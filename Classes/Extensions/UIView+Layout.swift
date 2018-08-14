@@ -48,7 +48,7 @@ enum ViewPositioning {
     case front
 }
 
-internal struct KanvasViewConstants {
+private struct KanvasViewConstants {
     static let AnimationDuration: TimeInterval = 0.2
 }
 
@@ -94,7 +94,7 @@ extension UIView {
         }
     }
     
-    fileprivate func addConstraints(containerView: UIView, insets: UIEdgeInsets, respectSafeArea: Bool) {
+    private func addConstraints(containerView: UIView, insets: UIEdgeInsets, respectSafeArea: Bool) {
         if respectSafeArea {
             NSLayoutConstraint.activate([
                 topAnchor.constraint(equalTo: containerView.safeLayoutGuide.topAnchor, constant: insets.top),
