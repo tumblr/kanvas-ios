@@ -16,21 +16,22 @@ private struct URLConstants {
 
 /// This is an extension to help create new URLs for videos and images
 extension NSURL {
-
+    
     /// Returns a new video url
-    class func createNewVideoURL() -> URL {
+    class func createNewVideoURL() -> URL? {
         return createURLWithExtension(URLConstants.mp4)
     }
     
     /// Returns a new image url
-    class func createNewImageURL() -> URL {
+    class func createNewImageURL() -> URL? {
         return createURLWithExtension(URLConstants.jpg)
     }
-
+    
     /// Returns a url of the given extension
-    private class func createURLWithExtension(_ ext: String) -> URL {
+    private class func createURLWithExtension(_ ext: String) -> URL? {
         guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            fatalError("documents directory should exist")
+            NSLog("documents directory should exist")
+            return nil
         }
         var requiresNewFilePath = true
         var fileURL: URL = documentsURL.appendingPathComponent(String(format: URLConstants.BaseURL, NSUUID().uuidString, ext))

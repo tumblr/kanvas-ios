@@ -13,7 +13,7 @@ import Foundation
  without properties' values if it's a struct.
  */
 public func SimpleName(ofType type: Any.Type) -> String {
-    return String(describing: type).components(separatedBy: ".").last!  //swiftlint:disable:this force_unwrapping
+    return String(describing: type)
 }
 
 /**
@@ -21,7 +21,7 @@ public func SimpleName(ofType type: Any.Type) -> String {
  That is to say:
  without scope prefixes,
  without properties' values if it's a struct.
-
+ 
  - seealso: type(of:)
  */
 public func SimpleName<T>(of element: T) -> String {
