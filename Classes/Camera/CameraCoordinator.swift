@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// This class will be the coordinator to present the Camera on a view controller, given CameraSettings
 class CameraCoordinator {
 
     init(parentController: UIViewController, settings: CameraSettings) {

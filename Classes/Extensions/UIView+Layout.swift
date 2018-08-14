@@ -46,7 +46,7 @@ enum ViewPositioning {
     case front
 }
 
-internal struct KanvasViewConstants {
+struct KanvasViewConstants {
     static let AnimationDuration: TimeInterval = 0.2
 }
 

@@ -3,3 +3,11 @@ platform :ios, '10.0'
 target 'KanvasCameraExample' do
 	pod 'KanvasCamera', :path => '../'
 end
+
+target 'KanvasCameraExampleTests' do
+    pod 'KanvasCamera', :path => '../'
+end
+
+target 'KanvasCameraExampleUITests' do
+    pod 'KanvasCamera', :path => '../'
+end
