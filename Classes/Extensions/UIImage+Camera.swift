@@ -9,6 +9,6 @@ import UIKit
 /// Extension for loading images from the bundle
 extension UIImage {
     class func imageFromCameraBundle(named: String) -> UIImage? {
-        return UIImage(named: named, in: Bundle(for: CameraCoordinator.self), compatibleWith: nil)
+        return UIImage(named: named, in: Bundle(for: CameraSettings.self), compatibleWith: nil)
     }
 }

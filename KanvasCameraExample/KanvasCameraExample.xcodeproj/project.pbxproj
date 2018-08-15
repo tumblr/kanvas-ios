@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0EBE144B212371C300E9D0C8 /* CameraCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE144A212371C300E9D0C8 /* CameraCoordinatorTests.swift */; };
 		0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */; };
 		612FA7B757A698CCD73E2F26 /* libPods-KanvasCameraExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBEC36EF4B957A66AFC99DAE /* libPods-KanvasCameraExample.a */; };
 		AB7F29472121F02A00B8D599 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7F29462121F02A00B8D599 /* AppDelegate.swift */; };
@@ -38,7 +37,6 @@
 
 /* Begin PBXFileReference section */
 		07DDC249DAB2E1FD27A71D49 /* Pods-KanvasCameraExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		0EBE144A212371C300E9D0C8 /* CameraCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCoordinatorTests.swift; sourceTree = "<group>"; };
 		0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettingsTests.swift; sourceTree = "<group>"; };
 		170B898D935F145157C1DC3B /* libPods-KanvasCameraExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasCameraExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -92,7 +90,6 @@
 		0EBE14482123719B00E9D0C8 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				0EBE144A212371C300E9D0C8 /* CameraCoordinatorTests.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -390,7 +387,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */,
-				0EBE144B212371C300E9D0C8 /* CameraCoordinatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

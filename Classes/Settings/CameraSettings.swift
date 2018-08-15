@@ -7,7 +7,48 @@
 import Foundation
 import AVFoundation
 
+/// Camera Modes available
+///
+/// - photo: Capturing photos
+/// - gif: Capturing gifs, a sequence of photos
+/// - stopMotion: Capturing stop motions, a sequence of images and/or videos
+public enum CameraMode: Int {
+    case stopMotion = 0
+    case photo
+    case gif
+    
+    private var order: Int {
+        return self.rawValue
+    }
+    
+}
+
 // A class that defines the settings for the Kanvas Camera
 @objc public final class CameraSettings: NSObject{
+    // MARK: - Modes
+    /**
+     Enables/disables modes. Public so that other modules can change the enabled modes
+     - note: Defaults to stop motion and gif.
+     - note: The set can't be empty.
+     */
+    public var enabledModes: Set<CameraMode> {
+        set {
+            if !newValue.isEmpty {
+                _enabledModes = newValue
+            }
+        }
+        get {
+            return _enabledModes
+        }
+    }
+    
+    private var _enabledModes: Set<CameraMode> = DefaultCameraSettings.EnabledModes
+}
+
+internal struct DefaultCameraSettings {
+    
+    // MARK: - Mode Selection
+    static let EnabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+    static let DefaultMode: CameraMode? = .none
     
 }

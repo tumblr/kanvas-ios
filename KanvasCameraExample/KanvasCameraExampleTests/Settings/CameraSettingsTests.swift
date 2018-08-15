@@ -4,22 +4,17 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+@testable import KanvasCamera
+import Foundation
 import XCTest
 
-class CameraSettingsTests: XCTestCase {
+final class CameraSettingsTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    // test that the defaults have not changed unexpectedly
+    func testDefaultSettings() {
+        let settings = CameraSettings()
+        
+        XCTAssert(settings.enabledModes == [.photo, .gif, .stopMotion], "Expected default settings for camera modes to be enabled.")
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }    
 }
