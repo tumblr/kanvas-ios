@@ -22,7 +22,7 @@ public protocol Identifiable {
 public extension Identifiable {
 
     public static var identifier: String {
-        return SimpleName(ofType: self)
+        return String(describing: self)
     }
 
 }
