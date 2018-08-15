@@ -1,0 +1,6 @@
+module Pods_KanvasCameraExampleUITests {
+  umbrella header "Pods-KanvasCameraExampleUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
