@@ -33,9 +33,11 @@ public enum CameraMode: Int {
      */
     public var enabledModes: Set<CameraMode> {
         set {
-            if !newValue.isEmpty {
-                _enabledModes = newValue
+            guard !newValue.isEmpty else {
+                assertionFailure("New value for camera modes is empty")
+                return
             }
+            _enabledModes = newValue
         }
         get {
             return _enabledModes
