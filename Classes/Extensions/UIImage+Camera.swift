@@ -8,6 +8,11 @@ import UIKit
 
 /// Extension for loading images from the bundle
 extension UIImage {
+    
+    /// This loads the image from the resources bundle associated with the camera
+    ///
+    /// - Parameter named: This is the name of the image (extension unnecessary) in the bundle
+    /// - Returns: returns a UIImage if found in the bundle, or nil otherwise
     class func imageFromCameraBundle(named: String) -> UIImage? {
         return UIImage(named: named, in: Bundle(for: CameraSettings.self), compatibleWith: nil)
     }
