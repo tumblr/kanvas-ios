@@ -47,7 +47,7 @@ public enum CameraMode: Int {
     private var _enabledModes: Set<CameraMode> = DefaultCameraSettings.EnabledModes
 }
 
-internal struct DefaultCameraSettings {
+private struct DefaultCameraSettings {
     
     // MARK: - Mode Selection
     static let EnabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
