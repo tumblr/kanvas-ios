@@ -1,4 +1,5 @@
 platform :ios, '10.0'
+use_frameworks!
 
 target 'KanvasCameraExample' do
 	pod 'KanvasCamera', :path => '../'
@@ -6,4 +7,5 @@ end
 
 target 'KanvasCameraExampleTests' do
     pod 'KanvasCamera', :path => '../'
+    pod 'FBSnapshotTestCase', '2.1.4'
 end

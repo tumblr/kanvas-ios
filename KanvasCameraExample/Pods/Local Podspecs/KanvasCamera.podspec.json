@@ -15,8 +15,7 @@
   "requires_arc": true,
   "frameworks": [
     "Foundation",
-    "UIKit",
-    "CoreData"
+    "UIKit"
   ],
   "source_files": "Classes/**/*.{h,m,swift}",
   "resources": "Resources/*",
