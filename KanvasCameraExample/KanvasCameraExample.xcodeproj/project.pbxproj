@@ -69,20 +69,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0EBE14482123719B00E9D0C8 /* Camera */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Camera;
-			sourceTree = "<group>";
-		};
-		0EBE1449212371A500E9D0C8 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		0EBE144C2123726B00E9D0C8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -141,8 +127,6 @@
 			isa = PBXGroup;
 			children = (
 				0EBE144C2123726B00E9D0C8 /* Settings */,
-				0EBE1449212371A500E9D0C8 /* Extensions */,
-				0EBE14482123719B00E9D0C8 /* Camera */,
 				AB7F29602121F0ED00B8D599 /* Info.plist */,
 			);
 			path = KanvasCameraExampleTests;
