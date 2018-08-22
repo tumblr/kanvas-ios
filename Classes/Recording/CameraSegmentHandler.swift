@@ -21,7 +21,7 @@ struct CameraSegment {
 
 /// A class to handle the various segments of a stop motion video, and also creates the final output
 
-class CameraSegmentHandler {
+final class CameraSegmentHandler {
     var segments: [CameraSegment] = []
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
@@ -245,17 +245,20 @@ private extension CameraSegmentHandler {
             completion(false)
             return
         }
-        adaptor.append(buffer, withPresentationTime: kCMTimeZero)
-        let endTime = KanvasCameraTimes.StopMotionFrameTime
-        while !adaptor.assetWriterInput.isReadyForMoreMediaData {
-            Thread.sleep(forTimeInterval: KanvasCameraTimes.SleepTime)
-        }
-        adaptor.append(buffer, withPresentationTime: endTime)
-        assetWriter.endSession(atSourceTime: endTime)
-        adaptor.assetWriterInput.markAsFinished()
-        assetWriter.finishWriting() {
-            completion(assetWriter.status == .completed)
-        }
+        adaptor.append(buffer: buffer, time: kCMTimeZero, completion: { firstAppended in
+            if firstAppended {
+                let endTime = KanvasCameraTimes.StopMotionFrameTime
+                assetWriter.endSession(atSourceTime: endTime)
+                adaptor.assetWriterInput.markAsFinished()
+                assetWriter.finishWriting() {
+                    completion(assetWriter.status == .completed)
+                }
+            }
+            else {
+                assetWriter.cancelWriting()
+                completion(false)
+            }
+        })
     }
 
     /// Creates a new pixel buffer from a UIImage for appending to an asset writer
