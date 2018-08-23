@@ -87,7 +87,6 @@ public enum CameraMode: Int {
     
     private var _defaultCameraPositionOption: AVCaptureDevice.Position = DefaultCameraSettings.DefaultCameraPositionOption
     
-    
     // MARK: - Flash settings
     
     /// Flash option which starts active.
