@@ -24,7 +24,7 @@ public enum CameraMode: Int {
 }
 
 // A class that defines the settings for the Kanvas Camera
-@objc public final class CameraSettings: NSObject{
+@objc public final class CameraSettings: NSObject {
     // MARK: - Modes
     /**
      Enables/disables modes. Public so that other modules can change the enabled modes
@@ -51,6 +51,5 @@ private struct DefaultCameraSettings {
     
     // MARK: - Mode Selection
     static let EnabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
-    static let DefaultMode: CameraMode? = .none
     
 }
