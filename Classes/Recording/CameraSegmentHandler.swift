@@ -76,17 +76,13 @@ final class CameraSegmentHandler {
     ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
     func deleteSegment(index: Int, removeFromDisk: Bool? = true) {
         guard index < segments.count else { return }
-        if removeFromDisk == true {
-            let segment = segments[index]
-            if let url = segment.videoURL {
-                let fileManager = FileManager.default
-                if fileManager.fileExists(atPath: url.path) {
-                    do {
-                        try fileManager.removeItem(at: url)
-                    } catch {
-                        NSLog("failed to remove item at \(url)")
-                    }
-                }
+        let segment = segments[index]
+        let fileManager = FileManager.default
+        if removeFromDisk == true, let url = segment.videoURL, fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.removeItem(at: url)
+            } catch {
+                NSLog("failed to remove item at \(url)")
             }
         }
         segments.remove(at: index)
