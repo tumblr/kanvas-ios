@@ -239,7 +239,7 @@ private extension CameraSegmentHandler {
     func createVideoFromImage(image: UIImage, assetWriter: AVAssetWriter, adaptor: AVAssetWriterInputPixelBufferAdaptor, input: AVAssetWriterInput, completion: @escaping (Bool) -> Void) {
         assetWriter.startWriting()
         assetWriter.startSession(atSourceTime: kCMTimeZero)
-        guard let buffer = pixelBuffer(from: image) else {
+        guard let buffer = createNewPixelBuffer(from: image) else {
             completion(false)
             return
         }
@@ -263,7 +263,7 @@ private extension CameraSegmentHandler {
     ///
     /// - Parameter image: input UIImage
     /// - Returns: the pixel buffer, if successful
-    func pixelBuffer(from image: UIImage) -> CVPixelBuffer? {
+    func createNewPixelBuffer(from image: UIImage) -> CVPixelBuffer? {
         let attrs: CFDictionary = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
         var pixelBuffer: CVPixelBuffer?
         let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(image.size.width), Int(image.size.height), kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
