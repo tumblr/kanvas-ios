@@ -7,6 +7,7 @@
 @testable import KanvasCamera
 import Foundation
 import XCTest
+import AVFoundation
 
 final class CameraSegmentHandlerTests: XCTestCase {
 
@@ -17,7 +18,24 @@ final class CameraSegmentHandlerTests: XCTestCase {
         let cameraSegmentHandler = CameraSegmentHandler()
         cameraSegmentHandler.segments = segments
         cameraSegmentHandler.exportVideo(completion: { url in
-            XCTAssert(url != nil, "should have a valid url for video merging")
+            guard let url = url else {
+                XCTFail("should have a valid url for video merging")
+                return
+            }
+            let asset = AVURLAsset(url: url)
+            let videoTracks = asset.tracks(withMediaType: .video)
+            let audioTracks = asset.tracks(withMediaType: .audio)
+            XCTAssert(videoTracks.count == 1, "There should be one video track")
+            XCTAssert(audioTracks.count == 1, "There should be one audio track")
+            
+            if let videoTrack = videoTracks.first, let audioTrack = audioTracks.first {
+                let videoDuration = videoTrack.timeRange.duration
+                let audioDuration = audioTrack.timeRange.duration
+                XCTAssert(CMTimeCompare(audioDuration, videoDuration) == 0, "Tracks were not synced")
+            }
+            else {
+                XCTFail("Audio and video tracks not found")
+            }
         })
     }
 
@@ -69,7 +87,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
             })
         }
     }
-
+    
     func createSegments() -> [CameraSegment] {
         var segments: [CameraSegment] = []
         if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
