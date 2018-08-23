@@ -192,7 +192,6 @@ extension CameraSettings {
     
 }
 
-
 // MARK: - Default settings
 private struct DefaultCameraSettings {
     
