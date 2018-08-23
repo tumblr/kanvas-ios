@@ -67,7 +67,7 @@ public enum CameraMode: Int {
         }
     }
     
-    private var _defaultMode: CameraMode? = DefaultCameraSettings.DefaultMode
+    private var _defaultMode: CameraMode?
     
     // MARK: - Camera Position settings
     
@@ -197,7 +197,6 @@ extension CameraSettings {
 private struct DefaultCameraSettings {
     
     static let EnabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
-    static let DefaultMode: CameraMode? = .none
     static let DefaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let DefaultCameraPositionOption: AVCaptureDevice.Position = .back
     static let LandscapeIsSupported: Bool = false
