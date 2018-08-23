@@ -10,8 +10,8 @@ import AVFoundation
 /// A container for segments
 
 struct CameraSegment {
-    var image: UIImage? = nil
-    var videoURL: URL? = nil
+    var image: UIImage?
+    var videoURL: URL?
 
     init(image: UIImage? = nil, videoURL: URL? = nil) {
         self.image = image
@@ -69,9 +69,11 @@ final class CameraSegmentHandler {
         })
     }
 
-    /// Deletes a segment
+    /// Deletes a segment and removes from local storage. When running tests, it should be false
     ///
-    /// - Parameter index: the index of the segment to be deleted
+    /// - Parameters:
+    ///   - index: the index of the segment to be deleted
+    ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
     func deleteSegment(index: Int, removeFromDisk: Bool? = true) {
         guard index < segments.count else { return }
         if removeFromDisk == true {
