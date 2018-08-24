@@ -17,7 +17,7 @@ extension AVURLAsset {
             let uiImage = UIImage(cgImage: cgImage)
             return uiImage
         } catch {
-            NSLog("failed to get thumbnail")
+            assertionFailure("failed to get thumbnail")
         }
 
         return nil
