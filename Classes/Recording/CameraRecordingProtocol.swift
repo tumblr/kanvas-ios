@@ -60,36 +60,36 @@ protocol CameraRecordingProtocol {
     /// - Returns: URL? can be nil if not currently recording
     func outputURL() -> URL?
     
-    /// starts recording video (stop motion mode)
+    /// starts recording video
     ///
     /// - Returns: returns whether it has successfully started
-    @discardableResult func startRecordingStopMotion() -> Bool
+    @discardableResult func startRecordingVideo() -> Bool
     
-    /// stops recording video for stop motion.
+    /// stops recording video, and exports the recording to a local file
     ///
     /// - Parameter completion: URL of the local video clip, can be nil if erroring
     /// - Returns: Void
-    func stopRecordingStopMotion(completion: @escaping (URL?) -> Void)
+    func stopRecordingVideo(completion: @escaping (URL?) -> Void)
     
     /// cancels the current recording and discards the segment
     func cancelRecording()
     
-    /// takes a stop motion photo and appends to the segments.
+    /// takes a photo and appends to the segments.
     ///
     /// - Parameter completion: returns a UIImage if successful
     /// - Returns: Void
-    func takeStopMotionPhoto(completion: @escaping (UIImage?) -> Void)
+    func takePhoto(completion: @escaping (UIImage?) -> Void)
     
-    /// finishes stop motion recording and composites a video
+    /// composites a video and exports the resulting file to mp4
     ///
     /// - Parameter completion: Returns a destination URL if successful
     /// - Returns: Void
-    func finishStopMotionRecording(completion: @escaping (URL?) -> Void)
+    func exportRecording(completion: @escaping (URL?) -> Void)
     
     /// deletes a segment at the selected index
     ///
     /// - Parameter index: location of the segment from `segments`
-    func deleteStopMotionSegmentAtIndex(_ index: Int)
+    func deleteSegmentAtIndex(_ index: Int)
     
     /// takes a `boomerang` (but actually is a video recording).
     ///
