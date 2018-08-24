@@ -25,7 +25,7 @@ public enum CameraMode: Int {
 
 // A class that defines the settings for the Kanvas Camera
 @objc public final class CameraSettings: NSObject {
-    
+
     // MARK: - Modes
     /**
      Enables/disables modes.
