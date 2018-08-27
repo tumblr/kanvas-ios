@@ -27,6 +27,13 @@ final class CameraSegmentHandler {
     private var assetWriterVideoInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
 
+    /// Appends an existing CameraSegment
+    ///
+    /// - Parameter segment: A camera segment with image or video
+    func addSegment(_ segment: CameraSegment) {
+        segments.append(segment)
+    }
+
     /// Creates a new CameraSegment from a video url and appends to segments
     ///
     /// - Parameter url: the local url of the video
