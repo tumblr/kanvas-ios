@@ -111,17 +111,18 @@ final class CameraSegmentHandler {
     
     /// This removes all segments from disk and memory
     func reset(removeFromDisk: Bool? = true) {
-        if removeFromDisk == true {
-            let fileManager = FileManager.default
-            segments.forEach { (segment) in
-                if let url = segment.videoURL, fileManager.fileExists(atPath: url.path) {
-                    do {
-                        try fileManager.removeItem(at: url)
-                    } catch { }
-                }
+        defer { segments.removeAll() }
+        guard removeFromDisk == true else {
+            return
+        }
+        let fileManager = FileManager.default
+        segments.forEach { (segment) in
+            if let url = segment.videoURL, fileManager.fileExists(atPath: url.path) {
+                do {
+                    try fileManager.removeItem(at: url)
+                } catch { }
             }
         }
-        segments.removeAll()
     }
     
     /// concatenates all of the videos in the segments
