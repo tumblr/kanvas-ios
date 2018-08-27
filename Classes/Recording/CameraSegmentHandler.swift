@@ -22,7 +22,7 @@ struct CameraSegment {
 /// A class to handle the various segments of a stop motion video, and also creates the final output
 
 final class CameraSegmentHandler {
-    var segments: [CameraSegment] = []
+    private(set) var segments: [CameraSegment] = []
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?

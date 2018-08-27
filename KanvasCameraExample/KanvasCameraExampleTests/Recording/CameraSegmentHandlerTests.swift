@@ -11,12 +11,14 @@ import AVFoundation
 
 final class CameraSegmentHandlerTests: XCTestCase {
 
-    var segments: [CameraSegment] = []
-
     func testMerge() {
-        segments = createSegments()
         let cameraSegmentHandler = CameraSegmentHandler()
-        cameraSegmentHandler.segments = segments
+        guard let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") else {
+            XCTFail("no valid url found")
+            return
+        }
+        cameraSegmentHandler.addNewVideoSegment(url: url)
+        cameraSegmentHandler.addNewVideoSegment(url: url)
         cameraSegmentHandler.exportVideo(completion: { url in
             guard let url = url else {
                 XCTFail("should have a valid url for video merging")
@@ -88,21 +90,6 @@ final class CameraSegmentHandlerTests: XCTestCase {
         }
     }
     
-    func createSegments() -> [CameraSegment] {
-        var segments: [CameraSegment] = []
-        if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let segment = CameraSegment(image: nil, videoURL: url)
-
-            for _ in 0...5 {
-                NSLog("appending segment at \(url)")
-                segments.append(segment)
-            }
-        }
-        NSLog("current segments \(segments)")
-
-        return segments
-    }
-
     func createImagesArray() -> [UIImage] {
         var images: [UIImage] = []
 
