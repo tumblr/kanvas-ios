@@ -185,7 +185,9 @@ final class CameraSegmentHandler {
         guard let url = NSURL.createNewVideoURL() else {
             return nil
         }
-        do { assetWriter = try AVAssetWriter(outputURL: url, fileType: AVFileType.mp4) } catch {
+        do {
+            assetWriter = try AVAssetWriter(outputURL: url, fileType: AVFileType.mp4)
+        } catch {
             return nil
         }
         let outputSettings: [String: Any] = CameraSegmentHandler.videoOutputSettingsForSize(size: size)
@@ -221,8 +223,7 @@ final class CameraSegmentHandler {
     private class func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime) {
         do {
             try compositionTrack?.insertTimeRange(assetTrack.timeRange, of: assetTrack, at: time)
-        }
-        catch {
+        } catch {
             NSLog("No track at range to append.")
         }
     }
