@@ -17,8 +17,8 @@ final class VideoOutputHandlerTests: XCTestCase {
 
     func testStartRecording() {
         let handler = setupHandler()
-        let started = handler.startRecordingVideo(assetWriter: nil, pixelBufferAdaptor: nil, videoInput: nil, audioInput: nil)
-        XCTAssert(started == false, "Handler should not have started recording with the current asset writer")
+        handler.startRecordingVideo(assetWriter: nil, pixelBufferAdaptor: nil, videoInput: nil, audioInput: nil)
+        XCTAssert(handler.recording == false, "Handler should not have started recording without an asset writer")
     }
 
     func testFinishRecordingBlock() {

@@ -40,14 +40,13 @@ final class VideoOutputHandler: NSObject {
     ///   - pixelBufferAdaptor: the pixel buffer adapator
     ///   - videoInput: the video input for the asset writer
     ///   - audioInput: the audio input for the asset writer
-    /// - Returns: returns success boolean on whether recording has started
-    @discardableResult func startRecordingVideo(assetWriter: AVAssetWriter?,
+    func startRecordingVideo(assetWriter: AVAssetWriter?,
                                                 pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?,
                                                 videoInput: AVAssetWriterInput?,
-                                                audioInput: AVAssetWriterInput?) -> Bool {
+                                                audioInput: AVAssetWriterInput?) {
         guard let assetWriter = assetWriter, recording == false, finalizing == false else {
-            NSLog("asset writer is empty?")
-            return false
+            NSLog("Should not start record while asset writer is nil or recording is already in progress")
+            return
         }
 
         self.assetWriter = assetWriter
@@ -63,8 +62,8 @@ final class VideoOutputHandler: NSObject {
         }
 
         guard let _ = self.assetWriter?.startWriting() else {
-            NSLog("asset writer couldn't start")
-            return false
+            assertionFailure("asset writer couldn't start")
+            return
         }
         recording = true
 
@@ -72,8 +71,6 @@ final class VideoOutputHandler: NSObject {
         if let sampleBuffer = self.currentVideoSampleBuffer {
             processVideoSampleBuffer(sampleBuffer)
         }
-
-        return true
     }
 
     /// Stops recording video and exports as a mp4
