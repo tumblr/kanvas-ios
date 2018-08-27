@@ -130,7 +130,7 @@ final class CameraSegmentHandler {
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
-    class func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
+    static func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
         let mixComposition = AVMutableComposition()
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
         var insertTime = kCMTimeZero
@@ -165,7 +165,7 @@ final class CameraSegmentHandler {
     ///
     /// - Parameter size: dimensions of the video output
     /// - Returns: Dictionary of settings
-    class func videoOutputSettingsForSize(size: CGSize) -> [String: Any] {
+    static func videoOutputSettingsForSize(size: CGSize) -> [String: Any] {
         let width = Int(size.width)
         let height = Int(size.height)
         let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecH264, AVVideoWidthKey: width, AVVideoHeightKey: height]
@@ -199,7 +199,7 @@ final class CameraSegmentHandler {
     /// - Parameters:
     ///   - composition: the final composition to be exported
     ///   - completion: url of the local video
-    private class func exportComposition(composition: AVMutableComposition, completion: @escaping (URL?) -> Void) {
+    private static func exportComposition(composition: AVMutableComposition, completion: @escaping (URL?) -> Void) {
         guard let assetExport = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else { return }
         assetExport.outputFileType = .m4v
         let finalURL = NSURL.createNewVideoURL()
@@ -217,7 +217,7 @@ final class CameraSegmentHandler {
     ///   - assetTrack: track to be added
     ///   - compositionTrack: target composition track
     ///   - time: the insert time of the track
-    private class func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime) {
+    private static func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime) {
         do {
             try compositionTrack?.insertTimeRange(assetTrack.timeRange, of: assetTrack, at: time)
         } catch {
