@@ -174,16 +174,14 @@ final class CameraSegmentHandler {
         let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecH264, AVVideoWidthKey: width, AVVideoHeightKey: height]
         return outputSettings
     }
-}
 
-/// helper functions
-private extension CameraSegmentHandler {
+    // MARK: - helper functions
 
     /// Sets up the asset writer for video creation
     ///
     /// - Parameter size: resolution of video
     /// - Returns: URL?: the url of the local video
-    func setupAssetWriter(size: CGSize) -> URL? {
+    private func setupAssetWriter(size: CGSize) -> URL? {
         guard let url = NSURL.createNewVideoURL() else {
             return nil
         }
@@ -202,7 +200,7 @@ private extension CameraSegmentHandler {
     /// - Parameters:
     ///   - composition: the final composition to be exported
     ///   - completion: url of the local video
-    class func exportComposition(composition: AVMutableComposition, completion: @escaping (URL?) -> Void) {
+    private class func exportComposition(composition: AVMutableComposition, completion: @escaping (URL?) -> Void) {
         guard let assetExport = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else { return }
         assetExport.outputFileType = .m4v
         let finalURL = NSURL.createNewVideoURL()
@@ -220,7 +218,7 @@ private extension CameraSegmentHandler {
     ///   - assetTrack: track to be added
     ///   - compositionTrack: target composition track
     ///   - time: the insert time of the track
-    class func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime) {
+    private class func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime) {
         do {
             try compositionTrack?.insertTimeRange(assetTrack.timeRange, of: assetTrack, at: time)
         }
@@ -237,7 +235,7 @@ private extension CameraSegmentHandler {
     ///   - adaptor: the pixel buffer adaptor
     ///   - input: asset writer input
     ///   - completion: returns success bool
-    func createVideoFromImage(image: UIImage, assetWriter: AVAssetWriter, adaptor: AVAssetWriterInputPixelBufferAdaptor, input: AVAssetWriterInput, completion: @escaping (Bool) -> Void) {
+    private func createVideoFromImage(image: UIImage, assetWriter: AVAssetWriter, adaptor: AVAssetWriterInputPixelBufferAdaptor, input: AVAssetWriterInput, completion: @escaping (Bool) -> Void) {
         assetWriter.startWriting()
         assetWriter.startSession(atSourceTime: kCMTimeZero)
         guard let buffer = createNewPixelBuffer(from: image) else {
@@ -264,7 +262,7 @@ private extension CameraSegmentHandler {
     ///
     /// - Parameter image: input UIImage
     /// - Returns: the pixel buffer, if successful
-    func createNewPixelBuffer(from image: UIImage) -> CVPixelBuffer? {
+    private func createNewPixelBuffer(from image: UIImage) -> CVPixelBuffer? {
         let attrs: CFDictionary = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
         var pixelBuffer: CVPixelBuffer?
         let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(image.size.width), Int(image.size.height), kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
