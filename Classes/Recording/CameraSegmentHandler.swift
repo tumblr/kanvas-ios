@@ -139,6 +139,7 @@ final class CameraSegmentHandler {
     ///   - completion: returns a local video URL if merged successfully
     static func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
         let mixComposition = AVMutableComposition()
+        // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
         var insertTime = kCMTimeZero
         
@@ -154,7 +155,6 @@ final class CameraSegmentHandler {
             }
             if let audioTrack = urlAsset.tracks(withMediaType: .audio).first {
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
-                
                 var audioTimeRange = audioTrack.timeRange
                 if CMTimeCompare(audioTrack.timeRange.duration, videoDuration) == 1 {
                     audioTimeRange = CMTimeRangeMake(audioTimeRange.start, videoDuration); // crop audio to video range
@@ -204,8 +204,11 @@ final class CameraSegmentHandler {
     ///   - composition: the final composition to be exported
     ///   - completion: url of the local video
     private static func exportComposition(composition: AVMutableComposition, completion: @escaping (URL?) -> Void) {
-        guard let assetExport = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else { return }
-        assetExport.outputFileType = .m4v
+        guard composition.tracks.count > 0, let assetExport = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else {
+            completion(nil)
+            return
+        }
+        assetExport.outputFileType = .mp4
         let finalURL = NSURL.createNewVideoURL()
         assetExport.outputURL = finalURL
         assetExport.shouldOptimizeForNetworkUse = true
