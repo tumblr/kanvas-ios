@@ -59,8 +59,8 @@ final class CameraSegmentHandlerTests: XCTestCase {
     func testAddVideo() {
         let cameraSegmentHandler = CameraSegmentHandler()
         if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let added = cameraSegmentHandler.addNewVideoSegment(url: url)
-            XCTAssert(added, "CameraSegmentHandler failed to add video segment")
+            cameraSegmentHandler.addNewVideoSegment(url: url)
+            XCTAssert(cameraSegmentHandler.segments.count == 1, "CameraSegmentHandler failed to add video segment")
         }
         else {
             XCTFail("url was not found for video")

@@ -30,12 +30,13 @@ final class CameraSegmentHandler {
     /// Creates a new CameraSegment from a video url and appends to segments
     ///
     /// - Parameter url: the local url of the video
-    /// - Returns: success if file exists and is appended
-    @discardableResult func addNewVideoSegment(url: URL) -> Bool {
-        guard FileManager.default.fileExists(atPath: url.path) else { return false }
+    func addNewVideoSegment(url: URL) {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            assertionFailure("no video exists at file url")
+            return
+        }
         let segment = CameraSegment(videoURL: url)
         segments.append(segment)
-        return true
     }
 
     /// Creates a video from a UIImage representation and appends as a CameraSegment
@@ -219,13 +220,13 @@ private extension CameraSegmentHandler {
     ///   - assetTrack: track to be added
     ///   - compositionTrack: target composition track
     ///   - time: the insert time of the track
-    /// - Returns: success Bool
-    @discardableResult class func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime) -> Bool {
-        do { try compositionTrack?.insertTimeRange(assetTrack.timeRange, of: assetTrack, at: time) } catch {
-            NSLog("failed to insert video track")
-            return false
+    class func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime) {
+        do {
+            try compositionTrack?.insertTimeRange(assetTrack.timeRange, of: assetTrack, at: time)
         }
-        return true
+        catch {
+            NSLog("No track at range to append.")
+        }
     }
 
     /// Creates a video from a UIImage given the settings
