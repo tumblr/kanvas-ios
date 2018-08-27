@@ -149,7 +149,7 @@ final class CameraSegmentHandler {
             
             if let videoTrack = urlAsset.tracks(withMediaType: .video).first {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
-                addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime)
+                addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
                 videoDuration = videoTrack.timeRange.duration
             }
             if let audioTrack = urlAsset.tracks(withMediaType: .audio).first {
@@ -159,7 +159,7 @@ final class CameraSegmentHandler {
                 if CMTimeCompare(audioTrack.timeRange.duration, videoDuration) == 1 {
                     audioTimeRange = CMTimeRangeMake(audioTimeRange.start, videoDuration); // crop audio to video range
                 }
-                addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime)
+                addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
             }
             insertTime = CMTimeAdd(insertTime, videoDuration)
         }
@@ -221,14 +221,14 @@ final class CameraSegmentHandler {
     ///   - assetTrack: track to be added
     ///   - compositionTrack: target composition track
     ///   - time: the insert time of the track
-    private static func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime) {
+    private static func addTrack(assetTrack: AVAssetTrack, compositionTrack: AVMutableCompositionTrack?, time: CMTime, timeRange: CMTimeRange) {
         do {
-            try compositionTrack?.insertTimeRange(assetTrack.timeRange, of: assetTrack, at: time)
+            try compositionTrack?.insertTimeRange(timeRange, of: assetTrack, at: time)
         } catch {
             NSLog("No track at range to append.")
         }
     }
-
+    
     /// Creates a video from a UIImage given the settings
     ///
     /// - Parameters:
