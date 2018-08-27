@@ -46,16 +46,12 @@ final class CameraSegmentHandler {
     ///   - size: size (resolution) of the video
     ///   - completion: completion handler, success bool and URL of video
     func addNewImageSegment(image: UIImage, size: CGSize, completion: @escaping (Bool, CameraSegment?) -> Void) {
-        guard let url = setupAssetWriter(size: size) else {
+        guard let url = setupAssetWriter(size: size), let assetWriter = assetWriter, let input = assetWriterVideoInput else {
             completion(false, nil)
             return
         }
 
         let bufferAttributes: [String: Any] = [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA, String(kCVPixelBufferCGBitmapContextCompatibilityKey): true, String(kCVPixelBufferCGImageCompatibilityKey): true, String(kCVPixelBufferWidthKey): size.width, String(kCVPixelBufferHeightKey): size.height]
-        guard let assetWriter = assetWriter, let input = assetWriterVideoInput else {
-            completion(false, nil)
-            return
-        }
         assetWriter.add(input)
         let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: bufferAttributes)
         createVideoFromImage(image: image, assetWriter: assetWriter, adaptor: adaptor, input: input, completion: { success in
