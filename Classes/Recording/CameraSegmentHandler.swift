@@ -95,7 +95,7 @@ final class CameraSegmentHandler {
                 let asset = AVURLAsset(url: segmentURL)
                 totalDuration = CMTimeAdd(totalDuration, asset.duration)
             }
-            else if let _ = segment.image {
+            else if segment.image != nil {
                 totalDuration = CMTimeAdd(totalDuration, KanvasCameraTimes.StopMotionFrameTime)
             }
         }
