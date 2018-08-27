@@ -166,10 +166,7 @@ final class CameraSegmentHandler {
     /// - Parameter size: dimensions of the video output
     /// - Returns: Dictionary of settings
     static func videoOutputSettingsForSize(size: CGSize) -> [String: Any] {
-        let width = Int(size.width)
-        let height = Int(size.height)
-        let outputSettings: [String: Any] = [AVVideoCodecKey: AVVideoCodecH264, AVVideoWidthKey: width, AVVideoHeightKey: height]
-        return outputSettings
+        return [AVVideoCodecKey: AVVideoCodecH264, AVVideoWidthKey: Int(size.width), AVVideoHeightKey: Int(size.height)]
     }
 
     // MARK: - helper functions
