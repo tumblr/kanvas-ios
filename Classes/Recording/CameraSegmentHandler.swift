@@ -113,7 +113,7 @@ final class CameraSegmentHandler {
     func reset(removeFromDisk: Bool? = true) {
         if removeFromDisk == true {
             let fileManager = FileManager.default
-            for segment in segments {
+            segments.forEach { (segment) in
                 if let url = segment.videoURL, fileManager.fileExists(atPath: url.path) {
                     do {
                         try fileManager.removeItem(at: url)
