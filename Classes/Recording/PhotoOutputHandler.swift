@@ -11,7 +11,7 @@ import UIKit
 /// A handler for taking photos
 final class PhotoOutputHandler: NSObject {
 
-    private var photoOutput: AVCapturePhotoOutput?
+    private let photoOutput: AVCapturePhotoOutput?
     private var completionBlock: ((UIImage?) -> Void)?
 
     required init(photoOutput: AVCapturePhotoOutput?) {
