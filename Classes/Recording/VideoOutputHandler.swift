@@ -8,12 +8,22 @@ import Foundation
 import AVFoundation
 import UIKit
 
+/// Protocol for video handlers
+protocol VideoOutputHandlerProtocol {
+    
+    func startRecordingVideo(assetWriter: AVAssetWriter,
+                             pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor,
+                             audioInput: AVAssetWriterInput?)
+    
+    func stopRecordingVideo(completion: @escaping (Bool) -> Void)
+}
+
 private struct VideoHandlerConstants {
     static let Queue = "VideoQueue"
 }
 
 /// A class to handle video recording
-final class VideoOutputHandler: NSObject {
+final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
 
     /// start time of the current clip
     private(set) var startTime: CMTime = kCMTimeZero
@@ -38,37 +48,35 @@ final class VideoOutputHandler: NSObject {
     /// - Parameters:
     ///   - assetWriter: the asset writer to append buffers
     ///   - pixelBufferAdaptor: the pixel buffer adapator
-    ///   - videoInput: the video input for the asset writer
-    ///   - audioInput: the audio input for the asset writer
-    func startRecordingVideo(assetWriter: AVAssetWriter?,
-                                                pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?,
-                                                videoInput: AVAssetWriterInput?,
+    ///   - audioInput: the audio input for the asset writer. This can be nil
+    func startRecordingVideo(assetWriter: AVAssetWriter,
+                                                pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor,
                                                 audioInput: AVAssetWriterInput?) {
-        guard let assetWriter = assetWriter, recording == false, finalizing == false else {
-            assertionFailure("Should not start record while asset writer is nil or recording is already in progress")
+        guard recording == false, finalizing == false else {
+            assertionFailure("Should not start record while recording is already in progress")
             return
         }
 
         self.assetWriter = assetWriter
         self.pixelBufferAdaptor = pixelBufferAdaptor
-        self.videoInput = videoInput
+        self.videoInput = pixelBufferAdaptor.assetWriterInput
         self.audioInput = audioInput
 
         recordedVideoFrameFirst = false
         startTime = CMTime(value: 0, timescale: KanvasCameraTimes.StopMotionFrameTimescale)
 
-        if let sampleBuffer = self.currentVideoSampleBuffer {
+        if let sampleBuffer = currentVideoSampleBuffer {
             startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         }
 
-        guard let _ = self.assetWriter?.startWriting() else {
+        guard assetWriter.startWriting() else {
             assertionFailure("asset writer couldn't start")
             return
         }
         recording = true
 
         /// add the first frame if already possible
-        if let sampleBuffer = self.currentVideoSampleBuffer {
+        if let sampleBuffer = currentVideoSampleBuffer {
             processVideoSampleBuffer(sampleBuffer)
         }
     }
