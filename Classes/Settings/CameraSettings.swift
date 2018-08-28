@@ -25,9 +25,10 @@ public enum CameraMode: Int {
 
 // A class that defines the settings for the Kanvas Camera
 @objc public final class CameraSettings: NSObject {
+
     // MARK: - Modes
     /**
-     Enables/disables modes. Public so that other modules can change the enabled modes
+     Enables/disables modes.
      - note: Defaults to stop motion and gif.
      - note: The set can't be empty.
      */
@@ -45,11 +46,159 @@ public enum CameraMode: Int {
     }
     
     private var _enabledModes: Set<CameraMode> = DefaultCameraSettings.EnabledModes
+    
+    /**
+     Camera mode which starts active.
+     - note: Defaults to .none, which will activate the first active
+     mode in the list.
+     - note: You can't set as default mode one which is not enabled, it will be ignored.
+     */
+    public var defaultMode: CameraMode? {
+        set {
+            if let mode = newValue, enabledModes.contains(mode) {
+                _defaultMode = mode
+            }
+            if newValue == .none {
+                _defaultMode = newValue
+            }
+        }
+        get {
+            return _defaultMode
+        }
+    }
+    
+    private var _defaultMode: CameraMode?
+    
+    // MARK: - Camera Position settings
+    
+    /// Camera position option which starts active.
+    /// - note: Defaults to back.
+    /// - note: Can't be unspecified.
+    public var defaultCameraPositionOption: AVCaptureDevice.Position {
+        set {
+            if newValue != .unspecified {
+                _defaultCameraPositionOption = newValue
+            }
+        }
+        get {
+            return _defaultCameraPositionOption
+        }
+    }
+    
+    private var _defaultCameraPositionOption: AVCaptureDevice.Position = DefaultCameraSettings.DefaultCameraPositionOption
+    
+    // MARK: - Flash settings
+    
+    /// Flash option which starts active.
+    /// - note: Defaults to flash off.
+    public let defaultFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.DefaultFlashOption
+    
+    
+    // MARK: - Landscape support
+    public var cameraSupportsLandscape: Bool = DefaultCameraSettings.LandscapeIsSupported
+    
+    // MARK: - Stop motion mode export settings
+    public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.ExportStopMotionPhotoAsVideo
+    
+    override public init() { }
+    
 }
 
+
+// MARK: - External utilities
+public extension CameraSettings {
+    /**
+     Enables/disables photo mode.
+     */
+    public var enablePhotoMode: Bool {
+        set {
+            setMode(.photo, to: newValue)
+        }
+        get {
+            return getMode(.photo)
+        }
+    }
+    /**
+     Enables/disables gif mode.
+     */
+    public var enableGifMode: Bool {
+        set {
+            setMode(.gif, to: newValue)
+        }
+        get {
+            return getMode(.gif)
+        }
+    }
+    /**
+     Enables/disables stop motion mode.
+     */
+    public var enableStopMotionMode: Bool {
+        set {
+            setMode(.stopMotion, to: newValue)
+        }
+        get {
+            return getMode(.stopMotion)
+        }
+    }
+    
+    private func setMode(_ mode: CameraMode, to on: Bool) {
+        if on {
+            enabledModes.insert(mode)
+        }
+        else {
+            enabledModes.remove(mode)
+        }
+    }
+    
+    private func getMode(_ mode: CameraMode) -> Bool {
+        return enabledModes.contains(mode)
+    }
+    
+}
+
+// MARK: - Internal utilities
+extension CameraSettings {
+    
+    var orderedEnabledModes: [CameraMode] {
+        return Array(enabledModes).sorted { $0.rawValue < $1.rawValue }
+    }
+    
+    var initialMode: CameraMode {
+        // enabledModes will always have at least one value as its precondition.
+        guard let firstMode = orderedEnabledModes.first else {
+            assertionFailure("should have at least one enabled mode")
+            return CameraMode.stopMotion
+        }
+        return defaultMode ?? firstMode
+    }
+    
+    var notDefaultFlashOption: AVCaptureDevice.FlashMode {
+        if defaultFlashOption == .on {
+            return .off
+        }
+        else {
+            return .on
+        }
+    }
+    
+    var notDefaultCameraPositionOption: AVCaptureDevice.Position {
+        if defaultCameraPositionOption == .front {
+            return .back
+        }
+        else {
+            return .front
+        }
+    }
+    
+}
+
+// MARK: - Default settings
 private struct DefaultCameraSettings {
     
-    // MARK: - Mode Selection
     static let EnabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+    static let DefaultFlashOption: AVCaptureDevice.FlashMode = .off
+    static let DefaultCameraPositionOption: AVCaptureDevice.Position = .back
+    static let LandscapeIsSupported: Bool = false
+    static let ExportStopMotionPhotoAsVideo: Bool = false
     
 }
