@@ -6,6 +6,7 @@
 
 import Foundation
 import XCTest
+import AVFoundation
 @testable import KanvasCamera
 
 final class VideoOutputHandlerTests: XCTestCase {
@@ -14,11 +15,28 @@ final class VideoOutputHandlerTests: XCTestCase {
         let handler = VideoOutputHandler()
         return handler
     }
+    
+    func setupAssetWriter() -> AVAssetWriter? {
+        do {
+            guard let url = NSURL.createNewVideoURL() else {
+                return nil
+            }
+            let assetWriter = try AVAssetWriter(outputURL: url, fileType: .mp4)
+            return assetWriter
+        }
+        catch {
+            return nil
+        }
+    }
 
     func testStartRecording() {
         let handler = setupHandler()
-        handler.startRecordingVideo(assetWriter: nil, pixelBufferAdaptor: nil, videoInput: nil, audioInput: nil)
-        XCTAssert(handler.recording == false, "Handler should not have started recording without an asset writer")
+        guard let assetWriter = setupAssetWriter() else {
+            XCTFail("failed to create asset writer")
+            return
+        }
+        handler.startRecordingVideo(assetWriter: assetWriter, pixelBufferAdaptor: nil, videoInput: nil, audioInput: nil)
+        XCTAssert(handler.recording == true, "Asset writer should have started recording")
     }
 
     func testFinishRecordingBlock() {

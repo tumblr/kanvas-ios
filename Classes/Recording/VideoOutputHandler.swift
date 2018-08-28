@@ -45,7 +45,7 @@ final class VideoOutputHandler: NSObject {
                                                 videoInput: AVAssetWriterInput?,
                                                 audioInput: AVAssetWriterInput?) {
         guard let assetWriter = assetWriter, recording == false, finalizing == false else {
-            NSLog("Should not start record while asset writer is nil or recording is already in progress")
+            assertionFailure("Should not start record while asset writer is nil or recording is already in progress")
             return
         }
 
