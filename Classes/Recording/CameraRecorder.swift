@@ -198,14 +198,16 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
-        videoOutputHandler.stopRecordingVideo { [unowned self] success in
-            self.recordingDelegate?.cameraWillFinishVideo()
-            if success, let url = self.url {
-                self.cameraSegmentHandler.addNewVideoSegment(url: url)
-                completion(url)
-            }
-            else {
-                completion(nil)
+        videoOutputHandler.stopRecordingVideo { [weak self] success in
+            if let strongSelf = self {
+                strongSelf.recordingDelegate?.cameraWillFinishVideo()
+                if success, let url = strongSelf.url {
+                    strongSelf.cameraSegmentHandler.addNewVideoSegment(url: url)
+                    completion(url)
+                }
+                else {
+                    completion(nil)
+                }
             }
         }
     }

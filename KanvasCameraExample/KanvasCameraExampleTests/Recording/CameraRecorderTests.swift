@@ -9,8 +9,6 @@ import Foundation
 import AVFoundation
 import XCTest
 
-/// This mocks up a camera recorder for future classes that require recording segments
-
 final class CameraRecorderTests: XCTestCase {
 
     /// the camera recorder requires a device to run. This is testing the initialization
@@ -50,14 +48,15 @@ final class CameraRecorderTests: XCTestCase {
         let delegate = CameraRecorderDelegateStub()
         cameraRecorder.recordingDelegate = delegate
 
-        let blockExpectation = XCTestExpectation(description: "blockExpectation")
         let started = cameraRecorder.startRecordingVideo()
+        let blockExpectation = XCTestExpectation(description: "block expectation")
         XCTAssert(started, "CameraRecorder failed to start recording")
 
         cameraRecorder.stopRecordingVideo(completion: { url in
             blockExpectation.fulfill()
+            XCTAssert(delegate.videoFinish, "Delegate was not called to finish video")
         })
-        wait(for: [delegate.videoStartExpectation, delegate.videoFinishExpectation, blockExpectation], timeout: 5)
+        wait(for: [blockExpectation], timeout: 5)
     }
 
     func testDeleteSegment() {
@@ -86,13 +85,14 @@ final class CameraRecorderTests: XCTestCase {
 
 }
 
+/// This mocks up a camera recorder delegate for future classes that require recording segments
 final class CameraRecorderDelegateStub: CameraRecordingDelegate {
-    var videoStartExpectation: XCTestExpectation
-    var videoFinishExpectation: XCTestExpectation
+    var videoStart: Bool
+    var videoFinish: Bool
 
     init() {
-        videoStartExpectation = XCTestExpectation(description: "start")
-        videoFinishExpectation = XCTestExpectation(description: "finish")
+        videoStart = false
+        videoFinish = false
     }
 
     func photoSettingsForCamera() -> AVCapturePhotoSettings? {
@@ -100,10 +100,12 @@ final class CameraRecorderDelegateStub: CameraRecordingDelegate {
     }
 
     func cameraWillTakeVideo() {
-        videoStartExpectation.fulfill()
+        videoStart = true
     }
 
     func cameraWillFinishVideo() {
-        videoFinishExpectation.fulfill()
+        if videoStart {
+            videoFinish = true
+        }
     }
 }
