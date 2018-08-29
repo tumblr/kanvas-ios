@@ -19,7 +19,7 @@ protocol OptionsStackViewDelegate: class {
 /// A view for laying out option views in a stack
 final class OptionsStackView<Item>: UIView {
 
-    var stackView: UIStackView
+    private(set) var stackView: UIStackView
     weak var delegate: OptionsStackViewDelegate?
 
     private let interItemSpacing: CGFloat
@@ -48,6 +48,9 @@ final class OptionsStackView<Item>: UIView {
         delegate?.optionWasTapped(optionIndex: sender.tag)
     }
 
+    /// Update the UI to the new options with an animation
+    ///
+    /// - Parameter newOptions: an array of the new options to replace the old options
     func changeOptions(to newOptions: [Option<Item>]) {
         let oldStack = stackView
         let newStack = UIStackView()
@@ -59,9 +62,7 @@ final class OptionsStackView<Item>: UIView {
         }, completion: { _ in oldStack.removeFromSuperview() })
     }
 
-}
-
-private extension OptionsStackView {
+    // MARK: - private functions
 
     private func addStackView(_ stackView: UIStackView) {
         addSubview(stackView)

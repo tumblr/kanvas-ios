@@ -10,7 +10,7 @@ import UIKit
 /// A view that contains a button and handles image layout
 final class OptionView: UIView {
 
-    let button: UIButton
+    private(set) var button: UIButton
 
     init(image: UIImage?) {
         button = UIButton()
