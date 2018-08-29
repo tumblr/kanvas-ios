@@ -66,7 +66,7 @@ protocol CameraRecordingProtocol {
     /// starts recording video
     ///
     /// - Returns: returns whether it has successfully started
-    @discardableResult func startRecordingVideo() -> Bool
+    func startRecordingVideo() -> Bool
     
     /// stops recording video, and exports the recording to a local file
     ///

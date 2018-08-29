@@ -181,7 +181,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     // MARK: - video
-    @discardableResult func startRecordingVideo() -> Bool {
+    func startRecordingVideo() -> Bool {
         if isRecording() {
             return false
         }
