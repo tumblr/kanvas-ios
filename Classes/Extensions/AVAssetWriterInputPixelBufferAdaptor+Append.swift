@@ -7,36 +7,24 @@
 import Foundation
 import AVFoundation
 
-private struct AdaptorConstants {
-    static let MaximumAppendAttempts: Int = 50
-}
-
 extension AVAssetWriterInputPixelBufferAdaptor {
-
+    
     /// method to help append a buffer to an asset writer input
     ///
     /// - Parameters:
     ///   - buffer: CVPixelBuffer
     ///   - time: append CMTime
-    ///   - completion: Bool for success
+    ///   - completion: Bool for whether the buffer was appended
     func append(buffer: CVPixelBuffer, time: CMTime, completion: @escaping (Bool) -> Void) {
-        append(buffer: buffer, time: time, attempts: 0, completion: completion)
-    }
-
-    private func append(buffer: CVPixelBuffer, time: CMTime, attempts: Int, completion: @escaping (Bool) -> Void) {
-        if attempts > AdaptorConstants.MaximumAppendAttempts {
-            completion(false)
-            return
-        }
         if assetWriterInput.isReadyForMoreMediaData {
-            let appended = append(buffer, withPresentationTime: time)
-            completion(appended)
+            completion(append(buffer, withPresentationTime: time))
         }
         else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
-                self.append(buffer: buffer, time: time, attempts: attempts + 1, completion: completion)
-            })
+            let _ = assetWriterInput.observe(\.isReadyForMoreMediaData) { [unowned self] (writer, change) in
+                if self.assetWriterInput.isReadyForMoreMediaData {
+                    completion(self.append(buffer, withPresentationTime: time))
+                }
+            }
         }
     }
-
 }

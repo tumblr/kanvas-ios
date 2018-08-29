@@ -7,17 +7,37 @@
 @testable import KanvasCamera
 import Foundation
 import XCTest
+import AVFoundation
 
 final class CameraSegmentHandlerTests: XCTestCase {
 
-    var segments: [CameraSegment] = []
-
     func testMerge() {
-        segments = createSegments()
         let cameraSegmentHandler = CameraSegmentHandler()
-        cameraSegmentHandler.segments = segments
+        guard let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") else {
+            XCTFail("no valid url found")
+            return
+        }
+        cameraSegmentHandler.addNewVideoSegment(url: url)
+        cameraSegmentHandler.addNewVideoSegment(url: url)
         cameraSegmentHandler.exportVideo(completion: { url in
-            XCTAssert(url != nil, "should have a valid url for video merging")
+            guard let url = url else {
+                XCTFail("should have a valid url for video merging")
+                return
+            }
+            let asset = AVURLAsset(url: url)
+            let videoTracks = asset.tracks(withMediaType: .video)
+            let audioTracks = asset.tracks(withMediaType: .audio)
+            XCTAssert(videoTracks.count == 1, "There should be one video track")
+            XCTAssert(audioTracks.count == 1, "There should be one audio track")
+            
+            if let videoTrack = videoTracks.first, let audioTrack = audioTracks.first {
+                let videoDuration = videoTrack.timeRange.duration
+                let audioDuration = audioTrack.timeRange.duration
+                XCTAssert(CMTimeCompare(audioDuration, videoDuration) == 0, "Tracks were not synced")
+            }
+            else {
+                XCTFail("Audio and video tracks not found")
+            }
         })
     }
 
@@ -41,8 +61,8 @@ final class CameraSegmentHandlerTests: XCTestCase {
     func testAddVideo() {
         let cameraSegmentHandler = CameraSegmentHandler()
         if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let added = cameraSegmentHandler.addNewVideoSegment(url: url)
-            XCTAssert(added, "CameraSegmentHandler failed to add video segment")
+            cameraSegmentHandler.addNewVideoSegment(url: url)
+            XCTAssert(cameraSegmentHandler.segments.count == 1, "CameraSegmentHandler failed to add video segment")
         }
         else {
             XCTFail("url was not found for video")
@@ -69,22 +89,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
             })
         }
     }
-
-    func createSegments() -> [CameraSegment] {
-        var segments: [CameraSegment] = []
-        if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let segment = CameraSegment(image: nil, videoURL: url)
-
-            for _ in 0...5 {
-                NSLog("appending segment at \(url)")
-                segments.append(segment)
-            }
-        }
-        NSLog("current segments \(segments)")
-
-        return segments
-    }
-
+    
     func createImagesArray() -> [UIImage] {
         var images: [UIImage] = []
 
