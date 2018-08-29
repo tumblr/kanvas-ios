@@ -7,20 +7,15 @@
 import Foundation
 import UIKit
 
-/// An option in this collection can be one of 3 kinds
-/// and so behave in one of 3 ways
+/// An option in this collection can be one of 2 kinds
+/// and so behave in one of 2 ways
 ///
-/// - twoOptions: Is an option that has only two values (two images)
+/// - twoOptionsImage: Is an option that has only two values (two images)
 ///     and so it will change from one to the other when it's tapped
-/// - expandable: Is an option that has many suboptions or values to choose from.
-///     So when tapped, it will show all the suboptions to choose from.
-///     So when one suboption is chosen, it will change its image to that value's one
-/// - subOption: It's a an option that serves to represent a value it's predecessor may posses.
-///     And so it serves to set its predecessor's value (and image) when tapped
-///     and go back to the "main options menu".
+/// - oneOptionAnimation: an option that has one state, but contains a custom animation.
 enum OptionType<Item> {
     case twoOptionsImages(alternateOption: Item, alternateImage: UIImage?)
-    case twoOptionsAnimation(animation: (UIView) -> (), duration: TimeInterval, completion: ((UIView) -> ())?)
+    case oneOptionAnimation(animation: (UIView) -> (), duration: TimeInterval, completion: ((UIView) -> ())?)
 }
 
 /// A wrapper for Options
@@ -82,7 +77,7 @@ extension OptionsController: OptionsStackViewDelegate {
         switch item.type {
         case .twoOptionsImages(alternateOption: let otherOption, alternateImage: let otherImage):
             alternateOption(index: optionIndex, newOption: otherOption, newImage: otherImage)
-        case .twoOptionsAnimation(animation: let animation, duration: let duration, completion: let completion):
+        case .oneOptionAnimation(animation: let animation, duration: let duration, completion: let completion):
             animateOption(index: optionIndex, duration: duration, animation: animation, completion: completion)
         }
         _view.changeOptions(to: options)

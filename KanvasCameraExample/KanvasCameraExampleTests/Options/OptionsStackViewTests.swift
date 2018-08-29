@@ -21,7 +21,7 @@ final class OptionsStackViewTests: FBSnapshotTestCase {
     func options() -> [Option<TopOption>] {
         var options: [Option<TopOption>] = []
         options.append(Option(option: TopOption.flashOff, image: KanvasCameraImages.FlashOffImage, type: .twoOptionsImages(alternateOption: TopOption.flashOn, alternateImage: KanvasCameraImages.FlashOnImage)))
-        options.append(Option(option: TopOption.frontCamera, image: KanvasCameraImages.CameraPositionImage, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
+        options.append(Option(option: TopOption.frontCamera, image: KanvasCameraImages.CameraPositionImage, type: .oneOptionAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
         return options
     }
 

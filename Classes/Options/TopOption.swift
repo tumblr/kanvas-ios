@@ -7,6 +7,12 @@
 import Foundation
 import AVFoundation
 
+/// The possible states of options for the camera
+///
+/// - flashOn: represents the camera flash or torch enabled
+/// - flashOff: represents the camera flash or torch disabled
+/// - frontCamera: represents the device's front (selfie) camera
+/// - backCamera: presents the device's back camera
 enum TopOption {
     case flashOn
     case flashOff
