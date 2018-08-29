@@ -29,15 +29,6 @@ final class CameraSegmentHandlerTests: XCTestCase {
             let audioTracks = asset.tracks(withMediaType: .audio)
             XCTAssert(videoTracks.count == 1, "There should be one video track")
             XCTAssert(audioTracks.count == 1, "There should be one audio track")
-            
-            if let videoTrack = videoTracks.first, let audioTrack = audioTracks.first {
-                let videoDuration = videoTrack.timeRange.duration
-                let audioDuration = audioTrack.timeRange.duration
-                XCTAssert(CMTimeCompare(audioDuration, videoDuration) == 0, "Tracks were not synced")
-            }
-            else {
-                XCTFail("Audio and video tracks not found")
-            }
         })
     }
 

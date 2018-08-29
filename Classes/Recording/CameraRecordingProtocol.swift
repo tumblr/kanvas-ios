@@ -6,6 +6,7 @@
 
 import Foundation
 import AVFoundation
+import UIKit
 
 /// A protocol for camera recording callbacks
 protocol CameraRecordingDelegate {
@@ -14,10 +15,7 @@ protocol CameraRecordingDelegate {
     ///
     /// - Returns: AVCapturePhotoSettings for flash, etc
     func photoSettingsForCamera() -> AVCapturePhotoSettings?
-    
-    /// this is called immediately after a photo is taken
-    func cameraDidTakePhoto()
-    
+
     /// this is called before a video is taken. Methods to change UI, update torch, should be called from this method
     func cameraWillTakeVideo()
     
@@ -54,6 +52,11 @@ protocol CameraRecordingProtocol {
     ///
     /// - Returns: [CameraSegment]
     func segments() -> [CameraSegment]
+
+    /// adds a segment that is already created
+    ///
+    /// - Parameter segment: a segment containing an image or a video url
+    func addSegment(_ segment: CameraSegment)
     
     /// returns the destination url of the captured content
     ///
@@ -89,7 +92,8 @@ protocol CameraRecordingProtocol {
     /// deletes a segment at the selected index
     ///
     /// - Parameter index: location of the segment from `segments`
-    func deleteSegmentAtIndex(_ index: Int)
+    /// - Parameter removeFromDisk: whether to also delete the file from disk
+    func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool)
     
     /// takes a `boomerang` (but actually is a video recording).
     ///
