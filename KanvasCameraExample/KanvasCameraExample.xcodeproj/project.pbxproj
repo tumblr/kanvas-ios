@@ -32,6 +32,9 @@
 		ABE498FD21370DFD00379F7F /* MediaClipsCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498F921370DFD00379F7F /* MediaClipsCollectionCellTests.swift */; };
 		ABE4990021370FAB00379F7F /* MediaClipsEditorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498FE21370FAB00379F7F /* MediaClipsEditorControllerTests.swift */; };
 		ABE4990121370FAB00379F7F /* MediaClipsEditorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498FF21370FAB00379F7F /* MediaClipsEditorViewTests.swift */; };
+		ABE49906213712E100379F7F /* OptionsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE49903213712E100379F7F /* OptionsControllerTests.swift */; };
+		ABE49907213712E100379F7F /* OptionsStackViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE49904213712E100379F7F /* OptionsStackViewTests.swift */; };
+		ABE49908213712E100379F7F /* OptionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE49905213712E100379F7F /* OptionViewTests.swift */; };
 		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
@@ -82,6 +85,9 @@
 		ABE498F921370DFD00379F7F /* MediaClipsCollectionCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaClipsCollectionCellTests.swift; sourceTree = "<group>"; };
 		ABE498FE21370FAB00379F7F /* MediaClipsEditorControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaClipsEditorControllerTests.swift; sourceTree = "<group>"; };
 		ABE498FF21370FAB00379F7F /* MediaClipsEditorViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaClipsEditorViewTests.swift; sourceTree = "<group>"; };
+		ABE49903213712E100379F7F /* OptionsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsControllerTests.swift; sourceTree = "<group>"; };
+		ABE49904213712E100379F7F /* OptionsStackViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsStackViewTests.swift; sourceTree = "<group>"; };
+		ABE49905213712E100379F7F /* OptionViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionViewTests.swift; sourceTree = "<group>"; };
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
@@ -193,6 +199,7 @@
 		AB7F295D2121F0ED00B8D599 /* KanvasCameraExampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				ABE49902213712E100379F7F /* Options */,
 				ABE498F521370DFD00379F7F /* MediaClips */,
 				AB7263ED212CCBB30044ED96 /* Recording */,
 				AB7263E4212CC83B0044ED96 /* Constants */,
@@ -213,6 +220,16 @@
 				ABE498F921370DFD00379F7F /* MediaClipsCollectionCellTests.swift */,
 			);
 			path = MediaClips;
+			sourceTree = "<group>";
+		};
+		ABE49902213712E100379F7F /* Options */ = {
+			isa = PBXGroup;
+			children = (
+				ABE49903213712E100379F7F /* OptionsControllerTests.swift */,
+				ABE49904213712E100379F7F /* OptionsStackViewTests.swift */,
+				ABE49905213712E100379F7F /* OptionViewTests.swift */,
+			);
+			path = Options;
 			sourceTree = "<group>";
 		};
 		C15AF1B8DCB328EAA7285428 /* Frameworks */ = {
@@ -424,7 +441,9 @@
 				ABE498E62136F22400379F7F /* CameraRecorderStub.swift in Sources */,
 				ABE4990121370FAB00379F7F /* MediaClipsEditorViewTests.swift in Sources */,
 				0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */,
+				ABE49906213712E100379F7F /* OptionsControllerTests.swift in Sources */,
 				AB7263EF212CCBB30044ED96 /* CameraSegmentHandlerTests.swift in Sources */,
+				ABE49907213712E100379F7F /* OptionsStackViewTests.swift in Sources */,
 				AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */,
 				ABE498FC21370DFD00379F7F /* MediaClipsCollectionControllerTests.swift in Sources */,
 				AB7263EB212CC83B0044ED96 /* KanvasCameraColorsTests.swift in Sources */,
@@ -436,6 +455,7 @@
 				ABE498FA21370DFD00379F7F /* MediaClipsCollectionViewTests.swift in Sources */,
 				ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */,
 				ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */,
+				ABE49908213712E100379F7F /* OptionViewTests.swift in Sources */,
 				ABE4990021370FAB00379F7F /* MediaClipsEditorControllerTests.swift in Sources */,
 				AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */,
 			);
