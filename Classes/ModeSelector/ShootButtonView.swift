@@ -117,6 +117,12 @@ final class ShootButtonView: IgnoreTouchesView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    /// The main function to set the current record type and current image
+    ///
+    /// - Parameters:
+    ///   - trigger: The type of trigger for the button (tap, hold)
+    ///   - image: the image to display in the button
+    ///   - timeLimit: the animation duration of the ring
     func configureFor(trigger: CaptureTrigger, image: UIImage?, timeLimit: TimeInterval?) {
         self.trigger = trigger
         maximumTime = timeLimit
