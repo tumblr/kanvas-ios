@@ -38,6 +38,7 @@
 		ABE4990C213722D300379F7F /* OptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4990B213722D300379F7F /* OptionTests.swift */; };
 		ABE4991E2137307500379F7F /* IgnoreTouchesViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4991C2137307500379F7F /* IgnoreTouchesViewTests.swift */; };
 		ABE4991F2137307500379F7F /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4991D2137307500379F7F /* QueueTests.swift */; };
+		ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4992A21375B3700379F7F /* ShootButtonViewTests.swift */; };
 		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
@@ -94,6 +95,7 @@
 		ABE4990B213722D300379F7F /* OptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionTests.swift; sourceTree = "<group>"; };
 		ABE4991C2137307500379F7F /* IgnoreTouchesViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IgnoreTouchesViewTests.swift; sourceTree = "<group>"; };
 		ABE4991D2137307500379F7F /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
+		ABE4992A21375B3700379F7F /* ShootButtonViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShootButtonViewTests.swift; sourceTree = "<group>"; };
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 		AB7F295D2121F0ED00B8D599 /* KanvasCameraExampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				ABE4992921375B3700379F7F /* ModeSelector */,
 				ABE4991B2137307500379F7F /* Utility */,
 				ABE49902213712E100379F7F /* Options */,
 				ABE498F521370DFD00379F7F /* MediaClips */,
@@ -247,6 +250,14 @@
 				ABE4991D2137307500379F7F /* QueueTests.swift */,
 			);
 			path = Utility;
+			sourceTree = "<group>";
+		};
+		ABE4992921375B3700379F7F /* ModeSelector */ = {
+			isa = PBXGroup;
+			children = (
+				ABE4992A21375B3700379F7F /* ShootButtonViewTests.swift */,
+			);
+			path = ModeSelector;
 			sourceTree = "<group>";
 		};
 		C15AF1B8DCB328EAA7285428 /* Frameworks */ = {
@@ -474,6 +485,7 @@
 				ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */,
 				ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */,
 				ABE4991F2137307500379F7F /* QueueTests.swift in Sources */,
+				ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */,
 				ABE4991E2137307500379F7F /* IgnoreTouchesViewTests.swift in Sources */,
 				ABE49908213712E100379F7F /* OptionViewTests.swift in Sources */,
 				ABE4990021370FAB00379F7F /* MediaClipsEditorControllerTests.swift in Sources */,
