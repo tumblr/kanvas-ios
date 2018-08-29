@@ -127,8 +127,11 @@ final class CameraRecorder: NSObject {
             switch currentRecordingMode {
                 case .gif:
                     cancelGif()
+                    self.recordingDelegate?.cameraWillFinishVideo()
                 case .stopMotion:
-                    stopRecordingVideo(completion: { _ in })
+                    stopRecordingVideo(completion: { _ in
+                        self.recordingDelegate?.cameraWillFinishVideo()
+                    })
                 default:
                     break
             }
@@ -137,6 +140,7 @@ final class CameraRecorder: NSObject {
 }
 
 // MARK: - CameraRecordingProtocol
+// More documentation for the methods are in the Protocol file
 
 extension CameraRecorder: CameraRecordingProtocol {
 
