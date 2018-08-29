@@ -56,7 +56,8 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         XCTAssertEqual(options[0].option, "Option 1.2")
         if case let .twoOptionsImages(alternateOption: otherOption, alternateImage: _) = options[0].type {
             XCTAssertEqual(otherOption, "Option 1.1")
-        } else {
+        }
+        else {
             XCTFail()
         }
     }
