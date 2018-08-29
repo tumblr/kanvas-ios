@@ -31,6 +31,7 @@ final class Option<Item> {
     }
 }
 
+/// A protocol for handling selecting options
 protocol OptionsControllerDelegate: class {
     associatedtype OptionsItem
 

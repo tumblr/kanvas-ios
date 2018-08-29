@@ -35,6 +35,7 @@
 		ABE49906213712E100379F7F /* OptionsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE49903213712E100379F7F /* OptionsControllerTests.swift */; };
 		ABE49907213712E100379F7F /* OptionsStackViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE49904213712E100379F7F /* OptionsStackViewTests.swift */; };
 		ABE49908213712E100379F7F /* OptionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE49905213712E100379F7F /* OptionViewTests.swift */; };
+		ABE4990C213722D300379F7F /* OptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4990B213722D300379F7F /* OptionTests.swift */; };
 		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
@@ -88,6 +89,7 @@
 		ABE49903213712E100379F7F /* OptionsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsControllerTests.swift; sourceTree = "<group>"; };
 		ABE49904213712E100379F7F /* OptionsStackViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsStackViewTests.swift; sourceTree = "<group>"; };
 		ABE49905213712E100379F7F /* OptionViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionViewTests.swift; sourceTree = "<group>"; };
+		ABE4990B213722D300379F7F /* OptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionTests.swift; sourceTree = "<group>"; };
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				ABE49903213712E100379F7F /* OptionsControllerTests.swift */,
 				ABE49904213712E100379F7F /* OptionsStackViewTests.swift */,
 				ABE49905213712E100379F7F /* OptionViewTests.swift */,
+				ABE4990B213722D300379F7F /* OptionTests.swift */,
 			);
 			path = Options;
 			sourceTree = "<group>";
@@ -437,6 +440,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABE4990C213722D300379F7F /* OptionTests.swift in Sources */,
 				ABE498FB21370DFD00379F7F /* MediaClipTests.swift in Sources */,
 				ABE498E62136F22400379F7F /* CameraRecorderStub.swift in Sources */,
 				ABE4990121370FAB00379F7F /* MediaClipsEditorViewTests.swift in Sources */,
