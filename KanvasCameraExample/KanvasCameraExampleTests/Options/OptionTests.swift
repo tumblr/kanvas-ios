@@ -19,6 +19,7 @@ final class OptionTests: XCTestCase {
         switch option.type {
             case .twoOptionsImages(alternateOption: let alternateItem, alternateImage: let image):
                 XCTAssert(alternateItem == TopOption.flashOn, "The alternate item did not match the expected item")
+                XCTAssert(image == KanvasCameraImages.FlashOnImage, "The alternate image did not match the expected image")
                 break
             default:
                 XCTFail("Option did not match the expected twoOptionsImages type")

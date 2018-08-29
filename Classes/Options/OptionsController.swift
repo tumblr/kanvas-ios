@@ -12,10 +12,10 @@ import UIKit
 ///
 /// - twoOptionsImage: Is an option that has only two values (two images)
 ///     and so it will change from one to the other when it's tapped
-/// - oneOptionAnimation: an option that has one state, but contains a custom animation.
+/// - twoOptionAnimation: An option that has two values, but only one image. It contains a custom animation.
 enum OptionType<Item> {
     case twoOptionsImages(alternateOption: Item, alternateImage: UIImage?)
-    case oneOptionAnimation(animation: (UIView) -> (), duration: TimeInterval, completion: ((UIView) -> ())?)
+    case twoOptionAnimation(animation: (UIView) -> (), duration: TimeInterval, completion: ((UIView) -> ())?)
 }
 
 /// A wrapper for Options
@@ -78,7 +78,7 @@ extension OptionsController: OptionsStackViewDelegate {
         switch item.type {
         case .twoOptionsImages(alternateOption: let otherOption, alternateImage: let otherImage):
             alternateOption(index: optionIndex, newOption: otherOption, newImage: otherImage)
-        case .oneOptionAnimation(animation: let animation, duration: let duration, completion: let completion):
+        case .twoOptionAnimation(animation: let animation, duration: let duration, completion: let completion):
             animateOption(index: optionIndex, duration: duration, animation: animation, completion: completion)
         }
         _view.changeOptions(to: options)
