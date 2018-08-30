@@ -15,7 +15,7 @@ protocol MediaClipsEditorDelegate: class {
 }
 
 /// Controller for handling media clips edition (showing, adding, removing, etc)
-final class MediaClipsEditorController: UIViewController, MediaClipsCollectionControllerDelegate, MediaClipsEditorViewDelegate {
+final class MediaClipsEditorViewController: UIViewController, MediaClipsCollectionControllerDelegate, MediaClipsEditorViewDelegate {
     weak var delegate: MediaClipsEditorDelegate?
 
     private lazy var _view: MediaClipsEditorView = {

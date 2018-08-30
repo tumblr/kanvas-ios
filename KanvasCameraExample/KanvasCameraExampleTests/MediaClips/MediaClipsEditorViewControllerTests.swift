@@ -18,8 +18,8 @@ final class MediaClipsEditorControllerTests: FBSnapshotTestCase {
         self.recordMode = false
     }
 
-    func newViewController() -> MediaClipsEditorController {
-        let viewController = MediaClipsEditorController()
+    func newViewController() -> MediaClipsEditorViewController {
+        let viewController = MediaClipsEditorViewController()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         viewController.view.layoutIfNeeded()
         return viewController
