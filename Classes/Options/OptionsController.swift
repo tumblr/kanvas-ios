@@ -24,6 +24,12 @@ final class Option<Item> {
     var image: UIImage?
     var type: OptionType<Item>
 
+    /// The initializer for Options
+    ///
+    /// - Parameters:
+    ///   - option: The generic option that this class will represent
+    ///   - image: an optional UIImage to represent it
+    ///   - type: the OptionType to initalize as
     init(option: Item, image: UIImage?, type: OptionType<Item>) {
         self.option = option
         self.image = image
@@ -54,6 +60,11 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
 
     weak var delegate: Delegate?
 
+    /// The designated initializer for the OptionsController
+    ///
+    /// - Parameters:
+    ///   - options: the Option items to display in the stack view
+    ///   - spacing: the amount of spacing for the internal stack view
     init(options: [Option<Item>], spacing: CGFloat) {
         self.options = options
         self.spacing = spacing
