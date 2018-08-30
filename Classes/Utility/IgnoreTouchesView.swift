@@ -12,6 +12,7 @@ import UIKit
 /// * if the touch was in an "empty" space, the touch moves on
 /// in the hierarchy of views to some other (parent or brother, or brother's subview)
 /// that may respond to that touch.
+/// This class is meant to be subclassed.
 class IgnoreTouchesView: UIView {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

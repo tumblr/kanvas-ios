@@ -33,21 +33,10 @@ struct Queue<Element> {
         storage.append(element)
     }
 
-    /// The first element in the queue, if available
-    ///
-    /// - Returns: an optional element
-    func peek() -> Element? {
-        return storage.first
-    }
-
     /// Returns the first element in queue
     /// (next to dequeue).
-    /// - Warning: Use this function if you are sure there is one element.
-    func first() -> Element {
-        if isEmpty() {
-            assertionFailure("Storage is empty")
-        }
-        return storage[0]
+    var first: Element? {
+        return storage.first
     }
 
     /// Dequeues the next element if not empty
@@ -68,10 +57,8 @@ struct Queue<Element> {
     }
 
     /// Checks whether the queue is empty
-    ///
-    /// - Returns: true if the queue is empty
-    func isEmpty() -> Bool {
-        return peek() == nil
+    var isEmpty: Bool {
+        return storage.isEmpty
     }
 
     /// runs the callback on each element in the queue
@@ -82,10 +69,7 @@ struct Queue<Element> {
     }
 
     /// Returns the number of elements in the queue
-    ///
-    /// - Returns: a count
-    func numberOfElements() -> Int {
+    var count: Int {
         return storage.count
     }
-
 }
