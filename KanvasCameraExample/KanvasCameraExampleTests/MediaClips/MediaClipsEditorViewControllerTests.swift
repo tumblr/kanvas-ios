@@ -30,26 +30,21 @@ final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
         if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
             mediaClip = MediaClip(representativeFrame: image, overlayText: "00:02")
         }
+        if mediaClip == nil {
+            XCTFail("Media clip was not loaded")
+        }
         return mediaClip
     }
 
     func testAddNewClip() {
-        let mediaClip = newMediaClip()
-        guard let clip = mediaClip else {
-            XCTFail("Media clip was not loaded")
-            return
-        }
+        guard let clip = newMediaClip() else { return }
         let viewController = newViewController()
         viewController.addNewClip(clip)
         XCTAssert(viewController.hasClips, "Editor Controller has no clips")
     }
 
     func testUndo() {
-        let mediaClip = newMediaClip()
-        guard let clip = mediaClip else {
-            XCTFail("Media clip was not loaded")
-            return
-        }
+        guard let clip = newMediaClip() else { return }
         let viewController = newViewController()
         UIView.setAnimationsEnabled(false)
         viewController.addNewClip(clip)
