@@ -78,7 +78,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     func showModeButton(_ show: Bool) {
         if show {
             showViews(shownViews: [modeSelectorButton], hiddenViews: [], animated: true)
-        } else {
+        }
+        else {
             showViews(shownViews: [], hiddenViews: [modeSelectorButton], animated: true)
         }
     }
