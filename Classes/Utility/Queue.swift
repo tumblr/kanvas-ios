@@ -57,10 +57,8 @@ struct Queue<Element> {
     }
 
     /// Checks whether the queue is empty
-    ///
-    /// - Returns: true if the queue is empty
-    func isEmpty() -> Bool {
-        return first == nil
+    var isEmpty: Bool {
+        return storage.isEmpty
     }
 
     /// runs the callback on each element in the queue

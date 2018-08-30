@@ -9,16 +9,16 @@ import XCTest
 
 final class QueueTests: XCTestCase {
 
-    // MARK: - init and .isEmpty()
+    // MARK: - init and .isEmpty
     func testQueueInitializesEmpty() {
         let queue = Queue<Int>()
-        XCTAssert(queue.isEmpty(), "Expected new queue to be empty.")
+        XCTAssert(queue.isEmpty, "Expected new queue to be empty.")
     }
 
     func testQueueInitializesWithElementsIsNotEmpty() {
         let elements = [1, 2, 3]
         let queue = Queue<Int>(elements: elements)
-        XCTAssert(!queue.isEmpty(), "Expected queue created with elements to not be empty.")
+        XCTAssert(!queue.isEmpty, "Expected queue created with elements to not be empty.")
     }
 
     func testQueueInitializesWithElementsFirstInSequenceIsFirst() {
@@ -31,7 +31,7 @@ final class QueueTests: XCTestCase {
     func testEmptyQueueWhenElementEnqueuedNotEmptyAnymore() {
         var queue = Queue<Int>()
         queue.enqueue(2)
-        XCTAssert(!queue.isEmpty(), "Expected empty queue created to not be empty after new element pushed.")
+        XCTAssert(!queue.isEmpty, "Expected empty queue created to not be empty after new element pushed.")
     }
 
     // MARK: - .pop()
@@ -56,7 +56,7 @@ final class QueueTests: XCTestCase {
         let elements = [1]
         var queue = Queue<Int>(elements: elements)
         let _ = queue.dequeue()
-        XCTAssert(queue.isEmpty(), "Expected queue to be empty after dequeueing all elements.")
+        XCTAssert(queue.isEmpty, "Expected queue to be empty after dequeueing all elements.")
     }
 
     func testQueueWhenDequeuedNewEnqueuedValueReturnsFirstValue() {
@@ -139,7 +139,7 @@ final class QueueTests: XCTestCase {
     func testRotateOnceOnEmptyQueueMakesNoChanges() {
         var queue = Queue<Int>()
         let _ = queue.rotateOnce()
-        XCTAssert(queue.isEmpty(), "Expected empty queue to continue empty after .rotateOnce()")
+        XCTAssert(queue.isEmpty, "Expected empty queue to continue empty after .rotateOnce()")
     }
 
     func testRotateOnceOnOneElementQueueReturnsElementAndNoChanges() {
