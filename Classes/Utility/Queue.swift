@@ -42,12 +42,8 @@ struct Queue<Element> {
 
     /// Returns the first element in queue
     /// (next to dequeue).
-    /// - Warning: Use this function if you are sure there is one element.
-    func first() -> Element {
-        if isEmpty() {
-            assertionFailure("Storage is empty")
-        }
-        return storage[0]
+    var first: Element? {
+        return storage.first
     }
 
     /// Dequeues the next element if not empty
@@ -82,10 +78,7 @@ struct Queue<Element> {
     }
 
     /// Returns the number of elements in the queue
-    ///
-    /// - Returns: a count
-    func numberOfElements() -> Int {
+    var count: Int {
         return storage.count
     }
-
 }

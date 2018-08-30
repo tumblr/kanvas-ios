@@ -7,7 +7,7 @@
 import XCTest
 @testable import KanvasCamera
 
-class QueueTests: XCTestCase {
+final class QueueTests: XCTestCase {
 
     // MARK: - init and .isEmpty()
     func testQueueInitializesEmpty() {
@@ -110,21 +110,21 @@ class QueueTests: XCTestCase {
         XCTAssert(iteratedElements == elements, "Expected forEach to provide values in the following order: \(elements), got: \(iteratedElements)")
     }
 
-    // MARK: - .first()
+    // MARK: - .first
     func testFirstOnNotEmptyQueueReturnsFirstValue() {
         let elements = [1, 2]
         let queue = Queue<Int>(elements: elements)
-        let value = queue.first()
+        let value = queue.first
         let expectedValue = elements.first
-        XCTAssert(value == expectedValue, "Expected queue.first() to return first value. Expected: \(String(describing: expectedValue)) - Got: \(value)")
+        XCTAssert(value == expectedValue, "Expected queue.first() to return first value. Expected: \(String(describing: expectedValue)) - Got: \(String(describing: value))")
     }
 
     func testFirstOnNotEmptyQueueAfterEnqueuedReturnsEnqueuedValue() {
         var queue = Queue<Int>()
         let expectedValue = 7
         queue.enqueue(expectedValue)
-        let value = queue.first()
-        XCTAssert(value == expectedValue, "Expected queue.first() to return new queued value. Expected: \(expectedValue) - Got: \(value)")
+        let value = queue.first
+        XCTAssert(value == expectedValue, "Expected queue.first() to return new queued value. Expected: \(expectedValue) - Got: \(String(describing: value))")
     }
 
     func testFirstOnNotEmptyQueueAfterDequeuedReturnsNewFirstValue() {
@@ -132,8 +132,8 @@ class QueueTests: XCTestCase {
         var queue = Queue<Int>(elements: elements)
         let _ = queue.dequeue()
         let expectedValue = elements[1]
-        let value = queue.first()
-        XCTAssert(value == expectedValue, "Expected queue.first() to return new first value after dequeueing. Expected: \(expectedValue) - Got: \(value)")
+        let value = queue.first
+        XCTAssert(value == expectedValue, "Expected queue.first() to return new first value after dequeueing. Expected: \(expectedValue) - Got: \(String(describing: value))")
     }
 
     // MARK: - .rotateOnce()
@@ -162,42 +162,42 @@ class QueueTests: XCTestCase {
         value = queue.peek()
         expectedValue = elements[1]
         XCTAssert(value == expectedValue, "Expected queue.peek() to return same first value after rotating. Expected: \(String(describing: expectedValue)) - Got: \(String(describing: value))")
-        value = queue.numberOfElements()
+        value = queue.count
         expectedValue = elements.count
-        XCTAssert(value == expectedValue, "Expected numberOfElements() to return same quantity after rotating. Expected: \(String(describing: expectedValue)) - Got: \(String(describing: value))")
+        XCTAssert(value == expectedValue, "Expected count to return same quantity after rotating. Expected: \(String(describing: expectedValue)) - Got: \(String(describing: value))")
     }
 
     // MARK: - .numberOfElements()
     func testEmptyQueueHasNoElements() {
         let queue = Queue<Int>()
-        XCTAssert(queue.numberOfElements() == 0, "Expected queue.numberOfElements() to be 0 when queue is empty.")
+        XCTAssert(queue.count == 0, "Expected queue.count to be 0 when queue is empty.")
 
     }
 
     func testNotEmptyQueueHasElements() {
         let elements = [1,2,3]
         let queue = Queue<Int>(elements: elements)
-        let value = queue.numberOfElements()
+        let value = queue.count
         let expectedValue = elements.count
-        XCTAssert(value == expectedValue, "Expected queue.numberOfElements() to be the same count as elements with which queue was created. Expected: \(expectedValue). Got: \(value).")
+        XCTAssert(value == expectedValue, "Expected queue.count to be the same count as elements with which queue was created. Expected: \(expectedValue). Got: \(value).")
     }
 
     func testQueueHasOneElementMoreWhenEnqueued() {
         let elements = [1,2,3]
         var queue = Queue<Int>(elements: elements)
         queue.enqueue(4)
-        let value = queue.numberOfElements()
+        let value = queue.count
         let expectedValue = elements.count + 1
-        XCTAssert(value == expectedValue, "Expected queue.numberOfElements() to increase by 1 after enqueueing an element. Expected: \(expectedValue). Got: \(value).")
+        XCTAssert(value == expectedValue, "Expected queue.count to increase by 1 after enqueueing an element. Expected: \(expectedValue). Got: \(value).")
     }
 
     func testQueueHasOneElementLessWhenDequeued() {
         let elements = [1,2,3]
         var queue = Queue<Int>(elements: elements)
         let _ = queue.dequeue()
-        let value = queue.numberOfElements()
+        let value = queue.count
         let expectedValue = elements.count - 1
-        XCTAssert(value == expectedValue, "Expected queue.numberOfElements() to decrease by 1 after dequeueing an element. Expected: \(expectedValue). Got: \(value).")
+        XCTAssert(value == expectedValue, "Expected queue.count to decrease by 1 after dequeueing an element. Expected: \(expectedValue). Got: \(value).")
     }
 
 }
