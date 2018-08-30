@@ -43,7 +43,7 @@ final class ModeSelectorAndShootController: UIViewController {
     private lazy var modesQueue: Queue<CameraMode> = {
         var queue = Queue(elements: self.settings.orderedEnabledModes)
         // Start in the default mode but maintain order
-        while queue.peek() != self.settings.initialMode {
+        while queue.first != self.settings.initialMode {
             let _ = queue.rotateOnce()
         }
         return queue
