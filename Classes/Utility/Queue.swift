@@ -33,13 +33,6 @@ struct Queue<Element> {
         storage.append(element)
     }
 
-    /// The first element in the queue, if available
-    ///
-    /// - Returns: an optional element
-    func peek() -> Element? {
-        return storage.first
-    }
-
     /// Returns the first element in queue
     /// (next to dequeue).
     var first: Element? {
@@ -67,7 +60,7 @@ struct Queue<Element> {
     ///
     /// - Returns: true if the queue is empty
     func isEmpty() -> Bool {
-        return peek() == nil
+        return first == nil
     }
 
     /// runs the callback on each element in the queue
