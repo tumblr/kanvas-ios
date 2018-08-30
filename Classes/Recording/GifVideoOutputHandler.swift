@@ -143,15 +143,7 @@ final class GifVideoOutputHandler: NSObject {
             NSLog("array needs to be at least two elements to reverse")
             return array
         }
-        var newArray: [CMSampleBuffer] = array.map{ $0 }
-        var reversedArray: [CMSampleBuffer] = []
-        reversedArray.append(contentsOf: array.reversed())
-        if reversedArray.count > 1 {
-            reversedArray.removeFirst()
-            reversedArray.removeLast()
-        }
-
-        newArray.append(contentsOf: reversedArray)
+        let newArray = array + Array(array.reversed()[1...array.count - 2])
 
         return newArray
     }
