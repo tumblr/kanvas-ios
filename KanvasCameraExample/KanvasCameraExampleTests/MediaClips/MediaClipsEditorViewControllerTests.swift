@@ -10,7 +10,7 @@ import UIKit
 import FBSnapshotTestCase
 @testable import KanvasCamera
 
-final class MediaClipsEditorControllerTests: FBSnapshotTestCase {
+final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
