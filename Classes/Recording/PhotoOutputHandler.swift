@@ -14,6 +14,9 @@ final class PhotoOutputHandler: NSObject {
     private let photoOutput: AVCapturePhotoOutput?
     private var completionBlock: ((UIImage?) -> Void)?
 
+    /// The designated initializer for the PhotoOutpuHandler
+    ///
+    /// - Parameter photoOutput: The AVCapturePhotoOutput that will capture photos. Optional for error handling
     required init(photoOutput: AVCapturePhotoOutput?) {
         self.photoOutput = photoOutput
     }

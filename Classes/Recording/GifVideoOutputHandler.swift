@@ -33,6 +33,9 @@ final class GifVideoOutputHandler: NSObject {
     private var videoInput: AVAssetWriterInput?
     private var audioInput: AVAssetWriterInput?
 
+    /// Designated initializer for GifVideoOutputHandler
+    ///
+    /// - Parameter videoOutput: the video data output that the pixel buffer frames will be coming from. Optional for error handling
     required init(videoOutput: AVCaptureVideoDataOutput?) {
         self.videoOutput = videoOutput
     }
