@@ -238,7 +238,8 @@ final class ShootButtonView: IgnoreTouchesView {
                               completion: { [unowned self] in self.circleAnimationCallback() })
             }
             delegate?.shootButtonViewDidStartLongPress()
-        } else {
+        }
+        else {
             buttonState = .released
             terminateCircleAnimation()
             containerView.layer.removeAllAnimations()
@@ -332,7 +333,8 @@ final class ShootButtonView: IgnoreTouchesView {
             }, completion: { _ in
                 self.animateNewImageShowing(image)
             })
-        } else {
+        }
+        else {
             self.imageWidthConstraint?.constant = 0
             self.setNeedsLayout()
             self.layoutIfNeeded()
