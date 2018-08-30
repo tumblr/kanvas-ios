@@ -18,7 +18,7 @@ protocol MediaClipsEditorDelegate: class {
 final class MediaClipsEditorViewController: UIViewController, MediaClipsCollectionControllerDelegate, MediaClipsEditorViewDelegate {
     weak var delegate: MediaClipsEditorDelegate?
 
-    private lazy var _view: MediaClipsEditorView = {
+    private lazy var editorView: MediaClipsEditorView = {
         let view = MediaClipsEditorView()
         view.delegate = self
         return view
@@ -50,12 +50,12 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
 
     // MARK: - View Life Cycle
     override func loadView() {
-        view = _view
+        view = editorView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        load(childViewController: collectionController, into: _view.collectionContainer)
+        load(childViewController: collectionController, into: editorView.collectionContainer)
     }
 
     // MARK: - Public interface
@@ -71,7 +71,7 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
 
     /// Undoes the last clip added
     func undo() {
-        _view.hideTrash()
+        editorView.hideTrash()
         collectionController.removeLastClip()
         hasClips = collectionController.getClips().count > 0
         clipIsSelected = false
@@ -79,26 +79,26 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
 
     // MARK: - MediaClipsControllerDelegate
     func mediaClipWasSelected(at index: Int) {
-        _view.showTrash()
+        editorView.showTrash()
         clipIsSelected = true
     }
 
     func mediaClipWasDeselected(at index: Int) {
-        _view.hideTrash()
+        editorView.hideTrash()
         clipIsSelected = false
     }
 
     // MARK: - MediaClipsEditorViewDelegate
     func trashButtonWasPressed() {
         if let index = collectionController.removeSelectedClip() {
-            _view.hideTrash()
+            editorView.hideTrash()
             delegate?.mediaClipWasDeleted(at: index)
         }
         else {
             assertionFailure("Trash was pressed when there is nothing selected to delete")
         }
         hasClips = collectionController.getClips().count > 0
-        _view.hideTrash()
+        editorView.hideTrash()
         clipIsSelected = false
     }
 
