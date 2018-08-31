@@ -254,7 +254,7 @@ final class CameraInputController: UIViewController {
     /// Starts video recording using the CameraRecordingProtocol type
     ///
     /// - Returns: return true if successfully started recording
-    @discardableResult func startRecording() -> Bool {
+    func startRecording() -> Bool {
         guard let recorder = self.recorder else { return false }
         addArtificialFlashIfNecessary()
         return recorder.startRecordingVideo()
