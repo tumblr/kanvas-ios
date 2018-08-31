@@ -58,7 +58,7 @@ public enum CameraMode: Int {
             if let mode = newValue, enabledModes.contains(mode) {
                 _defaultMode = mode
             }
-            if newValue == nil {
+            if newValue == .none {
                 _defaultMode = newValue
             }
         }
@@ -92,7 +92,7 @@ public enum CameraMode: Int {
     
     /// Flash option which starts active.
     /// - note: Defaults to flash off.
-    public let defaultFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.DefaultFlashOption
+    public var defaultFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.DefaultFlashOption
     
     
     // MARK: - Landscape support

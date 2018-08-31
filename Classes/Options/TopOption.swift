@@ -7,6 +7,13 @@
 import Foundation
 import AVFoundation
 
+fileprivate struct TopOptionsConstants {
+    static let CameraFlipAnimationsDuration: TimeInterval = 0.15
+    static func CameraFlipAnimationsTransform(baseTransform: CATransform3D) -> CATransform3D {
+        return CATransform3DRotate(baseTransform, .pi/2, 0, 0, 1)
+    }
+}
+
 /// The possible states of options for the camera
 ///
 /// - flashOn: represents the camera flash or torch enabled
