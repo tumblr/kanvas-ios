@@ -10,6 +10,7 @@
 		0EAE0C7E21387C39004CD7FF /* ModeButtonViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C7D21387C39004CD7FF /* ModeButtonViewTests.swift */; };
 		0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C7F21387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift */; };
 		0EAE0C8221387DE3004CD7FF /* ModeSelectorAndShootViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C8021387DE3004CD7FF /* ModeSelectorAndShootViewTests.swift */; };
+		0EAE0C89213985E8004CD7FF /* CameraSegmentHandlerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C88213985E8004CD7FF /* CameraSegmentHandlerStub.swift */; };
 		0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */; };
 		2534A21F22A4C02B90353CA5 /* Pods_KanvasCameraExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E13E1F33AB135043567AD8 /* Pods_KanvasCameraExample.framework */; };
 		AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E5212CC83B0044ED96 /* KanvasCameraStringsTests.swift */; };
@@ -63,6 +64,7 @@
 		0EAE0C7D21387C39004CD7FF /* ModeButtonViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeButtonViewTests.swift; sourceTree = "<group>"; };
 		0EAE0C7F21387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootControllerTests.swift; sourceTree = "<group>"; };
 		0EAE0C8021387DE3004CD7FF /* ModeSelectorAndShootViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootViewTests.swift; sourceTree = "<group>"; };
+		0EAE0C88213985E8004CD7FF /* CameraSegmentHandlerStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentHandlerStub.swift; sourceTree = "<group>"; };
 		0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettingsTests.swift; sourceTree = "<group>"; };
 		304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		37E13E1F33AB135043567AD8 /* Pods_KanvasCameraExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -164,6 +166,7 @@
 		AB7263ED212CCBB30044ED96 /* Recording */ = {
 			isa = PBXGroup;
 			children = (
+				0EAE0C88213985E8004CD7FF /* CameraSegmentHandlerStub.swift */,
 				ABE498E42136F22400379F7F /* CameraRecorderStub.swift */,
 				ABE498E32136F22400379F7F /* CameraRecorderTests.swift */,
 				ABE498DB2134AEB200379F7F /* VideoOutputHandlerTests.swift */,
@@ -478,6 +481,7 @@
 				ABE498FB21370DFD00379F7F /* MediaClipTests.swift in Sources */,
 				ABE498E62136F22400379F7F /* CameraRecorderStub.swift in Sources */,
 				ABE4990121370FAB00379F7F /* MediaClipsEditorViewTests.swift in Sources */,
+				0EAE0C89213985E8004CD7FF /* CameraSegmentHandlerStub.swift in Sources */,
 				0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */,
 				ABE49906213712E100379F7F /* OptionsControllerTests.swift in Sources */,
 				0EAE0C8221387DE3004CD7FF /* ModeSelectorAndShootViewTests.swift in Sources */,
