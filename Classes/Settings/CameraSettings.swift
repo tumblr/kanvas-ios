@@ -58,7 +58,7 @@ public enum CameraMode: Int {
             if let mode = newValue, enabledModes.contains(mode) {
                 _defaultMode = mode
             }
-            if newValue == .none {
+            if newValue == nil {
                 _defaultMode = newValue
             }
         }
