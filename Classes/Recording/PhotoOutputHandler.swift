@@ -35,15 +35,15 @@ final class PhotoOutputHandler: NSObject {
 }
 
 extension PhotoOutputHandler: AVCapturePhotoCaptureDelegate {
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+    // iOS 11 method for handling photo capture
+    public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         defer {
             completionBlock = nil
         }
-        guard let buffer = photoSampleBuffer,
-              let data = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: buffer, previewPhotoSampleBuffer: nil),
-              let image = UIImage(data: data) else {
-            completionBlock?(nil)
-            return
+        guard let data = photo.fileDataRepresentation(),
+            let image = UIImage(data: data) else {
+                completionBlock?(nil)
+                return
         }
         completionBlock?(image)
     }
