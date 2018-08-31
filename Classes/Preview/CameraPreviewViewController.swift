@@ -214,7 +214,8 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                 if let url = url {
                     self.delegate?.didFinishExportingVideo(url: url)
                     self.hideLoading()
-                } else {
+                }
+                else {
                     self.hideLoading()
                     // TODO: Localize strings
                     let viewModel = ModalViewModel(text: "There was an issue loading your post...",
