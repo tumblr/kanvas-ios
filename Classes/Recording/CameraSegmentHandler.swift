@@ -12,14 +12,14 @@ enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
     case image(UIImage, URL?)
     case video(URL)
-    
+
     var image: UIImage? {
         switch self {
         case .image(let image, _): return image
         case .video: return nil
         }
     }
-    
+
     var videoURL: URL? {
         switch self {
         case .image(_, let url): return url
@@ -28,27 +28,86 @@ enum CameraSegment {
     }
 }
 
+/// A protocol to create gfinal output with all assets
 protocol AssetsHandlerType {
+
+    /// concatenates all of the videos in the segments
+    ///
+    /// - Parameters:
+    ///   - segments: the CameraSegments to be merged
+    ///   - completion: returns a local video URL if merged successfully
     func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void)
+
+}
+
+/// A protocol to handle the various segments of a stop motion video, and also creates the final output
+protocol SegmentsHandlerType: AssetsHandlerType {
+
+    init()
+
+    /// Current segments in stop motion
+    var segments: [CameraSegment] { get }
+
+    /// Appends an existing CameraSegment
+    ///
+    /// - Parameter segment: A camera segment with image or video
+    func addSegment(_ segment: CameraSegment)
+
+    /// Creates a new CameraSegment from a video url and appends to segments
+    ///
+    /// - Parameter url: the local url of the video
+    func addNewVideoSegment(url: URL)
+
+    /// Creates a video from a UIImage representation and appends as a CameraSegment
+    ///
+    /// - Parameters:
+    ///   - image: UIImage
+    ///   - size: size (resolution) of the video
+    ///   - completion: completion handler, success bool and URL of video
+    func addNewImageSegment(image: UIImage, size: CGSize, completion: @escaping (Bool, CameraSegment?) -> Void)
+
+    /// Deletes a segment and removes from local storage. When running tests, it should be false
+    ///
+    /// - Parameters:
+    ///   - index: the index of the segment to be deleted
+    ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
+    func deleteSegment(index: Int, removeFromDisk: Bool)
+
+    /// an approximation of the total duration. calculating the exact duration would have to be asynchronous
+    ///
+    /// - Returns: seconds of total recorded video + photos
+    func currentTotalDuration() -> TimeInterval
+
+    /// This functions exports the complete final video to a local resource.
+    ///
+    /// - Parameter completion: returns a local video URL if merged successfully
+    func exportVideo(completion: @escaping (URL?) -> Void)
+
+    /// This removes all segments from disk and memory
+    func reset(removeFromDisk: Bool)
+
+    /// Video output settings, used by internal classes for recording and exporting
+    ///
+    /// - Parameter size: dimensions of the video output
+    /// - Returns: Dictionary of settings
+    func videoOutputSettingsForSize(size: CGSize) -> [String: Any]
 }
 
 /// A class to handle the various segments of a stop motion video, and also creates the final output
 
-/// A class to handle the various segments of a stop motion video, and also creates the final output
-
-final class CameraSegmentHandler: AssetsHandlerType {
+final class CameraSegmentHandler: SegmentsHandlerType {
     private(set) var segments: [CameraSegment] = []
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
-    
+
     /// Appends an existing CameraSegment
     ///
     /// - Parameter segment: A camera segment with image or video
     func addSegment(_ segment: CameraSegment) {
         segments.append(segment)
     }
-    
+
     /// Creates a new CameraSegment from a video url and appends to segments
     ///
     /// - Parameter url: the local url of the video
@@ -60,7 +119,7 @@ final class CameraSegmentHandler: AssetsHandlerType {
         let segment = CameraSegment.video(url)
         segments.append(segment)
     }
-    
+
     /// Creates a video from a UIImage representation and appends as a CameraSegment
     ///
     /// - Parameters:
@@ -72,7 +131,7 @@ final class CameraSegmentHandler: AssetsHandlerType {
             completion(false, nil)
             return
         }
-        
+
         let bufferAttributes: [String: Any] = [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA, String(kCVPixelBufferCGBitmapContextCompatibilityKey): true, String(kCVPixelBufferCGImageCompatibilityKey): true, String(kCVPixelBufferWidthKey): size.width, String(kCVPixelBufferHeightKey): size.height]
         assetWriter.add(input)
         let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: bufferAttributes)
@@ -87,17 +146,17 @@ final class CameraSegmentHandler: AssetsHandlerType {
             }
         })
     }
-    
+
     /// Deletes a segment and removes from local storage. When running tests, it should be false
     ///
     /// - Parameters:
     ///   - index: the index of the segment to be deleted
     ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
-    func deleteSegment(index: Int, removeFromDisk: Bool? = true) {
+    func deleteSegment(index: Int, removeFromDisk: Bool = true) {
         guard index < segments.count else { return }
         let segment = segments[index]
         let fileManager = FileManager.default
-        if removeFromDisk == true, let url = segment.videoURL, fileManager.fileExists(atPath: url.path) {
+        if removeFromDisk, let url = segment.videoURL, fileManager.fileExists(atPath: url.path) {
             do {
                 try fileManager.removeItem(at: url)
             } catch {
@@ -106,7 +165,7 @@ final class CameraSegmentHandler: AssetsHandlerType {
         }
         segments.remove(at: index)
     }
-    
+
     /// an approximation of the total duration. calculating the exact duration would have to be asynchronous
     ///
     /// - Returns: seconds of total recorded video + photos
@@ -123,18 +182,18 @@ final class CameraSegmentHandler: AssetsHandlerType {
         }
         return CMTimeGetSeconds(totalDuration)
     }
-    
+
     /// This functions exports the complete final video to a local resource.
     ///
     /// - Parameter completion: returns a local video URL if merged successfully
     func exportVideo(completion: @escaping (URL?) -> Void) {
         mergeAssets(segments: segments, completion: completion)
     }
-    
+
     /// This removes all segments from disk and memory
-    func reset(removeFromDisk: Bool? = true) {
+    func reset(removeFromDisk: Bool = true) {
         defer { segments.removeAll() }
-        guard removeFromDisk == true else {
+        guard removeFromDisk else {
             return
         }
         let fileManager = FileManager.default
@@ -146,7 +205,7 @@ final class CameraSegmentHandler: AssetsHandlerType {
             }
         }
     }
-    
+
     /// concatenates all of the videos in the segments
     ///
     /// - Parameters:
@@ -157,12 +216,12 @@ final class CameraSegmentHandler: AssetsHandlerType {
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
         var insertTime = kCMTimeZero
-        
+
         for segment in segments {
             guard let segmentURL = segment.videoURL else { continue }
             let urlAsset = AVURLAsset(url: segmentURL)
             var videoDuration: CMTime = kCMTimeZero
-            
+
             if let videoTrack = urlAsset.tracks(withMediaType: .video).first {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
                 addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
@@ -182,17 +241,17 @@ final class CameraSegmentHandler: AssetsHandlerType {
             completion(url)
         })
     }
-    
+
     /// Video output settings, used by internal classes for recording and exporting
     ///
     /// - Parameter size: dimensions of the video output
     /// - Returns: Dictionary of settings
-    static func videoOutputSettingsForSize(size: CGSize) -> [String: Any] {
+    func videoOutputSettingsForSize(size: CGSize) -> [String: Any] {
         return [AVVideoCodecKey: AVVideoCodecH264, AVVideoWidthKey: Int(size.width), AVVideoHeightKey: Int(size.height)]
     }
-    
+
     // MARK: - helper functions
-    
+
     /// Sets up the asset writer for video creation
     ///
     /// - Parameter size: resolution of video
@@ -206,13 +265,13 @@ final class CameraSegmentHandler: AssetsHandlerType {
         } catch {
             return nil
         }
-        let outputSettings: [String: Any] = CameraSegmentHandler.videoOutputSettingsForSize(size: size)
+        let outputSettings: [String: Any] = videoOutputSettingsForSize(size: size)
         assetWriterVideoInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
         assetWriterVideoInput?.expectsMediaDataInRealTime = true
-        
+
         return url
     }
-    
+
     /// private method for exporting a composition after all tracks have been added
     ///
     /// - Parameters:
@@ -227,12 +286,12 @@ final class CameraSegmentHandler: AssetsHandlerType {
         let finalURL = NSURL.createNewVideoURL()
         assetExport.outputURL = finalURL
         assetExport.shouldOptimizeForNetworkUse = true
-        
+
         assetExport.exportAsynchronously() {
             completion(assetExport.status == .completed ? finalURL : nil)
         }
     }
-    
+
     /// Convenience method to add a track to a composition track at insert time
     ///
     /// - Parameters:
@@ -246,7 +305,7 @@ final class CameraSegmentHandler: AssetsHandlerType {
             NSLog("No track at range to append.")
         }
     }
-    
+
     /// Creates a video from a UIImage given the settings
     ///
     /// - Parameters:
@@ -277,7 +336,7 @@ final class CameraSegmentHandler: AssetsHandlerType {
             }
         })
     }
-    
+
     /// Creates a new pixel buffer from a UIImage for appending to an asset writer
     ///
     /// - Parameter image: input UIImage
@@ -289,19 +348,19 @@ final class CameraSegmentHandler: AssetsHandlerType {
         guard status == kCVReturnSuccess, let buffer = pixelBuffer else {
             return nil
         }
-        
+
         CVPixelBufferLockBaseAddress(buffer, [])
         let pixelData = CVPixelBufferGetBaseAddress(buffer)
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
         guard let ctx = CGContext(data: pixelData, width: Int(image.size.width), height: Int(image.size.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(buffer), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue) else { return nil }
-        
+
         ctx.translateBy(x: 0, y: image.size.height)
         ctx.scaleBy(x: 1.0, y: -1.0)
         UIGraphicsPushContext(ctx)
         image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
         UIGraphicsPopContext()
         CVPixelBufferUnlockBaseAddress(buffer, [])
-        
+
         return pixelBuffer
     }
 }

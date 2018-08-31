@@ -10,22 +10,22 @@ import UIKit
 @testable import KanvasCamera
 
 final class CameraRecorderStub: CameraRecordingProtocol {
-    
+
     private var _isRecording = false
     private var _currentVideoSample: CMSampleBuffer?
-    private var cameraSegmentHandler: CameraSegmentHandler
+    private var cameraSegmentHandler: SegmentsHandlerType
     private var startTime: Date?
     var recordingDelegate: CameraRecordingDelegate? = nil
 
-    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?) {
+    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?, segmentsHandler: SegmentsHandlerType) {
         self.recordingDelegate = recordingDelegate
-        cameraSegmentHandler = CameraSegmentHandler()
+        self.cameraSegmentHandler = segmentsHandler
     }
 
     func addSegment(_ segment: CameraSegment) {
         cameraSegmentHandler.addSegment(segment)
     }
-    
+
     func isRecording() -> Bool {
         return _isRecording
     }
@@ -116,7 +116,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
 
     func reset() {
         if !isRecording() {
-            cameraSegmentHandler.reset()
+            cameraSegmentHandler.reset(removeFromDisk: false)
         }
     }
 

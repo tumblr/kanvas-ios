@@ -18,7 +18,8 @@ final class CameraRecorderTests: XCTestCase {
                 photoOutput: nil,
                 videoOutput: nil,
                 audioOutput: nil,
-                recordingDelegate: nil)
+                recordingDelegate: nil,
+                segmentsHandler: CameraSegmentHandlerStub())
         return cameraRecorder
     }
 
