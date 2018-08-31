@@ -272,7 +272,8 @@ public class CameraController: UIViewController {
         _view.bottomActionsView.updateNext(enabled: show)
         if clipsController.hasClips {
             modeAndShootController.hideModeButton()
-        } else {
+        }
+        else {
             modeAndShootController.showModeButton()
         }
     }

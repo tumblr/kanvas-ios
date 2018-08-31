@@ -83,7 +83,8 @@ extension CameraController {
     func getImage(for option: AVCaptureDevice.FlashMode) -> UIImage? {
         if option == .on {
             return KanvasCameraImages.FlashOnImage
-        } else {
+        }
+        else {
             return KanvasCameraImages.FlashOffImage
         }
     }
