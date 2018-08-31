@@ -44,3 +44,45 @@ extension AVCaptureDevice.Position: TopOptionConvertible {
         }
     }
 }
+
+
+// MARK: - Top options creation
+extension CameraController {
+    
+    func getOptions(from settings: CameraSettings) -> [Option<TopOption>] {
+        let (animation, completion) = getAnimationForCameraFlip()
+        return [
+            Option(option: settings.defaultFlashOption.topOption,
+                   image: getImage(for: settings.defaultFlashOption),
+                   type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.topOption,
+                                           alternateImage: getImage(for: settings.notDefaultFlashOption))),
+            Option(option: settings.defaultCameraPositionOption.topOption,
+                   image: KanvasCameraImages.CameraPositionImage,
+                   type: .twoOptionsAnimation(animation: animation,
+                                              duration: TopOptionsConstants.CameraFlipAnimationsDuration,
+                                              completion: completion))
+            
+        ]
+    }
+    
+    func getImage(for option: AVCaptureDevice.FlashMode) -> UIImage? {
+        if option == .on {
+            return KanvasCameraImages.FlashOnImage
+        } else {
+            return KanvasCameraImages.FlashOffImage
+        }
+    }
+    
+    func getAnimationForCameraFlip() -> ((UIView) -> (), (UIView) -> ()) {
+        let animation = { (view: UIView) in
+            view.layer.transform = TopOptionsConstants.CameraFlipAnimationsTransform(baseTransform: view.layer.transform)
+        }
+        let completed = { (view: UIView) in
+            UIView.animate(withDuration: TopOptionsConstants.CameraFlipAnimationsDuration, animations: {
+                animation(view)
+            }, completion: { _ in view.layer.transform = CATransform3DIdentity })   // We clear all transformation to leave it normal again.
+        }
+        return (animation, completed)
+    }
+    
+}
