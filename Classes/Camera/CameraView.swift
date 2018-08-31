@@ -81,7 +81,8 @@ final class CameraView: UIView {
         let views = [bottomActionsView, clipsContainer, closeButton, topOptionsContainer]
         if isRecording {
             showViews(shownViews: [], hiddenViews: views, animated: true)
-        } else {
+        }
+        else {
             showViews(shownViews: views, hiddenViews: [], animated: true)
         }
     }
