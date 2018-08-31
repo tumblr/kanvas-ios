@@ -70,6 +70,7 @@ public class CameraController: UIViewController {
     }()
 
     private let settings: CameraSettings
+    private let analyticsProvider: KanvasCameraAnalyticsProvider
     private var currentMode: CameraMode
     private var isRecording: Bool
     private var disposables: [NSKeyValueObservation] = []
@@ -84,8 +85,9 @@ public class CameraController: UIViewController {
     /// - Parameter settings: Settings to configure in which ways should the controller
     /// interact with the user, which options should the controller give the user
     /// and which should be the result of the interaction.
-    convenience public init(settings: CameraSettings) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self)
+    ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
+    convenience public init(settings: CameraSettings, analyticsProvider: KanvasCameraAnalyticsProvider) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, analyticsProvider: analyticsProvider)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -98,13 +100,17 @@ public class CameraController: UIViewController {
     ///   - recorderClass: Class that will provide a recorder that defines how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
-    init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type) {
+    init(settings: CameraSettings,
+         recorderClass: CameraRecordingProtocol.Type,
+         segmentsHandlerClass: SegmentsHandlerType.Type,
+         analyticsProvider: KanvasCameraAnalyticsProvider) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
         firstClipEver = true
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
+        self.analyticsProvider = analyticsProvider
         super.init(nibName: .none, bundle: .none)
     }
 
