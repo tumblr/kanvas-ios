@@ -451,7 +451,8 @@ final class CameraInputController: UIViewController {
         photoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
         if captureSession.canAddOutput(photoOutput) {
             captureSession.addOutput(photoOutput)
-        } else { throw CameraInputError.invalidOperation }
+        }
+        else { throw CameraInputError.invalidOperation }
     }
 
     private func configureVideoDataOutput() throws {
@@ -463,7 +464,8 @@ final class CameraInputController: UIViewController {
 
         if captureSession.canAddOutput(videoOutput) {
             captureSession.addOutput(videoOutput)
-        } else { throw CameraInputError.invalidOperation }
+        }
+        else { throw CameraInputError.invalidOperation }
         videoDataOutput = videoOutput
 
         videoDataOutput?.setSampleBufferDelegate(self, queue: sampleBufferQueue)
