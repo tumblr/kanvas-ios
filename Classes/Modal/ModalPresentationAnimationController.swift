@@ -70,7 +70,8 @@ extension ModalPresentationAnimationController: UIViewControllerAnimatedTransiti
     @objc func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         if isPresenting {
             animatePresentation(with: transitionContext)
-        } else {
+        }
+        else {
             animateDismissal(with: transitionContext)
         }
     }
