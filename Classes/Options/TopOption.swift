@@ -7,7 +7,7 @@
 import Foundation
 import AVFoundation
 
-fileprivate struct TopOptionsConstants {
+private struct TopOptionsConstants {
     static let CameraFlipAnimationsDuration: TimeInterval = 0.15
     static func CameraFlipAnimationsTransform(baseTransform: CATransform3D) -> CATransform3D {
         return CATransform3DRotate(baseTransform, .pi/2, 0, 0, 1)
@@ -56,6 +56,10 @@ extension AVCaptureDevice.Position: TopOptionConvertible {
 // MARK: - Top options creation
 extension CameraController {
     
+    /// function for returning default TopOptions based on settings
+    ///
+    /// - Parameter settings: The input CameraSettings
+    /// - Returns: an array of Options wrapping TopOption enums
     func getOptions(from settings: CameraSettings) -> [Option<TopOption>] {
         let (animation, completion) = getAnimationForCameraFlip()
         return [
@@ -72,6 +76,10 @@ extension CameraController {
         ]
     }
     
+    /// function to get the image for a camera flash mode
+    ///
+    /// - Parameter option: AVCaptureDevice.FlashMode, on or off / auto
+    /// - Returns: an optional image
     func getImage(for option: AVCaptureDevice.FlashMode) -> UIImage? {
         if option == .on {
             return KanvasCameraImages.FlashOnImage
@@ -80,6 +88,7 @@ extension CameraController {
         }
     }
     
+    /// function that returns the default animation for rotating the camera button
     func getAnimationForCameraFlip() -> ((UIView) -> (), (UIView) -> ()) {
         let animation = { (view: UIView) in
             view.layer.transform = TopOptionsConstants.CameraFlipAnimationsTransform(baseTransform: view.layer.transform)
