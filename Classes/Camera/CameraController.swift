@@ -42,7 +42,7 @@ public class CameraController: UIViewController {
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
 
-    private lazy var _view: CameraView = {
+    private lazy var cameraView: CameraView = {
         let view = CameraView()
         view.delegate = self
         return view
@@ -73,7 +73,6 @@ public class CameraController: UIViewController {
     private var currentMode: CameraMode
     private var isRecording: Bool
     private var disposables: [NSKeyValueObservation] = []
-    private var firstClipEver: Bool
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
 
@@ -102,7 +101,6 @@ public class CameraController: UIViewController {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
-        firstClipEver = true
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
         super.init(nibName: .none, bundle: .none)
@@ -144,15 +142,15 @@ public class CameraController: UIViewController {
     // MARK: - View Lifecycle
 
     override public func loadView() {
-        view = _view
+        view = cameraView
     }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        load(childViewController: modeAndShootController, into: _view.modeAndShootContainer)
-        load(childViewController: clipsController, into: _view.clipsContainer)
-        load(childViewController: cameraInputController, into: _view.cameraInputViewContainer)
-        load(childViewController: topOptionsController, into: _view.topOptionsContainer)
+        load(childViewController: modeAndShootController, into: cameraView.modeAndShootContainer)
+        load(childViewController: clipsController, into: cameraView.clipsContainer)
+        load(childViewController: cameraInputController, into: cameraView.cameraInputViewContainer)
+        load(childViewController: topOptionsController, into: cameraView.topOptionsContainer)
         bindMediaContentAvailable()
         bindContentSelected()
     }
@@ -164,16 +162,6 @@ public class CameraController: UIViewController {
         controller.delegate = self
         self.present(controller, animated: true)
     }
-    
-    private func showOnboardingModal() {
-        // TODO: Localize texts
-        let viewModel = ModalViewModel(text: "Keep capturing to add more, or hit next.",
-                                       buttonTitle: "Got it",
-                                       buttonCallback: { [unowned self] in self.firstClipEver = false })
-        let controller = ModalController(viewModel: viewModel)
-        present(controller, animated: true, completion: .none)
-    }
-    
     
     // MARK: - Media Content Creation
     private func saveImageToFile(_ image: UIImage?) -> URL? {
@@ -259,7 +247,7 @@ public class CameraController: UIViewController {
     
     private func updateRecordState(event: RecordingEvent) {
         isRecording = event == .started
-        _view.updateUI(forRecording: isRecording)
+        cameraView.updateUI(forRecording: isRecording)
         if isRecording {
             modeAndShootController.hideModeButton()
         }
@@ -268,8 +256,8 @@ public class CameraController: UIViewController {
     
     // MARK: - UI
     private func enableBottomViewButtons(show: Bool) {
-        _view.bottomActionsView.updateUndo(enabled: show)
-        _view.bottomActionsView.updateNext(enabled: show)
+        cameraView.bottomActionsView.updateUndo(enabled: show)
+        cameraView.bottomActionsView.updateNext(enabled: show)
         if clipsController.hasClips {
             modeAndShootController.hideModeButton()
         }
@@ -349,9 +337,6 @@ extension CameraController: ModeSelectorAndShootControllerDelegate {
                 performUIUpdate {
                     if let url = url, let image = AVURLAsset(url: url).thumbnail() {                
                         self.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: self.durationStringForAssetAtURL(url)))
-                    }
-                    if self.firstClipEver {
-                        self.showOnboardingModal()
                     }
                 }
             })
