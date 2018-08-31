@@ -116,12 +116,10 @@ final class CameraInputController: UIViewController {
 
     @objc private func appWillResignActive() {
         captureSession?.stopRunning()
-        NSLog("session stopped running")
     }
 
     @objc private func appDidBecomeActive() {
         captureSession?.startRunning()
-        NSLog("session started running")
     }
 
     override public func viewDidLoad() {
@@ -136,13 +134,11 @@ final class CameraInputController: UIViewController {
 
         if !CameraDevicePlatform.isSimulator { // if running on simulator, the startRunning() call takes a long time to return
             captureSession?.startRunning()
-            NSLog("session did start running")
         }
     }
 
     private func configureSession() {
         guard !CameraDevicePlatform.isSimulator else {
-            NSLog("camera session doesn't work on simulator")
             return
         }
         do {
@@ -155,7 +151,7 @@ final class CameraInputController: UIViewController {
             try configureCurrentOutput()
             captureSession?.commitConfiguration()
         } catch {
-            NSLog("failed to configure camera")
+            // this can happen if not all permissions were accepted, should not throw an exception
             captureSession?.commitConfiguration()
             return
         }
@@ -201,7 +197,7 @@ final class CameraInputController: UIViewController {
             try toggleFrontRearCameras()
             try configureCurrentOutput()
         } catch {
-            NSLog("was unable to switch cameras, may only be one camera")
+            // was unable to switch cameras, may only be one camera
             return false
         }
         captureSession?.startRunning()
@@ -211,7 +207,8 @@ final class CameraInputController: UIViewController {
     /// Changes the current output modes corresponding to camera mode
     ///
     /// - Parameter mode: The current camera mode
-    func configureMode(_ mode: CameraMode) {
+    /// - throws:
+    func configureMode(_ mode: CameraMode) throws {
         switch mode {
         case .photo:
             currentCameraOutput = .photo
@@ -219,7 +216,9 @@ final class CameraInputController: UIViewController {
             currentCameraOutput = .video
         }
         do { try configureCurrentOutput() } catch {
+            // camera could be initialized properly in current mode but failed to switch modes. Should not crash
             NSLog("could not configure for mode \(mode)")
+            throw CameraInputError.invalidOperation
         }
     }
 
@@ -278,7 +277,7 @@ final class CameraInputController: UIViewController {
     ///
     /// - Parameter point: should be a normalized point from (0, 0) to (1, 1)
     /// - Throws:
-    func focusCamera(point: CGPoint) {
+    func focusCamera(point: CGPoint) throws {
         if let device = currentDevice {
             do {
                 try device.lockForConfiguration()
@@ -292,10 +291,11 @@ final class CameraInputController: UIViewController {
                     device.focusMode = .autoFocus
                 }
                 device.unlockForConfiguration()
-                NSLog("focused camera")
             }
             catch {
-                NSLog("unable to focus, perhaps no camera found")
+                // not sure if all devices have focus / exposure.
+                NSLog("unable to focus for current camera")
+                throw CameraInputError.inputsAreInvalid
             }
         }
     }
@@ -315,7 +315,7 @@ final class CameraInputController: UIViewController {
     /// Sets the video camera zoom factor
     ///
     /// - Parameter zoomFactor: should be a value between 1 and the videoMaxZoomFactor. 1 is standard zoom
-    func setZoom(zoomFactor: CGFloat) {
+    func setZoom(zoomFactor: CGFloat) throws {
         guard let camera = currentDevice else { return }
         var targetZoomFactor = zoomFactor
         if targetZoomFactor > 1 {
@@ -328,7 +328,11 @@ final class CameraInputController: UIViewController {
             try camera.lockForConfiguration()
             camera.videoZoomFactor = zoomFactor
             camera.unlockForConfiguration()
-        } catch { NSLog("failed to zoom for \(zoomFactor)") }
+        } catch {
+            // the zoom factor is different for various devices, setting the zoom shouldn't crash
+            NSLog("failed to zoom for \(zoomFactor)")
+            throw CameraInputError.inputsAreInvalid
+        }
     }
 
     /// The current camera's zoom
@@ -367,7 +371,9 @@ final class CameraInputController: UIViewController {
         let point = gesture.location(in: view)
         /// normalize this
         let tapPoint = CGPoint(x: point.x / view.frame.size.width, y: point.y / view.frame.size.height)
-        focusCamera(point: tapPoint)
+        do { try focusCamera(point: tapPoint) } catch {
+            // shouldn't crash if focus is not supported
+        }
     }
 
     @objc private func doubleTapped() {
@@ -384,6 +390,8 @@ final class CameraInputController: UIViewController {
         return resolution
     }
 
+    // MARK: - configuring session and devices
+    
     private func createCaptureSession() {
         captureSession = AVCaptureSession()
 
@@ -560,7 +568,9 @@ extension CameraInputController: CameraRecordingDelegate {
                     try camera.lockForConfiguration()
                     camera.torchMode = .on
                     camera.unlockForConfiguration()
-                } catch { NSLog("torch mode failed") }
+                } catch {
+                    assertionFailure("torch mode failed")
+                }
             }
         }
     }
@@ -572,7 +582,9 @@ extension CameraInputController: CameraRecordingDelegate {
                 try camera.lockForConfiguration()
                 camera.torchMode = .off
                 camera.unlockForConfiguration()
-            } catch { NSLog("torch mode failed") }
+            } catch {
+                assertionFailure("torch mode failed")
+            }
         }
     }
 }

@@ -25,9 +25,9 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testConfigureMode() {
         let cameraInputController = newCameraInputController()
-        cameraInputController.configureMode(.gif)
+        do { try cameraInputController.configureMode(.gif) } catch { }
         XCTAssert(cameraInputController.currentCameraOutput == .video, "Gif mode should configure as video")
-        cameraInputController.configureMode(.photo)
+        do { try cameraInputController.configureMode(.photo) } catch { }
         XCTAssert(cameraInputController.currentCameraOutput == .photo, "Photo mode not configured properly")
     }
 
@@ -63,7 +63,7 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testZoom() {
         let cameraInputController = newCameraInputController()
-        cameraInputController.setZoom(zoomFactor: 0.7) // zoom requires device
+        do { try cameraInputController.setZoom(zoomFactor: 0.7) } catch { } // zoom requires device
         let currentZoom = cameraInputController.currentZoom()
         XCTAssert(currentZoom == nil, "Zooming should not be set without device")
     }
