@@ -31,7 +31,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     }
 
     func newController(delegate: CameraControllerDelegate, settings: CameraSettings = CameraSettings()) -> CameraController {
-        let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self)
+        let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = delegate
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         UIView.setAnimationsEnabled(false)
