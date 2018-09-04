@@ -68,7 +68,6 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         setUpView()
     }
 
-
     override func prepareForReuse() {
         super.prepareForReuse()
         clipImage.image = .none
