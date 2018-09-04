@@ -21,6 +21,9 @@
 		AB7F29512121F02C00B8D599 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB7F294F2121F02C00B8D599 /* LaunchScreen.storyboard */; };
 		AB997EEB212CD07800A346A2 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		AB997EEC212CD07A00A346A2 /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
+		ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498D52134AA1C00379F7F /* PhotoOutputHandlerTests.swift */; };
+		ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498D92134AD5700379F7F /* GifVideoOutputHandlerTests.swift */; };
+		ABE498DC2134AEB200379F7F /* VideoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498DB2134AEB200379F7F /* VideoOutputHandlerTests.swift */; };
 		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
@@ -60,6 +63,9 @@
 		AB7F29522121F02C00B8D599 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB7F295C2121F0ED00B8D599 /* KanvasCameraExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KanvasCameraExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB7F29602121F0ED00B8D599 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ABE498D52134AA1C00379F7F /* PhotoOutputHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoOutputHandlerTests.swift; sourceTree = "<group>"; };
+		ABE498D92134AD5700379F7F /* GifVideoOutputHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifVideoOutputHandlerTests.swift; sourceTree = "<group>"; };
+		ABE498DB2134AEB200379F7F /* VideoOutputHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoOutputHandlerTests.swift; sourceTree = "<group>"; };
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
@@ -122,6 +128,9 @@
 		AB7263ED212CCBB30044ED96 /* Recording */ = {
 			isa = PBXGroup;
 			children = (
+				ABE498DB2134AEB200379F7F /* VideoOutputHandlerTests.swift */,
+				ABE498D92134AD5700379F7F /* GifVideoOutputHandlerTests.swift */,
+				ABE498D52134AA1C00379F7F /* PhotoOutputHandlerTests.swift */,
 				ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */,
 				AB7263EE212CCBB30044ED96 /* CameraSegmentHandlerTests.swift */,
 			);
@@ -383,8 +392,11 @@
 				AB7263EF212CCBB30044ED96 /* CameraSegmentHandlerTests.swift in Sources */,
 				AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */,
 				AB7263EB212CC83B0044ED96 /* KanvasCameraColorsTests.swift in Sources */,
+				ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */,
+				ABE498DC2134AEB200379F7F /* VideoOutputHandlerTests.swift in Sources */,
 				AB7263EC212CC83B0044ED96 /* KanvasCameraTimesTests.swift in Sources */,
 				ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */,
+				ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */,
 				AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

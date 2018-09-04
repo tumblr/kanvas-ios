@@ -8,36 +8,38 @@
 
 /* Begin PBXBuildFile section */
 		051A816D6DD0CAE13496DDCFE0829167 /* UIImage+Diff.h in Headers */ = {isa = PBXBuildFile; fileRef = 85E250EF19C5B5671AEC10BEB508D087 /* UIImage+Diff.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		08BB3F34C99DC030DC5129444AE447BA /* KanvasCamera-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F5817F65473CA081C24936A63C54EF2 /* KanvasCamera-dummy.m */; };
 		094973D2D2F1E3B2E772F93C8147C6B9 /* UIApplication+StrictKeyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EECE81A9AEC1ED1057A9C3C88DBCEBE /* UIApplication+StrictKeyWindow.m */; };
-		0DC6DF0B612D9C3433564442450190FC /* AVAssetWriterInputPixelBufferAdaptor+Append.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093773681AA20D7D091CB6632B998C5 /* AVAssetWriterInputPixelBufferAdaptor+Append.swift */; };
+		180643D6DC43260A8E104A403C6B651D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A94602875A48A997AD3F08A33E6EAA /* Foundation.framework */; };
 		18EA4E0D8B74F2B2BBF8F39B49F49BF9 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7843C520ED7D11392D872D57034A1BC /* XCTest.framework */; };
 		1AB7934C16CE49DE196FFC7BE7278287 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97545C39C4A5EE2631DD9FFECE76A40 /* SwiftSupport.swift */; };
-		1FD986F6020B351ECA172DDCA0E54299 /* UIFont+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B360C634A5118E97B04BB896F4C7228A /* UIFont+Utils.swift */; };
-		21CB6B1E97C39D9378270BA429DCF581 /* KanvasCamera-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E7DC007446892DA3F563575C75E6AEF3 /* KanvasCamera-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2C44372FD401003BAF49F04779404757 /* CameraRecordingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC8A0F3F4667DC53CE6F83470C7F593 /* CameraRecordingProtocol.swift */; };
+		1E8EE909F6F95F43A62D3F8B750AF748 /* KanvasCameraColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D52FEF8CEC805944E73313AA0475DD /* KanvasCameraColors.swift */; };
+		2775AAD4E14B639C90318AB3F9489010 /* KanvasCameraImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC1FC5D2195827C2A6A4215E418B442 /* KanvasCameraImages.swift */; };
+		27AACB1D380A5DBF398581B036A159B4 /* UICollectionView+Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E75F262D71C3FAF9B1482F2D9139D9 /* UICollectionView+Cells.swift */; };
+		2A89BAB63D2045242D9814305FF7F0C1 /* KanvasCameraStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E6CF1D80A9731BC44248ED4AA4061F /* KanvasCameraStrings.swift */; };
+		2C589895A1B1B942EFA18B2659C167A9 /* GifVideoOutputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B997FCB154089AC9DB35DD528173DA5 /* GifVideoOutputHandler.swift */; };
 		2F485B69F51E4F723A38410F31F08550 /* FBSnapshotTestController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1374B79237CAC07693E99442FBED1F15 /* FBSnapshotTestController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		302E417C5117C5A4145F7F7E08EBCCAD /* CameraSegmentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54DEC2678F23F1F0A5AE86FD526DF472 /* CameraSegmentHandler.swift */; };
+		321723F3B18C6A8E6ADE7D04A48052B2 /* KanvasCameraTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAF1FC6E3E6B7C3896A5C389D6B9F4D /* KanvasCameraTimes.swift */; };
+		33D4FA52D7DE9E31A27F72A230BB3D22 /* NSURL+Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C801C9EDCAFA609786E18084EF200 /* NSURL+Media.swift */; };
 		35DD05FD595A6FE7F5A0692D12E319DC /* UIImage+Diff.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CEF7D6C5E08AB80E58DABC75D882BC /* UIImage+Diff.m */; };
-		37334DD284A26413486C609A3C5F42DB /* NSURL+Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EF073A56B2FA2C6718EFF10B71C880 /* NSURL+Media.swift */; };
+		37852CA1BA3A755D02EFF4AD77CADFC5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBB6A925DF90E5500E7BDCC094FEBEA7 /* UIKit.framework */; };
+		387AD29440E8A3B2F0B63605683ABA73 /* CameraRecordingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C3B780F220B38450684E65F0AAA38 /* CameraRecordingProtocol.swift */; };
+		3E3E45004B4CAA0D3D1CF5B0E3199287 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24D449C00EA69007BFAEE4B2AAAA95C4 /* Assets.xcassets */; };
 		421CDD701AEE0F2458A84200366CDD0F /* UIImage+Snapshot.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B161931541BFE46DFEA2092EDDDA815 /* UIImage+Snapshot.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		47DEE95708BDBD11436162D166CD192E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBB6A925DF90E5500E7BDCC094FEBEA7 /* UIKit.framework */; };
-		4F90057A027CA349B64FB620D06BF796 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A94602875A48A997AD3F08A33E6EAA /* Foundation.framework */; };
+		497A739FDE850E1B62DBB2027D2D3797 /* KanvasCamera-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 031F4210136869CAE360E84E0DE2792D /* KanvasCamera-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B8BF6646F4C64B26637C735A2C7844C /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38A6AFBF4D4CF3BF9B0AA68D48338D9 /* UIView+Layout.swift */; };
 		506D761F91EC3583789A837C559972FE /* FBSnapshotTestCase-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4792533D7EE0F440EE722DA4999E845C /* FBSnapshotTestCase-dummy.m */; };
-		519C669C0B40C76D84CC6CC3B7E2DC72 /* CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E55019012FA4B63B97A485684203B2E /* CameraSettings.swift */; };
-		555DF4167192E1DA61D2C41C2C49910F /* CameraSegmentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8075E521785000C40FD0D35F2979941 /* CameraSegmentHandler.swift */; };
+		57B7E7E3406E03A926CCE6FA28B9384A /* UIImage+Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633C75CE9F1CE97E4840473C96C11E5A /* UIImage+Camera.swift */; };
 		5BC12F69E33ABA27B9E0B78128CE336D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D77B07CA7D221E3EC46B93C00BF37CDE /* QuartzCore.framework */; };
-		5E3771E2A68B8F450BAB6D485B6DE08D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBB6A925DF90E5500E7BDCC094FEBEA7 /* UIKit.framework */; };
 		69DA8B003216466C60F029CBD79897F1 /* UIImage+Compare.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E22F9517F21D3A0251F88FCAB281E /* UIImage+Compare.m */; };
-		7096D4BFFBCD61783E364EDA9C6457C0 /* KanvasCameraImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A3683152D8F9D6F18C6CF0FE47A2F1 /* KanvasCameraImages.swift */; };
 		756564ABAF2892FE7140C92A1CDDCF65 /* UIImage+Snapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBFBDCC891B770A2AC9EF0FB164B751 /* UIImage+Snapshot.m */; };
-		7698F170589F6C988BA8EF28877653D6 /* KanvasCameraTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B82A45082958222997BC10CFFDA5B9F /* KanvasCameraTimes.swift */; };
 		7B0E352E589DF8118E2A97A2360B4EAF /* Pods-KanvasCameraExample-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 570C8B2CE87E47FBD6EB555D507285D5 /* Pods-KanvasCameraExample-dummy.m */; };
 		7DEB3F73A53890B315DA3F9EDCDD3FA7 /* Pods-KanvasCameraExampleTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 586C927EB62F939BE159B57EA8E65356 /* Pods-KanvasCameraExampleTests-dummy.m */; };
-		7E4AA244C384CE21E41E4A86B0DE606A /* UIViewController+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3B5CCCDEB9A4AFF67FC7810DE17A8A /* UIViewController+Load.swift */; };
-		8A498375FD874071AC2E9315555C391B /* UIButton+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9302951757C34414CD32B1A9547377AA /* UIButton+Shadows.swift */; };
-		91AF6DB1376CF3A659A4C6F5206EFF87 /* KanvasCameraStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BEAC35B73A7BE0F3525F7E9A55843C /* KanvasCameraStrings.swift */; };
-		942F8C4192461B3DA5C3D45763035044 /* UICollectionView+Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 567186E05E0FF71FA4C552CEB53CFD87 /* UICollectionView+Cells.swift */; };
-		9463263CCE1D9E7750FEB7564A9D9C4B /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74AE90E99B58C1D1C6E536E6532617ED /* UIView+Layout.swift */; };
+		825FC65ACE7F041FBFA1DF7FEC9BCED7 /* AVAssetWriterInputPixelBufferAdaptor+Append.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AC1BF1EE5D673F65CC1136AFF16DA8 /* AVAssetWriterInputPixelBufferAdaptor+Append.swift */; };
+		82FFA7ADE1A33EA1423C427A0BF821E9 /* UIFont+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32570FC6C6B97EEAD3FFBEE76AD0E7F /* UIFont+Utils.swift */; };
+		831128F9E6575611A4EF1523F92881F4 /* KanvasCamera-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B1BEF8846B9F9875BF51CD41ED4ADFDE /* KanvasCamera-dummy.m */; };
+		8B899422A2108AD8E4154A5FEFFC2B67 /* UIViewController+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C32FC32DF52AB81081ED24979B53FA7 /* UIViewController+Load.swift */; };
 		9673CF780F48C8E4EC2A331717B1F67C /* FBSnapshotTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = E37899BD4B349060AA147E2A3721D3A2 /* FBSnapshotTestCase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		97014CF014F7F382F0CF2A2B025A057C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A94602875A48A997AD3F08A33E6EAA /* Foundation.framework */; };
 		A4F69F3477A935285620AC3031C5C848 /* FBSnapshotTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052258A488A96C35531FAC73C4F42924 /* FBSnapshotTestController.m */; };
@@ -47,14 +49,15 @@
 		BC952FC04FC963C1294DCD619C9B6B3B /* UIApplication+StrictKeyWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = B9109B8B333B5A1A3E92EFC09EDC10AC /* UIApplication+StrictKeyWindow.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		BE14F2198CDB0DAD98A567981D21C7A1 /* FBSnapshotTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 39577E2B806B8B2D019998DE60728F63 /* FBSnapshotTestCase.m */; };
 		BFCE460CC33E8872B7156D4166340178 /* FBSnapshotTestCasePlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E3DB4D092B985E76E227F7F313C6981 /* FBSnapshotTestCasePlatform.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C1C67C843521661E619A8F90ED8DCC08 /* UIImage+Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387807ED353D17D90280919202BB316F /* UIImage+Camera.swift */; };
-		C494D159FCECA8CA7FC0BA5AB9DC508C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3530477C1DE6A2E48EF6BA605C729051 /* Assets.xcassets */; };
 		CAFA5E486BCE117A7D8C0FBF9DA6666B /* UIImage+Compare.h in Headers */ = {isa = PBXBuildFile; fileRef = 432938111B6FF0189EFFEDF2F845B308 /* UIImage+Compare.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D6714A974991CEA2AD4BD467A50AC690 /* Pods-KanvasCameraExample-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2431DA944FACCCCEEBC3388A96EE92F1 /* Pods-KanvasCameraExample-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D6D861727546370248464FA2A7A506B1 /* AVURLAsset+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF255F6045A464FB57AC7848E26A98A5 /* AVURLAsset+Thumbnail.swift */; };
+		DA4E0217D3020C1DD740551B78B5B1E2 /* PhotoOutputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1785C60468C2D8CFF6DB7C20854231 /* PhotoOutputHandler.swift */; };
 		DAD9A0E0F40D3984B78A22F8D3CDAB45 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A94602875A48A997AD3F08A33E6EAA /* Foundation.framework */; };
 		DB7A106243AC974FC7EBEB00B506C786 /* FBSnapshotTestCasePlatform.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A2557E7CE20AACCD1B28B1CD1F920D /* FBSnapshotTestCasePlatform.m */; };
-		F01E311F998061294092BB946D517015 /* AVURLAsset+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521AFDD5C146068030F239A8D0622EC8 /* AVURLAsset+Thumbnail.swift */; };
-		F3CDDA7534EEC4DA212040A6777804A1 /* KanvasCameraColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A453F0BBD7BFB96A47BCAA7A7BCCC3E /* KanvasCameraColors.swift */; };
+		F3CAD6999C681510F1EEE2A23D715649 /* CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A275C78CB0ED2CE9AEB84EA64DBDF6A /* CameraSettings.swift */; };
+		F97E308A7C3AD539B2D4CDE7FAB6AD4C /* UIButton+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD1011B9C89AE5051E317AE82B4055C /* UIButton+Shadows.swift */; };
+		FB82A957170EA9F5CEB0D0CC9232826F /* VideoOutputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAFB8E1795E62A099BC3AB186D192E4 /* VideoOutputHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,7 +65,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = C730AD6F1FA3196D71603015F922C8FA;
+			remoteGlobalIDString = 95A2F84A293006D20D2ED53F9A3AD400;
 			remoteInfo = KanvasCamera;
 		};
 		8BD051996E13F13A0C4D1697193746EC /* PBXContainerItemProxy */ = {
@@ -76,70 +79,74 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = C730AD6F1FA3196D71603015F922C8FA;
+			remoteGlobalIDString = 95A2F84A293006D20D2ED53F9A3AD400;
 			remoteInfo = KanvasCamera;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		031F4210136869CAE360E84E0DE2792D /* KanvasCamera-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KanvasCamera-umbrella.h"; sourceTree = "<group>"; };
+		041B62E791E7C2DA07F05860D1443858 /* KanvasCamera-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KanvasCamera-prefix.pch"; sourceTree = "<group>"; };
 		052258A488A96C35531FAC73C4F42924 /* FBSnapshotTestController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSnapshotTestController.m; path = FBSnapshotTestCase/FBSnapshotTestController.m; sourceTree = "<group>"; };
 		0B161931541BFE46DFEA2092EDDDA815 /* UIImage+Snapshot.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+Snapshot.h"; path = "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"; sourceTree = "<group>"; };
 		0B499D640103037E86832BCA986D7418 /* Pods-KanvasCameraExample-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-KanvasCameraExample-acknowledgements.markdown"; sourceTree = "<group>"; };
-		0C3B5CCCDEB9A4AFF67FC7810DE17A8A /* UIViewController+Load.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Load.swift"; sourceTree = "<group>"; };
-		0E55019012FA4B63B97A485684203B2E /* CameraSettings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
+		0BC1FC5D2195827C2A6A4215E418B442 /* KanvasCameraImages.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraImages.swift; sourceTree = "<group>"; };
+		0E0C3B780F220B38450684E65F0AAA38 /* CameraRecordingProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraRecordingProtocol.swift; sourceTree = "<group>"; };
 		1374B79237CAC07693E99442FBED1F15 /* FBSnapshotTestController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FBSnapshotTestController.h; path = FBSnapshotTestCase/FBSnapshotTestController.h; sourceTree = "<group>"; };
-		1B82A45082958222997BC10CFFDA5B9F /* KanvasCameraTimes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraTimes.swift; sourceTree = "<group>"; };
+		22A6B512672572C6354F5241389A4A24 /* KanvasCamera.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = KanvasCamera.xcconfig; sourceTree = "<group>"; };
 		2431DA944FACCCCEEBC3388A96EE92F1 /* Pods-KanvasCameraExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-KanvasCameraExample-umbrella.h"; sourceTree = "<group>"; };
+		24D449C00EA69007BFAEE4B2AAAA95C4 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
+		24E6CF1D80A9731BC44248ED4AA4061F /* KanvasCameraStrings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraStrings.swift; sourceTree = "<group>"; };
+		2CAFB8E1795E62A099BC3AB186D192E4 /* VideoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VideoOutputHandler.swift; sourceTree = "<group>"; };
+		2D1785C60468C2D8CFF6DB7C20854231 /* PhotoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoOutputHandler.swift; sourceTree = "<group>"; };
 		2E337FB8D21E6B805862BE61C445670F /* Pods_KanvasCameraExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_KanvasCameraExample.framework; path = "Pods-KanvasCameraExample.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EECE81A9AEC1ED1057A9C3C88DBCEBE /* UIApplication+StrictKeyWindow.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIApplication+StrictKeyWindow.m"; path = "FBSnapshotTestCase/Categories/UIApplication+StrictKeyWindow.m"; sourceTree = "<group>"; };
-		3530477C1DE6A2E48EF6BA605C729051 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
-		387807ED353D17D90280919202BB316F /* UIImage+Camera.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Camera.swift"; sourceTree = "<group>"; };
+		38AC1BF1EE5D673F65CC1136AFF16DA8 /* AVAssetWriterInputPixelBufferAdaptor+Append.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAssetWriterInputPixelBufferAdaptor+Append.swift"; sourceTree = "<group>"; };
 		39577E2B806B8B2D019998DE60728F63 /* FBSnapshotTestCase.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSnapshotTestCase.m; path = FBSnapshotTestCase/FBSnapshotTestCase.m; sourceTree = "<group>"; };
 		3B5E22F9517F21D3A0251F88FCAB281E /* UIImage+Compare.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Compare.m"; path = "FBSnapshotTestCase/Categories/UIImage+Compare.m"; sourceTree = "<group>"; };
+		3B997FCB154089AC9DB35DD528173DA5 /* GifVideoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GifVideoOutputHandler.swift; sourceTree = "<group>"; };
 		3DBFBDCC891B770A2AC9EF0FB164B751 /* UIImage+Snapshot.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Snapshot.m"; path = "FBSnapshotTestCase/Categories/UIImage+Snapshot.m"; sourceTree = "<group>"; };
-		3E094A2DC0669B65D7ED1196D29D52FA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		432938111B6FF0189EFFEDF2F845B308 /* UIImage+Compare.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+Compare.h"; path = "FBSnapshotTestCase/Categories/UIImage+Compare.h"; sourceTree = "<group>"; };
 		44EDA688CBD7DB8E43750CDEA6E1285E /* Pods_KanvasCameraExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_KanvasCameraExampleTests.framework; path = "Pods-KanvasCameraExampleTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4792533D7EE0F440EE722DA4999E845C /* FBSnapshotTestCase-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FBSnapshotTestCase-dummy.m"; sourceTree = "<group>"; };
-		48BEAC35B73A7BE0F3525F7E9A55843C /* KanvasCameraStrings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraStrings.swift; sourceTree = "<group>"; };
 		4C17DA8FD76B879002D669BAA48B1E6E /* Pods-KanvasCameraExampleTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-KanvasCameraExampleTests-frameworks.sh"; sourceTree = "<group>"; };
-		521AFDD5C146068030F239A8D0622EC8 /* AVURLAsset+Thumbnail.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVURLAsset+Thumbnail.swift"; sourceTree = "<group>"; };
-		55A3683152D8F9D6F18C6CF0FE47A2F1 /* KanvasCameraImages.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraImages.swift; sourceTree = "<group>"; };
-		56014CF89C6D5E72E97FCBA0D3417A76 /* KanvasCamera-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KanvasCamera-prefix.pch"; sourceTree = "<group>"; };
-		567186E05E0FF71FA4C552CEB53CFD87 /* UICollectionView+Cells.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Cells.swift"; sourceTree = "<group>"; };
+		54DEC2678F23F1F0A5AE86FD526DF472 /* CameraSegmentHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSegmentHandler.swift; sourceTree = "<group>"; };
 		56A143BDB3C4C9494A7EB0A874253C34 /* Pods-KanvasCameraExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-KanvasCameraExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		570C8B2CE87E47FBD6EB555D507285D5 /* Pods-KanvasCameraExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-KanvasCameraExample-dummy.m"; sourceTree = "<group>"; };
-		5843A35ABCB8EE6F39D7B92F1C0E5D98 /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
-		58623D121329CE716418B36E606D0D90 /* KanvasCamera.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = KanvasCamera.modulemap; sourceTree = "<group>"; };
 		586C927EB62F939BE159B57EA8E65356 /* Pods-KanvasCameraExampleTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-KanvasCameraExampleTests-dummy.m"; sourceTree = "<group>"; };
 		58A2557E7CE20AACCD1B28B1CD1F920D /* FBSnapshotTestCasePlatform.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSnapshotTestCasePlatform.m; path = FBSnapshotTestCase/FBSnapshotTestCasePlatform.m; sourceTree = "<group>"; };
-		5F5817F65473CA081C24936A63C54EF2 /* KanvasCamera-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "KanvasCamera-dummy.m"; sourceTree = "<group>"; };
+		5A18957DE997CB73BC95EBE8443051AA /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
+		5AD1011B9C89AE5051E317AE82B4055C /* UIButton+Shadows.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIButton+Shadows.swift"; sourceTree = "<group>"; };
+		5F7C801C9EDCAFA609786E18084EF200 /* NSURL+Media.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSURL+Media.swift"; sourceTree = "<group>"; };
 		63377C220E90B4D05971DFC31FFCF899 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		633C75CE9F1CE97E4840473C96C11E5A /* UIImage+Camera.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Camera.swift"; sourceTree = "<group>"; };
+		638D6251AC8965D99B8AC2CF11E3D39F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67E276593855381568F725E69496F29C /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6C32FC32DF52AB81081ED24979B53FA7 /* UIViewController+Load.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Load.swift"; sourceTree = "<group>"; };
 		73760231042E4E5235E47CEE8A6E93BE /* Pods-KanvasCameraExample-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-KanvasCameraExample-resources.sh"; sourceTree = "<group>"; };
-		74AE90E99B58C1D1C6E536E6532617ED /* UIView+Layout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
-		75EF073A56B2FA2C6718EFF10B71C880 /* NSURL+Media.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSURL+Media.swift"; sourceTree = "<group>"; };
+		7A275C78CB0ED2CE9AEB84EA64DBDF6A /* CameraSettings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
 		7B37D7C695D5C6C47A7C093595CD4F06 /* FBSnapshotTestCase.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FBSnapshotTestCase.xcconfig; sourceTree = "<group>"; };
 		7DDF12DFB905E8F4E6C52F9DA9990913 /* Pods-KanvasCameraExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-KanvasCameraExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		7E3DB4D092B985E76E227F7F313C6981 /* FBSnapshotTestCasePlatform.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FBSnapshotTestCasePlatform.h; path = FBSnapshotTestCase/FBSnapshotTestCasePlatform.h; sourceTree = "<group>"; };
 		85E250EF19C5B5671AEC10BEB508D087 /* UIImage+Diff.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+Diff.h"; path = "FBSnapshotTestCase/Categories/UIImage+Diff.h"; sourceTree = "<group>"; };
 		8683FD17E5C0DA60CD3DE90D22C1BC17 /* Pods-KanvasCameraExampleTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-KanvasCameraExampleTests-umbrella.h"; sourceTree = "<group>"; };
-		887E341E76109D4F51054B0E408E3320 /* KanvasCamera.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = KanvasCamera.xcconfig; sourceTree = "<group>"; };
-		8A453F0BBD7BFB96A47BCAA7A7BCCC3E /* KanvasCameraColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraColors.swift; sourceTree = "<group>"; };
-		9302951757C34414CD32B1A9547377AA /* UIButton+Shadows.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIButton+Shadows.swift"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		94CC1416713E684248273E68F46D0003 /* KanvasCamera.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = KanvasCamera.modulemap; sourceTree = "<group>"; };
+		95E75F262D71C3FAF9B1482F2D9139D9 /* UICollectionView+Cells.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Cells.swift"; sourceTree = "<group>"; };
 		9710A9ABCC87F85543E8DB98EB7905CB /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FBSnapshotTestCase.framework; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A001B444A3514ECF27E76EDDD2DD7388 /* KanvasCamera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = KanvasCamera.framework; path = KanvasCamera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A11D5B54955E3381F067364E427B571A /* FBSnapshotTestCase-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FBSnapshotTestCase-umbrella.h"; sourceTree = "<group>"; };
-		A8075E521785000C40FD0D35F2979941 /* CameraSegmentHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSegmentHandler.swift; sourceTree = "<group>"; };
+		A3D52FEF8CEC805944E73313AA0475DD /* KanvasCameraColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraColors.swift; sourceTree = "<group>"; };
+		ABAF1FC6E3E6B7C3896A5C389D6B9F4D /* KanvasCameraTimes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraTimes.swift; sourceTree = "<group>"; };
 		AF043B1189EAD36CDC369F81F8880362 /* Pods-KanvasCameraExample-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-KanvasCameraExample-frameworks.sh"; sourceTree = "<group>"; };
-		B093773681AA20D7D091CB6632B998C5 /* AVAssetWriterInputPixelBufferAdaptor+Append.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAssetWriterInputPixelBufferAdaptor+Append.swift"; sourceTree = "<group>"; };
-		B360C634A5118E97B04BB896F4C7228A /* UIFont+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Utils.swift"; sourceTree = "<group>"; };
+		B1BEF8846B9F9875BF51CD41ED4ADFDE /* KanvasCamera-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "KanvasCamera-dummy.m"; sourceTree = "<group>"; };
 		B65D1DFA459F44E317166718275F3AF5 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9109B8B333B5A1A3E92EFC09EDC10AC /* UIApplication+StrictKeyWindow.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIApplication+StrictKeyWindow.h"; path = "FBSnapshotTestCase/Categories/UIApplication+StrictKeyWindow.h"; sourceTree = "<group>"; };
 		B9CEF7D6C5E08AB80E58DABC75D882BC /* UIImage+Diff.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Diff.m"; path = "FBSnapshotTestCase/Categories/UIImage+Diff.m"; sourceTree = "<group>"; };
 		BBB6A925DF90E5500E7BDCC094FEBEA7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		BF255F6045A464FB57AC7848E26A98A5 /* AVURLAsset+Thumbnail.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVURLAsset+Thumbnail.swift"; sourceTree = "<group>"; };
 		C1A94602875A48A997AD3F08A33E6EAA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		C32570FC6C6B97EEAD3FFBEE76AD0E7F /* UIFont+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Utils.swift"; sourceTree = "<group>"; };
 		C3FB9AECB725014E6B95D42C9B8F4451 /* Pods-KanvasCameraExampleTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-KanvasCameraExampleTests.modulemap"; sourceTree = "<group>"; };
 		CD7A7D56274444DC032E52FD1FFDA8C5 /* Pods-KanvasCameraExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasCameraExample-acknowledgements.plist"; sourceTree = "<group>"; };
 		D3B6CE6612AF52A4ACEDD89B5022D0C0 /* Pods-KanvasCameraExampleTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-KanvasCameraExampleTests-resources.sh"; sourceTree = "<group>"; };
@@ -149,10 +156,9 @@
 		DC6B6863AD6E65251BE6D0F1BFE1843D /* Pods-KanvasCameraExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-KanvasCameraExample.release.xcconfig"; sourceTree = "<group>"; };
 		E17BE53D4D894B8FF493044F7B81955C /* Pods-KanvasCameraExampleTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasCameraExampleTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		E37899BD4B349060AA147E2A3721D3A2 /* FBSnapshotTestCase.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FBSnapshotTestCase.h; path = FBSnapshotTestCase/FBSnapshotTestCase.h; sourceTree = "<group>"; };
+		E38A6AFBF4D4CF3BF9B0AA68D48338D9 /* UIView+Layout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		E6AE733B07F41B24ADB8D1521DFF6430 /* Pods-KanvasCameraExample.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-KanvasCameraExample.modulemap"; sourceTree = "<group>"; };
 		E7843C520ED7D11392D872D57034A1BC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		E7DC007446892DA3F563575C75E6AEF3 /* KanvasCamera-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KanvasCamera-umbrella.h"; sourceTree = "<group>"; };
-		EBC8A0F3F4667DC53CE6F83470C7F593 /* CameraRecordingProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraRecordingProtocol.swift; sourceTree = "<group>"; };
 		EE01FAD0B1ADB8ECD52E2C89FC0EE97A /* Pods-KanvasCameraExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-KanvasCameraExample.debug.xcconfig"; sourceTree = "<group>"; };
 		EF519A026B10AC73ABBE6E658308B29D /* FBSnapshotTestCase-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FBSnapshotTestCase-prefix.pch"; sourceTree = "<group>"; };
 		F10CBDEE32E5F6BDECFB3D41F7DD0B03 /* FBSnapshotTestCase.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = FBSnapshotTestCase.modulemap; sourceTree = "<group>"; };
@@ -178,12 +184,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BA60B65F5636F03C82D1DF951311C8E0 /* Frameworks */ = {
+		F611B453B4075AF8A5D8F7DA5AF1A5AA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F90057A027CA349B64FB620D06BF796 /* Foundation.framework in Frameworks */,
-				5E3771E2A68B8F450BAB6D485B6DE08D /* UIKit.framework in Frameworks */,
+				180643D6DC43260A8E104A403C6B651D /* Foundation.framework in Frameworks */,
+				37852CA1BA3A755D02EFF4AD77CADFC5 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,12 +204,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		10C7FA8DCA082A62AB637920E9CDBD62 /* Pod */ = {
+		095F89201B21A51AFDB9DD700BD9F06A /* KanvasCamera */ = {
 			isa = PBXGroup;
 			children = (
-				5843A35ABCB8EE6F39D7B92F1C0E5D98 /* KanvasCamera.podspec.json */,
+				A69018F66D8BEF233F5057F47E7900EA /* Constants */,
+				DF77E0916809CBA27CD0CB09391EB3A6 /* Extensions */,
+				DDB679337B695D26897FD73E615E0F05 /* Pod */,
+				47C13DBCADEB58957E5FB0AAF835D30C /* Recording */,
+				9D37C1CADD7D971CAD9CE333EA21AF19 /* Resources */,
+				1D4074E869A86D6B6F5B82C7E36FC31A /* Settings */,
+				F0A86ADF569F9A773109AF647593D3B9 /* Support Files */,
 			);
-			name = Pod;
+			name = KanvasCamera;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		14B8B9B15ECBE87983FF987239AB2D7B /* Frameworks */ = {
@@ -212,6 +225,15 @@
 				3EB1A8839A654B1F16EF9E6F67243337 /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1D4074E869A86D6B6F5B82C7E36FC31A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				7A275C78CB0ED2CE9AEB84EA64DBDF6A /* CameraSettings.swift */,
+			);
+			name = Settings;
+			path = Classes/Settings;
 			sourceTree = "<group>";
 		};
 		2287B5EBEAA3C332F8DB9A1E61F5B097 /* FBSnapshotTestCase */ = {
@@ -223,20 +245,6 @@
 			);
 			name = FBSnapshotTestCase;
 			path = FBSnapshotTestCase;
-			sourceTree = "<group>";
-		};
-		286FE74E63EDE59B2CC40FF09F50BB08 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				3E094A2DC0669B65D7ED1196D29D52FA /* Info.plist */,
-				58623D121329CE716418B36E606D0D90 /* KanvasCamera.modulemap */,
-				887E341E76109D4F51054B0E408E3320 /* KanvasCamera.xcconfig */,
-				5F5817F65473CA081C24936A63C54EF2 /* KanvasCamera-dummy.m */,
-				56014CF89C6D5E72E97FCBA0D3417A76 /* KanvasCamera-prefix.pch */,
-				E7DC007446892DA3F563575C75E6AEF3 /* KanvasCamera-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "KanvasCameraExample/Pods/Target Support Files/KanvasCamera";
 			sourceTree = "<group>";
 		};
 		3288FCB8E15F6401DE6220AE5CA1D27B /* Support Files */ = {
@@ -251,14 +259,6 @@
 			);
 			name = "Support Files";
 			path = "../Target Support Files/FBSnapshotTestCase";
-			sourceTree = "<group>";
-		};
-		3913C7593C0E75964E1EF4CA8C34E376 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				3530477C1DE6A2E48EF6BA605C729051 /* Assets.xcassets */,
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		3E680576FE4FBC119F683122F6ABE59F /* Targets Support Files */ = {
@@ -281,34 +281,23 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		45A4D8A9FAF70CDE00ED1E4036E704B3 /* Settings */ = {
+		47C13DBCADEB58957E5FB0AAF835D30C /* Recording */ = {
 			isa = PBXGroup;
 			children = (
-				0E55019012FA4B63B97A485684203B2E /* CameraSettings.swift */,
+				0E0C3B780F220B38450684E65F0AAA38 /* CameraRecordingProtocol.swift */,
+				54DEC2678F23F1F0A5AE86FD526DF472 /* CameraSegmentHandler.swift */,
+				3B997FCB154089AC9DB35DD528173DA5 /* GifVideoOutputHandler.swift */,
+				2D1785C60468C2D8CFF6DB7C20854231 /* PhotoOutputHandler.swift */,
+				2CAFB8E1795E62A099BC3AB186D192E4 /* VideoOutputHandler.swift */,
 			);
-			name = Settings;
-			path = Classes/Settings;
-			sourceTree = "<group>";
-		};
-		4808FB093BD9C80956F7B2AD8DC0419D /* KanvasCamera */ = {
-			isa = PBXGroup;
-			children = (
-				EAD1D6238ED2827FE25194F38559444F /* Constants */,
-				F53D2D7F9FD5C8568E87D0EEA71C9104 /* Extensions */,
-				10C7FA8DCA082A62AB637920E9CDBD62 /* Pod */,
-				98D9BB47478664AFAF5072A1CFE677CA /* Recording */,
-				3913C7593C0E75964E1EF4CA8C34E376 /* Resources */,
-				45A4D8A9FAF70CDE00ED1E4036E704B3 /* Settings */,
-				286FE74E63EDE59B2CC40FF09F50BB08 /* Support Files */,
-			);
-			name = KanvasCamera;
-			path = ../..;
+			name = Recording;
+			path = Classes/Recording;
 			sourceTree = "<group>";
 		};
 		4DDEA7954B60BF68789FE039BD591842 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				4808FB093BD9C80956F7B2AD8DC0419D /* KanvasCamera */,
+				095F89201B21A51AFDB9DD700BD9F06A /* KanvasCamera */,
 			);
 			name = "Development Pods";
 			sourceTree = "<group>";
@@ -354,16 +343,6 @@
 			);
 			sourceTree = "<group>";
 		};
-		98D9BB47478664AFAF5072A1CFE677CA /* Recording */ = {
-			isa = PBXGroup;
-			children = (
-				EBC8A0F3F4667DC53CE6F83470C7F593 /* CameraRecordingProtocol.swift */,
-				A8075E521785000C40FD0D35F2979941 /* CameraSegmentHandler.swift */,
-			);
-			name = Recording;
-			path = Classes/Recording;
-			sourceTree = "<group>";
-		};
 		99E46DD4AB2256791F111C718CB0EEF8 /* SwiftSupport */ = {
 			isa = PBXGroup;
 			children = (
@@ -372,16 +351,63 @@
 			name = SwiftSupport;
 			sourceTree = "<group>";
 		};
-		EAD1D6238ED2827FE25194F38559444F /* Constants */ = {
+		9D37C1CADD7D971CAD9CE333EA21AF19 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				8A453F0BBD7BFB96A47BCAA7A7BCCC3E /* KanvasCameraColors.swift */,
-				55A3683152D8F9D6F18C6CF0FE47A2F1 /* KanvasCameraImages.swift */,
-				48BEAC35B73A7BE0F3525F7E9A55843C /* KanvasCameraStrings.swift */,
-				1B82A45082958222997BC10CFFDA5B9F /* KanvasCameraTimes.swift */,
+				24D449C00EA69007BFAEE4B2AAAA95C4 /* Assets.xcassets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		A69018F66D8BEF233F5057F47E7900EA /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				A3D52FEF8CEC805944E73313AA0475DD /* KanvasCameraColors.swift */,
+				0BC1FC5D2195827C2A6A4215E418B442 /* KanvasCameraImages.swift */,
+				24E6CF1D80A9731BC44248ED4AA4061F /* KanvasCameraStrings.swift */,
+				ABAF1FC6E3E6B7C3896A5C389D6B9F4D /* KanvasCameraTimes.swift */,
 			);
 			name = Constants;
 			path = Classes/Constants;
+			sourceTree = "<group>";
+		};
+		DDB679337B695D26897FD73E615E0F05 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				5A18957DE997CB73BC95EBE8443051AA /* KanvasCamera.podspec.json */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		DF77E0916809CBA27CD0CB09391EB3A6 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				38AC1BF1EE5D673F65CC1136AFF16DA8 /* AVAssetWriterInputPixelBufferAdaptor+Append.swift */,
+				BF255F6045A464FB57AC7848E26A98A5 /* AVURLAsset+Thumbnail.swift */,
+				5F7C801C9EDCAFA609786E18084EF200 /* NSURL+Media.swift */,
+				5AD1011B9C89AE5051E317AE82B4055C /* UIButton+Shadows.swift */,
+				95E75F262D71C3FAF9B1482F2D9139D9 /* UICollectionView+Cells.swift */,
+				C32570FC6C6B97EEAD3FFBEE76AD0E7F /* UIFont+Utils.swift */,
+				633C75CE9F1CE97E4840473C96C11E5A /* UIImage+Camera.swift */,
+				E38A6AFBF4D4CF3BF9B0AA68D48338D9 /* UIView+Layout.swift */,
+				6C32FC32DF52AB81081ED24979B53FA7 /* UIViewController+Load.swift */,
+			);
+			name = Extensions;
+			path = Classes/Extensions;
+			sourceTree = "<group>";
+		};
+		F0A86ADF569F9A773109AF647593D3B9 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				638D6251AC8965D99B8AC2CF11E3D39F /* Info.plist */,
+				94CC1416713E684248273E68F46D0003 /* KanvasCamera.modulemap */,
+				22A6B512672572C6354F5241389A4A24 /* KanvasCamera.xcconfig */,
+				B1BEF8846B9F9875BF51CD41ED4ADFDE /* KanvasCamera-dummy.m */,
+				041B62E791E7C2DA07F05860D1443858 /* KanvasCamera-prefix.pch */,
+				031F4210136869CAE360E84E0DE2792D /* KanvasCamera-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "KanvasCameraExample/Pods/Target Support Files/KanvasCamera";
 			sourceTree = "<group>";
 		};
 		F35791481CAFDD8E7715AE1B44687328 /* Core */ = {
@@ -403,23 +429,6 @@
 				3DBFBDCC891B770A2AC9EF0FB164B751 /* UIImage+Snapshot.m */,
 			);
 			name = Core;
-			sourceTree = "<group>";
-		};
-		F53D2D7F9FD5C8568E87D0EEA71C9104 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				B093773681AA20D7D091CB6632B998C5 /* AVAssetWriterInputPixelBufferAdaptor+Append.swift */,
-				521AFDD5C146068030F239A8D0622EC8 /* AVURLAsset+Thumbnail.swift */,
-				75EF073A56B2FA2C6718EFF10B71C880 /* NSURL+Media.swift */,
-				9302951757C34414CD32B1A9547377AA /* UIButton+Shadows.swift */,
-				567186E05E0FF71FA4C552CEB53CFD87 /* UICollectionView+Cells.swift */,
-				B360C634A5118E97B04BB896F4C7228A /* UIFont+Utils.swift */,
-				387807ED353D17D90280919202BB316F /* UIImage+Camera.swift */,
-				74AE90E99B58C1D1C6E536E6532617ED /* UIView+Layout.swift */,
-				0C3B5CCCDEB9A4AFF67FC7810DE17A8A /* UIViewController+Load.swift */,
-			);
-			name = Extensions;
-			path = Classes/Extensions;
 			sourceTree = "<group>";
 		};
 		FAF3FCC35BF5C221DAEB1E75A525AED3 /* Pods-KanvasCameraExample */ = {
@@ -451,14 +460,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		0FDFEE708458CDE287A8B9615B220BEC /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				21CB6B1E97C39D9378270BA429DCF581 /* KanvasCamera-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9DC6F5AC11E37A1EB45C6473C9E800B6 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -487,6 +488,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B20B51C7CB0497FB5ED3B532F4DF3DC9 /* Pods-KanvasCameraExampleTests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E78E5A94ABE34DCE8D03C9D00C5BBE15 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				497A739FDE850E1B62DBB2027D2D3797 /* KanvasCamera-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,14 +537,14 @@
 			productReference = 9710A9ABCC87F85543E8DB98EB7905CB /* FBSnapshotTestCase.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		C730AD6F1FA3196D71603015F922C8FA /* KanvasCamera */ = {
+		95A2F84A293006D20D2ED53F9A3AD400 /* KanvasCamera */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D83FA6326B1D037E28497C3026ABB6C /* Build configuration list for PBXNativeTarget "KanvasCamera" */;
+			buildConfigurationList = F6323E689D7FB4516C5A80088BD39582 /* Build configuration list for PBXNativeTarget "KanvasCamera" */;
 			buildPhases = (
-				DF27914D1F490D81C6B9C1508CE52F49 /* Sources */,
-				BA60B65F5636F03C82D1DF951311C8E0 /* Frameworks */,
-				C17FC419165536599E1F8857C4018793 /* Resources */,
-				0FDFEE708458CDE287A8B9615B220BEC /* Headers */,
+				23A96F1027C9E473C1C1421759FB88EC /* Sources */,
+				F611B453B4075AF8A5D8F7DA5AF1A5AA /* Frameworks */,
+				1A3A39F75F3C79CBEE313553AC142133 /* Resources */,
+				E78E5A94ABE34DCE8D03C9D00C5BBE15 /* Headers */,
 			);
 			buildRules = (
 			);
@@ -587,7 +596,7 @@
 			projectRoot = "";
 			targets = (
 				34CD2E3428AB802BACA62286FF5074B1 /* FBSnapshotTestCase */,
-				C730AD6F1FA3196D71603015F922C8FA /* KanvasCamera */,
+				95A2F84A293006D20D2ED53F9A3AD400 /* KanvasCamera */,
 				1DAE607FCE997AA0A6CDC5837B0819AA /* Pods-KanvasCameraExample */,
 				CE597662AE02FF991E975F2CA2DF985B /* Pods-KanvasCameraExampleTests */,
 			);
@@ -595,17 +604,44 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		C17FC419165536599E1F8857C4018793 /* Resources */ = {
+		1A3A39F75F3C79CBEE313553AC142133 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C494D159FCECA8CA7FC0BA5AB9DC508C /* Assets.xcassets in Resources */,
+				3E3E45004B4CAA0D3D1CF5B0E3199287 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		23A96F1027C9E473C1C1421759FB88EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				825FC65ACE7F041FBFA1DF7FEC9BCED7 /* AVAssetWriterInputPixelBufferAdaptor+Append.swift in Sources */,
+				D6D861727546370248464FA2A7A506B1 /* AVURLAsset+Thumbnail.swift in Sources */,
+				387AD29440E8A3B2F0B63605683ABA73 /* CameraRecordingProtocol.swift in Sources */,
+				302E417C5117C5A4145F7F7E08EBCCAD /* CameraSegmentHandler.swift in Sources */,
+				F3CAD6999C681510F1EEE2A23D715649 /* CameraSettings.swift in Sources */,
+				2C589895A1B1B942EFA18B2659C167A9 /* GifVideoOutputHandler.swift in Sources */,
+				831128F9E6575611A4EF1523F92881F4 /* KanvasCamera-dummy.m in Sources */,
+				1E8EE909F6F95F43A62D3F8B750AF748 /* KanvasCameraColors.swift in Sources */,
+				2775AAD4E14B639C90318AB3F9489010 /* KanvasCameraImages.swift in Sources */,
+				2A89BAB63D2045242D9814305FF7F0C1 /* KanvasCameraStrings.swift in Sources */,
+				321723F3B18C6A8E6ADE7D04A48052B2 /* KanvasCameraTimes.swift in Sources */,
+				33D4FA52D7DE9E31A27F72A230BB3D22 /* NSURL+Media.swift in Sources */,
+				DA4E0217D3020C1DD740551B78B5B1E2 /* PhotoOutputHandler.swift in Sources */,
+				F97E308A7C3AD539B2D4CDE7FAB6AD4C /* UIButton+Shadows.swift in Sources */,
+				27AACB1D380A5DBF398581B036A159B4 /* UICollectionView+Cells.swift in Sources */,
+				82FFA7ADE1A33EA1423C427A0BF821E9 /* UIFont+Utils.swift in Sources */,
+				57B7E7E3406E03A926CCE6FA28B9384A /* UIImage+Camera.swift in Sources */,
+				4B8BF6646F4C64B26637C735A2C7844C /* UIView+Layout.swift in Sources */,
+				8B899422A2108AD8E4154A5FEFFC2B67 /* UIViewController+Load.swift in Sources */,
+				FB82A957170EA9F5CEB0D0CC9232826F /* VideoOutputHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9AE17A55AD1E4E7B937AEC9D1088E639 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -619,30 +655,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B0E352E589DF8118E2A97A2360B4EAF /* Pods-KanvasCameraExample-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DF27914D1F490D81C6B9C1508CE52F49 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0DC6DF0B612D9C3433564442450190FC /* AVAssetWriterInputPixelBufferAdaptor+Append.swift in Sources */,
-				F01E311F998061294092BB946D517015 /* AVURLAsset+Thumbnail.swift in Sources */,
-				2C44372FD401003BAF49F04779404757 /* CameraRecordingProtocol.swift in Sources */,
-				555DF4167192E1DA61D2C41C2C49910F /* CameraSegmentHandler.swift in Sources */,
-				519C669C0B40C76D84CC6CC3B7E2DC72 /* CameraSettings.swift in Sources */,
-				08BB3F34C99DC030DC5129444AE447BA /* KanvasCamera-dummy.m in Sources */,
-				F3CDDA7534EEC4DA212040A6777804A1 /* KanvasCameraColors.swift in Sources */,
-				7096D4BFFBCD61783E364EDA9C6457C0 /* KanvasCameraImages.swift in Sources */,
-				91AF6DB1376CF3A659A4C6F5206EFF87 /* KanvasCameraStrings.swift in Sources */,
-				7698F170589F6C988BA8EF28877653D6 /* KanvasCameraTimes.swift in Sources */,
-				37334DD284A26413486C609A3C5F42DB /* NSURL+Media.swift in Sources */,
-				8A498375FD874071AC2E9315555C391B /* UIButton+Shadows.swift in Sources */,
-				942F8C4192461B3DA5C3D45763035044 /* UICollectionView+Cells.swift in Sources */,
-				1FD986F6020B351ECA172DDCA0E54299 /* UIFont+Utils.swift in Sources */,
-				C1C67C843521661E619A8F90ED8DCC08 /* UIImage+Camera.swift in Sources */,
-				9463263CCE1D9E7750FEB7564A9D9C4B /* UIView+Layout.swift in Sources */,
-				7E4AA244C384CE21E41E4A86B0DE606A /* UIViewController+Load.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -668,13 +680,13 @@
 		1BF228566D424715A222FB4F77EED1A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = KanvasCamera;
-			target = C730AD6F1FA3196D71603015F922C8FA /* KanvasCamera */;
+			target = 95A2F84A293006D20D2ED53F9A3AD400 /* KanvasCamera */;
 			targetProxy = 085484E62C07B85D35F1F387D6A5BEC0 /* PBXContainerItemProxy */;
 		};
 		44DD5B78B0FAE543EBF26D2D8750BA86 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = KanvasCamera;
-			target = C730AD6F1FA3196D71603015F922C8FA /* KanvasCamera */;
+			target = 95A2F84A293006D20D2ED53F9A3AD400 /* KanvasCamera */;
 			targetProxy = E87A5821F22BF8880BCC2AB2FE53835F /* PBXContainerItemProxy */;
 		};
 		6B11491037195CE9507A99AAD9C81017 /* PBXTargetDependency */ = {
@@ -865,43 +877,6 @@
 			};
 			name = Debug;
 		};
-		5558730EB41A18499388697B5D520B89 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 887E341E76109D4F51054B0E408E3320 /* KanvasCamera.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/KanvasCamera/KanvasCamera-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/KanvasCamera/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/KanvasCamera/KanvasCamera.modulemap";
-				PRODUCT_MODULE_NAME = KanvasCamera;
-				PRODUCT_NAME = KanvasCamera;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 		58CE816B060A41D32CEC095441D0E3E0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -957,6 +932,44 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
 				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		5991F272C1B31ED35F5E08BC3D0F0C47 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 22A6B512672572C6354F5241389A4A24 /* KanvasCamera.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/KanvasCamera/KanvasCamera-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/KanvasCamera/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/KanvasCamera/KanvasCamera.modulemap";
+				PRODUCT_MODULE_NAME = KanvasCamera;
+				PRODUCT_NAME = KanvasCamera;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -1040,9 +1053,9 @@
 			};
 			name = Debug;
 		};
-		D05181BBED95EAB584D19E5AC0ACBE0D /* Release */ = {
+		D2EFF68A27DB90006B828F0B93937E71 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 887E341E76109D4F51054B0E408E3320 /* KanvasCamera.xcconfig */;
+			baseConfigurationReference = 22A6B512672572C6354F5241389A4A24 /* KanvasCamera.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -1069,14 +1082,13 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
 		EC2B16E08A82FFFAA496F1301724367A /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1118,15 +1130,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D83FA6326B1D037E28497C3026ABB6C /* Build configuration list for PBXNativeTarget "KanvasCamera" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5558730EB41A18499388697B5D520B89 /* Debug */,
-				D05181BBED95EAB584D19E5AC0ACBE0D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1159,6 +1162,15 @@
 			buildConfigurations = (
 				246CED37F175AF5E851C3839F63F9521 /* Debug */,
 				EC2B16E08A82FFFAA496F1301724367A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F6323E689D7FB4516C5A80088BD39582 /* Build configuration list for PBXNativeTarget "KanvasCamera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2EFF68A27DB90006B828F0B93937E71 /* Debug */,
+				5991F272C1B31ED35F5E08BC3D0F0C47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
