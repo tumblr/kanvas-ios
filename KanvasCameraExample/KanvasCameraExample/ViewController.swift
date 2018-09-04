@@ -47,7 +47,6 @@ extension ViewController: CameraControllerDelegate {
                 }
             case .video(let url):
                 UISaveVideoAtPathToSavedPhotosAlbum(url.path, nil, nil, nil)
-            default: break
             }
         }
         dismiss(animated: true, completion: .none)
