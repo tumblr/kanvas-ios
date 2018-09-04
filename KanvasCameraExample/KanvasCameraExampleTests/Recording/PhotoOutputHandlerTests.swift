@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+@testable import KanvasCamera
+import AVFoundation
 import Foundation
 import XCTest
-import AVFoundation
-@testable import KanvasCamera
 
 final class PhotoOutputHandlerTests: XCTestCase {
 
