@@ -4,9 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
-import UIKit
+import Foundation
 
 /// A protocol for camera recording callbacks
 protocol CameraRecordingDelegate {
