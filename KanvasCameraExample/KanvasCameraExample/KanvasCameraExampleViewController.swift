@@ -8,9 +8,12 @@ import UIKit
 import KanvasCamera
 import Photos
 
-final class ViewController: UIViewController {
+/// This class contains a button that launches the camera module
+/// It is also the delegate for the camera, and handles saving the exported media
+/// The camera can be customized with CameraSettings
+final class KanvasCameraExampleViewController: UIViewController {
 
-    let button = UIButton(type: .custom)
+    private let button = UIButton(type: .custom)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,18 +29,28 @@ final class ViewController: UIViewController {
     }
 
     @objc func cameraSelected() {
-        let settings = CameraSettings()
-        settings.enabledModes = [.photo, .gif, .stopMotion]
-        settings.defaultMode = .stopMotion
-        settings.exportStopMotionPhotoAsVideo = true
+        let settings = customCameraSettings()
         let controller = CameraController(settings: settings, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = self
         self.present(controller, animated: true, completion: .none)
     }
 
+    /// This returns the customized settings for the CameraController
+    ///
+    /// - Returns: an instance of CameraSettings 
+    private func customCameraSettings() -> CameraSettings {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo, .gif, .stopMotion]
+        settings.defaultMode = .stopMotion
+        settings.exportStopMotionPhotoAsVideo = true
+        return settings
+    }
+
 }
 
-extension ViewController: CameraControllerDelegate {
+// MARK: - CameraControllerDelegate
+
+extension KanvasCameraExampleViewController: CameraControllerDelegate {
     func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
         if let media = media {
             switch media {
