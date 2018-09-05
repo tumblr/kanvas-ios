@@ -80,18 +80,17 @@ final class CameraRecorder: NSObject {
         }
 
         let videoOutputSettings: [String: Any] = segmentsHandler.videoOutputSettingsForSize(size: size)
-
-        assetWriterVideoInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoOutputSettings)
-        assetWriterVideoInput?.expectsMediaDataInRealTime = true
-
+        let videoInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoOutputSettings)
+        videoInput.expectsMediaDataInRealTime = true
+        
         let sourcePixelBufferAttributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA, kCVPixelBufferWidthKey as String: size.width, kCVPixelBufferHeightKey as String: size.height]
 
-        guard let videoInput = assetWriterVideoInput else { return }
         assetWriterPixelBufferInput = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: videoInput, sourcePixelBufferAttributes: sourcePixelBufferAttributes)
         if assetWriter?.canAdd(videoInput) == true {
             assetWriter?.add(videoInput)
         }
 
+        assetWriterVideoInput = videoInput
         setupAudioForAssetWriter()
     }
 
