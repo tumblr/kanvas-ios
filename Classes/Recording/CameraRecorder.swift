@@ -78,6 +78,7 @@ final class CameraRecorder: NSObject {
             NSLog("failed to setup asset writer")
             return
         }
+        self.url = url
 
         let videoOutputSettings: [String: Any] = segmentsHandler.videoOutputSettingsForSize(size: size)
         let videoInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoOutputSettings)
@@ -190,8 +191,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         currentRecordingMode = .stopMotion
         recordingDelegate?.cameraWillTakeVideo()
 
-        url = NSURL.createNewVideoURL()
-        setupAssetWriter(url: url)
+        setupAssetWriter(url: NSURL.createNewVideoURL())
         guard let assetWriter = assetWriter, let pixelBufferAdaptor = assetWriterPixelBufferInput else {
             return
         }
@@ -247,8 +247,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         currentRecordingMode = .gif
         recordingDelegate?.cameraWillTakeVideo()
 
-        url = NSURL.createNewVideoURL()
-        setupAssetWriter(url: url)
+        setupAssetWriter(url: NSURL.createNewVideoURL())
 
         gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput) { [unowned self] success in
             self.recordingDelegate?.cameraWillFinishVideo()
@@ -277,8 +276,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func reset() {
-        url = NSURL.createNewVideoURL()
-        setupAssetWriter(url: url)
+        setupAssetWriter(url: NSURL.createNewVideoURL())
         segmentsHandler.reset(removeFromDisk: true)
     }
 
