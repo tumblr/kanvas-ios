@@ -7,7 +7,7 @@
 import Foundation
 
 /// Protocol for handling CameraView's interaction.
-protocol CameraViewDelegate: ActionsViewDelegate {
+protocol CameraViewDelegate: class {
     /// A function that is called when the close button is pressed
     func closeButtonPressed()
 }
@@ -39,9 +39,11 @@ final class CameraView: UIView {
 
     private let closeButton: UIButton
 
-    weak var delegate: CameraViewDelegate? {
+    weak var delegate: CameraViewDelegate?
+    
+    weak var actionsDelegate: ActionsViewDelegate? {
         didSet {
-            bottomActionsView.delegate = delegate
+            bottomActionsView.delegate = actionsDelegate
         }
     }
 
