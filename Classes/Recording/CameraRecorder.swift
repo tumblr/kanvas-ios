@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
-import VideoToolbox
+import Foundation
 import UIKit
+import VideoToolbox
 
 /// Default values for the camera recorder
 private struct CameraRecordingConstants {
@@ -184,9 +184,9 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     // MARK: - video
-    @discardableResult func startRecordingVideo() -> Bool {
+    func startRecordingVideo() {
         if isRecording() {
-            return false
+            return
         }
         currentRecordingMode = .stopMotion
         recordingDelegate?.cameraWillTakeVideo()
@@ -194,10 +194,9 @@ extension CameraRecorder: CameraRecordingProtocol {
         url = NSURL.createNewVideoURL()
         setupAssetWriter(url: url)
         guard let assetWriter = assetWriter, let pixelBufferAdaptor = assetWriterPixelBufferInput else {
-            return false
+            return
         }
         videoOutputHandler.startRecordingVideo(assetWriter: assetWriter, pixelBufferAdaptor: pixelBufferAdaptor, audioInput: assetWriterAudioInput)
-        return true
     }
 
     func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
