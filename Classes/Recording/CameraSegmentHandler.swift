@@ -43,8 +43,6 @@ protocol AssetsHandlerType {
 /// A protocol to handle the various segments of a stop motion video, and also creates the final output
 protocol SegmentsHandlerType: AssetsHandlerType {
 
-    init()
-
     /// Current segments in stop motion
     var segments: [CameraSegment] { get }
 
