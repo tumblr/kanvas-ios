@@ -119,25 +119,25 @@ extension UIView {
      - parameter hiddenViews: subviews to hide
      - parameter animated: whether to animate the alpha values
      */
-    internal func showViews(shownViews: [UIView],
-                            hiddenViews: [UIView],
+    internal func showViews(shownViews: [UIView?],
+                            hiddenViews: [UIView?],
                             animated: Bool = false,
                             animationDuration: TimeInterval = KanvasViewConstants.AnimationDuration) {
         let duration = animated ? animationDuration : 0
         for view in (shownViews + hiddenViews) {
-            view.isUserInteractionEnabled = false
+            view?.isUserInteractionEnabled = false
         }
         
         UIView.animate(withDuration: duration, animations: { () -> Void in
             for view in shownViews {
-                view.alpha = 1
+                view?.alpha = 1
             }
             for view in hiddenViews {
-                view.alpha = 0
+                view?.alpha = 0
             }
         }, completion: { (finished: Bool) in
             for view in (shownViews + hiddenViews) {
-                view.isUserInteractionEnabled = true
+                view?.isUserInteractionEnabled = true
             }
         })
     }
