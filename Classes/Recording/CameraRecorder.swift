@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
-import VideoToolbox
+import Foundation
 import UIKit
+import VideoToolbox
 
 /// Default values for the camera recorder
 private struct CameraRecordingConstants {

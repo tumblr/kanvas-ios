@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import XCTest
+@testable import KanvasCamera
 import AVFoundation
 import UIKit
-@testable import KanvasCamera
+import XCTest
 
 final class MediaClipsCollectionControllerTests: XCTestCase {
 

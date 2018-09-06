@@ -5,11 +5,11 @@
 //
 
 @testable import KanvasCamera
-import Foundation
 import AVFoundation
+import FBSnapshotTestCase
+import Foundation
 import UIKit
 import XCTest
-import FBSnapshotTestCase
 
 final class CameraPreviewViewTests: FBSnapshotTestCase {
 

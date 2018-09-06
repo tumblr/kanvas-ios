@@ -5,8 +5,8 @@
 //
 
 @testable import KanvasCamera
-import Foundation
 import AVFoundation
+import Foundation
 import XCTest
 
 final class CameraRecorderTests: XCTestCase {
