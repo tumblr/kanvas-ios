@@ -541,7 +541,7 @@ final class CameraInputController: UIViewController {
 // MARK: - CameraRecordingDelegate
 // more documentation on the protocol methods can be found in the CameraRecordingDelegate
 extension CameraInputController: CameraRecordingDelegate {
-    func photoSettingsForCamera() -> AVCapturePhotoSettings? {
+    var photoSettingsForCamera: AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
         settings.flashMode = flashMode
         return settings
