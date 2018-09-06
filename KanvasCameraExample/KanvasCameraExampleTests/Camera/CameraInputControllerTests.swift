@@ -25,9 +25,9 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testConfigureMode() {
         let cameraInputController = newCameraInputController()
-        do { try cameraInputController.configureMode(.gif) } catch { }
+        do { try? cameraInputController.configureMode(.gif) }
         XCTAssert(cameraInputController.currentCameraOutput == .video, "Gif mode should configure as video")
-        do { try cameraInputController.configureMode(.photo) } catch { }
+        do { try? cameraInputController.configureMode(.photo) }
         XCTAssert(cameraInputController.currentCameraOutput == .photo, "Photo mode not configured properly")
     }
 
