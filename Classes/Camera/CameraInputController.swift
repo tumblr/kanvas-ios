@@ -365,9 +365,9 @@ final class CameraInputController: UIViewController {
         let point = gesture.location(in: view)
         /// normalize this
         let tapPoint = CGPoint(x: point.x / view.frame.size.width, y: point.y / view.frame.size.height)
-        do { try focusCamera(point: tapPoint) } catch {
-            // shouldn't crash if focus is not supported
-        }
+
+        // shouldn't crash if focus is not supported
+        do { try? focusCamera(point: tapPoint) }
     }
 
     @objc private func doubleTapped() {
