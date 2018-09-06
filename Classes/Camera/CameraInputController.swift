@@ -339,20 +339,14 @@ final class CameraInputController: UIViewController {
     ///
     /// - Returns: returns the current device's videoZoomFactor, if a device is found
     func currentZoom() -> CGFloat? {
-        guard let camera = currentDevice else {
-            return nil
-        }
-        return camera.videoZoomFactor
+        return currentDevice?.videoZoomFactor
     }
 
     /// Deletes a segment at an index
     ///
     /// - Parameter index: Int
     func deleteSegmentAtIndex(_ index: Int) {
-        guard let recorder = recorder else {
-            return
-        }
-        recorder.deleteSegmentAtIndex(index, removeFromDisk: true)
+        recorder?.deleteSegmentAtIndex(index, removeFromDisk: true)
     }
 
     /// The currently recorded segments of images and video
