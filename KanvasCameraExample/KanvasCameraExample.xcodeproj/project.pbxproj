@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0EAE0C89213985E8004CD7FF /* CameraSegmentHandlerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C88213985E8004CD7FF /* CameraSegmentHandlerStub.swift */; };
 		0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */; };
 		2534A21F22A4C02B90353CA5 /* Pods_KanvasCameraExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E13E1F33AB135043567AD8 /* Pods_KanvasCameraExample.framework */; };
 		AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E5212CC83B0044ED96 /* KanvasCameraStringsTests.swift */; };
@@ -24,6 +25,8 @@
 		ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498D52134AA1C00379F7F /* PhotoOutputHandlerTests.swift */; };
 		ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498D92134AD5700379F7F /* GifVideoOutputHandlerTests.swift */; };
 		ABE498DC2134AEB200379F7F /* VideoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498DB2134AEB200379F7F /* VideoOutputHandlerTests.swift */; };
+		ABE498E52136F22400379F7F /* CameraRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498E32136F22400379F7F /* CameraRecorderTests.swift */; };
+		ABE498E62136F22400379F7F /* CameraRecorderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498E42136F22400379F7F /* CameraRecorderStub.swift */; };
 		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
@@ -42,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		07DDC249DAB2E1FD27A71D49 /* Pods-KanvasCameraExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0EAE0C88213985E8004CD7FF /* CameraSegmentHandlerStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentHandlerStub.swift; sourceTree = "<group>"; };
 		0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettingsTests.swift; sourceTree = "<group>"; };
 		304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		37E13E1F33AB135043567AD8 /* Pods_KanvasCameraExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,6 +70,8 @@
 		ABE498D52134AA1C00379F7F /* PhotoOutputHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoOutputHandlerTests.swift; sourceTree = "<group>"; };
 		ABE498D92134AD5700379F7F /* GifVideoOutputHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifVideoOutputHandlerTests.swift; sourceTree = "<group>"; };
 		ABE498DB2134AEB200379F7F /* VideoOutputHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoOutputHandlerTests.swift; sourceTree = "<group>"; };
+		ABE498E32136F22400379F7F /* CameraRecorderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraRecorderTests.swift; sourceTree = "<group>"; };
+		ABE498E42136F22400379F7F /* CameraRecorderStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraRecorderStub.swift; sourceTree = "<group>"; };
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
@@ -128,6 +134,9 @@
 		AB7263ED212CCBB30044ED96 /* Recording */ = {
 			isa = PBXGroup;
 			children = (
+				0EAE0C88213985E8004CD7FF /* CameraSegmentHandlerStub.swift */,
+				ABE498E42136F22400379F7F /* CameraRecorderStub.swift */,
+				ABE498E32136F22400379F7F /* CameraRecorderTests.swift */,
 				ABE498DB2134AEB200379F7F /* VideoOutputHandlerTests.swift */,
 				ABE498D92134AD5700379F7F /* GifVideoOutputHandlerTests.swift */,
 				ABE498D52134AA1C00379F7F /* PhotoOutputHandlerTests.swift */,
@@ -403,11 +412,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABE498E62136F22400379F7F /* CameraRecorderStub.swift in Sources */,
+				0EAE0C89213985E8004CD7FF /* CameraSegmentHandlerStub.swift in Sources */,
 				0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */,
 				AB7263EF212CCBB30044ED96 /* CameraSegmentHandlerTests.swift in Sources */,
 				AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */,
 				AB7263EB212CC83B0044ED96 /* KanvasCameraColorsTests.swift in Sources */,
 				ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */,
+				ABE498E52136F22400379F7F /* CameraRecorderTests.swift in Sources */,
 				ABE498DC2134AEB200379F7F /* VideoOutputHandlerTests.swift in Sources */,
 				AB7263EC212CC83B0044ED96 /* KanvasCameraTimesTests.swift in Sources */,
 				ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */,
