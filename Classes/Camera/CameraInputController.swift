@@ -347,10 +347,7 @@ final class CameraInputController: UIViewController {
     ///
     /// - Returns: an array of CameraSegment
     func segments() -> [CameraSegment] {
-        guard let recorder = recorder else {
-            return []
-        }
-        return recorder.segments()
+        return recorder?.segments() ?? []
     }
 
     // MARK: - private methods
