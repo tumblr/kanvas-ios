@@ -189,19 +189,13 @@ final class CameraInputController: UIViewController {
     // MARK: - Internal methods
 
     /// Switches between front and rear camera, if possible
-    ///
-    /// - Returns: true if successfully switched cameras, false otherwise
-    func switchCameras() -> Bool {
+    func switchCameras() {
         captureSession?.stopRunning()
         do {
-            try toggleFrontRearCameras()
-            try configureCurrentOutput()
-        } catch {
-            // was unable to switch cameras, may only be one camera
-            return false
+            try? toggleFrontRearCameras()
+            try? configureCurrentOutput()
         }
         captureSession?.startRunning()
-        return true
     }
 
     /// Changes the current output modes corresponding to camera mode
@@ -371,7 +365,7 @@ final class CameraInputController: UIViewController {
     }
 
     @objc private func doubleTapped() {
-        let _ = switchCameras()
+        switchCameras()
     }
 
     private func currentResolution() -> CGSize {
