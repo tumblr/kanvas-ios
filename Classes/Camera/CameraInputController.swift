@@ -590,6 +590,9 @@ extension CameraInputController: AVCaptureVideoDataOutputSampleBufferDelegate, A
     }
 
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        // dropping a sample should be okay here
+        // dropping a sample should be okay here, processor could be busy
+        var mode: CMAttachmentMode = 0
+        let reason = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_DroppedFrameReason, &mode)
+        print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
     }
 }
