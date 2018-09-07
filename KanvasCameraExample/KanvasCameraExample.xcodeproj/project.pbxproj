@@ -27,7 +27,7 @@
 		0EAE0CB82139EC81004CD7FF /* KanvasCameraAnalyticsStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0CB72139EC81004CD7FF /* KanvasCameraAnalyticsStub.swift */; };
 		0EAE0CB92139EC85004CD7FF /* KanvasCameraAnalyticsStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0CB72139EC81004CD7FF /* KanvasCameraAnalyticsStub.swift */; };
 		0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */; };
-		2534A21F22A4C02B90353CA5 /* Pods_KanvasCameraExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E13E1F33AB135043567AD8 /* Pods_KanvasCameraExample.framework */; };
+		1A82DCEC21E83A81E483CA0A /* Pods_KanvasCameraExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCEE38E678D0A1C310541517 /* Pods_KanvasCameraExample.framework */; };
 		AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E5212CC83B0044ED96 /* KanvasCameraStringsTests.swift */; };
 		AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E6212CC83B0044ED96 /* KanvasCameraImagesTests.swift */; };
 		AB7263EB212CC83B0044ED96 /* KanvasCameraColorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E7212CC83B0044ED96 /* KanvasCameraColorsTests.swift */; };
@@ -40,6 +40,7 @@
 		AB7F29512121F02C00B8D599 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB7F294F2121F02C00B8D599 /* LaunchScreen.storyboard */; };
 		AB997EEB212CD07800A346A2 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		AB997EEC212CD07A00A346A2 /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
+		AB9BBC99F2684E7C43CABD6E /* Pods_KanvasCameraExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B049C18133FD4C00FAE1DF75 /* Pods_KanvasCameraExampleTests.framework */; };
 		ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498D52134AA1C00379F7F /* PhotoOutputHandlerTests.swift */; };
 		ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498D92134AD5700379F7F /* GifVideoOutputHandlerTests.swift */; };
 		ABE498DC2134AEB200379F7F /* VideoOutputHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE498DB2134AEB200379F7F /* VideoOutputHandlerTests.swift */; };
@@ -61,7 +62,6 @@
 		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
-		E8264023808D1EB1319FB1A6 /* Pods_KanvasCameraExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 830DFC8B8AE630F14D70C4C7 /* Pods_KanvasCameraExampleTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,10 +96,8 @@
 		0EAE0CB72139EC81004CD7FF /* KanvasCameraAnalyticsStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KanvasCameraAnalyticsStub.swift; path = KanvasCameraExample/KanvasCameraAnalyticsStub.swift; sourceTree = SOURCE_ROOT; };
 		0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettingsTests.swift; sourceTree = "<group>"; };
 		304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
-		37E13E1F33AB135043567AD8 /* Pods_KanvasCameraExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		761E012CE7CCF5C5FED281D1 /* Pods-KanvasCameraExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		7FD18CF4703E381AA074395F /* Pods-KanvasCameraExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		830DFC8B8AE630F14D70C4C7 /* Pods_KanvasCameraExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4E5C17CE13C14A294FC20A5 /* libPods-KanvasCameraExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasCameraExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB7263E5212CC83B0044ED96 /* KanvasCameraStringsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KanvasCameraStringsTests.swift; sourceTree = "<group>"; };
 		AB7263E6212CC83B0044ED96 /* KanvasCameraImagesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KanvasCameraImagesTests.swift; sourceTree = "<group>"; };
@@ -136,8 +134,10 @@
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
+		B049C18133FD4C00FAE1DF75 /* Pods_KanvasCameraExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1F6839B40675658A9EB1A05 /* Pods-KanvasCameraExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.release.xcconfig"; sourceTree = "<group>"; };
 		F67459CFA8681ADB0C29FF28 /* Pods-KanvasCameraExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.debug.xcconfig"; sourceTree = "<group>"; };
+		FCEE38E678D0A1C310541517 /* Pods_KanvasCameraExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,7 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2534A21F22A4C02B90353CA5 /* Pods_KanvasCameraExample.framework in Frameworks */,
+				1A82DCEC21E83A81E483CA0A /* Pods_KanvasCameraExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,7 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8264023808D1EB1319FB1A6 /* Pods_KanvasCameraExampleTests.framework in Frameworks */,
+				AB9BBC99F2684E7C43CABD6E /* Pods_KanvasCameraExampleTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,8 +343,8 @@
 			isa = PBXGroup;
 			children = (
 				A4E5C17CE13C14A294FC20A5 /* libPods-KanvasCameraExampleUITests.a */,
-				37E13E1F33AB135043567AD8 /* Pods_KanvasCameraExample.framework */,
-				830DFC8B8AE630F14D70C4C7 /* Pods_KanvasCameraExampleTests.framework */,
+				FCEE38E678D0A1C310541517 /* Pods_KanvasCameraExample.framework */,
+				B049C18133FD4C00FAE1DF75 /* Pods_KanvasCameraExampleTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -361,7 +361,7 @@
 				AB7F293F2121F02A00B8D599 /* Sources */,
 				AB7F29402121F02A00B8D599 /* Frameworks */,
 				AB7F29412121F02A00B8D599 /* Resources */,
-				D18E728F4DD1C0A4B2F02D6F /* [CP] Embed Pods Frameworks */,
+				7BADC7EFC2B159B2A79CC30D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -380,7 +380,7 @@
 				AB7F29582121F0ED00B8D599 /* Sources */,
 				AB7F29592121F0ED00B8D599 /* Frameworks */,
 				AB7F295A2121F0ED00B8D599 /* Resources */,
-				4A1BD56BE262CC791B7F7A17 /* [CP] Embed Pods Frameworks */,
+				C7E4F007DFA2D2F5EBF08989 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -455,24 +455,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4A1BD56BE262CC791B7F7A17 /* [CP] Embed Pods Frameworks */ = {
+		7BADC7EFC2B159B2A79CC30D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KanvasCamera.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9B52629913251AB792550162 /* [CP] Check Pods Manifest.lock */ = {
@@ -525,22 +523,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D18E728F4DD1C0A4B2F02D6F /* [CP] Embed Pods Frameworks */ = {
+		C7E4F007DFA2D2F5EBF08989 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KanvasCamera.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
