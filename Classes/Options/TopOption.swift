@@ -63,8 +63,8 @@ extension CameraController {
     func getOptions(from settings: CameraSettings) -> [Option<TopOption>] {
         let (animation, completion) = getAnimationForCameraFlip()
         return [
-            Option(option: settings.defaultFlashOption.topOption,
-                   image: getImage(for: settings.defaultFlashOption),
+            Option(option: settings.initialFlashOption.topOption,
+                   image: getImage(for: settings.initialFlashOption),
                    type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.topOption,
                                            alternateImage: getImage(for: settings.notDefaultFlashOption))),
             Option(option: settings.defaultCameraPositionOption.topOption,

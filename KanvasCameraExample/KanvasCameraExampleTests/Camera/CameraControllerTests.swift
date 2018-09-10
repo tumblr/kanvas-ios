@@ -68,7 +68,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func testSetUpWithFlashOn() {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
-        settings.defaultFlashOption = .on
+        settings.initialFlashOption = .on
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }

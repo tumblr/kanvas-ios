@@ -129,7 +129,7 @@ final class CameraInputController: UIViewController {
         configureSession()
         setupGestures()
         setupPreview()
-        setupFlash(defaultOption: settings.defaultFlashOption)
+        setupFlash(defaultOption: settings.initialFlashOption)
         setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
 
         if !CameraDevicePlatform.isSimulator { // if running on simulator, the startRunning() call takes a long time to return
