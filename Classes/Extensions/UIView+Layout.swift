@@ -118,8 +118,9 @@ extension UIView {
      - parameter shownViews: subviews to show
      - parameter hiddenViews: subviews to hide
      - parameter animated: whether to animate the alpha values
+     - parameter animationDuration: the duration in seconds to show the animation
      */
-    internal func showViews(shownViews: [UIView],
+    func showViews(shownViews: [UIView],
                             hiddenViews: [UIView],
                             animated: Bool = false,
                             animationDuration: TimeInterval = KanvasViewConstants.AnimationDuration) {

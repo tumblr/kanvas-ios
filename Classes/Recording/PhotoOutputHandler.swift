@@ -4,16 +4,30 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 import UIKit
 
+/// Protocol for photo handlers
+protocol PhotoOutputHandlerProtocol {
+
+    /// Function to take a photo
+    ///
+    /// - Parameters:
+    ///   - settings: the AVCapturePhotoSettings for the AVCapturePhotoOutput instance
+    ///   - completion: returns the photo as a UIImage if successful
+    func takePhoto(settings: AVCapturePhotoSettings, completion: @escaping (UIImage?) -> Void)
+}
+
 /// A handler for taking photos
-final class PhotoOutputHandler: NSObject {
+final class PhotoOutputHandler: NSObject, PhotoOutputHandlerProtocol {
 
     private let photoOutput: AVCapturePhotoOutput?
     private var completionBlock: ((UIImage?) -> Void)?
 
+    /// The designated initializer for the PhotoOutpuHandler
+    ///
+    /// - Parameter photoOutput: The AVCapturePhotoOutput that will capture photos. Optional for error handling
     required init(photoOutput: AVCapturePhotoOutput?) {
         self.photoOutput = photoOutput
     }
