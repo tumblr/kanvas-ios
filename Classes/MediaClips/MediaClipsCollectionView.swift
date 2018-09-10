@@ -8,13 +8,13 @@ import Foundation
 import UIKit
 
 private struct MediaClipsCollectionViewConstants {
-    static var Height: CGFloat = MediaClipsCollectionCell.minimumHeight
+    static var height: CGFloat = MediaClipsCollectionCell.minimumHeight
 }
 
 /// Collection view for the MediaClipsCollectionController
 final class MediaClipsCollectionView: UIView {
 
-    static let height = MediaClipsCollectionViewConstants.Height
+    static let height = MediaClipsCollectionViewConstants.height
     let collectionView: UICollectionView
 
     init() {
