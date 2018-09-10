@@ -8,8 +8,8 @@ import Foundation
 import AVFoundation
 
 private struct TopOptionsConstants {
-    static let CameraFlipAnimationsDuration: TimeInterval = 0.15
-    static func CameraFlipAnimationsTransform(baseTransform: CATransform3D) -> CATransform3D {
+    static let cameraFlipAnimationsDuration: TimeInterval = 0.15
+    static func cameraFlipAnimationsTransform(baseTransform: CATransform3D) -> CATransform3D {
         return CATransform3DRotate(baseTransform, .pi/2, 0, 0, 1)
     }
 }
@@ -70,7 +70,7 @@ extension CameraController {
             Option(option: settings.defaultCameraPositionOption.topOption,
                    image: KanvasCameraImages.CameraPositionImage,
                    type: .twoOptionsAnimation(animation: animation,
-                                              duration: TopOptionsConstants.CameraFlipAnimationsDuration,
+                                              duration: TopOptionsConstants.cameraFlipAnimationsDuration,
                                               completion: completion))
             
         ]
@@ -92,10 +92,10 @@ extension CameraController {
     /// function that returns the default animation for rotating the camera button
     func getAnimationForCameraFlip() -> ((UIView) -> (), (UIView) -> ()) {
         let animation = { (view: UIView) in
-            view.layer.transform = TopOptionsConstants.CameraFlipAnimationsTransform(baseTransform: view.layer.transform)
+            view.layer.transform = TopOptionsConstants.cameraFlipAnimationsTransform(baseTransform: view.layer.transform)
         }
         let completed = { (view: UIView) in
-            UIView.animate(withDuration: TopOptionsConstants.CameraFlipAnimationsDuration, animations: {
+            UIView.animate(withDuration: TopOptionsConstants.cameraFlipAnimationsDuration, animations: {
                 animation(view)
             }, completion: { _ in view.layer.transform = CATransform3DIdentity })   // We clear all transformation to leave it normal again.
         }
