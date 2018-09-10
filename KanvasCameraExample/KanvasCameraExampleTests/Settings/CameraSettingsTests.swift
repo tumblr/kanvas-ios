@@ -34,7 +34,7 @@ final class CameraSettingsTests: XCTestCase {
     
     func testDefaultFlash() {
         let settings = CameraSettings()
-        XCTAssert(settings.initialFlashOption == .off, "Default flash should be off")
+        XCTAssert(settings.preferredFlashOption == .off, "Default flash should be off")
     }
     
 }
