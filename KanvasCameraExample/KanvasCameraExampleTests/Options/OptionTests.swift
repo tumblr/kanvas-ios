@@ -12,13 +12,13 @@ import UIKit
 final class OptionTests: XCTestCase {
     
     func testFlashTopOption() {
-        let option = Option(option: TopOption.flashOff, image: KanvasCameraImages.FlashOffImage, type: .twoOptionsImages(alternateOption: TopOption.flashOn, alternateImage: KanvasCameraImages.FlashOnImage))
+        let option = Option(option: CameraDeviceOption.flashOff, image: KanvasCameraImages.FlashOffImage, type: .twoOptionsImages(alternateOption: CameraDeviceOption.flashOn, alternateImage: KanvasCameraImages.FlashOnImage))
         XCTAssert(option.image != nil && option.image == KanvasCameraImages.FlashOffImage, "The option image does not match the expected image")
         XCTAssert(option.option == .flashOff, "The option does not match flash on option")
         
         switch option.type {
             case .twoOptionsImages(alternateOption: let alternateItem, alternateImage: let image):
-                XCTAssert(alternateItem == TopOption.flashOn, "The alternate item did not match the expected item")
+                XCTAssert(alternateItem == CameraDeviceOption.flashOn, "The alternate item did not match the expected item")
                 XCTAssert(image == KanvasCameraImages.FlashOnImage, "The alternate image did not match the expected image")
                 break
             default:

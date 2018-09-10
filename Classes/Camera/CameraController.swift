@@ -350,7 +350,7 @@ extension CameraController: ModeSelectorAndShootControllerDelegate {
 // MARK: - OptionsCollectionControllerDelegate (Top Options)
 extension CameraController: OptionsControllerDelegate {
 
-    func optionSelected(_ item: TopOption) {
+    func optionSelected(_ item: CameraDeviceOption) {
         switch item {
         case .flashOn:
             cameraInputController.setFlashMode(on: true)

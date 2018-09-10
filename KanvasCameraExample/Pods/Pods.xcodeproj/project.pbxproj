@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -55,7 +55,7 @@
 		8642EF7F3EEDA01B21361AC721D512C1 /* CameraRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6925246F6419EDF48612C177139254 /* CameraRecorder.swift */; };
 		90F47EAD5B3153FFE69912F65B167AAE /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A73181B3129C3CF4A9185F73B91663 /* CameraPreviewView.swift */; };
 		947F218693606702639ABE51435DFFEB /* MediaClipsCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6971FB382200CF26E9A8C27A0FE8E4E /* MediaClipsCollectionController.swift */; };
-		960189C1C5CA40788BF96F431B69CC8A /* TopOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DB29EC9226041827FB3C00E171DE53 /* TopOption.swift */; };
+		960189C1C5CA40788BF96F431B69CC8A /* CameraDeviceOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DB29EC9226041827FB3C00E171DE53 /* CameraDeviceOption.swift */; };
 		9673CF780F48C8E4EC2A331717B1F67C /* FBSnapshotTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = E37899BD4B349060AA147E2A3721D3A2 /* FBSnapshotTestCase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		97014CF014F7F382F0CF2A2B025A057C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A94602875A48A997AD3F08A33E6EAA /* Foundation.framework */; };
 		97673E5856403D8317926CE476CC0576 /* ModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607EA9258080D27A7466233579B361D3 /* ModalController.swift */; };
@@ -127,7 +127,7 @@
 		13A73181B3129C3CF4A9185F73B91663 /* CameraPreviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 		19FCC94042B0D3E2B033DBDCC2F6240A /* OptionsController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		2431DA944FACCCCEEBC3388A96EE92F1 /* Pods-KanvasCameraExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-KanvasCameraExample-umbrella.h"; sourceTree = "<group>"; };
-		2E337FB8D21E6B805862BE61C445670F /* Pods_KanvasCameraExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_KanvasCameraExample.framework; path = "Pods-KanvasCameraExample.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E337FB8D21E6B805862BE61C445670F /* Pods_KanvasCameraExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EECE81A9AEC1ED1057A9C3C88DBCEBE /* UIApplication+StrictKeyWindow.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIApplication+StrictKeyWindow.m"; path = "FBSnapshotTestCase/Categories/UIApplication+StrictKeyWindow.m"; sourceTree = "<group>"; };
 		2F1209BAEFC84CB6F44FD80BE12D8A70 /* CGRect+Center.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGRect+Center.swift"; sourceTree = "<group>"; };
 		32D07FEB002A81FDFCCF1F4407AF1F98 /* UIFont+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Utils.swift"; sourceTree = "<group>"; };
@@ -139,7 +139,7 @@
 		3DBFBDCC891B770A2AC9EF0FB164B751 /* UIImage+Snapshot.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Snapshot.m"; path = "FBSnapshotTestCase/Categories/UIImage+Snapshot.m"; sourceTree = "<group>"; };
 		3E6925246F6419EDF48612C177139254 /* CameraRecorder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraRecorder.swift; sourceTree = "<group>"; };
 		432938111B6FF0189EFFEDF2F845B308 /* UIImage+Compare.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+Compare.h"; path = "FBSnapshotTestCase/Categories/UIImage+Compare.h"; sourceTree = "<group>"; };
-		44EDA688CBD7DB8E43750CDEA6E1285E /* Pods_KanvasCameraExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_KanvasCameraExampleTests.framework; path = "Pods-KanvasCameraExampleTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		44EDA688CBD7DB8E43750CDEA6E1285E /* Pods_KanvasCameraExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4792533D7EE0F440EE722DA4999E845C /* FBSnapshotTestCase-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FBSnapshotTestCase-dummy.m"; sourceTree = "<group>"; };
 		4B0C903AF77DA13C0363D3A3F941D688 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
 		4C17DA8FD76B879002D669BAA48B1E6E /* Pods-KanvasCameraExampleTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-KanvasCameraExampleTests-frameworks.sh"; sourceTree = "<group>"; };
@@ -157,7 +157,7 @@
 		67E276593855381568F725E69496F29C /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67F347DDD73D3279911417849F2904AC /* CameraController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		6815CCD19E103C03DB8F583FC7C7D1AE /* PhotoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoOutputHandler.swift; sourceTree = "<group>"; };
-		69DB29EC9226041827FB3C00E171DE53 /* TopOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TopOption.swift; sourceTree = "<group>"; };
+		69DB29EC9226041827FB3C00E171DE53 /* CameraDeviceOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraDeviceOption.swift; sourceTree = "<group>"; };
 		73760231042E4E5235E47CEE8A6E93BE /* Pods-KanvasCameraExample-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-KanvasCameraExample-resources.sh"; sourceTree = "<group>"; };
 		7B37D7C695D5C6C47A7C093595CD4F06 /* FBSnapshotTestCase.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FBSnapshotTestCase.xcconfig; sourceTree = "<group>"; };
 		7C43C47C61E8F89B6D1A057B30FD9821 /* NSURL+Media.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSURL+Media.swift"; sourceTree = "<group>"; };
@@ -170,15 +170,15 @@
 		88ABD7311BB18DD3FCD96C0E5CB7228D /* UIViewController+Load.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Load.swift"; sourceTree = "<group>"; };
 		894C7506B8F9A22C53F1644D3E540FFA /* UIView+Layout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		9047DF62C9CBD39227C28BDE07F56542 /* KanvasCamera-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KanvasCamera-prefix.pch"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		95C1153EAFB5F7DF51E5F464F000881E /* MediaClipsCollectionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaClipsCollectionCell.swift; sourceTree = "<group>"; };
-		9710A9ABCC87F85543E8DB98EB7905CB /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FBSnapshotTestCase.framework; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9710A9ABCC87F85543E8DB98EB7905CB /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		988DDEE3B534639DC3310FE66CA90B1E /* OptionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
 		9DFCF579A86C59784C5E0CD5F675E47F /* ModalPresentationAnimationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModalPresentationAnimationController.swift; sourceTree = "<group>"; };
 		9EC70EF9223C51D9BC6FA9F91C8393F5 /* ModeSelectorAndShootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootView.swift; sourceTree = "<group>"; };
 		9F3D27B81538B89EAED776C6C7540E4E /* ModalPresentationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModalPresentationController.swift; sourceTree = "<group>"; };
 		9F77A04000F804EC27D35B1D076ADC06 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
-		A001B444A3514ECF27E76EDDD2DD7388 /* KanvasCamera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = KanvasCamera.framework; path = KanvasCamera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A001B444A3514ECF27E76EDDD2DD7388 /* KanvasCamera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KanvasCamera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A11D5B54955E3381F067364E427B571A /* FBSnapshotTestCase-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FBSnapshotTestCase-umbrella.h"; sourceTree = "<group>"; };
 		A2B02D0A6B399161952A82A4A4FC1334 /* CameraView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		A6971FB382200CF26E9A8C27A0FE8E4E /* MediaClipsCollectionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaClipsCollectionController.swift; sourceTree = "<group>"; };
@@ -222,7 +222,7 @@
 		F49BF050E4CCE09A635EF76221E3F096 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4E4447428A28B075879153AE8197AD4 /* UIUpdate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIUpdate.swift; sourceTree = "<group>"; };
 		F6BA1DF104D691A478DC74B352699747 /* KanvasCameraColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraColors.swift; sourceTree = "<group>"; };
-		F9FD96B5346332F4EAACE44D21807FC2 /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
+		F9FD96B5346332F4EAACE44D21807FC2 /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
 		FF4FB67379C15E2E0F62ECC319FD4846 /* OptionsStackView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionsStackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -322,7 +322,6 @@
 				3288FCB8E15F6401DE6220AE5CA1D27B /* Support Files */,
 				99E46DD4AB2256791F111C718CB0EEF8 /* SwiftSupport */,
 			);
-			name = FBSnapshotTestCase;
 			path = FBSnapshotTestCase;
 			sourceTree = "<group>";
 		};
@@ -332,7 +331,7 @@
 				19FCC94042B0D3E2B033DBDCC2F6240A /* OptionsController.swift */,
 				FF4FB67379C15E2E0F62ECC319FD4846 /* OptionsStackView.swift */,
 				988DDEE3B534639DC3310FE66CA90B1E /* OptionView.swift */,
-				69DB29EC9226041827FB3C00E171DE53 /* TopOption.swift */,
+				69DB29EC9226041827FB3C00E171DE53 /* CameraDeviceOption.swift */,
 			);
 			name = Options;
 			path = Classes/Options;
@@ -833,7 +832,7 @@
 				0915BB2387177308D8BED988A99CF4D4 /* PhotoOutputHandler.swift in Sources */,
 				F78575865ADD48B57C381161EEEDFC94 /* Queue.swift in Sources */,
 				C63BBC16E277ABAC4AE82927214148F4 /* ShootButtonView.swift in Sources */,
-				960189C1C5CA40788BF96F431B69CC8A /* TopOption.swift in Sources */,
+				960189C1C5CA40788BF96F431B69CC8A /* CameraDeviceOption.swift in Sources */,
 				3DB361484E0687E2FE0730E00AA5FBA3 /* UIButton+Shadows.swift in Sources */,
 				5CEB680C18CAFD51FAD38AB6ABBC7A14 /* UICollectionView+Cells.swift in Sources */,
 				2921DD81BC14CCC4BFF0202BC206419C /* UIFont+Utils.swift in Sources */,
@@ -961,11 +960,7 @@
 				INFOPLIST_FILE = "Target Support Files/KanvasCamera/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/KanvasCamera/KanvasCamera.modulemap";
 				PRODUCT_MODULE_NAME = KanvasCamera;
 				PRODUCT_NAME = KanvasCamera;
@@ -997,11 +992,7 @@
 				INFOPLIST_FILE = "Target Support Files/FBSnapshotTestCase/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/FBSnapshotTestCase/FBSnapshotTestCase.modulemap";
 				PRODUCT_MODULE_NAME = FBSnapshotTestCase;
 				PRODUCT_NAME = FBSnapshotTestCase;
@@ -1034,11 +1025,7 @@
 				INFOPLIST_FILE = "Target Support Files/KanvasCamera/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/KanvasCamera/KanvasCamera.modulemap";
 				PRODUCT_MODULE_NAME = KanvasCamera;
 				PRODUCT_NAME = KanvasCamera;
@@ -1072,11 +1059,7 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-KanvasCameraExampleTests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests.modulemap";
 				OTHER_LDFLAGS = "";
@@ -1112,11 +1095,7 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-KanvasCameraExample/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.modulemap";
 				OTHER_LDFLAGS = "";
@@ -1215,11 +1194,7 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-KanvasCameraExample/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.modulemap";
 				OTHER_LDFLAGS = "";
@@ -1255,11 +1230,7 @@
 				INFOPLIST_FILE = "Target Support Files/Pods-KanvasCameraExampleTests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests.modulemap";
 				OTHER_LDFLAGS = "";
@@ -1294,11 +1265,7 @@
 				INFOPLIST_FILE = "Target Support Files/FBSnapshotTestCase/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/FBSnapshotTestCase/FBSnapshotTestCase.modulemap";
 				PRODUCT_MODULE_NAME = FBSnapshotTestCase;
 				PRODUCT_NAME = FBSnapshotTestCase;
