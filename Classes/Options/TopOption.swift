@@ -4,8 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 private struct TopOptionsConstants {
     static let CameraFlipAnimationsDuration: TimeInterval = 0.15
