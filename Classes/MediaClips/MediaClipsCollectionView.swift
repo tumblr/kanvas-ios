@@ -59,9 +59,7 @@ fileprivate func createCollectionView() -> UICollectionView {
 
 fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.scrollDirection = .horizontal
-    if #available(iOS 10.0, *) {
-        layout.itemSize = UICollectionViewFlowLayoutAutomaticSize
-    }
+    layout.itemSize = UICollectionViewFlowLayoutAutomaticSize
     layout.estimatedItemSize = CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)
     layout.minimumInteritemSpacing = 0
     layout.minimumLineSpacing = 0
