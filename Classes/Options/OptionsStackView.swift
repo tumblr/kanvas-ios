@@ -88,7 +88,7 @@ final class OptionsStackView<Item>: UIView {
         options.enumerated().forEach { (index, option) in
             let optionView = OptionView(image: option.image)
             optionView.button.tag = index
-            optionView.accessibilityIdentifier = "Options Option View #\(index)"
+            optionView.accessibilityIdentifier = "Options Option View #\(index + 1)"
             optionView.button.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(optionView)
         }
