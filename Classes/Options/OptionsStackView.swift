@@ -85,7 +85,7 @@ final class OptionsStackView<Item>: UIView {
     }
 
     private func addOptions(_ options: [Option<Item>]) {
-        for (index, option) in options.enumerated() {
+        options.enumerated().forEach { (index, option) in
             let optionView = OptionView(image: option.image)
             optionView.button.tag = index
             optionView.accessibilityIdentifier = "Options Option View #\(index)"
