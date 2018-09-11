@@ -13,20 +13,21 @@ import Foundation
 /// - flashOff: represents the camera flash or torch disabled
 /// - frontCamera: represents the device's front (selfie) camera
 /// - backCamera: presents the device's back camera
-enum TopOption {
+enum CameraDeviceOption {
     case flashOn
     case flashOff
     case frontCamera
     case backCamera
 }
 
-// MARK: - Setting to Top Option conversion
-fileprivate protocol TopOptionConvertible {
-    var topOption: TopOption { get }
+// MARK: - Setting to CameraDeviceOption conversion
+fileprivate protocol CameraDeviceOptionConvertible {
+    var topOption: CameraDeviceOption { get }
 }
 
-extension AVCaptureDevice.FlashMode: TopOptionConvertible {
-    var topOption: TopOption {
+extension AVCaptureDevice.FlashMode: CameraDeviceOptionConvertible {
+    /// The options for flash modes
+    var topOption: CameraDeviceOption {
         switch self {
         case .off: return .flashOff
         case .on: return .flashOn
@@ -35,8 +36,9 @@ extension AVCaptureDevice.FlashMode: TopOptionConvertible {
     }
 }
 
-extension AVCaptureDevice.Position: TopOptionConvertible {
-    var topOption: TopOption {
+extension AVCaptureDevice.Position: CameraDeviceOptionConvertible {
+    /// The options for camera position modes
+    var topOption: CameraDeviceOption {
         switch self {
         case .back: return .backCamera
         case .front: return .frontCamera
