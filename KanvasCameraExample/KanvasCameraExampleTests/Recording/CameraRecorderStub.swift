@@ -4,30 +4,30 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
-import AVFoundation
-import UIKit
 @testable import KanvasCamera
+import AVFoundation
+import Foundation
+import UIKit
 
 final class CameraRecorderStub: CameraRecordingProtocol {
-    
-    private var _isRecording = false
-    private var _currentVideoSample: CMSampleBuffer?
-    private var cameraSegmentHandler: CameraSegmentHandler
+
+    private var recording = false
+    private var currentVideoSample: CMSampleBuffer?
+    private var cameraSegmentHandler: SegmentsHandlerType
     private var startTime: Date?
     var recordingDelegate: CameraRecordingDelegate? = nil
 
-    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?) {
+    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?, segmentsHandler: SegmentsHandlerType) {
         self.recordingDelegate = recordingDelegate
-        cameraSegmentHandler = CameraSegmentHandler()
+        self.cameraSegmentHandler = segmentsHandler
     }
 
     func addSegment(_ segment: CameraSegment) {
         cameraSegmentHandler.addSegment(segment)
     }
-    
+
     func isRecording() -> Bool {
-        return _isRecording
+        return recording
     }
 
     func segments() -> [CameraSegment] {
@@ -38,18 +38,17 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         return nil
     }
 
-    func startRecordingVideo() -> Bool {
+    func startRecordingVideo() {
         if isRecording() {
-            return false
+            return
         }
-        _isRecording = true
+        recording = true
         startTime = Date()
-        return true
     }
 
     func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
         if isRecording() {
-            _isRecording = false
+            recording = false
             if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
                 cameraSegmentHandler.addNewVideoSegment(url: url)
                 completion(url)
@@ -66,7 +65,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
     }
 
     func cancelRecording() {
-        _isRecording = false
+        recording = false
     }
 
     func takePhoto(completion: @escaping (UIImage?) -> Void) {
@@ -88,7 +87,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
     func exportRecording(completion: @escaping (URL?) -> Void) {
         cameraSegmentHandler.exportVideo(completion: { url in
             completion(url)
-            self._isRecording = false
+            self.recording = false
         })
     }
 
@@ -104,19 +103,19 @@ final class CameraRecorderStub: CameraRecordingProtocol {
             completion(nil)
             return
         }
-        _isRecording = true
+        recording = true
         if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             completion(url)
         }
         else {
             completion(nil)
         }
-        _isRecording = false
+        recording = false
     }
 
     func reset() {
         if !isRecording() {
-            cameraSegmentHandler.reset()
+            cameraSegmentHandler.reset(removeFromDisk: false)
         }
     }
 
@@ -125,7 +124,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
     }
 
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        _currentVideoSample = sampleBuffer
+        currentVideoSample = sampleBuffer
     }
 
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {

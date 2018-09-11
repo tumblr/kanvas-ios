@@ -4,8 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 // the values for timing and frame intervals throughout the module
 struct KanvasCameraTimes {

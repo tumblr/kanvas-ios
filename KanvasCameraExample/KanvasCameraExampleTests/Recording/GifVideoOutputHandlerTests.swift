@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+@testable import KanvasCamera
 import Foundation
 import XCTest
-@testable import KanvasCamera
 
 final class GifVideoOutputHandlerTests: XCTestCase {
 
