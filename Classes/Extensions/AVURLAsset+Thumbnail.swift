@@ -4,8 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 extension AVURLAsset {
 
@@ -17,7 +17,7 @@ extension AVURLAsset {
             let uiImage = UIImage(cgImage: cgImage)
             return uiImage
         } catch {
-            NSLog("failed to get thumbnail")
+            assertionFailure("failed to get thumbnail")
         }
 
         return nil

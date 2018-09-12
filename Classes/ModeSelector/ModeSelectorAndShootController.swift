@@ -32,7 +32,7 @@ protocol ModeSelectorAndShootControllerDelegate: class {
 final class ModeSelectorAndShootController: UIViewController {
 
     private let settings: CameraSettings
-    lazy var _view: ModeSelectorAndShootView = {
+    lazy var modeView: ModeSelectorAndShootView = {
         let view = ModeSelectorAndShootView(settings: self.settings)
         view.delegate = self
         return view
@@ -69,7 +69,7 @@ final class ModeSelectorAndShootController: UIViewController {
 
     // MARK: - View Life Cycle
     override func loadView() {
-        view = _view
+        view = modeView
     }
 
     override func viewDidLoad() {
@@ -81,12 +81,12 @@ final class ModeSelectorAndShootController: UIViewController {
 
     /// shows the camera mode button
     func showModeButton() {
-        _view.showModeButton(true)
+        modeView.showModeButton(true)
     }
 
     /// hides the camera mode button
     func hideModeButton() {
-        _view.showModeButton(false)
+        modeView.showModeButton(false)
     }
 
 }
@@ -102,7 +102,7 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     }
 
     func setMode(_ newMode: CameraMode, from oldMode: CameraMode?) {
-        _view.setUpMode(newMode)
+        modeView.setUpMode(newMode)
         delegate?.didOpenMode(newMode, andClosed: oldMode)
 
     }
