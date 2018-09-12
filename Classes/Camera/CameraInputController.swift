@@ -393,11 +393,13 @@ final class CameraInputController: UIViewController {
         guard !cameras.isEmpty else { throw CameraInputError.noCamerasAvailable }
 
         for camera in cameras {
-            if camera.position == .front {
+            switch camera.position {
+            case .front:
                 frontCamera = camera
-            }
-            if camera.position == .back {
+            case .back:
                 rearCamera = camera
+            case .unspecified:
+                break // unspecified cameras are not currently supported
             }
             if camera.isFocusModeSupported(.continuousAutoFocus) {
                 try camera.lockForConfiguration()
