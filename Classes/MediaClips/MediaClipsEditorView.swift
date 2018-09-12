@@ -37,7 +37,7 @@ final class MediaClipsEditorView: UIView {
 
         trashButton = UIButton()
         trashButton.accessibilityIdentifier = "Media Clips Trash Button"
-        trashButton.setImage(KanvasCameraImages.DeleteImage, for: .normal)    //TODO: Settings
+        trashButton.setImage(KanvasCameraImages.DeleteImage, for: .normal)
         super.init(frame: .zero)
 
         setUpViews()

@@ -4,9 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
-import UIKit
+import Foundation
 
 /// A protocol for camera recording callbacks
 protocol CameraRecordingDelegate {
@@ -68,7 +67,7 @@ protocol CameraRecordingProtocol {
     /// starts recording video
     ///
     /// - Returns: returns whether it has successfully started
-    @discardableResult func startRecordingVideo() -> Bool
+    func startRecordingVideo()
 
     /// stops recording video, and exports the recording to a local file
     ///

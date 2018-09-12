@@ -4,8 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 import UIKit
 
 /// An enum for AVCaptureOutput types
@@ -250,7 +250,8 @@ final class CameraInputController: UIViewController {
     func startRecording() -> Bool {
         guard let recorder = self.recorder else { return false }
         addArtificialFlashIfNecessary()
-        return recorder.startRecordingVideo()
+        recorder.startRecordingVideo()
+        return true
     }
 
     /// Finishes video recording

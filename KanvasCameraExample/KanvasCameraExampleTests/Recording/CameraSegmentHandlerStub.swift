@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
-import AVFoundation
-import UIKit
 @testable import KanvasCamera
+import AVFoundation
+import Foundation
+import UIKit
 
 final class CameraSegmentHandlerStub: SegmentsHandlerType {
     var segments: [CameraSegment] = []

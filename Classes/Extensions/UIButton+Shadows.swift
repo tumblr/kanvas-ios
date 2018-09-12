@@ -19,7 +19,7 @@ private struct ButtonShadowConstants {
     static let radius: CGFloat = 0.0
 }
 
-internal extension UIButton {
+extension UIButton {
     func applyShadows() {
         layer.shadowColor = ButtonShadowConstants.color.cgColor
         layer.shadowOffset = ButtonShadowConstants.offset

@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
-import VideoToolbox
+import Foundation
 import UIKit
+import VideoToolbox
 
 /// Default values for the camera recorder
 private struct CameraRecordingConstants {
@@ -78,20 +78,20 @@ final class CameraRecorder: NSObject {
             NSLog("failed to setup asset writer")
             return
         }
+        self.url = url
 
         let videoOutputSettings: [String: Any] = segmentsHandler.videoOutputSettingsForSize(size: size)
-
-        assetWriterVideoInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoOutputSettings)
-        assetWriterVideoInput?.expectsMediaDataInRealTime = true
-
+        let videoInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoOutputSettings)
+        videoInput.expectsMediaDataInRealTime = true
+        
         let sourcePixelBufferAttributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA, kCVPixelBufferWidthKey as String: size.width, kCVPixelBufferHeightKey as String: size.height]
 
-        guard let videoInput = assetWriterVideoInput else { return }
         assetWriterPixelBufferInput = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: videoInput, sourcePixelBufferAttributes: sourcePixelBufferAttributes)
         if assetWriter?.canAdd(videoInput) == true {
             assetWriter?.add(videoInput)
         }
 
+        assetWriterVideoInput = videoInput
         setupAudioForAssetWriter()
     }
 
@@ -184,20 +184,18 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     // MARK: - video
-    @discardableResult func startRecordingVideo() -> Bool {
+    func startRecordingVideo() {
         if isRecording() {
-            return false
+            return
         }
         currentRecordingMode = .stopMotion
         recordingDelegate?.cameraWillTakeVideo()
 
-        url = NSURL.createNewVideoURL()
-        setupAssetWriter(url: url)
+        setupAssetWriter(url: NSURL.createNewVideoURL())
         guard let assetWriter = assetWriter, let pixelBufferAdaptor = assetWriterPixelBufferInput else {
-            return false
+            return
         }
         videoOutputHandler.startRecordingVideo(assetWriter: assetWriter, pixelBufferAdaptor: pixelBufferAdaptor, audioInput: assetWriterAudioInput)
-        return true
     }
 
     func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
@@ -249,8 +247,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         currentRecordingMode = .gif
         recordingDelegate?.cameraWillTakeVideo()
 
-        url = NSURL.createNewVideoURL()
-        setupAssetWriter(url: url)
+        setupAssetWriter(url: NSURL.createNewVideoURL())
 
         gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput) { [unowned self] success in
             self.recordingDelegate?.cameraWillFinishVideo()
@@ -279,8 +276,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func reset() {
-        url = NSURL.createNewVideoURL()
-        setupAssetWriter(url: url)
+        setupAssetWriter(url: NSURL.createNewVideoURL())
         segmentsHandler.reset(removeFromDisk: true)
     }
 
