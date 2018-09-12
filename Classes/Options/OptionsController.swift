@@ -78,7 +78,6 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(optionsStackView)
         optionsStackView.add(into: view)
     }
 }
