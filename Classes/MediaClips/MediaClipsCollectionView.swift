@@ -8,13 +8,13 @@ import Foundation
 import UIKit
 
 private struct MediaClipsCollectionViewConstants {
-    static var Height: CGFloat = MediaClipsCollectionCell.minimumHeight
+    static var height: CGFloat = MediaClipsCollectionCell.minimumHeight
 }
 
 /// Collection view for the MediaClipsCollectionController
 final class MediaClipsCollectionView: UIView {
 
-    static let height = MediaClipsCollectionViewConstants.Height
+    static let height = MediaClipsCollectionViewConstants.height
     let collectionView: UICollectionView
 
     init() {
@@ -59,9 +59,7 @@ fileprivate func createCollectionView() -> UICollectionView {
 
 fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.scrollDirection = .horizontal
-    if #available(iOS 10.0, *) {
-        layout.itemSize = UICollectionViewFlowLayoutAutomaticSize
-    }
+    layout.itemSize = UICollectionViewFlowLayoutAutomaticSize
     layout.estimatedItemSize = CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)
     layout.minimumInteritemSpacing = 0
     layout.minimumLineSpacing = 0
