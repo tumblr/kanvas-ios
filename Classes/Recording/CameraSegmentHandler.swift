@@ -4,8 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 /// A container for segments
 enum CameraSegment {
@@ -42,7 +42,8 @@ protocol AssetsHandlerType {
 
 /// A protocol to handle the various segments of a stop motion video, and also creates the final output
 protocol SegmentsHandlerType: AssetsHandlerType {
-
+    
+    /// An init function for segment handler types
     init()
 
     /// Current segments in stop motion

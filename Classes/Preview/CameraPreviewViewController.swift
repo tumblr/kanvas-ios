@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import AVFoundation
 import Foundation
 import UIKit
-import AVFoundation
 
 /// Protocol for camera preview controller methods
 

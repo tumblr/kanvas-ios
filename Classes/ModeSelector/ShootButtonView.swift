@@ -260,13 +260,14 @@ final class ShootButtonView: IgnoreTouchesView {
         animation.duration = ShootButtonViewConstants.ButtonSizeAnimationDuration
         containerView.layer.add(animation, forKey: "cornerRadius")
         borderView.layer.add(animation, forKey: "cornerRadius")
-        UIView.animate(withDuration: ShootButtonViewConstants.ButtonSizeAnimationDuration, animations: {
-            self.containerView.layer.cornerRadius = newCornerRadius
-            self.borderView.layer.cornerRadius = newCornerRadius
-            self.containerWidthConstraint?.constant = newWidth
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }, completion: { _ in })
+        UIView.animate(withDuration: ShootButtonViewConstants.ButtonSizeAnimationDuration) { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.containerView.layer.cornerRadius = newCornerRadius
+            strongSelf.borderView.layer.cornerRadius = newCornerRadius
+            strongSelf.containerWidthConstraint?.constant = newWidth
+            strongSelf.setNeedsLayout()
+            strongSelf.layoutIfNeeded()
+        }
     }
 
     private func circleAnimationCallback() {
@@ -294,9 +295,7 @@ final class ShootButtonView: IgnoreTouchesView {
         animateStrokeEnd.duration = time
         animateStrokeEnd.fromValue = 0
         animateStrokeEnd.toValue = 1
-        CATransaction.setCompletionBlock {
-            completion()
-        }
+        CATransaction.setCompletionBlock(completion)
         timeSegmentLayer.add(animateStrokeEnd, forKey: .none)
         CATransaction.commit()
         timeSegmentLayer.strokeEnd = 1
@@ -325,13 +324,15 @@ final class ShootButtonView: IgnoreTouchesView {
 
     private func animateImageChange(_ image: UIImage?) {
         isUserInteractionEnabled = false
-        if let _ = self.imageView.image {
-            UIView.animate(withDuration: ShootButtonViewConstants.ButtonImageAnimationOutDuration, animations: {
-                self.imageWidthConstraint?.constant = 0
-                self.setNeedsLayout()
-                self.layoutIfNeeded()
-            }, completion: { _ in
-                self.animateNewImageShowing(image)
+        if self.imageView.image != nil {
+            UIView.animate(withDuration: ShootButtonViewConstants.ButtonImageAnimationOutDuration, animations: { [weak self] in
+                guard let strongSelf = self else { return }
+                strongSelf.imageWidthConstraint?.constant = 0
+                strongSelf.setNeedsLayout()
+                strongSelf.layoutIfNeeded()
+            }, completion: { [weak self] _ in
+                guard let strongSelf = self else { return }
+                strongSelf.animateNewImageShowing(image)
             })
         }
         else {
