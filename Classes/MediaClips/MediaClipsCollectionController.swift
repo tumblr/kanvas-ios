@@ -18,7 +18,7 @@ protocol MediaClipsCollectionControllerDelegate: class {
 
 /// Controller for handling the media clips collection.
 final class MediaClipsCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    private lazy var _view = MediaClipsCollectionView()
+    private lazy var mediaClipsCollectionView = MediaClipsCollectionView()
 
     private var clips: [MediaClip]
     private var selectedClipIndex: IndexPath?
@@ -44,24 +44,24 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     ///
     /// - Parameter clip: The media clip to display
     func addNewClip(_ clip: MediaClip) {
-        deselectOldSelection(in: _view.collectionView)
+        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
         clips.append(clip)
-        _view.collectionView.insertItems(at: [IndexPath(item: clips.count - 1, section: 0)])
-        if _view.collectionView.numberOfItems(inSection: 0) > 0 {
+        mediaClipsCollectionView.collectionView.insertItems(at: [IndexPath(item: clips.count - 1, section: 0)])
+        if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
             scrollToLast(animated: true)
         }
     }
 
     /// Deletes the last clip and updates the UI
     func removeLastClip() {
-        deselectOldSelection(in: _view.collectionView)
+        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
         if clips.count > 0 {
             let index = clips.count - 1
             if index == selectedClipIndex?.item {
                 selectedClipIndex = .none
             }
             clips.removeLast()
-            _view.collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
+            mediaClipsCollectionView.collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
         }
     }
 
@@ -72,7 +72,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         if let index = selectedClipIndex {
             selectedClipIndex = .none
             clips.remove(at: index.item)
-            _view.collectionView.deleteItems(at: [index])
+            mediaClipsCollectionView.collectionView.deleteItems(at: [index])
             return index.item
         }
         else {
@@ -89,21 +89,21 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     // MARK: - View Life Cycle
     override func loadView() {
-        view = _view
+        view = mediaClipsCollectionView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        _view.collectionView.register(cell: MediaClipsCollectionCell.self)
-        _view.collectionView.delegate = self
-        _view.collectionView.dataSource = self
+        mediaClipsCollectionView.collectionView.register(cell: MediaClipsCollectionCell.self)
+        mediaClipsCollectionView.collectionView.delegate = self
+        mediaClipsCollectionView.collectionView.dataSource = self
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        _view.collectionView.collectionViewLayout.invalidateLayout()
-        _view.collectionView.layoutIfNeeded()
-        if _view.collectionView.numberOfItems(inSection: 0) > 0 {
+        mediaClipsCollectionView.collectionView.collectionViewLayout.invalidateLayout()
+        mediaClipsCollectionView.collectionView.layoutIfNeeded()
+        if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
             scrollToLast(animated: false)
         }
     }
@@ -127,7 +127,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        NSLog("Selected Item")
         let item = selectedClipIndex?.item
         deselectOldSelection(in: collectionView)
         if item != indexPath.item {
@@ -173,16 +172,16 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     }
 
     private func scrollToOptionAt(_ index: Int, animated: Bool) {
-        guard _view.collectionView.numberOfItems(inSection: 0) > index else { return }
+        guard mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: 0)
-        _view.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
+        mediaClipsCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         if !animated {
-            _view.collectionView.reloadData()
+            mediaClipsCollectionView.collectionView.reloadData()
         }
     }
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        deselectOldSelection(in: _view.collectionView)
+        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
     }
 
     // MARK: - Helpers

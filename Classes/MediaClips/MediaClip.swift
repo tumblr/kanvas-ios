@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// A representation for a camera segment to be presented in the MediaClipsEditorController
+/// A representation for a camera segment to be presented in the MediaClipsEditorViewController
 struct MediaClip {
     /// The image to represent the photo or video
     let representativeFrame: UIImage

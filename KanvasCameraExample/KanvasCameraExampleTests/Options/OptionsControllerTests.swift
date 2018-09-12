@@ -5,10 +5,10 @@
 //
 
 @testable import KanvasCamera
+import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
-import FBSnapshotTestCase
 
 final class OptionsControllerTests: FBSnapshotTestCase {
 
@@ -22,7 +22,6 @@ final class OptionsControllerTests: FBSnapshotTestCase {
 
         self.recordMode = false
         animationCalled = false
-        completionCalled = false
     }
 
     func getOptions() -> [Option<String>] {
@@ -30,7 +29,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         return [Option(option: "Option 1.1", image: image, type: .twoOptionsImages(alternateOption: "Option 1.2", alternateImage: image)),
                 Option(option: "Option 2", image: image, type: .twoOptionsAnimation(animation: { [unowned self] _ in self.animationCalled = true },
                                                                                     duration: AnimationDuration,
-                                                                                    completion: { [unowned self] _ in self.completionCalled = true }))]
+                                                                                    completion: nil))]
     }
 
     func newViewController(options: [Option<String>]) -> OptionsController<OptionsControllerDelegateStub> {
@@ -72,7 +71,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         // Test that the animation was made
         RunLoop.main.run(until: Date())
         XCTAssert(animationCalled, "Animation not called")
-        XCTAssert(completionCalled, "Completion not called")
+        // completion test would run async, should not test
         // Test option was not mutated
         XCTAssertEqual(options[1].option, "Option 2")
     }
