@@ -5,8 +5,8 @@
 //
 
 @testable import KanvasCamera
-import Foundation
 import AVFoundation
+import Foundation
 import XCTest
 
 final class CameraRecorderTests: XCTestCase {
@@ -18,7 +18,8 @@ final class CameraRecorderTests: XCTestCase {
                 photoOutput: nil,
                 videoOutput: nil,
                 audioOutput: nil,
-                recordingDelegate: nil)
+                recordingDelegate: nil,
+                segmentsHandler: CameraSegmentHandlerStub())
         return cameraRecorder
     }
 
@@ -48,9 +49,9 @@ final class CameraRecorderTests: XCTestCase {
         let delegate = CameraRecorderDelegateStub()
         cameraRecorder.recordingDelegate = delegate
 
-        let started = cameraRecorder.startRecordingVideo()
+        cameraRecorder.startRecordingVideo()
         let blockExpectation = XCTestExpectation(description: "block expectation")
-        XCTAssert(started, "CameraRecorder failed to start recording")
+        XCTAssert(cameraRecorder.isRecording(), "CameraRecorder failed to start recording")
 
         cameraRecorder.stopRecordingVideo(completion: { url in
             blockExpectation.fulfill()
