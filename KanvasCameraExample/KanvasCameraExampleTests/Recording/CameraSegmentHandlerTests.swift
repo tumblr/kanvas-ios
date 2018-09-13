@@ -5,9 +5,9 @@
 //
 
 @testable import KanvasCamera
+import AVFoundation
 import Foundation
 import XCTest
-import AVFoundation
 
 final class CameraSegmentHandlerTests: XCTestCase {
 

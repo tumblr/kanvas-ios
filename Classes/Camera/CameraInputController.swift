@@ -4,8 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 import UIKit
 
 /// An enum for AVCaptureOutput types
@@ -189,19 +189,13 @@ final class CameraInputController: UIViewController {
     // MARK: - Internal methods
 
     /// Switches between front and rear camera, if possible
-    ///
-    /// - Returns: true if successfully switched cameras, false otherwise
-    func switchCameras() -> Bool {
+    func switchCameras() {
         captureSession?.stopRunning()
         do {
-            try toggleFrontRearCameras()
-            try configureCurrentOutput()
-        } catch {
-            // was unable to switch cameras, may only be one camera
-            return false
+            try? toggleFrontRearCameras()
+            try? configureCurrentOutput()
         }
         captureSession?.startRunning()
-        return true
     }
 
     /// Changes the current output modes corresponding to camera mode
@@ -256,7 +250,8 @@ final class CameraInputController: UIViewController {
     func startRecording() -> Bool {
         guard let recorder = self.recorder else { return false }
         addArtificialFlashIfNecessary()
-        return recorder.startRecordingVideo()
+        recorder.startRecordingVideo()
+        return true
     }
 
     /// Finishes video recording
@@ -339,30 +334,21 @@ final class CameraInputController: UIViewController {
     ///
     /// - Returns: returns the current device's videoZoomFactor, if a device is found
     func currentZoom() -> CGFloat? {
-        guard let camera = currentDevice else {
-            return nil
-        }
-        return camera.videoZoomFactor
+        return currentDevice?.videoZoomFactor
     }
 
     /// Deletes a segment at an index
     ///
     /// - Parameter index: Int
     func deleteSegmentAtIndex(_ index: Int) {
-        guard let recorder = recorder else {
-            return
-        }
-        recorder.deleteSegmentAtIndex(index, removeFromDisk: true)
+        recorder?.deleteSegmentAtIndex(index, removeFromDisk: true)
     }
 
     /// The currently recorded segments of images and video
     ///
     /// - Returns: an array of CameraSegment
     func segments() -> [CameraSegment] {
-        guard let recorder = recorder else {
-            return []
-        }
-        return recorder.segments()
+        return recorder?.segments() ?? []
     }
 
     // MARK: - private methods
@@ -371,13 +357,13 @@ final class CameraInputController: UIViewController {
         let point = gesture.location(in: view)
         /// normalize this
         let tapPoint = CGPoint(x: point.x / view.frame.size.width, y: point.y / view.frame.size.height)
-        do { try focusCamera(point: tapPoint) } catch {
-            // shouldn't crash if focus is not supported
-        }
+
+        // shouldn't crash if focus is not supported
+        do { try? focusCamera(point: tapPoint) }
     }
 
     @objc private func doubleTapped() {
-        let _ = switchCameras()
+        switchCameras()
     }
 
     private func currentResolution() -> CGSize {
@@ -408,11 +394,13 @@ final class CameraInputController: UIViewController {
         guard !cameras.isEmpty else { throw CameraInputError.noCamerasAvailable }
 
         for camera in cameras {
-            if camera.position == .front {
+            switch camera.position {
+            case .front:
                 frontCamera = camera
-            }
-            if camera.position == .back {
+            case .back:
                 rearCamera = camera
+            case .unspecified:
+                break // unspecified cameras are not currently supported
             }
             if camera.isFocusModeSupported(.continuousAutoFocus) {
                 try camera.lockForConfiguration()
@@ -556,7 +544,7 @@ final class CameraInputController: UIViewController {
 // MARK: - CameraRecordingDelegate
 // more documentation on the protocol methods can be found in the CameraRecordingDelegate
 extension CameraInputController: CameraRecordingDelegate {
-    func photoSettingsForCamera() -> AVCapturePhotoSettings? {
+    var photoSettingsForCamera: AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
         settings.flashMode = flashMode
         return settings
@@ -605,6 +593,9 @@ extension CameraInputController: AVCaptureVideoDataOutputSampleBufferDelegate, A
     }
 
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        // dropping a sample should be okay here
+        // dropping a sample should be okay here, processor could be busy
+        var mode: CMAttachmentMode = 0
+        let reason = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_DroppedFrameReason, &mode)
+        print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
     }
 }

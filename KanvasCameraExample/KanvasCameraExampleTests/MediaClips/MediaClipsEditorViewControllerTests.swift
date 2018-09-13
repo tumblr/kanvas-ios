@@ -4,11 +4,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import XCTest
-import AVFoundation
-import UIKit
-import FBSnapshotTestCase
 @testable import KanvasCamera
+import AVFoundation
+import FBSnapshotTestCase
+import UIKit
+import XCTest
 
 final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
 

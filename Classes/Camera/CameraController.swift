@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import AVFoundation
 import Foundation
 import UIKit
-import AVFoundation
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -147,10 +147,10 @@ public class CameraController: UIViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        load(childViewController: modeAndShootController, into: cameraView.modeAndShootContainer)
-        load(childViewController: clipsController, into: cameraView.clipsContainer)
-        load(childViewController: cameraInputController, into: cameraView.cameraInputViewContainer)
-        load(childViewController: topOptionsController, into: cameraView.topOptionsContainer)
+        cameraView.addModeView(modeAndShootController.view)
+        cameraView.addClipsView(clipsController.view)
+        cameraView.addCameraInputView(cameraInputController.view)
+        cameraView.addOptionsView(topOptionsController.view)
         bindMediaContentAvailable()
         bindContentSelected()
     }

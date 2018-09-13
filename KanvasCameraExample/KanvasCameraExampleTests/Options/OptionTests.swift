@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
-import XCTest
-import UIKit
 @testable import KanvasCamera
+import Foundation
+import UIKit
+import XCTest
 
 final class OptionTests: XCTestCase {
     
