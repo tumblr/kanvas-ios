@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import AVFoundation
 import Foundation
 import UIKit
-import AVFoundation
 
 /// Protocol for camera preview controller methods
 
@@ -116,8 +116,8 @@ final class CameraPreviewViewController: UIViewController {
     private func playImage(image: UIImage) {
         cameraPreviewView.setImage(image: image)
         let displayTime = KanvasCameraTimes.StopMotionFrameTimeInterval
-        timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { _ in
-            self.playNextSegment()
+        timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
+            self?.playNextSegment()
         })
     }
 

@@ -50,7 +50,7 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
 
     typealias Item = Delegate.OptionsItem
 
-    private lazy var _view: OptionsStackView<Item> = {
+    private lazy var optionsStackView: OptionsStackView<Item> = {
         let view = OptionsStackView(options: options, interItemSpacing: self.spacing)
         view.delegate = self
         return view
@@ -76,10 +76,10 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        view = _view
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        optionsStackView.add(into: view)
     }
-    
 }
 
 extension OptionsController: OptionsStackViewDelegate {
@@ -92,7 +92,7 @@ extension OptionsController: OptionsStackViewDelegate {
         case .twoOptionsAnimation(animation: let animation, duration: let duration, completion: let completion):
             animateOption(index: optionIndex, duration: duration, animation: animation, completion: completion)
         }
-        _view.changeOptions(to: options)
+        optionsStackView.changeOptions(to: options)
         delegate?.optionSelected(options[optionIndex].option)
     }
 
@@ -107,9 +107,9 @@ extension OptionsController: OptionsStackViewDelegate {
 
     private func animateOption(index: Int, duration: TimeInterval, animation: @escaping (UIView) -> (), completion: ((UIView) -> ())?) {
         UIView.animate(withDuration: duration, animations: {
-            animation(self._view.stackView.arrangedSubviews[index])
+            animation(self.optionsStackView.stackView.arrangedSubviews[index])
         }, completion: { _ in
-            completion?(self._view.stackView.arrangedSubviews[index])
+            completion?(self.optionsStackView.stackView.arrangedSubviews[index])
         })
     }
 

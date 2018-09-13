@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import AVFoundation
 import Foundation
 import UIKit
-import AVFoundation
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -163,10 +163,10 @@ public class CameraController: UIViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        load(childViewController: modeAndShootController, into: cameraView.modeAndShootContainer)
-        load(childViewController: clipsController, into: cameraView.clipsContainer)
-        load(childViewController: cameraInputController, into: cameraView.cameraInputViewContainer)
-        load(childViewController: topOptionsController, into: cameraView.topOptionsContainer)
+        cameraView.addModeView(modeAndShootController.view)
+        cameraView.addClipsView(clipsController.view)
+        cameraView.addCameraInputView(cameraInputController.view)
+        cameraView.addOptionsView(topOptionsController.view)
         bindMediaContentAvailable()
         bindContentSelected()
     }
@@ -374,7 +374,7 @@ extension CameraController: ModeSelectorAndShootControllerDelegate {
 // MARK: - OptionsCollectionControllerDelegate (Top Options)
 extension CameraController: OptionsControllerDelegate {
 
-    func optionSelected(_ item: TopOption) {
+    func optionSelected(_ item: CameraDeviceOption) {
         switch item {
         case .flashOn:
             cameraInputController.setFlashMode(on: true)
@@ -383,9 +383,8 @@ extension CameraController: OptionsControllerDelegate {
             cameraInputController.setFlashMode(on: false)
             analyticsProvider.logFlashToggled()
         case .backCamera, .frontCamera:
-            if cameraInputController.switchCameras() {
-                analyticsProvider.logFlipCamera()
-            }
+            cameraInputController.switchCameras()
+            analyticsProvider.logFlipCamera()
         }
     }
 

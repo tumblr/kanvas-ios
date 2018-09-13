@@ -4,11 +4,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import XCTest
-import AVFoundation
-import UIKit
-import FBSnapshotTestCase
 @testable import KanvasCamera
+import AVFoundation
+import FBSnapshotTestCase
+import UIKit
+import XCTest
 
 final class OptionsStackViewTests: FBSnapshotTestCase {
 
@@ -18,15 +18,15 @@ final class OptionsStackViewTests: FBSnapshotTestCase {
         self.recordMode = false
     }
 
-    func options() -> [Option<TopOption>] {
-        var options: [Option<TopOption>] = []
-        options.append(Option(option: TopOption.flashOff, image: KanvasCameraImages.FlashOffImage, type: .twoOptionsImages(alternateOption: TopOption.flashOn, alternateImage: KanvasCameraImages.FlashOnImage)))
-        options.append(Option(option: TopOption.frontCamera, image: KanvasCameraImages.CameraPositionImage, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
+    func options() -> [Option<CameraDeviceOption>] {
+        var options: [Option<CameraDeviceOption>] = []
+        options.append(Option(option: CameraDeviceOption.flashOff, image: KanvasCameraImages.FlashOffImage, type: .twoOptionsImages(alternateOption: CameraDeviceOption.flashOn, alternateImage: KanvasCameraImages.FlashOnImage)))
+        options.append(Option(option: CameraDeviceOption.frontCamera, image: KanvasCameraImages.CameraPositionImage, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
         return options
     }
 
-    func newStackView() -> OptionsStackView<TopOption> {
-        let stackView = OptionsStackView<TopOption>(options: options(), interItemSpacing: 32)
+    func newStackView() -> OptionsStackView<CameraDeviceOption> {
+        let stackView = OptionsStackView<CameraDeviceOption>(options: options(), interItemSpacing: 32)
         stackView.frame = CGRect(x: 0, y: 0, width: 320, height: 100)
         return stackView
     }

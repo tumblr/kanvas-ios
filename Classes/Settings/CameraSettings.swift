@@ -4,8 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 /// Camera Modes available
 ///
@@ -25,7 +25,7 @@ public enum CameraMode: Int {
 
 // A class that defines the settings for the Kanvas Camera
 @objc public final class CameraSettings: NSObject {
-    
+
     // MARK: - Modes
     /**
      Enables/disables modes.
@@ -67,7 +67,7 @@ public enum CameraMode: Int {
         }
     }
     
-    private var _defaultMode: CameraMode? = DefaultCameraSettings.DefaultMode
+    private var _defaultMode: CameraMode?
     
     // MARK: - Camera Position settings
     
@@ -87,13 +87,11 @@ public enum CameraMode: Int {
     
     private var _defaultCameraPositionOption: AVCaptureDevice.Position = DefaultCameraSettings.DefaultCameraPositionOption
     
-    
     // MARK: - Flash settings
     
     /// Flash option which starts active.
     /// - note: Defaults to flash off.
-    public var defaultFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.DefaultFlashOption
-    
+    public var preferredFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.DefaultFlashOption
     
     // MARK: - Landscape support
     public var cameraSupportsLandscape: Bool = DefaultCameraSettings.LandscapeIsSupported
@@ -174,7 +172,7 @@ extension CameraSettings {
     }
     
     var notDefaultFlashOption: AVCaptureDevice.FlashMode {
-        if defaultFlashOption == .on {
+        if preferredFlashOption == .on {
             return .off
         }
         else {
@@ -193,12 +191,10 @@ extension CameraSettings {
     
 }
 
-
 // MARK: - Default settings
 private struct DefaultCameraSettings {
     
     static let EnabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
-    static let DefaultMode: CameraMode? = .none
     static let DefaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let DefaultCameraPositionOption: AVCaptureDevice.Position = .back
     static let LandscapeIsSupported: Bool = false
