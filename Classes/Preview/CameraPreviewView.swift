@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import AVFoundation
 import Foundation
 import UIKit
-import AVFoundation
 
 /// protocol for closing the preview or confirming
 
@@ -58,11 +58,10 @@ final class CameraPreviewView: UIView {
         firstPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
         secondPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
 
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        firstPlayerLayer.opacity = 0
-        secondPlayerLayer.opacity = 0
-        CATransaction.commit()
+        performLayerActionsWithoutAnimation {
+            firstPlayerLayer.opacity = 0
+            secondPlayerLayer.opacity = 0
+        }
 
         disposables.append(observe(\.bounds, options: [], changeHandler: { (previewView, _) in
             performUIUpdate {
@@ -138,29 +137,36 @@ final class CameraPreviewView: UIView {
     ///
     /// - Parameter image: the image to display
     func setImage(image: UIImage) {
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         imageView.image = image
-        firstPlayerLayer.opacity = 0
-        secondPlayerLayer.opacity = 0
-        CATransaction.commit()
+        performLayerActionsWithoutAnimation {
+            firstPlayerLayer.opacity = 0
+            secondPlayerLayer.opacity = 0
+        }
     }
 
     /// Shows the first player layer and hides the second
     func showFirstPlayer() {
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        firstPlayerLayer.opacity = 1
-        secondPlayerLayer.opacity = 0
-        CATransaction.commit()
+        performLayerActionsWithoutAnimation {
+            firstPlayerLayer.opacity = 1
+            secondPlayerLayer.opacity = 0
+        }
     }
 
     /// Shows the second player layer and hides the first
     func showSecondPlayer() {
+        performLayerActionsWithoutAnimation {
+            firstPlayerLayer.opacity = 0
+            secondPlayerLayer.opacity = 1
+        }
+    }
+    
+    // MARK: - layer helper
+
+    /// changing values on a layer has implicit animations, unless you explicitly disable them
+    private func performLayerActionsWithoutAnimation(_ action:() -> Void) {
         CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        firstPlayerLayer.opacity = 0
-        secondPlayerLayer.opacity = 1
+        CATransaction.setDisableActions(true)
+        action()
         CATransaction.commit()
     }
 }

@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
-import XCTest
 @testable import KanvasCamera
 import FBSnapshotTestCase
+import Foundation
+import XCTest
 
 final class KanvasCameraImagesTests: FBSnapshotTestCase {
     override func setUp() {
@@ -18,7 +18,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
     func testPhotoModeImage() {
         let imageView = newImageView()
         let image = KanvasCameraImages.PhotoModeImage
-        XCTAssert(image != nil, "Image not found")
+        /// photo image can be nil.
         imageView.image = image
         FBSnapshotVerifyView(imageView)
     }
@@ -34,7 +34,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
     func testStopMotionModeImage() {
         let imageView = newImageView()
         let image = KanvasCameraImages.StopMotionModeImage
-        /// stop motion image can be nil. But this is the only one
+        /// stop motion image can be nil.
         imageView.image = image
         FBSnapshotVerifyView(imageView)
     }

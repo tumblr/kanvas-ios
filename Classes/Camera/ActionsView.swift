@@ -22,19 +22,32 @@ protocol ActionsViewDelegate: class {
 
 final class ActionsView: IgnoreTouchesView {
 
-    private let nextButton: UIButton
-    private let undoButton: UIButton
+    private let nextButton = UIButton()
+    private let undoButton = UIButton()
 
     weak var delegate: ActionsViewDelegate?
 
     init() {
-        nextButton = UIButton()
-        undoButton = UIButton()
-
         super.init(frame: .zero)
 
-        setUpUndoButton(image: KanvasCameraImages.UndoImage)
-        setUpNextButton(image: KanvasCameraImages.NextImage)
+        addSubview(undoButton)
+        addSubview(nextButton)
+        setupActionButton(button: undoButton,
+                          image: KanvasCameraImages.UndoImage,
+                          identifier: "Undo Button",
+                          action: #selector(undoTapped),
+                          constraints: [undoButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
+                                        undoButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: ActionsViewConstants.ButtonMargin),
+                                        undoButton.heightAnchor.constraint(equalTo: undoButton.widthAnchor),
+                                        undoButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.ButtonSize)])
+        setupActionButton(button: nextButton,
+                          image: KanvasCameraImages.NextImage,
+                          identifier: "Next Button",
+                          action: #selector(nextTapped),
+                          constraints: [nextButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
+                                        nextButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -ActionsViewConstants.ButtonMargin),
+                                        nextButton.heightAnchor.constraint(equalTo: nextButton.widthAnchor),
+                                        nextButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.ButtonSize)])
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -64,38 +77,21 @@ final class ActionsView: IgnoreTouchesView {
             self.nextButton.alpha = enabled ? 1 : 0
         }
     }
+    
     // MARK: - UI Layout
-
-    private func setUpUndoButton(image: UIImage?) {
-        undoButton.accessibilityIdentifier = "Undo Button"
-        undoButton.setImage(image, for: .normal)
-        undoButton.contentMode = .scaleAspectFit
-        undoButton.addTarget(self, action: #selector(undoTapped), for: .touchUpInside)
-
-        addSubview(undoButton)
-        undoButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            undoButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
-            undoButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: ActionsViewConstants.ButtonMargin),
-            undoButton.heightAnchor.constraint(equalTo: undoButton.widthAnchor),
-            undoButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.ButtonSize)
-        ])
-    }
-
-    private func setUpNextButton(image: UIImage?) {
-        nextButton.accessibilityIdentifier = "Next Button"
-        nextButton.setImage(image, for: .normal)
-        nextButton.contentMode = .scaleAspectFit
-        nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
-
-        addSubview(nextButton)
-        nextButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            nextButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
-            nextButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -ActionsViewConstants.ButtonMargin),
-            nextButton.heightAnchor.constraint(equalTo: nextButton.widthAnchor),
-            nextButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.ButtonSize)
-        ])
+    
+    private func setupActionButton(button: UIButton,
+                                   image: UIImage?,
+                                   identifier: String,
+                                   action: Selector,
+                                   constraints: [NSLayoutConstraint]) {
+        button.accessibilityIdentifier = identifier
+        button.setImage(image, for: .normal)
+        button.contentMode = .scaleAspectFit
+        button.addTarget(self, action: action, for: .touchUpInside)
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(constraints)
     }
 
     // MARK: - Buttons actions

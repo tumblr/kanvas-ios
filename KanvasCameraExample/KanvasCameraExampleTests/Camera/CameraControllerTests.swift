@@ -5,10 +5,10 @@
 //
 
 @testable import KanvasCamera
+import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
-import FBSnapshotTestCase
 
 final class CameraControllerTests: FBSnapshotTestCase {
 
@@ -68,7 +68,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func testSetUpWithFlashOn() {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
-        settings.defaultFlashOption = .on
+        settings.preferredFlashOption = .on
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }

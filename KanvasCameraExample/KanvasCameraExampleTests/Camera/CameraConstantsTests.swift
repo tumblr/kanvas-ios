@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import XCTest
-import Foundation
 @testable import KanvasCamera
+import Foundation
+import XCTest
 
 final class CameraConstantsTests: XCTestCase {
     
