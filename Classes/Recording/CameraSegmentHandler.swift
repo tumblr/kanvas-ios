@@ -42,6 +42,9 @@ protocol AssetsHandlerType {
 
 /// A protocol to handle the various segments of a stop motion video, and also creates the final output
 protocol SegmentsHandlerType: AssetsHandlerType {
+    
+    /// An init function for segment handler types
+    init()
 
     /// Current segments in stop motion
     var segments: [CameraSegment] { get }
@@ -245,7 +248,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameter size: dimensions of the video output
     /// - Returns: Dictionary of settings
     func videoOutputSettingsForSize(size: CGSize) -> [String: Any] {
-        return [AVVideoCodecKey: AVVideoCodecH264, AVVideoWidthKey: Int(size.width), AVVideoHeightKey: Int(size.height)]
+        return [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: Int(size.width), AVVideoHeightKey: Int(size.height)]
     }
 
     // MARK: - helper functions

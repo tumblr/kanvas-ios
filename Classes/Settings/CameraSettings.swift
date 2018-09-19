@@ -91,8 +91,7 @@ public enum CameraMode: Int {
     
     /// Flash option which starts active.
     /// - note: Defaults to flash off.
-    public let defaultFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.DefaultFlashOption
-    
+    public var preferredFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.DefaultFlashOption
     
     // MARK: - Landscape support
     public var cameraSupportsLandscape: Bool = DefaultCameraSettings.LandscapeIsSupported
@@ -173,7 +172,7 @@ extension CameraSettings {
     }
     
     var notDefaultFlashOption: AVCaptureDevice.FlashMode {
-        if defaultFlashOption == .on {
+        if preferredFlashOption == .on {
             return .off
         }
         else {
