@@ -31,11 +31,11 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
 
     /// Is there any clip?
     /// This needs to be dynamic because it will be observed
-    @objc private(set) var hasClips: Bool = false
+    @objc private(set) dynamic var hasClips: Bool = false
 
     /// Check if there is a clip selected
     /// This needs to be dynamic because it will be observed
-    @objc private(set) var clipIsSelected: Bool = false
+    @objc private(set) dynamic var clipIsSelected: Bool = false
 
     init() {
         super.init(nibName: .none, bundle: .none)
