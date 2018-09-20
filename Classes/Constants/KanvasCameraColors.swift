@@ -11,4 +11,8 @@ struct KanvasCameraColors {
     // MARK: - Shooting
     static let ShootButtonInactiveColor: UIColor = .white
     static let ShootButtonActiveColor: UIColor = .red
+    
+    // MARK: - Media
+    static let MediaBorderColor: UIColor = .white
+    static let MediaSelectedBorderColor: UIColor = .red
 }

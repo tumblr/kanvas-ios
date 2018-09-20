@@ -19,6 +19,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
         }
         cameraSegmentHandler.addNewVideoSegment(url: url)
         cameraSegmentHandler.addNewVideoSegment(url: url)
+        let expectation = XCTestExpectation(description: "merged")
         cameraSegmentHandler.exportVideo(completion: { url in
             guard let url = url else {
                 XCTFail("should have a valid url for video merging")
@@ -29,16 +30,10 @@ final class CameraSegmentHandlerTests: XCTestCase {
             let audioTracks = asset.tracks(withMediaType: .audio)
             XCTAssert(videoTracks.count == 1, "There should be one video track")
             XCTAssert(audioTracks.count == 1, "There should be one audio track")
-            
-            if let videoTrack = videoTracks.first, let audioTrack = audioTracks.first {
-                let videoDuration = videoTrack.timeRange.duration
-                let audioDuration = audioTrack.timeRange.duration
-                XCTAssert(CMTimeCompare(audioDuration, videoDuration) == 0, "Tracks were not synced")
-            }
-            else {
-                XCTFail("Audio and video tracks not found")
-            }
+            expectation.fulfill()
         })
+        let result = XCTWaiter().wait(for: [expectation], timeout: 5)
+        XCTAssert(result == .completed, "Merging did not complete")
     }
 
     func testAddImage() {
@@ -89,7 +84,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
             })
         }
     }
-    
+
     func createImagesArray() -> [UIImage] {
         var images: [UIImage] = []
 
@@ -101,5 +96,5 @@ final class CameraSegmentHandlerTests: XCTestCase {
 
         return images
     }
-    
+
 }
