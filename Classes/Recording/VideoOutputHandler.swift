@@ -152,12 +152,9 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
     ///
     /// - Returns: time interval in seconds of the current clip
     func currentClipDuration() -> TimeInterval? {
-        guard recording else { return nil }
-        if let currentVideoSample = currentVideoSampleBuffer {
-            let timestamp = CMSampleBufferGetPresentationTimeStamp(currentVideoSample)
-            let difference = CMTimeSubtract(timestamp, startTime)
-            return CMTimeGetSeconds(difference)
-        }
-        return nil
+        guard recording, let currentVideoSample = currentVideoSampleBuffer else { return nil }
+        let timestamp = CMSampleBufferGetPresentationTimeStamp(currentVideoSample)
+        let difference = CMTimeSubtract(timestamp, startTime)
+        return CMTimeGetSeconds(difference)
     }
 }
