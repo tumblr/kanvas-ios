@@ -253,7 +253,11 @@ public class CameraController: UIViewController {
     private func updateMode(_ mode: CameraMode) {
         if mode != currentMode {
             currentMode = mode
-            try? cameraInputController.configureMode(mode)
+            do {
+                try cameraInputController.configureMode(mode)
+            } catch {
+                // we can ignore this error for now since configuring mode may not succeed for devices without all the modes available (flash, multiple cameras)
+            }
         }
     }
     
