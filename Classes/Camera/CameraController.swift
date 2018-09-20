@@ -45,6 +45,7 @@ public class CameraController: UIViewController {
     private lazy var cameraView: CameraView = {
         let view = CameraView()
         view.delegate = self
+        view.actionsDelegate = self
         return view
     }()
     private lazy var modeAndShootController: ModeSelectorAndShootController = {
@@ -219,27 +220,29 @@ public class CameraController: UIViewController {
     }
     
     private func takeGif() {
-        cameraInputController.takeGif(completion: { url in
-            self.analyticsProvider?.logCapturedMedia(type: self.currentMode, cameraPosition: self.cameraInputController.currentCameraPosition, length: 0)
+        cameraInputController.takeGif(completion: { [weak self] url in
+            guard let strongSelf = self else { return }
+            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
             performUIUpdate {
                 if let url = url {
                     let segment = CameraSegment.video(url)
-                    self.showPreviewWithSegments([segment])
+                    strongSelf.showPreviewWithSegments([segment])
                 }
             }
         })
     }
     
     private func takePhoto() {
-        cameraInputController.takePhoto(completion: { image in
-            self.analyticsProvider?.logCapturedMedia(type: self.currentMode, cameraPosition: self.cameraInputController.currentCameraPosition, length: 0)
+        cameraInputController.takePhoto(completion: { [weak self] image in
+            guard let strongSelf = self else { return }
+            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
             performUIUpdate {
                 if let image = image {
-                    if self.currentMode == .photo {
-                        self.showPreviewWithSegments([CameraSegment.image(image, nil)])
+                    if strongSelf.currentMode == .photo {
+                        strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil)])
                     }
                     else {
-                        self.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: nil))
+                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: nil))
                     }
                 }
             }
@@ -250,11 +253,7 @@ public class CameraController: UIViewController {
     private func updateMode(_ mode: CameraMode) {
         if mode != currentMode {
             currentMode = mode
-            do {
-                try cameraInputController.configureMode(mode)
-            } catch {
-                
-            }
+            try? cameraInputController.configureMode(mode)
         }
     }
     
@@ -304,7 +303,7 @@ public class CameraController: UIViewController {
 }
 
 // MARK: - CameraViewDelegate
-extension CameraController: CameraViewDelegate {
+extension CameraController: CameraViewDelegate, ActionsViewDelegate {
 
     func undoButtonPressed() {
         clipsController.undo()
@@ -345,7 +344,9 @@ extension CameraController: ModeSelectorAndShootControllerDelegate {
         switch mode {
         case .stopMotion:
             let _ = cameraInputController.startRecording()
-            updateRecordState(event: .started)
+            performUIUpdate { [weak self] in
+                self?.updateRecordState(event: .started)
+            }
         default: break
         }
     }
@@ -353,18 +354,19 @@ extension CameraController: ModeSelectorAndShootControllerDelegate {
     func didEndPressingForMode(_ mode: CameraMode) {
         switch mode {
         case .stopMotion:
-            cameraInputController.endRecording(completion: { url in
+            cameraInputController.endRecording(completion: { [weak self] url in
+                guard let strongSelf = self else { return }
                 if let videoURL = url {
                     let asset = AVURLAsset(url: videoURL)
-                    self.analyticsProvider?.logCapturedMedia(type: self.currentMode, cameraPosition: self.cameraInputController.currentCameraPosition, length: CMTimeGetSeconds(asset.duration))
+                    strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: CMTimeGetSeconds(asset.duration))
                 }
                 performUIUpdate {
-                    if let url = url, let image = AVURLAsset(url: url).thumbnail() {                
-                        self.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: self.durationStringForAssetAtURL(url)))
+                    if let url = url, let image = AVURLAsset(url: url).thumbnail() {
+                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: strongSelf.durationStringForAssetAtURL(url)))
                     }
+                    strongSelf.updateRecordState(event: .ended)
                 }
             })
-            updateRecordState(event: .ended)
         default: break
         }
     }
@@ -407,28 +409,28 @@ extension CameraController: CameraPreviewControllerDelegate {
             let asset = AVURLAsset(url: videoURL)
             analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
         }
-        performUIUpdate {
-            self.delegate?.didCreateMedia(media: url.map { .video($0) }, error: url != nil ? nil : CameraControllerError.exportFailure)
+        performUIUpdate { [weak self] in
+            self?.delegate?.didCreateMedia(media: url.map { .video($0) }, error: url != nil ? nil : CameraControllerError.exportFailure)
         }
     }
 
     func didFinishExportingImage(image: UIImage?) {
         analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: 1, length: 0)
-        performUIUpdate {
-            if let url = self.saveImageToFile(image) {
+        performUIUpdate { [weak self] in
+            if let url = self?.saveImageToFile(image) {
                 let media = KanvasCameraMedia.image(url)
-                self.delegate?.didCreateMedia(media: media, error: nil)
+                self?.delegate?.didCreateMedia(media: media, error: nil)
             }
             else {
-                self.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure)
+                self?.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure)
             }
         }
     }
 
     func dismissButtonPressed() {
         analyticsProvider?.logPreviewDismissed()
-        performUIUpdate {
-            self.dismiss(animated: true)
+        performUIUpdate { [weak self] in
+            self?.dismiss(animated: true)
         }
     }
 }
