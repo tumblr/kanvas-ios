@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import AVFoundation
 import Foundation
 import KanvasCamera
+import AVFoundation
 
 final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsProvider {
     public func logCameraOpen(mode: CameraMode) {

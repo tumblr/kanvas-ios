@@ -4,9 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import UIKit
 import KanvasCamera
 import Photos
-import UIKit
 
 /// This class contains a button that launches the camera module
 /// It is also the delegate for the camera, and handles saving the exported media
