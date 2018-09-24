@@ -77,6 +77,9 @@ final class ModeSelectorAndShootController: UIViewController {
         if let mode = modesQueue.first {
             setMode(mode, from: nil)
         }
+        if modesQueue.count == 1 {
+            hideModeButton()
+        }
     }
 
     /// shows the camera mode button
