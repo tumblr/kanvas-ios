@@ -555,7 +555,7 @@ extension CameraInputController: CameraRecordingDelegate {
     func cameraWillTakeVideo() {
         guard let camera = currentDevice else { return }
         if flashMode == .on {
-            if camera.hasTorch {
+            if camera.hasTorch && camera.isTorchModeSupported(.on) {
                 do {
                     try camera.lockForConfiguration()
                     camera.torchMode = .on
@@ -569,7 +569,7 @@ extension CameraInputController: CameraRecordingDelegate {
 
     func cameraWillFinishVideo() {
         guard let camera = currentDevice else { return }
-        if camera.hasTorch && camera.torchMode != .off {
+        if camera.hasTorch && camera.torchMode != .off && camera.isTorchModeSupported(.off) {
             do {
                 try camera.lockForConfiguration()
                 camera.torchMode = .off
