@@ -13,7 +13,7 @@ protocol CameraRecordingDelegate {
     /// this is called before a photo is taken. It uses the returned settings (if any) for the current device
     ///
     /// - Returns: AVCapturePhotoSettings for flash, etc
-    var photoSettingsForCamera: AVCapturePhotoSettings? { get }
+    func photoSettings(forOutput: AVCapturePhotoOutput?) -> AVCapturePhotoSettings?
 
     /// this is called before a video is taken. Methods to change UI, update torch, should be called from this method
     func cameraWillTakeVideo()

@@ -96,10 +96,10 @@ final class CameraRecorderDelegateStub: CameraRecordingDelegate {
         videoFinish = false
     }
 
-    var photoSettingsForCamera: AVCapturePhotoSettings? {
+    func photoSettings(forOutput: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         return nil
     }
-
+    
     func cameraWillTakeVideo() {
         videoStart = true
     }

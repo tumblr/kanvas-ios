@@ -216,7 +216,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     func takePhoto(completion: @escaping (UIImage?) -> Void) {
         currentRecordingMode = .photo
 
-        let settings = recordingDelegate?.photoSettingsForCamera
+        let settings = recordingDelegate?.photoSettings(forOutput: photoOutput)
         photoOutputHandler.takePhoto(settings: settings ?? AVCapturePhotoSettings()) { [unowned self] image in
             guard let image = image else {
                 completion(nil)
