@@ -206,8 +206,8 @@ public class CameraController: UIViewController {
     private func showWelcomeTooltip() {
         let viewModel = ModalViewModel(text: NSLocalizedString("You can take a picture or video, or tap “Capture” to switch to Loop mode", comment: "Welcome message for the camera"),
                                        buttonTitle: NSLocalizedString("Got it", comment: "Welcome confirmation"),
-                                       buttonCallback: { [unowned self] in
-                                        self.delegate?.didDismissWelcomeTooltip()
+                                       buttonCallback: { [weak self] in
+                                        self?.delegate?.didDismissWelcomeTooltip()
         })
         let controller = ModalController(viewModel: viewModel)
         present(controller, animated: true, completion: nil)
@@ -216,8 +216,8 @@ public class CameraController: UIViewController {
     private func showCreationTooltip() {
         let viewModel = ModalViewModel(text: NSLocalizedString("Looks great. Keep capturing to add more, or hit next to continue.", comment: "Tooltip message for capturing clips"),
                                        buttonTitle: NSLocalizedString("Got it", comment: "Tooltip confirmation"),
-                                       buttonCallback: { [unowned self] in
-                                        self.delegate?.didDismissCreationTooltip()
+                                       buttonCallback: { [weak self] in
+                                        self?.delegate?.didDismissCreationTooltip()
         })
         let controller = ModalController(viewModel: viewModel)
         present(controller, animated: true, completion: nil)
@@ -226,9 +226,9 @@ public class CameraController: UIViewController {
     private func showDismissTooltip() {
         let viewModel = ModalViewModel(text: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"),
                                        confirmTitle: NSLocalizedString("I'm sure", comment: "Confirmation to discard all the clips"),
-                                       confirmCallback: { [unowned self] in
+                                       confirmCallback: { [weak self] in
                                         performUIUpdate {
-                                            self.delegate?.dismissButtonPressed()
+                                            self?.delegate?.dismissButtonPressed()
                                         }
         },
                                        cancelTitle: NSLocalizedString("Cancel", comment: "Cancel action"),
