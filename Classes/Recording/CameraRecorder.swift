@@ -18,7 +18,7 @@ private struct CameraRecordingConstants {
 /// An implementation of a CameraRecordingProtocol without filters
 
 final class CameraRecorder: NSObject {
-    var recordingDelegate: CameraRecordingDelegate?
+    weak var recordingDelegate: CameraRecordingDelegate?
 
     private var url: URL?
     private var size: CGSize
