@@ -233,7 +233,7 @@ public class CameraController: UIViewController {
         },
                                        cancelTitle: NSLocalizedString("Cancel", comment: "Cancel action"),
                                        cancelCallback: {
-                                        /// should do nothing here other than dismiss the modal
+                                        /// This is left intentionally empty; canceling the callback automatically dismisses it.
         },
                                        buttonsLayout: .oneBelowTheOther)
         let controller = ModalController(viewModel: viewModel)
