@@ -13,7 +13,7 @@ protocol MediaClipsEditorDelegate: class {
     /// - Parameter index: the index of the deleted clip
     func mediaClipWasDeleted(at index: Int)
     
-    /// Callback fro when a clip is added
+    /// Callback for when a clip is added
     ///
     /// - Parameter index: index of the newly added clip
     func mediaClipWasAdded(at index: Int)
