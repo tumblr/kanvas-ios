@@ -214,7 +214,7 @@ public class CameraController: UIViewController {
     }
     
     private func showCreationTooltip() {
-        let viewModel = ModalViewModel(text: NSLocalizedString("Looks great! Keep capturing to add more, or hit next to continue.", comment: "Tooltip message for capturing clips"),
+        let viewModel = ModalViewModel(text: NSLocalizedString("Looks great. Keep capturing to add more, or hit next to continue.", comment: "Tooltip message for capturing clips"),
                                        buttonTitle: NSLocalizedString("Got it", comment: "Tooltip confirmation"),
                                        buttonCallback: { [unowned self] in
                                         self.delegate?.didDismissCreationTooltip()
