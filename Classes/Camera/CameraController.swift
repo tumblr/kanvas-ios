@@ -191,7 +191,7 @@ public class CameraController: UIViewController {
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if delegate?.cameraShouldShowWelcomeTooltip() == true {
-            showOnboardingTooltip()
+            showWelcomeTooltip()
         }
     }
 
@@ -203,7 +203,7 @@ public class CameraController: UIViewController {
         self.present(controller, animated: true)
     }
     
-    private func showOnboardingTooltip() {
+    private func showWelcomeTooltip() {
         let viewModel = ModalViewModel(text: NSLocalizedString("You can take a picture or video, or tap “Capture” to switch to Loop mode", comment: "Welcome message for the camera"),
                                        buttonTitle: NSLocalizedString("Got it", comment: "Welcome confirmation"),
                                        buttonCallback: { [unowned self] in
