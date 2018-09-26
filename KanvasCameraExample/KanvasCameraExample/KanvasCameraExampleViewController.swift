@@ -14,6 +14,8 @@ import UIKit
 final class KanvasCameraExampleViewController: UIViewController {
 
     private let button = UIButton(type: .custom)
+    private var welcomeTooltip = true
+    private var creationTooltip = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +53,22 @@ final class KanvasCameraExampleViewController: UIViewController {
 // MARK: - CameraControllerDelegate
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
+    func cameraShouldShowWelcomeTooltip() -> Bool {
+        return welcomeTooltip
+    }
+    
+    func cameraShouldShowCreationTooltip() -> Bool {
+        return creationTooltip
+    }
+
+    func didDismissWelcomeTooltip() {
+        welcomeTooltip = false
+    }
+    
+    func didDismissCreationTooltip() {
+        creationTooltip = false
+    }
+    
     func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
         if let media = media {
             switch media {

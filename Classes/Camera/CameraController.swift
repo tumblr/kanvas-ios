@@ -34,6 +34,22 @@ public protocol CameraControllerDelegate: class {
      A function that is called when the main camera dismiss button is pressed
      */
     func dismissButtonPressed()
+    
+    /// Called after the welcome tooltip is dismissed
+    func didDismissWelcomeTooltip()
+    
+    /// Called after the creation tooltip is dismissed
+    func didDismissCreationTooltip()
+    
+    /// Called to ask if welcome tooltip should be shown
+    ///
+    /// - Returns: Bool for tooltip
+    func cameraShouldShowWelcomeTooltip() -> Bool
+    
+    /// Called to ask if creation tooltip should be shown
+    ///
+    /// - Returns: Bool for tooltip
+    func cameraShouldShowCreationTooltip() -> Bool
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -171,6 +187,13 @@ public class CameraController: UIViewController {
         bindMediaContentAvailable()
         bindContentSelected()
     }
+    
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if delegate?.cameraShouldShowWelcomeTooltip() == true {
+            showOnboardingTooltip()
+        }
+    }
 
     // MARK: - navigation
     
@@ -178,6 +201,43 @@ public class CameraController: UIViewController {
         let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init())
         controller.delegate = self
         self.present(controller, animated: true)
+    }
+    
+    private func showOnboardingTooltip() {
+        let viewModel = ModalViewModel(text: NSLocalizedString("You can take a picture or video, or tap “Capture” to switch to Loop mode", comment: "Welcome message for the camera"),
+                                       buttonTitle: NSLocalizedString("Got it", comment: "Welcome confirmation"),
+                                       buttonCallback: { [unowned self] in
+                                        self.delegate?.didDismissWelcomeTooltip()
+        })
+        let controller = ModalController(viewModel: viewModel)
+        present(controller, animated: true, completion: nil)
+    }
+    
+    private func showCreationTooltip() {
+        let viewModel = ModalViewModel(text: NSLocalizedString("Looks great! Keep capturing to add more, or hit next to continue.", comment: "Tooltip message for capturing clips"),
+                                       buttonTitle: NSLocalizedString("Got it", comment: "Tooltip confirmation"),
+                                       buttonCallback: { [unowned self] in
+                                        self.delegate?.didDismissCreationTooltip()
+        })
+        let controller = ModalController(viewModel: viewModel)
+        present(controller, animated: true, completion: nil)
+    }
+    
+    private func showDismissTooltip() {
+        let viewModel = ModalViewModel(text: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"),
+                                       confirmTitle: NSLocalizedString("I'm sure", comment: "Confirmation to discard all the clips"),
+                                       confirmCallback: { [unowned self] in
+                                        performUIUpdate {
+                                            self.delegate?.dismissButtonPressed()
+                                        }
+        },
+                                       cancelTitle: NSLocalizedString("Cancel", comment: "Cancel action"),
+                                       cancelCallback: {
+                                        /// should do nothing here other than dismiss the modal
+        },
+                                       buttonsLayout: .oneBelowTheOther)
+        let controller = ModalController(viewModel: viewModel)
+        present(controller, animated: true, completion: nil)
     }
     
     // MARK: - Media Content Creation
@@ -321,7 +381,12 @@ extension CameraController: CameraViewDelegate, ActionsViewDelegate {
     }
 
     func closeButtonPressed() {
-        delegate?.dismissButtonPressed()
+        if clipsController.hasClips {
+            showDismissTooltip()
+        }
+        else {
+            delegate?.dismissButtonPressed()
+        }
     }
 
 }
@@ -404,6 +469,11 @@ extension CameraController: MediaClipsEditorDelegate {
         analyticsProvider?.logDeleteSegment()
     }
 
+    func mediaClipWasAdded(at index: Int) {
+        if delegate?.cameraShouldShowCreationTooltip() == true {
+            showCreationTooltip()
+        }
+    }
 }
 
 // MARK: - CameraPreviewControllerDelegate
