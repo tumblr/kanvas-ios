@@ -339,7 +339,7 @@ public class CameraController: UIViewController {
     private func enableBottomViewButtons(show: Bool) {
         cameraView.bottomActionsView.updateUndo(enabled: show)
         cameraView.bottomActionsView.updateNext(enabled: show)
-        if clipsController.hasClips {
+        if clipsController.hasClips || settings.enabledModes.count == 1 {
             modeAndShootController.hideModeButton()
         }
         else {
