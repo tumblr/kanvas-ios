@@ -323,7 +323,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             return
         }
         adaptor.assetWriterInput.requestMediaDataWhenReady(on: DispatchQueue.main) {
-            adaptor.append(buffer, withPresentationTime: kCMTimeZero)
+            adaptor.append(buffer, withPresentationTime: CMTime.zero)
             let endTime = KanvasCameraTimes.StopMotionFrameTime
             assetWriter.endSession(atSourceTime: endTime)
             adaptor.assetWriterInput.markAsFinished()
