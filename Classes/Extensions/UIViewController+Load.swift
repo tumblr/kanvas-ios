@@ -20,9 +20,9 @@ extension UIViewController {
      - parameter viewPositioning: Back or Front. Default: Front
      */
     func load(childViewController: UIViewController, into containerView: UIView, viewPositioning: ViewPositioning = .front) {
-        childViewController.willMove(toParentViewController: self)
-        addChildViewController(childViewController)
-        childViewController.didMove(toParentViewController: self)
+        childViewController.willMove(toParent: self)
+        addChild(childViewController)
+        childViewController.didMove(toParent: self)
         childViewController.view.add(into: containerView, in: viewPositioning)
     }
 
@@ -31,14 +31,14 @@ extension UIViewController {
      */
     func unloadFromParentViewController() {
         view.removeFromSuperview()
-        removeFromParentViewController()
+        removeFromParent()
     }
 
     /**
      Unloads all childViewController and their view from self.
      */
     func unloadChildViewControllers() {
-        for childController in self.childViewControllers {
+        for childController in self.children {
             childController.unloadFromParentViewController()
         }
     }

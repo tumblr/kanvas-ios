@@ -194,7 +194,7 @@ public class CameraController: UIViewController {
                 try FileManager.default.removeItem(at: fileURL)
             }
             
-            if let jpgImageData = UIImageJPEGRepresentation(image, 1.0) {
+            if let jpgImageData = image.jpegData(compressionQuality: 1.0) {
                 try jpgImageData.write(to: fileURL, options: .atomic)
             }
             return fileURL

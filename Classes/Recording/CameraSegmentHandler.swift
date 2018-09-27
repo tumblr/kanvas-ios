@@ -171,7 +171,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///
     /// - Returns: seconds of total recorded video + photos
     func currentTotalDuration() -> TimeInterval {
-        var totalDuration: CMTime = kCMTimeZero
+        var totalDuration: CMTime = CMTime.zero
         for segment in segments {
             if let segmentURL = segment.videoURL {
                 let asset = AVURLAsset(url: segmentURL)
@@ -216,12 +216,12 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         let mixComposition = AVMutableComposition()
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
-        var insertTime = kCMTimeZero
+        var insertTime = CMTime.zero
 
         for segment in segments {
             guard let segmentURL = segment.videoURL else { continue }
             let urlAsset = AVURLAsset(url: segmentURL)
-            var videoDuration: CMTime = kCMTimeZero
+            var videoDuration: CMTime = CMTime.zero
 
             if let videoTrack = urlAsset.tracks(withMediaType: .video).first {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
@@ -232,7 +232,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
                 var audioTimeRange = audioTrack.timeRange
                 if CMTimeCompare(audioTrack.timeRange.duration, videoDuration) == 1 {
-                    audioTimeRange = CMTimeRangeMake(audioTimeRange.start, videoDuration); // crop audio to video range
+                    audioTimeRange = CMTimeRangeMake(start: audioTimeRange.start, duration: videoDuration); // crop audio to video range
                 }
                 addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
             }
@@ -317,12 +317,12 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - completion: returns success bool
     private func createVideoFromImage(image: UIImage, assetWriter: AVAssetWriter, adaptor: AVAssetWriterInputPixelBufferAdaptor, input: AVAssetWriterInput, completion: @escaping (Bool) -> Void) {
         assetWriter.startWriting()
-        assetWriter.startSession(atSourceTime: kCMTimeZero)
+        assetWriter.startSession(atSourceTime: CMTime.zero)
         guard let buffer = createNewPixelBuffer(from: image) else {
             completion(false)
             return
         }
-        adaptor.append(buffer: buffer, time: kCMTimeZero, completion: { firstAppended in
+        adaptor.append(buffer: buffer, time: CMTime.zero, completion: { firstAppended in
             if firstAppended {
                 let endTime = KanvasCameraTimes.StopMotionFrameTime
                 assetWriter.endSession(atSourceTime: endTime)

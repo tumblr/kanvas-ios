@@ -16,7 +16,7 @@ private struct LoadingIndicatorConstants {
 /// but it will eventually be replaced with a custom animation
 final class LoadingIndicatorView: UIView {
 
-    private let indicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    private let indicator = UIActivityIndicatorView(style: .whiteLarge)
 
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {

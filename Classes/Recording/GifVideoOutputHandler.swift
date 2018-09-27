@@ -71,7 +71,7 @@ final class GifVideoOutputHandler: NSObject {
 
         let link = CADisplayLink(target: self, selector: #selector(gifLoop))
         link.preferredFramesPerSecond = KanvasCameraTimes.GifPreferredFramesPerSecond
-        link.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        link.add(to: RunLoop.main, forMode: RunLoop.Mode.default)
         gifLink = link
     }
 
@@ -105,7 +105,7 @@ final class GifVideoOutputHandler: NSObject {
         }
         // we need to create a copy of the CMSampleBuffer, the other one will be automatically reused by the video data output
         var newBuffer: CMSampleBuffer? = nil
-        CMSampleBufferCreateCopy(kCFAllocatorDefault, buffer, &newBuffer)
+        CMSampleBufferCreateCopy(allocator: kCFAllocatorDefault, sampleBuffer: buffer, sampleBufferOut: &newBuffer)
         if let buffer = newBuffer {
             gifBuffers.append(buffer)
             gifFrames += 1
@@ -164,7 +164,7 @@ final class GifVideoOutputHandler: NSObject {
 
     private func invalidateLink() {
         gifLink?.invalidate()
-        gifLink?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        gifLink?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
         gifLink = nil
     }
 }
