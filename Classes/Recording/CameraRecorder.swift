@@ -222,7 +222,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         
         currentRecordingMode = .photo
 
-        let settings = recordingDelegate?.photoSettings(forOutput: photoOutput)
+        let settings = recordingDelegate?.photoSettings(for: photoOutput)
         takingPhoto = true
         photoOutputHandler.takePhoto(settings: settings ?? AVCapturePhotoSettings()) { [unowned self] image in
             self.takingPhoto = false
