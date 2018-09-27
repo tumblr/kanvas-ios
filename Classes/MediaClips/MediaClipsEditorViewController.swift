@@ -12,6 +12,11 @@ protocol MediaClipsEditorDelegate: class {
     ///
     /// - Parameter index: the index of the deleted clip
     func mediaClipWasDeleted(at index: Int)
+    
+    /// Callback for when a clip is added
+    ///
+    /// - Parameter index: index of the newly added clip
+    func mediaClipWasAdded(at index: Int)
 }
 
 /// Controller for handling media clips edition (showing, adding, removing, etc)
@@ -70,6 +75,7 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         collectionController.addNewClip(clip)
         hasClips = true
         clipIsSelected = false
+        delegate?.mediaClipWasAdded(at: collectionController.getClips().count - 1)
     }
 
     /// Undoes the last clip added

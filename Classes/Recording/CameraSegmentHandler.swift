@@ -322,20 +322,15 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             completion(false)
             return
         }
-        adaptor.append(buffer: buffer, time: CMTime.zero, completion: { firstAppended in
-            if firstAppended {
-                let endTime = KanvasCameraTimes.StopMotionFrameTime
-                assetWriter.endSession(atSourceTime: endTime)
-                adaptor.assetWriterInput.markAsFinished()
-                assetWriter.finishWriting() {
-                    completion(assetWriter.status == .completed)
-                }
+        adaptor.assetWriterInput.requestMediaDataWhenReady(on: DispatchQueue.main) {
+            adaptor.append(buffer, withPresentationTime: kCMTimeZero)
+            let endTime = KanvasCameraTimes.StopMotionFrameTime
+            assetWriter.endSession(atSourceTime: endTime)
+            adaptor.assetWriterInput.markAsFinished()
+            assetWriter.finishWriting() {
+                completion(assetWriter.status == .completed)
             }
-            else {
-                assetWriter.cancelWriting()
-                completion(false)
-            }
-        })
+        }
     }
 
     /// Creates a new pixel buffer from a UIImage for appending to an asset writer
