@@ -280,7 +280,18 @@ public class CameraController: UIViewController {
     }
     
     private func takeGif() {
+        guard !isRecording else { return }
+        isRecording = true
+        performUIUpdate {
+            self.cameraView.isUserInteractionEnabled = false
+        }
         cameraInputController.takeGif(completion: { [weak self] url in
+            defer {
+                self?.isRecording = false
+                performUIUpdate {
+                    self?.cameraView.isUserInteractionEnabled = true
+                }
+            }
             guard let strongSelf = self else { return }
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
             performUIUpdate {
@@ -293,7 +304,18 @@ public class CameraController: UIViewController {
     }
     
     private func takePhoto() {
+        guard !isRecording else { return }
+        isRecording = true
+        performUIUpdate {
+            self.cameraView.isUserInteractionEnabled = false
+        }
         cameraInputController.takePhoto(completion: { [weak self] image in
+            defer {
+                self?.isRecording = false
+                performUIUpdate {
+                    self?.cameraView.isUserInteractionEnabled = true
+                }
+            }
             guard let strongSelf = self else { return }
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
             performUIUpdate {
