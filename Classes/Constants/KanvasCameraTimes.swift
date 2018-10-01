@@ -53,7 +53,7 @@ struct KanvasCameraTimes {
     static let GifTimeScale: CMTimeScale = Int32(GifTimeValue * Int64(KanvasCameraTimes.GifPreferredFramesPerSecond))
 
     // GifFrameTime: the composed CMTime from the duration and timescale
-    static let GifFrameTime: CMTime = CMTimeMake(GifTimeValue, GifTimeScale)
+    static let GifFrameTime: CMTime = CMTimeMake(value: GifTimeValue, timescale: GifTimeScale)
 
     // MARK: - Other
 

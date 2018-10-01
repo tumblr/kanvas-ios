@@ -183,11 +183,32 @@ final class CameraControllerTests: FBSnapshotTestCase {
         XCTAssert(delegate.imageCreatedCalled)
         XCTAssert(!delegate.creationError)
     }
+    
+    func testCameraWithOneMode() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
 
     // Can't test `dismissButtonPressed` because it requires presenting and dismissing preview controller.
 }
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
+    func didDismissWelcomeTooltip() {
+    }
+    
+    func didDismissCreationTooltip() {
+    }
+    
+    func cameraShouldShowWelcomeTooltip() -> Bool {
+        return false
+    }
+    
+    func cameraShouldShowCreationTooltip() -> Bool {
+        return false
+    }
 
     var dismissCalled = false
     var videoURL: URL? = nil

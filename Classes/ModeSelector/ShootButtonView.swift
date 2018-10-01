@@ -254,7 +254,7 @@ final class ShootButtonView: IgnoreTouchesView {
         let newWidth = bigger ? ShootButtonViewConstants.ButtonActiveWidth : ShootButtonViewConstants.ButtonInactiveWidth
         let newCornerRadius = newWidth / 2
         let animation = CABasicAnimation(keyPath: "cornerRadius")
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         animation.fromValue = containerView.bounds.width / 2
         animation.toValue = newCornerRadius
         animation.duration = ShootButtonViewConstants.ButtonSizeAnimationDuration
@@ -287,8 +287,8 @@ final class ShootButtonView: IgnoreTouchesView {
         timeSegmentLayer.lineWidth = ShootButtonViewConstants.BorderWidth
         timeSegmentLayer.strokeStart = 0
         timeSegmentLayer.strokeEnd = 1
-        timeSegmentLayer.lineCap = kCALineCapButt
-        timeSegmentLayer.lineJoin = kCALineJoinBevel
+        timeSegmentLayer.lineCap = CAShapeLayerLineCap.butt
+        timeSegmentLayer.lineJoin = CAShapeLayerLineJoin.bevel
         containerView.layer.addSublayer(timeSegmentLayer)
 
         let animateStrokeEnd = CABasicAnimation(keyPath: "strokeEnd")
