@@ -11,7 +11,7 @@ DEPENDENCIES:
   - KanvasCamera (from `../`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - FBSnapshotTestCase
 
 EXTERNAL SOURCES:
@@ -24,4 +24,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: d660d2b8b126fa915d709c9b7f6f0ef384125197
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3
