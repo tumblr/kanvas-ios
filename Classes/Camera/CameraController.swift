@@ -280,7 +280,12 @@ public class CameraController: UIViewController {
     }
     
     private func takeGif() {
+        guard !isRecording else { return }
+        updatePhotoCaptureState(event: .started)
         cameraInputController.takeGif(completion: { [weak self] url in
+            defer {
+                self?.updatePhotoCaptureState(event: .ended)
+            }
             guard let strongSelf = self else { return }
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
             performUIUpdate {
@@ -293,7 +298,12 @@ public class CameraController: UIViewController {
     }
     
     private func takePhoto() {
+        guard !isRecording else { return }
+        updatePhotoCaptureState(event: .started)
         cameraInputController.takePhoto(completion: { [weak self] image in
+            defer {
+                self?.updatePhotoCaptureState(event: .ended)
+            }
             guard let strongSelf = self else { return }
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
             performUIUpdate {
@@ -326,6 +336,9 @@ public class CameraController: UIViewController {
         case ended
     }
     
+    /// This updates the camera view based on the current video recording state
+    ///
+    /// - Parameter event: The recording event (started or ended)
     private func updateRecordState(event: RecordingEvent) {
         isRecording = event == .started
         cameraView.updateUI(forRecording: isRecording)
@@ -333,6 +346,16 @@ public class CameraController: UIViewController {
             modeAndShootController.hideModeButton()
         }
         // If it finished recording, then there is at least one clip and button shouldn't be shown.
+    }
+    
+    /// This enables the camera view user interaction based on the photo capture
+    ///
+    /// - Parameter event: The recording event state (started or ended)
+    private func updatePhotoCaptureState(event: RecordingEvent) {
+        isRecording = event == .started
+        performUIUpdate {
+            self.cameraView.isUserInteractionEnabled = !self.isRecording
+        }
     }
     
     // MARK: - UI
