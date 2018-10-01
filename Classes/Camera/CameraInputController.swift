@@ -544,16 +544,18 @@ final class CameraInputController: UIViewController {
 // MARK: - CameraRecordingDelegate
 // more documentation on the protocol methods can be found in the CameraRecordingDelegate
 extension CameraInputController: CameraRecordingDelegate {
-    var photoSettingsForCamera: AVCapturePhotoSettings? {
+    func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
-        settings.flashMode = flashMode
+        if output?.supportedFlashModes.contains(.on) == true {
+            settings.flashMode = flashMode
+        }
         return settings
     }
 
     func cameraWillTakeVideo() {
         guard let camera = currentDevice else { return }
         if flashMode == .on {
-            if camera.hasTorch {
+            if camera.hasTorch && camera.isTorchModeSupported(.on) {
                 do {
                     try camera.lockForConfiguration()
                     camera.torchMode = .on
@@ -567,7 +569,7 @@ extension CameraInputController: CameraRecordingDelegate {
 
     func cameraWillFinishVideo() {
         guard let camera = currentDevice else { return }
-        if camera.hasTorch && camera.torchMode != .off {
+        if camera.hasTorch && camera.torchMode != .off && camera.isTorchModeSupported(.off) {
             do {
                 try camera.lockForConfiguration()
                 camera.torchMode = .off
