@@ -7,18 +7,25 @@
 import Foundation
 import UIKit
 
-private struct OptionConstants {
-    static let inset: CGFloat = -10
-}
+/// A view that contains a button and handles image layout
+final class OptionView: UIView {
 
-/// A button view that handles image layout
-final class OptionView: UIButton {
-
-    init(image: UIImage?) {
+    private(set) var button: ExtendedButton
+    private let inset: CGFloat
+    
+    /// The designated initializer for an OptionView, it can accept an `inset` value for a larger tap area
+    ///
+    /// - Parameters:
+    ///   - image: image to describe the option
+    ///   - inset: use a negative value to "outset"
+    init(image: UIImage?, inset: CGFloat = 0) {
+        self.inset = inset
+        button = ExtendedButton(inset: inset)
+        button.contentMode = .scaleAspectFit
+        button.setImage(image, for: .normal)
+        button.applyShadows()
         super.init(frame: .zero)
-        contentMode = .scaleAspectFit
-        setImage(image, for: .normal)
-        applyShadows()
+        setUpButton()
     }
 
     @available(*, unavailable, message: "use init(image:) instead")
@@ -33,9 +40,20 @@ final class OptionView: UIButton {
     
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let relativeFrame = bounds
-        let inset = OptionConstants.inset
         let hitTestEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
         return hitFrame.contains(point)
+    }
+    
+    private func setUpButton() {
+        addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
+            button.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor),
+            button.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor),
+            safeLayoutGuide.heightAnchor.constraint(equalTo: safeLayoutGuide.widthAnchor)
+            ])
     }
 }

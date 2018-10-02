@@ -95,10 +95,10 @@ final class OptionsStackView<Item>: UIView {
 
     private func addOptions(_ options: [Option<Item>]) {
         options.enumerated().forEach { (index, option) in
-            let optionView = OptionView(image: option.image)
-            optionView.tag = index
+            let optionView = OptionView(image: option.image, inset: OptionsStackViewConstants.inset)
+            optionView.button.tag = index
             optionView.accessibilityIdentifier = "Options Option View #\(index + 1)"
-            optionView.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)
+            optionView.button.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(optionView)
         }
     }
