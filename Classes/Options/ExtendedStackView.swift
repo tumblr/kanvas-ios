@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// This is a class that overrides the hit test function `point(inside point: CGPoint, with event: UIEvent?)` to allow for a more tappable area
+/// This is a class that overrides the hit test function to allow for a more tappable area
 final class ExtendedStackView: UIStackView {
     
     private let inset: CGFloat
