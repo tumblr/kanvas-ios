@@ -20,13 +20,13 @@ protocol OptionsStackViewDelegate: class {
 /// A view for laying out option views in a stack
 final class OptionsStackView<Item>: UIView {
 
-    private(set) var stackView: UIStackView
+    private(set) var stackView: ExtendedStackView
     weak var delegate: OptionsStackViewDelegate?
 
     private let interItemSpacing: CGFloat
 
     init(options: [Option<Item>], interItemSpacing: CGFloat) {
-        stackView = UIStackView()
+        stackView = ExtendedStackView(inset: OptionsStackViewConstants.inset)
         self.interItemSpacing = interItemSpacing
         super.init(frame: .zero)
 
@@ -44,7 +44,11 @@ final class OptionsStackView<Item>: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    @objc func optionTapped(_ sender: UIButton) {
+        delegate?.optionWasTapped(optionIndex: sender.tag)
+    }
+
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let relativeFrame = bounds
         let inset = OptionsStackViewConstants.inset
@@ -52,17 +56,13 @@ final class OptionsStackView<Item>: UIView {
         let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
         return hitFrame.contains(point)
     }
-
-    @objc func optionTapped(_ sender: UIButton) {
-        delegate?.optionWasTapped(optionIndex: sender.tag)
-    }
-
+    
     /// Update the UI to the new options with an animation
     ///
     /// - Parameter newOptions: an array of the new options to replace the old options
     func changeOptions(to newOptions: [Option<Item>]) {
         let oldStack = stackView
-        let newStack = UIStackView()
+        let newStack = ExtendedStackView(inset: OptionsStackViewConstants.inset)
         stackView = newStack
         setUpStackView(newOptions)
         UIView.animate(withDuration: OptionsStackViewConstants.OptionsChangeAnimationDuration, animations: {
