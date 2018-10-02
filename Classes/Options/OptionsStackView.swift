@@ -9,6 +9,7 @@ import UIKit
 
 private struct OptionsStackViewConstants {
     static let OptionsChangeAnimationDuration: TimeInterval = 0.2
+    static let inset: CGFloat = -10
 }
 
 protocol OptionsStackViewDelegate: class {
@@ -42,6 +43,14 @@ final class OptionsStackView<Item>: UIView {
     @available(*, unavailable, message: "use init(options:) instead")
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let relativeFrame = bounds
+        let inset = OptionsStackViewConstants.inset
+        let hitTestEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
+        return hitFrame.contains(point)
     }
 
     @objc func optionTapped(_ sender: UIButton) {
@@ -87,9 +96,9 @@ final class OptionsStackView<Item>: UIView {
     private func addOptions(_ options: [Option<Item>]) {
         options.enumerated().forEach { (index, option) in
             let optionView = OptionView(image: option.image)
-            optionView.button.tag = index
+            optionView.tag = index
             optionView.accessibilityIdentifier = "Options Option View #\(index + 1)"
-            optionView.button.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)
+            optionView.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(optionView)
         }
     }
