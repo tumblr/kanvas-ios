@@ -26,7 +26,7 @@ private struct VideoHandlerConstants {
 final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
 
     /// start time of the current clip
-    private(set) var startTime: CMTime = kCMTimeZero
+    private(set) var startTime: CMTime = CMTime.zero
 
     /// whether current handler is recording
     private(set) var recording: Bool = false
@@ -115,7 +115,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         currentVideoSampleBuffer = sampleBuffer
         if recording {
             var newBuffer: CMSampleBuffer? = nil
-            CMSampleBufferCreateCopy(kCFAllocatorDefault, sampleBuffer, &newBuffer)
+            CMSampleBufferCreateCopy(allocator: kCFAllocatorDefault, sampleBuffer: sampleBuffer, sampleBufferOut: &newBuffer)
             guard let buffer = newBuffer else { return }
 
             videoQueue.async {
@@ -137,7 +137,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         currentAudioSampleBuffer = sampleBuffer
         if recording && recordedVideoFrameFirst == true {
             var newBuffer: CMSampleBuffer? = nil
-            CMSampleBufferCreateCopy(kCFAllocatorDefault, sampleBuffer, &newBuffer)
+            CMSampleBufferCreateCopy(allocator: kCFAllocatorDefault, sampleBuffer: sampleBuffer, sampleBufferOut: &newBuffer)
             guard let buffer = newBuffer else { return }
 
             videoQueue.async {

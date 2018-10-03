@@ -181,8 +181,8 @@ final class CameraView: UIView {
     /// - Parameter view: view for camera input
     func addCameraInputView(_ view: UIView) {
         guard cameraInputViewContainer == nil else { return }
-        addViewWithGuide(view: view, guide: cameraInputLayoutGuide)
         cameraInputViewContainer = view
+        addViewWithGuide(view: view, guide: cameraInputLayoutGuide)
     }
 
     /// Adds the mode selector view
@@ -190,8 +190,8 @@ final class CameraView: UIView {
     /// - Parameter view: view for mode selection
     func addModeView(_ view: UIView) {
         guard modeAndShootContainer == nil else { return }
-        addViewWithGuide(view: view, guide: modeLayoutGuide)
         modeAndShootContainer = view
+        addViewWithGuide(view: view, guide: modeLayoutGuide)
     }
 
     /// Adds the clip editor view
@@ -199,8 +199,8 @@ final class CameraView: UIView {
     /// - Parameter view: view for clip editor
     func addClipsView(_ view: UIView) {
         guard clipsContainer == nil else { return }
-        addViewWithGuide(view: view, guide: clipsLayoutGuide)
         clipsContainer = view
+        addViewWithGuide(view: view, guide: clipsLayoutGuide)
     }
 
     /// Adds the Top Options view
@@ -208,8 +208,8 @@ final class CameraView: UIView {
     /// - Parameter view: view for options
     func addOptionsView(_ view: UIView) {
         guard topOptionsContainer == nil else { return }
-        addViewWithGuide(view: view, guide: optionsLayoutGuide)
         topOptionsContainer = view
+        addViewWithGuide(view: view, guide: optionsLayoutGuide)
     }
 
     private func addViewWithGuide(view: UIView, guide: UILayoutGuide) {

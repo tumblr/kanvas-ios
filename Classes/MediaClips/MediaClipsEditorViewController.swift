@@ -12,6 +12,11 @@ protocol MediaClipsEditorDelegate: class {
     ///
     /// - Parameter index: the index of the deleted clip
     func mediaClipWasDeleted(at index: Int)
+    
+    /// Callback for when a clip is added
+    ///
+    /// - Parameter index: index of the newly added clip
+    func mediaClipWasAdded(at index: Int)
 }
 
 /// Controller for handling media clips edition (showing, adding, removing, etc)
@@ -31,11 +36,11 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
 
     /// Is there any clip?
     /// This needs to be dynamic because it will be observed
-    @objc private(set) var hasClips: Bool = false
+    @objc private(set) dynamic var hasClips: Bool = false
 
     /// Check if there is a clip selected
     /// This needs to be dynamic because it will be observed
-    @objc private(set) var clipIsSelected: Bool = false
+    @objc private(set) dynamic var clipIsSelected: Bool = false
 
     init() {
         super.init(nibName: .none, bundle: .none)
@@ -70,6 +75,7 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         collectionController.addNewClip(clip)
         hasClips = true
         clipIsSelected = false
+        delegate?.mediaClipWasAdded(at: collectionController.getClips().count - 1)
     }
 
     /// Undoes the last clip added

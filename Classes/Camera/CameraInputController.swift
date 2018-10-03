@@ -544,16 +544,18 @@ final class CameraInputController: UIViewController {
 // MARK: - CameraRecordingDelegate
 // more documentation on the protocol methods can be found in the CameraRecordingDelegate
 extension CameraInputController: CameraRecordingDelegate {
-    var photoSettingsForCamera: AVCapturePhotoSettings? {
+    func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
-        settings.flashMode = flashMode
+        if output?.supportedFlashModes.contains(.on) == true {
+            settings.flashMode = flashMode
+        }
         return settings
     }
 
     func cameraWillTakeVideo() {
         guard let camera = currentDevice else { return }
         if flashMode == .on {
-            if camera.hasTorch {
+            if camera.hasTorch && camera.isTorchModeSupported(.on) {
                 do {
                     try camera.lockForConfiguration()
                     camera.torchMode = .on
@@ -567,7 +569,7 @@ extension CameraInputController: CameraRecordingDelegate {
 
     func cameraWillFinishVideo() {
         guard let camera = currentDevice else { return }
-        if camera.hasTorch && camera.torchMode != .off {
+        if camera.hasTorch && camera.torchMode != .off && camera.isTorchModeSupported(.off) {
             do {
                 try camera.lockForConfiguration()
                 camera.torchMode = .off
@@ -595,7 +597,7 @@ extension CameraInputController: AVCaptureVideoDataOutputSampleBufferDelegate, A
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // dropping a sample should be okay here, processor could be busy
         var mode: CMAttachmentMode = 0
-        let reason = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_DroppedFrameReason, &mode)
+        let reason = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
         print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
     }
 }
