@@ -20,6 +20,8 @@ protocol OptionsStackViewDelegate: class {
 /// A view for laying out option views in a stack
 final class OptionsStackView<Item>: UIView {
 
+    /// The stackView is an ExtendedStackView to allow for touch events beyond it's regular bounds.
+    /// This is to allow for smaller frames for buttons in a stack view but still have them register touches correctly
     private(set) var stackView: ExtendedStackView
     weak var delegate: OptionsStackViewDelegate?
 
@@ -49,6 +51,13 @@ final class OptionsStackView<Item>: UIView {
         delegate?.optionWasTapped(optionIndex: sender.tag)
     }
 
+    /// This overridden function returns whether the point for any given event is inside this button's frame
+    /// It adds the inset values to the frame, so a negative inset would create an `outset`, and a larger tappable area
+    ///
+    /// - Parameters:
+    ///   - point: The point to test
+    ///   - event: UIEvent
+    /// - Returns: Bool for whether the point should be recognized by this view
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let relativeFrame = bounds
         let inset = OptionsStackViewConstants.inset
