@@ -62,9 +62,9 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         return []
     }
 
-    func newViewController(segments: [CameraSegment], delegate: CameraPreviewControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil) -> CameraPreviewViewController {
+    func newViewController(settings: CameraSettings = CameraSettings(), segments: [CameraSegment], delegate: CameraPreviewControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil) -> CameraPreviewViewController {
         let handler = assetsHandler ?? AssetsHandlerStub()
-        let viewController = CameraPreviewViewController(settings: CameraSettings(), segments: segments, assetsHandler: handler)
+        let viewController = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: handler, cameraMode: cameraMode)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
@@ -129,6 +129,31 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
+    }
+    
+    func testConfirmPhotoAsVideoInStopMotionMode() {
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let settings = CameraSettings()
+        settings.exportStopMotionPhotoAsVideo = true
+        let handler = newAssetHandlerStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .stopMotion)
+        viewController.confirmButtonPressed()
+        XCTAssertTrue(!handler.mergeAssetsCalled, "Handler merge assets function called")
+        XCTAssertTrue(delegate.videoExportCalled, "Delegate video export function not called")
+    }
+    
+    func testConfirmPhotoAsPhotoInStopMotionMode() {
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let settings = CameraSettings()
+        settings.exportStopMotionPhotoAsVideo = true
+        let handler = newAssetHandlerStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .photo)
+        viewController.confirmButtonPressed()
+        XCTAssertTrue(!handler.mergeAssetsCalled, "Handler merge assets function called")
+        XCTAssertTrue(delegate.imageExportCalled, "Delegate image export function not called")
+        XCTAssertFalse(delegate.videoExportCalled, "Delegate video export function should not be called")
     }
 
     func testConfirmVideos() {

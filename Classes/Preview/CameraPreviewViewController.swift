@@ -36,6 +36,7 @@ final class CameraPreviewViewController: UIViewController {
     private let settings: CameraSettings
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
+    private let cameraMode: CameraMode?
 
     private var currentSegmentIndex: Int = 0
     private var timer: Timer = Timer()
@@ -62,10 +63,12 @@ final class CameraPreviewViewController: UIViewController {
     ///   - settings: The CameraSettings instance for export optioins
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType) {
+    ///   - cameraMode: The camera mode that the preview was coming from, if any
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, cameraMode: CameraMode?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
+        self.cameraMode = cameraMode
         self.currentPlayer = firstPlayer
 
         super.init(nibName: .none, bundle: .none)
@@ -190,7 +193,7 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
         stopPlayback()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
-            if settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
+            if let cameraMode = cameraMode, cameraMode == .stopMotion && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
                 performUIUpdate {
                     self.delegate?.didFinishExportingVideo(url: videoURL)
                     self.hideLoading()
