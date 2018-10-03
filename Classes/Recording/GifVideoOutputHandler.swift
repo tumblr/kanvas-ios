@@ -71,7 +71,7 @@ final class GifVideoOutputHandler: NSObject {
 
         let link = CADisplayLink(target: self, selector: #selector(gifLoop))
         link.preferredFramesPerSecond = KanvasCameraTimes.GifPreferredFramesPerSecond
-        link.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        link.add(to: RunLoop.main, forMode: RunLoop.Mode.default)
         gifLink = link
     }
 
@@ -105,7 +105,7 @@ final class GifVideoOutputHandler: NSObject {
         }
         // we need to create a copy of the CMSampleBuffer, the other one will be automatically reused by the video data output
         var newBuffer: CMSampleBuffer? = nil
-        CMSampleBufferCreateCopy(kCFAllocatorDefault, buffer, &newBuffer)
+        CMSampleBufferCreateCopy(allocator: kCFAllocatorDefault, sampleBuffer: buffer, sampleBufferOut: &newBuffer)
         if let buffer = newBuffer {
             gifBuffers.append(buffer)
             gifFrames += 1
@@ -123,19 +123,23 @@ final class GifVideoOutputHandler: NSObject {
         assetWriter?.startSession(atSourceTime: nextTime)
 
         gifBuffers = sampleBuffersWithReverse(array: gifBuffers)
-        for (index, buffer) in self.gifBuffers.enumerated() {
+        var index = 0
+        self.pixelBufferAdaptor?.assetWriterInput.requestMediaDataWhenReady(on: self.gifQueue, using: { [unowned self] in
+            guard let pixelBuffer = CMSampleBufferGetImageBuffer(self.gifBuffers[index]) else {
+                return
+            }
             let appendTime = nextTime
             nextTime = CMTimeAdd(nextTime, KanvasCameraTimes.GifFrameTime)
-            gifQueue.async { [unowned self] in
-                if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
-                    self.pixelBufferAdaptor?.append(buffer: pixelBuffer, time: appendTime, completion: { [unowned self] appended in
-                        if index == self.gifBuffers.count - 1 {
-                            self.exportGif(endTime: nextTime)
-                        }
-                    })
-                }
+            self.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
+            if index == self.gifBuffers.count - 1 {
+                self.videoInput?.markAsFinished()
+                self.audioInput?.markAsFinished()
+                self.exportGif(endTime: nextTime)
             }
-        }
+            else {
+                index += 1
+            }
+        })
     }
 
     private func sampleBuffersWithReverse(array: [CMSampleBuffer]) -> [CMSampleBuffer] {
@@ -150,8 +154,6 @@ final class GifVideoOutputHandler: NSObject {
 
     private func exportGif(endTime: CMTime) {
         assetWriter?.endSession(atSourceTime: endTime)
-        videoInput?.markAsFinished()
-        audioInput?.markAsFinished()
         gifQueue.async { [unowned self] in
             self.assetWriter?.finishWriting(completionHandler: {
                 self.recording = false
@@ -164,7 +166,7 @@ final class GifVideoOutputHandler: NSObject {
 
     private func invalidateLink() {
         gifLink?.invalidate()
-        gifLink?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        gifLink?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
         gifLink = nil
     }
 }

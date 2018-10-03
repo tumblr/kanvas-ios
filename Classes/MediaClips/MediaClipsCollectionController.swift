@@ -147,7 +147,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         let leftInset = cellBorderWhenCentered(firstCell: true, leftBorder: true, collectionView: collectionView)
         let rightInset = cellBorderWhenCentered(firstCell: false, leftBorder: false, collectionView: collectionView)
 
-        return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
     }
 
     private func cellBorderWhenCentered(firstCell: Bool, leftBorder: Bool, collectionView: UICollectionView) -> CGFloat {
@@ -158,7 +158,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         else if let lastClip = clips.last {
             cellMock.bindTo(lastClip)
         }
-        let cellSize = cellMock.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+        let cellSize = cellMock.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         let cellWidth = cellSize.width
         let center = collectionView.center.x
         let border = leftBorder ? center - cellWidth/2 : center + cellWidth/2

@@ -26,6 +26,8 @@
 	<string>So you can record videos, you know?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>So you can post photos, you know?</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>So you can save pictures, you know?</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

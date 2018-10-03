@@ -18,7 +18,7 @@ private struct CameraRecordingConstants {
 /// An implementation of a CameraRecordingProtocol without filters
 
 final class CameraRecorder: NSObject {
-    var recordingDelegate: CameraRecordingDelegate?
+    weak var recordingDelegate: CameraRecordingDelegate?
 
     private var url: URL?
     private var size: CGSize
@@ -42,6 +42,8 @@ final class CameraRecorder: NSObject {
     private let gifVideoOutputHandler: GifVideoOutputHandler
     private let videoOutputHandler: VideoOutputHandler
 
+    private var takingPhoto: Bool = false
+    
     required init(size: CGSize,
                   photoOutput: AVCapturePhotoOutput?,
                   videoOutput: AVCaptureVideoDataOutput?,
@@ -116,7 +118,7 @@ final class CameraRecorder: NSObject {
 
     private func setupNotifications() {
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appWillResignActive), name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
     }
 
     deinit {
@@ -163,7 +165,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         case .stopMotion:
             return videoOutputHandler.recording
         case .photo:
-            return false
+            return takingPhoto
         case .gif:
             return gifVideoOutputHandler.recording
         }
@@ -214,10 +216,16 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func takePhoto(completion: @escaping (UIImage?) -> Void) {
+        guard isRecording() == false else {
+            return
+        }
+        
         currentRecordingMode = .photo
 
-        let settings = recordingDelegate?.photoSettingsForCamera
+        let settings = recordingDelegate?.photoSettings(for: photoOutput)
+        takingPhoto = true
         photoOutputHandler.takePhoto(settings: settings ?? AVCapturePhotoSettings()) { [unowned self] image in
+            self.takingPhoto = false
             guard let image = image else {
                 completion(nil)
                 return

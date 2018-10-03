@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 
 /// A protocol for injecting analytics into the KanvasCamera module
-public protocol KanvasCameraAnalyticsProvider {
+@objc public protocol KanvasCameraAnalyticsProvider {
 
     /// Logs an event when the camera is opened
     ///

@@ -158,7 +158,7 @@ final class CameraPreviewViewController: UIViewController {
 
     @objc private func playNextSegment() {
         currentPlayer.pause()
-        currentPlayer.seek(to: kCMTimeZero)
+        currentPlayer.seek(to: CMTime.zero)
         currentSegmentIndex = (currentSegmentIndex + 1) % segments.count
         guard currentSegmentIndex < segments.count else { return }
         playSegment(segment: segments[currentSegmentIndex])
