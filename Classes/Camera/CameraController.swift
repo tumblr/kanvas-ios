@@ -224,20 +224,16 @@ public class CameraController: UIViewController {
     }
     
     private func showDismissTooltip() {
-        let viewModel = ModalViewModel(text: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"),
-                                       confirmTitle: NSLocalizedString("I'm sure", comment: "Confirmation to discard all the clips"),
-                                       confirmCallback: { [weak self] in
-                                        performUIUpdate {
-                                            self?.delegate?.dismissButtonPressed()
-                                        }
-        },
-                                       cancelTitle: NSLocalizedString("Cancel", comment: "Cancel action"),
-                                       cancelCallback: {
-                                        /// This is left intentionally empty; canceling the callback automatically dismisses it.
-        },
-                                       buttonsLayout: .oneBelowTheOther)
-        let controller = ModalController(viewModel: viewModel)
-        present(controller, animated: true, completion: nil)
+        let alertController = UIAlertController(title: nil, message: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"), preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let discardAction = UIAlertAction(title: NSLocalizedString("I'm sure", comment: "Confirmation to discard all the clips"), style: .destructive) { [weak self] (UIAlertAction) in
+            performUIUpdate {
+                self?.delegate?.dismissButtonPressed()
+            }
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(discardAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - Media Content Creation
@@ -268,7 +264,7 @@ public class CameraController: UIViewController {
         var text = ""
         if let url = url {
             let asset = AVURLAsset(url: url)
-            let seconds = CMTimeGetSeconds(asset.duration)
+            let seconds = CMTimeGetSeconds(asset.duration).rounded()
             let formatter = DateComponentsFormatter()
             formatter.allowedUnits = [.minute, .second]
             formatter.zeroFormattingBehavior = .pad

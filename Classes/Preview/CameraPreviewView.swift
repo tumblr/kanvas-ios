@@ -49,14 +49,14 @@ final class CameraPreviewView: UIView {
 
     private func setupViews() {
         imageView.backgroundColor = .black
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.add(into: self)
 
         imageView.layer.addSublayer(firstPlayerLayer)
         imageView.layer.addSublayer(secondPlayerLayer)
 
-        firstPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-        secondPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+        firstPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        secondPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
 
         performLayerActionsWithoutAnimation {
             firstPlayerLayer.opacity = 0
