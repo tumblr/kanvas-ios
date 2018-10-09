@@ -264,7 +264,7 @@ public class CameraController: UIViewController {
         var text = ""
         if let url = url {
             let asset = AVURLAsset(url: url)
-            let seconds = CMTimeGetSeconds(asset.duration)
+            let seconds = CMTimeGetSeconds(asset.duration).rounded()
             let formatter = DateComponentsFormatter()
             formatter.allowedUnits = [.minute, .second]
             formatter.zeroFormattingBehavior = .pad
