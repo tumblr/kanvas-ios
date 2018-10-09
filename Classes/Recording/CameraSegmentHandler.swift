@@ -316,19 +316,27 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - input: asset writer input
     ///   - completion: returns success bool
     private func createVideoFromImage(image: UIImage, assetWriter: AVAssetWriter, adaptor: AVAssetWriterInputPixelBufferAdaptor, input: AVAssetWriterInput, completion: @escaping (Bool) -> Void) {
-        assetWriter.startWriting()
-        assetWriter.startSession(atSourceTime: CMTime.zero)
         guard let buffer = createNewPixelBuffer(from: image) else {
             completion(false)
             return
         }
+        assetWriter.startWriting()
+        assetWriter.startSession(atSourceTime: CMTime.zero)
+        /// should also append a buffer at the end time
+        var firstBufferAppended = false
         adaptor.assetWriterInput.requestMediaDataWhenReady(on: DispatchQueue.main) {
-            adaptor.append(buffer, withPresentationTime: CMTime.zero)
-            let endTime = KanvasCameraTimes.StopMotionFrameTime
-            assetWriter.endSession(atSourceTime: endTime)
-            adaptor.assetWriterInput.markAsFinished()
-            assetWriter.finishWriting() {
-                completion(assetWriter.status == .completed)
+            if !firstBufferAppended {
+                adaptor.append(buffer, withPresentationTime: CMTime.zero)
+                firstBufferAppended = true
+            }
+            else {
+                let endTime = KanvasCameraTimes.StopMotionFrameTime
+                adaptor.append(buffer, withPresentationTime: endTime)
+                assetWriter.endSession(atSourceTime: endTime)
+                adaptor.assetWriterInput.markAsFinished()
+                assetWriter.finishWriting() {
+                    completion(assetWriter.status == .completed)
+                }
             }
         }
     }
