@@ -118,10 +118,19 @@ final class CameraPreviewViewController: UIViewController {
 
     private func playImage(image: UIImage) {
         cameraPreviewView.setImage(image: image)
-        let displayTime = KanvasCameraTimes.StopMotionFrameTimeInterval
+        let displayTime = timeIntervalForImageSegments(segments)
         timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
             self?.playNextSegment()
         })
+    }
+    
+    private func timeIntervalForImageSegments(_ segments: [CameraSegment]) -> TimeInterval {
+        for segment in segments {
+            if segment.image == nil {
+                return KanvasCameraTimes.StopMotionFrameTimeInterval
+            }
+        }
+        return CMTimeGetSeconds(CMTimeMake(value: KanvasCameraTimes.OnlyImagesFrameDuration, timescale: KanvasCameraTimes.StopMotionFrameTimescale))
     }
 
     private func playVideo(url: URL) {

@@ -26,17 +26,17 @@ struct KanvasCameraTimes {
     }
     // MARK: - Stop motion
 
-    // StopMotionFrameDuration: the duration value of each photo clip in a video
-    static let StopMotionFrameDuration: CMTimeValue = 120
+    // OnlyImagesFrameDuration: the duration value of each photo clip in a video if there are ONLY videos
+    static let OnlyImagesFrameDuration: CMTimeValue = 120
     
-    // SinglePhotoFrameDuration: the duration value of a single photo exported as a video
-    static let SinglePhotoFrameDuration: CMTimeValue = 300
+    // SinglePhotoWithVideoFrameDuration: the duration value of a single photo exported as a video. Also applies to photos exported with video
+    static let SinglePhotoWithVideoFrameDuration: CMTimeValue = 300
 
     // StopMotionFrameTimescale: the timescale used for creating videos
     static let StopMotionFrameTimescale: CMTimeScale = 600
 
     // StopMotionFrameTime: the CMTime for each frame composed from the duration and timescale
-    static let StopMotionFrameTime: CMTime = CMTime(value: StopMotionFrameDuration, timescale: StopMotionFrameTimescale)
+    static let StopMotionFrameTime: CMTime = CMTime(value: SinglePhotoWithVideoFrameDuration, timescale: StopMotionFrameTimescale)
 
     // StopMotionFrameTimeInterval: the equivalent amount of seconds for each frame time
     static let StopMotionFrameTimeInterval: TimeInterval = CMTimeGetSeconds(StopMotionFrameTime)
