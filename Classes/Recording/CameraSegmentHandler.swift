@@ -207,7 +207,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         }
     }
 
-    /// concatenates all of the videos in the segments
+    /// concatenates all of the videos and images with `videoURL`s in the segments
     ///
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
