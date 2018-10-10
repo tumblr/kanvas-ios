@@ -215,6 +215,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
         let mixComposition = AVMutableComposition()
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
+        // CameraSegments with images should also have a video url associated with it; that url is created when the addNewImageSegment method is called
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
         var insertTime = CMTime.zero
         let allImages = containsOnlyImages(segments: segments)
