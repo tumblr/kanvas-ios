@@ -69,8 +69,27 @@ final class CameraPreviewViewController: UIViewController {
         self.currentPlayer = firstPlayer
 
         super.init(nibName: .none, bundle: .none)
+        setupNotifications()
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+ 
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+    }
+    
+    @objc private func appDidBecomeActive() {
+        restartPlayback()
+    }
+
+    @objc private func appWillResignActive() {
+        timer.invalidate()
+        currentPlayer.pause()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -97,6 +116,8 @@ final class CameraPreviewViewController: UIViewController {
     // MARK: - playback methods
 
     private func restartPlayback() {
+        currentPlayer.pause()
+        timer.invalidate()
         currentSegmentIndex = 0
         if let firstSegment = segments.first {
             playSegment(segment: firstSegment)
