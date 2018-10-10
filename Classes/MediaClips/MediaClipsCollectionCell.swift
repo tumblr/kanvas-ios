@@ -94,6 +94,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
 extension MediaClipsCollectionCell {
 
     private func setUpView() {
+        let i = 0
         clipView.accessibilityIdentifier = "Media Clips Cell View"
         clipImage.accessibilityIdentifier = "Media Clips Cell ImageView"
         clipLabel.accessibilityIdentifier = "Media Clips Cell Duration"
