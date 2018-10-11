@@ -198,6 +198,6 @@ private struct DefaultCameraSettings {
     static let DefaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let DefaultCameraPositionOption: AVCaptureDevice.Position = .back
     static let LandscapeIsSupported: Bool = false
-    static let ExportStopMotionPhotoAsVideo: Bool = false
+    static let ExportStopMotionPhotoAsVideo: Bool = true
     
 }

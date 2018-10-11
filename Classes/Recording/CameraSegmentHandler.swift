@@ -207,7 +207,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         }
     }
 
-    /// concatenates all of the videos in the segments
+    /// concatenates all of the videos and images with `videoURL`s in the segments
     ///
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
@@ -215,8 +215,10 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
         let mixComposition = AVMutableComposition()
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
+        // CameraSegments with images should also have a video url associated with it; that url is created when the addNewImageSegment method is called
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
         var insertTime = CMTime.zero
+        let allImages = containsOnlyImages(segments: segments)
 
         for segment in segments {
             guard let segmentURL = segment.videoURL else { continue }
@@ -225,8 +227,16 @@ final class CameraSegmentHandler: SegmentsHandlerType {
 
             if let videoTrack = urlAsset.tracks(withMediaType: .video).first {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
-                addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
-                videoDuration = videoTrack.timeRange.duration
+                /// If all of the segments are photos, then the individual frame times are shorter
+                if allImages {
+                    let endTime = CMTimeMake(value: KanvasCameraTimes.OnlyImagesFrameDuration, timescale: KanvasCameraTimes.StopMotionFrameTimescale)
+                    videoDuration = CMTimeCompare(videoTrack.timeRange.duration, endTime) == 1 ? endTime : videoTrack.timeRange.duration
+                    addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: CMTimeRangeMake(start: videoTrack.timeRange.start, duration: videoDuration))
+                }
+                else {
+                    addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
+                    videoDuration = videoTrack.timeRange.duration
+                }
             }
             if let audioTrack = urlAsset.tracks(withMediaType: .audio).first {
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
@@ -241,6 +251,15 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         exportComposition(composition: mixComposition, completion: { url in
             completion(url)
         })
+    }
+    
+    private func containsOnlyImages(segments: [CameraSegment]) -> Bool {
+        for segment in segments {
+            if segment.image == nil {
+                return false
+            }
+        }
+        return true
     }
 
     /// Video output settings, used by internal classes for recording and exporting
@@ -316,19 +335,27 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - input: asset writer input
     ///   - completion: returns success bool
     private func createVideoFromImage(image: UIImage, assetWriter: AVAssetWriter, adaptor: AVAssetWriterInputPixelBufferAdaptor, input: AVAssetWriterInput, completion: @escaping (Bool) -> Void) {
-        assetWriter.startWriting()
-        assetWriter.startSession(atSourceTime: CMTime.zero)
         guard let buffer = createNewPixelBuffer(from: image) else {
             completion(false)
             return
         }
+        assetWriter.startWriting()
+        assetWriter.startSession(atSourceTime: CMTime.zero)
+        /// should also append a buffer at the end time
+        var firstBufferAppended = false
         adaptor.assetWriterInput.requestMediaDataWhenReady(on: DispatchQueue.main) {
-            adaptor.append(buffer, withPresentationTime: CMTime.zero)
-            let endTime = KanvasCameraTimes.StopMotionFrameTime
-            assetWriter.endSession(atSourceTime: endTime)
-            adaptor.assetWriterInput.markAsFinished()
-            assetWriter.finishWriting() {
-                completion(assetWriter.status == .completed)
+            if !firstBufferAppended {
+                adaptor.append(buffer, withPresentationTime: CMTime.zero)
+                firstBufferAppended = true
+            }
+            else {
+                let endTime = KanvasCameraTimes.StopMotionFrameTime
+                adaptor.append(buffer, withPresentationTime: endTime)
+                assetWriter.endSession(atSourceTime: endTime)
+                adaptor.assetWriterInput.markAsFinished()
+                assetWriter.finishWriting() {
+                    completion(assetWriter.status == .completed)
+                }
             }
         }
     }

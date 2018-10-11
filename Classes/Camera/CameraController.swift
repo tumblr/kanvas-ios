@@ -198,7 +198,7 @@ public class CameraController: UIViewController {
     // MARK: - navigation
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
-        let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init())
+        let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
         controller.delegate = self
         self.present(controller, animated: true)
     }

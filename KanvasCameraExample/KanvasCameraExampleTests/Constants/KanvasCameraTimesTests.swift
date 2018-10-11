@@ -20,19 +20,19 @@ final class KanvasCameraTimesTests: XCTestCase {
     }
 
     func testStopMotionFrameDuration() {
-        XCTAssert(KanvasCameraTimes.StopMotionFrameDuration == 40, "Returned value does not match expected value")
+        XCTAssert(KanvasCameraTimes.SinglePhotoWithVideoFrameDuration == 300, "Returned value does not match expected value")
     }
 
     func testStopMotionFrameTimescale() {
-        XCTAssert(KanvasCameraTimes.StopMotionFrameTimescale == 200, "Returned value does not match expected value")
+        XCTAssert(KanvasCameraTimes.StopMotionFrameTimescale == 600, "Returned value does not match expected value")
     }
 
     func testStopMotionFrameTime() {
-        XCTAssert(CMTimeCompare(KanvasCameraTimes.StopMotionFrameTime, CMTime(value: 40, timescale: 200)) == 0, "Returned value does not match expected value")
+        XCTAssert(CMTimeCompare(KanvasCameraTimes.StopMotionFrameTime, CMTime(value: 300, timescale: 600)) == 0, "Returned value does not match expected value")
     }
 
     func testStopMotionFrameTimeInterval() {
-        XCTAssert(KanvasCameraTimes.StopMotionFrameTimeInterval == 0.2, "Returned value does not match expected value")
+        XCTAssert(KanvasCameraTimes.StopMotionFrameTimeInterval == 0.5, "Returned value does not match expected value")
     }
 
     func testGifPreferredFramesPerSecond() {
