@@ -112,14 +112,24 @@ final class CameraInputController: UIViewController {
         recorderType = recorderClass
         segmentsHandlerType = segmentsHandlerClass
         super.init(nibName: .none, bundle: .none)
+        setupNotifications()
     }
 
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
     @objc private func appWillResignActive() {
         captureSession?.stopRunning()
     }
 
     @objc private func appDidBecomeActive() {
         captureSession?.startRunning()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     override public func viewDidLoad() {
