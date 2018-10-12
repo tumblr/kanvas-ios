@@ -61,6 +61,7 @@ final class GifVideoOutputHandler: NSObject {
             return
         }
 
+        recording = true
         self.assetWriter = assetWriter
         self.pixelBufferAdaptor = pixelBufferAdaptor
         self.videoInput = videoInput
@@ -166,7 +167,6 @@ final class GifVideoOutputHandler: NSObject {
 
     private func invalidateLink() {
         gifLink?.invalidate()
-        gifLink?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
         gifLink = nil
     }
 }
