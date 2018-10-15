@@ -82,7 +82,7 @@ final class CameraPreviewViewController: UIViewController {
     }
     
     @objc private func appDidBecomeActive() {
-        restartPlayback()
+        resumePlayback()
     }
 
     @objc private func appWillResignActive() {
@@ -121,6 +121,19 @@ final class CameraPreviewViewController: UIViewController {
         currentSegmentIndex = 0
         if let firstSegment = segments.first {
             playSegment(segment: firstSegment)
+        }
+    }
+    
+    private func resumePlayback() {
+        guard segments.count > 0 else {
+            return
+        }
+        let segment = segments[currentSegmentIndex]
+        if let image = segment.image {
+            playImage(image: image)
+        }
+        else if segment.videoURL != nil {
+            currentPlayer.play()
         }
     }
 
