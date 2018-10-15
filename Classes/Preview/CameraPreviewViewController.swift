@@ -125,7 +125,7 @@ final class CameraPreviewViewController: UIViewController {
     }
     
     private func resumePlayback() {
-        guard segments.count > 0 else {
+        guard segments.count > currentSegmentIndex else {
             return
         }
         let segment = segments[currentSegmentIndex]
