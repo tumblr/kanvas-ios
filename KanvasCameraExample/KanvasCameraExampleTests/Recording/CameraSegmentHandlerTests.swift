@@ -10,10 +10,10 @@ import Foundation
 import XCTest
 
 final class CameraSegmentHandlerTests: XCTestCase {
-
+    
     func testMerge() {
         let cameraSegmentHandler = CameraSegmentHandler()
-        guard let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") else {
+        guard let url = createVideo() else {
             XCTFail("no valid url found")
             return
         }
@@ -35,7 +35,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
         let result = XCTWaiter().wait(for: [expectation], timeout: 5)
         XCTAssert(result == .completed, "Merging did not complete")
     }
-
+    
     func testAddImage() {
         let cameraSegmentHandler = CameraSegmentHandler()
         let images = createImagesArray()
@@ -43,7 +43,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
         for image in images {
             cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, completion: { (success, segment) in
                 XCTAssert(success, "appending an image failed to create a CameraSegment")
-
+                
                 if cameraSegmentHandler.segments.count == images.count {
                     cameraSegmentHandler.exportVideo(completion: { url in
                         XCTAssert(url != nil, "should have a valid url for images merging")
@@ -52,7 +52,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
             })
         }
     }
-
+    
     func testAddVideo() {
         let cameraSegmentHandler = CameraSegmentHandler()
         if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
@@ -63,20 +63,20 @@ final class CameraSegmentHandlerTests: XCTestCase {
             XCTFail("url was not found for video")
         }
     }
-
+    
     func testDeleteSegment() {
         let cameraSegmentHandler = CameraSegmentHandler()
         let images = createImagesArray()
         XCTAssert(images.count > 0, "Images should have been added")
-
+        
         let deleteBlock: (() -> Void) = {
             cameraSegmentHandler.deleteSegment(index: 0, removeFromDisk: false)
         }
-
+        
         for image in images {
             cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, completion: { (success, segment) in
                 XCTAssert(success, "appending an image failed to create a CameraSegment")
-
+                
                 if cameraSegmentHandler.segments.count == images.count {
                     deleteBlock()
                     XCTAssert(cameraSegmentHandler.segments.count == images.count - 1, "failed to delete a segment properly")
@@ -84,17 +84,44 @@ final class CameraSegmentHandlerTests: XCTestCase {
             })
         }
     }
-
+    
+    func testMoveSegment() {
+        let cameraSegmentHandler = CameraSegmentHandler()
+        guard let image = createImage() else { XCTFail("no valid image found"); return }
+        guard let url = createVideo() else { XCTFail("no valid url found"); return }
+        
+        let expectation = XCTestExpectation(description: "added image")
+        cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, completion: { (success, segment) in
+            XCTAssert(success, "appending an image failed to create a CameraSegment")
+            cameraSegmentHandler.addNewVideoSegment(url: url)
+            cameraSegmentHandler.moveSegment(from: 1, to: 0)
+            XCTAssertNotNil(cameraSegmentHandler.segments[0].videoURL)
+            XCTAssertNil(cameraSegmentHandler.segments[0].image)
+            XCTAssertNotNil(cameraSegmentHandler.segments[1].image)
+            XCTAssertNotNil(cameraSegmentHandler.segments[1].videoURL)
+            expectation.fulfill()
+        })
+        wait(for: [expectation], timeout: 5.0)
+    }
+    
+    func createImage() -> UIImage? {
+        let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png")
+        return path.flatMap { UIImage(contentsOfFile: $0) }
+    }
+    
     func createImagesArray() -> [UIImage] {
         var images: [UIImage] = []
-
-        if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
+        
+        if let image = createImage() {
             for _ in 0...5 {
                 images.append(image)
             }
         }
-
+        
         return images
     }
-
+    
+    func createVideo() -> URL? {
+        return Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4")
+    }
 }

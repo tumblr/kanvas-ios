@@ -354,6 +354,16 @@ final class CameraInputController: UIViewController {
         recorder?.deleteSegmentAtIndex(index, removeFromDisk: true)
     }
 
+    /// Moves a segment inside the sequence
+    ///
+    /// - Parameters:
+    ///   - originIndex: Int
+    ///   - destinationIndex: Int
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        guard let recorder = recorder else { return }
+        recorder.moveSegment(from: originIndex, to: destinationIndex)
+    }
+    
     /// The currently recorded segments of images and video
     ///
     /// - Returns: an array of CameraSegment

@@ -96,6 +96,14 @@ protocol CameraRecordingProtocol {
     /// - Parameter removeFromDisk: whether to also delete the file from disk
     func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool)
 
+    /// moves a segment
+    ///
+    /// - Parameters:
+    ///   - originIndex: index at which the segments is right now
+    ///   - destinationIndex: index at which we want the segment to be after this
+    /// - Returns: Void
+    func moveSegment(from originIndex: Int, to destinationIndex: Int)
+
     /// takes a `boomerang` (but actually is a video recording).
     ///
     /// - Parameter completion: Returns the destination url

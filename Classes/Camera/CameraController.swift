@@ -494,6 +494,10 @@ extension CameraController: MediaClipsEditorDelegate {
             showCreationTooltip()
         }
     }
+    
+    func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
+        cameraInputController.moveSegment(from: originIndex, to: destinationIndex)
+    }
 }
 
 // MARK: - CameraPreviewControllerDelegate

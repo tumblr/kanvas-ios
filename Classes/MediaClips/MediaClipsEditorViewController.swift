@@ -17,6 +17,13 @@ protocol MediaClipsEditorDelegate: class {
     ///
     /// - Parameter index: index of the newly added clip
     func mediaClipWasAdded(at index: Int)
+    
+    /// Callback for when a clip is moved inside the collection
+    ///
+    /// - Parameters:
+    ///   - originIndex: Index where the clip was at before the moving around action
+    ///   - destinationIndex: Index where the clips is ar after the moving around action
+    func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
 }
 
 /// Controller for handling media clips edition (showing, adding, removing, etc)
@@ -97,6 +104,10 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         clipIsSelected = false
     }
 
+    func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
+        delegate?.mediaClipWasMoved(from: originIndex, to: destinationIndex)
+    }
+    
     // MARK: - MediaClipsEditorViewDelegate
     func trashButtonWasPressed() {
         if let index = collectionController.removeSelectedClip() {

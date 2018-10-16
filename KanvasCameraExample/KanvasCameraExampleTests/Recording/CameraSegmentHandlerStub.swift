@@ -39,6 +39,10 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
         segments.remove(at: index)
     }
 
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        segments.move(from: originIndex, to: destinationIndex)
+    }
+    
     func currentTotalDuration() -> TimeInterval {
         let timePerSegment: TimeInterval = 2
         return Double(segments.count) * timePerSegment

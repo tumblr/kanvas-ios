@@ -8,6 +8,7 @@ import Foundation
 import UIKit
 
 private struct MediaClipsCollectionViewConstants {
+    static var bufferSize: CGFloat = 10
     static var height: CGFloat = MediaClipsCollectionCell.minimumHeight
 }
 
@@ -76,4 +77,6 @@ fileprivate func configureCollection(collectionView: UICollectionView) {
     collectionView.autoresizesSubviews = true
     collectionView.contentInset = .zero
     collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
+    collectionView.dragInteractionEnabled = true
+    collectionView.reorderingCadence = .immediate
 }

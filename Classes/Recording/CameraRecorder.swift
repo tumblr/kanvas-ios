@@ -246,6 +246,10 @@ extension CameraRecorder: CameraRecordingProtocol {
         segmentsHandler.deleteSegment(index: index, removeFromDisk: removeFromDisk)
     }
 
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        segmentsHandler.moveSegment(from: originIndex, to: destinationIndex)
+    }
+
     // MARK: - gif
     func takeGifMovie(completion: @escaping (URL?) -> Void) {
         if isRecording() {

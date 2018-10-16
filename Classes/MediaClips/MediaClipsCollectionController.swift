@@ -14,6 +14,9 @@ protocol MediaClipsCollectionControllerDelegate: class {
 
     /// Callback for when a clip is deselected
     func mediaClipWasDeselected(at index: Int)
+    
+    /// Callback for when a clip is moved inside the collection
+    func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
 }
 
 /// Controller for handling the media clips collection.
@@ -97,6 +100,8 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         mediaClipsCollectionView.collectionView.register(cell: MediaClipsCollectionCell.self)
         mediaClipsCollectionView.collectionView.delegate = self
         mediaClipsCollectionView.collectionView.dataSource = self
+        mediaClipsCollectionView.collectionView.dragDelegate = self
+        mediaClipsCollectionView.collectionView.dropDelegate = self
     }
 
     override func viewDidLayoutSubviews() {
@@ -127,6 +132,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard !collectionView.hasActiveDrag else { return }
         let item = selectedClipIndex?.item
         deselectOldSelection(in: collectionView)
         if item != indexPath.item {
@@ -194,4 +200,57 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         }
     }
 
+}
+
+// MARK: - UICollectionViewDragDelegate
+extension MediaClipsCollectionController: UICollectionViewDragDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        deselectOldSelection(in: collectionView)
+        let item = clips[indexPath.item]
+        // Local object won't be used
+        let itemProvider = NSItemProvider(object: item.representativeFrame)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        dragItem.localObject = item.representativeFrame
+        return [dragItem]
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        return parameters
+    }
+    
+}
+
+// MARK: - UICollectionViewDropDelegate
+extension MediaClipsCollectionController: UICollectionViewDropDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        guard let item = coordinator.items.first, let oldIndexPath = item.sourceIndexPath else { return }
+        let oldIndex = oldIndexPath.item
+        if coordinator.destinationIndexPath == nil {
+            NSLog("Destination Drag index path is nil: strange things may happen.")
+        }
+        let newIndexPath = coordinator.destinationIndexPath ?? oldIndexPath
+        let newIndex = newIndexPath.item
+        clips.move(from: oldIndex, to: newIndex)
+        collectionView.moveItem(at: oldIndexPath, to: newIndexPath)
+        coordinator.drop(item.dragItem, toItemAt: newIndexPath)
+        delegate?.mediaClipWasMoved(from: oldIndex, to: newIndex)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        parameters.backgroundColor = .clear
+        if let cellSize = collectionView.visibleCells.first?.bounds {
+            parameters.visiblePath = UIBezierPath(rect: CGRect(x: cellSize.center.x, y: cellSize.center.y, width: 0, height: 0))
+        }
+        return parameters
+    }
+    
 }
