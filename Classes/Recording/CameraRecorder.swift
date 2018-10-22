@@ -12,7 +12,7 @@ import VideoToolbox
 /// Default values for the camera recorder
 private struct CameraRecordingConstants {
     /// queue for exporting
-    static let PrepareQueue: String = "PrepareQueue"
+    static let prepareQueue: String = "PrepareQueue"
 }
 
 /// An implementation of a CameraRecordingProtocol without filters

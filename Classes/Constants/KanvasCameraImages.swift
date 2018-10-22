@@ -9,26 +9,26 @@ import Foundation
 // the images used throughout the module
 struct KanvasCameraImages {
     // MARK: - Mode Selection
-    static let PhotoModeImage = UIImage.imageFromCameraBundle(named: "photoCameraMode")
-    static let GifModeImage = UIImage.imageFromCameraBundle(named: "gifCameraMode")
-    static let StopMotionModeImage: UIImage? = .none
+    static let photoModeImage = UIImage.imageFromCameraBundle(named: "photoCameraMode")
+    static let gifModeImage = UIImage.imageFromCameraBundle(named: "gifCameraMode")
+    static let stopMotionModeImage: UIImage? = .none
 
     static func image(for mode: CameraMode) -> UIImage? {
         switch mode {
-        case .photo: return PhotoModeImage
-        case .gif: return GifModeImage
-        case .stopMotion: return StopMotionModeImage
+        case .photo: return photoModeImage
+        case .gif: return gifModeImage
+        case .stopMotion: return stopMotionModeImage
         }
     }
     // MARK: - Top options
-    static let FlashOnImage = UIImage.imageFromCameraBundle(named: "flashOn")
-    static let FlashOffImage = UIImage.imageFromCameraBundle(named: "flashOff")
-    static let CameraPositionImage = UIImage.imageFromCameraBundle(named: "cameraPosition")
+    static let flashOnImage = UIImage.imageFromCameraBundle(named: "flashOn")
+    static let flashOffImage = UIImage.imageFromCameraBundle(named: "flashOff")
+    static let cameraPositionImage = UIImage.imageFromCameraBundle(named: "cameraPosition")
     // MARK: - General
-    static let CloseImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
-    static let ConfirmImage = UIImage.imageFromCameraBundle(named: "confirm")
-    static let BackImage = UIImage.imageFromCameraBundle(named: "backArrow")
-    static let UndoImage = UIImage.imageFromCameraBundle(named: "undoButton")
-    static let NextImage = UIImage.imageFromCameraBundle(named: "nextButton")
-    static let DeleteImage = UIImage.imageFromCameraBundle(named: "trashButton")
+    static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
+    static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
+    static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
+    static let undoImage = UIImage.imageFromCameraBundle(named: "undoButton")
+    static let nextImage = UIImage.imageFromCameraBundle(named: "nextButton")
+    static let deleteImage = UIImage.imageFromCameraBundle(named: "trashButton")
 }

@@ -7,7 +7,7 @@
 import Foundation
 
 private struct ModalPresentationAnimationConstants {
-    static let Duration: TimeInterval = 0.5
+    static let duration: TimeInterval = 0.5
 }
 
 /// An class conforming to UIViewControllerAnimatedTransitioning to handle presentation
@@ -49,7 +49,7 @@ final class ModalPresentationAnimationController: NSObject {
         let completedBlock: (_ completed: Bool) -> Void = {
             transitionContext.completeTransition($0)
         }
-        UIView.animate(withDuration: ModalPresentationAnimationConstants.Duration,
+        UIView.animate(withDuration: ModalPresentationAnimationConstants.duration,
                        delay: 0.0,
                        usingSpringWithDamping: 1.0,
                        initialSpringVelocity: 0.0,
@@ -64,7 +64,7 @@ final class ModalPresentationAnimationController: NSObject {
 extension ModalPresentationAnimationController: UIViewControllerAnimatedTransitioning {
 
     @objc func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return ModalPresentationAnimationConstants.Duration
+        return ModalPresentationAnimationConstants.duration
     }
 
     @objc func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {

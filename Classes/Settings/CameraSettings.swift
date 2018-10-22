@@ -45,7 +45,7 @@ import Foundation
         }
     }
     
-    private var _enabledModes: Set<CameraMode> = DefaultCameraSettings.EnabledModes
+    private var _enabledModes: Set<CameraMode> = DefaultCameraSettings.enabledModes
     
     /**
      Camera mode which starts active.
@@ -85,19 +85,19 @@ import Foundation
         }
     }
     
-    private var _defaultCameraPositionOption: AVCaptureDevice.Position = DefaultCameraSettings.DefaultCameraPositionOption
+    private var _defaultCameraPositionOption: AVCaptureDevice.Position = DefaultCameraSettings.defaultCameraPositionOption
     
     // MARK: - Flash settings
     
     /// Flash option which starts active.
     /// - note: Defaults to flash off.
-    public var preferredFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.DefaultFlashOption
+    public var preferredFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.defaultFlashOption
     
     // MARK: - Landscape support
-    public var cameraSupportsLandscape: Bool = DefaultCameraSettings.LandscapeIsSupported
+    public var cameraSupportsLandscape: Bool = DefaultCameraSettings.landscapeIsSupported
     
     // MARK: - Stop motion mode export settings
-    public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.ExportStopMotionPhotoAsVideo
+    public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.exportStopMotionPhotoAsVideo
     
     override public init() { }
     
@@ -194,10 +194,10 @@ extension CameraSettings {
 // MARK: - Default settings
 private struct DefaultCameraSettings {
     
-    static let EnabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
-    static let DefaultFlashOption: AVCaptureDevice.FlashMode = .off
-    static let DefaultCameraPositionOption: AVCaptureDevice.Position = .back
-    static let LandscapeIsSupported: Bool = false
-    static let ExportStopMotionPhotoAsVideo: Bool = true
+    static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+    static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
+    static let defaultCameraPositionOption: AVCaptureDevice.Position = .back
+    static let landscapeIsSupported: Bool = false
+    static let exportStopMotionPhotoAsVideo: Bool = true
     
 }

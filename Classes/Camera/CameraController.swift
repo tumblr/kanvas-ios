@@ -71,7 +71,7 @@ public class CameraController: UIViewController {
     }()
     private lazy var topOptionsController: OptionsController<CameraController> = {
         let options = getOptions(from: self.settings)
-        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.ButtonMargin)
+        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.buttonMargin)
         controller.delegate = self
         return controller
     }()

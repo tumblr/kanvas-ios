@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 private struct GifHandlerConstants {
-    static let Queue = "GifQueue"
+    static let queue = "GifQueue"
 }
 
 /// A handler for recording videos in the gif (forwards then backwards) method
@@ -18,7 +18,7 @@ final class GifVideoOutputHandler: NSObject {
     // bool for whether the handler is currently in a recording state
     private(set) var recording = false
 
-    private let gifQueue = DispatchQueue(label: GifHandlerConstants.Queue)
+    private let gifQueue = DispatchQueue(label: GifHandlerConstants.queue)
     private let videoOutput: AVCaptureVideoDataOutput?
     
     private var currentVideoSampleBuffer: CMSampleBuffer?
@@ -71,7 +71,7 @@ final class GifVideoOutputHandler: NSObject {
         gifCompletion = completion
 
         let link = CADisplayLink(target: self, selector: #selector(gifLoop))
-        link.preferredFramesPerSecond = KanvasCameraTimes.GifPreferredFramesPerSecond
+        link.preferredFramesPerSecond = KanvasCameraTimes.gifPreferredFramesPerSecond
         link.add(to: RunLoop.main, forMode: RunLoop.Mode.default)
         gifLink = link
     }
@@ -110,7 +110,7 @@ final class GifVideoOutputHandler: NSObject {
         if let buffer = newBuffer {
             gifBuffers.append(buffer)
             gifFrames += 1
-            if gifFrames >= KanvasCameraTimes.GifTotalFrames {
+            if gifFrames >= KanvasCameraTimes.gifTotalFrames {
                 gifFinishedBursting()
             }
         }
@@ -119,7 +119,7 @@ final class GifVideoOutputHandler: NSObject {
     private func gifFinishedBursting() {
         invalidateLink()
 
-        var nextTime = CMTime(value: 0, timescale: KanvasCameraTimes.GifTimeScale)
+        var nextTime = CMTime(value: 0, timescale: KanvasCameraTimes.gifTimeScale)
         assetWriter?.startWriting()
         assetWriter?.startSession(atSourceTime: nextTime)
 
@@ -130,7 +130,7 @@ final class GifVideoOutputHandler: NSObject {
                 return
             }
             let appendTime = nextTime
-            nextTime = CMTimeAdd(nextTime, KanvasCameraTimes.GifFrameTime)
+            nextTime = CMTimeAdd(nextTime, KanvasCameraTimes.gifFrameTime)
             self.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
             if index == self.gifBuffers.count - 1 {
                 self.videoInput?.markAsFinished()

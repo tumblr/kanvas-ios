@@ -178,7 +178,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 totalDuration = CMTimeAdd(totalDuration, asset.duration)
             }
             else if segment.image != nil {
-                totalDuration = CMTimeAdd(totalDuration, KanvasCameraTimes.StopMotionFrameTime)
+                totalDuration = CMTimeAdd(totalDuration, KanvasCameraTimes.stopMotionFrameTime)
             }
         }
         return CMTimeGetSeconds(totalDuration)
@@ -229,7 +229,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
                 /// If all of the segments are photos, then the individual frame times are shorter
                 if allImages {
-                    let endTime = CMTimeMake(value: KanvasCameraTimes.OnlyImagesFrameDuration, timescale: KanvasCameraTimes.StopMotionFrameTimescale)
+                    let endTime = CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
                     videoDuration = CMTimeCompare(videoTrack.timeRange.duration, endTime) == 1 ? endTime : videoTrack.timeRange.duration
                     addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: CMTimeRangeMake(start: videoTrack.timeRange.start, duration: videoDuration))
                 }
@@ -349,7 +349,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 firstBufferAppended = true
             }
             else {
-                let endTime = KanvasCameraTimes.StopMotionFrameTime
+                let endTime = KanvasCameraTimes.stopMotionFrameTime
                 adaptor.append(buffer, withPresentationTime: endTime)
                 assetWriter.endSession(atSourceTime: endTime)
                 adaptor.assetWriterInput.markAsFinished()

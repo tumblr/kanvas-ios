@@ -28,7 +28,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tap, image: KanvasCameraImages.PhotoModeImage, timeLimit: KanvasCameraTimes.StopMotionFrameTimeInterval)
+        shootButton.configureFor(trigger: .tap, image: KanvasCameraImages.photoModeImage, timeLimit: KanvasCameraTimes.stopMotionFrameTimeInterval)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
@@ -38,7 +38,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tap, image: KanvasCameraImages.GifModeImage, timeLimit: KanvasCameraTimes.GifRecordingTime)
+        shootButton.configureFor(trigger: .tap, image: KanvasCameraImages.gifModeImage, timeLimit: KanvasCameraTimes.gifRecordingTime)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
@@ -48,7 +48,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tapAndHold, image: KanvasCameraImages.StopMotionModeImage, timeLimit: KanvasCameraTimes.VideoRecordingTime)
+        shootButton.configureFor(trigger: .tapAndHold, image: KanvasCameraImages.stopMotionModeImage, timeLimit: KanvasCameraTimes.videoRecordingTime)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }

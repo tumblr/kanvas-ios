@@ -9,10 +9,10 @@ import Foundation
 // The colors used throughout the module
 struct KanvasCameraColors {
     // MARK: - Shooting
-    static let ShootButtonInactiveColor: UIColor = .white
-    static let ShootButtonActiveColor: UIColor = .red
+    static let shootButtonInactiveColor: UIColor = .white
+    static let shootButtonActiveColor: UIColor = .red
     
     // MARK: - Media
-    static let MediaBorderColor: UIColor = .white
-    static let MediaSelectedBorderColor: UIColor = .red
+    static let mediaBorderColor: UIColor = .white
+    static let mediaSelectedBorderColor: UIColor = .red
 }

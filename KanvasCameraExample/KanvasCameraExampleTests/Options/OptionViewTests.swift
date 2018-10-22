@@ -19,7 +19,7 @@ final class OptionViewTests: FBSnapshotTestCase {
     }
 
     func testNewButton() {
-        if let image = KanvasCameraImages.FlashOffImage {
+        if let image = KanvasCameraImages.flashOffImage {
             let button = OptionView(image: image)
             button.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
             FBSnapshotVerifyView(button)
@@ -30,7 +30,7 @@ final class OptionViewTests: FBSnapshotTestCase {
     }
 
     func testTouchOutsideOfButton() {
-        guard let image = KanvasCameraImages.FlashOffImage else {
+        guard let image = KanvasCameraImages.flashOffImage else {
             XCTFail("Bundle image not found")
             return
         }

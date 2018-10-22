@@ -19,7 +19,7 @@ protocol VideoOutputHandlerProtocol {
 }
 
 private struct VideoHandlerConstants {
-    static let Queue = "VideoQueue"
+    static let queue = "VideoQueue"
 }
 
 /// A class to handle video recording
@@ -38,7 +38,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
     private var videoInput: AVAssetWriterInput?
     private var audioInput: AVAssetWriterInput?
     private var recordedVideoFrameFirst: Bool = false
-    private let videoQueue: DispatchQueue = DispatchQueue(label: VideoHandlerConstants.Queue)
+    private let videoQueue: DispatchQueue = DispatchQueue(label: VideoHandlerConstants.queue)
     private var finalizing: Bool = false
 
     // MARK: - external methods
@@ -63,7 +63,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         self.audioInput = audioInput
 
         recordedVideoFrameFirst = false
-        startTime = CMTime(value: 0, timescale: KanvasCameraTimes.StopMotionFrameTimescale)
+        startTime = CMTime(value: 0, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
 
         if let sampleBuffer = currentVideoSampleBuffer {
             startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)

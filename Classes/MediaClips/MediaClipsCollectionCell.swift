@@ -38,7 +38,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         let view = UIView()
         view.clipsToBounds = true
         view.layer.cornerRadius = MediaClipsCollectionCellConstants.cornerRadius
-        view.layer.borderColor = KanvasCameraColors.MediaBorderColor.cgColor
+        view.layer.borderColor = KanvasCameraColors.mediaBorderColor.cgColor
         view.layer.borderWidth = MediaClipsCollectionCellConstants.borderWidth
         return view
     }()
@@ -86,7 +86,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter selected: whether the cell is selected or unselected
     func setSelected(_ selected: Bool) {
-        clipView.layer.borderColor = selected ? KanvasCameraColors.MediaSelectedBorderColor.cgColor : KanvasCameraColors.MediaBorderColor.cgColor
+        clipView.layer.borderColor = selected ? KanvasCameraColors.mediaSelectedBorderColor.cgColor : KanvasCameraColors.mediaBorderColor.cgColor
     }
 }
 

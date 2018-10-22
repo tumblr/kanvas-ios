@@ -15,14 +15,14 @@ final class KanvasCameraColorsTests: FBSnapshotTestCase {
 
     func testActiveShootColor() {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = KanvasCameraColors.ShootButtonActiveColor
+        view.backgroundColor = KanvasCameraColors.shootButtonActiveColor
 
         FBSnapshotVerifyView(view)
     }
 
     func testInactiveShootColor() {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = KanvasCameraColors.ShootButtonInactiveColor
+        view.backgroundColor = KanvasCameraColors.shootButtonInactiveColor
 
         FBSnapshotVerifyView(view)
     }

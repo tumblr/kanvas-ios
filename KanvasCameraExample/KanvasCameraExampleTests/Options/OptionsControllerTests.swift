@@ -25,7 +25,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
     }
 
     func getOptions() -> [Option<String>] {
-        let image = KanvasCameraImages.FlashOnImage
+        let image = KanvasCameraImages.flashOnImage
         return [Option(option: "Option 1.1", image: image, type: .twoOptionsImages(alternateOption: "Option 1.2", alternateImage: image)),
                 Option(option: "Option 2", image: image, type: .twoOptionsAnimation(animation: { [unowned self] _ in self.animationCalled = true },
                                                                                     duration: AnimationDuration,
