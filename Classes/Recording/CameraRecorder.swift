@@ -98,9 +98,9 @@ final class CameraRecorder: NSObject {
     }
 
     private func setupAudioForAssetWriter() {
-        let sampleRate = AVAudioSession.sharedInstance().preferredSampleRate
+        let sampleRate = AVAudioSession.sharedInstance().sampleRate
         guard sampleRate != 0 else {
-            NSLog("should not setup up the audio asset writer if no preferred sample rate found")
+            NSLog("should not setup up the audio asset writer if no sample rate found")
             return
         }
         var audioChannelLayout: AudioChannelLayout = AudioChannelLayout()
