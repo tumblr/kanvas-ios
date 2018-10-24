@@ -49,7 +49,7 @@ enum ViewPositioning {
 }
 
 private struct KanvasViewConstants {
-    static let AnimationDuration: TimeInterval = 0.2
+    static let animationDuration: TimeInterval = 0.2
 }
 
 extension UIView {
@@ -123,7 +123,7 @@ extension UIView {
     internal func showViews(shownViews: [UIView?],
                             hiddenViews: [UIView?],
                             animated: Bool = false,
-                            animationDuration: TimeInterval = KanvasViewConstants.AnimationDuration) {
+                            animationDuration: TimeInterval = KanvasViewConstants.animationDuration) {
         let duration = animated ? animationDuration : 0
         for view in (shownViews + hiddenViews) {
             view?.isUserInteractionEnabled = false

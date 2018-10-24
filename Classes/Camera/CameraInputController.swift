@@ -33,9 +33,9 @@ enum CameraInputError: Swift.Error {
 
 /// Default values for the input camera
 private struct CameraInputConstants {
-    static let SampleBufferQueue: String = "SampleBufferQueue"
-    static let AudioQueue: String = "AudioQueue"
-    static let FlashColor = UIColor.white.withAlphaComponent(0.4)
+    static let sampleBufferQueue: String = "SampleBufferQueue"
+    static let audioQueue: String = "AudioQueue"
+    static let flashColor = UIColor.white.withAlphaComponent(0.4)
 }
 
 /// The class for controlling the device camera.
@@ -62,8 +62,8 @@ final class CameraInputController: UIViewController {
 
     private let previewLayer = AVCaptureVideoPreviewLayer()
     private let flashLayer = CALayer()
-    private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.SampleBufferQueue)
-    private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.AudioQueue, qos: .utility)
+    private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.sampleBufferQueue)
+    private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, qos: .utility)
 
     private var settings: CameraSettings
     private var recorderType: CameraRecordingProtocol.Type
@@ -183,7 +183,7 @@ final class CameraInputController: UIViewController {
     }
 
     private func setupFlash(defaultOption: AVCaptureDevice.FlashMode) {
-        flashLayer.backgroundColor = CameraInputConstants.FlashColor.cgColor
+        flashLayer.backgroundColor = CameraInputConstants.flashColor.cgColor
         flashLayer.frame = previewLayer.bounds
         hideFlashLayer()
 

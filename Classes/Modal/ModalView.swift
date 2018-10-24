@@ -7,19 +7,19 @@
 import Foundation
 
 private struct ModalViewConstants {
-    static let Margin: CGFloat = 40
-    static let PaddingToText: CGFloat = 24
-    static let PaddingBetweenButtons: CGFloat = 10
-    static let ContainerCornerRadius: CGFloat = 16
-    static let ButtonCornerRadius: CGFloat = 10
-    static let TitleFontSize: CGFloat = 22
-    static let ButtonFontSize: CGFloat = 16
-    static let ContainerColor: UIColor = .white
-    static let ConfirmButtonColor: UIColor = UIColor(red: 32/255, green: 185/255, blue: 252/255, alpha: 1)
-    static let CancelButtonColor: UIColor = .white
-    static let ConfirmButtonTextColor: UIColor = CancelButtonColor
-    static let CancelButtonTextColor: UIColor = ConfirmButtonColor
-    static let ButtonTextMargin: CGFloat = 15
+    static let margin: CGFloat = 40
+    static let paddingToText: CGFloat = 24
+    static let paddingBetweenButtons: CGFloat = 10
+    static let containerCornerRadius: CGFloat = 16
+    static let buttonCornerRadius: CGFloat = 10
+    static let titleFontSize: CGFloat = 22
+    static let buttonFontSize: CGFloat = 16
+    static let containerColor: UIColor = .white
+    static let confirmButtonColor: UIColor = UIColor(red: 32/255, green: 185/255, blue: 252/255, alpha: 1)
+    static let cancelButtonColor: UIColor = .white
+    static let confirmButtonTextColor: UIColor = cancelButtonColor
+    static let cancelButtonTextColor: UIColor = confirmButtonColor
+    static let buttonTextMargin: CGFloat = 15
 }
 
 /// The modal view to be presented by a ModalPresentationController
@@ -87,7 +87,7 @@ final class ModalView: UIView {
     }
 
     private func setCancelButton(active: Bool) {
-        buttonsSeparationConstraint?.constant = active ? ModalViewConstants.PaddingBetweenButtons : 0
+        buttonsSeparationConstraint?.constant = active ? ModalViewConstants.paddingBetweenButtons : 0
         cancelButtonAppearingConstraint?.isActive = active
         cancelButtonDisappearingConstraint?.isActive = !active
     }
@@ -107,22 +107,22 @@ final class ModalView: UIView {
 
     private func setUpContainer() {
         containerView.accessibilityIdentifier = "Modal Container View"
-        containerView.backgroundColor = ModalViewConstants.ContainerColor
-        containerView.layer.cornerRadius = ModalViewConstants.ContainerCornerRadius
+        containerView.backgroundColor = ModalViewConstants.containerColor
+        containerView.layer.cornerRadius = ModalViewConstants.containerCornerRadius
         containerView.layer.masksToBounds = true
     }
 
     private func setUpLabel() {
         textLabel.accessibilityIdentifier = "Modal Text Label"
-        textLabel.font = UIFont.systemFont(ofSize: ModalViewConstants.TitleFontSize)
+        textLabel.font = UIFont.systemFont(ofSize: ModalViewConstants.titleFontSize)
         textLabel.textAlignment = .center
         textLabel.numberOfLines = 0
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            textLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: ModalViewConstants.Margin),
-            textLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -ModalViewConstants.Margin),
-            textLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: ModalViewConstants.Margin),
-            textLabel.bottomAnchor.constraint(equalTo: confirmButton.topAnchor, constant: -ModalViewConstants.PaddingToText)
+            textLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: ModalViewConstants.margin),
+            textLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -ModalViewConstants.margin),
+            textLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: ModalViewConstants.margin),
+            textLabel.bottomAnchor.constraint(equalTo: confirmButton.topAnchor, constant: -ModalViewConstants.paddingToText)
         ])
     }
 
@@ -133,16 +133,16 @@ final class ModalView: UIView {
         let variableConstraint: NSLayoutConstraint
         switch buttonsLayout {
         case .oneNextToTheOther:
-            separationConstraint = confirmButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: ModalViewConstants.PaddingBetweenButtons)
-            variableConstraint = confirmButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -ModalViewConstants.Margin)
+            separationConstraint = confirmButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: ModalViewConstants.paddingBetweenButtons)
+            variableConstraint = confirmButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -ModalViewConstants.margin)
         case .oneBelowTheOther:
-            separationConstraint = cancelButton.topAnchor.constraint(equalTo: confirmButton.bottomAnchor, constant: ModalViewConstants.PaddingBetweenButtons)
-            variableConstraint = confirmButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: ModalViewConstants.Margin)
+            separationConstraint = cancelButton.topAnchor.constraint(equalTo: confirmButton.bottomAnchor, constant: ModalViewConstants.paddingBetweenButtons)
+            variableConstraint = confirmButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: ModalViewConstants.margin)
         }
         buttonsSeparationConstraint = separationConstraint
         NSLayoutConstraint.activate([
             separationConstraint,
-            confirmButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -ModalViewConstants.Margin),
+            confirmButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -ModalViewConstants.margin),
             variableConstraint
         ])
     }
@@ -166,27 +166,27 @@ final class ModalView: UIView {
         NSLayoutConstraint.activate([
             heightConstraint,
             widthConstraint,
-            cancelButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: ModalViewConstants.Margin),
-            cancelButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -ModalViewConstants.Margin),
+            cancelButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: ModalViewConstants.margin),
+            cancelButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -ModalViewConstants.margin),
             variableConstraint
         ])
 
     }
 
     private func configureButton(button: UIButton, isConfirmButton: Bool) {
-        button.layer.cornerRadius = ModalViewConstants.ButtonCornerRadius
+        button.layer.cornerRadius = ModalViewConstants.buttonCornerRadius
         button.layer.masksToBounds = true
         button.setTitle("", for: .normal)   // Needed so there is a title label which we can set font to.
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: ModalViewConstants.ButtonFontSize)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: ModalViewConstants.buttonFontSize)
         button.titleLabel?.numberOfLines = 0
         button.contentVerticalAlignment = .center
         button.contentHorizontalAlignment = .center
-        button.backgroundColor = isConfirmButton ? ModalViewConstants.ConfirmButtonColor : ModalViewConstants.CancelButtonColor
-        button.setTitleColor(isConfirmButton ? ModalViewConstants.ConfirmButtonTextColor : ModalViewConstants.CancelButtonTextColor, for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: ModalViewConstants.ButtonTextMargin,
-                                                left: ModalViewConstants.ButtonTextMargin,
-                                                bottom: ModalViewConstants.ButtonTextMargin,
-                                                right: ModalViewConstants.ButtonTextMargin)
+        button.backgroundColor = isConfirmButton ? ModalViewConstants.confirmButtonColor : ModalViewConstants.cancelButtonColor
+        button.setTitleColor(isConfirmButton ? ModalViewConstants.confirmButtonTextColor : ModalViewConstants.cancelButtonTextColor, for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: ModalViewConstants.buttonTextMargin,
+                                                left: ModalViewConstants.buttonTextMargin,
+                                                bottom: ModalViewConstants.buttonTextMargin,
+                                                right: ModalViewConstants.buttonTextMargin)
 
         button.accessibilityIdentifier = "Modal \(isConfirmButton ? "Confirm" : "Cancel") Button"
     }

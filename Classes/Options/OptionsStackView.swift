@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 private struct OptionsStackViewConstants {
-    static let OptionsChangeAnimationDuration: TimeInterval = 0.2
+    static let optionsChangeAnimationDuration: TimeInterval = 0.2
     static let inset: CGFloat = -10
 }
 
@@ -74,7 +74,7 @@ final class OptionsStackView<Item>: UIView {
         let newStack = ExtendedStackView(inset: OptionsStackViewConstants.inset)
         stackView = newStack
         setUpStackView(newOptions)
-        UIView.animate(withDuration: OptionsStackViewConstants.OptionsChangeAnimationDuration, animations: {
+        UIView.animate(withDuration: OptionsStackViewConstants.optionsChangeAnimationDuration, animations: {
             self.addStackView(newStack)
             oldStack.alpha = 0
         }, completion: { _ in oldStack.removeFromSuperview() })

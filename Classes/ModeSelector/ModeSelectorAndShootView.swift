@@ -7,11 +7,11 @@
 import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
-    static let SelectorYCenterMargin: CGFloat = 49
-    static let ShootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
-    static let ShootButtonBottomMargin: CGFloat = 48
-    static var ShootButtonTopMargin: CGFloat {
-        return ModeSelectorAndShootViewConstants.ShootButtonBottomMargin + ModeSelectorAndShootViewConstants.ShootButtonSize
+    static let selectorYCenterMargin: CGFloat = 49
+    static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
+    static let shootButtonBottomMargin: CGFloat = 48
+    static var shootButtonTopMargin: CGFloat {
+        return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
 }
 
@@ -23,9 +23,9 @@ protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonVi
 final class ModeSelectorAndShootView: IgnoreTouchesView {
 
     /// exposed for other classes that need to know the sizing of the buttons
-    static let shootButtonSize = ModeSelectorAndShootViewConstants.ShootButtonSize
-    static let shootButtonBottomMargin = ModeSelectorAndShootViewConstants.ShootButtonBottomMargin
-    static let shootButtonTopMargin = ModeSelectorAndShootViewConstants.ShootButtonTopMargin
+    static let shootButtonSize = ModeSelectorAndShootViewConstants.shootButtonSize
+    static let shootButtonBottomMargin = ModeSelectorAndShootViewConstants.shootButtonBottomMargin
+    static let shootButtonTopMargin = ModeSelectorAndShootViewConstants.shootButtonTopMargin
 
     weak var delegate: ModeSelectorAndShootViewDelegate? {
         didSet {
@@ -43,7 +43,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     /// - Parameter settings: CameraSettings to determine the default and available modes
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
-        shootButton = ShootButtonView(baseColor: KanvasCameraColors.ShootButtonInactiveColor, activeColor: KanvasCameraColors.ShootButtonActiveColor)
+        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonInactiveColor, activeColor: KanvasCameraColors.shootButtonActiveColor)
         self.settings = settings
 
         super.init(frame: .zero)
@@ -97,7 +97,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         addSubview(modeSelectorButton)
         modeSelectorButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            modeSelectorButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: ModeSelectorAndShootViewConstants.SelectorYCenterMargin),
+            modeSelectorButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: ModeSelectorAndShootViewConstants.selectorYCenterMargin),
             modeSelectorButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
         ])
     }
@@ -108,10 +108,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         addSubview(shootButton)
         shootButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            shootButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.ShootButtonBottomMargin),
+            shootButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.shootButtonBottomMargin),
             shootButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             shootButton.heightAnchor.constraint(equalTo: shootButton.widthAnchor),
-            shootButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.ShootButtonSize)
+            shootButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.shootButtonSize)
         ])
     }
 

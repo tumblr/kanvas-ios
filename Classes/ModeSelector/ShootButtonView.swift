@@ -33,18 +33,18 @@ protocol ShootButtonViewDelegate: class {
 }
 
 private struct ShootButtonViewConstants {
-    static let ImageWidth: CGFloat = 30
-    static let BorderWidth: CGFloat = 3
-    static let LongPressMinimumDuration: CFTimeInterval = 0.5
-    static let ButtonInactiveWidth: CGFloat = (ImageWidth + 15) * 2
-    static let ButtonActiveWidth: CGFloat = ButtonInactiveWidth + 10
-    static let ButtonSizeAnimationDuration: TimeInterval = 0.2
-    static let ButtonImageAnimationInDuration: TimeInterval = 0.5
-    static let ButtonImageAnimationInSpringDamping: CGFloat = 0.6
-    static let ButtonImageAnimationOutDuration: TimeInterval = 0.15
+    static let imageWidth: CGFloat = 30
+    static let borderWidth: CGFloat = 3
+    static let longPressMinimumDuration: CFTimeInterval = 0.5
+    static let buttonInactiveWidth: CGFloat = (imageWidth + 15) * 2
+    static let buttonActiveWidth: CGFloat = buttonInactiveWidth + 10
+    static let buttonSizeAnimationDuration: TimeInterval = 0.2
+    static let buttonImageAnimationInDuration: TimeInterval = 0.5
+    static let buttonImageAnimationInSpringDamping: CGFloat = 0.6
+    static let buttonImageAnimationOutDuration: TimeInterval = 0.15
 
     static var ButtonMaximumWidth: CGFloat {
-        return max(ButtonInactiveWidth, ButtonActiveWidth)
+        return max(buttonInactiveWidth, buttonActiveWidth)
     }
 }
 
@@ -141,7 +141,7 @@ final class ShootButtonView: IgnoreTouchesView {
     private func setUpContainerView() {
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        let widthConstaint = containerView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.ButtonInactiveWidth)
+        let widthConstaint = containerView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.buttonInactiveWidth)
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             containerView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
@@ -159,7 +159,7 @@ final class ShootButtonView: IgnoreTouchesView {
 
         containerView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.ImageWidth)
+        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.imageWidth)
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
             widthConstraint,
@@ -172,7 +172,7 @@ final class ShootButtonView: IgnoreTouchesView {
     private func setUpBorderView() {
         borderView.accessibilityIdentifier = "Camera Shoot Button Border View"
         borderView.layer.masksToBounds = true
-        borderView.layer.borderWidth = ShootButtonViewConstants.BorderWidth
+        borderView.layer.borderWidth = ShootButtonViewConstants.borderWidth
         borderView.layer.borderColor = baseColor.cgColor
         borderView.isUserInteractionEnabled = false
 
@@ -195,7 +195,7 @@ final class ShootButtonView: IgnoreTouchesView {
     }
 
     private func configureLongPressRecognizer() {
-        longPressRecognizer.minimumPressDuration = ShootButtonViewConstants.LongPressMinimumDuration
+        longPressRecognizer.minimumPressDuration = ShootButtonViewConstants.longPressMinimumDuration
         longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
     }
 
@@ -204,7 +204,7 @@ final class ShootButtonView: IgnoreTouchesView {
         case .tap:
             if let timeLimit = maximumTime {
                 animateCircle(for: timeLimit,
-                              width: ShootButtonViewConstants.ButtonInactiveWidth,
+                              width: ShootButtonViewConstants.buttonInactiveWidth,
                               completion: { [unowned self] in self.circleAnimationCallback() })
             }
         case .tapAndHold:
@@ -234,7 +234,7 @@ final class ShootButtonView: IgnoreTouchesView {
             buttonState = .animating
             if let timeLimit = maximumTime {
                 animateCircle(for: timeLimit,
-                              width: ShootButtonViewConstants.ButtonActiveWidth,
+                              width: ShootButtonViewConstants.buttonActiveWidth,
                               completion: { [unowned self] in self.circleAnimationCallback() })
             }
             delegate?.shootButtonViewDidStartLongPress()
@@ -251,16 +251,16 @@ final class ShootButtonView: IgnoreTouchesView {
     // MARK: - Animations
 
     private func animateSizeChange(bigger: Bool) {
-        let newWidth = bigger ? ShootButtonViewConstants.ButtonActiveWidth : ShootButtonViewConstants.ButtonInactiveWidth
+        let newWidth = bigger ? ShootButtonViewConstants.buttonActiveWidth : ShootButtonViewConstants.buttonInactiveWidth
         let newCornerRadius = newWidth / 2
         let animation = CABasicAnimation(keyPath: "cornerRadius")
         animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         animation.fromValue = containerView.bounds.width / 2
         animation.toValue = newCornerRadius
-        animation.duration = ShootButtonViewConstants.ButtonSizeAnimationDuration
+        animation.duration = ShootButtonViewConstants.buttonSizeAnimationDuration
         containerView.layer.add(animation, forKey: "cornerRadius")
         borderView.layer.add(animation, forKey: "cornerRadius")
-        UIView.animate(withDuration: ShootButtonViewConstants.ButtonSizeAnimationDuration) { [weak self] in
+        UIView.animate(withDuration: ShootButtonViewConstants.buttonSizeAnimationDuration) { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.containerView.layer.cornerRadius = newCornerRadius
             strongSelf.borderView.layer.cornerRadius = newCornerRadius
@@ -284,7 +284,7 @@ final class ShootButtonView: IgnoreTouchesView {
         timeSegmentLayer.path = createPathForCircle(with: width)
         timeSegmentLayer.strokeColor = activeColor.cgColor
         timeSegmentLayer.fillColor = UIColor.clear.cgColor
-        timeSegmentLayer.lineWidth = ShootButtonViewConstants.BorderWidth
+        timeSegmentLayer.lineWidth = ShootButtonViewConstants.borderWidth
         timeSegmentLayer.strokeStart = 0
         timeSegmentLayer.strokeEnd = 1
         timeSegmentLayer.lineCap = CAShapeLayerLineCap.butt
@@ -304,13 +304,13 @@ final class ShootButtonView: IgnoreTouchesView {
     private func createPathForCircle(with width: CGFloat) -> CGPath {
         let arcPath = UIBezierPath()
         activeColor.set()
-        arcPath.lineWidth = ShootButtonViewConstants.BorderWidth
+        arcPath.lineWidth = ShootButtonViewConstants.borderWidth
         arcPath.lineCapStyle = .butt
         arcPath.lineJoinStyle = .bevel
         arcPath.addArc(withCenter: containerView.bounds.center,
                        // Different from UIView's border, this isn't inner to the coordinate, but centered in it.
                        // So we need to subtract half the width to make it match the view's border.
-                       radius: width / 2 - ShootButtonViewConstants.BorderWidth / 2,
+                       radius: width / 2 - ShootButtonViewConstants.borderWidth / 2,
                        startAngle: -.pi / 2,
                        endAngle: 3/2 * .pi,
                        clockwise: true)
@@ -325,7 +325,7 @@ final class ShootButtonView: IgnoreTouchesView {
     private func animateImageChange(_ image: UIImage?) {
         isUserInteractionEnabled = false
         if self.imageView.image != nil {
-            UIView.animate(withDuration: ShootButtonViewConstants.ButtonImageAnimationOutDuration, animations: { [weak self] in
+            UIView.animate(withDuration: ShootButtonViewConstants.buttonImageAnimationOutDuration, animations: { [weak self] in
                 guard let strongSelf = self else { return }
                 strongSelf.imageWidthConstraint?.constant = 0
                 strongSelf.setNeedsLayout()
@@ -345,13 +345,13 @@ final class ShootButtonView: IgnoreTouchesView {
 
     private func animateNewImageShowing(_ image: UIImage?) {
         self.imageView.image = image
-        UIView.animate(withDuration: ShootButtonViewConstants.ButtonImageAnimationInDuration,
+        UIView.animate(withDuration: ShootButtonViewConstants.buttonImageAnimationInDuration,
                        delay: 0,
-                       usingSpringWithDamping: ShootButtonViewConstants.ButtonImageAnimationInSpringDamping,
+                       usingSpringWithDamping: ShootButtonViewConstants.buttonImageAnimationInSpringDamping,
                        initialSpringVelocity: 0,
                        options: .curveEaseInOut,
                        animations: {
-                           self.imageWidthConstraint?.constant = ShootButtonViewConstants.ImageWidth
+                           self.imageWidthConstraint?.constant = ShootButtonViewConstants.imageWidth
                            self.setNeedsLayout()
                            self.layoutIfNeeded()
         }, completion: { _ in

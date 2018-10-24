@@ -11,7 +11,7 @@ import Foundation
 private struct URLConstants {
     static let jpg = "jpg"
     static let mp4 = "mp4"
-    static let BaseURL: String = "camera-asset-%@.%@"
+    static let baseURL: String = "camera-asset-%@.%@"
 }
 
 /// This is an extension to help create new URLs for videos and images
@@ -34,14 +34,14 @@ extension NSURL {
             return nil
         }
         var requiresNewFilePath = true
-        var fileURL: URL = documentsURL.appendingPathComponent(String(format: URLConstants.BaseURL, NSUUID().uuidString, ext))
+        var fileURL: URL = documentsURL.appendingPathComponent(String(format: URLConstants.baseURL, NSUUID().uuidString, ext))
         
         while requiresNewFilePath {
             if FileManager.default.fileExists(atPath: fileURL.path) != true {
                 requiresNewFilePath = false
                 break
             }
-            fileURL = documentsURL.appendingPathComponent(String(format: URLConstants.BaseURL, NSUUID().uuidString, ext))
+            fileURL = documentsURL.appendingPathComponent(String(format: URLConstants.baseURL, NSUUID().uuidString, ext))
         }
         return fileURL
     }
