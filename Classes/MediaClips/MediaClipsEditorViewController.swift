@@ -18,6 +18,12 @@ protocol MediaClipsEditorDelegate: class {
     /// - Parameter index: index of the newly added clip
     func mediaClipWasAdded(at index: Int)
     
+    /// Callback for when a clip starts moving inside the collection
+    func mediaClipStartedMoving()
+    
+    /// Callback for when a clip finishes moving inside the collection
+    func mediaClipFinishedMoving()
+    
     /// Callback for when a clip is moved inside the collection
     ///
     /// - Parameters:
@@ -94,6 +100,14 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     }
 
     // MARK: - MediaClipsControllerDelegate
+    func mediaClipStartedMoving() {
+        delegate?.mediaClipStartedMoving()
+    }
+    
+    func mediaClipFinishedMoving() {
+        delegate?.mediaClipFinishedMoving()
+    }
+
     func mediaClipWasSelected(at index: Int) {
         editorView.showTrash()
         clipIsSelected = true

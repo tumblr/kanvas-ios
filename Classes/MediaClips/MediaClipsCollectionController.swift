@@ -17,6 +17,12 @@ protocol MediaClipsCollectionControllerDelegate: class {
     
     /// Callback for when a clip is moved inside the collection
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
+    
+    /// Callback for when a clips starts moving / dragging
+    func mediaClipStartedMoving()
+    
+    /// Callback for when a clip finishes moving / draggin
+    func mediaClipFinishedMoving()
 }
 
 /// Controller for handling the media clips collection.
@@ -212,6 +218,7 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         let itemProvider = NSItemProvider(object: item.representativeFrame)
         let dragItem = UIDragItem(itemProvider: itemProvider)
         dragItem.localObject = item.representativeFrame
+        delegate?.mediaClipStartedMoving()
         return [dragItem]
     }
     
@@ -221,6 +228,9 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         return parameters
     }
     
+    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        delegate?.mediaClipFinishedMoving()
+    }
 }
 
 // MARK: - UICollectionViewDropDelegate

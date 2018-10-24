@@ -483,6 +483,17 @@ extension CameraController: OptionsControllerDelegate {
 
 // MARK: - MediaClipsEditorDelegate
 extension CameraController: MediaClipsEditorDelegate {
+    func mediaClipStartedMoving() {
+        performUIUpdate { [weak self] in
+            self?.enableBottomViewButtons(show: false)
+        }
+    }
+    
+    func mediaClipFinishedMoving() {
+        performUIUpdate { [weak self] in
+            self?.enableBottomViewButtons(show: true)
+        }
+    }
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegmentAtIndex(index)

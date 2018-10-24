@@ -65,10 +65,21 @@ final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(true)
         XCTAssert(delegate.movedWasCalled, "Move failed to call delegate")
     }
+    
+    func testDragStartedFinishedDelegate() {
+        let delegate = MediaClipsEditorViewControllerDelegateStub()
+        let viewController = newViewController(delegate: delegate)
+        viewController.mediaClipStartedMoving()
+        XCTAssertTrue(delegate.dragStarted, "Drag started delegate method was not called")
+        viewController.mediaClipFinishedMoving()
+        XCTAssertTrue(delegate.dragFinished, "Drag finished delegate method was not called")
+    }
 }
 
 final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate {
     var movedWasCalled = false
+    var dragStarted = false
+    var dragFinished = false
     
     func mediaClipWasAdded(at index: Int) {
         
@@ -79,5 +90,13 @@ final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate
     }
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         movedWasCalled = true
+    }
+    
+    func mediaClipStartedMoving() {
+        dragStarted = true
+    }
+    
+    func mediaClipFinishedMoving() {
+        dragFinished = true
     }
 }
