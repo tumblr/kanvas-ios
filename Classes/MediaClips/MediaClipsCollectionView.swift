@@ -9,7 +9,7 @@ import UIKit
 
 private struct MediaClipsCollectionViewConstants {
     static var bufferSize: CGFloat = 10
-    static var height: CGFloat = MediaClipsCollectionCell.minimumHeight + 10
+    static var height: CGFloat = MediaClipsCollectionCell.minimumHeight + MediaClipsCollectionViewConstants.bufferSize
 }
 
 /// Collection view for the MediaClipsCollectionController
