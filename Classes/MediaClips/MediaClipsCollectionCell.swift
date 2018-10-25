@@ -8,6 +8,11 @@ import AVFoundation
 import Foundation
 import UIKit
 
+/// Delegate for drag events on this cell
+protocol MediaClipsCollectionCellDelegate {
+    func didChangeState(newDragState: UICollectionViewCell.DragState)
+}
+
 private struct MediaClipsCollectionCellConstants {
     static let cellPadding: CGFloat = 2
     static let clipHeight: CGFloat = 80
@@ -57,6 +62,8 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
+    /// The drag delegate to be injected
+    var dragDelegate: MediaClipsCollectionCellDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -123,4 +130,11 @@ extension MediaClipsCollectionCell {
         ])
     }
 
+    /// This overrides the original function to to notify the drag delegate of the changed state
+    ///
+    /// - Parameter dragState: can be .lifting, .dragging, .none
+    override func dragStateDidChange(_ dragState: UICollectionViewCell.DragState) {
+        super.dragStateDidChange(dragState)
+        dragDelegate?.didChangeState(newDragState: dragState)
+    }
 }

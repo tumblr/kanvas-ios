@@ -132,6 +132,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaClipsCollectionCell.identifier, for: indexPath)
         if let mediaCell = cell as? MediaClipsCollectionCell {
             mediaCell.bindTo(clips[indexPath.item])
+            mediaCell.dragDelegate = self
         }
         return cell
     }
@@ -218,7 +219,6 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         let itemProvider = NSItemProvider(object: item.representativeFrame)
         let dragItem = UIDragItem(itemProvider: itemProvider)
         dragItem.localObject = item.representativeFrame
-        delegate?.mediaClipStartedMoving()
         return [dragItem]
     }
     
@@ -226,10 +226,6 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         let parameters = UIDragPreviewParameters()
         parameters.backgroundColor = .clear
         return parameters
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
-        delegate?.mediaClipFinishedMoving()
     }
 }
 
@@ -263,4 +259,17 @@ extension MediaClipsCollectionController: UICollectionViewDropDelegate {
         return parameters
     }
     
+}
+
+// MARK: - MediaClipsCollectionCellDelegate
+extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
+    func didChangeState(newDragState: UICollectionViewCell.DragState) {
+        switch newDragState {
+        case .dragging: break
+        case .lifting:
+            delegate?.mediaClipStartedMoving()
+        case .none:
+            delegate?.mediaClipFinishedMoving()
+        }
+    }
 }
