@@ -490,6 +490,7 @@ extension CameraController: MediaClipsEditorDelegate {
     }
     
     func mediaClipFinishedMoving() {
+        analyticsProvider?.logMovedClip()
         performUIUpdate { [weak self] in
             self?.enableBottomViewButtons(show: true)
         }
