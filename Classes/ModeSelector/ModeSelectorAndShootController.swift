@@ -26,6 +26,14 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     ///
     /// - Parameter mode: active mode when long press ended
     func didEndPressingForMode(_ mode: CameraMode)
+    
+    /// Function called when the user pans to zoom on the capture button
+    ///
+    /// - Parameter
+    ///     - mode: active mode when panning ocurred
+    ///     - currentPoint: location of finger on the screen
+    ///     - gesture: the long press gesture recognizer that performs the zoom action
+    func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer)
 }
 
 /// Controller that handles interaction between the mode selector and the capture button
@@ -49,6 +57,10 @@ final class ModeSelectorAndShootController: UIViewController {
         return queue
     }()
 
+    private lazy var currentMode: CameraMode? = {
+        return modesQueue.first
+    }()
+    
     /// Initializer with CameraSettings
     ///
     /// - Parameter settings: CameraSettings to determine the available modes and default images
@@ -74,7 +86,7 @@ final class ModeSelectorAndShootController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let mode = modesQueue.first {
+        if let mode = currentMode {
             setMode(mode, from: nil)
         }
         if modesQueue.count == 1 {
@@ -99,7 +111,7 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     // MARK: - ModeButtonViewDelegate
     func modeButtonViewDidTap() {
         let oldMode = modesQueue.rotateOnce()
-        if let newMode = modesQueue.first {
+        if let newMode = currentMode {
             setMode(newMode, from: oldMode)
         }
     }
@@ -112,27 +124,32 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
 
     // MARK: - ShootButtonViewDelegate
     func shootButtonViewDidTap() {
-        if let mode = modesQueue.first {
+        if let mode = currentMode {
             delegate?.didTapForMode(mode)
         }
     }
 
     func shootButtonViewDidStartLongPress() {
-        if let mode = modesQueue.first {
+        if let mode = currentMode {
             delegate?.didStartPressingForMode(mode)
         }
     }
 
     func shootButtonViewDidEndLongPress() {
-        if let mode = modesQueue.first {
+        if let mode = currentMode {
             delegate?.didEndPressingForMode(mode)
         }
     }
 
     func shootButtonReachedMaximumTime() {
-        if let mode = modesQueue.first {
+        if let mode = currentMode {
             delegate?.didEndPressingForMode(mode)
         }
     }
 
+    func shootButtonDidZoom(currentPoint: CGPoint, gesture: UILongPressGestureRecognizer) {
+        if let mode = currentMode {
+            delegate?.didPanForZoom(mode, currentPoint, gesture)
+        }
+    }
 }

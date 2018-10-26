@@ -30,6 +30,12 @@ protocol ShootButtonViewDelegate: class {
     /// Function called when the button was triggered and reached the time limit
     func shootButtonReachedMaximumTime()
 
+    /// Function called when the button was panned to zoom
+    ///
+    /// - Parameters:
+    ///   - currentPoint: location of the finger on the screen
+    ///   - gesture: the long press gesture recognizer that performs the zoom action.
+    func shootButtonDidZoom(currentPoint: CGPoint, gesture: UILongPressGestureRecognizer)
 }
 
 private struct ShootButtonViewConstants {
@@ -76,7 +82,8 @@ final class ShootButtonView: IgnoreTouchesView {
     private let timeSegmentLayer: CAShapeLayer
     private var maximumTime: TimeInterval?
     private var buttonState: ShootButtonState = .neutral
-    
+    private var startingPoint: CGPoint?
+
     static let buttonMaximumWidth = ShootButtonViewConstants.ButtonMaximumWidth
 
     /// designated initializer for the shoot button view
@@ -226,6 +233,12 @@ final class ShootButtonView: IgnoreTouchesView {
             updateForLongPress(started: false)
         default: break
         }
+        updateZoom(recognizer: recognizer)
+    }
+
+    private func updateZoom(recognizer: UILongPressGestureRecognizer) {
+        let currentPoint = recognizer.location(in: containerView)
+        delegate?.shootButtonDidZoom(currentPoint: currentPoint, gesture: recognizer)
     }
 
     private func updateForLongPress(started: Bool) {
