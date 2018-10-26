@@ -94,6 +94,7 @@ final class CameraInputController: UIViewController {
     /// These two variables act as a reference point for the pan zoom
     private var baseZoom: CGFloat = CameraInputConstants.minimumZoom
     private var startingPoint: CGPoint? = nil
+    private var analyticsProvider: KanvasCameraAnalyticsProvider?
     
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -114,8 +115,10 @@ final class CameraInputController: UIViewController {
     ///   - recorderClass: Class that will provide a recorder that defines exactly how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
-    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type) {
+    ///   - analyticsPRovider: Class implementing the analytics provider protocols
+    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type, analyticsProvider: KanvasCameraAnalyticsProvider? = nil) {
         self.settings = settings
+        self.analyticsProvider = analyticsProvider
         recorderType = recorderClass
         segmentsHandlerType = segmentsHandlerClass
         super.init(nibName: .none, bundle: .none)
@@ -622,7 +625,10 @@ extension CameraInputController {
         startingPoint = nil
         
         switch gesture.state {
-        case .began, .changed:
+        case .began:
+            analyticsProvider?.logPinchedZoom()
+            fallthrough
+        case .changed:
             updateZoom(captureDevice: camera, zoomFactor: validZoomFactor)
         case .ended, .failed, .cancelled:
             initialZoomFactor = validZoomFactor
@@ -641,6 +647,7 @@ extension CameraInputController {
         guard let camera = currentDevice else { return }
         switch gesture.state {
         case .began:
+            analyticsProvider?.logSwipedZoom()
             preparePan(point: point, zoom: initialZoomFactor)
         case .changed:
             if startingPoint == nil {

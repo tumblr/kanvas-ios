@@ -82,7 +82,7 @@ public class CameraController: UIViewController {
     }()
 
     private lazy var cameraInputController: CameraInputController = {
-        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass)
+        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass, analyticsProvider: self.analyticsProvider)
         return controller
     }()
 
