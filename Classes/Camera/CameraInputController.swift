@@ -36,6 +36,8 @@ private struct CameraInputConstants {
     static let sampleBufferQueue: String = "SampleBufferQueue"
     static let audioQueue: String = "AudioQueue"
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
+    static let minimumZoom: CGFloat = 1.0
+    static let zoomDistanceDivisor: CGFloat = 50
 }
 
 /// The class for controlling the device camera.
@@ -87,7 +89,12 @@ final class CameraInputController: UIViewController {
         }
     }
     private var recorder: CameraRecordingProtocol?
-
+    /// Shared zoom factor for panning and pinching
+    private var initialZoomFactor: CGFloat = CameraInputConstants.minimumZoom
+    /// These two variables act as a reference point for the pan zoom
+    private var baseZoom: CGFloat = CameraInputConstants.minimumZoom
+    private var startingPoint: CGPoint? = nil
+    
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -173,6 +180,8 @@ final class CameraInputController: UIViewController {
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinched))
+        view.addGestureRecognizer(pinch)
     }
 
     private func setupPreview() {
@@ -317,36 +326,6 @@ final class CameraInputController: UIViewController {
         flashMode = .off == flashMode ? .on : .off
     }
 
-    /// Sets the video camera zoom factor
-    ///
-    /// - Parameter zoomFactor: should be a value between 1 and the videoMaxZoomFactor. 1 is standard zoom
-    func setZoom(zoomFactor: CGFloat) throws {
-        guard let camera = currentDevice else { return }
-        var targetZoomFactor = zoomFactor
-        if targetZoomFactor > 1 {
-            targetZoomFactor = 1
-        }
-        if targetZoomFactor < camera.activeFormat.videoMaxZoomFactor {
-            targetZoomFactor = camera.activeFormat.videoMaxZoomFactor
-        }
-        do {
-            try camera.lockForConfiguration()
-            camera.videoZoomFactor = zoomFactor
-            camera.unlockForConfiguration()
-        } catch {
-            // the zoom factor is different for various devices, setting the zoom shouldn't crash
-            NSLog("failed to zoom for \(zoomFactor)")
-            throw CameraInputError.inputsAreInvalid
-        }
-    }
-
-    /// The current camera's zoom
-    ///
-    /// - Returns: returns the current device's videoZoomFactor, if a device is found
-    func currentZoom() -> CGFloat? {
-        return currentDevice?.videoZoomFactor
-    }
-
     /// Deletes a segment at an index
     ///
     /// - Parameter index: Int
@@ -383,7 +362,13 @@ final class CameraInputController: UIViewController {
     }
 
     @objc private func doubleTapped() {
+        resetZoom()
         switchCameras()
+    }
+    
+    @objc private func pinched(_ gesture: UIPinchGestureRecognizer) {
+        let zoom = gesture.scale * initialZoomFactor
+        setZoom(zoomFactor: zoom, gesture: gesture)
     }
 
     private func currentResolution() -> CGSize {
@@ -619,5 +604,120 @@ extension CameraInputController: AVCaptureVideoDataOutputSampleBufferDelegate, A
         var mode: CMAttachmentMode = 0
         let reason = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
         print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
+    }
+}
+
+// MARK: - Zoom
+
+extension CameraInputController {
+    
+    /// Sets the video camera zoom factor
+    ///
+    /// - Parameter
+    ///   - zoomFactor: should be a value between 1 and the videoMaxZoomFactor. The standard zoom is 1.
+    ///   - gesture: the pinch gesture recognizer that performs the zoom action.
+    func setZoom(zoomFactor: CGFloat, gesture: UIPinchGestureRecognizer) {
+        guard let camera = currentDevice else { return }
+        let validZoomFactor = minMaxZoom(captureDevice: camera, zoomFactor: zoomFactor)
+        startingPoint = nil
+        
+        switch gesture.state {
+        case .began, .changed:
+            updateZoom(captureDevice: camera, zoomFactor: validZoomFactor)
+        case .ended, .failed, .cancelled:
+            initialZoomFactor = validZoomFactor
+            updateZoom(captureDevice: camera, zoomFactor: validZoomFactor)
+        default:
+            break
+        }
+    }
+    
+    /// Sets the video camera zoom factor
+    ///
+    /// - Parameter
+    ///   - zoomFactor: should be a value between 1 and the videoMaxZoomFactor. The standard zoom is 1.
+    ///   - gesture: the long press gesture recognizer that performs the zoom action.
+    func setZoom(point: CGPoint, gesture: UILongPressGestureRecognizer) {
+        guard let camera = currentDevice else { return }
+        switch gesture.state {
+        case .began:
+            preparePan(point: point, zoom: initialZoomFactor)
+        case .changed:
+            if startingPoint == nil {
+                preparePan(point: point, zoom: initialZoomFactor)
+            }
+            let zoom = calculateZoom(captureDevice: camera, currentPoint: point)
+            updateZoom(captureDevice: camera, zoomFactor: zoom)
+            initialZoomFactor = zoom
+        case .ended, .failed, .cancelled:
+            let zoom = calculateZoom(captureDevice: camera, currentPoint: point)
+            updateZoom(captureDevice: camera, zoomFactor: zoom)
+            initialZoomFactor = zoom
+            preparePan(point: nil, zoom: zoom)
+        default:
+            break
+        }
+    }
+    
+    /// Prepares pan zoom to be used
+    ///
+    /// - Parameter
+    ///   - point: location of the screen that will act as a reference to zoom in or out
+    ///   - zoom: base zoom that will act as a reference to zoom in or out
+    private func preparePan(point: CGPoint?, zoom: CGFloat) {
+        startingPoint = point
+        baseZoom = zoom
+    }
+    
+    /// Sets the video camera zoom factor
+    ///
+    /// - Parameter
+    ///   - captureDevice: a device that provides video
+    ///   - currentPoint: location of the finger on the screen
+    private func calculateZoom(captureDevice: AVCaptureDevice, currentPoint: CGPoint) -> CGFloat {
+        guard let initialPoint = startingPoint else { return initialZoomFactor }
+        let yDistance = initialPoint.y - currentPoint.y
+        let zoom = yDistance / CameraInputConstants.zoomDistanceDivisor + baseZoom
+        let validZoom = minMaxZoom(captureDevice: captureDevice, zoomFactor: zoom)
+        return validZoom
+    }
+    
+    /// The current camera's zoom
+    ///
+    /// - Returns: returns the current device's videoZoomFactor, if a device is found
+    func currentZoom() -> CGFloat? {
+        return currentDevice?.videoZoomFactor
+    }
+    
+    /// Returns zoom value between the minimum and maximum zoom values
+    ///
+    /// - Parameters:
+    ///   - captureDevice: a device that provides video
+    ///   - zoomFactor: zoom value to be set
+    func updateZoom(captureDevice: AVCaptureDevice, zoomFactor: CGFloat) {
+        do {
+            defer { captureDevice.unlockForConfiguration() }
+            try captureDevice.lockForConfiguration()
+            captureDevice.videoZoomFactor = zoomFactor
+        } catch {
+            // The zoom factor is different for various devices, setting the zoom shouldn't crash
+            NSLog("failed to zoom for \(zoomFactor)")
+        }
+    }
+    
+    /// Returns zoom value between the minimum and maximum zoom values
+    ///
+    /// - Parameters:
+    ///   - captureDevice: a device that provides video
+    ///   - zoomFactor: zoom value to be checked
+    func minMaxZoom(captureDevice: AVCaptureDevice, zoomFactor: CGFloat) -> CGFloat {
+        return (CameraInputConstants.minimumZoom ... captureDevice.activeFormat.videoMaxZoomFactor).clamp(zoomFactor)
+    }
+    
+    /// Resets the zoom to the minimum value
+    func resetZoom() {
+        guard let camera = currentDevice else { return }
+        initialZoomFactor = CameraInputConstants.minimumZoom
+        updateZoom(captureDevice: camera, zoomFactor: CameraInputConstants.minimumZoom)
     }
 }

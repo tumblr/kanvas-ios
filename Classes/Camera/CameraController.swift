@@ -413,6 +413,13 @@ extension CameraController: CameraViewDelegate, ActionsViewDelegate {
 
 // MARK: - ModeSelectorAndShootControllerDelegate
 extension CameraController: ModeSelectorAndShootControllerDelegate {
+    func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
+        switch mode {
+        case .stopMotion:
+            cameraInputController.setZoom(point: currentPoint, gesture: gesture)
+        default: break
+        }
+    }
 
     func didOpenMode(_ mode: CameraMode, andClosed oldMode: CameraMode?) {
         updateMode(mode)
@@ -476,6 +483,7 @@ extension CameraController: OptionsControllerDelegate {
         case .backCamera, .frontCamera:
             cameraInputController.switchCameras()
             analyticsProvider?.logFlipCamera()
+            cameraInputController.resetZoom()
         }
     }
 
