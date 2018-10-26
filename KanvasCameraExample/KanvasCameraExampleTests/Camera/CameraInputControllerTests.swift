@@ -61,9 +61,19 @@ final class CameraInputControllerTests: XCTestCase {
         XCTAssertEqual(cameraInputController.flashMode, .on, "Flash should be toggled on")
     }
 
-    func testZoom() {
+    func testPanZoom() {
         let cameraInputController = newCameraInputController()
-        do { try cameraInputController.setZoom(zoomFactor: 0.7) } catch { } // zoom requires device
+        let gesture = UILongPressGestureRecognizer()
+        let point = CGPoint(x: 1.0, y: 1.0)
+        cameraInputController.setZoom(point: point, gesture: gesture)
+        let currentZoom = cameraInputController.currentZoom()
+        XCTAssertNil(currentZoom, "Zooming should not be set without device")
+    }
+    
+    func testPinchZoom() {
+        let cameraInputController = newCameraInputController()
+        let gesture = UIPinchGestureRecognizer()
+        cameraInputController.setZoom(zoomFactor: 0.7, gesture: gesture)
         let currentZoom = cameraInputController.currentZoom()
         XCTAssertNil(currentZoom, "Zooming should not be set without device")
     }
