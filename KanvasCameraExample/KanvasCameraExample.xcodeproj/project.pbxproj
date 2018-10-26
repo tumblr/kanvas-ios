@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E827E102183872600681FEA /* ClosedRangeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E827E0F2183872600681FEA /* ClosedRangeTests.swift */; };
 		0EAE0C7E21387C39004CD7FF /* ModeButtonViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C7D21387C39004CD7FF /* ModeButtonViewTests.swift */; };
 		0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C7F21387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift */; };
 		0EAE0C8221387DE3004CD7FF /* ModeSelectorAndShootViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C8021387DE3004CD7FF /* ModeSelectorAndShootViewTests.swift */; };
@@ -78,6 +79,7 @@
 
 /* Begin PBXFileReference section */
 		07DDC249DAB2E1FD27A71D49 /* Pods-KanvasCameraExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0E827E0F2183872600681FEA /* ClosedRangeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosedRangeTests.swift; sourceTree = "<group>"; };
 		0EAE0C7D21387C39004CD7FF /* ModeButtonViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeButtonViewTests.swift; sourceTree = "<group>"; };
 		0EAE0C7F21387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootControllerTests.swift; sourceTree = "<group>"; };
 		0EAE0C8021387DE3004CD7FF /* ModeSelectorAndShootViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootViewTests.swift; sourceTree = "<group>"; };
@@ -164,6 +166,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E827E0E2183870D00681FEA /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				0E827E0F2183872600681FEA /* ClosedRangeTests.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		0EAE0C8A2139895A004CD7FF /* Camera */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,6 +293,7 @@
 		AB7F295D2121F0ED00B8D599 /* KanvasCameraExampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				0E827E0E2183870D00681FEA /* Extension */,
 				0EAE0CB72139EC81004CD7FF /* KanvasCameraAnalyticsStub.swift */,
 				0EAE0CAE2139B966004CD7FF /* CameraPreview */,
 				0EAE0CA32139A9AA004CD7FF /* Modal */,
@@ -611,6 +622,7 @@
 				ABE49908213712E100379F7F /* OptionViewTests.swift in Sources */,
 				ABE4990021370FAB00379F7F /* MediaClipsEditorViewControllerTests.swift in Sources */,
 				AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */,
+				0E827E102183872600681FEA /* ClosedRangeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
