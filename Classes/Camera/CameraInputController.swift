@@ -36,14 +36,12 @@ private struct CameraInputConstants {
     static let sampleBufferQueue: String = "SampleBufferQueue"
     static let audioQueue: String = "AudioQueue"
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
-    static let minimumZoom: CGFloat = 1.0
-    static let zoomDistanceDivisor: CGFloat = 50
 }
 
 /// The class for controlling the device camera.
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
-final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, CameraZoomHandlerDelegate {
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -89,11 +87,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
     private var recorder: CameraRecordingProtocol?
-    /// Shared zoom factor for panning and pinching
-    private var initialZoomFactor: CGFloat = CameraInputConstants.minimumZoom
-    /// These two variables act as a reference point for the pan zoom
-    private var baseZoom: CGFloat = CameraInputConstants.minimumZoom
-    private var startingPoint: CGPoint?
+    private lazy var cameraZoomHandler: CameraZoomHandler = {
+        return CameraZoomHandler(delegate: self)
+    }()
     
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -179,7 +175,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
-        view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinched)))
+        view.addGestureRecognizer(UIPinchGestureRecognizer(target: cameraZoomHandler, action: #selector(CameraZoomHandler.pinched)))
     }
 
     private func setupPreview() {
@@ -352,10 +348,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     @objc private func doubleTapped() {
         resetZoom()
         switchCameras()
-    }
-    
-    @objc private func pinched(_ gesture: UIPinchGestureRecognizer) {
-        setZoom(zoomFactor: gesture.scale * initialZoomFactor, gesture: gesture)
     }
 
     private func currentResolution() -> CGSize {
@@ -589,25 +581,17 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     // MARK: - Zoom
     
+    var zoomHandlerCurrentDevice: AVCaptureDevice? {
+        return currentDevice
+    }
+    
     /// Sets the video camera zoom factor
     ///
     /// - Parameter
     ///   - zoomFactor: should be a value between 1 and the videoMaxZoomFactor. The standard zoom is 1.
     ///   - gesture: the pinch gesture recognizer that performs the zoom action.
     func setZoom(zoomFactor: CGFloat, gesture: UIPinchGestureRecognizer) {
-        guard let camera = currentDevice else { return }
-        let validZoomFactor = minMaxZoom(captureDevice: camera, zoomFactor: zoomFactor)
-        startingPoint = nil
-        
-        switch gesture.state {
-        case .began, .changed:
-            updateZoom(captureDevice: camera, zoomFactor: validZoomFactor)
-        case .ended, .failed, .cancelled:
-            initialZoomFactor = validZoomFactor
-            updateZoom(captureDevice: camera, zoomFactor: validZoomFactor)
-        default:
-            break
-        }
+        cameraZoomHandler.setZoom(zoomFactor: zoomFactor, gesture: gesture)
     }
     
     /// Sets the video camera zoom factor
@@ -616,48 +600,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     ///   - zoomFactor: should be a value between 1 and the videoMaxZoomFactor. The standard zoom is 1.
     ///   - gesture: the long press gesture recognizer that performs the zoom action.
     func setZoom(point: CGPoint, gesture: UILongPressGestureRecognizer) {
-        guard let camera = currentDevice else { return }
-        switch gesture.state {
-        case .began:
-            preparePan(point: point, zoom: initialZoomFactor)
-        case .changed:
-            if startingPoint == nil {
-                preparePan(point: point, zoom: initialZoomFactor)
-            }
-            let zoom = calculateZoom(captureDevice: camera, currentPoint: point)
-            updateZoom(captureDevice: camera, zoomFactor: zoom)
-            initialZoomFactor = zoom
-        case .ended, .failed, .cancelled:
-            let zoom = calculateZoom(captureDevice: camera, currentPoint: point)
-            updateZoom(captureDevice: camera, zoomFactor: zoom)
-            initialZoomFactor = zoom
-            preparePan(point: nil, zoom: zoom)
-        default:
-            break
-        }
+        cameraZoomHandler.setZoom(point: point, gesture: gesture)
     }
-    
-    /// Prepares pan zoom to be used
-    ///
-    /// - Parameter
-    ///   - point: location of the screen that will act as a reference to zoom in or out
-    ///   - zoom: base zoom that will act as a reference to zoom in or out
-    private func preparePan(point: CGPoint?, zoom: CGFloat) {
-        startingPoint = point
-        baseZoom = zoom
-    }
-    
-    /// Sets the video camera zoom factor
-    ///
-    /// - Parameter
-    ///   - captureDevice: a device that provides video
-    ///   - currentPoint: location of the finger on the screen
-    private func calculateZoom(captureDevice: AVCaptureDevice, currentPoint: CGPoint) -> CGFloat {
-        guard let initialPoint = startingPoint else { return initialZoomFactor }
-        let yDistance = initialPoint.y - currentPoint.y
-        return minMaxZoom(captureDevice: captureDevice, zoomFactor: yDistance / CameraInputConstants.zoomDistanceDivisor + baseZoom)
-    }
-    
+
     /// The current camera's zoom
     ///
     /// - Returns: returns the current device's videoZoomFactor, if a device is found
@@ -665,36 +610,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         return currentDevice?.videoZoomFactor
     }
     
-    /// Returns zoom value between the minimum and maximum zoom values
-    ///
-    /// - Parameters:
-    ///   - captureDevice: a device that provides video
-    ///   - zoomFactor: zoom value to be set
-    func updateZoom(captureDevice: AVCaptureDevice, zoomFactor: CGFloat) {
-        do {
-            defer { captureDevice.unlockForConfiguration() }
-            try captureDevice.lockForConfiguration()
-            captureDevice.videoZoomFactor = zoomFactor
-        } catch {
-            // The zoom factor is different for various devices, setting the zoom shouldn't crash
-            NSLog("failed to zoom for \(zoomFactor)")
-        }
-        captureDevice.unlockForConfiguration()
-    }
-    
-    /// Returns zoom value between the minimum and maximum zoom values
-    ///
-    /// - Parameters:
-    ///   - captureDevice: a device that provides video
-    ///   - zoomFactor: zoom value to be checked
-    func minMaxZoom(captureDevice: AVCaptureDevice, zoomFactor: CGFloat) -> CGFloat {
-        return (CameraInputConstants.minimumZoom ... captureDevice.activeFormat.videoMaxZoomFactor).clamp(zoomFactor)
-    }
-    
     /// Resets the zoom to the minimum value
     func resetZoom() {
-        guard let camera = currentDevice else { return }
-        initialZoomFactor = CameraInputConstants.minimumZoom
-        updateZoom(captureDevice: camera, zoomFactor: CameraInputConstants.minimumZoom)
+        cameraZoomHandler.resetZoom()
     }
 }
