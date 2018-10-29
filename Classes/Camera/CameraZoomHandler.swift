@@ -15,36 +15,30 @@ private struct CameraZoomConstants {
 
 /// protocol for handling the current zoom on a device
 protocol CameraZoomHandlerDelegate {
-    var zoomHandlerCurrentDevice: AVCaptureDevice? { get }
+    /// Gets the current device for zooming
+    var currentDeviceForZooming: AVCaptureDevice? { get }
 }
 
 /// A class to handle the pinch and pan zoom gestures and apply them to a given device
 final class CameraZoomHandler {
     
-    private var delegate: CameraZoomHandlerDelegate?
+    /// The delegate for the camera zoom
+    var delegate: CameraZoomHandlerDelegate?
     private var initialZoomFactor: CGFloat = CameraZoomConstants.minimumZoom
     /// These two variables act as a reference point for the pan zoom
     private var baseZoom: CGFloat = CameraZoomConstants.minimumZoom
     private var startingPoint: CGPoint?
     private var currentDevice: AVCaptureDevice? {
-        return delegate?.zoomHandlerCurrentDevice
-    }
-
-    init(delegate: CameraZoomHandlerDelegate?) {
-        self.delegate = delegate
-    }
-    
-    @objc func pinched(_ gesture: UIPinchGestureRecognizer) {
-        setZoom(zoomFactor: gesture.scale * initialZoomFactor, gesture: gesture)
+        return delegate?.currentDeviceForZooming
     }
     
     /// Sets the video camera zoom factor
     ///
     /// - Parameter
-    ///   - zoomFactor: should be a value between 1 and the videoMaxZoomFactor. The standard zoom is 1.
     ///   - gesture: the pinch gesture recognizer that performs the zoom action.
-    func setZoom(zoomFactor: CGFloat, gesture: UIPinchGestureRecognizer) {
+    func setZoom(gesture: UIPinchGestureRecognizer) {
         guard let camera = currentDevice else { return }
+        let zoomFactor = gesture.scale * initialZoomFactor
         let validZoomFactor = minMaxZoom(captureDevice: camera, zoomFactor: zoomFactor)
         startingPoint = nil
         
@@ -131,6 +125,13 @@ final class CameraZoomHandler {
     ///   - zoomFactor: zoom value to be checked
     func minMaxZoom(captureDevice: AVCaptureDevice, zoomFactor: CGFloat) -> CGFloat {
         return (CameraZoomConstants.minimumZoom ... captureDevice.activeFormat.videoMaxZoomFactor).clamp(zoomFactor)
+    }
+    
+    /// The current camera's zoom
+    ///
+    /// - Returns: returns the current device's videoZoomFactor, if a device is found
+    func currentZoom() -> CGFloat? {
+        return currentDevice?.videoZoomFactor
     }
     
     /// Resets the zoom to the minimum value

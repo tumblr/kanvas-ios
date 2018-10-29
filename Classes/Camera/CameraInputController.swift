@@ -38,10 +38,22 @@ private struct CameraInputConstants {
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
 }
 
+/// Delegate for handling camera input actions
+protocol CameraInputControllerDelegate {
+    /// Delegate to reset the current device zoom
+    func cameraInputControllerShouldResetZoom()
+    
+    /// Delegate method to set zoom based on pinch
+    ///
+    /// - Parameters:
+    ///   - gesture: the pinch gesture
+    func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer)
+}
+
 /// The class for controlling the device camera.
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
-final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, CameraZoomHandlerDelegate {
+final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -87,9 +99,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
     private var recorder: CameraRecordingProtocol?
-    private lazy var cameraZoomHandler: CameraZoomHandler = {
-        return CameraZoomHandler(delegate: self)
-    }()
+    
+    /// The delegate methods for zooming and touches
+    var delegate: CameraInputControllerDelegate?
     
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -110,10 +122,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     ///   - recorderClass: Class that will provide a recorder that defines exactly how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
-    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type) {
+    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type, delegate: CameraInputControllerDelegate? = nil) {
         self.settings = settings
         recorderType = recorderClass
         segmentsHandlerType = segmentsHandlerClass
+        self.delegate = delegate
         super.init(nibName: .none, bundle: .none)
         setupNotifications()
     }
@@ -175,7 +188,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
-        view.addGestureRecognizer(UIPinchGestureRecognizer(target: cameraZoomHandler, action: #selector(CameraZoomHandler.pinched)))
+        view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinched)))
     }
 
     private func setupPreview() {
@@ -346,10 +359,14 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     @objc private func doubleTapped() {
-        resetZoom()
+        delegate?.cameraInputControllerShouldResetZoom()
         switchCameras()
     }
 
+    @objc func pinched(_ gesture: UIPinchGestureRecognizer) {
+        delegate?.cameraInputControllerPinched(gesture: gesture)
+    }
+    
     private func currentResolution() -> CGSize {
         var resolution = CGSize(width: 0, height: 0)
         if let formatDescription = currentDevice?.activeFormat.formatDescription {
@@ -577,41 +594,5 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         var mode: CMAttachmentMode = 0
         let reason = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
         print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
-    }
-
-    // MARK: - Zoom
-    
-    var zoomHandlerCurrentDevice: AVCaptureDevice? {
-        return currentDevice
-    }
-    
-    /// Sets the video camera zoom factor
-    ///
-    /// - Parameter
-    ///   - zoomFactor: should be a value between 1 and the videoMaxZoomFactor. The standard zoom is 1.
-    ///   - gesture: the pinch gesture recognizer that performs the zoom action.
-    func setZoom(zoomFactor: CGFloat, gesture: UIPinchGestureRecognizer) {
-        cameraZoomHandler.setZoom(zoomFactor: zoomFactor, gesture: gesture)
-    }
-    
-    /// Sets the video camera zoom factor
-    ///
-    /// - Parameter
-    ///   - zoomFactor: should be a value between 1 and the videoMaxZoomFactor. The standard zoom is 1.
-    ///   - gesture: the long press gesture recognizer that performs the zoom action.
-    func setZoom(point: CGPoint, gesture: UILongPressGestureRecognizer) {
-        cameraZoomHandler.setZoom(point: point, gesture: gesture)
-    }
-
-    /// The current camera's zoom
-    ///
-    /// - Returns: returns the current device's videoZoomFactor, if a device is found
-    func currentZoom() -> CGFloat? {
-        return currentDevice?.videoZoomFactor
-    }
-    
-    /// Resets the zoom to the minimum value
-    func resetZoom() {
-        cameraZoomHandler.resetZoom()
     }
 }

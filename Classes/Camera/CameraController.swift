@@ -53,7 +53,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, ActionsViewDelegate, CameraInputControllerDelegate {
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -82,10 +82,10 @@ public class CameraController: UIViewController {
     }()
 
     private lazy var cameraInputController: CameraInputController = {
-        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass)
+        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass, delegate: self)
         return controller
     }()
-
+    
     private let settings: CameraSettings
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private var currentMode: CameraMode
@@ -93,6 +93,7 @@ public class CameraController: UIViewController {
     private var disposables: [NSKeyValueObservation] = []
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
+    private let cameraZoomHandler = CameraZoomHandler()
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -127,6 +128,7 @@ public class CameraController: UIViewController {
         self.segmentsHandlerClass = segmentsHandlerClass
         self.analyticsProvider = analyticsProvider
         super.init(nibName: .none, bundle: .none)
+        cameraZoomHandler.delegate = self
     }
 
     @available(*, unavailable, message: "use init(settings:) instead")
@@ -384,10 +386,8 @@ public class CameraController: UIViewController {
             }
         })
     }
-}
-
-// MARK: - CameraViewDelegate
-extension CameraController: CameraViewDelegate, ActionsViewDelegate {
+    
+    // MARK: - CameraViewDelegate
 
     func undoButtonPressed() {
         clipsController.undo()
@@ -409,13 +409,11 @@ extension CameraController: CameraViewDelegate, ActionsViewDelegate {
         }
     }
 
-}
+    // MARK: - ModeSelectorAndShootControllerDelegate
 
-// MARK: - ModeSelectorAndShootControllerDelegate
-extension CameraController: ModeSelectorAndShootControllerDelegate {
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
         if mode == .stopMotion {
-            cameraInputController.setZoom(point: currentPoint, gesture: gesture)
+            cameraZoomHandler.setZoom(point: currentPoint, gesture: gesture)
         }
     }
 
@@ -465,10 +463,7 @@ extension CameraController: ModeSelectorAndShootControllerDelegate {
         }
     }
 
-}
-
-// MARK: - OptionsCollectionControllerDelegate (Top Options)
-extension CameraController: OptionsControllerDelegate {
+    // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
     func optionSelected(_ item: CameraDeviceOption) {
         switch item {
@@ -481,14 +476,11 @@ extension CameraController: OptionsControllerDelegate {
         case .backCamera, .frontCamera:
             cameraInputController.switchCameras()
             analyticsProvider?.logFlipCamera()
-            cameraInputController.resetZoom()
+            cameraZoomHandler.resetZoom()
         }
     }
 
-}
-
-// MARK: - MediaClipsEditorDelegate
-extension CameraController: MediaClipsEditorDelegate {
+    // MARK: - MediaClipsEditorDelegate
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegmentAtIndex(index)
@@ -500,10 +492,9 @@ extension CameraController: MediaClipsEditorDelegate {
             showCreationTooltip()
         }
     }
-}
-
-// MARK: - CameraPreviewControllerDelegate
-extension CameraController: CameraPreviewControllerDelegate {
+    
+    // MARK: - CameraPreviewControllerDelegate
+    
     func didFinishExportingVideo(url: URL?) {
         if let videoURL = url {
             let asset = AVURLAsset(url: videoURL)
@@ -532,5 +523,19 @@ extension CameraController: CameraPreviewControllerDelegate {
         performUIUpdate { [weak self] in
             self?.dismiss(animated: true)
         }
+    }
+    
+    // MARK: CameraZoomHandlerDelegate
+    var currentDeviceForZooming: AVCaptureDevice? {
+        return cameraInputController.currentDevice
+    }
+    
+    // MARK: CameraInputControllerDelegate
+    func cameraInputControllerShouldResetZoom() {
+        cameraZoomHandler.resetZoom()
+    }
+    
+    func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer) {
+        cameraZoomHandler.setZoom(gesture: gesture)
     }
 }
