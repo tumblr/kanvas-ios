@@ -175,13 +175,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     private func setupGestures() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped(gesture:)))
-        view.addGestureRecognizer(tap)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapped(gesture:))))
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
-        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinched))
-        view.addGestureRecognizer(pinch)
+        view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinched)))
     }
 
     private func setupPreview() {
@@ -357,8 +355,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
     
     @objc private func pinched(_ gesture: UIPinchGestureRecognizer) {
-        let zoom = gesture.scale * initialZoomFactor
-        setZoom(zoomFactor: zoom, gesture: gesture)
+        setZoom(zoomFactor: gesture.scale * initialZoomFactor, gesture: gesture)
     }
 
     private func currentResolution() -> CGSize {
@@ -658,9 +655,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     private func calculateZoom(captureDevice: AVCaptureDevice, currentPoint: CGPoint) -> CGFloat {
         guard let initialPoint = startingPoint else { return initialZoomFactor }
         let yDistance = initialPoint.y - currentPoint.y
-        let zoom = yDistance / CameraInputConstants.zoomDistanceDivisor + baseZoom
-        let validZoom = minMaxZoom(captureDevice: captureDevice, zoomFactor: zoom)
-        return validZoom
+        return minMaxZoom(captureDevice: captureDevice, zoomFactor: yDistance / CameraInputConstants.zoomDistanceDivisor + baseZoom)
     }
     
     /// The current camera's zoom
