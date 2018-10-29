@@ -93,7 +93,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     private var initialZoomFactor: CGFloat = CameraInputConstants.minimumZoom
     /// These two variables act as a reference point for the pan zoom
     private var baseZoom: CGFloat = CameraInputConstants.minimumZoom
-    private var startingPoint: CGPoint? = nil
+    private var startingPoint: CGPoint?
     
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
