@@ -679,6 +679,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             // The zoom factor is different for various devices, setting the zoom shouldn't crash
             NSLog("failed to zoom for \(zoomFactor)")
         }
+        captureDevice.unlockForConfiguration()
     }
     
     /// Returns zoom value between the minimum and maximum zoom values
