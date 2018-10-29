@@ -13,8 +13,8 @@ protocol CameraViewDelegate: class {
 }
 
 struct CameraConstants {
-    static let ButtonSize: CGFloat = 34
-    static let ButtonMargin: CGFloat = 32
+    static let buttonSize: CGFloat = 34
+    static let buttonMargin: CGFloat = 32
     fileprivate static let HidingAnimationDuration: CGFloat = 0.2
 }
 
@@ -128,10 +128,10 @@ final class CameraView: UIView {
 
     private func setupOptionsGuide() {
         addLayoutGuide(optionsLayoutGuide)
-        optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.ButtonMargin).isActive = true
-        optionsLayoutGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.ButtonMargin).isActive = true
-        optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.ButtonMargin).isActive = true
-        optionsLayoutGuide.heightAnchor.constraint(equalToConstant: CameraConstants.ButtonSize).isActive = true
+        optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.buttonMargin).isActive = true
+        optionsLayoutGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
+        optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.buttonMargin).isActive = true
+        optionsLayoutGuide.heightAnchor.constraint(equalToConstant: CameraConstants.buttonSize).isActive = true
     }
 
     private func setUpViews() {
@@ -156,15 +156,15 @@ final class CameraView: UIView {
         addSubview(closeButton)
         closeButton.accessibilityLabel = "Close Button"
         closeButton.applyShadows()
-        closeButton.setImage(KanvasCameraImages.CloseImage, for: .normal)
+        closeButton.setImage(KanvasCameraImages.closeImage, for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: CameraConstants.ButtonMargin),
-            closeButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.ButtonMargin),
+            closeButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: CameraConstants.buttonMargin),
+            closeButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.ButtonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.buttonSize)
         ])
     }
 

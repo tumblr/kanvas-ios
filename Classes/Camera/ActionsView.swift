@@ -7,9 +7,9 @@
 import Foundation
 
 private struct ActionsViewConstants {
-    static let ButtonMargin: CGFloat = CameraConstants.ButtonMargin * 3/2
-    static let ButtonSize: CGFloat = 50
-    static let AnimationDuration: TimeInterval = 0.5
+    static let buttonMargin: CGFloat = CameraConstants.buttonMargin * 3/2
+    static let buttonSize: CGFloat = 50
+    static let animationDuration: TimeInterval = 0.5
 }
 
 /// Protocol for handling ActionsView's interaction.
@@ -33,21 +33,21 @@ final class ActionsView: IgnoreTouchesView {
         addSubview(undoButton)
         addSubview(nextButton)
         setupActionButton(button: undoButton,
-                          image: KanvasCameraImages.UndoImage,
+                          image: KanvasCameraImages.undoImage,
                           identifier: "Undo Button",
                           action: #selector(undoTapped),
                           constraints: [undoButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
-                                        undoButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: ActionsViewConstants.ButtonMargin),
+                                        undoButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: ActionsViewConstants.buttonMargin),
                                         undoButton.heightAnchor.constraint(equalTo: undoButton.widthAnchor),
-                                        undoButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.ButtonSize)])
+                                        undoButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.buttonSize)])
         setupActionButton(button: nextButton,
-                          image: KanvasCameraImages.NextImage,
+                          image: KanvasCameraImages.nextImage,
                           identifier: "Next Button",
                           action: #selector(nextTapped),
                           constraints: [nextButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
-                                        nextButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -ActionsViewConstants.ButtonMargin),
+                                        nextButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -ActionsViewConstants.buttonMargin),
                                         nextButton.heightAnchor.constraint(equalTo: nextButton.widthAnchor),
-                                        nextButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.ButtonSize)])
+                                        nextButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.buttonSize)])
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -64,7 +64,7 @@ final class ActionsView: IgnoreTouchesView {
     ///
     /// - Parameter enabled: whether to enable the undo button or not
     func updateUndo(enabled: Bool) {
-        UIView.animate(withDuration: ActionsViewConstants.AnimationDuration) {
+        UIView.animate(withDuration: ActionsViewConstants.animationDuration) {
             self.undoButton.alpha = enabled ? 1 : 0
         }
     }
@@ -73,7 +73,7 @@ final class ActionsView: IgnoreTouchesView {
     ///
     /// - Parameter enabled: whether to enable the next button or not
     func updateNext(enabled: Bool) {
-        UIView.animate(withDuration: ActionsViewConstants.AnimationDuration) {
+        UIView.animate(withDuration: ActionsViewConstants.animationDuration) {
             self.nextButton.alpha = enabled ? 1 : 0
         }
     }

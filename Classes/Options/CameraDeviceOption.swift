@@ -68,7 +68,7 @@ extension CameraController {
                    type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.cameraDeviceOption,
                                            alternateImage: getImage(for: settings.notDefaultFlashOption))),
             Option(option: settings.defaultCameraPositionOption.cameraDeviceOption,
-                   image: KanvasCameraImages.CameraPositionImage,
+                   image: KanvasCameraImages.cameraPositionImage,
                    type: .twoOptionsAnimation(animation: animation,
                                               duration: CameraOptionsConstants.cameraFlipAnimationsDuration,
                                               completion: completion))
@@ -82,10 +82,10 @@ extension CameraController {
     /// - Returns: an optional image
     func getImage(for option: AVCaptureDevice.FlashMode) -> UIImage? {
         if option == .on {
-            return KanvasCameraImages.FlashOnImage
+            return KanvasCameraImages.flashOnImage
         }
         else {
-            return KanvasCameraImages.FlashOffImage
+            return KanvasCameraImages.flashOffImage
         }
     }
     

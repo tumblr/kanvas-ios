@@ -8,11 +8,11 @@ import Foundation
 import UIKit
 
 private struct MediaClipsEditorViewConstants {
-    static let TrashSize: CGFloat = 50
-    static let Padding: CGFloat = 25
-    static let TrashAnimationDuration: TimeInterval = 0.2
+    static let trashSize: CGFloat = 50
+    static let padding: CGFloat = 25
+    static let trashAnimationDuration: TimeInterval = 0.2
 
-    static var Height: CGFloat = Padding + MediaClipsCollectionView.height + Padding + TrashSize
+    static var height: CGFloat = padding + MediaClipsCollectionView.height + padding + trashSize
 }
 
 protocol MediaClipsEditorViewDelegate: class {
@@ -23,7 +23,7 @@ protocol MediaClipsEditorViewDelegate: class {
 /// View for media clips editor
 final class MediaClipsEditorView: UIView {
     
-    static let height = MediaClipsEditorViewConstants.Height
+    static let height = MediaClipsEditorViewConstants.height
 
     let collectionContainer: UIView
     let trashButton: UIButton
@@ -37,7 +37,7 @@ final class MediaClipsEditorView: UIView {
 
         trashButton = UIButton()
         trashButton.accessibilityIdentifier = "Media Clips Trash Button"
-        trashButton.setImage(KanvasCameraImages.DeleteImage, for: .normal)
+        trashButton.setImage(KanvasCameraImages.deleteImage, for: .normal)
         super.init(frame: .zero)
 
         setUpViews()
@@ -57,14 +57,14 @@ final class MediaClipsEditorView: UIView {
 
     /// method to animate and fade the trash button in
     func showTrash() {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.TrashAnimationDuration) {
+        UIView.animate(withDuration: MediaClipsEditorViewConstants.trashAnimationDuration) {
             self.trashButton.alpha = 1
         }
     }
 
     /// method to animate and fade the trash button out
     func hideTrash() {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.TrashAnimationDuration) {
+        UIView.animate(withDuration: MediaClipsEditorViewConstants.trashAnimationDuration) {
             self.trashButton.alpha = 0
         }
     }
@@ -85,7 +85,7 @@ private extension MediaClipsEditorView {
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -MediaClipsEditorViewConstants.Padding),
+            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -MediaClipsEditorViewConstants.padding),
             collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
         ])
     }
@@ -94,10 +94,10 @@ private extension MediaClipsEditorView {
         addSubview(trashButton)
         trashButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            trashButton.bottomAnchor.constraint(equalTo: collectionContainer.topAnchor, constant: -MediaClipsEditorViewConstants.Padding),
+            trashButton.bottomAnchor.constraint(equalTo: collectionContainer.topAnchor, constant: -MediaClipsEditorViewConstants.padding),
             trashButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             trashButton.widthAnchor.constraint(equalTo: trashButton.heightAnchor),
-            trashButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.TrashSize)
+            trashButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.trashSize)
         ])
     }
 

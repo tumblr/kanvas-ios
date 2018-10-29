@@ -7,9 +7,9 @@
 import Foundation
 
 private struct LoadingIndicatorConstants {
-    static let BackgroundColor = UIColor.black.withAlphaComponent(0.7)
-    static let Width: CGFloat = 50
-    static let Height = LoadingIndicatorConstants.Width
+    static let backgroundColor = UIColor.black.withAlphaComponent(0.7)
+    static let width: CGFloat = 50
+    static let height = LoadingIndicatorConstants.width
 }
 
 /// Loading indicator view. Right now it contains just a regular activity indicator,
@@ -26,7 +26,7 @@ final class LoadingIndicatorView: UIView {
     init() {
         super.init(frame: .zero)
 
-        backgroundColor = LoadingIndicatorConstants.BackgroundColor
+        backgroundColor = LoadingIndicatorConstants.backgroundColor
         addSubview(indicator)
         setupConstraints()
     }
@@ -36,8 +36,8 @@ final class LoadingIndicatorView: UIView {
         NSLayoutConstraint.activate([
             indicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            indicator.widthAnchor.constraint(equalToConstant: LoadingIndicatorConstants.Width),
-            indicator.heightAnchor.constraint(equalToConstant: LoadingIndicatorConstants.Height)
+            indicator.widthAnchor.constraint(equalToConstant: LoadingIndicatorConstants.width),
+            indicator.heightAnchor.constraint(equalToConstant: LoadingIndicatorConstants.height)
         ])
     }
 
