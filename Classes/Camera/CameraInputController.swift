@@ -43,7 +43,7 @@ private struct CameraInputConstants {
 /// The class for controlling the device camera.
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
-final class CameraInputController: UIViewController {
+final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -534,11 +534,9 @@ final class CameraInputController: UIViewController {
             hideFlashLayer()
         }
     }
-}
 
-// MARK: - CameraRecordingDelegate
-// more documentation on the protocol methods can be found in the CameraRecordingDelegate
-extension CameraInputController: CameraRecordingDelegate {
+    // MARK: - CameraRecordingDelegate
+    // more documentation on the protocol methods can be found in the CameraRecordingDelegate
     func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
         if output?.supportedFlashModes.contains(.on) == true {
@@ -574,12 +572,8 @@ extension CameraInputController: CameraRecordingDelegate {
             }
         }
     }
-}
 
-// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
-
-extension CameraInputController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    
+    // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if output == audioDataOutput {
             recorder?.processAudioSampleBuffer(sampleBuffer)
@@ -595,11 +589,8 @@ extension CameraInputController: AVCaptureVideoDataOutputSampleBufferDelegate, A
         let reason = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
         print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
     }
-}
 
-// MARK: - Zoom
-
-extension CameraInputController {
+    // MARK: - Zoom
     
     /// Sets the video camera zoom factor
     ///
