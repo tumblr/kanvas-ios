@@ -414,10 +414,8 @@ extension CameraController: CameraViewDelegate, ActionsViewDelegate {
 // MARK: - ModeSelectorAndShootControllerDelegate
 extension CameraController: ModeSelectorAndShootControllerDelegate {
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
-        switch mode {
-        case .stopMotion:
+        if mode == .stopMotion {
             cameraInputController.setZoom(point: currentPoint, gesture: gesture)
-        default: break
         }
     }
 
