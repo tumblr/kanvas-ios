@@ -38,18 +38,6 @@ private struct CameraInputConstants {
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
 }
 
-/// Delegate for handling camera input actions
-protocol CameraInputControllerDelegate {
-    /// Delegate to reset the current device zoom
-    func cameraInputControllerShouldResetZoom()
-    
-    /// Delegate method to set zoom based on pinch
-    ///
-    /// - Parameters:
-    ///   - gesture: the pinch gesture
-    func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer)
-}
-
 /// The class for controlling the device camera.
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
