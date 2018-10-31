@@ -14,13 +14,6 @@ enum CameraOutput {
     case video // AVCaptureVideoDataOutput
 }
 
-/// A convenience check for building to simulators
-private struct CameraDevicePlatform {
-    static var isSimulator: Bool {
-        return TARGET_OS_SIMULATOR != 0
-    }
-}
-
 /// Error cases for configuring inputs
 enum CameraInputError: Swift.Error {
     case captureSessionAlreadyRunning
@@ -64,6 +57,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     private let flashLayer = CALayer()
     private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.sampleBufferQueue)
     private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, qos: .utility)
+    private let isSimulator = TARGET_OS_SIMULATOR != 0
 
     private var settings: CameraSettings
     private var recorderType: CameraRecordingProtocol.Type
@@ -146,13 +140,13 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         setupFlash(defaultOption: settings.preferredFlashOption)
         setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
 
-        if !CameraDevicePlatform.isSimulator { // if running on simulator, the startRunning() call takes a long time to return
+        if !isSimulator { // if running on simulator, the startRunning() call takes a long time to return
             captureSession?.startRunning()
         }
     }
 
     private func configureSession() {
-        guard !CameraDevicePlatform.isSimulator else {
+        guard !isSimulator else {
             return
         }
         do {
