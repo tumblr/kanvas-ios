@@ -108,7 +108,6 @@ final class CameraZoomHandler {
     ///   - zoomFactor: zoom value to be set
     func updateZoom(captureDevice: AVCaptureDevice, zoomFactor: CGFloat) {
         do {
-            defer { captureDevice.unlockForConfiguration() }
             try captureDevice.lockForConfiguration()
             captureDevice.videoZoomFactor = zoomFactor
         } catch {
