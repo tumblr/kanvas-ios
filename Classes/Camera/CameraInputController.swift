@@ -8,22 +8,6 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// An enum for AVCaptureOutput types
-enum CameraOutput {
-    case photo // AVCapturePhotoOutput
-    case video // AVCaptureVideoDataOutput
-}
-
-/// Error cases for configuring inputs
-enum CameraInputError: Swift.Error {
-    case captureSessionAlreadyRunning
-    case captureSessionIsMissing
-    case inputsAreInvalid
-    case invalidOperation
-    case noCamerasAvailable
-    case unknown
-}
-
 /// Default values for the input camera
 private struct CameraInputConstants {
     static let sampleBufferQueue: String = "SampleBufferQueue"
