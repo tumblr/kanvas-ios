@@ -12,7 +12,7 @@ import XCTest
 final class KanvasCameraTimesTests: XCTestCase {
 
     func testVideoRecordingTime() {
-        XCTAssert(KanvasCameraTimes.videoRecordingTime == 15, "Returned value does not match expected value")
+        XCTAssert(KanvasCameraTimes.videoRecordingTime == 30, "Returned value does not match expected value")
     }
 
     func testGifRecordingTime() {
