@@ -31,6 +31,14 @@ final class CameraZoomHandler {
     private var currentDevice: AVCaptureDevice? {
         return delegate?.currentDeviceForZooming
     }
+    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    
+    /// The designated initializer
+    ///
+    /// - Parameter analyticsProvider: Optionally provide an analytics class
+    init(analyticsProvider: KanvasCameraAnalyticsProvider? = nil) {
+        self.analyticsProvider = analyticsProvider
+    }
     
     /// Sets the video camera zoom factor
     ///
@@ -43,7 +51,10 @@ final class CameraZoomHandler {
         startingPoint = nil
         
         switch gesture.state {
-        case .began, .changed:
+        case .began:
+            analyticsProvider?.logPinchedZoom()
+            fallthrough
+        case .changed:
             updateZoom(captureDevice: camera, zoomFactor: validZoomFactor)
         case .ended, .failed, .cancelled:
             initialZoomFactor = validZoomFactor
@@ -62,6 +73,7 @@ final class CameraZoomHandler {
         guard let camera = currentDevice else { return }
         switch gesture.state {
         case .began:
+            analyticsProvider?.logSwipedZoom()
             preparePan(point: point, zoom: initialZoomFactor)
         case .changed:
             if startingPoint == nil {

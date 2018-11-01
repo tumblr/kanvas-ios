@@ -65,7 +65,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
     private var recorder: CameraRecordingProtocol?
-    private var analyticsProvider: KanvasCameraAnalyticsProvider?
     
     /// The delegate methods for zooming and touches
     var delegate: CameraInputControllerDelegate?
@@ -89,11 +88,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     ///   - recorderClass: Class that will provide a recorder that defines exactly how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
-    ///   - analyticsProvider: Class implementing the analytics provider protocols
     ///   - delegate: Delegate for input
-    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type, analyticsProvider: KanvasCameraAnalyticsProvider? = nil, delegate: CameraInputControllerDelegate? = nil) {
+    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type, delegate: CameraInputControllerDelegate? = nil) {
         self.settings = settings
-        self.analyticsProvider = analyticsProvider
         recorderType = recorderClass
         segmentsHandlerType = segmentsHandlerClass
         self.delegate = delegate

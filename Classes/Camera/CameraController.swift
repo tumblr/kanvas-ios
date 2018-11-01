@@ -82,7 +82,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }()
 
     private lazy var cameraInputController: CameraInputController = {
-        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass, analyticsProvider: self.analyticsProvider, delegate: self)
+        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass, delegate: self)
         return controller
     }()
     
@@ -93,7 +93,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var disposables: [NSKeyValueObservation] = []
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
-    private let cameraZoomHandler = CameraZoomHandler()
+    private let cameraZoomHandler: CameraZoomHandler
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -127,6 +127,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
         self.analyticsProvider = analyticsProvider
+        cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         super.init(nibName: .none, bundle: .none)
         cameraZoomHandler.delegate = self
     }
