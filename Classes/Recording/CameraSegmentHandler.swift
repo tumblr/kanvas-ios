@@ -246,7 +246,10 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 }
                 addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
             }
-            insertTime = CMTimeAdd(insertTime, videoDuration)
+            else {
+                audioCompTrack?.insertEmptyTimeRange(CMTimeRange(start: insertTime, duration: videoDuration))
+            }
+            insertTime = mixComposition.duration
         }
         exportComposition(composition: mixComposition, completion: { url in
             completion(url)
