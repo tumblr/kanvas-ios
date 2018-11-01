@@ -8,29 +8,6 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// An enum for AVCaptureOutput types
-enum CameraOutput {
-    case photo // AVCapturePhotoOutput
-    case video // AVCaptureVideoDataOutput
-}
-
-/// A convenience check for building to simulators
-private struct CameraDevicePlatform {
-    static var isSimulator: Bool {
-        return TARGET_OS_SIMULATOR != 0
-    }
-}
-
-/// Error cases for configuring inputs
-enum CameraInputError: Swift.Error {
-    case captureSessionAlreadyRunning
-    case captureSessionIsMissing
-    case inputsAreInvalid
-    case invalidOperation
-    case noCamerasAvailable
-    case unknown
-}
-
 /// Default values for the input camera
 private struct CameraInputConstants {
     static let sampleBufferQueue: String = "SampleBufferQueue"
@@ -41,7 +18,7 @@ private struct CameraInputConstants {
 /// The class for controlling the device camera.
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
-final class CameraInputController: UIViewController {
+final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -64,6 +41,7 @@ final class CameraInputController: UIViewController {
     private let flashLayer = CALayer()
     private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.sampleBufferQueue)
     private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, qos: .utility)
+    private let isSimulator = TARGET_OS_SIMULATOR != 0
 
     private var settings: CameraSettings
     private var recorderType: CameraRecordingProtocol.Type
@@ -87,7 +65,10 @@ final class CameraInputController: UIViewController {
         }
     }
     private var recorder: CameraRecordingProtocol?
-
+    
+    /// The delegate methods for zooming and touches
+    var delegate: CameraInputControllerDelegate?
+    
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -107,10 +88,11 @@ final class CameraInputController: UIViewController {
     ///   - recorderClass: Class that will provide a recorder that defines exactly how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
-    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type) {
+    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type, delegate: CameraInputControllerDelegate? = nil) {
         self.settings = settings
         recorderType = recorderClass
         segmentsHandlerType = segmentsHandlerClass
+        self.delegate = delegate
         super.init(nibName: .none, bundle: .none)
         setupNotifications()
     }
@@ -142,13 +124,13 @@ final class CameraInputController: UIViewController {
         setupFlash(defaultOption: settings.preferredFlashOption)
         setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
 
-        if !CameraDevicePlatform.isSimulator { // if running on simulator, the startRunning() call takes a long time to return
+        if !isSimulator { // if running on simulator, the startRunning() call takes a long time to return
             captureSession?.startRunning()
         }
     }
 
     private func configureSession() {
-        guard !CameraDevicePlatform.isSimulator else {
+        guard !isSimulator else {
             return
         }
         do {
@@ -168,11 +150,11 @@ final class CameraInputController: UIViewController {
     }
 
     private func setupGestures() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped(gesture:)))
-        view.addGestureRecognizer(tap)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapped(gesture:))))
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
+        view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinched)))
     }
 
     private func setupPreview() {
@@ -317,36 +299,6 @@ final class CameraInputController: UIViewController {
         flashMode = .off == flashMode ? .on : .off
     }
 
-    /// Sets the video camera zoom factor
-    ///
-    /// - Parameter zoomFactor: should be a value between 1 and the videoMaxZoomFactor. 1 is standard zoom
-    func setZoom(zoomFactor: CGFloat) throws {
-        guard let camera = currentDevice else { return }
-        var targetZoomFactor = zoomFactor
-        if targetZoomFactor > 1 {
-            targetZoomFactor = 1
-        }
-        if targetZoomFactor < camera.activeFormat.videoMaxZoomFactor {
-            targetZoomFactor = camera.activeFormat.videoMaxZoomFactor
-        }
-        do {
-            try camera.lockForConfiguration()
-            camera.videoZoomFactor = zoomFactor
-            camera.unlockForConfiguration()
-        } catch {
-            // the zoom factor is different for various devices, setting the zoom shouldn't crash
-            NSLog("failed to zoom for \(zoomFactor)")
-            throw CameraInputError.inputsAreInvalid
-        }
-    }
-
-    /// The current camera's zoom
-    ///
-    /// - Returns: returns the current device's videoZoomFactor, if a device is found
-    func currentZoom() -> CGFloat? {
-        return currentDevice?.videoZoomFactor
-    }
-
     /// Deletes a segment at an index
     ///
     /// - Parameter index: Int
@@ -383,9 +335,14 @@ final class CameraInputController: UIViewController {
     }
 
     @objc private func doubleTapped() {
+        delegate?.cameraInputControllerShouldResetZoom()
         switchCameras()
     }
 
+    @objc func pinched(_ gesture: UIPinchGestureRecognizer) {
+        delegate?.cameraInputControllerPinched(gesture: gesture)
+    }
+    
     private func currentResolution() -> CGSize {
         var resolution = CGSize(width: 0, height: 0)
         if let formatDescription = currentDevice?.activeFormat.formatDescription {
@@ -559,11 +516,9 @@ final class CameraInputController: UIViewController {
             hideFlashLayer()
         }
     }
-}
 
-// MARK: - CameraRecordingDelegate
-// more documentation on the protocol methods can be found in the CameraRecordingDelegate
-extension CameraInputController: CameraRecordingDelegate {
+    // MARK: - CameraRecordingDelegate
+    // more documentation on the protocol methods can be found in the CameraRecordingDelegate
     func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
         if output?.supportedFlashModes.contains(.on) == true {
@@ -599,12 +554,8 @@ extension CameraInputController: CameraRecordingDelegate {
             }
         }
     }
-}
 
-// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
-
-extension CameraInputController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    
+    // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if output == audioDataOutput {
             recorder?.processAudioSampleBuffer(sampleBuffer)

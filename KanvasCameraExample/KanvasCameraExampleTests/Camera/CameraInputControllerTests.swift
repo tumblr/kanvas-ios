@@ -61,13 +61,6 @@ final class CameraInputControllerTests: XCTestCase {
         XCTAssertEqual(cameraInputController.flashMode, .on, "Flash should be toggled on")
     }
 
-    func testZoom() {
-        let cameraInputController = newCameraInputController()
-        do { try cameraInputController.setZoom(zoomFactor: 0.7) } catch { } // zoom requires device
-        let currentZoom = cameraInputController.currentZoom()
-        XCTAssertNil(currentZoom, "Zooming should not be set without device")
-    }
-
     func testDeleteSegment() {
         let cameraInputController = newCameraInputController()
         cameraInputController.deleteSegmentAtIndex(0) // testing for graceful failure

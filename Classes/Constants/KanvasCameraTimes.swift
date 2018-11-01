@@ -12,7 +12,7 @@ struct KanvasCameraTimes {
     // MARK: - Shooting
 
     // VideoRecordingTime: the maximum recording time for each video clip
-    static let videoRecordingTime: TimeInterval = 15
+    static let videoRecordingTime: TimeInterval = 30
 
     // GifRecordingTime: the maximum amount of time for each gif (before reversing)
     static let gifRecordingTime: TimeInterval = 1
