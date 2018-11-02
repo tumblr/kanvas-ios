@@ -94,6 +94,10 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     func videoOutputSettingsForSize(size: CGSize) -> [String: Any]
 }
 
+private struct CameraSegmentHandlerConstants {
+    static let silentURL = Bundle(for: CameraSegmentHandler.self).url(forResource: "silence", withExtension: "mp3")
+}
+
 /// A class to handle the various segments of a stop motion video, and also creates the final output
 
 final class CameraSegmentHandler: SegmentsHandlerType {
@@ -101,6 +105,12 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
+    private var silentAsset: AVAsset? {
+        guard let url = CameraSegmentHandlerConstants.silentURL else {
+            return nil
+        }
+        return AVURLAsset(url: url)
+    }
 
     /// Appends an existing CameraSegment
     ///
@@ -247,7 +257,9 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
             }
             else {
-                audioCompTrack?.insertEmptyTimeRange(CMTimeRange(start: insertTime, duration: videoDuration))
+//                audioCompTrack?.insertEmptyTimeRange(CMTimeRange(start: insertTime, duration: videoDuration))
+                audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+                insertEmptyAudio(compositionTrack: audioCompTrack, duration: videoDuration, insertTime: insertTime)
             }
             insertTime = mixComposition.duration
         }
@@ -263,6 +275,26 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             }
         }
         return true
+    }
+    
+    private func insertEmptyAudio(compositionTrack: AVMutableCompositionTrack?, duration: CMTime, insertTime: CMTime) {
+        guard let silentAsset = silentAsset else {
+            NSLog("silent asset not found")
+            return
+        }
+        let tracks = silentAsset.tracks(withMediaType: .audio)
+        if let silenceTrack = tracks.first {
+            do {
+                let inserted = try compositionTrack?.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration), of: silenceTrack, at: insertTime)
+                NSLog("inserted silent audio \(inserted)")
+            }
+            catch {
+                NSLog("caught error, failed to insert empty audio")
+            }
+        }
+        else {
+            NSLog("no tracks found")
+        }
     }
 
     /// Video output settings, used by internal classes for recording and exporting
@@ -305,12 +337,13 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             completion(nil)
             return
         }
-        assetExport.outputFileType = .mp4
+        assetExport.outputFileType = .m4v
         let finalURL = NSURL.createNewVideoURL()
         assetExport.outputURL = finalURL
         assetExport.shouldOptimizeForNetworkUse = true
 
         assetExport.exportAsynchronously() {
+            NSLog("asset export error: \(assetExport.error)")
             completion(assetExport.status == .completed ? finalURL : nil)
         }
     }
