@@ -95,7 +95,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
 }
 
 private struct CameraSegmentHandlerConstants {
-    static let silentURL = Bundle(for: CameraSegmentHandler.self).url(forResource: "silence", withExtension: "mp3")
+    static let silentURL = Bundle(for: CameraSegmentHandler.self).url(forResource: "silence", withExtension: "aac")
 }
 
 /// A class to handle the various segments of a stop motion video, and also creates the final output
@@ -109,7 +109,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         guard let url = CameraSegmentHandlerConstants.silentURL else {
             return nil
         }
-        return AVURLAsset(url: url)
+        return AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
     }
 
     /// Appends an existing CameraSegment
@@ -223,7 +223,8 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
     func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
-        let mixComposition = AVMutableComposition()
+        let preciseOptions = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
+        let mixComposition = AVMutableComposition(urlAssetInitializationOptions: preciseOptions)
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
         // CameraSegments with images should also have a video url associated with it; that url is created when the addNewImageSegment method is called
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
@@ -232,7 +233,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
 
         for segment in segments {
             guard let segmentURL = segment.videoURL else { continue }
-            let urlAsset = AVURLAsset(url: segmentURL)
+            let urlAsset = AVURLAsset(url: segmentURL, options: preciseOptions)
             var videoDuration: CMTime = CMTime.zero
 
             if let videoTrack = urlAsset.tracks(withMediaType: .video).first {
@@ -257,7 +258,6 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
             }
             else {
-//                audioCompTrack?.insertEmptyTimeRange(CMTimeRange(start: insertTime, duration: videoDuration))
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
                 insertEmptyAudio(compositionTrack: audioCompTrack, duration: videoDuration, insertTime: insertTime)
             }
@@ -283,18 +283,10 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             return
         }
         let tracks = silentAsset.tracks(withMediaType: .audio)
-        if let silenceTrack = tracks.first {
-            do {
-                let inserted = try compositionTrack?.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration), of: silenceTrack, at: insertTime)
-                NSLog("inserted silent audio \(inserted)")
-            }
-            catch {
-                NSLog("caught error, failed to insert empty audio")
-            }
+        guard let silenceTrack = tracks.first else {
+            return
         }
-        else {
-            NSLog("no tracks found")
-        }
+        try? compositionTrack?.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration), of: silenceTrack, at: insertTime)
     }
 
     /// Video output settings, used by internal classes for recording and exporting
@@ -337,13 +329,12 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             completion(nil)
             return
         }
-        assetExport.outputFileType = .m4v
+        assetExport.outputFileType = .mp4
         let finalURL = NSURL.createNewVideoURL()
         assetExport.outputURL = finalURL
         assetExport.shouldOptimizeForNetworkUse = true
 
         assetExport.exportAsynchronously() {
-            NSLog("asset export error: \(assetExport.error)")
             completion(assetExport.status == .completed ? finalURL : nil)
         }
     }
