@@ -57,9 +57,11 @@ final class ModeSelectorAndShootController: UIViewController {
         return queue
     }()
 
-    private lazy var currentMode: CameraMode? = {
-        return modesQueue.first
-    }()
+    private var currentMode: CameraMode? {
+        get {
+            return modesQueue.first
+        }
+    }
     
     /// Initializer with CameraSettings
     ///
