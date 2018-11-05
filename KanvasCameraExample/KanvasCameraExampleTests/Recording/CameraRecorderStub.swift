@@ -97,7 +97,11 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         }
         cameraSegmentHandler.deleteSegment(index: index, removeFromDisk: false)
     }
-
+    
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        cameraSegmentHandler.moveSegment(from: originIndex, to: destinationIndex)
+    }
+    
     func takeGifMovie(completion: @escaping (URL?) -> Void) {
         if isRecording() {
             completion(nil)

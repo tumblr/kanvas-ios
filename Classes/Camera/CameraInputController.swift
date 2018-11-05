@@ -88,6 +88,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     ///   - recorderClass: Class that will provide a recorder that defines exactly how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
+    ///   - delegate: Delegate for input
     public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type, delegate: CameraInputControllerDelegate? = nil) {
         self.settings = settings
         recorderType = recorderClass
@@ -306,6 +307,16 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         recorder?.deleteSegmentAtIndex(index, removeFromDisk: true)
     }
 
+    /// Moves a segment inside the sequence
+    ///
+    /// - Parameters:
+    ///   - originIndex: Int
+    ///   - destinationIndex: Int
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        guard let recorder = recorder else { return }
+        recorder.moveSegment(from: originIndex, to: destinationIndex)
+    }
+    
     /// The currently recorded segments of images and video
     ///
     /// - Returns: an array of CameraSegment

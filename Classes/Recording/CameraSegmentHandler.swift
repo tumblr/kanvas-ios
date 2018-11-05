@@ -74,6 +74,13 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
     func deleteSegment(index: Int, removeFromDisk: Bool)
 
+    /// Moves one segment to a new position
+    ///
+    /// - Parameters:
+    ///   - originIndex: the index the segment has right now
+    ///   - destinationIndex: the index we want the segment to have
+    func moveSegment(from originIndex: Int, to destinationIndex: Int)
+    
     /// an approximation of the total duration. calculating the exact duration would have to be asynchronous
     ///
     /// - Returns: seconds of total recorded video + photos
@@ -175,6 +182,17 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             }
         }
         segments.remove(at: index)
+    }
+    
+    /// Moves a segment to a new index
+    ///
+    /// - Parameters:
+    ///   - originIndex: current index of the segment
+    ///   - destinationIndex: future index of the segment
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        guard originIndex != destinationIndex else { return }
+        guard originIndex < segments.count, destinationIndex < segments.count else { return }
+        segments.move(from: originIndex, to: destinationIndex)
     }
 
     /// an approximation of the total duration. calculating the exact duration would have to be asynchronous

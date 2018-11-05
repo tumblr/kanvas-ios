@@ -93,7 +93,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var disposables: [NSKeyValueObservation] = []
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
-    private let cameraZoomHandler = CameraZoomHandler()
+    private let cameraZoomHandler: CameraZoomHandler
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -127,6 +127,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
         self.analyticsProvider = analyticsProvider
+        cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         super.init(nibName: .none, bundle: .none)
         cameraZoomHandler.delegate = self
     }
@@ -482,6 +483,19 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     // MARK: - MediaClipsEditorDelegate
 
+    func mediaClipStartedMoving() {
+        performUIUpdate { [weak self] in
+            self?.enableBottomViewButtons(show: false)
+        }
+    }
+
+    func mediaClipFinishedMoving() {
+        analyticsProvider?.logMovedClip()
+        performUIUpdate { [weak self] in
+            self?.enableBottomViewButtons(show: true)
+        }
+    }
+
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegmentAtIndex(index)
         analyticsProvider?.logDeleteSegment()
@@ -492,7 +506,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             showCreationTooltip()
         }
     }
-    
+
+    func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
+        cameraInputController.moveSegment(from: originIndex, to: destinationIndex)
+    }
+
     // MARK: - CameraPreviewControllerDelegate
     
     func didFinishExportingVideo(url: URL?) {

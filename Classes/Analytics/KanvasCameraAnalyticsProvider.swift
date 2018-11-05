@@ -44,6 +44,15 @@ import Foundation
     /// Logs an event if the preview screen is closed without exporting media
     func logPreviewDismissed()
     
+    /// Logs an event when a media clip is moved
+    func logMovedClip()
+    
+    /// Logs an event when the user pinches to zoom
+    func logPinchedZoom()
+    
+    /// Logs an event when the user swipes up while recording to zoom
+    func logSwipedZoom()
+
     /// Logs an event when the confirm button is tapped
     ///
     /// - Parameters:

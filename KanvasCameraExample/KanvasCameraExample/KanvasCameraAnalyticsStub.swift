@@ -61,6 +61,18 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "\(#function)")
     }
 
+    public func logMovedClip() {
+        logString(string: "\(#function)")
+    }
+    
+    public func logPinchedZoom() {
+        logString(string: "\(#function)")
+    }
+    
+    public func logSwipedZoom() {
+        logString(string: "\(#function)")
+    }
+    
     func logString(string: String) {
         NSLog("\(self): \(string)")
     }

@@ -71,4 +71,14 @@ final class CameraInputControllerTests: XCTestCase {
         })
     }
 
+    func testMoveSegment() {
+        let cameraInputController = newCameraInputController()
+        cameraInputController.takePhoto(completion: { (image1) in
+            cameraInputController.takePhoto(completion: { (image2) in
+                XCTAssertEqual(cameraInputController.segments()[0].image, image1, "Photo should be taken in order")
+                cameraInputController.moveSegment(from: 0, to: 1)
+                XCTAssertEqual(cameraInputController.segments()[0].image, image2, "Photo order should have been altered")
+            })
+        })
+    }
 }
