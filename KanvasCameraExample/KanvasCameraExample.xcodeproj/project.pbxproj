@@ -63,7 +63,6 @@
 		ABE4991E2137307500379F7F /* IgnoreTouchesViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4991C2137307500379F7F /* IgnoreTouchesViewTests.swift */; };
 		ABE4991F2137307500379F7F /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4991D2137307500379F7F /* QueueTests.swift */; };
 		ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE4992A21375B3700379F7F /* ShootButtonViewTests.swift */; };
-		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
 /* End PBXBuildFile section */
@@ -458,7 +457,6 @@
 				AB7F29512121F02C00B8D599 /* LaunchScreen.storyboard in Resources */,
 				AB7F294E2121F02C00B8D599 /* Assets.xcassets in Resources */,
 				AB7F294C2121F02B00B8D599 /* Main.storyboard in Resources */,
-				ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */,
 				ABFBDE28212CCDE500E1044C /* sample.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
