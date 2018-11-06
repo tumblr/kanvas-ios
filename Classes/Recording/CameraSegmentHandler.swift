@@ -101,6 +101,10 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     func videoOutputSettingsForSize(size: CGSize) -> [String: Any]
 }
 
+private struct CameraSegmentHandlerConstants {
+    static let silentURL = Bundle(for: CameraSegmentHandler.self).url(forResource: "silence", withExtension: "aac")
+}
+
 /// A class to handle the various segments of a stop motion video, and also creates the final output
 
 final class CameraSegmentHandler: SegmentsHandlerType {
@@ -108,6 +112,12 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
+    private var silentAsset: AVAsset? {
+        guard let url = CameraSegmentHandlerConstants.silentURL else {
+            return nil
+        }
+        return AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+    }
 
     /// Appends an existing CameraSegment
     ///
@@ -231,7 +241,8 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
     func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
-        let mixComposition = AVMutableComposition()
+        let preciseOptions = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
+        let mixComposition = AVMutableComposition(urlAssetInitializationOptions: preciseOptions)
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
         // CameraSegments with images should also have a video url associated with it; that url is created when the addNewImageSegment method is called
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
@@ -240,7 +251,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
 
         for segment in segments {
             guard let segmentURL = segment.videoURL else { continue }
-            let urlAsset = AVURLAsset(url: segmentURL)
+            let urlAsset = AVURLAsset(url: segmentURL, options: preciseOptions)
             var videoDuration: CMTime = CMTime.zero
 
             if let videoTrack = urlAsset.tracks(withMediaType: .video).first {
@@ -264,7 +275,11 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 }
                 addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
             }
-            insertTime = CMTimeAdd(insertTime, videoDuration)
+            else {
+                audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+                insertEmptyAudio(compositionTrack: audioCompTrack, duration: videoDuration, insertTime: insertTime)
+            }
+            insertTime = mixComposition.duration
         }
         exportComposition(composition: mixComposition, completion: { url in
             completion(url)
@@ -278,6 +293,18 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             }
         }
         return true
+    }
+    
+    private func insertEmptyAudio(compositionTrack: AVMutableCompositionTrack?, duration: CMTime, insertTime: CMTime) {
+        guard let silentAsset = silentAsset else {
+            NSLog("silent asset not found")
+            return
+        }
+        let tracks = silentAsset.tracks(withMediaType: .audio)
+        guard let silenceTrack = tracks.first else {
+            return
+        }
+        try? compositionTrack?.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration), of: silenceTrack, at: insertTime)
     }
 
     /// Video output settings, used by internal classes for recording and exporting
