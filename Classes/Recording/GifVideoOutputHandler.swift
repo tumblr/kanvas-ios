@@ -21,10 +21,10 @@ final class GifVideoOutputHandler: NSObject {
     private let gifQueue = DispatchQueue(label: GifHandlerConstants.queue)
     private let videoOutput: AVCaptureVideoDataOutput?
     
-    private weak var currentVideoSampleBuffer: CMSampleBuffer?
+    private var currentVideoSampleBuffer: CMSampleBuffer?
 
     private var gifLink: CADisplayLink?
-    private var gifBuffers: [CMSampleBuffer] = []
+    private var gifBuffers: [CVPixelBuffer] = []
     private var gifFrames: Int = 0
     private var gifCompletion: ((Bool) -> Void)?
     private var maxGifFrames = KanvasCameraTimes.gifTotalFrames
@@ -72,6 +72,9 @@ final class GifVideoOutputHandler: NSObject {
         if longerDuration {
             maxGifFrames = 2 * KanvasCameraTimes.gifTotalFrames
         }
+        else {
+            maxGifFrames = KanvasCameraTimes.gifTotalFrames
+        }
 
         gifFrames = 0
         gifCompletion = completion
@@ -106,19 +109,16 @@ final class GifVideoOutputHandler: NSObject {
             cancelGif()
             return
         }
-        guard let buffer = currentVideoSampleBuffer else {
+        guard let buffer = currentVideoSampleBuffer, let pixelBuffer = CMSampleBufferGetImageBuffer(buffer)?.copy() else {
             // current video sample buffer may not be set yet, so don't necessarily cancelGif
             return
         }
-        // we need to create a copy of the CMSampleBuffer, the other one will be automatically reused by the video data output
-        var newBuffer: CMSampleBuffer? = nil
-        CMSampleBufferCreateCopy(allocator: kCFAllocatorDefault, sampleBuffer: buffer, sampleBufferOut: &newBuffer)
-        if let copiedBuffer = newBuffer {
-            gifBuffers.append(copiedBuffer)
-            gifFrames += 1
-            if gifFrames >= maxGifFrames {
-                gifFinishedBursting()
-            }
+        
+        gifBuffers.append(pixelBuffer)
+        currentVideoSampleBuffer = nil
+        gifFrames += 1
+        if gifFrames >= maxGifFrames {
+            gifFinishedBursting()
         }
     }
 
@@ -129,12 +129,10 @@ final class GifVideoOutputHandler: NSObject {
         assetWriter?.startWriting()
         assetWriter?.startSession(atSourceTime: nextTime)
 
-        gifBuffers = sampleBuffersWithReverse(array: gifBuffers)
+        gifBuffers = pixelBuffersWithReverse(array: gifBuffers)
         var index = 0
         self.pixelBufferAdaptor?.assetWriterInput.requestMediaDataWhenReady(on: self.gifQueue, using: { [unowned self] in
-            guard let pixelBuffer = CMSampleBufferGetImageBuffer(self.gifBuffers[index]) else {
-                return
-            }
+            let pixelBuffer = self.gifBuffers[index]
             let appendTime = nextTime
             nextTime = CMTimeAdd(nextTime, KanvasCameraTimes.gifFrameTime)
             self.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
@@ -149,7 +147,7 @@ final class GifVideoOutputHandler: NSObject {
         })
     }
 
-    private func sampleBuffersWithReverse(array: [CMSampleBuffer]) -> [CMSampleBuffer] {
+    private func pixelBuffersWithReverse(array: [CVPixelBuffer]) -> [CVPixelBuffer] {
         guard array.count > 1 else {
             NSLog("array needs to be at least two elements to reverse")
             return array
@@ -174,5 +172,30 @@ final class GifVideoOutputHandler: NSObject {
     private func invalidateLink() {
         gifLink?.invalidate()
         gifLink = nil
+    }
+}
+
+// MARK: - CVPixelBuffer copying
+private extension CVPixelBuffer {
+    /// Deep copy a CVPixelBuffer:
+    func copy() -> CVPixelBuffer? {
+        let width = CVPixelBufferGetWidth(self)
+        let height = CVPixelBufferGetHeight(self)
+        let format = CVPixelBufferGetPixelFormatType(self)
+
+        var pixelBuffer: CVPixelBuffer?
+        CVPixelBufferCreate(nil, width, height, format, nil, &pixelBuffer)
+        
+        if let pixelBuffer = pixelBuffer {
+            CVPixelBufferLockBaseAddress(self, .readOnly)
+            CVPixelBufferLockBaseAddress(pixelBuffer, [])
+            let baseAddress = CVPixelBufferGetBaseAddress(self)
+            let dataSize = CVPixelBufferGetDataSize(self)
+            let target = CVPixelBufferGetBaseAddress(pixelBuffer)
+            memcpy(target, baseAddress, dataSize)
+            CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
+            CVPixelBufferUnlockBaseAddress(self, .readOnly)
+        }
+        return pixelBuffer
     }
 }

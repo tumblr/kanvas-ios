@@ -32,9 +32,6 @@ final class CameraRecorder: NSObject {
     private let videoOutput: AVCaptureVideoDataOutput?
     private let audioOutput: AVCaptureAudioDataOutput?
 
-    private var currentVideoSampleBuffer: CMSampleBuffer?
-    private var currentAudioSampleBuffer: CMSampleBuffer?
-
     private var currentRecordingMode: CameraMode
     private let segmentsHandler: SegmentsHandlerType
 
@@ -268,7 +265,6 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        self.currentVideoSampleBuffer = sampleBuffer
         switch currentRecordingMode {
         case .stopMotion:
             videoOutputHandler.processVideoSampleBuffer(sampleBuffer)
@@ -279,7 +275,6 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        self.currentAudioSampleBuffer = sampleBuffer
         switch currentRecordingMode {
         case .stopMotion:
             videoOutputHandler.processAudioSampleBuffer(sampleBuffer)
