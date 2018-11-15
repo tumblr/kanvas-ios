@@ -279,10 +279,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return text
     }
     
-    private func takeGif() {
+    private func takeGif(useLongerDuration: Bool = false) {
         guard !isRecording else { return }
         updatePhotoCaptureState(event: .started)
-        cameraInputController.takeGif(completion: { [weak self] url in
+        cameraInputController.takeGif(useLongerDuration: useLongerDuration, completion: { [weak self] url in
             defer {
                 self?.updatePhotoCaptureState(event: .ended)
             }
@@ -435,6 +435,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didStartPressingForMode(_ mode: CameraMode) {
         switch mode {
+        case .gif:
+            takeGif(useLongerDuration: true)
         case .stopMotion:
             let _ = cameraInputController.startRecording()
             performUIUpdate { [weak self] in

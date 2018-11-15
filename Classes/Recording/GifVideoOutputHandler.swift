@@ -21,12 +21,13 @@ final class GifVideoOutputHandler: NSObject {
     private let gifQueue = DispatchQueue(label: GifHandlerConstants.queue)
     private let videoOutput: AVCaptureVideoDataOutput?
     
-    private var currentVideoSampleBuffer: CMSampleBuffer?
+    private weak var currentVideoSampleBuffer: CMSampleBuffer?
 
     private var gifLink: CADisplayLink?
     private var gifBuffers: [CMSampleBuffer] = []
     private var gifFrames: Int = 0
     private var gifCompletion: ((Bool) -> Void)?
+    private var maxGifFrames = KanvasCameraTimes.gifTotalFrames
 
     private var assetWriter: AVAssetWriter?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
@@ -49,11 +50,13 @@ final class GifVideoOutputHandler: NSObject {
     ///   - pixelBufferAdaptor: The pixel buffer adaptor that is attached to the asset writer
     ///   - videoInput: Video input for pixel buffer adaptor
     ///   - audioInput: Audio input for the asset writer. Is necessary since the asset writer setup is the same
+    ///   - longerDuration: Bool for determining duration length
     ///   - completion: returns a success boolean
     func takeGifMovie(assetWriter: AVAssetWriter?,
                       pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?,
                       videoInput: AVAssetWriterInput?,
                       audioInput: AVAssetWriterInput?,
+                      longerDuration: Bool = false,
                       completion: @escaping (Bool) -> Void) {
 
         guard !recording else {
@@ -66,6 +69,9 @@ final class GifVideoOutputHandler: NSObject {
         self.pixelBufferAdaptor = pixelBufferAdaptor
         self.videoInput = videoInput
         self.audioInput = audioInput
+        if longerDuration {
+            maxGifFrames = 2 * KanvasCameraTimes.gifTotalFrames
+        }
 
         gifFrames = 0
         gifCompletion = completion
@@ -107,10 +113,10 @@ final class GifVideoOutputHandler: NSObject {
         // we need to create a copy of the CMSampleBuffer, the other one will be automatically reused by the video data output
         var newBuffer: CMSampleBuffer? = nil
         CMSampleBufferCreateCopy(allocator: kCFAllocatorDefault, sampleBuffer: buffer, sampleBufferOut: &newBuffer)
-        if let buffer = newBuffer {
-            gifBuffers.append(buffer)
+        if let copiedBuffer = newBuffer {
+            gifBuffers.append(copiedBuffer)
             gifFrames += 1
-            if gifFrames >= KanvasCameraTimes.gifTotalFrames {
+            if gifFrames >= maxGifFrames {
                 gifFinishedBursting()
             }
         }

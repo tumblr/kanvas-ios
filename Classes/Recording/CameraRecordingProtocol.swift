@@ -106,9 +106,11 @@ protocol CameraRecordingProtocol {
 
     /// takes a `boomerang` (but actually is a video recording).
     ///
-    /// - Parameter completion: Returns the destination url
+    /// - Parameter
+    ///     useLongerDuration: whether to use a longer than normal duration for recording
+    ///     completion: Returns the destination url
     /// - Returns: Void
-    func takeGifMovie(completion: @escaping (URL?) -> Void)
+    func takeGifMovie(useLongerDuration: Bool, completion: @escaping (URL?) -> Void)
 
     /// cancels current recording and discards all properties
     func reset()
