@@ -102,7 +102,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         cameraSegmentHandler.moveSegment(from: originIndex, to: destinationIndex)
     }
     
-    func takeGifMovie(completion: @escaping (URL?) -> Void) {
+    func takeGifMovie(useLongerDuration: Bool = false, completion: @escaping (URL?) -> Void) {
         if isRecording() {
             completion(nil)
             return
