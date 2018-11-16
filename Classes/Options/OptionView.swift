@@ -51,8 +51,7 @@ final class OptionView: UIView {
         NSLayoutConstraint.activate([
             button.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
             button.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
-            button.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor),
-            button.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor),
+            button.centerYAnchor.constraint(equalTo: centerYAnchor),
             safeLayoutGuide.heightAnchor.constraint(equalTo: safeLayoutGuide.widthAnchor)
             ])
     }

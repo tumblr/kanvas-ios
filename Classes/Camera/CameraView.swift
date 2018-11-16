@@ -112,10 +112,10 @@ final class CameraView: UIView {
 
     private func setupModeLayoutGuide() {
         addLayoutGuide(modeLayoutGuide)
-        modeLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
-        modeLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
-        modeLayoutGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
-        modeLayoutGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
+        modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
+        modeLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor).isActive = true
+        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor).isActive = true
     }
 
     private func setupClipsGuide() {
@@ -128,8 +128,8 @@ final class CameraView: UIView {
 
     private func setupOptionsGuide() {
         addLayoutGuide(optionsLayoutGuide)
-        optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.buttonMargin).isActive = true
-        optionsLayoutGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
+        optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.buttonMargin).isActive = true
+        optionsLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
         optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.buttonMargin).isActive = true
         optionsLayoutGuide.heightAnchor.constraint(equalToConstant: CameraConstants.buttonSize).isActive = true
     }
@@ -161,8 +161,8 @@ final class CameraView: UIView {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: CameraConstants.buttonMargin),
-            closeButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin),
+            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.buttonMargin),
+            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.buttonSize)
         ])
