@@ -572,4 +572,22 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         let reason = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
         print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
     }
+    
+    // MARK: - breakdown
+    
+    /// Function to remove the current inputs and outputs from the capture session
+    func removeSessionInputsAndOutputs() {
+        if let input = currentCameraInput {
+            captureSession?.removeInput(input)
+        }
+        if let audioInput = currentMicInput {
+            captureSession?.removeInput(audioInput)
+        }
+        if let cameraOutput = currentCaptureOutput {
+            captureSession?.removeOutput(cameraOutput)
+        }
+        if let audioOutput = audioDataOutput {
+            captureSession?.removeOutput(audioOutput)
+        }
+    }
 }

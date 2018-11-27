@@ -558,4 +558,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer) {
         cameraZoomHandler.setZoom(gesture: gesture)
     }
+    
+    // MARK: - breakdown
+    
+    /// This function should be called to stop the camera session and properly breakdown the inputs
+    public func stopSession() {
+        cameraInputController.removeSessionInputsAndOutputs()
+    }
 }
