@@ -34,12 +34,14 @@ final class MediaClipsEditorView: UIView {
         collectionContainer = UIView()
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Media Clips Collection Container"
+        collectionContainer.clipsToBounds = false
 
         trashButton = UIButton()
         trashButton.accessibilityIdentifier = "Media Clips Trash Button"
         trashButton.setImage(KanvasCameraImages.deleteImage, for: .normal)
         super.init(frame: .zero)
 
+        clipsToBounds = false
         setUpViews()
         trashButton.addTarget(self, action: #selector(trashPressed), for: .touchUpInside)
         hideTrash()

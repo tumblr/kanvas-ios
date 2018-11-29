@@ -23,6 +23,20 @@ protocol MediaClipsCollectionControllerDelegate: class {
     
     /// Callback for when a clip finishes moving / draggin
     func mediaClipFinishedMoving()
+    
+    /// Callback for when a clip was swiped and deleted
+    ///
+    /// - Parameter index: the index of the deleted clip
+    func mediaClipWasSwipedAndDeleted(at index: Int)
+}
+
+/// Constants for Collection Controller
+private struct MediaClipsCollectionControllerConstants {
+    /// Animation duration in seconds
+    static let animationDuration: TimeInterval = 0.15
+    
+    /// The height of the delete animation
+    static let animationYDistance: CGFloat = 100
 }
 
 /// Controller for handling the media clips collection.
@@ -31,6 +45,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     private var clips: [MediaClip]
     private var selectedClipIndex: IndexPath?
+    private var draggingState: UICollectionViewCell.DragState = .none
 
     weak var delegate: MediaClipsCollectionControllerDelegate?
 
@@ -132,7 +147,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaClipsCollectionCell.identifier, for: indexPath)
         if let mediaCell = cell as? MediaClipsCollectionCell {
             mediaCell.bindTo(clips[indexPath.item])
-            mediaCell.dragDelegate = self
+            mediaCell.touchDelegate = self
         }
         return cell
     }
@@ -264,12 +279,36 @@ extension MediaClipsCollectionController: UICollectionViewDropDelegate {
 // MARK: - MediaClipsCollectionCellDelegate
 extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
     func didChangeState(newDragState: UICollectionViewCell.DragState) {
+        draggingState = newDragState
         switch newDragState {
         case .dragging: break
         case .lifting:
             delegate?.mediaClipStartedMoving()
         case .none:
             delegate?.mediaClipFinishedMoving()
+        }
+    }
+    
+    func didSwipeUp(cell: UICollectionViewCell) {
+        guard draggingState == .none && !mediaClipsCollectionView.collectionView.hasActiveDrag else { return }
+        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
+        if let index = mediaClipsCollectionView.collectionView.indexPath(for: cell) {
+            clips.remove(at: index.item)
+            animateSwipeUpDelete(cell: cell, index: index)
+            delegate?.mediaClipWasSwipedAndDeleted(at: index.item)
+        }
+    }
+    
+    private func animateSwipeUpDelete(cell: UICollectionViewCell, index: IndexPath) {
+        cell.clipsToBounds = false
+        UIView.animate(withDuration: MediaClipsCollectionControllerConstants.animationDuration, animations: {
+            var frame = cell.frame
+            frame.origin.y = frame.origin.y - MediaClipsCollectionControllerConstants.animationYDistance
+            cell.frame = frame
+            cell.alpha = 0
+        }) { (completed) in
+            cell.clipsToBounds = true
+            self.mediaClipsCollectionView.collectionView.deleteItems(at: [index])
         }
     }
 }

@@ -122,6 +122,11 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         delegate?.mediaClipWasMoved(from: originIndex, to: destinationIndex)
     }
     
+    func mediaClipWasSwipedAndDeleted(at index: Int) {
+        hasClips = collectionController.getClips().count > 0
+        delegate?.mediaClipWasDeleted(at: index)
+    }
+    
     // MARK: - MediaClipsEditorViewDelegate
     func trashButtonWasPressed() {
         if let index = collectionController.removeSelectedClip() {

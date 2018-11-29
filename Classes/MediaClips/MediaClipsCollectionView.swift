@@ -23,6 +23,7 @@ final class MediaClipsCollectionView: UIView {
 
         super.init(frame: .zero)
 
+        clipsToBounds = false
         setUpViews()
     }
 
@@ -42,6 +43,7 @@ extension MediaClipsCollectionView {
 
     private func setUpViews() {
         collectionView.add(into: self)
+        collectionView.clipsToBounds = false
     }
     
 }

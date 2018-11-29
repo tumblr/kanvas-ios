@@ -8,11 +8,18 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// Delegate for drag events on this cell
+/// Delegate for touch events on this cell
 protocol MediaClipsCollectionCellDelegate {
+    /// Callback method for dragging the cell
+    ///
+    /// - Parameter newDragState: The new state of the drag event
     func didChangeState(newDragState: UICollectionViewCell.DragState)
+    
+    /// Callback method for swiping the cell
+    ///
+    /// - Parameter cell: The currently swiped cell
+    func didSwipeUp(cell: UICollectionViewCell)
 }
-
 private struct MediaClipsCollectionCellConstants {
     static let cellPadding: CGFloat = 2
     static let clipHeight: CGFloat = 80
@@ -22,7 +29,7 @@ private struct MediaClipsCollectionCellConstants {
     static let fontSize: CGFloat = 12
     static let labelPadding: CGFloat = 6
     static let labelHeight: CGFloat = 14
-    static let llipAlpha: CGFloat = 0.5
+    static let clipAlpha: CGFloat = 0.5
 
     static var minimumHeight: CGFloat {
         return clipHeight
@@ -50,7 +57,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     private let clipImage: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
-        view.alpha = MediaClipsCollectionCellConstants.llipAlpha
+        view.alpha = MediaClipsCollectionCellConstants.clipAlpha
         return view
     }()
     private let clipLabel: UILabel = {
@@ -62,17 +69,19 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
-    /// The drag delegate to be injected
-    var dragDelegate: MediaClipsCollectionCellDelegate?
+    /// The touch delegate to be injected
+    var touchDelegate: MediaClipsCollectionCellDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
+        setupGestures()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
+        setupGestures()
     }
 
     override func prepareForReuse() {
@@ -130,11 +139,22 @@ extension MediaClipsCollectionCell {
         ])
     }
 
+    private func setupGestures() {
+        let swipeUpGesture = UISwipeGestureRecognizer(target: self, action: #selector(swiped(gesture:)))
+        swipeUpGesture.direction = .up
+        addGestureRecognizer(swipeUpGesture)
+    }
+    
     /// This overrides the original function to to notify the drag delegate of the changed state
     ///
     /// - Parameter dragState: can be .lifting, .dragging, .none
     override func dragStateDidChange(_ dragState: UICollectionViewCell.DragState) {
         super.dragStateDidChange(dragState)
-        dragDelegate?.didChangeState(newDragState: dragState)
+        touchDelegate?.didChangeState(newDragState: dragState)
+    }
+    
+    // MARK: - gestures
+    @objc private func swiped(gesture: UISwipeGestureRecognizer) {
+        touchDelegate?.didSwipeUp(cell: self)
     }
 }
