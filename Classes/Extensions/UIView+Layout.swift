@@ -13,31 +13,27 @@ import UIKit
 extension UIView {
     
     var safeLayoutGuide: UILayoutGuide {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide
+        let id = "\(accessibilityIdentifier ?? "").safe_layout"
+        
+        if let safeGuide = layoutGuides.filter({ $0.identifier == id }).first {
+            return safeGuide
         }
         else {
-            let id = "\(accessibilityIdentifier ?? "").safe_layout"
-            if let safeGuide = layoutGuides.filter({ $0.identifier == id }).first {
-                return safeGuide
-            }
-            else {
-                let safeGuide = UILayoutGuide()
-                safeGuide.identifier = id
-                addLayoutGuide(safeGuide)
-                
-                NSLayoutConstraint.activate([
-                    safeGuide.leadingAnchor.constraint(equalTo: leadingAnchor),
-                    safeGuide.trailingAnchor.constraint(equalTo: trailingAnchor),
-                    safeGuide.topAnchor.constraint(equalTo: topAnchor),
-                    safeGuide.bottomAnchor.constraint(equalTo: bottomAnchor)
-                    ])
-                
-                return safeGuide
-            }
+            let safeGuide = UILayoutGuide()
+            safeGuide.identifier = id
+            addLayoutGuide(safeGuide)
+            
+            let topOffset: CGFloat = Device.isIPhoneX ? KanvasViewConstants.iPhoneXTopOffset : KanvasViewConstants.normalTopOffset
+            NSLayoutConstraint.activate([
+                safeGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+                safeGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+                safeGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topOffset),
+                safeGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+                ])
+            
+            return safeGuide
         }
     }
-    
 }
 
 /**
@@ -50,6 +46,8 @@ enum ViewPositioning {
 
 private struct KanvasViewConstants {
     static let animationDuration: TimeInterval = 0.2
+    static let normalTopOffset: CGFloat = 0
+    static let iPhoneXTopOffset: CGFloat = -20
 }
 
 extension UIView {

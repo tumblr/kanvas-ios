@@ -9,7 +9,7 @@ import UIKit
 
 private struct OptionsStackViewConstants {
     static let optionsChangeAnimationDuration: TimeInterval = 0.2
-    static let inset: CGFloat = -10
+    static let inset: CGFloat = -15
 }
 
 protocol OptionsStackViewDelegate: class {
