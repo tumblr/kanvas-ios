@@ -21,17 +21,17 @@ protocol MediaClipsEditorViewDelegate: class {
 }
 
 /// View for media clips editor
-final class MediaClipsEditorView: UIView {
+final class MediaClipsEditorView: IgnoreTouchesView {
     
     static let height = MediaClipsEditorViewConstants.height
 
-    let collectionContainer: UIView
+    let collectionContainer: IgnoreTouchesView
     let trashButton: UIButton
 
     weak var delegate: MediaClipsEditorViewDelegate?
 
     init() {
-        collectionContainer = UIView()
+        collectionContainer = IgnoreTouchesView()
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Media Clips Collection Container"
         collectionContainer.clipsToBounds = false

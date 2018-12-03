@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0E29275F21879C18009E1FCF /* CameraZoomHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E29275E21879C18009E1FCF /* CameraZoomHandlerTests.swift */; };
 		0E5CFADE219F283B00D8F6F5 /* DeviceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5CFADD219F283B00D8F6F5 /* DeviceTests.swift */; };
+		0E6450B921B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6450B821B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift */; };
 		0E827E102183872600681FEA /* ClosedRangeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E827E0F2183872600681FEA /* ClosedRangeTests.swift */; };
 		0EAE0C7E21387C39004CD7FF /* ModeButtonViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C7D21387C39004CD7FF /* ModeButtonViewTests.swift */; };
 		0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE0C7F21387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift */; };
@@ -83,6 +84,7 @@
 		07DDC249DAB2E1FD27A71D49 /* Pods-KanvasCameraExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		0E29275E21879C18009E1FCF /* CameraZoomHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraZoomHandlerTests.swift; sourceTree = "<group>"; };
 		0E5CFADD219F283B00D8F6F5 /* DeviceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTests.swift; sourceTree = "<group>"; };
+		0E6450B821B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoreTouchesCollectionViewTests.swift; sourceTree = "<group>"; };
 		0E827E0F2183872600681FEA /* ClosedRangeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosedRangeTests.swift; sourceTree = "<group>"; };
 		0EAE0C7D21387C39004CD7FF /* ModeButtonViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeButtonViewTests.swift; sourceTree = "<group>"; };
 		0EAE0C7F21387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootControllerTests.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 				ABE4991C2137307500379F7F /* IgnoreTouchesViewTests.swift */,
 				ABE4991D2137307500379F7F /* QueueTests.swift */,
 				0E5CFADD219F283B00D8F6F5 /* DeviceTests.swift */,
+				0E6450B821B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -585,6 +588,7 @@
 				0EAE0C9B21399ED9004CD7FF /* CameraConstantsTests.swift in Sources */,
 				AB7263EF212CCBB30044ED96 /* CameraSegmentHandlerTests.swift in Sources */,
 				0EAE0CB12139B966004CD7FF /* CameraPreviewControllerTests.swift in Sources */,
+				0E6450B921B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift in Sources */,
 				0EDE7A3B216425BD009DB00F /* ExtendedStackViewTests.swift in Sources */,
 				ABE49907213712E100379F7F /* OptionsStackViewTests.swift in Sources */,
 				AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */,
