@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import TumblrTheme
 import UIKit
 
 /// Delegate for touch events on this cell
@@ -26,7 +27,6 @@ private struct MediaClipsCollectionCellConstants {
     static let clipWidth: CGFloat = 56
     static let borderWidth: CGFloat = 2
     static let cornerRadius: CGFloat = 8
-    static let fontSize: CGFloat = 12
     static let labelPadding: CGFloat = 6
     static let labelHeight: CGFloat = 14
     static let clipAlpha: CGFloat = 0.5
@@ -65,7 +65,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         label.backgroundColor = .clear
         label.textAlignment = .right
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: MediaClipsCollectionCellConstants.fontSize)
+        label.font = UIFont.imbe85()
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
