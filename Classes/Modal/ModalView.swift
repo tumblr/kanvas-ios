@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import TumblrTheme
 
 private struct ModalViewConstants {
     static let margin: CGFloat = 40
@@ -13,6 +12,8 @@ private struct ModalViewConstants {
     static let paddingBetweenButtons: CGFloat = 10
     static let containerCornerRadius: CGFloat = 16
     static let buttonCornerRadius: CGFloat = 10
+    static let titleFontSize: CGFloat = 22
+    static let buttonFontSize: CGFloat = 16
     static let containerColor: UIColor = .white
     static let confirmButtonColor: UIColor = UIColor(red: 32/255, green: 185/255, blue: 252/255, alpha: 1)
     static let cancelButtonColor: UIColor = .white
@@ -113,7 +114,7 @@ final class ModalView: UIView {
 
     private func setUpLabel() {
         textLabel.accessibilityIdentifier = "Modal Text Label"
-        textLabel.font = UIFont.eggplant85()
+        textLabel.font = UIFont.systemFont(ofSize: ModalViewConstants.titleFontSize)
         textLabel.textAlignment = .center
         textLabel.numberOfLines = 0
         textLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -176,7 +177,7 @@ final class ModalView: UIView {
         button.layer.cornerRadius = ModalViewConstants.buttonCornerRadius
         button.layer.masksToBounds = true
         button.setTitle("", for: .normal)   // Needed so there is a title label which we can set font to.
-        button.titleLabel?.font = UIFont.guavaMedium()
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: ModalViewConstants.buttonFontSize)
         button.titleLabel?.numberOfLines = 0
         button.contentVerticalAlignment = .center
         button.contentHorizontalAlignment = .center
