@@ -2,7 +2,8 @@ platform :ios, '11.0'
 use_frameworks!
 
 target 'KanvasCameraExample' do
-	pod 'KanvasCamera', :path => '../'
+    pod 'KanvasCamera', :path => '../'
+    pod 'TumblrTheme', :path => '../../TumblrTheme'
 end
 
 target 'KanvasCameraExampleTests' do

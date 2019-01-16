@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import TumblrTheme
 
 /// Protocol to handle mode button user actions
 protocol ModeButtonViewDelegate: class {
@@ -18,7 +19,7 @@ private struct ModeButtonViewConstants {
     static let contentVerticalInset: CGFloat = 8
     static let contentHorizontalInset: CGFloat = contentVerticalInset * 2
     static let borderWidth: CGFloat = 2
-    static let fontSize: CGFloat = 16
+    static let buttonFont: UIFont = .guava85()
 }
 
 /// The capsule mode button view
@@ -65,7 +66,7 @@ final class ModeButtonView: IgnoreTouchesView {
                                                     bottom: ModeButtonViewConstants.contentVerticalInset,
                                                     right: ModeButtonViewConstants.contentHorizontalInset)
         modeButton.setTitle("", for: .normal)   // Needed so there is a title label which we can set font to.
-        modeButton.titleLabel?.font = modeButton.titleLabel?.font.withSize(ModeButtonViewConstants.fontSize)
+        modeButton.titleLabel?.font = ModeButtonViewConstants.buttonFont
         modeButton.setTitleColor(.white, for: .normal)
 
         modeButton.layer.borderWidth = ModeButtonViewConstants.borderWidth

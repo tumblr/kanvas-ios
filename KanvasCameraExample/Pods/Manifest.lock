@@ -4,11 +4,14 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - KanvasCamera (0.1.0)
+  - KanvasCamera (0.1.0):
+    - TumblrTheme
+  - TumblrTheme (1.0.0)
 
 DEPENDENCIES:
   - FBSnapshotTestCase (= 2.1.4)
   - KanvasCamera (from `../`)
+  - TumblrTheme (from `../../TumblrTheme`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -17,11 +20,14 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   KanvasCamera:
     :path: "../"
+  TumblrTheme:
+    :path: "../../TumblrTheme"
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  KanvasCamera: 768f37c8ddda4b9cb484c4fb90c2140bc76f73fb
+  KanvasCamera: b2ec7b12318167c54928e83c0d1e63c376316003
+  TumblrTheme: d2fbf7ba3b47bfc6ab785ca46b376bb581da6af7
 
-PODFILE CHECKSUM: d660d2b8b126fa915d709c9b7f6f0ef384125197
+PODFILE CHECKSUM: 8cee5894f5cdf604216bad4a7338f2e86e4e273e
 
 COCOAPODS: 1.5.3

@@ -20,5 +20,6 @@
   "source_files": "Classes/**/*.{h,m,swift}",
   "resources": "Resources/*",
   "dependencies": {
+    "TumblrTheme": []
   }
 }
