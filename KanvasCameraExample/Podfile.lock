@@ -14,7 +14,7 @@ DEPENDENCIES:
   - TumblrTheme (from `../../TumblrTheme`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - FBSnapshotTestCase
 
 EXTERNAL SOURCES:
@@ -30,4 +30,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 8cee5894f5cdf604216bad4a7338f2e86e4e273e
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.0
