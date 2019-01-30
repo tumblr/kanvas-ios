@@ -24,6 +24,8 @@ struct KanvasCameraImages {
     static let flashOnImage = UIImage.imageFromCameraBundle(named: "flashOn")
     static let flashOffImage = UIImage.imageFromCameraBundle(named: "flashOff")
     static let cameraPositionImage = UIImage.imageFromCameraBundle(named: "cameraPosition")
+    static let imagePreviewOnImage = UIImage.imageFromCameraBundle(named: "imagePreviewOn")
+    static let imagePreviewOffImage = UIImage.imageFromCameraBundle(named: "imagePreviewOff")
     // MARK: - General
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")

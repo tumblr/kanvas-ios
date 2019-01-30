@@ -98,6 +98,11 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         hasClips = collectionController.getClips().count > 0
         clipIsSelected = false
     }
+    
+    /// Returns the image from the last clip of the collection
+    func getPreviewFromLastClip() -> UIImage? {
+        return collectionController.getPreviewFromLastClip()
+    }
 
     // MARK: - MediaClipsControllerDelegate
     func mediaClipStartedMoving() {

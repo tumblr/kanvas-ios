@@ -93,6 +93,10 @@ import Foundation
     /// - note: Defaults to flash off.
     public var preferredFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.defaultFlashOption
     
+    /// Fullscreen image preview which starts disabled.
+    /// - note: Defaults to image preview off.
+    public var imagePreviewOption: ImagePreviewMode = DefaultCameraSettings.defaultImagePreviewOption
+    
     // MARK: - Landscape support
     public var cameraSupportsLandscape: Bool = DefaultCameraSettings.landscapeIsSupported
     
@@ -189,6 +193,16 @@ extension CameraSettings {
         }
     }
     
+    /// Returns the opposite of the value that has been set for the fullscreen image preview
+    var notDefaultImagePreviewOption: ImagePreviewMode {
+        if imagePreviewOption == .on {
+            return .off
+        }
+        else {
+            return .on
+        }
+    }
+    
 }
 
 // MARK: - Default settings
@@ -197,7 +211,8 @@ private struct DefaultCameraSettings {
     static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
     static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let defaultCameraPositionOption: AVCaptureDevice.Position = .back
+    static let defaultImagePreviewOption: ImagePreviewMode = .off
     static let landscapeIsSupported: Bool = false
-    static let exportStopMotionPhotoAsVideo: Bool = true
+    static let exportStopMotionPhotoAsVideo: Bool = false
     
 }

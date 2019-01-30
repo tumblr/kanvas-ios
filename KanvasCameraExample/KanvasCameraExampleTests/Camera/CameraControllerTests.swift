@@ -72,6 +72,41 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
+    
+    func testSetUpWithImagePreviewOn() {
+        let delegate = newDelegateStub()
+        let settings = CameraSettings()
+        settings.imagePreviewOption = .on
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
+    
+    func testImagePreviewButtonShouldHideOnPhotoMode() {
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate)
+        UIView.setAnimationsEnabled(false)
+        controller.didOpenMode(.photo, andClosed: .none)
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(controller.view)
+    }
+    
+    func testImagePreviewButtonShouldAppearOnStopMotionMode() {
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate)
+        UIView.setAnimationsEnabled(false)
+        controller.didOpenMode(.stopMotion, andClosed: .none)
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(controller.view)
+    }
+    
+    func testImagePreviewButtonShouldAppearOnGifMode() {
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate)
+        UIView.setAnimationsEnabled(false)
+        controller.didOpenMode(.gif, andClosed: .none)
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(controller.view)
+    }
 
     // Can't test `exportStopMotionPhotoAsVideo` because it can't export in tests
 

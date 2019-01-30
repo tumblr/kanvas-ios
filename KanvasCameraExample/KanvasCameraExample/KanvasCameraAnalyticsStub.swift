@@ -52,7 +52,11 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     public func logFlashToggled() {
         logString(string: "\(#function)")
     }
-
+    
+    public func logImagePreviewToggled() {
+        logString(string: "\(#function)")
+    }
+    
     public func logUndoTapped() {
         logString(string: "\(#function)")
     }

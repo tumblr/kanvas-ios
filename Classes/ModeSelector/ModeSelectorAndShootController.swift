@@ -56,11 +56,9 @@ final class ModeSelectorAndShootController: UIViewController {
         }
         return queue
     }()
-
+    
     private var currentMode: CameraMode? {
-        get {
-            return modesQueue.first
-        }
+        return modesQueue.first
     }
     
     /// Initializer with CameraSettings
@@ -121,7 +119,6 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     func setMode(_ newMode: CameraMode, from oldMode: CameraMode?) {
         modeView.setUpMode(newMode)
         delegate?.didOpenMode(newMode, andClosed: oldMode)
-
     }
 
     // MARK: - ShootButtonViewDelegate

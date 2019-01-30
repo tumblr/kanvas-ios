@@ -15,7 +15,9 @@ protocol CameraViewDelegate: class {
 struct CameraConstants {
     static let buttonSize: CGFloat = 34
     static let buttonMargin: CGFloat = 32
-    fileprivate static let HidingAnimationDuration: CGFloat = 0.2
+    static let buttonSpacing: CGFloat = 8
+    fileprivate static let hidingAnimationDuration: CGFloat = 0.2
+    fileprivate static let optionRows: CGFloat = 2
 }
 
 /// View with containers for all camera subviews (input, mode selector, etc)
@@ -33,6 +35,9 @@ final class CameraView: UIView {
 
     /// Layout guide for options
     private let optionsLayoutGuide = UILayoutGuide()
+    
+    /// Layout guide for the fullscreen image preview
+    private let imagePreviewLayoutGuide = UILayoutGuide()
 
     /// the container for the camera input view
     private var cameraInputViewContainer: UIView?
@@ -42,6 +47,9 @@ final class CameraView: UIView {
 
     /// the container for the media clips collection view
     private var clipsContainer: UIView?
+    
+    /// the container for the fullscreen image preview
+    private var imagePreviewViewContainer: UIView?
 
     /// the container for the next / undo action buttons
     let bottomActionsView: ActionsView
@@ -100,6 +108,7 @@ final class CameraView: UIView {
         setupModeLayoutGuide()
         setupClipsGuide()
         setupOptionsGuide()
+        setupImagePreviewGuide()
     }
 
     private func setupCameraInputGuide() {
@@ -128,10 +137,20 @@ final class CameraView: UIView {
 
     private func setupOptionsGuide() {
         addLayoutGuide(optionsLayoutGuide)
+        // The height is equal to all the rows of buttons plus the space between them
+        let height = CameraConstants.buttonSize * CameraConstants.optionRows + CameraConstants.buttonSpacing * (CameraConstants.optionRows - 1)
         optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.buttonMargin).isActive = true
         optionsLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
         optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.buttonMargin).isActive = true
-        optionsLayoutGuide.heightAnchor.constraint(equalToConstant: CameraConstants.buttonSize).isActive = true
+        optionsLayoutGuide.heightAnchor.constraint(equalToConstant: height).isActive = true
+    }
+    
+    private func setupImagePreviewGuide() {
+        addLayoutGuide(imagePreviewLayoutGuide)
+        imagePreviewLayoutGuide.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        imagePreviewLayoutGuide.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        imagePreviewLayoutGuide.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        imagePreviewLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 
     private func setUpViews() {
@@ -211,6 +230,15 @@ final class CameraView: UIView {
         topOptionsContainer = view
         addViewWithGuide(view: view, guide: optionsLayoutGuide)
     }
+    
+    /// Adds the image preview view
+    ///
+    /// - Parameter view: view for the image preview
+    func addImagePreviewView(_ view: UIView) {
+        guard imagePreviewViewContainer == nil else { return }
+        imagePreviewViewContainer = view
+        addViewWithGuide(view: view, guide: imagePreviewLayoutGuide)
+    }
 
     private func addViewWithGuide(view: UIView, guide: UILayoutGuide) {
         addSubview(view)
@@ -224,6 +252,7 @@ final class CameraView: UIView {
 
     private func reorderSubviews() {
         let orderedViews = [cameraInputViewContainer,
+                            imagePreviewViewContainer,
                             closeButton,
                             topOptionsContainer,
                             modeAndShootContainer,

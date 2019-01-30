@@ -18,15 +18,15 @@ final class OptionsStackViewTests: FBSnapshotTestCase {
         self.recordMode = false
     }
 
-    func options() -> [Option<CameraDeviceOption>] {
-        var options: [Option<CameraDeviceOption>] = []
-        options.append(Option(option: CameraDeviceOption.flashOff, image: KanvasCameraImages.flashOffImage, type: .twoOptionsImages(alternateOption: CameraDeviceOption.flashOn, alternateImage: KanvasCameraImages.flashOnImage)))
-        options.append(Option(option: CameraDeviceOption.frontCamera, image: KanvasCameraImages.cameraPositionImage, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
+    func options() -> [Option<CameraOption>] {
+        var options: [Option<CameraOption>] = []
+        options.append(Option(option: CameraOption.flashOff, image: KanvasCameraImages.flashOffImage, type: .twoOptionsImages(alternateOption: CameraOption.flashOn, alternateImage: KanvasCameraImages.flashOnImage)))
+        options.append(Option(option: CameraOption.frontCamera, image: KanvasCameraImages.cameraPositionImage, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
         return options
     }
 
-    func newStackView() -> OptionsStackView<CameraDeviceOption> {
-        let stackView = OptionsStackView<CameraDeviceOption>(options: options(), interItemSpacing: 32)
+    func newStackView() -> OptionsStackView<CameraOption> {
+        let stackView = OptionsStackView<CameraOption>(section: 0, options: options(), interItemSpacing: 32)
         stackView.frame = CGRect(x: 0, y: 0, width: 320, height: 100)
         return stackView
     }

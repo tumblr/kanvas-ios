@@ -85,6 +85,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass, delegate: self)
         return controller
     }()
+    private lazy var imagePreviewController: ImagePreviewController = {
+        let controller = ImagePreviewController()
+        return controller
+    }()
     
     private let settings: CameraSettings
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
@@ -187,6 +191,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraView.addClipsView(clipsController.view)
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
+        cameraView.addImagePreviewView(imagePreviewController.view)
         bindMediaContentAvailable()
         bindContentSelected()
     }
@@ -323,6 +328,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func updateMode(_ mode: CameraMode) {
         if mode != currentMode {
             currentMode = mode
+            topOptionsController.configureMode(mode)
             do {
                 try cameraInputController.configureMode(mode)
             } catch {
@@ -362,12 +368,18 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func enableBottomViewButtons(show: Bool) {
         cameraView.bottomActionsView.updateUndo(enabled: show)
         cameraView.bottomActionsView.updateNext(enabled: show)
+
         if clipsController.hasClips || settings.enabledModes.count == 1 {
             modeAndShootController.hideModeButton()
         }
         else {
             modeAndShootController.showModeButton()
         }
+    }
+    
+    /// Updates the fullscreen preview with the last image of the clip collection
+    private func updateLastClipPreview() {
+        imagePreviewController.setImagePreview(clipsController.getPreviewFromLastClip())
     }
     
     // MARK : - Private utilities
@@ -393,6 +405,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func undoButtonPressed() {
         clipsController.undo()
         cameraInputController.deleteSegmentAtIndex(cameraInputController.segments().count - 1)
+        updateLastClipPreview()
         analyticsProvider?.logUndoTapped()
     }
 
@@ -468,7 +481,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
-    func optionSelected(_ item: CameraDeviceOption) {
+    func optionSelected(_ item: CameraOption) {
         switch item {
         case .flashOn:
             cameraInputController.setFlashMode(on: true)
@@ -480,6 +493,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             cameraInputController.switchCameras()
             analyticsProvider?.logFlipCamera()
             cameraZoomHandler.resetZoom()
+        case .imagePreviewOn:
+            imagePreviewController.showImagePreview(true)
+            analyticsProvider?.logImagePreviewToggled()
+        case .imagePreviewOff:
+            imagePreviewController.showImagePreview(false)
+            analyticsProvider?.logImagePreviewToggled()
         }
     }
 
@@ -500,6 +519,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegmentAtIndex(index)
+        updateLastClipPreview()
         analyticsProvider?.logDeleteSegment()
     }
 
@@ -511,6 +531,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         cameraInputController.moveSegment(from: originIndex, to: destinationIndex)
+        updateLastClipPreview()
     }
 
     // MARK: - CameraPreviewControllerDelegate

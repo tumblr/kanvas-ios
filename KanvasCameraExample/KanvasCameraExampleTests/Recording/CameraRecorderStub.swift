@@ -97,7 +97,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         }
         cameraSegmentHandler.deleteSegment(index: index, removeFromDisk: false)
     }
-    
+
     func moveSegment(from originIndex: Int, to destinationIndex: Int) {
         cameraSegmentHandler.moveSegment(from: originIndex, to: destinationIndex)
     }

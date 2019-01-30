@@ -110,6 +110,11 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     func getClips() -> [MediaClip] {
         return clips
     }
+    
+    /// Returns the image from the last clip of the collection
+    func getPreviewFromLastClip() -> UIImage? {
+        return clips.last?.representativeFrame
+    }
 
     // MARK: - View Life Cycle
     override func loadView() {

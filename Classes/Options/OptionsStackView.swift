@@ -14,7 +14,7 @@ private struct OptionsStackViewConstants {
 
 protocol OptionsStackViewDelegate: class {
     /// callback for an option button being tapped
-    func optionWasTapped(optionIndex: Int)
+    func optionWasTapped(section: Int, optionIndex: Int)
 }
 
 /// A view for laying out option views in a stack
@@ -25,10 +25,19 @@ final class OptionsStackView<Item>: UIView {
     private(set) var stackView: ExtendedStackView
     weak var delegate: OptionsStackViewDelegate?
 
+    private let section: Int
     private let interItemSpacing: CGFloat
 
-    init(options: [Option<Item>], interItemSpacing: CGFloat) {
+    /// Creates a view containing a horizontal StackView with options
+    ///
+    /// - Parameters:
+    ///   - section: number that represents the view in case there are multiple OptionStackViews
+    ///     calling methods on the same delegate.
+    ///   - options: settings that will be displayed horizontally in the StackView
+    ///   - interItemSpacing: horizontal spacing between the StackView buttons
+    init(section: Int, options: [Option<Item>], interItemSpacing: CGFloat) {
         stackView = ExtendedStackView(inset: OptionsStackViewConstants.inset)
+        self.section = section
         self.interItemSpacing = interItemSpacing
         super.init(frame: .zero)
 
@@ -48,7 +57,7 @@ final class OptionsStackView<Item>: UIView {
     }
 
     @objc func optionTapped(_ sender: UIButton) {
-        delegate?.optionWasTapped(optionIndex: sender.tag)
+        delegate?.optionWasTapped(section: section, optionIndex: sender.tag)
     }
 
     /// This overridden function returns whether the point for any given event is inside this button's frame
