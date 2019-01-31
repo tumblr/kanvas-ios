@@ -17,7 +17,7 @@ struct CameraConstants {
     static let buttonMargin: CGFloat = 32
     static let buttonSpacing: CGFloat = 8
     fileprivate static let hidingAnimationDuration: CGFloat = 0.2
-    fileprivate static let optionRows: CGFloat = 2
+    fileprivate static let defaultOptionRows: CGFloat = 2
 }
 
 /// View with containers for all camera subviews (input, mode selector, etc)
@@ -67,7 +67,15 @@ final class CameraView: UIView {
         }
     }
 
-    init() {
+    private let numberOfOptionRows: CGFloat
+
+    convenience init() {
+        self.init(numberOfOptionRows: CameraConstants.defaultOptionRows)
+    }
+
+    init(numberOfOptionRows: CGFloat) {
+        self.numberOfOptionRows = numberOfOptionRows
+
         // Main views
         closeButton = UIButton()
         bottomActionsView = ActionsView()
@@ -138,7 +146,7 @@ final class CameraView: UIView {
     private func setupOptionsGuide() {
         addLayoutGuide(optionsLayoutGuide)
         // The height is equal to all the rows of buttons plus the space between them
-        let height = CameraConstants.buttonSize * CameraConstants.optionRows + CameraConstants.buttonSpacing * (CameraConstants.optionRows - 1)
+        let height = CameraConstants.buttonSize * numberOfOptionRows + CameraConstants.buttonSpacing * (numberOfOptionRows - 1)
         optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.buttonMargin).isActive = true
         optionsLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
         optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.buttonMargin).isActive = true

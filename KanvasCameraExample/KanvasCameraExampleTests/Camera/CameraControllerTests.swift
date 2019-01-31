@@ -30,6 +30,10 @@ final class CameraControllerTests: FBSnapshotTestCase {
         return CameraControllerDelegateStub()
     }
 
+    func newDelegateStubWithoutGhostFrame() -> CameraControllerDelegateStub {
+        return CameraControllerDelegateStub(shouldEnableGhostFrame: false)
+    }
+
     func newController(delegate: CameraControllerDelegate, settings: CameraSettings = CameraSettings()) -> CameraController {
         let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = delegate
@@ -45,6 +49,12 @@ final class CameraControllerTests: FBSnapshotTestCase {
     // MARK: - Setting
     func testSetUpWithAllOptionsAndModesShouldStartWithFlashOffAndStopMotionMode() {
         let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate)
+        FBSnapshotVerifyView(controller.view)
+    }
+
+    func testSetupWithStopMotionDisabled() {
+        let delegate = newDelegateStubWithoutGhostFrame()
         let controller = newController(delegate: delegate)
         FBSnapshotVerifyView(controller.view)
     }
@@ -231,6 +241,13 @@ final class CameraControllerTests: FBSnapshotTestCase {
 }
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
+
+    private let shouldEnableGhostFrame: Bool
+
+    init(shouldEnableGhostFrame: Bool = true) {
+        self.shouldEnableGhostFrame = shouldEnableGhostFrame
+    }
+
     func didDismissWelcomeTooltip() {
     }
     
@@ -246,7 +263,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     }
 
     func cameraShouldEnableGhostFrame() -> Bool {
-        return true
+        return shouldEnableGhostFrame
     }
 
     var dismissCalled = false

@@ -60,8 +60,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
 
+    private lazy var options: [[Option<CameraOption>]] = {
+        return getOptions(from: self.settings)
+    }()
     private lazy var cameraView: CameraView = {
-        let view = CameraView()
+        let view = CameraView(numberOfOptionRows: CGFloat(options.count))
         view.delegate = self
         view.actionsDelegate = self
         return view
@@ -72,7 +75,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return controller
     }()
     private lazy var topOptionsController: OptionsController<CameraController> = {
-        let options = getOptions(from: self.settings)
         let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.buttonMargin)
         controller.delegate = self
         return controller
