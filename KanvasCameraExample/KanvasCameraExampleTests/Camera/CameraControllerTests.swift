@@ -245,6 +245,10 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         return false
     }
 
+    func cameraShouldEnableGhostFrame() -> Bool {
+        return true
+    }
+
     var dismissCalled = false
     var videoURL: URL? = nil
     var imageCreatedCalled = false
