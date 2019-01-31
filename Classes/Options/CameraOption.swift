@@ -77,7 +77,7 @@ extension CameraController {
     /// - Returns: an array of Options wrapping CameraOption enums
     func getOptions(from settings: CameraSettings) -> [[Option<CameraOption>]] {
         let (animation, completion) = getAnimationForCameraFlip()
-        return [
+        var options = [
             [
                 Option(option: settings.preferredFlashOption.cameraOption,
                        image: getImage(for: settings.preferredFlashOption),
@@ -89,13 +89,16 @@ extension CameraController {
                                                   duration: CameraOptionsConstants.cameraFlipAnimationsDuration,
                                                   completion: completion))
             ],
-            [
+        ]
+        if delegate?.cameraShouldEnableGhostFrame() ?? false {
+            options.append([
                 Option(option: settings.imagePreviewOption.cameraOption,
                        image: getImage(for: settings.imagePreviewOption),
                        type: .twoOptionsImages(alternateOption: settings.notDefaultImagePreviewOption.cameraOption,
                                                alternateImage: getImage(for: settings.notDefaultImagePreviewOption)))
-            ]
-        ]
+            ])
+        }
+        return options
     }
     
     /// function to get the image for a camera flash mode

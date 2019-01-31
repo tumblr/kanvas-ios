@@ -50,6 +50,8 @@ public protocol CameraControllerDelegate: class {
     ///
     /// - Returns: Bool for tooltip
     func cameraShouldShowCreationTooltip() -> Bool
+
+    func cameraShouldEnableGhostFrame() -> Bool
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
