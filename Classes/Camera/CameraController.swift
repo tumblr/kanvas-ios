@@ -527,6 +527,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if delegate?.cameraShouldShowCreationTooltip() == true {
             showCreationTooltip()
         }
+        updateLastClipPreview()
     }
 
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
