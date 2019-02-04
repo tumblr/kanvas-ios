@@ -40,6 +40,7 @@ protocol ShootButtonViewDelegate: class {
 
 private struct ShootButtonViewConstants {
     static let imageWidth: CGFloat = 30
+    static let innerCircleImageWidth: CGFloat = 64
     static let borderWidth: CGFloat = 3
     static let longPressMinimumDuration: CFTimeInterval = 0.5
     static let buttonInactiveWidth: CGFloat = (imageWidth + 15) * 2
@@ -69,17 +70,18 @@ final class ShootButtonView: IgnoreTouchesView {
 
     private let containerView: UIView
     private let imageView: UIImageView
+    private let pressCircleImageView: UIImageView
+    private let pressBackgroundImageView: UIImageView
     private let tapRecognizer: UITapGestureRecognizer
     private let longPressRecognizer: UILongPressGestureRecognizer
     private let borderView: UIView
     private let baseColor: UIColor
-    private let activeColor: UIColor
 
     private var containerWidthConstraint: NSLayoutConstraint?
     private var imageWidthConstraint: NSLayoutConstraint?
     private var trigger: CaptureTrigger
 
-    private let timeSegmentLayer: CAShapeLayer
+    private let timeSegmentLayer: ConicalGradientLayer
     private var maximumTime: TimeInterval?
     private var buttonState: ShootButtonState = .neutral
     private var startingPoint: CGPoint?
@@ -90,36 +92,39 @@ final class ShootButtonView: IgnoreTouchesView {
     ///
     /// - Parameters:
     ///   - baseColor: the color before recording
-    ///   - activeColor: the color of the ring animation
-    init(baseColor: UIColor, activeColor: UIColor) {
+    init(baseColor: UIColor) {
         containerView = UIView()
         imageView = UIImageView()
+        pressCircleImageView = UIImageView()
+        pressBackgroundImageView = UIImageView()
         borderView = UIView()
         tapRecognizer = UITapGestureRecognizer()
         longPressRecognizer = UILongPressGestureRecognizer()
-        timeSegmentLayer = CAShapeLayer()
+        timeSegmentLayer = ConicalGradientLayer()
 
         self.baseColor = baseColor
-        self.activeColor = activeColor
         trigger = .tap
 
+        //super.init(frame: .zero)
         super.init(frame: .zero)
-
+        
         backgroundColor = .clear
         isUserInteractionEnabled = true
 
         setUpContainerView()
         setUpImageView(imageView)
+        setUpPressCircleImage(pressCircleImageView)
+        setUpPressBackgroundImage(pressBackgroundImageView)
         setUpBorderView()
         setUpRecognizers()
     }
 
-    @available(*, unavailable, message: "use init(baseColor:, pressedColor:, timeLimit:) instead")
+    @available(*, unavailable, message: "use init(baseColor:, timeLimit:) instead")
     override init(frame: CGRect) {
         fatalError("init(frame:) has not been implemented")
     }
 
-    @available(*, unavailable, message: "use init(baseColor:, pressedColor:, timeLimit:) instead")
+    @available(*, unavailable, message: "use init(baseColor:, timeLimit:) instead")
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -176,6 +181,42 @@ final class ShootButtonView: IgnoreTouchesView {
         imageWidthConstraint = widthConstraint
     }
 
+    private func setUpPressCircleImage(_ imageView: UIImageView) {
+        imageView.accessibilityIdentifier = "Camera Shoot Button Press Inner Circle Image"
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        
+        addSubview(imageView)
+        imageView.image = KanvasCameraImages.circleImage
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.innerCircleImageWidth)
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
+            widthConstraint,
+            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            ])
+        showPressInnerCircle(show: false)
+    }
+    
+    private func setUpPressBackgroundImage(_ imageView: UIImageView) {
+        imageView.accessibilityIdentifier = "Camera Shoot Button Press Background Circle Image"
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        
+        addSubview(imageView)
+        imageView.image = KanvasCameraImages.circleImage
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let distanceToCenter = ShootButtonViewConstants.buttonActiveWidth
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalToConstant: distanceToCenter),
+            imageView.widthAnchor.constraint(equalToConstant: distanceToCenter),
+            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            ])
+        showPressBackgroundCircle(show: false)
+    }
+    
     private func setUpBorderView() {
         borderView.accessibilityIdentifier = "Camera Shoot Button Border View"
         borderView.layer.masksToBounds = true
@@ -215,9 +256,11 @@ final class ShootButtonView: IgnoreTouchesView {
                               completion: { [unowned self] in self.circleAnimationCallback() })
             }
         case .tapAndHold:
-            borderView.layer.borderColor = activeColor.cgColor
+            showBorderView(show: false, animated: false)
+            showShutterButtonPressed(show: true, animated: false)
             performUIUpdateAfter(deadline: .now() + 0.1) { [unowned self] in
-                self.borderView.layer.borderColor = self.baseColor.cgColor
+                self.showBorderView(show: true, animated: false)
+                self.showShutterButtonPressed(show: false, animated: true)
             }
         case .hold: return // Do nothing on tap
         }
@@ -242,12 +285,14 @@ final class ShootButtonView: IgnoreTouchesView {
     }
 
     private func updateForLongPress(started: Bool) {
-        animateSizeChange(bigger: started)
+        showBorderView(show: !started)
+        showPressInnerCircle(show: started)
+        showPressBackgroundCircle(show: started)
         if started {
             buttonState = .animating
             if let timeLimit = maximumTime {
                 animateCircle(for: timeLimit,
-                              width: ShootButtonViewConstants.buttonActiveWidth,
+                              width: ShootButtonViewConstants.buttonInactiveWidth,
                               completion: { [unowned self] in self.circleAnimationCallback() })
             }
             delegate?.shootButtonViewDidStartLongPress()
@@ -263,26 +308,6 @@ final class ShootButtonView: IgnoreTouchesView {
 
     // MARK: - Animations
 
-    private func animateSizeChange(bigger: Bool) {
-        let newWidth = bigger ? ShootButtonViewConstants.buttonActiveWidth : ShootButtonViewConstants.buttonInactiveWidth
-        let newCornerRadius = newWidth / 2
-        let animation = CABasicAnimation(keyPath: "cornerRadius")
-        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        animation.fromValue = containerView.bounds.width / 2
-        animation.toValue = newCornerRadius
-        animation.duration = ShootButtonViewConstants.buttonSizeAnimationDuration
-        containerView.layer.add(animation, forKey: "cornerRadius")
-        borderView.layer.add(animation, forKey: "cornerRadius")
-        UIView.animate(withDuration: ShootButtonViewConstants.buttonSizeAnimationDuration) { [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.containerView.layer.cornerRadius = newCornerRadius
-            strongSelf.borderView.layer.cornerRadius = newCornerRadius
-            strongSelf.containerWidthConstraint?.constant = newWidth
-            strongSelf.setNeedsLayout()
-            strongSelf.layoutIfNeeded()
-        }
-    }
-
     private func circleAnimationCallback() {
         terminateCircleAnimation()
         switch buttonState {
@@ -294,29 +319,40 @@ final class ShootButtonView: IgnoreTouchesView {
     }
 
     private func animateCircle(for time: TimeInterval, width: CGFloat, completion: @escaping () -> ()) {
-        timeSegmentLayer.path = createPathForCircle(with: width)
-        timeSegmentLayer.strokeColor = activeColor.cgColor
-        timeSegmentLayer.fillColor = UIColor.clear.cgColor
-        timeSegmentLayer.lineWidth = ShootButtonViewConstants.borderWidth
-        timeSegmentLayer.strokeStart = 0
-        timeSegmentLayer.strokeEnd = 1
-        timeSegmentLayer.lineCap = CAShapeLayerLineCap.butt
-        timeSegmentLayer.lineJoin = CAShapeLayerLineJoin.bevel
+        let shape = CAShapeLayer()
+        shape.path = createPathForCircle(with: width)
+        shape.fillColor = UIColor.clear.cgColor
+        shape.strokeColor = UIColor.white.cgColor
+        shape.lineWidth = ShootButtonViewConstants.borderWidth
+        shape.strokeStart = 0
+        shape.strokeEnd = 1
+        shape.lineCap = CAShapeLayerLineCap.butt
+        shape.lineJoin = CAShapeLayerLineJoin.bevel
+        
+        timeSegmentLayer.frame = containerView.bounds
+        timeSegmentLayer.colors = [KanvasCameraColors.rokrRed,
+                                   KanvasCameraColors.sidekickPink,
+                                   KanvasCameraColors.betamaxOrange,
+                                   KanvasCameraColors.tivoYellow,
+                                   KanvasCameraColors.glassGreen,
+                                   KanvasCameraColors.dreamcastBlue,
+                                   KanvasCameraColors.zunePurple,
+                                   KanvasCameraColors.rokrRed]
+        timeSegmentLayer.mask = shape
         containerView.layer.addSublayer(timeSegmentLayer)
-
+        
         let animateStrokeEnd = CABasicAnimation(keyPath: "strokeEnd")
         animateStrokeEnd.duration = time
         animateStrokeEnd.fromValue = 0
         animateStrokeEnd.toValue = 1
         CATransaction.setCompletionBlock(completion)
-        timeSegmentLayer.add(animateStrokeEnd, forKey: .none)
+        shape.add(animateStrokeEnd, forKey: .none)
         CATransaction.commit()
-        timeSegmentLayer.strokeEnd = 1
+        shape.strokeEnd = 1
     }
 
     private func createPathForCircle(with width: CGFloat) -> CGPath {
         let arcPath = UIBezierPath()
-        activeColor.set()
         arcPath.lineWidth = ShootButtonViewConstants.borderWidth
         arcPath.lineCapStyle = .butt
         arcPath.lineJoinStyle = .bevel
@@ -371,5 +407,46 @@ final class ShootButtonView: IgnoreTouchesView {
             self.isUserInteractionEnabled = true
         })
     }
-
+    
+    /// shows or hides the press effect on the shutter button
+    ///
+    /// - Parameter show: true to show, false to hide
+    /// - Parameter animated: true to enable fade in/out, false to disable it. Default is true
+    func showShutterButtonPressed(show: Bool, animated: Bool = true) {
+        showPressInnerCircle(show: show, animated: animated)
+        showPressBackgroundCircle(show: show, animated: animated)
+    }
+    
+    /// shows or hides the inner circle used for the press effect
+    ///
+    /// - Parameter show: true to show, false to hide
+    /// - Parameter animated: true to enable fade in/out, false to disable it. Default is true
+    func showPressInnerCircle(show: Bool, animated: Bool = true) {
+        let animationDuration = animated ? ShootButtonViewConstants.buttonSizeAnimationDuration : 0
+        UIView.animate(withDuration: animationDuration) { [weak self] in
+            self?.pressCircleImageView.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the outer translucent circle used for the press effect
+    ///
+    /// - Parameter show: true to show, false to hide
+    /// - Parameter animated: true to enable fade in/out, false to disable it. Default is true
+    func showPressBackgroundCircle(show: Bool, animated: Bool = true) {
+        let animationDuration = animated ? ShootButtonViewConstants.buttonSizeAnimationDuration : 0
+        UIView.animate(withDuration: animationDuration) { [weak self] in
+            self?.pressBackgroundImageView.alpha = show ? 0.2 : 0
+        }
+    }
+    
+    /// shows or hides the border of the shutter button
+    ///
+    /// - Parameter show: true to show, false to hide
+    /// - Parameter animated: true to enable fade in/out, false to disable it. Default is true
+    func showBorderView(show: Bool, animated: Bool = true) {
+        let animationDuration = animated ? ShootButtonViewConstants.buttonSizeAnimationDuration : 0
+        UIView.animate(withDuration: animationDuration) { [weak self] in
+            self?.borderView.alpha = show ? 1 : 0
+        }
+    }
 }
