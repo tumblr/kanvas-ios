@@ -21,7 +21,7 @@ final class MediaClipsCollectionControllerTests: XCTestCase {
     func newMediaClip() -> MediaClip? {
         var mediaClip: MediaClip? = nil
         if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
-            mediaClip = MediaClip(representativeFrame: image, overlayText: "00:02")
+            mediaClip = MediaClip(representativeFrame: image, overlayText: "00:02", lastFrame: image)
         }
         return mediaClip
     }

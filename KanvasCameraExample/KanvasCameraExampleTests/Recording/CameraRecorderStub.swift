@@ -68,7 +68,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         recording = false
     }
 
-    func takePhoto(completion: @escaping (UIImage?) -> Void) {
+    func takePhoto(cameraPosition: AVCaptureDevice.Position? = .back, completion: @escaping (UIImage?) -> Void) {
         if isRecording() {
             completion(nil)
             return
