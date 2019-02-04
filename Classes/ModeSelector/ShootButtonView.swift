@@ -40,19 +40,16 @@ protocol ShootButtonViewDelegate: class {
 
 private struct ShootButtonViewConstants {
     static let imageWidth: CGFloat = 30
-    static let innerCircleImageWidth: CGFloat = 64
     static let borderWidth: CGFloat = 3
+    static let innerCircleImageWidth: CGFloat = 64
+    static let outerCircleImageWidth: CGFloat = 95 + borderWidth
     static let longPressMinimumDuration: CFTimeInterval = 0.5
     static let buttonInactiveWidth: CGFloat = (imageWidth + 15) * 2
-    static let buttonActiveWidth: CGFloat = buttonInactiveWidth + 10
     static let buttonSizeAnimationDuration: TimeInterval = 0.2
     static let buttonImageAnimationInDuration: TimeInterval = 0.5
     static let buttonImageAnimationInSpringDamping: CGFloat = 0.6
     static let buttonImageAnimationOutDuration: TimeInterval = 0.15
-
-    static var ButtonMaximumWidth: CGFloat {
-        return max(buttonInactiveWidth, buttonActiveWidth)
-    }
+    static var buttonMaximumWidth: CGFloat = 100
 }
 
 private enum ShootButtonState {
@@ -86,7 +83,7 @@ final class ShootButtonView: IgnoreTouchesView {
     private var buttonState: ShootButtonState = .neutral
     private var startingPoint: CGPoint?
 
-    static let buttonMaximumWidth = ShootButtonViewConstants.ButtonMaximumWidth
+    static let buttonMaximumWidth = ShootButtonViewConstants.buttonMaximumWidth
 
     /// designated initializer for the shoot button view
     ///
@@ -207,7 +204,7 @@ final class ShootButtonView: IgnoreTouchesView {
         addSubview(imageView)
         imageView.image = KanvasCameraImages.circleImage
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        let distanceToCenter = ShootButtonViewConstants.buttonActiveWidth
+        let distanceToCenter = ShootButtonViewConstants.outerCircleImageWidth
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: distanceToCenter),
             imageView.widthAnchor.constraint(equalToConstant: distanceToCenter),
