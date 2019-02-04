@@ -432,7 +432,7 @@ final class ShootButtonView: IgnoreTouchesView {
     func showPressBackgroundCircle(show: Bool, animated: Bool = true) {
         let animationDuration = animated ? ShootButtonViewConstants.buttonSizeAnimationDuration : 0
         UIView.animate(withDuration: animationDuration) { [weak self] in
-            self?.pressBackgroundImageView.alpha = show ? 0.2 : 0
+            self?.pressBackgroundImageView.alpha = show ? 0.25 : 0
         }
     }
     
