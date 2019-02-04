@@ -8,11 +8,11 @@ import Foundation
 import UIKit
 
 /// The class for controlling filters
-final class FilterController: UIViewController {
+final class FiltersController: UIViewController {
     
-    private let filterView = FilterView()
+    private let filtersView = FiltersView()
     
     override func loadView() {
-        view = filterView
+        view = filtersView
     }
 }

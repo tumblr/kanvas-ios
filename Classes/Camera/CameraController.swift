@@ -92,8 +92,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let controller = ImagePreviewController()
         return controller
     }()
-    private lazy var filterController: FilterController = {
-        let controller = FilterController()
+    private lazy var filtersController: FiltersController = {
+        let controller = FiltersController()
         return controller
     }()
     
@@ -199,7 +199,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
         cameraView.addImagePreviewView(imagePreviewController.view)
-        cameraView.addFiltersView(filterController.view)
+        cameraView.addFiltersView(filtersController.view)
         bindMediaContentAvailable()
         bindContentSelected()
     }

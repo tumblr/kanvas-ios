@@ -7,12 +7,12 @@
 import Foundation
 import UIKit
 
-private struct FilterViewConstants {
+private struct FiltersViewConstants {
     static let iconSize: CGFloat = 32
 }
 
 /// View that handles the filter settings
-final class FilterView: IgnoreTouchesView {
+final class FiltersView: IgnoreTouchesView {
     
     static let height: CGFloat = 48
     
@@ -34,8 +34,8 @@ final class FilterView: IgnoreTouchesView {
         filterIcon.image = KanvasCameraImages.filterImage
         filterIcon.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            filterIcon.heightAnchor.constraint(equalToConstant: FilterViewConstants.iconSize),
-            filterIcon.widthAnchor.constraint(equalToConstant: FilterViewConstants.iconSize),
+            filterIcon.heightAnchor.constraint(equalToConstant: FiltersViewConstants.iconSize),
+            filterIcon.widthAnchor.constraint(equalToConstant: FiltersViewConstants.iconSize),
             filterIcon.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             filterIcon.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor)
         ])

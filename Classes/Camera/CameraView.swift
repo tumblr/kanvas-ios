@@ -39,7 +39,7 @@ final class CameraView: UIView {
     /// Layout guide for the fullscreen image preview
     private let imagePreviewLayoutGuide = UILayoutGuide()
     
-    /// Layout guide for filter settings
+    /// Layout guide for the filter settings
     private let filtersLayoutGuide = UILayoutGuide()
     
     /// the container for the camera input view
@@ -164,7 +164,7 @@ final class CameraView: UIView {
         filtersLayoutGuide.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         filtersLayoutGuide.bottomAnchor.constraint(equalTo: modeLayoutGuide.bottomAnchor,
                                                    constant: -ModeSelectorAndShootView.shootButtonTopMargin).isActive = true
-        filtersLayoutGuide.heightAnchor.constraint(equalToConstant: FilterView.height).isActive = true
+        filtersLayoutGuide.heightAnchor.constraint(equalToConstant: FiltersView.height).isActive = true
     }
     
     private func setUpViews() {
@@ -242,7 +242,7 @@ final class CameraView: UIView {
     
     /// Adds the filters view
     ///
-    /// - Parameter view: view for the filters settings
+    /// - Parameter view: view for the filter settings
     func addFiltersView(_ view: UIView) {
         guard filtersViewContainer == nil else { return }
         filtersViewContainer = view
