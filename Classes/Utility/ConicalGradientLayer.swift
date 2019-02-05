@@ -124,7 +124,8 @@ class ConicalGradientLayer: CALayer {
                 if locations.count == colors.count {
                     fromLocation = locations[i]
                     toLocation = locations[i + 1]
-                } else {
+                }
+                else {
                     fromLocation = locationStep * Double(i)
                     toLocation = locationStep * Double(i + 1)
                 }
@@ -151,10 +152,11 @@ class ConicalGradientLayer: CALayer {
 private extension Double {
     func convert(fromMin oldMin: Double, max oldMax: Double, toMin newMin: Double, max newMax: Double) -> Double {
         let oldRange, newRange, newValue: Double
-        oldRange = (oldMax - oldMin)
+        oldRange = oldMax - oldMin
         if (oldRange == 0.0) {
             newValue = newMin
-        } else {
+        }
+        else {
             newRange = (newMax - newMin)
             newValue = (((self - oldMin) * newRange) / oldRange) + newMin
         }
