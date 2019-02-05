@@ -11,6 +11,6 @@ final class RGBATests: XCTestCase {
     
     func testComponents() {
         let rgba: RGBA = UIColor.blue.rgbaComponents
-        XCTAssertTrue(rgba.red == 0 && rgba.green == 0 && rgba.blue == 1 && rgba.alpha == 1)
+        XCTAssertTrue(rgba.red == 0 && rgba.green == 0 && rgba.blue == 1 && rgba.alpha == 1, "RGBA values are not correct")
     }
 }
