@@ -14,6 +14,7 @@ private struct MediaClipsEditorViewConstants {
     static let buttonRadius: CGFloat = 25
     static let buttonWidth: CGFloat = 95
     static let buttonHeight: CGFloat = 42
+    static let animationDuration: TimeInterval = 0.5
 }
 
 protocol MediaClipsEditorViewDelegate: class {
@@ -57,6 +58,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     @available(*, unavailable, message: "use init() instead")
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Public interface
+    
+    func show(_ enabled: Bool) {
+        UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
+            self?.alpha = enabled ? 1 : 0
+        }
     }
 }
 

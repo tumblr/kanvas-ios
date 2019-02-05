@@ -116,10 +116,10 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     }
     
     func showViews() {
-        view.alpha = 1
+        editorView.show(true)
     }
     
     func hideViews() {
-        view.alpha = 0
+        editorView.show(false)
     }
 }
