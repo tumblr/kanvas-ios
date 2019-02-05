@@ -23,13 +23,13 @@ final class ConicalGradientLayerTests: FBSnapshotTestCase {
         let gradient = ConicalGradientLayer()
         gradient.frame = view.bounds
         gradient.colors = [.tumblrBrightRed,
-                          .tumblrBrightPink,
-                          .tumblrBrightOrange,
-                          .tumblrBrightYellow,
-                          .tumblrBrightGreen,
-                          .tumblrBrightBlue,
-                          .tumblrBrightPurple,
-                          .tumblrBrightRed]
+                           .tumblrBrightPink,
+                           .tumblrBrightOrange,
+                           .tumblrBrightYellow,
+                           .tumblrBrightGreen,
+                           .tumblrBrightBlue,
+                           .tumblrBrightPurple,
+                           .tumblrBrightRed]
         view.layer.addSublayer(gradient)
         FBSnapshotVerifyView(view)
     }
