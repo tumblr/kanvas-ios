@@ -327,14 +327,14 @@ final class ShootButtonView: IgnoreTouchesView {
         shape.lineJoin = CAShapeLayerLineJoin.bevel
         
         timeSegmentLayer.frame = containerView.bounds
-        timeSegmentLayer.colors = [KanvasCameraColors.rokrRed,
-                                   KanvasCameraColors.sidekickPink,
-                                   KanvasCameraColors.betamaxOrange,
-                                   KanvasCameraColors.tivoYellow,
-                                   KanvasCameraColors.glassGreen,
-                                   KanvasCameraColors.dreamcastBlue,
-                                   KanvasCameraColors.zunePurple,
-                                   KanvasCameraColors.rokrRed]
+        timeSegmentLayer.colors = [.tumblrBrightRed,
+                                   .tumblrBrightPink,
+                                   .tumblrBrightOrange,
+                                   .tumblrBrightYellow,
+                                   .tumblrBrightGreen,
+                                   .tumblrBrightBlue,
+                                   .tumblrBrightPurple,
+                                   .tumblrBrightRed]
         timeSegmentLayer.mask = shape
         containerView.layer.addSublayer(timeSegmentLayer)
         
