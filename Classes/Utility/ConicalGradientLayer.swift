@@ -157,7 +157,7 @@ private extension Double {
             newValue = newMin
         }
         else {
-            newRange = (newMax - newMin)
+            newRange = newMax - newMin
             newValue = (((self - oldMin) * newRange) / oldRange) + newMin
         }
         return newValue
