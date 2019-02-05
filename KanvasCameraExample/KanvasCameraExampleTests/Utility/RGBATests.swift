@@ -9,8 +9,8 @@ import XCTest
 
 final class RGBATests: XCTestCase {
     
-    func testRGBA() {
-        let rgba = UIColor.blue.rgbaComponents
+    func testComponents() {
+        let rgba: RGBA = UIColor.blue.rgbaComponents
         XCTAssertTrue(rgba.red == 0 && rgba.green == 0 && rgba.blue == 1 && rgba.alpha == 1)
     }
 }
