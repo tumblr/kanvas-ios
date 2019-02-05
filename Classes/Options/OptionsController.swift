@@ -66,6 +66,13 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
         
         return optionViews
     }()
+
+    private lazy var imagePreviewOptionsStackView: OptionsStackView<Item>? = {
+        if OptionsControllerConstants.imagePreviewRow < self.optionsStackViews.count {
+            return self.optionsStackViews[OptionsControllerConstants.imagePreviewRow]
+        }
+        return nil
+    }()
     
     private let options: [[Option<Item>]]
     private let spacing: CGFloat
@@ -111,17 +118,17 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
         switch mode {
         case .stopMotion:
             UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
-                self?.optionsStackViews[OptionsControllerConstants.imagePreviewRow].alpha = 1
+                self?.imagePreviewOptionsStackView?.alpha = 1
             }
         case .photo, .gif:
             UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
-                self?.optionsStackViews[OptionsControllerConstants.imagePreviewRow].alpha = 0
+                self?.imagePreviewOptionsStackView?.alpha = 0
             }
         }
     }
 
     func imagePreviewEnabled() -> Bool {
-        return self.optionsStackViews[OptionsControllerConstants.imagePreviewRow].alpha == 1
+        return self.imagePreviewOptionsStackView?.alpha == 1
     }
 }
 
