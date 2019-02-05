@@ -31,6 +31,7 @@ protocol MediaClipsEditorDelegate: class {
     ///   - destinationIndex: Index where the clips is ar after the moving around action
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
     
+    /// Callback for when the preview button is selected
     func previewButtonWasPressed()
 }
 
@@ -97,7 +98,17 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     func getPreviewFromLastClip() -> UIImage? {
         return collectionController.getPreviewFromLastClip()
     }
-
+    
+    /// Shows the clip collection and the preview button
+    func showViews() {
+        editorView.show(true)
+    }
+    
+    /// Hides the clip collection and the preview button
+    func hideViews() {
+        editorView.show(false)
+    }
+    
     // MARK: - MediaClipsControllerDelegate
     func mediaClipStartedMoving() {
         delegate?.mediaClipStartedMoving()
@@ -113,13 +124,5 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     
     func previewButtonWasPressed() {
         delegate?.previewButtonWasPressed()
-    }
-    
-    func showViews() {
-        editorView.show(true)
-    }
-    
-    func hideViews() {
-        editorView.show(false)
     }
 }

@@ -23,11 +23,9 @@ protocol MediaClipsCollectionControllerDelegate: class {
 private struct MediaClipsCollectionControllerConstants {
     /// Animation duration in seconds
     static let animationDuration: TimeInterval = 0.15
-    
-    /// The height of the delete animation
-    static let animationYDistance: CGFloat = 100
-    
-    static let horizontalMargin: CGFloat = 20
+        
+    /// Padding at each side of the clip collection
+    static let horizontalInset: CGFloat = 20
 }
 
 /// Controller for handling the media clips collection.
@@ -63,18 +61,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         mediaClipsCollectionView.collectionView.insertItems(at: [IndexPath(item: clips.count - 1, section: 0)])
         if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
             scrollToLast(animated: true)
-        }
-    }
-
-    /// Deletes the last clip and updates the UI
-    func removeLastClip() {
-        if clips.count > 0 {
-            let index = clips.count - 1
-            if index == selectedClipIndex?.item {
-                selectedClipIndex = .none
-            }
-            clips.removeLast()
-            mediaClipsCollectionView.collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
         }
     }
 
@@ -150,8 +136,8 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     // MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard clips.count > 0, collectionView.bounds != .zero else { return .zero }
-        return UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.horizontalMargin,
-                            bottom: 0, right: MediaClipsCollectionControllerConstants.horizontalMargin)
+        return UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.horizontalInset,
+                            bottom: 0, right: MediaClipsCollectionControllerConstants.horizontalInset)
     }
 
     private func cellBorderWhenCentered(firstCell: Bool, leftBorder: Bool, collectionView: UICollectionView) -> CGFloat {

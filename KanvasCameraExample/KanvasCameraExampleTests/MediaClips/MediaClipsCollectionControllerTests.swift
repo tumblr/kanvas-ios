@@ -36,15 +36,4 @@ final class MediaClipsCollectionControllerTests: XCTestCase {
         XCTAssert(viewController.getClips().count == 1, "Clip count \(viewController.getClips()) does not match expected after adding")
     }
 
-    func testDeleteClips() {
-        let viewController = newViewController()
-        guard let mediaClip = newMediaClip() else {
-            XCTFail("Media clip was not created")
-            return
-        }
-        viewController.addNewClip(mediaClip)
-        viewController.removeLastClip()
-        XCTAssert(viewController.getClips().count == 0, "Clip count does not match expected after deleting")
-    }
-
 }
