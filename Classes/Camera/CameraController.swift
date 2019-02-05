@@ -299,7 +299,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                            cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                            length: 0,
-                                                           ghostFrameEnabled: strongSelf.imagePreviewController.imagePreviewEnabled())
+                                                           ghostFrameEnabled: strongSelf.imagePreviewEnabled())
             performUIUpdate {
                 if let url = url {
                     let segment = CameraSegment.video(url)
@@ -317,11 +317,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 self?.updatePhotoCaptureState(event: .ended)
             }
             guard let strongSelf = self else { return }
-            let ghostFrameEnabled = strongSelf.imagePreviewController.imagePreviewEnabled()
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                            cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                            length: 0,
-                                                           ghostFrameEnabled: ghostFrameEnabled)
+                                                           ghostFrameEnabled: strongSelf.imagePreviewEnabled())
             performUIUpdate {
                 if let image = image {
                     if strongSelf.currentMode == .photo {
@@ -346,6 +345,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 // we can ignore this error for now since configuring mode may not succeed for devices without all the modes available (flash, multiple cameras)
             }
         }
+    }
+
+    private func imagePreviewEnabled() -> Bool {
+        return topOptionsController.imagePreviewEnabled() && imagePreviewController.imagePreviewEnabled()
     }
     
     private enum RecordingEvent {
@@ -480,7 +483,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                                    cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                                    length: CMTimeGetSeconds(asset.duration),
-                                                                   ghostFrameEnabled: strongSelf.imagePreviewController.imagePreviewEnabled())
+                                                                   ghostFrameEnabled: strongSelf.imagePreviewEnabled())
                 }
                 performUIUpdate {
                     if let url = url, let image = AVURLAsset(url: url).thumbnail() {

@@ -119,6 +119,10 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
             }
         }
     }
+
+    func imagePreviewEnabled() -> Bool {
+        return self.optionsStackViews[OptionsControllerConstants.imagePreviewRow].alpha == 1
+    }
 }
 
 extension OptionsController: OptionsStackViewDelegate {
