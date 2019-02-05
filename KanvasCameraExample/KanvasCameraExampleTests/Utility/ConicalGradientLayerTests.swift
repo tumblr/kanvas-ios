@@ -34,4 +34,8 @@ final class ConicalGradientLayerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(view)
     }
     
+    func testRGBA() {
+        let rgba = UIColor.blue.rgbaComponents
+        XCTAssertTrue(rgba.red == 0 && rgba.green == 0 && rgba.blue == 1 && rgba.alpha == 1)
+    }
 }

@@ -22,7 +22,7 @@ class ConicalGradientLayer: CALayer {
         
         func color(forPercent percent: Double) -> UIColor {
             let normalizedPercent = percent.convert(fromMin: fromLocation, max: toLocation, toMin: 0.0, max: 1.0)
-            return UIColor.lerp(from: fromColor.rgba, to: toColor.rgba, percent: CGFloat(normalizedPercent))
+            return UIColor.lerp(from: fromColor.rgbaComponents, to: toColor.rgbaComponents, percent: CGFloat(normalizedPercent))
         }
     }
     
@@ -168,7 +168,7 @@ private extension Double {
     }
 }
 
-private extension UIColor {
+extension UIColor {
     struct RGBA {
         var red: CGFloat = 0.0
         var green: CGFloat = 0.0
@@ -180,7 +180,7 @@ private extension UIColor {
         }
     }
     
-    var rgba: RGBA {
+    var rgbaComponents: RGBA {
         return RGBA(color: self)
     }
     
