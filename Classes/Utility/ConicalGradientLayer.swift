@@ -153,7 +153,7 @@ private extension Double {
     func convert(fromMin oldMin: Double, max oldMax: Double, toMin newMin: Double, max newMax: Double) -> Double {
         let oldRange, newRange, newValue: Double
         oldRange = oldMax - oldMin
-        if (oldRange == 0.0) {
+        if oldRange == 0.0 {
             newValue = newMin
         }
         else {
