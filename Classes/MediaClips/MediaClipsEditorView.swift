@@ -8,9 +8,9 @@ import Foundation
 import UIKit
 
 private struct MediaClipsEditorViewConstants {
-    static let verticalPadding: CGFloat = 10
+    static let topPadding: CGFloat = 8
+    static let bottomPadding: CGFloat = 12
     static let buttonHorizontalMargin: CGFloat = 20
-    static let collectionWidth: CGFloat = 255
     static let buttonRadius: CGFloat = 25
     static let buttonWidth: CGFloat = 95
     static let buttonHeight: CGFloat = 42
@@ -24,7 +24,9 @@ protocol MediaClipsEditorViewDelegate: class {
 /// View for media clips editor
 final class MediaClipsEditorView: IgnoreTouchesView {
     
-    static let height = MediaClipsCollectionView.height + MediaClipsEditorViewConstants.verticalPadding * 2
+    static let height = MediaClipsCollectionView.height +
+                        MediaClipsEditorViewConstants.topPadding +
+                        MediaClipsEditorViewConstants.bottomPadding
 
     let collectionContainer: IgnoreTouchesView
     let previewButton: UIButton
@@ -75,7 +77,7 @@ private extension MediaClipsEditorView {
             collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor,
                                                        constant: -trailingMargin),
             collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
-                                                        constant: -MediaClipsEditorViewConstants.verticalPadding),
+                                                        constant: -MediaClipsEditorViewConstants.bottomPadding),
             collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
         ])
     }
