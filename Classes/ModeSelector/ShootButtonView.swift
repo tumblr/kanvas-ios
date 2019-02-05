@@ -229,11 +229,13 @@ final class ShootButtonView: IgnoreTouchesView {
         switch recognizer.state {
         case .began:
             updateForLongPress(started: true)
+            updateZoom(recognizer: recognizer)
         case .ended, .cancelled, .failed:
             updateForLongPress(started: false)
-        default: break
+        default:
+            updateZoom(recognizer: recognizer)
         }
-        updateZoom(recognizer: recognizer)
+
     }
 
     private func updateZoom(recognizer: UILongPressGestureRecognizer) {
