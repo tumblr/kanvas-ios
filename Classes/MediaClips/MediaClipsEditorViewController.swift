@@ -30,6 +30,8 @@ protocol MediaClipsEditorDelegate: class {
     ///   - originIndex: Index where the clip was at before the moving around action
     ///   - destinationIndex: Index where the clips is ar after the moving around action
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
+    
+    func previewButtonWasPressed()
 }
 
 /// Controller for handling media clips edition (showing, adding, removing, etc)
@@ -90,14 +92,6 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         clipIsSelected = false
         delegate?.mediaClipWasAdded(at: collectionController.getClips().count - 1)
     }
-
-    /// Undoes the last clip added
-    func undo() {
-        editorView.hideTrash()
-        collectionController.removeLastClip()
-        hasClips = collectionController.getClips().count > 0
-        clipIsSelected = false
-    }
     
     /// Returns the image from the last clip of the collection
     func getPreviewFromLastClip() -> UIImage? {
@@ -113,37 +107,19 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         delegate?.mediaClipFinishedMoving()
     }
 
-    func mediaClipWasSelected(at index: Int) {
-        editorView.showTrash()
-        clipIsSelected = true
-    }
-
-    func mediaClipWasDeselected(at index: Int) {
-        editorView.hideTrash()
-        clipIsSelected = false
-    }
-
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         delegate?.mediaClipWasMoved(from: originIndex, to: destinationIndex)
     }
     
-    func mediaClipWasSwipedAndDeleted(at index: Int) {
-        hasClips = collectionController.getClips().count > 0
-        delegate?.mediaClipWasDeleted(at: index)
+    func previewButtonWasPressed() {
+        delegate?.previewButtonWasPressed()
     }
     
-    // MARK: - MediaClipsEditorViewDelegate
-    func trashButtonWasPressed() {
-        if let index = collectionController.removeSelectedClip() {
-            editorView.hideTrash()
-            delegate?.mediaClipWasDeleted(at: index)
-        }
-        else {
-            assertionFailure("Trash was pressed when there is nothing selected to delete")
-        }
-        hasClips = collectionController.getClips().count > 0
-        editorView.hideTrash()
-        clipIsSelected = false
+    func showViews() {
+        view.alpha = 1
     }
-
+    
+    func hideViews() {
+        view.alpha = 0
+    }
 }

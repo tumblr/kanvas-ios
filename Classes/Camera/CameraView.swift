@@ -131,7 +131,8 @@ final class CameraView: UIView {
         addLayoutGuide(modeLayoutGuide)
         modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
-        modeLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor).isActive = true
+        modeLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
+                                                constant: -MediaClipsEditorView.height).isActive = true
         modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor).isActive = true
     }
 
@@ -139,7 +140,7 @@ final class CameraView: UIView {
         addLayoutGuide(clipsLayoutGuide)
         clipsLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
         clipsLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
-        clipsLayoutGuide.bottomAnchor.constraint(equalTo: modeLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootView.shootButtonTopMargin).isActive = true
+        clipsLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor).isActive = true
         clipsLayoutGuide.heightAnchor.constraint(equalToConstant: MediaClipsEditorView.height).isActive = true
     }
 

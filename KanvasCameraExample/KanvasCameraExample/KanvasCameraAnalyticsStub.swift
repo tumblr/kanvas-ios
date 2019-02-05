@@ -17,7 +17,7 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "\(#function)")
     }
 
-    public func logNextTapped() {
+    public func logPreviewTapped() {
         logString(string: "\(#function)")
     }
 

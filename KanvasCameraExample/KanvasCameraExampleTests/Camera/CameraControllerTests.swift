@@ -179,30 +179,6 @@ final class CameraControllerTests: FBSnapshotTestCase {
         XCTAssert(delegate.dismissCalled)
     }
 
-    func testUndoButtonPressedShouldDeleteLastClip() {
-        let delegate = newDelegateStub()
-        let controller = newController(delegate: delegate)
-        UIView.setAnimationsEnabled(false)
-        controller.didOpenMode(.stopMotion, andClosed: .none)
-        controller.didTapForMode(.stopMotion)
-        controller.didStartPressingForMode(.stopMotion)
-        controller.didEndPressingForMode(.stopMotion)
-        controller.undoButtonPressed()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
-    }
-
-    func testUndoButtonPressedWhenOneClipShouldDisappearUndoAndNextAndShowModeButton() {
-        let delegate = newDelegateStub()
-        let controller = newController(delegate: delegate)
-        UIView.setAnimationsEnabled(false)
-        controller.didOpenMode(.stopMotion, andClosed: .none)
-        controller.didTapForMode(.stopMotion)
-        controller.undoButtonPressed()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
-    }
-
     // Can't test `nextButtonPressed` without controller hierarchy
 
     // MARK: - OptionsCollectionControllerDelegate

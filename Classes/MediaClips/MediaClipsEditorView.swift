@@ -8,25 +8,26 @@ import Foundation
 import UIKit
 
 private struct MediaClipsEditorViewConstants {
-    static let trashSize: CGFloat = 50
-    static let padding: CGFloat = 25
-    static let trashAnimationDuration: TimeInterval = 0.2
-
-    static var height: CGFloat = padding + MediaClipsCollectionView.height + padding + trashSize
+    static let verticalPadding: CGFloat = 10
+    static let buttonHorizontalMargin: CGFloat = 20
+    static let collectionWidth: CGFloat = 255
+    static let buttonRadius: CGFloat = 25
+    static let buttonWidth: CGFloat = 95
+    static let buttonHeight: CGFloat = 42
 }
 
 protocol MediaClipsEditorViewDelegate: class {
-    /// Callback for when trash button is selected
-    func trashButtonWasPressed()
+    /// Callback for when preview button is selected
+    func previewButtonWasPressed()
 }
 
 /// View for media clips editor
 final class MediaClipsEditorView: IgnoreTouchesView {
     
-    static let height = MediaClipsEditorViewConstants.height
+    static let height = MediaClipsCollectionView.height + MediaClipsEditorViewConstants.verticalPadding * 2
 
     let collectionContainer: IgnoreTouchesView
-    let trashButton: UIButton
+    let previewButton: UIButton
 
     weak var delegate: MediaClipsEditorViewDelegate?
 
@@ -36,15 +37,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.accessibilityIdentifier = "Media Clips Collection Container"
         collectionContainer.clipsToBounds = false
 
-        trashButton = UIButton()
-        trashButton.accessibilityIdentifier = "Media Clips Trash Button"
-        trashButton.setImage(KanvasCameraImages.deleteImage, for: .normal)
+        previewButton = UIButton()
+        previewButton.accessibilityIdentifier = "Media Clips Preview Button"
         super.init(frame: .zero)
 
         clipsToBounds = false
+        backgroundColor = KanvasCameraColors.translucentBlack
         setUpViews()
-        trashButton.addTarget(self, action: #selector(trashPressed), for: .touchUpInside)
-        hideTrash()
+        previewButton.addTarget(self, action: #selector(previewPressed), for: .touchUpInside)
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -56,21 +56,6 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    /// method to animate and fade the trash button in
-    func showTrash() {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.trashAnimationDuration) {
-            self.trashButton.alpha = 1
-        }
-    }
-
-    /// method to animate and fade the trash button out
-    func hideTrash() {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.trashAnimationDuration) {
-            self.trashButton.alpha = 0
-        }
-    }
-
 }
 
 // MARK: - UI Layout
@@ -78,28 +63,37 @@ private extension MediaClipsEditorView {
 
     func setUpViews() {
         setUpCollection()
-        setUpTrash()
+        setUpPreview()
     }
 
     func setUpCollection() {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        let trailingMargin = MediaClipsEditorViewConstants.buttonWidth + MediaClipsEditorViewConstants.buttonHorizontalMargin * 2
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -MediaClipsEditorViewConstants.padding),
+            collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor,
+                                                       constant: -trailingMargin),
+            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
+                                                        constant: -MediaClipsEditorViewConstants.verticalPadding),
             collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
         ])
     }
-
-    func setUpTrash() {
-        addSubview(trashButton)
-        trashButton.translatesAutoresizingMaskIntoConstraints = false
+    
+    func setUpPreview() {
+        addSubview(previewButton)
+        previewButton.translatesAutoresizingMaskIntoConstraints = false
+        previewButton.setTitle("Preview", for: .normal)
+        previewButton.layer.cornerRadius = 20
+        previewButton.backgroundColor = KanvasCameraColors.mediaActiveColor
+        previewButton.setTitleColor(.white, for: .normal)
+        previewButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         NSLayoutConstraint.activate([
-            trashButton.bottomAnchor.constraint(equalTo: collectionContainer.topAnchor, constant: -MediaClipsEditorViewConstants.padding),
-            trashButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            trashButton.widthAnchor.constraint(equalTo: trashButton.heightAnchor),
-            trashButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.trashSize)
+            previewButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor,
+                                                    constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
+            previewButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonHeight),
+            previewButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonWidth),
+            previewButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
         ])
     }
 
@@ -108,8 +102,8 @@ private extension MediaClipsEditorView {
 // MARK: - Button handling
 extension MediaClipsEditorView {
 
-    @objc func trashPressed() {
-        delegate?.trashButtonWasPressed()
+    @objc func previewPressed() {
+        delegate?.previewButtonWasPressed()
     }
 
 }

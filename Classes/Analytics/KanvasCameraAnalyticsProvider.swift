@@ -41,8 +41,8 @@ import Foundation
     /// Logs an event when the undo button is tapped
     func logUndoTapped()
 
-    /// Logs an event when the preview (next) button is tapped
-    func logNextTapped()
+    /// Logs an event when the preview button is tapped
+    func logPreviewTapped()
 
     /// Logs an event if the preview screen is closed without exporting media
     func logPreviewDismissed()

@@ -370,13 +370,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - UI
     private func enableBottomViewButtons(show: Bool) {
-        cameraView.bottomActionsView.updateUndo(enabled: show)
-        cameraView.bottomActionsView.updateNext(enabled: show)
-
+        
         if clipsController.hasClips || settings.enabledModes.count == 1 {
+            clipsController.showViews()
             modeAndShootController.hideModeButton()
         }
         else {
+            clipsController.hideViews()
             modeAndShootController.showModeButton()
         }
     }
@@ -405,18 +405,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - CameraViewDelegate
-
-    func undoButtonPressed() {
-        clipsController.undo()
-        cameraInputController.deleteSegmentAtIndex(cameraInputController.segments().count - 1)
-        updateLastClipPreview()
-        analyticsProvider?.logUndoTapped()
-    }
-
-    func nextButtonPressed() {
-        showPreviewWithSegments(cameraInputController.segments())
-        analyticsProvider?.logNextTapped()
-    }
 
     func closeButtonPressed() {
         if clipsController.hasClips {
@@ -537,6 +525,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         cameraInputController.moveSegment(from: originIndex, to: destinationIndex)
         updateLastClipPreview()
+    }
+    
+    func previewButtonWasPressed() {
+        showPreviewWithSegments(cameraInputController.segments())
+        analyticsProvider?.logPreviewTapped()
     }
 
     // MARK: - CameraPreviewControllerDelegate

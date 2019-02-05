@@ -23,21 +23,5 @@ final class MediaClipsEditorViewTests: FBSnapshotTestCase {
         editorView.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return editorView
     }
-
-    func testShowTrash() {
-        let editorView = newEditorView()
-        UIView.setAnimationsEnabled(false)
-        editorView.showTrash()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(editorView)
-    }
-
-    func testHideTrash() {
-        let editorView = newEditorView()
-        UIView.setAnimationsEnabled(false)
-        editorView.hideTrash()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(editorView)
-    }
-
+    
 }

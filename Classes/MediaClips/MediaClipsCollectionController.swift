@@ -8,12 +8,6 @@ import Foundation
 import UIKit
 
 protocol MediaClipsCollectionControllerDelegate: class {
-
-    /// Callback for when a clip is selected
-    func mediaClipWasSelected(at index: Int)
-
-    /// Callback for when a clip is deselected
-    func mediaClipWasDeselected(at index: Int)
     
     /// Callback for when a clip is moved inside the collection
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
@@ -23,11 +17,6 @@ protocol MediaClipsCollectionControllerDelegate: class {
     
     /// Callback for when a clip finishes moving / draggin
     func mediaClipFinishedMoving()
-    
-    /// Callback for when a clip was swiped and deleted
-    ///
-    /// - Parameter index: the index of the deleted clip
-    func mediaClipWasSwipedAndDeleted(at index: Int)
 }
 
 /// Constants for Collection Controller
@@ -37,6 +26,8 @@ private struct MediaClipsCollectionControllerConstants {
     
     /// The height of the delete animation
     static let animationYDistance: CGFloat = 100
+    
+    static let horizontalMargin: CGFloat = 20
 }
 
 /// Controller for handling the media clips collection.
@@ -68,7 +59,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     ///
     /// - Parameter clip: The media clip to display
     func addNewClip(_ clip: MediaClip) {
-        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
         clips.append(clip)
         mediaClipsCollectionView.collectionView.insertItems(at: [IndexPath(item: clips.count - 1, section: 0)])
         if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
@@ -78,7 +68,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     /// Deletes the last clip and updates the UI
     func removeLastClip() {
-        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
         if clips.count > 0 {
             let index = clips.count - 1
             if index == selectedClipIndex?.item {
@@ -132,6 +121,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        mediaClipsCollectionView.updateFadeOutEffect()
         mediaClipsCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         mediaClipsCollectionView.collectionView.layoutIfNeeded()
         if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
@@ -157,30 +147,11 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         return cell
     }
 
-    // MARK: - UICollectionViewDelegate
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard !collectionView.hasActiveDrag else { return }
-        let item = selectedClipIndex?.item
-        deselectOldSelection(in: collectionView)
-        if item != indexPath.item {
-            deselectOldSelection(in: collectionView)
-            let cell = collectionView.cellForItem(at: indexPath) as? MediaClipsCollectionCell
-            cell?.setSelected(true)
-            selectedClipIndex = indexPath
-            let index = indexPath.item
-            scrollToOptionAt(index, animated: true)
-            delegate?.mediaClipWasSelected(at: index)
-        }
-    }
-
     // MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard clips.count > 0, collectionView.bounds != .zero else { return .zero }
-
-        let leftInset = cellBorderWhenCentered(firstCell: true, leftBorder: true, collectionView: collectionView)
-        let rightInset = cellBorderWhenCentered(firstCell: false, leftBorder: false, collectionView: collectionView)
-
-        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
+        return UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.horizontalMargin,
+                            bottom: 0, right: MediaClipsCollectionControllerConstants.horizontalMargin)
     }
 
     private func cellBorderWhenCentered(firstCell: Bool, leftBorder: Bool, collectionView: UICollectionView) -> CGFloat {
@@ -213,27 +184,12 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         }
     }
 
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
-    }
-
-    // MARK: - Helpers
-    private func deselectOldSelection(in collectionView: UICollectionView) {
-        let oldSelected = selectedClipIndex.flatMap { collectionView.cellForItem(at: $0) as? MediaClipsCollectionCell }
-        oldSelected?.setSelected(false)
-        if let index = selectedClipIndex?.item {
-            selectedClipIndex = .none
-            delegate?.mediaClipWasDeselected(at: index)
-        }
-    }
-
 }
 
 // MARK: - UICollectionViewDragDelegate
 extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        deselectOldSelection(in: collectionView)
         let item = clips[indexPath.item]
         // Local object won't be used
         let itemProvider = NSItemProvider(object: item.representativeFrame)
@@ -283,6 +239,7 @@ extension MediaClipsCollectionController: UICollectionViewDropDelegate {
 
 // MARK: - MediaClipsCollectionCellDelegate
 extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
+    
     func didChangeState(newDragState: UICollectionViewCell.DragState) {
         draggingState = newDragState
         switch newDragState {
@@ -291,29 +248,6 @@ extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
             delegate?.mediaClipStartedMoving()
         case .none:
             delegate?.mediaClipFinishedMoving()
-        }
-    }
-    
-    func didSwipeUp(cell: UICollectionViewCell) {
-        guard draggingState == .none && !mediaClipsCollectionView.collectionView.hasActiveDrag else { return }
-        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
-        if let index = mediaClipsCollectionView.collectionView.indexPath(for: cell) {
-            clips.remove(at: index.item)
-            animateSwipeUpDelete(cell: cell, index: index)
-            delegate?.mediaClipWasSwipedAndDeleted(at: index.item)
-        }
-    }
-    
-    private func animateSwipeUpDelete(cell: UICollectionViewCell, index: IndexPath) {
-        cell.clipsToBounds = false
-        UIView.animate(withDuration: MediaClipsCollectionControllerConstants.animationDuration, animations: {
-            var frame = cell.frame
-            frame.origin.y = frame.origin.y - MediaClipsCollectionControllerConstants.animationYDistance
-            cell.frame = frame
-            cell.alpha = 0
-        }) { (completed) in
-            cell.clipsToBounds = true
-            self.mediaClipsCollectionView.collectionView.deleteItems(at: [index])
         }
     }
 }

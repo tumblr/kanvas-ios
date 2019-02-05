@@ -15,16 +15,11 @@ protocol MediaClipsCollectionCellDelegate {
     ///
     /// - Parameter newDragState: The new state of the drag event
     func didChangeState(newDragState: UICollectionViewCell.DragState)
-    
-    /// Callback method for swiping the cell
-    ///
-    /// - Parameter cell: The currently swiped cell
-    func didSwipeUp(cell: UICollectionViewCell)
 }
 private struct MediaClipsCollectionCellConstants {
     static let cellPadding: CGFloat = 2
-    static let clipHeight: CGFloat = 80
-    static let clipWidth: CGFloat = 56
+    static let clipHeight: CGFloat = 64
+    static let clipWidth: CGFloat = 45
     static let borderWidth: CGFloat = 2
     static let cornerRadius: CGFloat = 8
     static let font: UIFont = .imbe85()
@@ -76,13 +71,11 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
-        setupGestures()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
-        setupGestures()
     }
 
     override func prepareForReuse() {
@@ -139,12 +132,6 @@ extension MediaClipsCollectionCell {
             clipLabel.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.labelHeight)
         ])
     }
-
-    private func setupGestures() {
-        let swipeUpGesture = UISwipeGestureRecognizer(target: self, action: #selector(swiped(gesture:)))
-        swipeUpGesture.direction = .up
-        addGestureRecognizer(swipeUpGesture)
-    }
     
     /// This overrides the original function to to notify the drag delegate of the changed state
     ///
@@ -152,10 +139,5 @@ extension MediaClipsCollectionCell {
     override func dragStateDidChange(_ dragState: UICollectionViewCell.DragState) {
         super.dragStateDidChange(dragState)
         touchDelegate?.didChangeState(newDragState: dragState)
-    }
-    
-    // MARK: - gestures
-    @objc private func swiped(gesture: UISwipeGestureRecognizer) {
-        touchDelegate?.didSwipeUp(cell: self)
     }
 }
