@@ -164,7 +164,7 @@ private extension Double {
     }
     
     func convert(fromZeroToMax oldMax: Double, toZeroToMax newMax: Double) -> Double {
-        return ((self * newMax) / oldMax)
+        return self * newMax / oldMax
     }
 }
 
