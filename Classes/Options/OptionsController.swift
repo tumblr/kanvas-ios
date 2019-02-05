@@ -10,7 +10,7 @@ import UIKit
 private struct OptionsControllerConstants {
     static let rowSpacing: CGFloat = 20
     static let animationDuration = 0.25
-    static let imagePreviewRow = 1
+    static let imagePreviewRow = 2
 }
 
 /// An option in this collection can be one of 2 kinds
