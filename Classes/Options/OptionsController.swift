@@ -109,11 +109,11 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     /// - Parameter mode: The current camera mode
     func configureMode(_ mode: CameraMode) {
         switch mode {
-        case .gif, .stopMotion:
+        case .stopMotion:
             UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
                 self?.optionsStackViews[OptionsControllerConstants.imagePreviewRow].alpha = 1
             }
-        case .photo:
+        case .photo, .gif:
             UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
                 self?.optionsStackViews[OptionsControllerConstants.imagePreviewRow].alpha = 0
             }
