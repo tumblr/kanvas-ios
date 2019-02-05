@@ -296,7 +296,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 self?.updatePhotoCaptureState(event: .ended)
             }
             guard let strongSelf = self else { return }
-            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
+            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                           cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                           length: 0,
+                                                           ghostFrameEnabled: strongSelf.imagePreviewController.imagePreviewEnabled())
             performUIUpdate {
                 if let url = url {
                     let segment = CameraSegment.video(url)
@@ -314,7 +317,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 self?.updatePhotoCaptureState(event: .ended)
             }
             guard let strongSelf = self else { return }
-            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
+            let ghostFrameEnabled = strongSelf.imagePreviewController.imagePreviewEnabled()
+            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                           cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                           length: 0,
+                                                           ghostFrameEnabled: ghostFrameEnabled)
             performUIUpdate {
                 if let image = image {
                     if strongSelf.currentMode == .photo {
@@ -470,7 +477,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 guard let strongSelf = self else { return }
                 if let videoURL = url {
                     let asset = AVURLAsset(url: videoURL)
-                    strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: CMTimeGetSeconds(asset.duration))
+                    strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                                   cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                                   length: CMTimeGetSeconds(asset.duration),
+                                                                   ghostFrameEnabled: strongSelf.imagePreviewController.imagePreviewEnabled())
                 }
                 performUIUpdate {
                     if let url = url, let image = AVURLAsset(url: url).thumbnail() {
@@ -499,10 +509,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             cameraZoomHandler.resetZoom()
         case .imagePreviewOn:
             imagePreviewController.showImagePreview(true)
-            analyticsProvider?.logImagePreviewToggled()
+            analyticsProvider?.logImagePreviewToggled(enabled: true)
         case .imagePreviewOff:
             imagePreviewController.showImagePreview(false)
-            analyticsProvider?.logImagePreviewToggled()
+            analyticsProvider?.logImagePreviewToggled(enabled: false)
         }
     }
 

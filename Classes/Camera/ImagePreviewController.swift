@@ -17,7 +17,11 @@ private struct ImagePreviewConstants {
 final class ImagePreviewController: UIViewController {
     
     private let imageView = UIImageView()
-    
+
+    func imagePreviewEnabled() -> Bool {
+        return self.view.alpha == 1
+    }
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         setupView()

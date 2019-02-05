@@ -13,7 +13,7 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "\(#function)")
     }
 
-    public func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval) {
+    public func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval, ghostFrameEnabled: Bool) {
         logString(string: "\(#function)")
     }
 
@@ -53,7 +53,7 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "\(#function)")
     }
     
-    public func logImagePreviewToggled() {
+    public func logImagePreviewToggled(enabled: Bool) {
         logString(string: "\(#function)")
     }
     
