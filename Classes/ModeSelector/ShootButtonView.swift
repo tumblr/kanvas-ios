@@ -235,7 +235,6 @@ final class ShootButtonView: IgnoreTouchesView {
         default:
             updateZoom(recognizer: recognizer)
         }
-
     }
 
     private func updateZoom(recognizer: UILongPressGestureRecognizer) {
