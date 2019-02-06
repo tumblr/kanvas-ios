@@ -45,6 +45,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     private var clips: [MediaClip]
     private var selectedClipIndex: IndexPath?
+    private var draggingClipIndex: IndexPath?
     private var draggingState: UICollectionViewCell.DragState = .none
 
     weak var delegate: MediaClipsCollectionControllerDelegate?
@@ -95,6 +96,21 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     func removeSelectedClip() -> Int? {
         if let index = selectedClipIndex {
             selectedClipIndex = .none
+            clips.remove(at: index.item)
+            mediaClipsCollectionView.collectionView.deleteItems(at: [index])
+            return index.item
+        }
+        else {
+            return .none
+        }
+    }
+    
+    /// Deletes the current dragging clip and updates UI
+    ///
+    /// - Returns: the index of the selected clip
+    func removeDraggingClip() -> Int? {
+        if let index = draggingClipIndex {
+            draggingClipIndex = .none
             clips.remove(at: index.item)
             mediaClipsCollectionView.collectionView.deleteItems(at: [index])
             return index.item
@@ -234,6 +250,7 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         deselectOldSelection(in: collectionView)
+        draggingClipIndex = indexPath
         let item = clips[indexPath.item]
         // Local object won't be used
         let itemProvider = NSItemProvider(object: item.representativeFrame)
@@ -246,6 +263,10 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         let parameters = UIDragPreviewParameters()
         parameters.backgroundColor = .clear
         return parameters
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        draggingClipIndex = .none
     }
 }
 

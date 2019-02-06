@@ -482,7 +482,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         default: break
         }
     }
-
+    
+    func didDropToDelete() {
+        clipsController.removeDraggingClip()
+    }
+    
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
     func optionSelected(_ item: CameraOption) {
@@ -511,6 +515,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipStartedMoving() {
         performUIUpdate { [weak self] in
             self?.enableBottomViewButtons(show: false)
+            self?.modeAndShootController.showTrashView(true)
         }
     }
 
@@ -518,12 +523,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logMovedClip()
         performUIUpdate { [weak self] in
             self?.enableBottomViewButtons(show: true)
+            self?.modeAndShootController.showTrashView(false)
         }
     }
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegmentAtIndex(index)
-        updateLastClipPreview()
+        performUIUpdate { [weak self] in
+            self?.modeAndShootController.showTrashView(false)
+            self?.updateLastClipPreview()
+        }
         analyticsProvider?.logDeleteSegment()
     }
 

@@ -29,6 +29,8 @@ protocol ShootButtonViewDelegate: class {
     func shootButtonViewDidEndLongPress()
     /// Function called when the button was triggered and reached the time limit
     func shootButtonReachedMaximumTime()
+    /// Function called when the a clip was dropped on capture button
+    func shootButtonDidReceiveDropInteraction()
 
     /// Function called when the button was panned to zoom
     ///
@@ -48,6 +50,7 @@ private struct ShootButtonViewConstants {
     static let buttonImageAnimationInDuration: TimeInterval = 0.5
     static let buttonImageAnimationInSpringDamping: CGFloat = 0.6
     static let buttonImageAnimationOutDuration: TimeInterval = 0.15
+    static let animationDuration: TimeInterval = 0.5
 
     static var ButtonMaximumWidth: CGFloat {
         return max(buttonInactiveWidth, buttonActiveWidth)
@@ -63,7 +66,7 @@ private enum ShootButtonState {
 /// View for a capture/shoot button.
 /// It centers an image in a circle with border
 /// and reacts to events by changing color
-final class ShootButtonView: IgnoreTouchesView {
+final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
 
     weak var delegate: ShootButtonViewDelegate?
 
@@ -72,6 +75,7 @@ final class ShootButtonView: IgnoreTouchesView {
     private let tapRecognizer: UITapGestureRecognizer
     private let longPressRecognizer: UILongPressGestureRecognizer
     private let borderView: UIView
+    private let trashView: UIImageView
     private let baseColor: UIColor
     private let activeColor: UIColor
 
@@ -95,6 +99,7 @@ final class ShootButtonView: IgnoreTouchesView {
         containerView = UIView()
         imageView = UIImageView()
         borderView = UIView()
+        trashView = UIImageView()
         tapRecognizer = UITapGestureRecognizer()
         longPressRecognizer = UILongPressGestureRecognizer()
         timeSegmentLayer = CAShapeLayer()
@@ -111,7 +116,9 @@ final class ShootButtonView: IgnoreTouchesView {
         setUpContainerView()
         setUpImageView(imageView)
         setUpBorderView()
+        setUpTrashView()
         setUpRecognizers()
+        setUpInteractions()
     }
 
     @available(*, unavailable, message: "use init(baseColor:, pressedColor:, timeLimit:) instead")
@@ -187,6 +194,13 @@ final class ShootButtonView: IgnoreTouchesView {
 
         borderView.layer.cornerRadius = borderView.bounds.width / 2
     }
+    
+    private func setUpTrashView() {
+        trashView.add(into: containerView)
+        trashView.translatesAutoresizingMaskIntoConstraints = false
+        trashView.image = KanvasCameraImages.deleteImage
+        showTrashView(false)
+    }
 
     private func setUpRecognizers() {
         configureTapRecognizer()
@@ -194,7 +208,11 @@ final class ShootButtonView: IgnoreTouchesView {
         containerView.addGestureRecognizer(tapRecognizer)
         containerView.addGestureRecognizer(longPressRecognizer)
     }
-
+    
+    private func setUpInteractions() {
+        containerView.addInteraction(UIDropInteraction(delegate: self))
+    }
+    
     // MARK: - Gesture Recognizers
 
     private func configureTapRecognizer() {
@@ -371,5 +389,23 @@ final class ShootButtonView: IgnoreTouchesView {
             self.isUserInteractionEnabled = true
         })
     }
-
+    
+    /// Updates UI for the next button
+    ///
+    /// - Parameter enabled: whether to enable the next button or not
+    func showTrashView(_ show: Bool) {
+        UIView.animate(withDuration: ShootButtonViewConstants.animationDuration) {
+            self.trashView.alpha = show ? 1 : 0
+        }
+    }
+    
+    // MARK: - UIDropInteractionDelegate
+    
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+        return UIDropProposal(operation: .move)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+        delegate?.shootButtonDidReceiveDropInteraction()
+    }
 }

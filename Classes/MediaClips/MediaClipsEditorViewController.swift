@@ -99,6 +99,18 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         clipIsSelected = false
     }
     
+    /// Deletes the clip selected on the current dragging session
+    func removeDraggingClip() {
+        if let index = collectionController.removeDraggingClip() {
+            delegate?.mediaClipWasDeleted(at: index)
+        }
+        else {
+            assertionFailure("Clip was dropped but there is nothing to delete")
+        }
+        hasClips = collectionController.getClips().count > 0
+        clipIsSelected = false
+    }
+    
     /// Returns the image from the last clip of the collection
     func getPreviewFromLastClip() -> UIImage? {
         return collectionController.getPreviewFromLastClip()
