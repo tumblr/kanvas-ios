@@ -299,7 +299,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             return UIImage(cgImage: cgImage)
         }
         catch {
-            print("Error: Could not generate CG Image - \(error)")
             return UIImage()
         }
     }
