@@ -19,6 +19,20 @@ func performUIUpdate(using closure: @escaping () -> Void) {
     }
 }
 
+/// Convenience method to access values from the main thread
+///
+/// - Parameter closure: the closure to execute. Expected to return T.
+func accessUI<T>(using closure: @escaping () -> T) -> T? {
+    if Thread.isMainThread {
+        return closure()
+    }
+    var returnValue: T? = nil
+    DispatchQueue.main.sync {
+        returnValue = closure()
+    }
+    return returnValue
+}
+
 /// Convenience method to grab the main thread and perform closure after a delay
 ///
 /// - Parameters:

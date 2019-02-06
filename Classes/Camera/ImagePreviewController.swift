@@ -56,6 +56,8 @@ final class ImagePreviewController: UIViewController {
 
     /// Is the image preview (ghost frame) visible?
     func imagePreviewVisible() -> Bool {
-        return self.view.alpha == 1
+        return accessUI { [weak self] in
+            return self?.view.alpha
+        } == 1
     }
 }
