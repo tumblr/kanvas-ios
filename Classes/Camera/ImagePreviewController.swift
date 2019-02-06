@@ -54,6 +54,11 @@ final class ImagePreviewController: UIViewController {
         }
     }
 
+    /// returns the current image
+    func getImagePreview() -> UIImage? {
+        return imageView.image
+    }
+
     /// Is the image preview (ghost frame) visible?
     func imagePreviewVisible() -> Bool {
         return accessUI { [weak self] in

@@ -288,6 +288,21 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return text
     }
     
+    private func getLastFrameFrom(_ url: URL) -> UIImage {
+        let asset = AVURLAsset(url: url, options: nil)
+        let generate = AVAssetImageGenerator(asset: asset)
+        generate.appliesPreferredTrackTransform = true
+        let lastFrameTime = CMTimeGetSeconds(asset.duration) * 60.0
+        let time = CMTimeMake(value: Int64(lastFrameTime), timescale: 2)
+        do {
+            let cgImage = try generate.copyCGImage(at: time, actualTime: nil)
+            return UIImage(cgImage: cgImage)
+        }
+        catch {
+            return UIImage()
+        }
+    }
+
     private func takeGif(useLongerDuration: Bool = false) {
         guard !isRecording else { return }
         updatePhotoCaptureState(event: .started)
@@ -327,7 +342,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                         strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil)])
                     }
                     else {
-                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: nil))
+                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                        overlayText: nil,
+                                                                        lastFrame: image))
                     }
                 }
             }
@@ -394,7 +411,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     /// Updates the fullscreen preview with the last image of the clip collection
     private func updateLastClipPreview() {
-        imagePreviewController.setImagePreview(clipsController.getPreviewFromLastClip())
+        imagePreviewController.setImagePreview(clipsController.getLastFrameFromLastClip())
     }
     
     // MARK : - Private utilities
@@ -488,7 +505,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 }
                 performUIUpdate {
                     if let url = url, let image = AVURLAsset(url: url).thumbnail() {
-                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: strongSelf.durationStringForAssetAtURL(url)))
+                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                        overlayText: strongSelf.durationStringForAssetAtURL(url),
+                                                                        lastFrame: strongSelf.getLastFrameFrom(url)))
                     }
                     strongSelf.updateRecordState(event: .ended)
                 }
