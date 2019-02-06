@@ -18,11 +18,6 @@ final class ImagePreviewController: UIViewController {
     
     private let imageView = UIImageView()
 
-    /// Is the image preview (ghost frame) visible?
-    func imagePreviewEnabled() -> Bool {
-        return self.view.alpha == 1
-    }
-
     override public func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -57,5 +52,10 @@ final class ImagePreviewController: UIViewController {
         UIView.animate(withDuration: ImagePreviewConstants.animationDuration) { [weak self] in
             self?.view.alpha = enabled ? 1 : 0
         }
+    }
+
+    /// Is the image preview (ghost frame) visible?
+    func imagePreviewVisible() -> Bool {
+        return self.view.alpha == 1
     }
 }

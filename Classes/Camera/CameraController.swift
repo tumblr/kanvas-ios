@@ -299,7 +299,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                            cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                            length: 0,
-                                                           ghostFrameEnabled: strongSelf.imagePreviewEnabled())
+                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible())
             performUIUpdate {
                 if let url = url {
                     let segment = CameraSegment.video(url)
@@ -320,7 +320,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                            cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                            length: 0,
-                                                           ghostFrameEnabled: strongSelf.imagePreviewEnabled())
+                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible())
             performUIUpdate {
                 if let image = image {
                     if strongSelf.currentMode == .photo {
@@ -348,8 +348,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     /// Is the image preview (ghost frame) visible?
-    private func imagePreviewEnabled() -> Bool {
-        return topOptionsController.imagePreviewEnabled() && imagePreviewController.imagePreviewEnabled()
+    private func imagePreviewVisible() -> Bool {
+        return topOptionsController.imagePreviewOptionAvailable() && imagePreviewController.imagePreviewVisible()
     }
     
     private enum RecordingEvent {
@@ -484,7 +484,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                                    cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                                    length: CMTimeGetSeconds(asset.duration),
-                                                                   ghostFrameEnabled: strongSelf.imagePreviewEnabled())
+                                                                   ghostFrameEnabled: strongSelf.imagePreviewVisible())
                 }
                 performUIUpdate {
                     if let url = url, let image = AVURLAsset(url: url).thumbnail() {
