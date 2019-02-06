@@ -53,4 +53,9 @@ final class ImagePreviewController: UIViewController {
             self?.view.alpha = enabled ? 1 : 0
         }
     }
+
+    /// returns the current image
+    func getImagePreview() -> UIImage? {
+        return imageView.image
+    }
 }

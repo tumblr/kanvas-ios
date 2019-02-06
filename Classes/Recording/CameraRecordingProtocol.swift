@@ -80,9 +80,10 @@ protocol CameraRecordingProtocol {
 
     /// takes a photo and appends to the segments.
     ///
+    /// - Parameter cameraPosition: camera used when taking the photo (back or front camera). This is an optional value
     /// - Parameter completion: returns a UIImage if successful
     /// - Returns: Void
-    func takePhoto(completion: @escaping (UIImage?) -> Void)
+    func takePhoto(cameraPosition: AVCaptureDevice.Position?, completion: @escaping (UIImage?) -> Void)
 
     /// composites a video and exports the resulting file to mp4
     ///
