@@ -27,7 +27,7 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     /// - Parameter mode: active mode when long press ended
     func didEndPressingForMode(_ mode: CameraMode)
     /// Function called when a clip was dropped on the capture button to be deleted
-    func didDropToDelete()
+    func didDropToDelete(_ mode: CameraMode)
     
     /// Function called when the user pans to zoom on the capture button
     ///
@@ -154,7 +154,9 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     }
     
     func shootButtonDidReceiveDropInteraction() {
-        delegate?.didDropToDelete()
+        if let mode = currentMode {
+            delegate?.didDropToDelete(mode)
+        }
     }
     
     func shootButtonDidZoom(currentPoint: CGPoint, gesture: UILongPressGestureRecognizer) {

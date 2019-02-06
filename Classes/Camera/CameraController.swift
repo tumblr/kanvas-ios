@@ -483,8 +483,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
     
-    func didDropToDelete() {
-        clipsController.removeDraggingClip()
+    func didDropToDelete(_ mode: CameraMode) {
+        switch mode {
+        case .stopMotion:
+            clipsController.removeDraggingClip()
+        default: break
+        }
     }
     
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
