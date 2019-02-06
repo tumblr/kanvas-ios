@@ -129,9 +129,7 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
 
     /// Is the image preview option available?
     func imagePreviewOptionAvailable() -> Bool {
-        return accessUI { [weak self] in
-            return self?.imagePreviewOptionsStackView?.alpha
-        } == 1
+        return self.imagePreviewOptionsStackView?.alpha == 1
     }
 }
 

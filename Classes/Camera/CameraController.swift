@@ -366,7 +366,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     /// Is the image preview (ghost frame) visible?
     private func imagePreviewVisible() -> Bool {
-        return topOptionsController.imagePreviewOptionAvailable() && imagePreviewController.imagePreviewVisible()
+        return accessUISync { [weak self] in
+            return (self?.topOptionsController.imagePreviewOptionAvailable() ?? false) &&
+                   (self?.imagePreviewController.imagePreviewVisible() ?? false)
+        } ?? false
     }
     
     private enum RecordingEvent {
