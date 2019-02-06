@@ -347,6 +347,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
+    /// Is the image preview (ghost frame) visible?
     private func imagePreviewEnabled() -> Bool {
         return topOptionsController.imagePreviewEnabled() && imagePreviewController.imagePreviewEnabled()
     }

@@ -18,6 +18,7 @@ final class ImagePreviewController: UIViewController {
     
     private let imageView = UIImageView()
 
+    /// Is the image preview (ghost frame) visible?
     func imagePreviewEnabled() -> Bool {
         return self.view.alpha == 1
     }
@@ -51,7 +52,7 @@ final class ImagePreviewController: UIViewController {
     
     /// shows or hides the image preview with an animation
     ///
-    /// - Parameter show: true to show, false to hide
+    /// - Parameter enabled: true to show, false to hide
     func showImagePreview(_ enabled: Bool) {
         UIView.animate(withDuration: ImagePreviewConstants.animationDuration) { [weak self] in
             self?.view.alpha = enabled ? 1 : 0
