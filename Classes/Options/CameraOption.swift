@@ -79,15 +79,17 @@ extension CameraController {
         let (animation, completion) = getAnimationForCameraFlip()
         var options = [
             [
-                Option(option: settings.preferredFlashOption.cameraOption,
-                       image: getImage(for: settings.preferredFlashOption),
-                       type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.cameraOption,
-                                               alternateImage: getImage(for: settings.notDefaultFlashOption))),
                 Option(option: settings.defaultCameraPositionOption.cameraOption,
                        image: KanvasCameraImages.cameraPositionImage,
                        type: .twoOptionsAnimation(animation: animation,
                                                   duration: CameraOptionsConstants.cameraFlipAnimationsDuration,
                                                   completion: completion))
+            ],
+            [
+                Option(option: settings.preferredFlashOption.cameraOption,
+                       image: getImage(for: settings.preferredFlashOption),
+                       type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.cameraOption,
+                                               alternateImage: getImage(for: settings.notDefaultFlashOption))),
             ],
         ]
         if delegate?.cameraShouldEnableGhostFrame() ?? false {
