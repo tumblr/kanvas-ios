@@ -37,9 +37,6 @@ import Foundation
 
     /// Logs an event when the image preview button is tapped
     func logImagePreviewToggled()
-    
-    /// Logs an event when the undo button is tapped
-    func logUndoTapped()
 
     /// Logs an event when the preview (next) button is tapped
     func logNextTapped()

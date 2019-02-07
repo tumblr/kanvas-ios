@@ -29,23 +29,6 @@ final class ActionsViewTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(view)
     }
 
-    func testHideUndo() {
-        let view = newView()
-        UIView.setAnimationsEnabled(false)
-        view.updateUndo(enabled: false)
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
-    }
-
-    func testShowUndo() {
-        let view = newView()
-        view.updateUndo(enabled: false)
-        UIView.setAnimationsEnabled(false)
-        view.updateUndo(enabled: true)
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
-    }
-
     func testHideNext() {
         let view = newView()
         UIView.setAnimationsEnabled(false)

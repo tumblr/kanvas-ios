@@ -39,14 +39,6 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(imageView)
     }
 
-    func testUndoImage() {
-        let imageView = newImageView()
-        let image = KanvasCameraImages.undoImage
-        XCTAssert(image != nil, "Image not found")
-        imageView.image = image
-        FBSnapshotVerifyView(imageView)
-    }
-
     func testNextImage() {
         let imageView = newImageView()
         let image = KanvasCameraImages.nextImage

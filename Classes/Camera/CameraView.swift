@@ -51,7 +51,7 @@ final class CameraView: UIView {
     /// the container for the fullscreen image preview
     private var imagePreviewViewContainer: UIView?
 
-    /// the container for the next / undo action buttons
+    /// the container for the 'next' action button
     let bottomActionsView: ActionsView
 
     /// the container for the options (flash, flip camera)

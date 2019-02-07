@@ -90,14 +90,6 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         clipIsSelected = false
         delegate?.mediaClipWasAdded(at: collectionController.getClips().count - 1)
     }
-
-    /// Undoes the last clip added
-    func undo() {
-        editorView.hideTrash()
-        collectionController.removeLastClip()
-        hasClips = collectionController.getClips().count > 0
-        clipIsSelected = false
-    }
     
     /// Deletes the clip selected on the current dragging session
     func removeDraggingClip() {

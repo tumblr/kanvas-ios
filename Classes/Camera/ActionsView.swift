@@ -14,8 +14,6 @@ private struct ActionsViewConstants {
 
 /// Protocol for handling ActionsView's interaction.
 protocol ActionsViewDelegate: class {
-    /// A function that is called when the undo button is pressed
-    func undoButtonPressed()
     /// A function that is called when the next button is pressed
     func nextButtonPressed()
 }
@@ -23,23 +21,13 @@ protocol ActionsViewDelegate: class {
 final class ActionsView: IgnoreTouchesView {
 
     private let nextButton = UIButton()
-    private let undoButton = UIButton()
 
     weak var delegate: ActionsViewDelegate?
 
     init() {
         super.init(frame: .zero)
 
-        addSubview(undoButton)
         addSubview(nextButton)
-        setupActionButton(button: undoButton,
-                          image: KanvasCameraImages.undoImage,
-                          identifier: "Undo Button",
-                          action: #selector(undoTapped),
-                          constraints: [undoButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
-                                        undoButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: ActionsViewConstants.buttonMargin),
-                                        undoButton.heightAnchor.constraint(equalTo: undoButton.widthAnchor),
-                                        undoButton.widthAnchor.constraint(equalToConstant: ActionsViewConstants.buttonSize)])
         setupActionButton(button: nextButton,
                           image: KanvasCameraImages.nextImage,
                           identifier: "Next Button",
@@ -58,15 +46,6 @@ final class ActionsView: IgnoreTouchesView {
     @available(*, unavailable, message: "use init() instead")
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    /// Updates UI for the undo button
-    ///
-    /// - Parameter enabled: whether to enable the undo button or not
-    func updateUndo(enabled: Bool) {
-        UIView.animate(withDuration: ActionsViewConstants.animationDuration) {
-            self.undoButton.alpha = enabled ? 1 : 0
-        }
     }
 
     /// Updates UI for the next button
@@ -95,10 +74,6 @@ final class ActionsView: IgnoreTouchesView {
     }
 
     // MARK: - Buttons actions
-
-    @objc private func undoTapped() {
-        delegate?.undoButtonPressed()
-    }
 
     @objc private func nextTapped() {
         delegate?.nextButtonPressed()
