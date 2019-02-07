@@ -17,11 +17,6 @@ protocol MediaClipsCollectionControllerDelegate: class {
     
     /// Callback for when a clip finishes moving / draggin
     func mediaClipFinishedMoving()
-    
-    /// Callback for when a clip was swiped and deleted
-    ///
-    /// - Parameter index: the index of the deleted clip
-    func mediaClipWasSwipedAndDeleted(at index: Int)
 }
 
 /// Constants for Collection Controller
@@ -237,6 +232,7 @@ extension MediaClipsCollectionController: UICollectionViewDropDelegate {
 
 // MARK: - MediaClipsCollectionCellDelegate
 extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
+    
     func didChangeState(newDragState: UICollectionViewCell.DragState) {
         draggingState = newDragState
         switch newDragState {
@@ -245,28 +241,6 @@ extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
             delegate?.mediaClipStartedMoving()
         case .none:
             delegate?.mediaClipFinishedMoving()
-        }
-    }
-    
-    func didSwipeUp(cell: UICollectionViewCell) {
-        guard draggingState == .none && !mediaClipsCollectionView.collectionView.hasActiveDrag else { return }
-        if let index = mediaClipsCollectionView.collectionView.indexPath(for: cell) {
-            clips.remove(at: index.item)
-            animateSwipeUpDelete(cell: cell, index: index)
-            delegate?.mediaClipWasSwipedAndDeleted(at: index.item)
-        }
-    }
-    
-    private func animateSwipeUpDelete(cell: UICollectionViewCell, index: IndexPath) {
-        cell.clipsToBounds = false
-        UIView.animate(withDuration: MediaClipsCollectionControllerConstants.animationDuration, animations: {
-            var frame = cell.frame
-            frame.origin.y = frame.origin.y - MediaClipsCollectionControllerConstants.animationYDistance
-            cell.frame = frame
-            cell.alpha = 0
-        }) { (completed) in
-            cell.clipsToBounds = true
-            self.mediaClipsCollectionView.collectionView.deleteItems(at: [index])
         }
     }
 }
