@@ -88,7 +88,6 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         clipImage.image = .none
-        setSelected(false)
     }
 
     /// updates the cell to the MediaClip properties
@@ -97,13 +96,6 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     func bindTo(_ item: MediaClip) {
         clipImage.image = item.representativeFrame
         clipLabel.text = item.overlayText
-    }
-
-    /// Updates the cell to display the corrent state
-    ///
-    /// - Parameter selected: whether the cell is selected or unselected
-    func setSelected(_ selected: Bool) {
-        clipView.layer.borderColor = selected ? KanvasCameraColors.mediaSelectedBorderColor.cgColor : KanvasCameraColors.mediaBorderColor.cgColor
     }
 }
 

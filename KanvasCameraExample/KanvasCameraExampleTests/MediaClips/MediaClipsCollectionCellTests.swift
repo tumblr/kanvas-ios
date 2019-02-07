@@ -38,10 +38,4 @@ final class MediaClipsCollectionCellTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(cell)
     }
 
-    func testSelection() {
-        let cell = newCell()
-        cell.setSelected(true)
-        FBSnapshotVerifyView(cell)
-    }
-
 }

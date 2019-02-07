@@ -8,12 +8,6 @@ import Foundation
 import UIKit
 
 protocol MediaClipsCollectionControllerDelegate: class {
-
-    /// Callback for when a clip is selected
-    func mediaClipWasSelected(at index: Int)
-
-    /// Callback for when a clip is deselected
-    func mediaClipWasDeselected(at index: Int)
     
     /// Callback for when a clip is moved inside the collection
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
@@ -44,7 +38,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     private lazy var mediaClipsCollectionView = MediaClipsCollectionView()
 
     private var clips: [MediaClip]
-    private var selectedClipIndex: IndexPath?
     private var draggingClipIndex: IndexPath?
     private var draggingState: UICollectionViewCell.DragState = .none
 
@@ -69,39 +62,10 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     ///
     /// - Parameter clip: The media clip to display
     func addNewClip(_ clip: MediaClip) {
-        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
         clips.append(clip)
         mediaClipsCollectionView.collectionView.insertItems(at: [IndexPath(item: clips.count - 1, section: 0)])
         if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
             scrollToLast(animated: true)
-        }
-    }
-
-    /// Deletes the last clip and updates the UI
-    func removeLastClip() {
-        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
-        if clips.count > 0 {
-            let index = clips.count - 1
-            if index == selectedClipIndex?.item {
-                selectedClipIndex = .none
-            }
-            clips.removeLast()
-            mediaClipsCollectionView.collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
-        }
-    }
-
-    /// Deletes the current selected clip and updates UI
-    ///
-    /// - Returns: the index of the selected clip
-    func removeSelectedClip() -> Int? {
-        if let index = selectedClipIndex {
-            selectedClipIndex = .none
-            clips.remove(at: index.item)
-            mediaClipsCollectionView.collectionView.deleteItems(at: [index])
-            return index.item
-        }
-        else {
-            return .none
         }
     }
     
@@ -173,22 +137,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         return cell
     }
 
-    // MARK: - UICollectionViewDelegate
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard !collectionView.hasActiveDrag else { return }
-        let item = selectedClipIndex?.item
-        deselectOldSelection(in: collectionView)
-        if item != indexPath.item {
-            deselectOldSelection(in: collectionView)
-            let cell = collectionView.cellForItem(at: indexPath) as? MediaClipsCollectionCell
-            cell?.setSelected(true)
-            selectedClipIndex = indexPath
-            let index = indexPath.item
-            scrollToOptionAt(index, animated: true)
-            delegate?.mediaClipWasSelected(at: index)
-        }
-    }
-
     // MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard clips.count > 0, collectionView.bounds != .zero else { return .zero }
@@ -229,27 +177,12 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         }
     }
 
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
-    }
-
-    // MARK: - Helpers
-    private func deselectOldSelection(in collectionView: UICollectionView) {
-        let oldSelected = selectedClipIndex.flatMap { collectionView.cellForItem(at: $0) as? MediaClipsCollectionCell }
-        oldSelected?.setSelected(false)
-        if let index = selectedClipIndex?.item {
-            selectedClipIndex = .none
-            delegate?.mediaClipWasDeselected(at: index)
-        }
-    }
-
 }
 
 // MARK: - UICollectionViewDragDelegate
 extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        deselectOldSelection(in: collectionView)
         draggingClipIndex = indexPath
         let item = clips[indexPath.item]
         // Local object won't be used
@@ -317,7 +250,6 @@ extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
     
     func didSwipeUp(cell: UICollectionViewCell) {
         guard draggingState == .none && !mediaClipsCollectionView.collectionView.hasActiveDrag else { return }
-        deselectOldSelection(in: mediaClipsCollectionView.collectionView)
         if let index = mediaClipsCollectionView.collectionView.indexPath(for: cell) {
             clips.remove(at: index.item)
             animateSwipeUpDelete(cell: cell, index: index)
