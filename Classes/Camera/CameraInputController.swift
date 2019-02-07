@@ -303,8 +303,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// Deletes a segment at an index
     ///
     /// - Parameter index: Int
-    func deleteSegmentAtIndex(_ index: Int) {
-        recorder?.deleteSegmentAtIndex(index, removeFromDisk: true)
+    func deleteSegment(at index: Int) {
+        recorder?.deleteSegment(at: index, removeFromDisk: true)
     }
 
     /// Moves a segment inside the sequence

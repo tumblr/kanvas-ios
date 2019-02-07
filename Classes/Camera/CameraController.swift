@@ -439,7 +439,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func undoButtonPressed() {
         clipsController.undo()
-        cameraInputController.deleteSegmentAtIndex(cameraInputController.segments().count - 1)
+        cameraInputController.deleteSegment(at: cameraInputController.segments().count - 1)
         updateLastClipPreview()
         analyticsProvider?.logUndoTapped()
     }
@@ -558,7 +558,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func mediaClipWasDeleted(at index: Int) {
-        cameraInputController.deleteSegmentAtIndex(index)
+        cameraInputController.deleteSegment(at: index)
         updateLastClipPreview()
         analyticsProvider?.logDeleteSegment()
     }

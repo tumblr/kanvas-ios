@@ -70,7 +70,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
         XCTAssert(images.count > 0, "Images should have been added")
         
         let deleteBlock: (() -> Void) = {
-            cameraSegmentHandler.deleteSegment(index: 0, removeFromDisk: false)
+            cameraSegmentHandler.deleteSegment(at: 0, removeFromDisk: false)
         }
         
         for image in images {

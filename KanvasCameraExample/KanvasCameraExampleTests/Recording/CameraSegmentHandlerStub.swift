@@ -32,7 +32,7 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
         completion(true, segment)
     }
 
-    func deleteSegment(index: Int, removeFromDisk: Bool) {
+    func deleteSegment(at index: Int, removeFromDisk: Bool) {
         guard index < segments.count else {
             return
         }
