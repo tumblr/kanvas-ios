@@ -40,7 +40,7 @@ final class CameraView: UIView {
     private let imagePreviewLayoutGuide = UILayoutGuide()
     
     /// Layout guide for the filter settings
-    private let filtersLayoutGuide = UILayoutGuide()
+    private let filterSettingsLayoutGuide = UILayoutGuide()
     
     /// the container for the camera input view
     private var cameraInputViewContainer: UIView?
@@ -55,7 +55,7 @@ final class CameraView: UIView {
     private var imagePreviewViewContainer: UIView?
 
     /// the container for the filter settings view
-    private var filtersViewContainer: UIView?
+    private var filterSettingsViewContainer: UIView?
 
     /// the container for the options (flash, flip camera)
     private var topOptionsContainer: UIView?
@@ -113,7 +113,7 @@ final class CameraView: UIView {
         setupClipsGuide()
         setupOptionsGuide()
         setupImagePreviewGuide()
-        setupFiltersGuide()
+        setupFilterSettingsGuide()
     }
 
     private func setupCameraInputGuide() {
@@ -159,12 +159,12 @@ final class CameraView: UIView {
         imagePreviewLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
-    private func setupFiltersGuide() {
-        addLayoutGuide(filtersLayoutGuide)
-        filtersLayoutGuide.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        filtersLayoutGuide.bottomAnchor.constraint(equalTo: modeLayoutGuide.bottomAnchor,
+    private func setupFilterSettingsGuide() {
+        addLayoutGuide(filterSettingsLayoutGuide)
+        filterSettingsLayoutGuide.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        filterSettingsLayoutGuide.bottomAnchor.constraint(equalTo: modeLayoutGuide.bottomAnchor,
                                                    constant: -ModeSelectorAndShootView.shootButtonTopMargin).isActive = true
-        filtersLayoutGuide.heightAnchor.constraint(equalToConstant: FiltersView.height).isActive = true
+        filterSettingsLayoutGuide.heightAnchor.constraint(equalToConstant: FilterSettingsView.height).isActive = true
     }
     
     private func setUpViews() {
@@ -244,9 +244,9 @@ final class CameraView: UIView {
     ///
     /// - Parameter view: view for the filter settings
     func addFiltersView(_ view: UIView) {
-        guard filtersViewContainer == nil else { return }
-        filtersViewContainer = view
-        addViewWithGuide(view: view, guide: filtersLayoutGuide)
+        guard filterSettingsViewContainer == nil else { return }
+        filterSettingsViewContainer = view
+        addViewWithGuide(view: view, guide: filterSettingsLayoutGuide)
     }
     
     private func addViewWithGuide(view: UIView, guide: UILayoutGuide) {
@@ -265,8 +265,8 @@ final class CameraView: UIView {
                             closeButton,
                             topOptionsContainer,
                             modeAndShootContainer,
-                            filtersViewContainer,
-                            clipsContainer]
+                            clipsContainer,
+                            filterSettingsViewContainer]
         orderedViews.forEach { view in
             if let view = view {
                 addSubview(view)

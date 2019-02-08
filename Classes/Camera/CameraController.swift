@@ -55,8 +55,8 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate {
-
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
+    
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
 
@@ -92,8 +92,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let controller = ImagePreviewController()
         return controller
     }()
-    private lazy var filtersController: FiltersController = {
-        let controller = FiltersController()
+    private lazy var filterSettingsController: FilterSettingsController = {
+        let controller = FilterSettingsController()
+        controller.delegate = self
         return controller
     }()
     
@@ -199,7 +200,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
         cameraView.addImagePreviewView(imagePreviewController.view)
-        cameraView.addFiltersView(filtersController.view)
+        cameraView.addFiltersView(filterSettingsController.view)
         bindMediaContentAvailable()
         bindContentSelected()
     }
@@ -616,6 +617,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer) {
         cameraZoomHandler.setZoom(gesture: gesture)
+    }
+    
+    // MARK: - FilterSettingsControllerDelegate
+    
+    func filterSelected() {
+        // TODO: Apply filter to camera
     }
     
     // MARK: - breakdown

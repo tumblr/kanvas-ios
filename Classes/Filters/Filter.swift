@@ -7,12 +7,8 @@
 import Foundation
 import UIKit
 
-/// The class for controlling filters
-final class FiltersController: UIViewController {
-    
-    private let filtersView = FiltersView()
-    
-    override func loadView() {
-        view = filtersView
-    }
+/// A representation for a filter to be presented in the FilterCollectionController
+struct Filter {
+    /// The circle color
+    let representativeColor: UIColor
 }

@@ -44,8 +44,12 @@
 		617760D80C4E5A356E61541937AD8EA1 /* UIFont+TumblrTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9ABFF13F497E2E3D441CA44AD10885 /* UIFont+TumblrTheme.swift */; };
 		64E7E0F74197A8D39674B7C92835047A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F1EE65D6E7DB3A26D312926D030A67 /* Foundation.framework */; };
 		654AE7D899DE02262A56BCA46499B72B /* CameraInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55BD043F5C4DE5E6DBA7812D263E6B20 /* CameraInputController.swift */; };
-		65D18F7222273374004EF0C5 /* FiltersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D18F7022273373004EF0C5 /* FiltersController.swift */; };
-		65D18F7322273374004EF0C5 /* FiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D18F7122273373004EF0C5 /* FiltersView.swift */; };
+		6558BF8022256447003660F9 /* FilterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6558BF7A22256447003660F9 /* FilterSettingsView.swift */; };
+		6558BF8222256447003660F9 /* FilterCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6558BF7C22256447003660F9 /* FilterCollectionView.swift */; };
+		6558BF8322256447003660F9 /* FilterSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6558BF7D22256447003660F9 /* FilterSettingsController.swift */; };
+		6558BF8422256447003660F9 /* FilterCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6558BF7E22256447003660F9 /* FilterCollectionController.swift */; };
+		6558BF8522256447003660F9 /* FilterCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6558BF7F22256447003660F9 /* FilterCollectionCell.swift */; };
+		65D18F752227351B004EF0C5 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D18F742227351B004EF0C5 /* Filter.swift */; };
 		68AADB812BBA784C31696DEAE9B3787C /* KanvasCameraColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91276AA2811A2D80053D2F29CEE2F8E9 /* KanvasCameraColors.swift */; };
 		694B0E00FA3413E2D8677893F29031C7 /* TumblrTheme-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD0DBD8223FC2A902E0C6350B6DCEF5 /* TumblrTheme-dummy.m */; };
 		6C76BCBB3EE0D39192CFFD810DC4465B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 276B6E8C841A4E76D82C06D1DF890E1A /* Assets.xcassets */; };
@@ -212,8 +216,12 @@
 		5D8604F42D3ED58A4BB3AD02270B0F01 /* KanvasCamera-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "KanvasCamera-Info.plist"; sourceTree = "<group>"; };
 		630DD64AF6E511A9DCCA74D5ED44A3D8 /* Pods-KanvasCameraExample-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasCameraExample-Info.plist"; sourceTree = "<group>"; };
 		631F15C5948FFC569F4ADF1819917E75 /* ModalPresentationAnimationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModalPresentationAnimationController.swift; sourceTree = "<group>"; };
-		65D18F7022273373004EF0C5 /* FiltersController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersController.swift; sourceTree = "<group>"; };
-		65D18F7122273373004EF0C5 /* FiltersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersView.swift; sourceTree = "<group>"; };
+		6558BF7A22256447003660F9 /* FilterSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsView.swift; sourceTree = "<group>"; };
+		6558BF7C22256447003660F9 /* FilterCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
+		6558BF7D22256447003660F9 /* FilterSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsController.swift; sourceTree = "<group>"; };
+		6558BF7E22256447003660F9 /* FilterCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCollectionController.swift; sourceTree = "<group>"; };
+		6558BF7F22256447003660F9 /* FilterCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCollectionCell.swift; sourceTree = "<group>"; };
+		65D18F742227351B004EF0C5 /* Filter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		6C622B14A1373AF68B1F7E5D5C40DF18 /* TumblrTheme.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TumblrTheme.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CE7C3E3A8F16E854D9E12E0DD0AA609 /* CameraInputOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputOutput.swift; sourceTree = "<group>"; };
 		6D11A917E16D537C3E7109B520EA4E28 /* Pods-KanvasCameraExampleTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-KanvasCameraExampleTests-dummy.m"; sourceTree = "<group>"; };
@@ -549,8 +557,12 @@
 		6558BF7922256447003660F9 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
-				65D18F7022273373004EF0C5 /* FiltersController.swift */,
-				65D18F7122273373004EF0C5 /* FiltersView.swift */,
+				65D18F742227351B004EF0C5 /* Filter.swift */,
+				6558BF7A22256447003660F9 /* FilterSettingsView.swift */,
+				6558BF7C22256447003660F9 /* FilterCollectionView.swift */,
+				6558BF7D22256447003660F9 /* FilterSettingsController.swift */,
+				6558BF7E22256447003660F9 /* FilterCollectionController.swift */,
+				6558BF7F22256447003660F9 /* FilterCollectionCell.swift */,
 			);
 			name = Filters;
 			path = Classes/Filters;
@@ -1025,9 +1037,11 @@
 			files = (
 				37502C1949ABBEDC4C805E72E4574810 /* Array+Move.swift in Sources */,
 				BE357877E1A26D927C7E96481C2B4501 /* AVURLAsset+Thumbnail.swift in Sources */,
+				6558BF8522256447003660F9 /* FilterCollectionCell.swift in Sources */,
 				4D46B502041E1C627CF4B5FEA6A1C0DF /* CameraController.swift in Sources */,
 				654AE7D899DE02262A56BCA46499B72B /* CameraInputController.swift in Sources */,
 				DCC057D4516B46B2D4E3ED86A88B1811 /* CameraInputControllerDelegate.swift in Sources */,
+				65D18F752227351B004EF0C5 /* Filter.swift in Sources */,
 				59A71123327AB31F7769F7CBF780C24C /* CameraInputOutput.swift in Sources */,
 				9EB28D5805ED91DBA03B97BBFBC0EC9D /* CameraOption.swift in Sources */,
 				36A83097D9EC4C9F97B4A33BDC7BB054 /* CameraPreviewView.swift in Sources */,
@@ -1037,9 +1051,11 @@
 				55F52986AF50AEE562B49AA9E0699730 /* CameraSegmentHandler.swift in Sources */,
 				FEEDC20245AE3E01DC4C35CA7275592D /* CameraSettings.swift in Sources */,
 				F74F49A1A821ECF9762425AFF149105E /* CameraView.swift in Sources */,
+				6558BF8222256447003660F9 /* FilterCollectionView.swift in Sources */,
 				F7F6A0BB7455CE334AD1DCED0E9313D3 /* CameraZoomHandler.swift in Sources */,
 				C0594657CDFBAC13228249D2C4599438 /* CGRect+Center.swift in Sources */,
 				3C6759C21EFAFC7DA51BB33746BE89C4 /* ClosedRange+Clamp.swift in Sources */,
+				6558BF8022256447003660F9 /* FilterSettingsView.swift in Sources */,
 				C090A9CD27B25F273AF7C299BA2B9AEC /* Device.swift in Sources */,
 				5D0064173CC0B3670AF0FC5B7B89DB23 /* ExtendedButton.swift in Sources */,
 				DCF16A78B04FF957A9366292726D05AB /* ExtendedStackView.swift in Sources */,
@@ -1051,10 +1067,10 @@
 				2C6849CB506C59DC63A572A8FD80791C /* KanvasCameraAnalyticsProvider.swift in Sources */,
 				68AADB812BBA784C31696DEAE9B3787C /* KanvasCameraColors.swift in Sources */,
 				AFAFB7DD52F8DD25A25846CB13AB87B6 /* KanvasCameraImages.swift in Sources */,
+				6558BF8422256447003660F9 /* FilterCollectionController.swift in Sources */,
+				6558BF8322256447003660F9 /* FilterSettingsController.swift in Sources */,
 				70013CBBF1B0025CC4766D8ED32A48B4 /* KanvasCameraStrings.swift in Sources */,
-				65D18F7222273374004EF0C5 /* FiltersController.swift in Sources */,
 				CDA3B93C5274343C1F7C75840CA6AFC7 /* KanvasCameraTimes.swift in Sources */,
-				65D18F7322273374004EF0C5 /* FiltersView.swift in Sources */,
 				5D8F69DF4E833EE5119CCDF2E67FB49D /* LoadingIndicatorView.swift in Sources */,
 				C7C1BCD8B904A7A21AEC58260F2C6445 /* MediaClip.swift in Sources */,
 				C64329276707E1BD7AFED8086A28153A /* MediaClipsCollectionCell.swift in Sources */,
