@@ -48,6 +48,7 @@
 		63EA4B9CBBAB30A69C2D73693019FDC5 /* UIImage+Compare.h in Headers */ = {isa = PBXBuildFile; fileRef = 432938111B6FF0189EFFEDF2F845B308 /* UIImage+Compare.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		651DEBAB2209FE5F00476F22 /* Rgba.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBAA2209FE5F00476F22 /* Rgba.swift */; };
 		6542A8BC2208709600ECCEAE /* ConicalGradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6542A8BB2208709600ECCEAE /* ConicalGradientLayer.swift */; };
+		65A5BBA52211F76D0018757E /* UIColor+Lerp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5BBA42211F76D0018757E /* UIColor+Lerp.swift */; };
 		684B8C4B3AE2B677CB764F63C2714EB3 /* CameraInputControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D6E3DA534BCA0EE5268CB875134250 /* CameraInputControllerDelegate.swift */; };
 		6B71ACB6D56B970D0B2AD8EE2B79D96F /* FBSnapshotTestCasePlatform.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A2557E7CE20AACCD1B28B1CD1F920D /* FBSnapshotTestCasePlatform.m */; };
 		6CFA4E458CB38525BBEA33CE6E5F4A7F /* CameraInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F61F0FF053D7EF91B435BE7CBF2D941 /* CameraInputController.swift */; };
@@ -217,6 +218,7 @@
 		63377C220E90B4D05971DFC31FFCF899 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		651DEBAA2209FE5F00476F22 /* Rgba.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rgba.swift; sourceTree = "<group>"; };
 		6542A8BB2208709600ECCEAE /* ConicalGradientLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayer.swift; sourceTree = "<group>"; };
+		65A5BBA42211F76D0018757E /* UIColor+Lerp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Lerp.swift"; sourceTree = "<group>"; };
 		668757AAA1D40CA4736E47460468E96B /* Pods_KanvasCameraExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasCameraExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		67E276593855381568F725E69496F29C /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69CDF553CBE5C17DF9E44AE0E03F3AFA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -686,6 +688,7 @@
 				6BB073513C68208F7DEDA45A2581A605 /* UIImage+Camera.swift */,
 				35153E5D8A54F16E43F9620028B75E1C /* UIView+Layout.swift */,
 				ECFF34CE9EC09CBA81AE12F8237A5897 /* UIViewController+Load.swift */,
+				65A5BBA42211F76D0018757E /* UIColor+Lerp.swift */,
 			);
 			name = Extensions;
 			path = Classes/Extensions;
@@ -1077,6 +1080,7 @@
 				FF74808D781C344FADFE94550370538C /* MediaClipsCollectionController.swift in Sources */,
 				74A96790BD95F9197E4866FF0B1F83C8 /* MediaClipsCollectionView.swift in Sources */,
 				73E475CD5FF1347FB5FA64573CFEE69B /* MediaClipsEditorView.swift in Sources */,
+				65A5BBA52211F76D0018757E /* UIColor+Lerp.swift in Sources */,
 				9287EED6C4E3E418E9647EBF6E9AB494 /* MediaClipsEditorViewController.swift in Sources */,
 				05434137052835A80136E6D0021753D9 /* ModalController.swift in Sources */,
 				D0028D8AA59CD3F264E911391CC58917 /* ModalPresentationAnimationController.swift in Sources */,

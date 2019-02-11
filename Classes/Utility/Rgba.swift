@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-public class Rgba {
+class Rgba {
     var red: CGFloat = 0.0
     var green: CGFloat = 0.0
     var blue: CGFloat = 0.0
