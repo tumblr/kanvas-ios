@@ -267,6 +267,7 @@ final class CameraView: UIView {
                             closeButton,
                             topOptionsContainer,
                             modeAndShootContainer,
+                            filterSettingsViewContainer,
                             clipsContainer,
                             filterSettingsViewContainer]
         orderedViews.forEach { view in

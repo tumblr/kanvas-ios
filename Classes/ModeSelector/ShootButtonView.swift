@@ -94,7 +94,7 @@ final class ShootButtonView: IgnoreTouchesView {
     init(baseColor: UIColor, activeColor: UIColor) {
         containerView = UIView()
         imageView = UIImageView()
-        borderView = UIView()
+        borderView = IgnoreTouchesView()
         tapRecognizer = UITapGestureRecognizer()
         longPressRecognizer = UILongPressGestureRecognizer()
         timeSegmentLayer = CAShapeLayer()

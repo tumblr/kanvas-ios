@@ -74,6 +74,10 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         }
     }
     
+    func getFilters() -> [Filter] {
+        return filters
+    }
+    
     // MARK: - UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
