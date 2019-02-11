@@ -5,12 +5,14 @@
 //
 
 @testable import KanvasCamera
+import Foundation
+import UIKit
 import XCTest
 
-final class RGBATests: XCTestCase {
+final class RgbaTests: XCTestCase {
     
     func testComponents() {
-        let rgba: RGBA = UIColor.blue.rgbaComponents
+        let rgba: Rgba = UIColor.blue.rgbaComponents
         XCTAssertTrue(rgba.red == 0 && rgba.green == 0 && rgba.blue == 1 && rgba.alpha == 1, "RGBA values are not correct")
     }
 }

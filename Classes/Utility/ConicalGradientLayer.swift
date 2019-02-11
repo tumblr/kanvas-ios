@@ -170,11 +170,11 @@ private extension Double {
 
 public extension UIColor {
     
-    var rgbaComponents: RGBA {
-        return RGBA(color: self)
+    var rgbaComponents: Rgba {
+        return Rgba(color: self)
     }
     
-    class func lerp(from: RGBA, to: RGBA, percent: CGFloat) -> UIColor {
+    class func lerp(from: Rgba, to: Rgba, percent: CGFloat) -> UIColor {
         let red = from.red + percent * (to.red - from.red)
         let green = from.green + percent * (to.green - from.green)
         let blue = from.blue + percent * (to.blue - from.blue)
