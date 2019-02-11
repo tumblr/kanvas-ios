@@ -94,6 +94,10 @@ final class ModeSelectorAndShootController: UIViewController {
         }
     }
 
+    func enableShootButtonUserInteraction(_ enabled: Bool) {
+        modeView.enableShootButtonUserInteraction(enabled)
+    }
+    
     /// shows the camera mode button
     func showModeButton() {
         modeView.showModeButton(true)

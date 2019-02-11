@@ -94,7 +94,7 @@ final class ShootButtonView: IgnoreTouchesView {
     init(baseColor: UIColor, activeColor: UIColor) {
         containerView = UIView()
         imageView = UIImageView()
-        borderView = IgnoreTouchesView()
+        borderView = UIView()
         tapRecognizer = UITapGestureRecognizer()
         longPressRecognizer = UILongPressGestureRecognizer()
         timeSegmentLayer = CAShapeLayer()
@@ -372,5 +372,10 @@ final class ShootButtonView: IgnoreTouchesView {
             self.isUserInteractionEnabled = true
         })
     }
-
+    
+    // MARK: - Public interface
+    
+    func enableUserInteraction(_ enabled: Bool) {
+        containerView.isUserInteractionEnabled = enabled
+    }
 }

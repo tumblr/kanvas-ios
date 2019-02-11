@@ -625,6 +625,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         // TODO: Apply filter to camera input
     }
     
+    func visibilityButtonPressed(visible: Bool) {
+        modeAndShootController.enableShootButtonUserInteraction(!visible)
+    }
+    
     // MARK: - breakdown
     
     /// This function should be called to stop the camera session and properly breakdown the inputs

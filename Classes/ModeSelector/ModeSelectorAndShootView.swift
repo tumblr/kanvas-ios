@@ -82,6 +82,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
             showViews(shownViews: [], hiddenViews: [modeSelectorButton], animated: true)
         }
     }
+    
+    func enableShootButtonUserInteraction(_ enabled: Bool) {
+        shootButton.enableUserInteraction(enabled)
+    }
 
     // MARK: - UI Layout
 

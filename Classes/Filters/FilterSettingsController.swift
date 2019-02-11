@@ -9,6 +9,7 @@ import UIKit
 
 protocol FilterSettingsControllerDelegate: class {
     func filterSelected(filter: Filter)
+    func visibilityButtonPressed(visible: Bool)
 }
 
 /// The class for controlling filters
@@ -57,6 +58,7 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     func visibilityButtonPressed() {
         let visible = collectionController.isViewVisible()
         collectionController.showView(!visible)
+        delegate?.visibilityButtonPressed(visible: !visible)
     }
     
     // MARK: - FilterCollectionControllerDelegate
