@@ -45,7 +45,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         previewButton = UIButton()
         previewButton.accessibilityIdentifier = "Media Clips Preview Button"
         super.init(frame: .zero)
-
+        
         clipsToBounds = false
         backgroundColor = KanvasCameraColors.translucentBlack
         setUpViews()

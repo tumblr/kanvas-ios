@@ -32,4 +32,5 @@ struct KanvasCameraImages {
     static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
     static let deleteImage = UIImage.imageFromCameraBundle(named: "trashButton")
     static let filterImage = UIImage.imageFromCameraBundle(named: "filterIcon-smile")
+    static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
 }

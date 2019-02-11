@@ -9,9 +9,9 @@ import TumblrTheme
 import UIKit
 
 private struct FilterCollectionCellConstants {
-    static let cellPadding: CGFloat = 2
+    static let cellPadding: CGFloat = 12
     static let circleHeight: CGFloat = 80
-    static let circleWidth: CGFloat = 56
+    static let circleWidth: CGFloat = 80
     
     static var minimumHeight: CGFloat {
         return circleHeight
@@ -29,7 +29,8 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     private let circleView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = KanvasCameraImages.closeImage
+        imageView.contentMode = .scaleAspectFill
+        imageView.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
         return imageView
     }()
     
@@ -42,6 +43,15 @@ final class FilterCollectionCell: UICollectionViewCell {
         super.init(coder: aDecoder)
         setUpView()
     }
+    
+    func bindTo(_ item: Filter) {
+        circleView.tintColor = item.representativeColor
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        circleView.tintColor = .none
+    }
 }
 
 
@@ -49,6 +59,7 @@ final class FilterCollectionCell: UICollectionViewCell {
 extension FilterCollectionCell {
     
     private func setUpView() {
+        contentView.addSubview(circleView)
         circleView.accessibilityIdentifier = "Filter Cell View"
         circleView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

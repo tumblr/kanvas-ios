@@ -621,8 +621,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - FilterSettingsControllerDelegate
     
-    func filterSelected() {
-        // TODO: Apply filter to camera
+    func filterSelected(filter: Filter) {
+        // TODO: Apply filter to camera input
     }
     
     // MARK: - breakdown

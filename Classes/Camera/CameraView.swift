@@ -160,10 +160,12 @@ final class CameraView: UIView {
     }
     
     private func setupFilterSettingsGuide() {
+        let bottomMargin = ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterCollectionView.height) / 2)
         addLayoutGuide(filterSettingsLayoutGuide)
-        filterSettingsLayoutGuide.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        filterSettingsLayoutGuide.bottomAnchor.constraint(equalTo: modeLayoutGuide.bottomAnchor,
-                                                   constant: -ModeSelectorAndShootView.shootButtonTopMargin).isActive = true
+        filterSettingsLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
+        filterSettingsLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+        filterSettingsLayoutGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor,
+                                                          constant: -bottomMargin).isActive = true
         filterSettingsLayoutGuide.heightAnchor.constraint(equalToConstant: FilterSettingsView.height).isActive = true
     }
     

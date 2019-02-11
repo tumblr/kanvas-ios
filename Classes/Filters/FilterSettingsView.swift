@@ -7,24 +7,25 @@
 import Foundation
 import UIKit
 
+private struct FilterSettingsViewConstants {
+    static let iconSize: CGFloat = 32
+    static let padding: CGFloat = 10
+    static var height: CGFloat = padding + FilterCollectionView.height + padding + iconSize
+}
+
 protocol FilterSettingsViewDelegate: class {
     func visibilityButtonPressed()
 }
 
-private struct FilterSettingsViewConstants {
-    static let iconSize: CGFloat = 32
-    static let padding: CGFloat = 25
-    static var height: CGFloat = padding + FilterCollectionView.height + padding
-}
-
 /// View that handles the filter settings
 final class FilterSettingsView: IgnoreTouchesView {
-    weak var delegate: FilterSettingsViewDelegate?
-    
+
     static let height: CGFloat = FilterSettingsViewConstants.height
     
     let collectionContainer: IgnoreTouchesView
-    private let visibilityButton: UIButton
+    let visibilityButton: UIButton
+    
+    weak var delegate: FilterSettingsViewDelegate?
     
     init() {
         collectionContainer = IgnoreTouchesView()
@@ -34,11 +35,20 @@ final class FilterSettingsView: IgnoreTouchesView {
         
         visibilityButton = UIButton()
         visibilityButton.accessibilityIdentifier = "Filter Visibility Button"
+        visibilityButton.setBackgroundImage(KanvasCameraImages.filterImage, for: .normal)
         super.init(frame: .zero)
+        
         clipsToBounds = false
         setUpViews()
+        visibilityButton.addTarget(self, action: #selector(visibilityButtonPressed), for: .touchUpInside)
     }
     
+    @available(*, unavailable, message: "use init() instead")
+    override init(frame: CGRect) {
+        fatalError("init(frame:) has not been implemented")
+    }
+    
+    @available(*, unavailable, message: "use init() instead")
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -58,8 +68,7 @@ private extension FilterSettingsView {
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
-                                                        constant: -FilterSettingsViewConstants.padding),
+            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: FilterCollectionView.height)
         ])
     }
@@ -67,11 +76,8 @@ private extension FilterSettingsView {
     private func setUpVisibilityButton() {
         addSubview(visibilityButton)
         
-        visibilityButton.setBackgroundImage(KanvasCameraImages.filterImage, for: .normal)
-        visibilityButton.addTarget(self, action: #selector(visibilityButtonPressed), for: .touchUpInside)
         visibilityButton.isUserInteractionEnabled = true
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
-        visibilityButton.contentMode = .scaleAspectFit
         NSLayoutConstraint.activate([
             visibilityButton.heightAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
             visibilityButton.widthAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
@@ -84,7 +90,7 @@ private extension FilterSettingsView {
 // MARK: - Button handling
 private extension FilterSettingsView {
     
-    @objc private func visibilityButtonPressed() {
+    @objc func visibilityButtonPressed() {
         delegate?.visibilityButtonPressed()
     }
 }

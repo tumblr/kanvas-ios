@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 protocol FilterSettingsControllerDelegate: class {
-    func filterSelected()
+    func filterSelected(filter: Filter)
 }
 
 /// The class for controlling filters
@@ -23,12 +23,32 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     
     private lazy var collectionController: FilterCollectionController = {
         let controller = FilterCollectionController()
-        
+        controller.delegate = self
         return controller
     }()
     
+    init() {
+        super.init(nibName: .none, bundle: .none)
+    }
+    
+    @available(*, unavailable, message: "use init() instead")
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @available(*, unavailable, message: "use init() instead")
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        fatalError("init(nibName:bundle:) has not been implemented")
+    }
+    
+    // MARK: - View Life Cycle
     override func loadView() {
         view = filterSettingsView
+        
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         load(childViewController: collectionController, into: filterSettingsView.collectionContainer)
     }
     
@@ -39,7 +59,9 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
         collectionController.showView(!visible)
     }
     
-    func filterSelected() {
-        delegate?.filterSelected()
+    // MARK: - FilterCollectionControllerDelegate
+    
+    func filterSelected(filter: Filter) {
+        delegate?.filterSelected(filter: filter)
     }
 }
