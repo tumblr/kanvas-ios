@@ -44,7 +44,7 @@ private struct ShootButtonViewConstants {
     static let innerCircleImageWidth: CGFloat = 64
     static let outerCircleImageWidth: CGFloat = 95 + borderWidth
     static let longPressMinimumDuration: CFTimeInterval = 0.5
-    static let buttonInactiveWidth: CGFloat = (imageWidth + 15) * 2
+    static let buttonWidth: CGFloat = (imageWidth + 15) * 2
     static let buttonSizeAnimationDuration: TimeInterval = 0.2
     static let buttonImageAnimationInDuration: TimeInterval = 0.5
     static let buttonImageAnimationInSpringDamping: CGFloat = 0.6
@@ -150,7 +150,7 @@ final class ShootButtonView: IgnoreTouchesView {
     private func setUpContainerView() {
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        let widthConstaint = containerView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.buttonInactiveWidth)
+        let widthConstaint = containerView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.buttonWidth)
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             containerView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
@@ -248,9 +248,7 @@ final class ShootButtonView: IgnoreTouchesView {
         switch trigger {
         case .tap:
             if let timeLimit = maximumTime {
-                animateCircle(for: timeLimit,
-                              width: ShootButtonViewConstants.buttonInactiveWidth,
-                              completion: { [unowned self] in self.circleAnimationCallback() })
+                animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
             }
         case .tapAndHold:
             showBorderView(show: false, animated: false)
@@ -288,9 +286,7 @@ final class ShootButtonView: IgnoreTouchesView {
         if started {
             buttonState = .animating
             if let timeLimit = maximumTime {
-                animateCircle(for: timeLimit,
-                              width: ShootButtonViewConstants.buttonInactiveWidth,
-                              completion: { [unowned self] in self.circleAnimationCallback() })
+                animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
             }
             delegate?.shootButtonViewDidStartLongPress()
         }
@@ -315,9 +311,9 @@ final class ShootButtonView: IgnoreTouchesView {
         buttonState = .neutral
     }
 
-    private func animateCircle(for time: TimeInterval, width: CGFloat, completion: @escaping () -> ()) {
+    private func animateCircle(for time: TimeInterval, completion: @escaping () -> ()) {
         let shape = CAShapeLayer()
-        shape.path = createPathForCircle(with: width)
+        shape.path = createPathForCircle()
         shape.fillColor = UIColor.clear.cgColor
         shape.strokeColor = UIColor.white.cgColor
         shape.lineWidth = ShootButtonViewConstants.borderWidth
@@ -348,7 +344,7 @@ final class ShootButtonView: IgnoreTouchesView {
         shape.strokeEnd = 1
     }
 
-    private func createPathForCircle(with width: CGFloat) -> CGPath {
+    private func createPathForCircle() -> CGPath {
         let arcPath = UIBezierPath()
         arcPath.lineWidth = ShootButtonViewConstants.borderWidth
         arcPath.lineCapStyle = .butt
@@ -356,7 +352,7 @@ final class ShootButtonView: IgnoreTouchesView {
         arcPath.addArc(withCenter: containerView.bounds.center,
                        // Different from UIView's border, this isn't inner to the coordinate, but centered in it.
                        // So we need to subtract half the width to make it match the view's border.
-                       radius: width / 2 - ShootButtonViewConstants.borderWidth / 2,
+                       radius: ShootButtonViewConstants.buttonWidth / 2 - ShootButtonViewConstants.borderWidth / 2,
                        startAngle: -.pi / 2,
                        endAngle: 3/2 * .pi,
                        clockwise: true)
