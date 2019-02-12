@@ -8,13 +8,16 @@ import Foundation
 import UIKit
 
 protocol FilterCollectionControllerDelegate: class {
-    func filterSelected(filter: Filter)
+    /// Callback for when a filter is selected
+    func didSelectFilter(_ filter: Filter)
 }
 
+/// Constants for Collection Controller
 private struct FilterCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.25
 }
 
+/// Controller for handling the filter collection.
 final class FilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     private lazy var filterCollectionView = FilterCollectionView()
@@ -22,6 +25,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     weak var delegate: FilterCollectionControllerDelegate?
     
+    /// Initializes the collection with Tumblr colors
     init() {
         filters = [Filter(representativeColor: .tumblrBrightRed),
                    Filter(representativeColor: .tumblrBrightPink),
@@ -50,16 +54,27 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         filterCollectionView.collectionView.register(cell: FilterCollectionCell.self)
         filterCollectionView.collectionView.delegate = self
         filterCollectionView.collectionView.dataSource = self
-        filterCollectionView.alpha = 0
+        setUpView()
+        setUpRecognizers()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
+    }
+    
+    private func setUpView() {
+        filterCollectionView.alpha = 0
+    }
+    
+    private func setUpRecognizers() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(collectionTapped))
+        filterCollectionView.collectionView.addGestureRecognizer(tapRecognizer)
     }
     
     // MARK: - Public interface
@@ -74,6 +89,9 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         }
     }
     
+    /// Returns the collection of filters
+    ///
+    /// - Returns: Filter array
     func getFilters() -> [Filter] {
         return filters
     }
@@ -97,6 +115,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     }
     
     // MARK: - UICollectionViewDelegateFlowLayout
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard filters.count > 0, collectionView.bounds != .zero else { return .zero }
         
@@ -128,7 +147,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: 0)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        delegate?.filterSelected(filter: filters[indexPath.item])
+        delegate?.didSelectFilter(filters[indexPath.item])
     }
     
     private func indexPathAtCenter() -> IndexPath? {
@@ -145,6 +164,14 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     }
     
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        if let indexPath = indexPathAtCenter() {
+            scrollToOptionAt(indexPath.item)
+        }
+    }
+    
+    // When the collection is decelerating, but the user taps a cell to stop,
+    // the collection needs to set a cell at the center of the screen
+    @objc func collectionTapped() {
         if let indexPath = indexPathAtCenter() {
             scrollToOptionAt(indexPath.item)
         }

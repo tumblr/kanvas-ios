@@ -375,6 +375,9 @@ final class ShootButtonView: IgnoreTouchesView {
     
     // MARK: - Public interface
     
+    /// enables or disables the user interation on the shutter button
+    ///
+    /// - Parameter enabled: true to enable, false to disable
     func enableUserInteraction(_ enabled: Bool) {
         containerView.isUserInteractionEnabled = enabled
     }

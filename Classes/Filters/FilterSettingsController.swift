@@ -8,11 +8,15 @@ import Foundation
 import UIKit
 
 protocol FilterSettingsControllerDelegate: class {
-    func filterSelected(filter: Filter)
-    func visibilityButtonPressed(visible: Bool)
+    /// Callback for when a filter is selected
+    func didSelectFilter(_ filter: Filter)
+    /// Callback for when the button that shows/hides the filter selector is tapped
+    ///
+    /// - Parameter visible: whether the filter collection is visible
+    func didTapVisibilityButton(visible: Bool)
 }
 
-/// The class for controlling filters
+/// Controller for handling the filter selector
 final class FilterSettingsController: UIViewController, FilterSettingsViewDelegate, FilterCollectionControllerDelegate {
     weak var delegate: FilterSettingsControllerDelegate?
     
@@ -43,6 +47,7 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     }
     
     // MARK: - View Life Cycle
+    
     override func loadView() {
         view = filterSettingsView
         
@@ -53,17 +58,17 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
         load(childViewController: collectionController, into: filterSettingsView.collectionContainer)
     }
     
-    // MARK: - FiltersViewDelegate
+    // MARK: - FilterSettingsViewDelegate
     
-    func visibilityButtonPressed() {
-        let visible = collectionController.isViewVisible()
-        collectionController.showView(!visible)
-        delegate?.visibilityButtonPressed(visible: !visible)
+    func didTapVisibilityButton() {
+        let visible = !collectionController.isViewVisible()
+        collectionController.showView(visible)
+        delegate?.didTapVisibilityButton(visible: visible)
     }
     
     // MARK: - FilterCollectionControllerDelegate
     
-    func filterSelected(filter: Filter) {
-        delegate?.filterSelected(filter: filter)
+    func didSelectFilter(_ filter: Filter) {
+        delegate?.didSelectFilter(filter)
     }
 }

@@ -93,7 +93,10 @@ final class ModeSelectorAndShootController: UIViewController {
             hideModeButton()
         }
     }
-
+    
+    /// enables or disables the user interation on the shutter button
+    ///
+    /// - Parameter enabled: true to enable, false to disable
     func enableShootButtonUserInteraction(_ enabled: Bool) {
         modeView.enableShootButtonUserInteraction(enabled)
     }

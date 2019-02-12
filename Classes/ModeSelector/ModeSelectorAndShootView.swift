@@ -83,6 +83,9 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         }
     }
     
+    /// enables or disables the user interation on the shutter button
+    ///
+    /// - Parameter enabled: true to enable, false to disable
     func enableShootButtonUserInteraction(_ enabled: Bool) {
         shootButton.enableUserInteraction(enabled)
     }

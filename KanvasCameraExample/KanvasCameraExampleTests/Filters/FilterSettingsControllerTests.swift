@@ -27,8 +27,8 @@ final class FilterSettingsControllerTests: FBSnapshotTestCase {
     func testHideCollection() {
         let controller = newViewController()
         UIView.setAnimationsEnabled(false)
-        controller.visibilityButtonPressed()
-        controller.visibilityButtonPressed()
+        controller.didTapVisibilityButton()
+        controller.didTapVisibilityButton()
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }
@@ -36,9 +36,8 @@ final class FilterSettingsControllerTests: FBSnapshotTestCase {
     func testShowCollection() {
         let controller = newViewController()
         UIView.setAnimationsEnabled(false)
-        controller.visibilityButtonPressed()
+        controller.didTapVisibilityButton()
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }
 }
-

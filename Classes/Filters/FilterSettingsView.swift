@@ -14,10 +14,11 @@ private struct FilterSettingsViewConstants {
 }
 
 protocol FilterSettingsViewDelegate: class {
-    func visibilityButtonPressed()
+    /// Callback for when the button that shows/hides the filter selector is tapped
+    func didTapVisibilityButton()
 }
 
-/// View that handles the filter settings
+/// View for filter settings
 final class FilterSettingsView: IgnoreTouchesView {
 
     static let height: CGFloat = FilterSettingsViewConstants.height
@@ -40,7 +41,7 @@ final class FilterSettingsView: IgnoreTouchesView {
         
         clipsToBounds = false
         setUpViews()
-        visibilityButton.addTarget(self, action: #selector(visibilityButtonPressed), for: .touchUpInside)
+        visibilityButton.addTarget(self, action: #selector(visibilityButtonTapped), for: .touchUpInside)
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -90,7 +91,7 @@ private extension FilterSettingsView {
 // MARK: - Button handling
 private extension FilterSettingsView {
     
-    @objc func visibilityButtonPressed() {
-        delegate?.visibilityButtonPressed()
+    @objc func visibilityButtonTapped() {
+        delegate?.didTapVisibilityButton()
     }
 }

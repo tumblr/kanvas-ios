@@ -12,7 +12,7 @@ private struct FilterCollectionViewConstants {
     static var height: CGFloat = FilterCollectionCell.minimumHeight + FilterCollectionViewConstants.bufferSize
 }
 
-/// View that handles the filter collection
+/// Collection view for the FilterCollectionController
 final class FilterCollectionView: IgnoreTouchesView {
     
     static let height = FilterCollectionViewConstants.height
@@ -27,6 +27,12 @@ final class FilterCollectionView: IgnoreTouchesView {
         setUpViews()
     }
     
+    @available(*, unavailable, message: "use init() instead")
+    override init(frame: CGRect) {
+        fatalError("init(frame:) has not been implemented")
+    }
+    
+    @available(*, unavailable, message: "use init() instead")
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

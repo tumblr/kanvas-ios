@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import TumblrTheme
 import UIKit
 
 private struct FilterCollectionCellConstants {
@@ -22,6 +21,7 @@ private struct FilterCollectionCellConstants {
     }
 }
 
+/// The cell in FilterCollectionView to display an individual filter
 final class FilterCollectionCell: UICollectionViewCell {
     
     static let minimumHeight = FilterCollectionCellConstants.minimumHeight
@@ -44,10 +44,15 @@ final class FilterCollectionCell: UICollectionViewCell {
         setUpView()
     }
     
+    /// Updates the cell to the Filter properties
+    ///
+    /// - Parameter item: The Filter to display
     func bindTo(_ item: Filter) {
         circleView.tintColor = item.representativeColor
     }
     
+    /// Updates the cell to be reused
+    ///
     override func prepareForReuse() {
         super.prepareForReuse()
         circleView.tintColor = .none

@@ -54,4 +54,3 @@ final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDeleg
         return cell
     }
 }
-

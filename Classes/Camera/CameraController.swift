@@ -621,11 +621,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - FilterSettingsControllerDelegate
     
-    func filterSelected(filter: Filter) {
+    func didSelectFilter(_ filter: Filter) {
         // TODO: Apply filter to camera input
+        print("didSelectFilter")
     }
     
-    func visibilityButtonPressed(visible: Bool) {
+    func didTapVisibilityButton(visible: Bool) {
         modeAndShootController.enableShootButtonUserInteraction(!visible)
     }
     
