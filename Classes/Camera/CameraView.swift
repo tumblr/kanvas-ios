@@ -129,18 +129,18 @@ final class CameraView: UIView {
 
     private func setupModeLayoutGuide() {
         addLayoutGuide(modeLayoutGuide)
-        modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
-        modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
-        modeLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
+        modeLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
+        modeLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+        modeLayoutGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor,
                                                 constant: -MediaClipsEditorView.height).isActive = true
-        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor).isActive = true
+        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
     }
 
     private func setupClipsGuide() {
         addLayoutGuide(clipsLayoutGuide)
         clipsLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
         clipsLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
-        clipsLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor).isActive = true
+        clipsLayoutGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
         clipsLayoutGuide.heightAnchor.constraint(equalToConstant: MediaClipsEditorView.height).isActive = true
     }
 
@@ -173,9 +173,10 @@ final class CameraView: UIView {
         bottomActionsView.accessibilityIdentifier = "Bottom Actions Container"
         bottomActionsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            bottomActionsView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            bottomActionsView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            bottomActionsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootView.shootButtonBottomMargin),
+            bottomActionsView.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
+            bottomActionsView.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
+            bottomActionsView.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
+                                                      constant: -ModeSelectorAndShootView.shootButtonBottomMargin),
             bottomActionsView.heightAnchor.constraint(equalToConstant: ModeSelectorAndShootView.shootButtonSize)
         ])
     }

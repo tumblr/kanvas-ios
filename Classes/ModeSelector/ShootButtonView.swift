@@ -150,8 +150,8 @@ final class ShootButtonView: IgnoreTouchesView {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         let widthConstaint = containerView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.buttonInactiveWidth)
         NSLayoutConstraint.activate([
-            containerView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            containerView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
+            containerView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
             containerView.heightAnchor.constraint(equalTo: containerView.widthAnchor),
             widthConstaint
         ])
@@ -170,8 +170,8 @@ final class ShootButtonView: IgnoreTouchesView {
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
             widthConstraint,
-            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            imageView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor)
         ])
         imageWidthConstraint = widthConstraint
     }

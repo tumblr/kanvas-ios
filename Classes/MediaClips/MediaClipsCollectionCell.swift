@@ -112,11 +112,13 @@ extension MediaClipsCollectionCell {
         contentView.addSubview(clipView)
         clipView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            clipView.centerXAnchor.constraint(equalTo: contentView.safeLayoutGuide.centerXAnchor),
-            clipView.leadingAnchor.constraint(equalTo: contentView.safeLayoutGuide.leadingAnchor, constant: MediaClipsCollectionCellConstants.cellPadding),
-            clipView.trailingAnchor.constraint(equalTo: contentView.safeLayoutGuide.trailingAnchor, constant: -MediaClipsCollectionCellConstants.cellPadding),
-            clipView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeLayoutGuide.topAnchor),
-            clipView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeLayoutGuide.bottomAnchor),
+            clipView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            clipView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor,
+                                              constant: MediaClipsCollectionCellConstants.cellPadding),
+            clipView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
+                                               constant: -MediaClipsCollectionCellConstants.cellPadding),
+            clipView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.topAnchor),
+            clipView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.bottomAnchor),
             clipView.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.clipHeight),
             clipView.widthAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.clipWidth)
         ])

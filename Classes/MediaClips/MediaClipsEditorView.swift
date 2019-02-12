@@ -76,16 +76,16 @@ private extension MediaClipsEditorView {
         setUpCollection()
         setUpPreview()
     }
-
+    
     func setUpCollection() {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         let trailingMargin = MediaClipsEditorViewConstants.buttonWidth + MediaClipsEditorViewConstants.buttonHorizontalMargin * 2
         NSLayoutConstraint.activate([
-            collectionContainer.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor,
+            collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
                                                        constant: -trailingMargin),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
+            collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor,
                                                         constant: -MediaClipsEditorViewConstants.bottomPadding),
             collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
         ])
@@ -100,7 +100,7 @@ private extension MediaClipsEditorView {
         previewButton.setTitleColor(.white, for: .normal)
         previewButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         NSLayoutConstraint.activate([
-            previewButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor,
+            previewButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
                                                     constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
             previewButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonHeight),
             previewButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonWidth),

@@ -7,7 +7,6 @@
 import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
-    static let selectorYCenterMargin: CGFloat = 49
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 6
     static var shootButtonTopMargin: CGFloat {
@@ -97,8 +96,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         addSubview(modeSelectorButton)
         modeSelectorButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            modeSelectorButton.centerYAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: ModeSelectorAndShootViewConstants.selectorYCenterMargin),
-            modeSelectorButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            modeSelectorButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            modeSelectorButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
         ])
     }
 
@@ -108,8 +107,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         addSubview(shootButton)
         shootButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            shootButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.shootButtonBottomMargin),
-            shootButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.shootButtonBottomMargin),
+            shootButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             shootButton.heightAnchor.constraint(equalTo: shootButton.widthAnchor),
             shootButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.shootButtonSize)
         ])

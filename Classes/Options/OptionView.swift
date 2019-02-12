@@ -49,10 +49,10 @@ final class OptionView: UIView {
         addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
+            button.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             button.centerYAnchor.constraint(equalTo: centerYAnchor),
-            safeLayoutGuide.heightAnchor.constraint(equalTo: safeLayoutGuide.widthAnchor)
-            ])
+            safeAreaLayoutGuide.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor)
+        ])
     }
 }
