@@ -102,8 +102,7 @@ final class CameraPreviewView: UIView {
 
         NSLayoutConstraint.activate([
             confirmButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
-                                                  constant: -CameraPreviewViewConstants.confirmButtonMargin),
+            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -CameraPreviewViewConstants.confirmButtonMargin),
             confirmButton.heightAnchor.constraint(equalTo: confirmButton.widthAnchor),
             confirmButton.widthAnchor.constraint(equalToConstant: CameraPreviewViewConstants.confirmButtonSize)
         ])

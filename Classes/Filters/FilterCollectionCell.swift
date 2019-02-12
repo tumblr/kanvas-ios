@@ -68,13 +68,13 @@ extension FilterCollectionCell {
         circleView.accessibilityIdentifier = "Filter Cell View"
         circleView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            circleView.centerXAnchor.constraint(equalTo: contentView.safeLayoutGuide.centerXAnchor),
-            circleView.leadingAnchor.constraint(equalTo: contentView.safeLayoutGuide.leadingAnchor,
+            circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            circleView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor,
                                                 constant: FilterCollectionCellConstants.cellPadding),
-            circleView.trailingAnchor.constraint(equalTo: contentView.safeLayoutGuide.trailingAnchor,
+            circleView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
                                                  constant: -FilterCollectionCellConstants.cellPadding),
-            circleView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeLayoutGuide.topAnchor),
-            circleView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeLayoutGuide.bottomAnchor),
+            circleView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.topAnchor),
+            circleView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.bottomAnchor),
             circleView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleHeight),
             circleView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleWidth)
         ])

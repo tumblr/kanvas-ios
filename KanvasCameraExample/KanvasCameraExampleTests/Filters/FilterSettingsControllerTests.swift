@@ -32,7 +32,7 @@ final class FilterSettingsControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }
-    
+
     func testShowCollection() {
         let controller = newViewController()
         UIView.setAnimationsEnabled(false)

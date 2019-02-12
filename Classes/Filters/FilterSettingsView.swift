@@ -67,9 +67,9 @@ private extension FilterSettingsView {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            collectionContainer.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor),
+            collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: FilterCollectionView.height)
         ])
     }
@@ -82,8 +82,8 @@ private extension FilterSettingsView {
         NSLayoutConstraint.activate([
             visibilityButton.heightAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
             visibilityButton.widthAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
-            visibilityButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            visibilityButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor)
+            visibilityButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            visibilityButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
         ])
     }
 }
