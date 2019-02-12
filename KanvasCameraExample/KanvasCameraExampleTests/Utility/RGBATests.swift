@@ -9,15 +9,15 @@ import Foundation
 import UIKit
 import XCTest
 
-final class RgbaTests: XCTestCase {
+final class RGBATests: XCTestCase {
     
-    func testRgba() {
-        let rgba = Rgba(color: UIColor.blue)
+    func testRGBA() {
+        let rgba = RGBA(color: UIColor.blue)
         XCTAssertTrue(rgba.red == 0 && rgba.green == 0 && rgba.blue == 1 && rgba.alpha == 1, "RGBA values are not correct")
     }
     
     func testComponents() {
-        let rgba: Rgba = UIColor.blue.rgbaComponents
+        let rgba: RGBA = UIColor.blue.rgbaComponents
         XCTAssertTrue(rgba.red == 0 && rgba.green == 0 && rgba.blue == 1 && rgba.alpha == 1, "RGBA values are not correct")
     }
 }

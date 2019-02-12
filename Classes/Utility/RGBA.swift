@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-class Rgba {
+class RGBA {
     var red: CGFloat = 0.0
     var green: CGFloat = 0.0
     var blue: CGFloat = 0.0
