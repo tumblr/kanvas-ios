@@ -623,7 +623,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func didSelectFilter(_ filter: Filter) {
         // TODO: Apply filter to camera input
-        print("didSelectFilter")
     }
     
     func didTapVisibilityButton(visible: Bool) {
