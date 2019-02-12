@@ -52,7 +52,6 @@ final class FilterCollectionCell: UICollectionViewCell {
     }
     
     /// Updates the cell to be reused
-    ///
     override func prepareForReuse() {
         super.prepareForReuse()
         circleView.tintColor = .none
