@@ -18,7 +18,7 @@ private struct CameraInputConstants {
 /// The class for controlling the device camera.
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
-final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, FilteredInputViewControllerDelegate {
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -37,6 +37,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
+    private lazy var filteredInputViewController = {
+         return FilteredInputViewController(delegate: self)
+    }()
     private let previewLayer = AVCaptureVideoPreviewLayer()
     private let flashLayer = CALayer()
     private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.sampleBufferQueue)
@@ -121,7 +124,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         createCaptureSession()
         configureSession()
         setupGestures()
-        setupPreview()
+//        setupPreview()
+        setupFilteredPreview()
         setupFlash(defaultOption: settings.preferredFlashOption)
         setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
 
@@ -165,6 +169,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         view.layer.addSublayer(previewLayer)
     }
 
+    private func setupFilteredPreview() {
+        load(childViewController: filteredInputViewController, into: view)
+    }
+
     private func setupFlash(defaultOption: AVCaptureDevice.FlashMode) {
         flashLayer.backgroundColor = CameraInputConstants.flashColor.cgColor
         flashLayer.frame = previewLayer.bounds
@@ -189,6 +197,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             try? configureCurrentOutput()
         }
         captureSession?.startRunning()
+
+        // have to rebuild the filtered input display setup
+        filteredInputViewController.reset()
     }
 
     /// Changes the current output modes corresponding to camera mode
@@ -562,6 +573,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             recorder?.processAudioSampleBuffer(sampleBuffer)
         }
         else if output == videoDataOutput {
+            filteredInputViewController.filterSampleBuffer(sampleBuffer)
             recorder?.processVideoSampleBuffer(sampleBuffer)
         }
     }
@@ -573,6 +585,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
     }
     
+    // MARK: - FilteredInputViewControllerDelegate
+    func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        //recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+    }
+
     // MARK: - breakdown
     
     /// Function to remove the current inputs and outputs from the capture session
