@@ -12,7 +12,8 @@ import XCTest
 final class KanvasCameraImagesTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
-        recordMode = false
+        
+        self.recordMode = false
     }
     
     func testPhotoModeImage() {

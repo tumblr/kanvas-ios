@@ -13,15 +13,15 @@ protocol CameraViewDelegate: class {
 }
 
 struct CameraConstants {
-    static let buttonSize: CGFloat = 34
+    static let buttonSize: CGFloat = 26
     static let buttonMargin: CGFloat = 32
-    static let buttonSpacing: CGFloat = 8
+    static let buttonSpacing: CGFloat = 20
     fileprivate static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
 }
 
 /// View with containers for all camera subviews (input, mode selector, etc)
-/// that handles their relative layout.
+/// that handles their relative layoutbuttonSize.
 final class CameraView: UIView {
 
     /// Layout guide for camera input
@@ -132,7 +132,7 @@ final class CameraView: UIView {
         modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
         modeLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor).isActive = true
-        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor).isActive = true
+        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
     }
 
     private func setupClipsGuide() {
@@ -183,7 +183,7 @@ final class CameraView: UIView {
         addSubview(closeButton)
         closeButton.accessibilityLabel = "Close Button"
         closeButton.applyShadows()
-        closeButton.setImage(KanvasCameraImages.closeImage, for: .normal)
+        closeButton.setBackgroundImage(KanvasCameraImages.closeImage, for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 

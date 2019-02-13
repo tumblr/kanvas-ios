@@ -117,6 +117,10 @@ final class OptionsStackView<Item>: UIView {
             optionView.button.tag = index
             optionView.accessibilityIdentifier = "Options Option View #\(index + 1)"
             optionView.button.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)
+            NSLayoutConstraint.activate([
+                optionView.heightAnchor.constraint(equalToConstant: CameraConstants.buttonSize),
+                optionView.widthAnchor.constraint(equalToConstant: CameraConstants.buttonSize)
+            ])
             stackView.addArrangedSubview(optionView)
         }
     }
