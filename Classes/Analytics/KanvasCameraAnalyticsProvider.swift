@@ -12,7 +12,7 @@ import Foundation
 
     /// Logs an event when the camera is opened
     ///
-    /// - Parameter position: what photo mode was opened
+    /// - Parameter mode: what photo mode was opened
     func logCameraOpen(mode: CameraMode)
 
     /// Logs an event when the camera is dismissed without exporting media
