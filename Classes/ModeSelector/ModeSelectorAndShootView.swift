@@ -86,11 +86,13 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         }
     }
     
+    /// shows the tooltip below the mode selector
     func showTooltip() {
         tooltip = createTooltip()
         tooltip?.show(forView: modeSelectorButton)
     }
     
+    /// hides the tooltip below the mode selector
     func dismissTooltip() {
         tooltip?.dismiss()
     }

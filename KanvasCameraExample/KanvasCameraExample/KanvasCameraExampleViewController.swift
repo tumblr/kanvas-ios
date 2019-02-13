@@ -61,10 +61,6 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeToolip
     }
-    
-    func cameraShouldShowCreationTooltip() -> Bool {
-        return shouldShowCreationTooltip
-    }
 
     func didDismissWelcomeTooltip() {
         shouldShowWelcomeToolip = false

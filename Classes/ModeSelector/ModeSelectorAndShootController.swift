@@ -104,10 +104,12 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.showModeButton(false)
     }
     
+    /// shows the tooltip below the mode selector
     func showTooltip() {
         modeView.showTooltip()
     }
     
+    /// hides the tooltip below the mode selector
     func hideTooltip() {
         modeView.dismissTooltip()
     }

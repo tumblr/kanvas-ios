@@ -45,11 +45,6 @@ public protocol CameraControllerDelegate: class {
     ///
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
-    
-    /// Called to ask if creation tooltip should be shown
-    ///
-    /// - Returns: Bool for tooltip
-    func cameraShouldShowCreationTooltip() -> Bool
 
     func cameraShouldEnableGhostFrame() -> Bool
 }
@@ -215,27 +210,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.present(controller, animated: true)
     }
     
-    /// The welcome tooltip shows tooltip text for the Capture mode
+    /// Shows the tooltip below the mode selector
     private func showWelcomeTooltip() {
         modeAndShootController.showTooltip()
-        
-        let viewModel = ModalViewModel(text: NSLocalizedString("Tap to take a photo or hold to take a video.", comment: "Welcome tooltip for the camera"),
-                                       buttonTitle: NSLocalizedString("Got it", comment: "Welcome confirmation"),
-                                       buttonCallback: { [weak self] in
-                                        self?.delegate?.didDismissWelcomeTooltip()
-        })
-        let controller = ModalController(viewModel: viewModel)
-        present(controller, animated: true, completion: nil)
-    }
-    
-    private func showCreationTooltip() {
-        let viewModel = ModalViewModel(text: NSLocalizedString("Looks great. Keep capturing to add more, or hit next to continue.", comment: "Tooltip message for capturing clips"),
-                                       buttonTitle: NSLocalizedString("Got it", comment: "Tooltip confirmation"),
-                                       buttonCallback: { [weak self] in
-                                        self?.delegate?.didDismissCreationTooltip()
-        })
-        let controller = ModalController(viewModel: viewModel)
-        present(controller, animated: true, completion: nil)
     }
     
     private func showDismissTooltip() {
@@ -566,9 +543,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func mediaClipWasAdded(at index: Int) {
-        if delegate?.cameraShouldShowCreationTooltip() == true {
-            showCreationTooltip()
-        }
         updateLastClipPreview()
     }
 

@@ -257,10 +257,6 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return false
     }
-    
-    func cameraShouldShowCreationTooltip() -> Bool {
-        return false
-    }
 
     func cameraShouldEnableGhostFrame() -> Bool {
         return shouldEnableGhostFrame
