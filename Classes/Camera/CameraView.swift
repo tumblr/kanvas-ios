@@ -13,9 +13,9 @@ protocol CameraViewDelegate: class {
 }
 
 struct CameraConstants {
-    static let buttonSize: CGFloat = 26
+    static let buttonSize: CGFloat = 24
     static let buttonMargin: CGFloat = 32
-    static let buttonSpacing: CGFloat = 20
+    static let buttonSpacing: CGFloat = 26
     fileprivate static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
 }
