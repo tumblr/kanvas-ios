@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 private struct FilterSettingsViewConstants {
-    static let iconSize: CGFloat = 32
+    static let iconSize: CGFloat = 35
     static let padding: CGFloat = 10
     static var height: CGFloat = padding + FilterCollectionView.height + padding + iconSize
 }
@@ -76,8 +76,6 @@ private extension FilterSettingsView {
     
     private func setUpVisibilityButton() {
         addSubview(visibilityButton)
-        
-        visibilityButton.isUserInteractionEnabled = true
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             visibilityButton.heightAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
