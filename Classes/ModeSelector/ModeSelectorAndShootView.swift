@@ -37,18 +37,20 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     private let settings: CameraSettings
     private let shootButton: ShootButtonView
     private let modeSelectorButton: ModeButtonView
+    private var tooltip: EasyTipView?
 
     /// Initializer for the mode selector view
     ///
     /// - Parameter settings: CameraSettings to determine the default and available modes
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
-        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonInactiveColor, activeColor: KanvasCameraColors.shootButtonActiveColor)
+        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonInactiveColor,
+                                      activeColor: KanvasCameraColors.shootButtonActiveColor)
         self.settings = settings
-
+        
         super.init(frame: .zero)
-
         backgroundColor = .clear
+        
         setUpButtons()
     }
 
@@ -83,9 +85,27 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
             showViews(shownViews: [], hiddenViews: [modeSelectorButton], animated: true)
         }
     }
-
+    
+    func showTooltip() {
+        tooltip = createTooltip()
+        tooltip?.show(forView: modeSelectorButton)
+    }
+    
+    func dismissTooltip() {
+        tooltip?.dismiss()
+    }
+    
     // MARK: - UI Layout
 
+    private func createTooltip() -> EasyTipView {
+        var preferences = EasyTipView.Preferences()
+        preferences.drawing.foregroundColor = .white
+        preferences.drawing.backgroundGradient = [.tumblrBrightBlue, .tumblrBrightPink]
+        preferences.drawing.arrowPosition = .top
+        preferences.positioning.margin = 10
+        return EasyTipView(text: "Tap to switch modes", preferences: preferences, delegate: nil)
+    }
+    
     private func setUpButtons() {
         setUpModeSelector()
         setUpShootButton()

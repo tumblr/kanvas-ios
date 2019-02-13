@@ -55,7 +55,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, ActionsViewDelegate, CameraInputControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, ActionsViewDelegate, CameraInputControllerDelegate, EasyTipViewDelegate {
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -217,6 +217,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     /// The welcome tooltip shows tooltip text for the Capture mode
     private func showWelcomeTooltip() {
+        modeAndShootController.showTooltip()
+        
         let viewModel = ModalViewModel(text: NSLocalizedString("Tap to take a photo or hold to take a video.", comment: "Welcome tooltip for the camera"),
                                        buttonTitle: NSLocalizedString("Got it", comment: "Welcome confirmation"),
                                        buttonCallback: { [weak self] in
@@ -626,5 +628,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// This function should be called to stop the camera session and properly breakdown the inputs
     public func stopSession() {
         cameraInputController.removeSessionInputsAndOutputs()
+    }
+    
+    public func easyTipViewDidDismiss(_ tipView: EasyTipView) {
+        // Nothing
     }
 }
