@@ -8,8 +8,8 @@
 import UIKit
 import Foundation
 
-public protocol EasyTipViewDelegate : class {
-    func easyTipViewDidDismiss(_ tipView : EasyTipView)
+public protocol EasyTipViewDelegate: class {
+    func easyTipViewDidDismiss(_ tipView: EasyTipView)
 }
 
 
@@ -98,14 +98,15 @@ public extension EasyTipView {
         
         superview.addSubview(self)
         
-        let animations : () -> () = {
+        let animations: () -> () = {
             self.transform = finalTransform
             self.alpha = 1
         }
         
         if animated {
             UIView.animate(withDuration: preferences.animating.showDuration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: velocity, options: [.curveEaseInOut], animations: animations, completion: nil)
-        }else{
+        }
+        else {
             animations()
         }
     }
@@ -160,17 +161,17 @@ open class EasyTipView: UIView {
     public struct Preferences {
         
         public struct Drawing {
-            public var cornerRadius        = CGFloat(5)
-            public var arrowHeight         = CGFloat(5)
-            public var arrowWidth          = CGFloat(10)
-            public var foregroundColor     = UIColor.white
-            public var backgroundColor     = UIColor.red
-            public var backgroundGradient: [UIColor]  = []
-            public var arrowPosition       = ArrowPosition.any
-            public var textAlignment       = NSTextAlignment.center
-            public var borderWidth         = CGFloat(0)
-            public var borderColor         = UIColor.clear
-            public var font                = UIFont.systemFont(ofSize: 15)
+            public var cornerRadius                             = CGFloat(5)
+            public var arrowHeight                              = CGFloat(5)
+            public var arrowWidth                               = CGFloat(10)
+            public var foregroundColor                          = UIColor.white
+            public var backgroundColor                          = UIColor.red
+            public var backgroundColorCollection: [UIColor]     = []
+            public var arrowPosition                            = ArrowPosition.any
+            public var textAlignment                            = NSTextAlignment.center
+            public var borderWidth                              = CGFloat(0)
+            public var borderColor                              = UIColor.clear
+            public var font                                     = UIFont.systemFont(ofSize: 15)
         }
         
         public struct Positioning {
@@ -179,7 +180,7 @@ open class EasyTipView: UIView {
             public var textHInset           = CGFloat(10)
             public var textVInset           = CGFloat(10)
             public var maxWidth             = CGFloat(200)
-            public var margin              = CGFloat(0)
+            public var margin               = CGFloat(0)
         }
         
         public struct Animating {
@@ -198,7 +199,7 @@ open class EasyTipView: UIView {
         public var drawing      = Drawing()
         public var positioning  = Positioning()
         public var animating    = Animating()
-        public var hasBorder : Bool {
+        public var hasBorder: Bool {
             return drawing.borderWidth > 0 && drawing.borderColor != UIColor.clear
         }
         
@@ -237,9 +238,9 @@ open class EasyTipView: UIView {
         [unowned self] in
         
         #if swift(>=4.2)
-        var attributes = [NSAttributedString.Key.font : self.preferences.drawing.font]
+        var attributes = [NSAttributedString.Key.font: self.preferences.drawing.font]
         #else
-        var attributes = [NSAttributedStringKey.font : self.preferences.drawing.font]
+        var attributes = [NSAttributedStringKey.font: self.preferences.drawing.font]
         #endif
         
         var textSize = self.text.boundingRect(with: CGSize(width: self.preferences.positioning.maxWidth, height: CGFloat.greatestFiniteMagnitude), options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: attributes, context: nil).size
@@ -343,14 +344,16 @@ open class EasyTipView: UIView {
         // adjust horizontally
         if frame.x < 0 {
             frame.x =  0
-        } else if frame.maxX > superviewFrame.width {
+        }
+        else if frame.maxX > superviewFrame.width {
             frame.x = superviewFrame.width - frame.width
         }
         
         //adjust vertically
         if frame.y < 0 {
             frame.y = 0
-        } else if frame.maxY > superviewFrame.maxY {
+        }
+        else if frame.maxY > superviewFrame.maxY {
             frame.y = superviewFrame.height - frame.height
         }
     }
@@ -368,7 +371,8 @@ open class EasyTipView: UIView {
         let superviewFrame: CGRect
         if let scrollview = superview as? UIScrollView {
             superviewFrame = CGRect(origin: scrollview.frame.origin, size: scrollview.contentSize)
-        } else {
+        }
+        else {
             superviewFrame = superview.frame
         }
         
@@ -399,7 +403,8 @@ open class EasyTipView: UIView {
         case .bottom, .top, .any:
             if frame.width < refViewFrame.width {
                 arrowTipXOrigin = contentSize.width / 2
-            } else {
+            }
+            else {
                 arrowTipXOrigin = abs(frame.x - refViewFrame.x) + refViewFrame.width / 2
             }
             
@@ -407,7 +412,8 @@ open class EasyTipView: UIView {
         case .right, .left:
             if frame.height < refViewFrame.height {
                 arrowTipXOrigin = contentSize.height / 2
-            } else {
+            }
+            else {
                 arrowTipXOrigin = abs(frame.y - refViewFrame.y) + refViewFrame.height / 2
             }
             
@@ -440,7 +446,8 @@ open class EasyTipView: UIView {
             contourPath.addLine(to: CGPoint(x: arrowTip.x - arrowWidth / 2, y: arrowTip.y + (arrowPosition == .bottom ? -1 : 1) * arrowHeight))
             if arrowPosition == .bottom {
                 drawBubbleBottomShape(bubbleFrame, cornerRadius: cornerRadius, path: contourPath)
-            } else {
+            }
+            else {
                 drawBubbleTopShape(bubbleFrame, cornerRadius: cornerRadius, path: contourPath)
             }
             contourPath.addLine(to: CGPoint(x: arrowTip.x + arrowWidth / 2, y: arrowTip.y + (arrowPosition == .bottom ? -1 : 1) * arrowHeight))
@@ -451,7 +458,8 @@ open class EasyTipView: UIView {
             
             if arrowPosition == .right {
                 drawBubbleRightShape(bubbleFrame, cornerRadius: cornerRadius, path: contourPath)
-            } else {
+            }
+            else {
                 drawBubbleLeftShape(bubbleFrame, cornerRadius: cornerRadius, path: contourPath)
             }
             
@@ -503,13 +511,22 @@ open class EasyTipView: UIView {
     }
     
     fileprivate func paintBubble(_ context: CGContext) {
-        let colors: [UIColor] = preferences.drawing.backgroundGradient
-        let gradientColor = colorWithGradient(frame: bounds, colors: colors)
-        context.setFillColor(gradientColor.cgColor)
+        let backgroundColor = getBackgroundColor()
+        context.setFillColor(backgroundColor.cgColor)
         context.fill(bounds)
     }
     
-    func colorWithGradient(frame: CGRect, colors: [UIColor]) -> UIColor {
+    fileprivate func getBackgroundColor() -> UIColor {
+        if preferences.drawing.backgroundColorCollection.isEmpty {
+            return preferences.drawing.backgroundColor
+        }
+        else {
+            let colors = preferences.drawing.backgroundColorCollection
+            return createColorFromGradient(frame: bounds, colors: colors)
+        }
+    }
+    
+    fileprivate func createColorFromGradient(frame: CGRect, colors: [UIColor], defaultColor: UIColor = .red) -> UIColor {
         // create the background layer that will hold the gradient
         let backgroundGradientLayer = CAGradientLayer()
         backgroundGradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
@@ -517,10 +534,9 @@ open class EasyTipView: UIView {
         backgroundGradientLayer.frame = frame
         
         // we create an array of CG colors from out UIColor array
-        let cgColors = colors.map({$0.cgColor})
+        let cgColors = colors.map {$0.cgColor}
         backgroundGradientLayer.colors = cgColors
-        
-        let defaultColor = UIColor.red
+
         UIGraphicsBeginImageContext(backgroundGradientLayer.bounds.size)
         guard let graphicsContext = UIGraphicsGetCurrentContext() else { return defaultColor }
         backgroundGradientLayer.render(in: graphicsContext)
@@ -537,7 +553,7 @@ open class EasyTipView: UIView {
         context.strokePath()
     }
     
-    fileprivate func drawText(_ bubbleFrame: CGRect, context : CGContext) {
+    fileprivate func drawText(_ bubbleFrame: CGRect, context: CGContext) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = preferences.drawing.textAlignment
         paragraphStyle.lineBreakMode = NSLineBreakMode.byWordWrapping
@@ -546,9 +562,9 @@ open class EasyTipView: UIView {
         let textRect = CGRect(x: bubbleFrame.origin.x + (bubbleFrame.size.width - textSize.width) / 2, y: bubbleFrame.origin.y + (bubbleFrame.size.height - textSize.height) / 2, width: textSize.width, height: textSize.height)
         
         #if swift(>=4.2)
-        let attributes = [NSAttributedString.Key.font : preferences.drawing.font, NSAttributedString.Key.foregroundColor : preferences.drawing.foregroundColor, NSAttributedString.Key.paragraphStyle : paragraphStyle]
+        let attributes = [NSAttributedString.Key.font: preferences.drawing.font, NSAttributedString.Key.foregroundColor: preferences.drawing.foregroundColor, NSAttributedString.Key.paragraphStyle : paragraphStyle]
         #else
-        let attributes = [NSAttributedStringKey.font : preferences.drawing.font, NSAttributedStringKey.foregroundColor : preferences.drawing.foregroundColor, NSAttributedStringKey.paragraphStyle : paragraphStyle]
+        let attributes = [NSAttributedStringKey.font : preferences.drawing.font, NSAttributedStringKey.foregroundColor: preferences.drawing.foregroundColor, NSAttributedStringKey.paragraphStyle: paragraphStyle]
         #endif
         
         text.draw(in: textRect, withAttributes: attributes)
@@ -575,7 +591,7 @@ open class EasyTipView: UIView {
             bubbleWidth = contentSize.width - 2 * preferences.positioning.bubbleHInset - preferences.drawing.arrowHeight
             bubbleHeight = contentSize.height - 2 * preferences.positioning.bubbleVInset
             
-            bubbleXOrigin = arrowPosition == .right ? preferences.positioning.bubbleHInset : preferences.positioning.bubbleHInset + preferences.drawing.arrowHeight
+            bubbleXOrigin = arrowPosition == .right ? preferences.positioning.bubbleHInset: preferences.positioning.bubbleHInset + preferences.drawing.arrowHeight
             bubbleYOrigin = preferences.positioning.bubbleVInset
             
         }
@@ -612,10 +628,12 @@ extension UIView {
         if let sview = view.superview {
             if sview === superview {
                 return true
-            }else{
+            }
+            else {
                 return viewHasSuperview(sview, superview: superview)
             }
-        }else{
+        }
+        else {
             return false
         }
     }

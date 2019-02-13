@@ -103,7 +103,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     private func createTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
         preferences.drawing.foregroundColor = .white
-        preferences.drawing.backgroundGradient = [.tumblrBrightBlue, .tumblrBrightPink]
+        preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue, .tumblrBrightPink]
         preferences.drawing.arrowPosition = .top
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
         return EasyTipView(text: "Tap to switch modes", preferences: preferences, delegate: nil)
