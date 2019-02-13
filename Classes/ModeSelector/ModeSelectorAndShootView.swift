@@ -50,6 +50,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         
         super.init(frame: .zero)
         backgroundColor = .clear
+        tooltip = createTooltip()
         
         setUpButtons()
     }
@@ -88,7 +89,6 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        tooltip = createTooltip()
         tooltip?.show(forView: modeSelectorButton)
     }
     

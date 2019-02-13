@@ -38,9 +38,6 @@ public protocol CameraControllerDelegate: class {
     /// Called after the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
     
-    /// Called after the creation tooltip is dismissed
-    func didDismissCreationTooltip()
-    
     /// Called to ask if welcome tooltip should be shown
     ///
     /// - Returns: Bool for tooltip

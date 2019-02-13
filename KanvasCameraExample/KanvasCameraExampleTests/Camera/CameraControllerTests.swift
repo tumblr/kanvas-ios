@@ -251,9 +251,6 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     func didDismissWelcomeTooltip() {
     }
     
-    func didDismissCreationTooltip() {
-    }
-    
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return false
     }
