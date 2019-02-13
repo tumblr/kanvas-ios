@@ -7,6 +7,7 @@
 import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
+    static let tooltipTopMargin: CGFloat = 10
     static let selectorYCenterMargin: CGFloat = 49
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 48
@@ -89,7 +90,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        tooltip?.show(forView: modeSelectorButton)
+        tooltip?.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
     }
     
     /// hides the tooltip below the mode selector
@@ -104,7 +105,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         preferences.drawing.foregroundColor = .white
         preferences.drawing.backgroundGradient = [.tumblrBrightBlue, .tumblrBrightPink]
         preferences.drawing.arrowPosition = .top
-        preferences.positioning.margin = 10
+        preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
         return EasyTipView(text: "Tap to switch modes", preferences: preferences, delegate: nil)
     }
     
