@@ -31,7 +31,7 @@ final class EasyTipViewTests: FBSnapshotTestCase {
     func newTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
         preferences.drawing.foregroundColor = .white
-        preferences.drawing.backgroundGradientColors = [.tumblrBrightBlue, .tumblrBrightPink]
+        preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue, .tumblrBrightPink]
         preferences.drawing.arrowPosition = .top
         preferences.positioning.margin = 10
         return EasyTipView(text: "Tap to switch modes", preferences: preferences, delegate: nil)
