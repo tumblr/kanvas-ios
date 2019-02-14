@@ -46,4 +46,22 @@ final class EasyTipViewTests: FBSnapshotTestCase {
         tooltip.show(animated: false, forView: subview, withinSuperview: containerView)
         FBSnapshotVerifyView(containerView)
     }
+    
+    func testDrawing() {
+        var drawing = EasyTipView.Preferences.Drawing()
+        drawing.backgroundColorCollection = [.red, .yellow]
+        XCTAssertEqual(drawing.backgroundColorCollection, [.red, .yellow], "Colors don't match")
+    }
+    
+    func testPositioning() {
+        var positioning = EasyTipView.Preferences.Positioning()
+        positioning.margin = 10
+        XCTAssertEqual(positioning.margin, 10, "Margin values do not match")
+    }
+    
+    func testAnimating() {
+        var animating = EasyTipView.Preferences.Animating()
+        animating.showDuration = 1.0
+        XCTAssertEqual(animating.showDuration, 1.0, "Duration values do not match")
+    }
 }
