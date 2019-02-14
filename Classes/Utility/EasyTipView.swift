@@ -371,7 +371,8 @@ open class EasyTipView: UIView {
         
         var position = preferences.drawing.arrowPosition
         
-        let refViewFrame = presentingView!.convert(presentingView!.bounds, to: superview)
+        guard let presentingView = presentingView else { return }
+        let refViewFrame = presentingView.convert(presentingView.bounds, to: superview)
         
         let superviewFrame: CGRect
         if let scrollview = superview as? UIScrollView {
