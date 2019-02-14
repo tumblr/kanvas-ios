@@ -21,7 +21,7 @@ struct CameraConstants {
 }
 
 /// View with containers for all camera subviews (input, mode selector, etc)
-/// that handles their relative layoutbuttonSize.
+/// that handles their relative layout.
 final class CameraView: UIView {
 
     /// Layout guide for camera input
