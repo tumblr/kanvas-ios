@@ -81,7 +81,7 @@ public extension EasyTipView {
             
         }
         
-        guard let defaultView = UIApplication.shared.windows.first else { return }
+        guard let defaultView = view.superview else { return }
         let superview = superview ?? defaultView
         
         let initialTransform = preferences.animating.showInitialTransform
