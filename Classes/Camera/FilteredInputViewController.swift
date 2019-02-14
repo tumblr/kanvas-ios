@@ -11,7 +11,7 @@ import UIKit
 
 /// Callback protocol for the filters
 protocol FilteredInputViewControllerDelegate {
-    /// Method to return a pixel buffer
+    /// Method to return a filtered pixel buffer
     ///
     /// - Parameter pixelBuffer: the final pixel buffer
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime)

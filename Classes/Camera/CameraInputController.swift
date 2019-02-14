@@ -610,6 +610,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
+        let filteredImage = filteredInputViewController.filterImageWithCurrentPipeline(image: image)
+        return filteredImage ?? image
+    }
+
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if output == audioDataOutput {

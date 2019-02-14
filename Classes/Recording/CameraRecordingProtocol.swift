@@ -20,6 +20,12 @@ protocol CameraRecordingDelegate: class {
 
     /// this is called after a video is taken. Methods to change UI, update torch, should be called from this method
     func cameraWillFinishVideo()
+
+    /// this is called after a photo is taken, returns a filtered image if necessary
+    ///
+    /// - Parameter image: the input image
+    /// - Returns: the output filtered image, if necessary
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage?
 }
 
 /// A protocol adopted by the various capture recorders

@@ -251,7 +251,11 @@ extension CameraRecorder: CameraRecordingProtocol {
             if cameraPosition == .front, let flippedImage = image.flipLeftMirrored() {
                 image = flippedImage
             }
-            self.segmentsHandler.addNewImageSegment(image: image, size: self.size, completion: { (success, _) in
+            guard let filteredImage = self.recordingDelegate?.cameraDidTakePhoto(image: image) else {
+                completion(nil)
+                return
+            }
+            self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
                 completion(success ? image : nil)
             })
         }

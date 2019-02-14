@@ -88,6 +88,10 @@ final class CameraRecorderTests: XCTestCase {
 
 /// This mocks up a camera recorder delegate for future classes that require recording segments
 final class CameraRecorderDelegateStub: CameraRecordingDelegate {
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
+        return image
+    }
+
     var videoStart: Bool
     var videoFinish: Bool
 
