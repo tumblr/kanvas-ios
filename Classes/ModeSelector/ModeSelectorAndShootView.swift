@@ -106,7 +106,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue, .tumblrBrightPink]
         preferences.drawing.arrowPosition = .top
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
-        return EasyTipView(text: "Tap to switch modes", preferences: preferences, delegate: nil)
+        let text = NSLocalizedString("Tap to switch modes", comment: "Welcome tooltip for the camera")
+        return EasyTipView(text: text, preferences: preferences, delegate: nil)
     }
     
     private func setUpButtons() {
