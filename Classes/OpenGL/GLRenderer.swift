@@ -39,7 +39,7 @@ final class GLRenderer {
         self.delegate = delegate
         self.callbackQueue = callbackQueue
         glContext = EAGLContext(api: .openGLES3)
-        filter = Filter(glContext: glContext)
+        filter = FilterFactory.createFilter(type: .emInterference, glContext: glContext)
     }
     
     /// Call this method to process the sample buffer
@@ -76,7 +76,7 @@ final class GLRenderer {
             processingImage = false
         }
 
-        let imageFilter = Filter(glContext: glContext)
+        let imageFilter = FilterFactory.createFilter(type: .emInterference, glContext: glContext)
         var sampleTime = CMSampleTimingInfo()
         var videoInfo: CMVideoFormatDescription?
         CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &videoInfo)
