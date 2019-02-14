@@ -617,7 +617,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         else if output == videoDataOutput {
             filteredInputViewController?.filterSampleBuffer(sampleBuffer)
-            recorder?.processVideoSampleBuffer(sampleBuffer)
         }
     }
 
@@ -630,7 +629,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     
     // MARK: - FilteredInputViewControllerDelegate
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-
+        recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
     }
 
     // MARK: - breakdown

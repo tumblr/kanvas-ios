@@ -131,6 +131,10 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         currentVideoSample = sampleBuffer
     }
 
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+
+    }
+
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
 
     }

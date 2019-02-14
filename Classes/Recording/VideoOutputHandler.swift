@@ -32,6 +32,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
     private(set) var recording: Bool = false
 
     private var currentVideoSampleBuffer: CMSampleBuffer?
+    private var currentVideoPixelBuffer: CVPixelBuffer?
     private var currentAudioSampleBuffer: CMSampleBuffer?
     private var assetWriter: AVAssetWriter?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
@@ -116,6 +117,26 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
                         self.recordedVideoFrameFirst = true
                     }
                     self.videoInput?.append(buffer)
+                }
+            }
+        }
+    }
+
+    /// The video pixel buffer processor
+    ///
+    /// - Parameters:
+    ///   - pixelBuffer: The filtered pixel buffer input
+    ///   - presentationTime: The time to append the buffer
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        currentVideoPixelBuffer = pixelBuffer
+        if recording {
+            videoQueue.async {
+                if self.videoInput?.isReadyForMoreMediaData == true {
+                    if self.recordedVideoFrameFirst == false {
+                        self.assetWriter?.startSession(atSourceTime: presentationTime)
+                        self.recordedVideoFrameFirst = true
+                    }
+                    self.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: presentationTime)
                 }
             }
         }

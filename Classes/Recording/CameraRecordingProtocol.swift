@@ -126,6 +126,13 @@ protocol CameraRecordingProtocol {
     /// - Parameter sampleBuffer: CMSampleBuffer input to be processed
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer)
 
+    /// process the video pixel buffer at the presentation time
+    ///
+    /// - Parameters:
+    ///   - pixelBuffer: The image buffer
+    ///   - presentationTime: The append time for the buffer
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime)
+
     /// processes the audio buffer
     ///
     /// - Parameter sampleBuffer: CMSampleBuffer input to be processed

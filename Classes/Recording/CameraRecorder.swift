@@ -32,6 +32,8 @@ final class CameraRecorder: NSObject {
     private let videoOutput: AVCaptureVideoDataOutput?
     private let audioOutput: AVCaptureAudioDataOutput?
 
+    private var currentVideoPixelBuffer: CVPixelBuffer?
+
     private var currentRecordingMode: CameraMode
     private let segmentsHandler: SegmentsHandlerType
 
@@ -53,7 +55,7 @@ final class CameraRecorder: NSObject {
         self.size = size
 
         photoOutputHandler = PhotoOutputHandler(photoOutput: photoOutput)
-        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput)
+        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput, usePixelBuffer: true)
         videoOutputHandlers = []
 
         self.photoOutput = photoOutput
@@ -292,6 +294,17 @@ extension CameraRecorder: CameraRecordingProtocol {
             currentVideoOutputHandler?.processVideoSampleBuffer(sampleBuffer)
         case .gif:
             gifVideoOutputHandler.processVideoSampleBuffer(sampleBuffer)
+        default: break
+        }
+    }
+
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        self.currentVideoPixelBuffer = pixelBuffer // TODO jimmy why?!
+        switch currentRecordingMode {
+        case .stopMotion:
+            currentVideoOutputHandler?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+        case .gif:
+            gifVideoOutputHandler.processVideoPixelBuffer(pixelBuffer)
         default: break
         }
     }
