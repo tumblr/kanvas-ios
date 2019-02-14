@@ -47,7 +47,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, ActionsViewDelegate, CameraInputControllerDelegate, EasyTipViewDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, ActionsViewDelegate, CameraInputControllerDelegate {
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -599,9 +599,5 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// This function should be called to stop the camera session and properly breakdown the inputs
     public func stopSession() {
         cameraInputController.removeSessionInputsAndOutputs()
-    }
-    
-    public func easyTipViewDidDismiss(_ tipView: EasyTipView) {
-        // Nothing
     }
 }
