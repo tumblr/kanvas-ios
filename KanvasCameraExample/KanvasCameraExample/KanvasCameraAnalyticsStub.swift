@@ -10,11 +10,11 @@ import KanvasCamera
 
 final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsProvider {
     public func logCameraOpen(mode: CameraMode) {
-        logString(string: "\(#function)")
+        logString(string: "\(#function) mode:\(mode.rawValue)")
     }
 
-    public func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval) {
-        logString(string: "\(#function)")
+    public func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval, ghostFrameEnabled: Bool) {
+        logString(string: "\(#function) type:\(type) cameraPosition:\(cameraPosition) length:\(length) ghostFrameEnabled:\(ghostFrameEnabled)")
     }
 
     public func logNextTapped() {
@@ -22,7 +22,7 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     }
 
     public func logConfirmedMedia(mode: CameraMode, clipsCount: Int, length: TimeInterval) {
-        logString(string: "\(#function)")
+        logString(string: "\(#function) mode:\(mode) clipsCount:\(clipsCount) length:\(length)")
     }
 
     public func logDismiss() {
@@ -30,15 +30,15 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     }
 
     public func logPhotoCaptured(cameraPosition: String) {
-        logString(string: "\(#function)")
+        logString(string: "\(#function) cameraPosition:\(cameraPosition)")
     }
 
     public func logGifCaptured(cameraPosition: String) {
-        logString(string: "\(#function)")
+        logString(string: "\(#function) cameraPosition:\(cameraPosition)")
     }
 
     public func logVideoCaptured(cameraPosition: String) {
-        logString(string: "\(#function)")
+        logString(string: "\(#function) cameraPosition:\(cameraPosition)")
     }
 
     public func logFlipCamera() {
@@ -53,8 +53,8 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "\(#function)")
     }
     
-    public func logImagePreviewToggled() {
-        logString(string: "\(#function)")
+    public func logImagePreviewToggled(enabled: Bool) {
+        logString(string: "\(#function) enabled:\(enabled)")
     }
     
     public func logUndoTapped() {

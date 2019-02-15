@@ -288,6 +288,21 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return text
     }
     
+    private func getLastFrameFrom(_ url: URL) -> UIImage {
+        let asset = AVURLAsset(url: url, options: nil)
+        let generate = AVAssetImageGenerator(asset: asset)
+        generate.appliesPreferredTrackTransform = true
+        let lastFrameTime = CMTimeGetSeconds(asset.duration) * 60.0
+        let time = CMTimeMake(value: Int64(lastFrameTime), timescale: 2)
+        do {
+            let cgImage = try generate.copyCGImage(at: time, actualTime: nil)
+            return UIImage(cgImage: cgImage)
+        }
+        catch {
+            return UIImage()
+        }
+    }
+
     private func takeGif(useLongerDuration: Bool = false) {
         guard !isRecording else { return }
         updatePhotoCaptureState(event: .started)
@@ -296,7 +311,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 self?.updatePhotoCaptureState(event: .ended)
             }
             guard let strongSelf = self else { return }
-            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
+            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                           cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                           length: 0,
+                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible())
             performUIUpdate {
                 if let url = url {
                     let segment = CameraSegment.video(url)
@@ -314,14 +332,19 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 self?.updatePhotoCaptureState(event: .ended)
             }
             guard let strongSelf = self else { return }
-            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: 0)
+            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                           cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                           length: 0,
+                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible())
             performUIUpdate {
                 if let image = image {
                     if strongSelf.currentMode == .photo {
                         strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil)])
                     }
                     else {
-                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: nil))
+                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                        overlayText: nil,
+                                                                        lastFrame: image))
                     }
                 }
             }
@@ -339,6 +362,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 // we can ignore this error for now since configuring mode may not succeed for devices without all the modes available (flash, multiple cameras)
             }
         }
+    }
+
+    /// Is the image preview (ghost frame) visible?
+    private func imagePreviewVisible() -> Bool {
+        return accessUISync { [weak self] in
+            return (self?.topOptionsController.imagePreviewOptionAvailable() ?? false) &&
+                   (self?.imagePreviewController.imagePreviewVisible() ?? false)
+        } ?? false
     }
     
     private enum RecordingEvent {
@@ -383,7 +414,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     /// Updates the fullscreen preview with the last image of the clip collection
     private func updateLastClipPreview() {
-        imagePreviewController.setImagePreview(clipsController.getPreviewFromLastClip())
+        imagePreviewController.setImagePreview(clipsController.getLastFrameFromLastClip())
     }
     
     // MARK : - Private utilities
@@ -458,11 +489,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 guard let strongSelf = self else { return }
                 if let videoURL = url {
                     let asset = AVURLAsset(url: videoURL)
-                    strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode, cameraPosition: strongSelf.cameraInputController.currentCameraPosition, length: CMTimeGetSeconds(asset.duration))
+                    strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                                   cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                                   length: CMTimeGetSeconds(asset.duration),
+                                                                   ghostFrameEnabled: strongSelf.imagePreviewVisible())
                 }
                 performUIUpdate {
                     if let url = url, let image = AVURLAsset(url: url).thumbnail() {
-                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: strongSelf.durationStringForAssetAtURL(url)))
+                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                        overlayText: strongSelf.durationStringForAssetAtURL(url),
+                                                                        lastFrame: strongSelf.getLastFrameFrom(url)))
                     }
                     strongSelf.updateRecordState(event: .ended)
                 }
@@ -487,10 +523,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             cameraZoomHandler.resetZoom()
         case .imagePreviewOn:
             imagePreviewController.showImagePreview(true)
-            analyticsProvider?.logImagePreviewToggled()
+            analyticsProvider?.logImagePreviewToggled(enabled: true)
         case .imagePreviewOff:
             imagePreviewController.showImagePreview(false)
-            analyticsProvider?.logImagePreviewToggled()
+            analyticsProvider?.logImagePreviewToggled(enabled: false)
         }
     }
 

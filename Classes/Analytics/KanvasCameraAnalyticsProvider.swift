@@ -12,7 +12,7 @@ import Foundation
 
     /// Logs an event when the camera is opened
     ///
-    /// - Parameter position: what photo mode was opened
+    /// - Parameter mode: what photo mode was opened
     func logCameraOpen(mode: CameraMode)
 
     /// Logs an event when the camera is dismissed without exporting media
@@ -24,7 +24,8 @@ import Foundation
     ///   - type: the camera mode used to capture media.
     ///   - cameraPosition: the back or front camera
     ///   - length: the duration of the video created, in seconds
-    func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval)
+    ///   - ghostFrameEnabled: whether the ghost frame feature is enabled or not
+    func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval, ghostFrameEnabled: Bool)
     
     /// Logs an event when the flip camera button is tapped
     func logFlipCamera()
@@ -36,7 +37,7 @@ import Foundation
     func logFlashToggled()
 
     /// Logs an event when the image preview button is tapped
-    func logImagePreviewToggled()
+    func logImagePreviewToggled(enabled: Bool)
     
     /// Logs an event when the undo button is tapped
     func logUndoTapped()

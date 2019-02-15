@@ -126,7 +126,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     // MARK: - ModeSelectorAndShootControllerDelegate
     // Open mode doesn't change UI directly because that is done before the delegate function is called
     // Tap for mode doesn't do anything because it should show preview for photo and gifd modes
-    func testTapForStopMotionModeShouldHideModeButtonAndAddClipAndShowUndoNextButtons() {
+    func testTapForStopMotionModeShouldHideModeButtonAndAddClipAndShowNextButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -146,7 +146,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testEndLongPressShouldHideModeButtonAndAddClipAndShowUndoNextButtons() {
+    func testEndLongPressShouldHideModeButtonAndAddClipAndShowNextButtons() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -157,7 +157,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testTapAndLongPressShouldAddTwoClipsAndShowUndoNextButtons() {
+    func testTapAndLongPressShouldAddTwoClipsAndShowNextButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
