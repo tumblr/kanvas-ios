@@ -17,6 +17,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     private var shouldShowWelcomeToolip = true
     private var shouldShowCreationTooltip = true
     private var shouldEnableGhostFrame = true
+    private var shouldEnableOpenGLPreview = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,6 +55,10 @@ final class KanvasCameraExampleViewController: UIViewController {
 // MARK: - CameraControllerDelegate
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
+    func cameraShouldEnableOpenGLPreview() -> Bool {
+        return shouldEnableOpenGLPreview
+    }
+
     func cameraShouldEnableGhostFrame() -> Bool {
         return shouldEnableGhostFrame
     }

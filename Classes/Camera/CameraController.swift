@@ -52,6 +52,8 @@ public protocol CameraControllerDelegate: class {
     func cameraShouldShowCreationTooltip() -> Bool
 
     func cameraShouldEnableGhostFrame() -> Bool
+
+    func cameraShouldEnableOpenGLPreview() -> Bool
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -619,6 +621,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer) {
         cameraZoomHandler.setZoom(gesture: gesture)
+    }
+
+    func cameraInputControllerShouldEnableOpenGLPreview() -> Bool {
+        return delegate?.cameraShouldEnableOpenGLPreview() ?? false
     }
     
     // MARK: - breakdown

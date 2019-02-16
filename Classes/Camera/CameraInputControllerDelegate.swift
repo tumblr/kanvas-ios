@@ -16,4 +16,6 @@ protocol CameraInputControllerDelegate {
     /// - Parameters:
     ///   - gesture: the pinch gesture
     func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer)
+
+    func cameraInputControllerShouldEnableOpenGLPreview() -> Bool
 }

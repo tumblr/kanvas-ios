@@ -37,8 +37,13 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
-    private lazy var filteredInputViewController = {
-         return FilteredInputViewController(delegate: self)
+    private lazy var filteredInputViewController: FilteredInputViewController? = {
+        if delegate?.cameraInputControllerShouldEnableOpenGLPreview() ?? false {
+            return FilteredInputViewController(delegate: self)
+        }
+        else {
+            return nil
+        }
     }()
     private let previewLayer = AVCaptureVideoPreviewLayer()
     private let flashLayer = CALayer()
@@ -124,8 +129,14 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         createCaptureSession()
         configureSession()
         setupGestures()
-//        setupPreview()
-        setupFilteredPreview()
+
+        if delegate?.cameraInputControllerShouldEnableOpenGLPreview() ?? false {
+            setupFilteredPreview()
+        }
+        else {
+            setupPreview()
+        }
+
         setupFlash(defaultOption: settings.preferredFlashOption)
         setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
 
@@ -170,6 +181,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     private func setupFilteredPreview() {
+        guard let filteredInputViewController = self.filteredInputViewController else { return }
+
         load(childViewController: filteredInputViewController, into: view)
     }
 
@@ -199,7 +212,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         captureSession?.startRunning()
 
         // have to rebuild the filtered input display setup
-        filteredInputViewController.reset()
+        filteredInputViewController?.reset()
     }
 
     /// Changes the current output modes corresponding to camera mode
@@ -573,7 +586,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             recorder?.processAudioSampleBuffer(sampleBuffer)
         }
         else if output == videoDataOutput {
-            filteredInputViewController.filterSampleBuffer(sampleBuffer)
+            filteredInputViewController?.filterSampleBuffer(sampleBuffer)
             recorder?.processVideoSampleBuffer(sampleBuffer)
         }
     }
@@ -587,7 +600,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     
     // MARK: - FilteredInputViewControllerDelegate
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        //recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+
     }
 
     // MARK: - breakdown
