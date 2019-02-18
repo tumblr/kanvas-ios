@@ -25,7 +25,7 @@ private struct MediaClipsCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.15
         
     /// Padding at each side of the clip collection
-    static let horizontalInset: CGFloat = 20
+    static let horizontalInset: CGFloat = 11
 }
 
 /// Controller for handling the media clips collection.

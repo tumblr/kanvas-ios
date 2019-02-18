@@ -6,14 +6,16 @@
 
 import Foundation
 import UIKit
+import TumblrTheme
 
 private struct MediaClipsEditorViewConstants {
-    static let topPadding: CGFloat = 8
+    static let topPadding: CGFloat = 6
     static let bottomPadding: CGFloat = 12
-    static let buttonHorizontalMargin: CGFloat = 20
+    static let buttonHorizontalMargin: CGFloat = 25
     static let buttonRadius: CGFloat = 25
-    static let buttonWidth: CGFloat = 95
-    static let buttonHeight: CGFloat = 42
+    static let buttonWidth: CGFloat = 91
+    static let buttonHeight: CGFloat = 41
+    static let buttonTopOffset: CGFloat = 3
     static let animationDuration: TimeInterval = 0.5
 }
 
@@ -96,15 +98,16 @@ private extension MediaClipsEditorView {
         previewButton.translatesAutoresizingMaskIntoConstraints = false
         previewButton.setTitle("Preview", for: .normal)
         previewButton.layer.cornerRadius = 20
-        previewButton.backgroundColor = KanvasCameraColors.mediaActiveColor
+        previewButton.backgroundColor = .tumblrBrightBlue
         previewButton.setTitleColor(.white, for: .normal)
-        previewButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        previewButton.titleLabel?.font = .favoritTumblrMedium(fontSize: 15)
         NSLayoutConstraint.activate([
             previewButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
                                                     constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
             previewButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonHeight),
             previewButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonWidth),
-            previewButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
+            previewButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor,
+                                                   constant: MediaClipsEditorViewConstants.buttonTopOffset)
         ])
     }
 
