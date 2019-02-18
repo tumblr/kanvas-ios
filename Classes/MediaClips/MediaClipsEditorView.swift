@@ -87,7 +87,7 @@ private extension MediaClipsEditorView {
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
                                                        constant: -trailingMargin),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor,
+            collectionContainer.bottomAnchor.constraint(equalTo: bottomAnchor,
                                                         constant: -MediaClipsEditorViewConstants.bottomPadding),
             collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
         ])

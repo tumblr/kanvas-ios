@@ -117,8 +117,7 @@ extension MediaClipsCollectionCell {
                                               constant: MediaClipsCollectionCellConstants.cellPadding),
             clipView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
                                                constant: -MediaClipsCollectionCellConstants.cellPadding),
-            clipView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.topAnchor),
-            clipView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.bottomAnchor),
+            clipView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             clipView.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.clipHeight),
             clipView.widthAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.clipWidth)
         ])
