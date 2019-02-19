@@ -7,7 +7,7 @@
 import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
-    static let tooltipTopMargin: CGFloat = 10
+    static let tooltipTopMargin: CGFloat = 12
     static let selectorYCenterMargin: CGFloat = 49
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 48
@@ -48,7 +48,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonInactiveColor,
                                       activeColor: KanvasCameraColors.shootButtonActiveColor)
         self.settings = settings
-        
+
         super.init(frame: .zero)
         backgroundColor = .clear
         tooltip = createTooltip()
