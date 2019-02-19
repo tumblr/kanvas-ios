@@ -160,10 +160,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return .portrait
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     /// Requests permissions for video
     ///
     /// - Parameter completion: boolean on whether access was granted
