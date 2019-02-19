@@ -8,7 +8,7 @@ import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
-    static let shootButtonBottomMargin: CGFloat = 5
+    static let shootButtonBottomMargin: CGFloat = 4
     static var shootButtonTopMargin: CGFloat {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }

@@ -9,14 +9,14 @@ import UIKit
 import TumblrTheme
 
 private struct MediaClipsEditorViewConstants {
-    static let topPadding: CGFloat = 6
-    static let bottomPadding: CGFloat = 12
-    static let buttonHorizontalMargin: CGFloat = 25
-    static let buttonRadius: CGFloat = 25
-    static let buttonWidth: CGFloat = 91
-    static let buttonHeight: CGFloat = 41
-    static let buttonTopOffset: CGFloat = 3
     static let animationDuration: TimeInterval = 0.5
+    static let buttonHorizontalMargin: CGFloat = 30
+    static let buttonRadius: CGFloat = 25
+    static let buttonWidth: CGFloat = 90
+    static let buttonHeight: CGFloat = 40
+    static let buttonTopOffset: CGFloat = 4.8
+    static let topPadding: CGFloat = 6
+    static let bottomPadding: CGFloat = 12 + (Device.isIPhoneX ? 12 : 0)
 }
 
 protocol MediaClipsEditorViewDelegate: class {
@@ -82,7 +82,7 @@ private extension MediaClipsEditorView {
     func setUpCollection() {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let trailingMargin = MediaClipsEditorViewConstants.buttonWidth + MediaClipsEditorViewConstants.buttonHorizontalMargin * 2
+        let trailingMargin = MediaClipsEditorViewConstants.buttonWidth + MediaClipsEditorViewConstants.buttonHorizontalMargin * 1.5
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
@@ -100,7 +100,7 @@ private extension MediaClipsEditorView {
         previewButton.layer.cornerRadius = 20
         previewButton.backgroundColor = .tumblrBrightBlue
         previewButton.setTitleColor(.white, for: .normal)
-        previewButton.titleLabel?.font = .favoritTumblrMedium(fontSize: 15)
+        previewButton.titleLabel?.font = .favoritTumblrMedium(fontSize: 14.8)
         NSLayoutConstraint.activate([
             previewButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
                                                     constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
