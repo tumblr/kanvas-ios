@@ -243,9 +243,11 @@ final class CameraControllerTests: FBSnapshotTestCase {
 final class CameraControllerDelegateStub: CameraControllerDelegate {
 
     private let shouldEnableGhostFrame: Bool
+    private let shouldEnableOpenGLPreview: Bool
 
-    init(shouldEnableGhostFrame: Bool = true) {
+    init(shouldEnableGhostFrame: Bool = true, shouldEnableOpenGLPreview: Bool = false) {
         self.shouldEnableGhostFrame = shouldEnableGhostFrame
+        self.shouldEnableOpenGLPreview = shouldEnableOpenGLPreview
     }
 
     func didDismissWelcomeTooltip() {
@@ -264,6 +266,10 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
 
     func cameraShouldEnableGhostFrame() -> Bool {
         return shouldEnableGhostFrame
+    }
+
+    func cameraShouldEnableOpenGLPreview() -> Bool {
+        return shouldEnableOpenGLPreview
     }
 
     var dismissCalled = false
