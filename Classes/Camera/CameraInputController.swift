@@ -143,6 +143,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
         guard !isSimulator else { return }
 
         captureSession?.startRunning()
@@ -156,6 +158,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
         guard !isSimulator else { return }
 
         captureSession?.stopRunning()

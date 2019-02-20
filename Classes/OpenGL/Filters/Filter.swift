@@ -130,7 +130,7 @@ class Filter: FilterProtocol {
                                                       kCVPixelFormatOpenGLESCompatibility: true,
                                                       kCVPixelBufferIOSurfacePropertiesKey: NSDictionary()]
 
-        let pixelBufferPoolOptions: NSDictionary = [kCVPixelBufferPoolAllocationThresholdKey:5, kCVPixelBufferPoolMinimumBufferCountKey: 2]
+        let pixelBufferPoolOptions: NSDictionary = [kCVPixelBufferPoolAllocationThresholdKey: 5, kCVPixelBufferPoolMinimumBufferCountKey: 2]
         
         CVPixelBufferPoolCreate(kCFAllocatorDefault, pixelBufferPoolOptions, sourcePixelBufferOptions, &outputPool)
         
@@ -191,16 +191,16 @@ class Filter: FilterProtocol {
         }
         shader?.deleteProgram()
         shader = nil
-        if textureCache != nil {
-            CVOpenGLESTextureCacheFlush(textureCache!, 0)
+        if let textureCacheNotNull = textureCache {
+            CVOpenGLESTextureCacheFlush(textureCacheNotNull, 0)
             textureCache = nil
         }
-        if renderTextureCache != nil {
-            CVOpenGLESTextureCacheFlush(renderTextureCache!, 0)
+        if let renderTextureCacheNotNull = renderTextureCache {
+            CVOpenGLESTextureCacheFlush(renderTextureCacheNotNull, 0)
             renderTextureCache = nil
         }
-        if bufferPool != nil {
-            CVPixelBufferPoolFlush(bufferPool!, [CVPixelBufferPoolFlushFlags.excessBuffers])
+        if let bufferPoolNotNull = bufferPool {
+            CVPixelBufferPoolFlush(bufferPoolNotNull, [CVPixelBufferPoolFlushFlags.excessBuffers])
             bufferPool = nil
         }
         if bufferPoolAuxAttributes != nil {
@@ -274,7 +274,8 @@ class Filter: FilterProtocol {
             if err != 0 {
                 if err == kCVReturnWouldExceedAllocationThreshold {
                     throw GLError.setupError("Pool is out of buffers, dropping frame")
-                } else {
+                }
+                else {
                     throw GLError.setupError("Error at CVPixelBufferPoolCreatePixelBuffer")
                 }
             }

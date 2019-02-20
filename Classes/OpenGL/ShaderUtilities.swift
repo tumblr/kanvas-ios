@@ -56,7 +56,9 @@ public struct glue {
             
             LogError("Failed to compile shader:\n")
             for i in 0..<count.l {
-                LogInfo("%s", args: OpaquePointer(sources[i]!))
+                if let source = sources[i] {
+                    LogInfo("%s", args: OpaquePointer(source))
+                }
             }
         }
         

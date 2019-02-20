@@ -143,7 +143,7 @@ class Shader {
             var vector: [GLfloat] = []
             vector.append(value[0])
             vector.append(value[1])
-            glUniform2fv(location, 1, vector);
+            glUniform2fv(location, 1, vector)
         }
     }
     

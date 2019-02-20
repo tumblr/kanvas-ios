@@ -17,7 +17,7 @@ final class GLPixelBufferView: UIView {
     private var colorBufferHandle: GLuint = 0
     private var videoFrame: GLint = 0
     
-    override class var layerClass : AnyClass {
+    override class var layerClass: AnyClass {
         return CAEAGLLayer.self
     }
     
@@ -104,9 +104,9 @@ final class GLPixelBufferView: UIView {
             colorBufferHandle = 0
         }
         renderShader?.deleteProgram()
-        if textureCache != nil {
-            CVOpenGLESTextureCacheFlush(textureCache!, 0)
-            textureCache = nil
+        if let textureCache = textureCache {
+            CVOpenGLESTextureCacheFlush(textureCache, 0)
+            self.textureCache = nil
         }
         if oldContext !== oglContext {
             EAGLContext.setCurrent(oldContext)
@@ -140,9 +140,15 @@ final class GLPixelBufferView: UIView {
         // Create a CVOpenGLESTexture from a CVPixelBufferRef
         let frameWidth = CVPixelBufferGetWidth(pixelBuffer)
         let frameHeight = CVPixelBufferGetHeight(pixelBuffer)
-        var texture: CVOpenGLESTexture? = nil
+        var textureMaybe: CVOpenGLESTexture? = nil
+
+        guard let textureCache = textureCache else {
+            NSLog("Problem accessing texture cache")
+            return
+        }
+
         let err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-                                                               textureCache!,
+                                                               textureCache,
                                                                pixelBuffer,
                                                                nil,
                                                                GL_TEXTURE_2D.ui,
@@ -152,11 +158,15 @@ final class GLPixelBufferView: UIView {
                                                                GL_BGRA.ui,
                                                                GL_UNSIGNED_BYTE.ui,
                                                                0,
-                                                               &texture)
+                                                               &textureMaybe)
         
-        
-        if texture == nil || err != 0 {
+        guard err == 0 else {
             NSLog("CVOpenGLESTextureCacheCreateTextureFromImage failed (error: %d)", err)
+            return
+        }
+
+        guard let texture = textureMaybe else {
+            NSLog("CVOpenGLESTextureCacheCreateTextureFromImage failed to create texture")
             return
         }
         
@@ -166,7 +176,7 @@ final class GLPixelBufferView: UIView {
         
         renderShader?.useProgram()
         glActiveTexture(GL_TEXTURE0.ui)
-        glBindTexture(CVOpenGLESTextureGetTarget(texture!), CVOpenGLESTextureGetName(texture!))
+        glBindTexture(CVOpenGLESTextureGetTarget(texture), CVOpenGLESTextureGetName(texture))
         glUniform1i(videoFrame, 0)
         
         // Set texture parameters
@@ -184,7 +194,8 @@ final class GLPixelBufferView: UIView {
         if cropScaleAmount.height > cropScaleAmount.width {
             textureSamplingSize.width = self.bounds.size.width / (frameWidth.g * cropScaleAmount.height)
             textureSamplingSize.height = 1.0
-        } else {
+        }
+        else {
             textureSamplingSize.width = 1.0
             textureSamplingSize.height = self.bounds.size.height / (frameHeight.g * cropScaleAmount.width)
         }
@@ -206,7 +217,7 @@ final class GLPixelBufferView: UIView {
         glBindRenderbuffer(GL_RENDERBUFFER.ui, colorBufferHandle)
         oglContext.presentRenderbuffer(GL_RENDERBUFFER.l)
 
-        glBindTexture(CVOpenGLESTextureGetTarget(texture!), 0)
+        glBindTexture(CVOpenGLESTextureGetTarget(texture), 0)
         glBindTexture(GL_TEXTURE_2D.ui, 0)
 
         if oldContext !== oglContext {

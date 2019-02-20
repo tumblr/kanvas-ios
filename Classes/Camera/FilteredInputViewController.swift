@@ -40,13 +40,11 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         view.backgroundColor = .black
         setupPreview()
     }
-    
-    override public func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
 
     override func viewDidDisappear(_ animated: Bool) {
         reset()
+
+        super.viewDidDisappear(animated)
     }
     
     // MARK: - layout
