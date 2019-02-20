@@ -96,10 +96,10 @@ class Filter: FilterProtocol {
             }
             
             bufferPoolAuxAttributes = createPixelBufferPoolAuxAttributes(maxRetainedBufferCount)
-            guard let bufferPool = bufferPool, let bufferPoolAttributes = bufferPoolAuxAttributes else {
+            guard let bufferPool = bufferPool else {
                 throw GLError.setupError("Problem allocating the pixel buffers")
             }
-            preallocatePixelBuffersInPool(bufferPool, bufferPoolAttributes)
+            //preallocatePixelBuffersInPool(bufferPool, bufferPoolAttributes)
             
             var outputFormatDescription: CMFormatDescription? = nil
             var testPixelBuffer: CVPixelBuffer? = nil
@@ -129,8 +129,8 @@ class Filter: FilterProtocol {
                                                       kCVPixelBufferHeightKey: height,
                                                       kCVPixelFormatOpenGLESCompatibility: true,
                                                       kCVPixelBufferIOSurfacePropertiesKey: NSDictionary()]
-        
-        let pixelBufferPoolOptions: NSDictionary = [kCVPixelBufferPoolMinimumBufferCountKey: maxBufferCount]
+
+        let pixelBufferPoolOptions: NSDictionary = [kCVPixelBufferPoolAllocationThresholdKey:5, kCVPixelBufferPoolMinimumBufferCountKey: 2]
         
         CVPixelBufferPoolCreate(kCFAllocatorDefault, pixelBufferPoolOptions, sourcePixelBufferOptions, &outputPool)
         
@@ -190,13 +190,17 @@ class Filter: FilterProtocol {
             offscreenBufferHandle = 0
         }
         shader?.deleteProgram()
+        shader = nil
         if textureCache != nil {
+            CVOpenGLESTextureCacheFlush(textureCache!, 0)
             textureCache = nil
         }
         if renderTextureCache != nil {
+            CVOpenGLESTextureCacheFlush(renderTextureCache!, 0)
             renderTextureCache = nil
         }
         if bufferPool != nil {
+            CVPixelBufferPoolFlush(bufferPool!, [CVPixelBufferPoolFlushFlags.excessBuffers])
             bufferPool = nil
         }
         if bufferPoolAuxAttributes != nil {
@@ -323,7 +327,7 @@ class Filter: FilterProtocol {
             glVertexAttribPointer(ShaderConstants.attribTexturePosition, 2, GL_FLOAT.ui, 0, 0, ShaderConstants.textureVertices)
             glEnableVertexAttribArray(ShaderConstants.attribTexturePosition)
             
-            glDrawArrays(GL_TRIANGLE_STRIP.ui, 0, 4)            
+            glDrawArrays(GL_TRIANGLE_STRIP.ui, 0, 4)
             glBindTexture(CVOpenGLESTextureGetTarget(sourceTexture), 0)
             glBindTexture(CVOpenGLESTextureGetTarget(destinationTexture), 0)
             

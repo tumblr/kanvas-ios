@@ -105,6 +105,7 @@ final class GLPixelBufferView: UIView {
         }
         renderShader?.deleteProgram()
         if textureCache != nil {
+            CVOpenGLESTextureCacheFlush(textureCache!, 0)
             textureCache = nil
         }
         if oldContext !== oglContext {
@@ -204,10 +205,10 @@ final class GLPixelBufferView: UIView {
         
         glBindRenderbuffer(GL_RENDERBUFFER.ui, colorBufferHandle)
         oglContext.presentRenderbuffer(GL_RENDERBUFFER.l)
-        
+
         glBindTexture(CVOpenGLESTextureGetTarget(texture!), 0)
         glBindTexture(GL_TEXTURE_2D.ui, 0)
-        
+
         if oldContext !== oglContext {
             EAGLContext.setCurrent(oldContext)
         }

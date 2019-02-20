@@ -30,7 +30,6 @@ final class GLRenderer {
     // opengl
     let glContext: EAGLContext?
     private var filter: FilterProtocol
-    private var imageFilter: FilterProtocol
     private var processingImage = false
 
     /// Designated initializer
@@ -41,7 +40,6 @@ final class GLRenderer {
         self.callbackQueue = callbackQueue
         glContext = EAGLContext(api: .openGLES3)
         filter = Filter(glContext: glContext)
-        imageFilter = Filter(glContext: glContext)
     }
     
     /// Call this method to process the sample buffer
@@ -57,7 +55,7 @@ final class GLRenderer {
         else {
 //            let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) // should this be a copy?
             let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)?.copy()
+            let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             if let filteredPixelBuffer = filter.processPixelBuffer(sourcePixelBuffer) {
                 delegate?.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer, presentationTime: time)
             }
@@ -77,7 +75,8 @@ final class GLRenderer {
         defer {
             processingImage = false
         }
-        imageFilter.cleanup()
+
+        let imageFilter = Filter(glContext: glContext)
         var sampleTime = CMSampleTimingInfo()
         var videoInfo: CMVideoFormatDescription?
         CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &videoInfo)
@@ -96,7 +95,9 @@ final class GLRenderer {
             imageFilter.setupFormatDescription(from: sampleBuffer)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        return imageFilter.processPixelBuffer(sourcePixelBuffer)
+        let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer)
+        imageFilter.cleanup()
+        return filteredPixelBuffer
     }
 
     /// Method to call reset on the camera filter

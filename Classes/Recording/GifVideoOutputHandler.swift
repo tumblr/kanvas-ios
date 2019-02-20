@@ -109,7 +109,7 @@ final class GifVideoOutputHandler: NSObject {
             cancelGif()
             return
         }
-        guard let buffer = currentVideoSampleBuffer, let pixelBuffer = CMSampleBufferGetImageBuffer(buffer)?.copy() else {
+        guard let buffer = currentVideoSampleBuffer, let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) else {
             // current video sample buffer may not be set yet, so don't necessarily cancelGif
             return
         }

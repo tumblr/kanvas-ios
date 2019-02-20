@@ -73,6 +73,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
     private var recorder: CameraRecordingProtocol?
+    private var filterViewNeedsReset: Bool = false
     
     /// The delegate methods for zooming and touches
     var delegate: CameraInputControllerDelegate?
@@ -139,10 +140,34 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         setupFlash(defaultOption: settings.preferredFlashOption)
         setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
+    }
 
-        if !isSimulator { // if running on simulator, the startRunning() call takes a long time to return
-            captureSession?.startRunning()
+    override func viewDidAppear(_ animated: Bool) {
+        guard !isSimulator else { return }
+
+        captureSession?.startRunning()
+
+        // have to rebuild the filtered input display setup
+        if filterViewNeedsReset {
+            filteredInputViewController?.reset()
         }
+
+        filterViewNeedsReset = false
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        guard !isSimulator else { return }
+
+        captureSession?.stopRunning()
+        filterViewNeedsReset = true
+    }
+
+    func cleanup() {
+        guard !isSimulator else { return }
+
+        captureSession?.stopRunning()
+        removeSessionInputsAndOutputs()
+        filteredInputViewController?.cleanup()
     }
 
     private func configureSession() {

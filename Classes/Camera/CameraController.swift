@@ -238,9 +238,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"), preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         let discardAction = UIAlertAction(title: NSLocalizedString("I'm sure", comment: "Confirmation to discard all the clips"), style: .destructive) { [weak self] (UIAlertAction) in
-            performUIUpdate {
-                self?.delegate?.dismissButtonPressed()
-            }
+            self?.handleCloseButtonPressed()
         }
         alertController.addAction(cancelAction)
         alertController.addAction(discardAction)
@@ -452,7 +450,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             showDismissTooltip()
         }
         else {
-            delegate?.dismissButtonPressed()
+            handleCloseButtonPressed()
+        }
+    }
+
+    func handleCloseButtonPressed() {
+        cameraInputController.cleanup()
+        performUIUpdate {
+            self.delegate?.dismissButtonPressed()
         }
     }
 
@@ -626,7 +631,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - breakdown
     
     /// This function should be called to stop the camera session and properly breakdown the inputs
-    public func stopSession() {
-        cameraInputController.removeSessionInputsAndOutputs()
+    public func cleanup() {
+        cameraInputController.cleanup()
     }
 }

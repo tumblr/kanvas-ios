@@ -102,7 +102,7 @@ import Foundation
     
     // MARK: - Stop motion mode export settings
     public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.exportStopMotionPhotoAsVideo
-    
+
     override public init() { }
     
 }
@@ -214,5 +214,5 @@ private struct DefaultCameraSettings {
     static let defaultImagePreviewOption: ImagePreviewMode = .off
     static let landscapeIsSupported: Bool = false
     static let exportStopMotionPhotoAsVideo: Bool = false
-    
+
 }

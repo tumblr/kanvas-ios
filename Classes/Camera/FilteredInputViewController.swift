@@ -23,11 +23,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         let renderer = GLRenderer(delegate: self)
         return renderer
     }()
-    private lazy var previewView: GLPixelBufferView = {
-        let view = GLPixelBufferView(frame: .zero)
-        return view
-    }()
-    private weak var currentPreviewPixelBuffer: CVPixelBuffer?
+    private weak var previewView: GLPixelBufferView?
     private let delegate: FilteredInputViewControllerDelegate?
     
     init(delegate: FilteredInputViewControllerDelegate? = nil) {
@@ -48,10 +44,16 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        reset()
+    }
     
     // MARK: - layout
     private func setupPreview() {
+        let previewView = GLPixelBufferView(frame: .zero)
         previewView.add(into: view)
+        self.previewView = previewView
     }
     
     func filterSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
@@ -60,26 +62,25 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     
     // MARK: - OpenGLRendererDelegate
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        self.currentPreviewPixelBuffer = pixelBuffer
         DispatchQueue.main.async {
             self.delegate?.filteredPixelBufferReady(pixelBuffer: pixelBuffer, presentationTime: presentationTime)
-            self.previewView.displayPixelBuffer(pixelBuffer)
+            self.previewView?.displayPixelBuffer(pixelBuffer)
         }
     }
     
     func rendererRanOutOfBuffers() {
-        previewView.flushPixelBufferCache()
-        currentPreviewPixelBuffer = nil
-    }
-    
-    // MARK: - switching filters
-    func glContext() -> EAGLContext? {
-        return renderer.glContext
+        previewView?.flushPixelBufferCache()
     }
     
     // MARK: - reset
     func reset() {
         renderer.reset()
+        previewView?.reset()
+    }
+
+    func cleanup() {
+        reset()
+        previewView?.removeFromSuperview()
     }
     
     // MARK: - filtering image
