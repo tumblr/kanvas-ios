@@ -92,7 +92,8 @@ final class GLPixelBufferView: UIView {
         let oldContext = EAGLContext.current()
         if oldContext !== oglContext {
             if !EAGLContext.setCurrent(oglContext) {
-                fatalError("Problem with OpenGL context")
+                NSLog("Problem with OpenGL context")
+                return
             }
         }
         if frameBufferHandle != 0 {
@@ -125,7 +126,8 @@ final class GLPixelBufferView: UIView {
         let oldContext = EAGLContext.current()
         if oldContext !== oglContext {
             if !EAGLContext.setCurrent(oglContext) {
-                fatalError("Problem with OpenGL context")
+                NSLog("Problem with OpenGL context")
+                return
             }
         }
         
