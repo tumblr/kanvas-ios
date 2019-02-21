@@ -35,8 +35,8 @@ struct ShaderConstants {
     static let numAttributes: GLuint = 2
     static let retainedBufferCount = 10
     static let shaderDirectory = "Shaders"
-    static let vertexShader = String("\(shaderDirectory)/Base.\(ShaderExtension.vertex)")
-    static let fragmentShader = String("\(shaderDirectory)/Base.\(ShaderExtension.fragment)")
+    static let vertexShader = String("\(shaderDirectory)/Base.\(ShaderExtension.vertex.rawValue)")
+    static let fragmentShader = String("\(shaderDirectory)/Base.\(ShaderExtension.fragment.rawValue)")
 }
 
 /// A wrapper for fragment and vertex shaders. Creates the program as well

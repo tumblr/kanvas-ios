@@ -4,6 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+@testable import KanvasCamera
 import XCTest
 
 class GLUETests: XCTestCase {
@@ -16,8 +17,12 @@ class GLUETests: XCTestCase {
         super.tearDown()
     }
 
-    func testExample() {
-
+    func testCompileShader() {
+        var shader: GLuint = 0
+        let fragmentShader = "precision mediump float;\nvoid main() {\n  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n}"
+        let cs = (fragmentShader as NSString).utf8String
+        var buffer = UnsafePointer(UnsafeMutablePointer<Int8>(mutating: cs))
+        glue.compileShader(GL_FRAGMENT_SHADER.ui, 1, &buffer, &shader)
     }
 
 }

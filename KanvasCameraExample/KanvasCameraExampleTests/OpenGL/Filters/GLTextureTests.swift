@@ -4,6 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+@testable import KanvasCamera
 import XCTest
 
 class GLTextureTests: XCTestCase {
@@ -16,8 +17,13 @@ class GLTextureTests: XCTestCase {
         super.tearDown()
     }
 
-    func testExample() {
-
+    func testInit() {
+        if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
+            let texture = GLTexture.textureWithImage(image)
+            texture?.deleteTexture()
+        } else {
+            XCTAssert(false, "Failed to load sample.png")
+        }
     }
 
 }

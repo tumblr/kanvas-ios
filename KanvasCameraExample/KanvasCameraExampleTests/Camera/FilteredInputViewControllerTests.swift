@@ -8,7 +8,7 @@
 import FBSnapshotTestCase
 import AVFoundation
 
-class FilteredInputViewControllerDelegateStub : FilteredInputViewControllerDelegate {
+class FilteredInputViewControllerDelegateStub: FilteredInputViewControllerDelegate {
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
 
     }

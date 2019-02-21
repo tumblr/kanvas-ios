@@ -17,8 +17,12 @@ class ShaderTests: XCTestCase {
         super.tearDown()
     }
 
-    func testExample() {
+    func testShaderInit() {
         let _ = Shader()
+    }
+
+    func testShaderConstants() {
+        XCTAssertEqual(ShaderConstants.fragmentShader, "Shaders/Base.glsl")
     }
 
 }
