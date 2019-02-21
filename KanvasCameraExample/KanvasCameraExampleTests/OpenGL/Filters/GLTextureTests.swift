@@ -21,7 +21,8 @@ class GLTextureTests: XCTestCase {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
             let texture = GLTexture.textureWithImage(image)
             texture?.deleteTexture()
-        } else {
+        }
+        else {
             XCTAssert(false, "Failed to load sample.png")
         }
     }

@@ -26,13 +26,15 @@ class GLPixelBufferViewTests: FBSnapshotTestCase {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
             if let pixelBuffer = image.pixelBuffer() {
                 view.displayPixelBuffer(pixelBuffer)
-            } else {
+            }
+            else {
                 XCTAssert(false, "Failed to generate pixel buffer")
             }
             _ = view
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 2.0))
             FBSnapshotVerifyView(view)
-        } else {
+        }
+        else {
             XCTAssert(false, "Failed to load sample.png")
         }
     }
