@@ -4,6 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+@testable import KanvasCamera
 import XCTest
 
 class FilterTests: XCTestCase {
@@ -17,7 +18,8 @@ class FilterTests: XCTestCase {
     }
 
     func testExample() {
-
+        let context = EAGLContext(api: .openGLES3)
+        let _ = Filter(glContext: context)
     }
 
 }

@@ -4,20 +4,32 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import XCTest
+@testable import KanvasCamera
+import FBSnapshotTestCase
+import AVFoundation
 
-class FilteredInputViewControllerTests: XCTestCase {
+class FilteredInputViewControllerDelegateStub : FilteredInputViewControllerDelegate {
+    func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+
+    }
+}
+
+final class FilteredInputViewControllerTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
+
+        self.recordMode = false
     }
 
     override func tearDown() {
         super.tearDown()
     }
 
-    func testExample() {
-
+    func testFilteredInputView() {
+        let delegate = FilteredInputViewControllerDelegateStub()
+        let controller = FilteredInputViewController(delegate: delegate)
+        FBSnapshotVerifyView(controller.view)
     }
 
 }

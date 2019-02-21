@@ -4,6 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+@testable import KanvasCamera
 import XCTest
 
 class ShaderTests: XCTestCase {
@@ -17,7 +18,7 @@ class ShaderTests: XCTestCase {
     }
 
     func testExample() {
-
+        let _ = Shader()
     }
 
 }
