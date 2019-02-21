@@ -7,7 +7,13 @@
 import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
-    static let tooltipTopMargin: CGFloat = 12
+    static let tooltipTopMargin: CGFloat = 13.5
+    static let tooltipArrowHeight: CGFloat = 7
+    static let tooltipArrowWidth: CGFloat = 17
+    static let tooltipBubbleWidth: CGFloat = 20.5
+    static let tooltipBubbleHeight: CGFloat = 12
+    static let tooltipCornerRadius: CGFloat = 6
+    static let tooltipTextFont: UIFont = .favoritTumblr85(fontSize: 15)
     static let selectorYCenterMargin: CGFloat = 49
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 48
@@ -105,6 +111,12 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         preferences.drawing.foregroundColor = .white
         preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue, .tumblrBrightPurple, .tumblrBrightPink]
         preferences.drawing.arrowPosition = .top
+        preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
+        preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight
+        preferences.drawing.cornerRadius = ModeSelectorAndShootViewConstants.tooltipCornerRadius
+        preferences.drawing.font = ModeSelectorAndShootViewConstants.tooltipTextFont
+        preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
+        preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
         let text = NSLocalizedString("Tap to switch modes", comment: "Welcome tooltip for the camera")
         return EasyTipView(text: text, preferences: preferences, delegate: nil)
