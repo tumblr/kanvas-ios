@@ -9,8 +9,8 @@ import Foundation
 private struct ModeSelectorAndShootViewConstants {
     static let tooltipTopMargin: CGFloat = 13.5
     static let tooltipArrowHeight: CGFloat = 7
-    static let tooltipArrowWidth: CGFloat = 17
-    static let tooltipBubbleWidth: CGFloat = 20.5
+    static let tooltipArrowWidth: CGFloat = 16
+    static let tooltipBubbleWidth: CGFloat = 18
     static let tooltipBubbleHeight: CGFloat = 12
     static let tooltipCornerRadius: CGFloat = 6
     static let tooltipTextFont: UIFont = .favoritTumblr85(fontSize: 15)
