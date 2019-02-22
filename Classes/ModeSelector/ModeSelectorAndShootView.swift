@@ -66,8 +66,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     ///
     /// - Parameter selectedMode: the mode to switch the UI to
     func setUpMode(_ selectedMode: CameraMode) {
-//        modeSelectorButton.setTitle(KanvasCameraStrings.name(for: selectedMode))
-        modeSelectorButton.setTitle("Normal")
+        modeSelectorButton.setTitle(KanvasCameraStrings.name(for: selectedMode))
         shootButton.configureFor(trigger: triggerFor(selectedMode),
                                  image: KanvasCameraImages.image(for: selectedMode),
                                  timeLimit: KanvasCameraTimes.recordingTime(for: selectedMode))
