@@ -169,9 +169,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func cleanup() {
         guard !isSimulator else { return }
 
-        captureSession?.stopRunning()
-        removeSessionInputsAndOutputs()
         filteredInputViewController?.cleanup()
+        removeSessionInputsAndOutputs()
+        captureSession?.stopRunning()
+        captureSession = nil
     }
 
     private func configureSession() {
@@ -638,15 +639,23 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func removeSessionInputsAndOutputs() {
         if let input = currentCameraInput {
             captureSession?.removeInput(input)
+            currentCameraInput = nil
         }
         if let audioInput = currentMicInput {
             captureSession?.removeInput(audioInput)
+            currentMicInput = nil
         }
-        if let cameraOutput = currentCaptureOutput {
-            captureSession?.removeOutput(cameraOutput)
+        if let aPhotoOutput = photoOutput {
+            captureSession?.removeOutput(aPhotoOutput)
+            photoOutput = nil
+        }
+        if let aVideoDataOutput = videoDataOutput {
+            captureSession?.removeOutput(aVideoDataOutput)
+            videoDataOutput = nil
         }
         if let audioOutput = audioDataOutput {
             captureSession?.removeOutput(audioOutput)
+            audioDataOutput = nil
         }
     }
 }
