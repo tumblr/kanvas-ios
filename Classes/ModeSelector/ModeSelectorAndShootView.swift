@@ -7,7 +7,7 @@
 import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
-    static let selectorYCenterMargin: CGFloat = (CameraConstants.optionButtonSize / 2) - 1
+    static let selectorYCenterMargin: CGFloat = (CameraConstants.optionButtonSize / 2)
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 48
     static var shootButtonTopMargin: CGFloat {
@@ -66,7 +66,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     ///
     /// - Parameter selectedMode: the mode to switch the UI to
     func setUpMode(_ selectedMode: CameraMode) {
-        modeSelectorButton.setTitle(KanvasCameraStrings.name(for: selectedMode))
+//        modeSelectorButton.setTitle(KanvasCameraStrings.name(for: selectedMode))
+        modeSelectorButton.setTitle("Normal")
         shootButton.configureFor(trigger: triggerFor(selectedMode),
                                  image: KanvasCameraImages.image(for: selectedMode),
                                  timeLimit: KanvasCameraTimes.recordingTime(for: selectedMode))
