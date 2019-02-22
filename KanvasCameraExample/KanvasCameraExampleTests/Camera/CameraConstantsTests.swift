@@ -11,7 +11,7 @@ import XCTest
 final class CameraConstantsTests: XCTestCase {
     
     func testButtonSize() {
-        XCTAssert(24 == CameraConstants.buttonSize, "Button size should match expected value")
+        XCTAssert(24 == CameraConstants.settingsButtonSize, "Button size should match expected value")
     }
 
     func testButtonMargin() {

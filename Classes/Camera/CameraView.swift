@@ -13,9 +13,12 @@ protocol CameraViewDelegate: class {
 }
 
 struct CameraConstants {
-    static let buttonSize: CGFloat = 24
-    static let buttonMargin: CGFloat = 32
-    static let buttonSpacing: CGFloat = 26
+    static let optionVerticalMargin: CGFloat = 27
+    static let optionHorizontalMargin: CGFloat = 30
+    static let optionButtonSize: CGFloat = 20
+    static let closeButtonSize: CGFloat = CameraConstants.optionButtonSize - 4
+    static let closeButtonVerticalMargin: CGFloat = CameraConstants.optionVerticalMargin + 2
+    static let optionSpacing: CGFloat = 32
     fileprivate static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
 }
@@ -132,7 +135,7 @@ final class CameraView: UIView {
         modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
         modeLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor).isActive = true
-        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
+        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin).isActive = true
     }
 
     private func setupClipsGuide() {
@@ -146,10 +149,10 @@ final class CameraView: UIView {
     private func setupOptionsGuide() {
         addLayoutGuide(optionsLayoutGuide)
         // The height is equal to all the rows of buttons plus the space between them
-        let height = CameraConstants.buttonSize * numberOfOptionRows + CameraConstants.buttonSpacing * (numberOfOptionRows - 1)
-        optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.buttonMargin).isActive = true
-        optionsLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
-        optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.buttonMargin).isActive = true
+        let height = CameraConstants.optionButtonSize * numberOfOptionRows + CameraConstants.optionSpacing * (numberOfOptionRows - 1)
+        optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin).isActive = true
+        optionsLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin).isActive = true
+        optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.optionHorizontalMargin).isActive = true
         optionsLayoutGuide.heightAnchor.constraint(equalToConstant: height).isActive = true
     }
     
@@ -191,10 +194,10 @@ final class CameraView: UIView {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.buttonMargin),
-            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin),
+            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
+            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.closeButtonVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.buttonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.closeButtonSize)
         ])
     }
 
