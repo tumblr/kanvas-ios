@@ -13,7 +13,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         
-        self.recordMode = false
+        recordMode = false
     }
     
     func testPhotoModeImage() {
