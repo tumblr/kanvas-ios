@@ -611,7 +611,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
-        let filteredImage = filteredInputViewController.filterImageWithCurrentPipeline(image: image)
+        let filteredImage = filteredInputViewController?.filterImageWithCurrentPipeline(image: image)
         return filteredImage ?? image
     }
 
