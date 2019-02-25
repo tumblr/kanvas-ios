@@ -104,7 +104,7 @@ final class GLRenderer {
     // MARK: - changing filters
     func changeFilter(_ filterType: FilterType) {
         self.filter.cleanup()
-	
+
         self.filterType = filterType
         self.filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
     }
