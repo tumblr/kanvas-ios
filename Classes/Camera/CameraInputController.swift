@@ -201,6 +201,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinched)))
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+        swipeLeft.direction = .left
+        view.addGestureRecognizer(swipeLeft)
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 
     private func setupPreview() {
@@ -398,6 +404,16 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         delegate?.cameraInputControllerPinched(gesture: gesture)
     }
     
+    @objc func swiped(_ gesture: UISwipeGestureRecognizer) {
+        switch gesture.direction {
+        case .left:
+            filteredInputViewController?.applyNextFilter()
+        case .right:
+            filteredInputViewController?.applyPreviousFilter()
+        default: break
+        }
+    }
+
     private func currentResolution() -> CGSize {
         var resolution = CGSize(width: 0, height: 0)
         if let formatDescription = currentDevice?.activeFormat.formatDescription {

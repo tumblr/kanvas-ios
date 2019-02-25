@@ -96,4 +96,30 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         NSLog("failed to filter image")
         return image
     }
+
+    // MARK: - changing filters
+    func applyNextFilter() {
+        let nextFilterInteger = currentFilter.rawValue + 1
+        if let nextFilter = FilterType(rawValue: nextFilterInteger) {
+            currentFilter = nextFilter
+        }
+        else if let nextFilter = FilterType(rawValue: 0) {
+            currentFilter = nextFilter
+        }
+        renderer.changeFilter(currentFilter)
+    }
+
+    func applyPreviousFilter() {
+        let previousFilterInteger = currentFilter.rawValue - 1
+        if let previousFilter = FilterType(rawValue: previousFilterInteger) {
+            currentFilter = previousFilter
+        }
+        else {
+            let lastType = FilterType.allCases.count - 1
+            if let previousFilter = FilterType(rawValue: lastType) {
+                currentFilter = previousFilter
+            }
+        }
+        renderer.changeFilter(currentFilter)
+    }
 }
