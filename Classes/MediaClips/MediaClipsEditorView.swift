@@ -10,10 +10,10 @@ import TumblrTheme
 
 private struct MediaClipsEditorViewConstants {
     static let animationDuration: TimeInterval = 0.5
-    static let buttonHorizontalMargin: CGFloat = 30
+    static let buttonHorizontalMargin: CGFloat = 28
     static let buttonRadius: CGFloat = 25
-    static let buttonWidth: CGFloat = 90
-    static let buttonHeight: CGFloat = 40
+    static let buttonWidth: CGFloat = 91
+    static let buttonHeight: CGFloat = 40.5
     static let buttonTopOffset: CGFloat = 4.8
     static let topPadding: CGFloat = 6
     static let bottomPadding: CGFloat = 12 + (Device.isIPhoneX ? 12 : 0)

@@ -22,7 +22,7 @@ private struct MediaClipsCollectionCellConstants {
     static let clipWidth: CGFloat = 45
     static let borderWidth: CGFloat = 1.1
     static let cornerRadius: CGFloat = 8
-    static let font: UIFont = .favoritTumblrMedium(fontSize: 9)
+    static let font: UIFont = .favoritTumblrMedium(fontSize: 9.5)
     static let labelHorizontalPadding: CGFloat = 5.5
     static let labelVerticalPadding: CGFloat = 3.5
     static let labelHeight: CGFloat = 14
