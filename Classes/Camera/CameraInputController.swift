@@ -38,7 +38,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     private lazy var filteredInputViewController: FilteredInputViewController? = {
-        if delegate?.cameraInputControllerShouldEnableOpenGLPreview() ?? false {
+        if settings.features.openGLPreview {
             return FilteredInputViewController(delegate: self)
         }
         else {
@@ -131,7 +131,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         configureSession()
         setupGestures()
 
-        if delegate?.cameraInputControllerShouldEnableOpenGLPreview() ?? false {
+        if filteredInputViewController != nil {
             setupFilteredPreview()
         }
         else {

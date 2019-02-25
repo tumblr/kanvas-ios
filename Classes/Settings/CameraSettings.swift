@@ -23,6 +23,19 @@ import Foundation
     
 }
 
+/// Camera Features
+///
+/// Struct which represents all camera features which are the same value for the duration of a camera session.
+public struct CameraFeatures {
+
+    /// The Ghost Frame feature
+    public var ghostFrame: Bool = false
+
+    /// The OpenGL Camera Preview feature
+    public var openGLPreview: Bool = false
+
+}
+
 // A class that defines the settings for the Kanvas Camera
 @objc public final class CameraSettings: NSObject {
 
@@ -102,6 +115,9 @@ import Foundation
     
     // MARK: - Stop motion mode export settings
     public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.exportStopMotionPhotoAsVideo
+
+    /// MARK: - Camera features
+    public var features = DefaultCameraSettings.features
 
     override public init() { }
     
@@ -214,5 +230,6 @@ private struct DefaultCameraSettings {
     static let defaultImagePreviewOption: ImagePreviewMode = .off
     static let landscapeIsSupported: Bool = false
     static let exportStopMotionPhotoAsVideo: Bool = false
+    static let features = CameraFeatures()
 
 }
