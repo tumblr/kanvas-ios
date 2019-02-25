@@ -24,6 +24,13 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         return renderer
     }()
     private weak var previewView: GLPixelBufferView?
+    private lazy var currentFilterLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.textColor = .white
+        label.sizeToFit()
+        label.textAlignment = .center
+        return label
+    }()
     private let delegate: FilteredInputViewControllerDelegate?
 
     /// Filters
@@ -42,6 +49,8 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupPreview()
+        setupFilterLabel()
+        updateCurrentFilterLabel()
         renderer.changeFilter(currentFilter)
     }
 
@@ -57,7 +66,11 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         previewView.add(into: view)
         self.previewView = previewView
     }
-    
+
+    private func setupFilterLabel() {
+        currentFilterLabel.add(into: view)
+    }
+
     func filterSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         renderer.processSampleBuffer(sampleBuffer)
     }
@@ -107,6 +120,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
             currentFilter = nextFilter
         }
         renderer.changeFilter(currentFilter)
+        updateCurrentFilterLabel()
     }
 
     func applyPreviousFilter() {
@@ -121,5 +135,10 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
             }
         }
         renderer.changeFilter(currentFilter)
+        updateCurrentFilterLabel()
+    }
+
+    func updateCurrentFilterLabel() {
+        currentFilterLabel.text = currentFilter.name()
     }
 }
