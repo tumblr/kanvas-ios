@@ -30,6 +30,5 @@ struct KanvasCameraImages {
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
     static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
-    static let nextImage = UIImage.imageFromCameraBundle(named: "nextButton")
     static let deleteImage = UIImage.imageFromCameraBundle(named: "trashButton")
 }

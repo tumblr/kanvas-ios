@@ -55,7 +55,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, ActionsViewDelegate, CameraInputControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate {
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -66,7 +66,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private lazy var cameraView: CameraView = {
         let view = CameraView(numberOfOptionRows: CGFloat(options.count))
         view.delegate = self
-        view.actionsDelegate = self
         return view
     }()
     private lazy var modeAndShootController: ModeSelectorAndShootController = {
@@ -400,12 +399,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - UI
     private func enableBottomViewButtons(show: Bool) {
-        cameraView.bottomActionsView.updateNext(enabled: show)
-
         if clipsController.hasClips || settings.enabledModes.count == 1 {
+            clipsController.showViews()
             modeAndShootController.hideModeButton()
         }
         else {
+            clipsController.hideViews()
             modeAndShootController.showModeButton()
         }
     }
@@ -426,11 +425,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - CameraViewDelegate
-
-    func nextButtonPressed() {
-        showPreviewWithSegments(cameraInputController.segments())
-        analyticsProvider?.logNextTapped()
-    }
 
     func closeButtonPressed() {
         if clipsController.hasClips {
@@ -569,6 +563,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         cameraInputController.moveSegment(from: originIndex, to: destinationIndex)
         updateLastClipPreview()
+    }
+    
+    func previewButtonWasPressed() {
+        showPreviewWithSegments(cameraInputController.segments())
+        analyticsProvider?.logNextTapped()
     }
 
     // MARK: - CameraPreviewControllerDelegate

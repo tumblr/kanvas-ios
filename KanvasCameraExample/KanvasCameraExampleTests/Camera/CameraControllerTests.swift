@@ -157,7 +157,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testTapAndLongPressShouldAddTwoClipsAndShowNextButtons() {
+    func testTapAndLongPressShouldAddTwoClipsAndShowNextButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)

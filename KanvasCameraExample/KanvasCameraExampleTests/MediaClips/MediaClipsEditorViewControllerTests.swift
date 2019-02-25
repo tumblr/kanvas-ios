@@ -67,6 +67,7 @@ final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
 }
 
 final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate {
+    
     var movedWasCalled = false
     var dragStarted = false
     var dragFinished = false
@@ -88,5 +89,9 @@ final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate
     
     func mediaClipFinishedMoving() {
         dragFinished = true
+    }
+    
+    func previewButtonWasPressed() {
+        
     }
 }

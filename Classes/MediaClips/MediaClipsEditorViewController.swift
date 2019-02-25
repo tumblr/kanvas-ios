@@ -30,14 +30,19 @@ protocol MediaClipsEditorDelegate: class {
     ///   - originIndex: Index where the clip was at before the moving around action
     ///   - destinationIndex: Index where the clips is ar after the moving around action
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
+    
+    /// Callback for when the preview button is selected
+    func previewButtonWasPressed()
 }
 
 /// Controller for handling media clips edition (showing, adding, removing, etc)
-final class MediaClipsEditorViewController: UIViewController, MediaClipsCollectionControllerDelegate {
+final class MediaClipsEditorViewController: UIViewController, MediaClipsCollectionControllerDelegate, MediaClipsEditorViewDelegate {
     weak var delegate: MediaClipsEditorDelegate?
 
     private lazy var editorView: MediaClipsEditorView = {
-        return MediaClipsEditorView()
+        let view = MediaClipsEditorView()
+        view.delegate = self
+        return view
     }()
     private lazy var collectionController: MediaClipsCollectionController = {
         let controller = MediaClipsCollectionController()
@@ -99,7 +104,17 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     func getLastFrameFromLastClip() -> UIImage? {
         return collectionController.getLastFrameFromLastClip()
     }
-
+    
+    /// Shows the clip collection and the preview button
+    func showViews() {
+        editorView.show(true)
+    }
+    
+    /// Hides the clip collection and the preview button
+    func hideViews() {
+        editorView.show(false)
+    }
+    
     // MARK: - MediaClipsControllerDelegate
     func mediaClipStartedMoving() {
         delegate?.mediaClipStartedMoving()
@@ -112,5 +127,8 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         delegate?.mediaClipWasMoved(from: originIndex, to: destinationIndex)
     }
-
+    
+    func previewButtonWasPressed() {
+        delegate?.previewButtonWasPressed()
+    }
 }

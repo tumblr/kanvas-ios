@@ -17,6 +17,7 @@ final class MediaClipsCollectionView: IgnoreTouchesView {
 
     static let height = MediaClipsCollectionViewConstants.height
     let collectionView: IgnoreTouchesCollectionView
+    let fadeOutGradient = CAGradientLayer()
 
     init() {
         collectionView = createCollectionView()
@@ -36,6 +37,10 @@ final class MediaClipsCollectionView: IgnoreTouchesView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func updateFadeOutEffect() {
+        fadeOutGradient.frame = bounds
+    }
 }
 
 // MARK: - Layout
@@ -44,6 +49,19 @@ extension MediaClipsCollectionView {
     private func setUpViews() {
         collectionView.add(into: self)
         collectionView.clipsToBounds = false
+        setFadeOutGradient()
+    }
+    
+    private func setFadeOutGradient() {
+        fadeOutGradient.frame = bounds
+        fadeOutGradient.colors = [UIColor.clear.cgColor,
+                                  UIColor.white.cgColor,
+                                  UIColor.white.cgColor,
+                                  UIColor.clear.cgColor]
+        fadeOutGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        fadeOutGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+        fadeOutGradient.locations = [0, 0.05, 0.9, 1.0]
+        layer.mask = fadeOutGradient
     }
     
 }

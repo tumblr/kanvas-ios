@@ -51,21 +51,12 @@ final class CameraView: UIView {
     /// the container for the fullscreen image preview
     private var imagePreviewViewContainer: UIView?
 
-    /// the container for the 'next' action button
-    let bottomActionsView: ActionsView
-
     /// the container for the options (flash, flip camera)
     private var topOptionsContainer: UIView?
 
     private let closeButton: UIButton
 
     weak var delegate: CameraViewDelegate?
-
-    weak var actionsDelegate: ActionsViewDelegate? {
-        didSet {
-            bottomActionsView.delegate = actionsDelegate
-        }
-    }
 
     private let numberOfOptionRows: CGFloat
 
@@ -78,7 +69,6 @@ final class CameraView: UIView {
 
         // Main views
         closeButton = UIButton()
-        bottomActionsView = ActionsView()
 
         super.init(frame: .zero)
 
@@ -101,7 +91,7 @@ final class CameraView: UIView {
     ///
     /// - Parameter isRecording: if the UI should reflect that the user is currently recording
     func updateUI(forRecording isRecording: Bool) {
-        let views = [bottomActionsView, clipsContainer, closeButton, topOptionsContainer]
+        let views = [clipsContainer, closeButton, topOptionsContainer]
         if isRecording {
             showViews(shownViews: [], hiddenViews: views, animated: true)
         }
@@ -129,17 +119,18 @@ final class CameraView: UIView {
 
     private func setupModeLayoutGuide() {
         addLayoutGuide(modeLayoutGuide)
-        modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
-        modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
-        modeLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor).isActive = true
-        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor).isActive = true
+        modeLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
+        modeLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+        modeLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor,
+                                                constant: -MediaClipsEditorView.height).isActive = true
+        modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
     }
 
     private func setupClipsGuide() {
         addLayoutGuide(clipsLayoutGuide)
         clipsLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
         clipsLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
-        clipsLayoutGuide.bottomAnchor.constraint(equalTo: modeLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootView.shootButtonTopMargin).isActive = true
+        clipsLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         clipsLayoutGuide.heightAnchor.constraint(equalToConstant: MediaClipsEditorView.height).isActive = true
     }
 
@@ -162,21 +153,7 @@ final class CameraView: UIView {
     }
 
     private func setUpViews() {
-        setUpActionsView()
         setUpCloseButton()
-    }
-
-    private func setUpActionsView() {
-        addSubview(bottomActionsView)
-        bottomActionsView.backgroundColor = .clear
-        bottomActionsView.accessibilityIdentifier = "Bottom Actions Container"
-        bottomActionsView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            bottomActionsView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            bottomActionsView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            bottomActionsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootView.shootButtonBottomMargin),
-            bottomActionsView.heightAnchor.constraint(equalToConstant: ModeSelectorAndShootView.shootButtonSize)
-        ])
     }
 
     private func setUpCloseButton() {
@@ -264,8 +241,7 @@ final class CameraView: UIView {
                             closeButton,
                             topOptionsContainer,
                             modeAndShootContainer,
-                            clipsContainer,
-                            bottomActionsView]
+                            clipsContainer]
         orderedViews.forEach { view in
             if let view = view {
                 addSubview(view)

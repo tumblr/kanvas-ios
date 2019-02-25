@@ -18,13 +18,14 @@ protocol MediaClipsCollectionCellDelegate {
 }
 
 private struct MediaClipsCollectionCellConstants {
-    static let cellPadding: CGFloat = 2
-    static let clipHeight: CGFloat = 80
-    static let clipWidth: CGFloat = 56
-    static let borderWidth: CGFloat = 2
+    static let cellPadding: CGFloat = 2.9
+    static let clipHeight: CGFloat = 64
+    static let clipWidth: CGFloat = 45
+    static let borderWidth: CGFloat = 1.1
     static let cornerRadius: CGFloat = 8
-    static let font: UIFont = .imbe85()
-    static let labelPadding: CGFloat = 6
+    static let font: UIFont = .favoritTumblrMedium(fontSize: 9.5)
+    static let labelHorizontalPadding: CGFloat = 5.5
+    static let labelVerticalPadding: CGFloat = 3.5
     static let labelHeight: CGFloat = 14
     static let clipAlpha: CGFloat = 0.5
 
@@ -60,10 +61,9 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     private let clipLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
-        label.textAlignment = .right
+        label.textAlignment = .left
         label.textColor = .white
         label.font = MediaClipsCollectionCellConstants.font
-        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     /// The touch delegate to be injected
@@ -105,11 +105,12 @@ extension MediaClipsCollectionCell {
         contentView.addSubview(clipView)
         clipView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            clipView.centerXAnchor.constraint(equalTo: contentView.safeLayoutGuide.centerXAnchor),
-            clipView.leadingAnchor.constraint(equalTo: contentView.safeLayoutGuide.leadingAnchor, constant: MediaClipsCollectionCellConstants.cellPadding),
-            clipView.trailingAnchor.constraint(equalTo: contentView.safeLayoutGuide.trailingAnchor, constant: -MediaClipsCollectionCellConstants.cellPadding),
-            clipView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeLayoutGuide.topAnchor),
-            clipView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeLayoutGuide.bottomAnchor),
+            clipView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            clipView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor,
+                                              constant: MediaClipsCollectionCellConstants.cellPadding),
+            clipView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
+                                               constant: -MediaClipsCollectionCellConstants.cellPadding),
+            clipView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             clipView.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.clipHeight),
             clipView.widthAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.clipWidth)
         ])
@@ -119,9 +120,12 @@ extension MediaClipsCollectionCell {
     private func setupLabelConstraints() {
         clipLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            clipLabel.trailingAnchor.constraint(equalTo: clipView.trailingAnchor, constant: -MediaClipsCollectionCellConstants.labelPadding),
-            clipLabel.topAnchor.constraint(equalTo: clipView.topAnchor, constant: MediaClipsCollectionCellConstants.labelPadding),
-            clipLabel.leadingAnchor.constraint(equalTo: clipView.leadingAnchor, constant: MediaClipsCollectionCellConstants.labelPadding),
+            clipLabel.trailingAnchor.constraint(equalTo: clipView.trailingAnchor,
+                                                constant: -MediaClipsCollectionCellConstants.labelHorizontalPadding),
+            clipLabel.bottomAnchor.constraint(equalTo: clipView.bottomAnchor,
+                                              constant: -MediaClipsCollectionCellConstants.labelVerticalPadding),
+            clipLabel.leadingAnchor.constraint(equalTo: clipView.leadingAnchor,
+                                               constant: MediaClipsCollectionCellConstants.labelHorizontalPadding),
             clipLabel.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.labelHeight)
         ])
     }

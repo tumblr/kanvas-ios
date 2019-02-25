@@ -23,9 +23,9 @@ protocol MediaClipsCollectionControllerDelegate: class {
 private struct MediaClipsCollectionControllerConstants {
     /// Animation duration in seconds
     static let animationDuration: TimeInterval = 0.15
-    
-    /// The height of the delete animation
-    static let animationYDistance: CGFloat = 100
+        
+    /// Padding at each side of the clip collection
+    static let horizontalInset: CGFloat = 11
 }
 
 /// Controller for handling the media clips collection.
@@ -107,6 +107,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        mediaClipsCollectionView.updateFadeOutEffect()
         mediaClipsCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         mediaClipsCollectionView.collectionView.layoutIfNeeded()
         if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
@@ -135,11 +136,8 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     // MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard clips.count > 0, collectionView.bounds != .zero else { return .zero }
-
-        let leftInset = cellBorderWhenCentered(firstCell: true, leftBorder: true, collectionView: collectionView)
-        let rightInset = cellBorderWhenCentered(firstCell: false, leftBorder: false, collectionView: collectionView)
-
-        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
+        return UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.horizontalInset,
+                            bottom: 0, right: MediaClipsCollectionControllerConstants.horizontalInset)
     }
 
     private func cellBorderWhenCentered(firstCell: Bool, leftBorder: Bool, collectionView: UICollectionView) -> CGFloat {
