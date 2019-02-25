@@ -17,7 +17,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
     private var startTime: Date?
     var recordingDelegate: CameraRecordingDelegate? = nil
 
-    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?, segmentsHandler: SegmentsHandlerType) {
+    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?, segmentsHandler: SegmentsHandlerType, settings: CameraSettings) {
         self.recordingDelegate = recordingDelegate
         self.cameraSegmentHandler = segmentsHandler
     }
