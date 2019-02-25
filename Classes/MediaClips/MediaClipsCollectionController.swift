@@ -159,7 +159,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard !collectionView.hasActiveDrag else { return }
+        guard !collectionView.hasActiveDrag && !collectionView.hasActiveDrop else { return }
         let item = selectedClipIndex?.item
         deselectOldSelection(in: collectionView)
         if item != indexPath.item {

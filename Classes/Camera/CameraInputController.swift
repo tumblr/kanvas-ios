@@ -39,7 +39,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     private lazy var filteredInputViewController: FilteredInputViewController? = {
         if settings.features.openGLPreview {
-            return FilteredInputViewController(delegate: self)
+            return FilteredInputViewController(delegate: self, settings: settings)
         }
         else {
             return nil
@@ -201,12 +201,14 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinched)))
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeLeft.direction = .left
-        view.addGestureRecognizer(swipeLeft)
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
+        if settings.features.openGLFilters {
+            let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+            swipeLeft.direction = .left
+            view.addGestureRecognizer(swipeLeft)
+            let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+            swipeRight.direction = .right
+            view.addGestureRecognizer(swipeRight)
+        }
     }
 
     private func setupPreview() {

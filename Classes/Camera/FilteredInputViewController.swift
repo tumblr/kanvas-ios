@@ -32,12 +32,14 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         return label
     }()
     private let delegate: FilteredInputViewControllerDelegate?
+    private let settings: CameraSettings
 
     /// Filters
     private var currentFilter: FilterType = .passthrough
     
-    init(delegate: FilteredInputViewControllerDelegate? = nil) {
+    init(delegate: FilteredInputViewControllerDelegate? = nil, settings: CameraSettings) {
         self.delegate = delegate
+        self.settings = settings
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -49,8 +51,12 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupPreview()
-        setupFilterLabel()
-        updateCurrentFilterLabel()
+
+        if settings.features.openGLFilters {
+            setupFilterLabel()
+            updateCurrentFilterLabel()
+        }
+
         renderer.changeFilter(currentFilter)
     }
 

@@ -39,7 +39,7 @@ final class KanvasCameraExampleViewController: UIViewController {
 
     /// This returns the customized settings for the CameraController
     ///
-    /// - Returns: an instance of CameraSettings 
+    /// - Returns: an instance of CameraSettings
     private func customCameraSettings() -> CameraSettings {
         let settings = CameraSettings()
         settings.enabledModes = [.photo, .gif, .stopMotion]
@@ -47,6 +47,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.exportStopMotionPhotoAsVideo = true
         settings.features.ghostFrame = true
         settings.features.openGLPreview = true
+        settings.features.openGLFilters = true
         return settings
     }
 
@@ -59,7 +60,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeToolip
     }
-    
+
     func cameraShouldShowCreationTooltip() -> Bool {
         return shouldShowCreationTooltip
     }
@@ -67,11 +68,11 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     func didDismissWelcomeTooltip() {
         shouldShowWelcomeToolip = false
     }
-    
+
     func didDismissCreationTooltip() {
         shouldShowCreationTooltip = false
     }
-    
+
     func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
         if let media = media {
             switch media {
