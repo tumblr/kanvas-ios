@@ -227,7 +227,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, segmentsHandlerType: SegmentsHandlerType.Type) {
         let size = currentResolution()
-        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandlerType.init())
+        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandlerType.init(), settings: settings)
     }
 
     // MARK: - Internal methods
@@ -622,6 +622,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         else if output == videoDataOutput {
             filteredInputViewController?.filterSampleBuffer(sampleBuffer)
+            if !settings.features.openGLCapture {
+                recorder?.processVideoSampleBuffer(sampleBuffer)
+            }
         }
     }
 
@@ -634,7 +637,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     
     // MARK: - FilteredInputViewControllerDelegate
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+        if settings.features.openGLCapture {
+            recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+        }
     }
 
     // MARK: - breakdown

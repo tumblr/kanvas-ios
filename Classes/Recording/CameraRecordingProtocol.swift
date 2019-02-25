@@ -40,12 +40,14 @@ protocol CameraRecordingProtocol {
     ///   - audioOutput: AVCaptureAudioDataOutput - for recording the microphone
     ///   - recordingDelegate: delegate for recording methods
     ///   - segmentsHandler: handler for segments and final output creating
+    ///   - cameraSettings: CameraSettings
     init(size: CGSize,
          photoOutput: AVCapturePhotoOutput?,
          videoOutput: AVCaptureVideoDataOutput?,
          audioOutput: AVCaptureAudioDataOutput?,
          recordingDelegate: CameraRecordingDelegate?,
-         segmentsHandler: SegmentsHandlerType)
+         segmentsHandler: SegmentsHandlerType,
+         settings: CameraSettings)
 
     /// the recording delegate for callback methods
     var recordingDelegate: CameraRecordingDelegate? { get set }

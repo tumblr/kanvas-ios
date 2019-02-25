@@ -45,17 +45,20 @@ final class CameraRecorder: NSObject {
     }
 
     private var takingPhoto: Bool = false
+
+    private let settings: CameraSettings
     
     required init(size: CGSize,
                   photoOutput: AVCapturePhotoOutput?,
                   videoOutput: AVCaptureVideoDataOutput?,
                   audioOutput: AVCaptureAudioDataOutput?,
                   recordingDelegate: CameraRecordingDelegate?,
-                  segmentsHandler: SegmentsHandlerType) {
+                  segmentsHandler: SegmentsHandlerType,
+                  settings: CameraSettings) {
         self.size = size
 
         photoOutputHandler = PhotoOutputHandler(photoOutput: photoOutput)
-        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput, usePixelBuffer: true)
+        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput, usePixelBuffer:settings.features.openGLCapture)
         videoOutputHandlers = []
 
         self.photoOutput = photoOutput
@@ -63,6 +66,7 @@ final class CameraRecorder: NSObject {
         self.audioOutput = audioOutput
         self.recordingDelegate = recordingDelegate
         self.segmentsHandler = segmentsHandler
+        self.settings = settings
 
         currentRecordingMode = .stopMotion
 
