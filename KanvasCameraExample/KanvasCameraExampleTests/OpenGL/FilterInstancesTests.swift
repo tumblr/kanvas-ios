@@ -12,6 +12,8 @@ class FilterInstancesTests: XCTestCase {
     var glContext: EAGLContext?
 
     override func setUp() {
+        super.setUp()
+
         glContext = EAGLContext(api: .openGLES3) ?? nil
     }
 
