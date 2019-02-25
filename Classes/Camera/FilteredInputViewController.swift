@@ -25,6 +25,9 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     }()
     private weak var previewView: GLPixelBufferView?
     private let delegate: FilteredInputViewControllerDelegate?
+
+    /// Filters
+    private var currentFilter: FilterType = .passthrough
     
     init(delegate: FilteredInputViewControllerDelegate? = nil) {
         self.delegate = delegate
@@ -39,6 +42,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupPreview()
+        renderer.changeFilter(currentFilter)
     }
 
     override func viewDidDisappear(_ animated: Bool) {

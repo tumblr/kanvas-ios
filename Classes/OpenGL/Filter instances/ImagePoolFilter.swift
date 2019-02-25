@@ -6,17 +6,13 @@
 
 import Foundation
 
-final class EMInterferenceFilter: Filter {
-    
+final class ImagePoolFilter: Filter {
+
     /// The time to pass
     private var startTime = Date.timeIntervalSinceReferenceDate
-    
-    override init(glContext: EAGLContext?) {
-        super.init(glContext: glContext)
-    }
-    
+
     override func setupShader() {
-        let fragment = Filter.loadShader("em_interference", type: .fragment)
+        let fragment = Filter.loadShader("image_pool", type: .fragment)
         let vertex = Filter.loadShader("Base", type: .vertex)
         if let fragment = fragment, let vertex = vertex {
             let shader = Shader()
@@ -24,7 +20,7 @@ final class EMInterferenceFilter: Filter {
             self.shader = shader
         }
     }
-    
+
     override func updateUniforms() {
         let time = Float(Date.timeIntervalSinceReferenceDate - startTime)
         shader?.setFloatUniform(key: "time", value: time)
