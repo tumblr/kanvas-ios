@@ -212,7 +212,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         }
     }
 
-    func takePhoto(completion: @escaping (UIImage?) -> Void) {
+    func takePhoto(cameraPosition: AVCaptureDevice.Position? = .back, completion: @escaping (UIImage?) -> Void) {
         guard isRecording() == false else {
             return
         }
@@ -223,9 +223,12 @@ extension CameraRecorder: CameraRecordingProtocol {
         takingPhoto = true
         photoOutputHandler.takePhoto(settings: settings ?? AVCapturePhotoSettings()) { [unowned self] image in
             self.takingPhoto = false
-            guard let image = image else {
+            guard var image = image else {
                 completion(nil)
                 return
+            }
+            if cameraPosition == .front, let flippedImage = image.flipLeftMirrored() {
+                image = flippedImage
             }
             self.segmentsHandler.addNewImageSegment(image: image, size: self.size, completion: { (success, _) in
                 completion(success ? image : nil)

@@ -94,10 +94,10 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         }
         hasClips = collectionController.getClips().count > 0
     }
-    
-    /// Returns the image from the last clip of the collection
-    func getPreviewFromLastClip() -> UIImage? {
-        return collectionController.getPreviewFromLastClip()
+
+    /// Returns the last frame from the last clip of the collection
+    func getLastFrameFromLastClip() -> UIImage? {
+        return collectionController.getLastFrameFromLastClip()
     }
 
     // MARK: - MediaClipsControllerDelegate

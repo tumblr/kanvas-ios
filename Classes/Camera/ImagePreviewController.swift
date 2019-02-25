@@ -17,7 +17,7 @@ private struct ImagePreviewConstants {
 final class ImagePreviewController: UIViewController {
     
     private let imageView = UIImageView()
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -47,10 +47,20 @@ final class ImagePreviewController: UIViewController {
     
     /// shows or hides the image preview with an animation
     ///
-    /// - Parameter show: true to show, false to hide
+    /// - Parameter enabled: true to show, false to hide
     func showImagePreview(_ enabled: Bool) {
         UIView.animate(withDuration: ImagePreviewConstants.animationDuration) { [weak self] in
             self?.view.alpha = enabled ? 1 : 0
         }
+    }
+
+    /// returns the current image
+    func getImagePreview() -> UIImage? {
+        return imageView.image
+    }
+
+    /// Is the image preview (ghost frame) visible?
+    func imagePreviewVisible() -> Bool {
+        return self.view.alpha == 1
     }
 }

@@ -232,7 +232,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             completion(nil)
             return
         }
-        recorder.takePhoto(completion: { (image) in
+        recorder.takePhoto(cameraPosition: currentCameraPosition, completion: { (image) in
             completion(image)
         })
     }
