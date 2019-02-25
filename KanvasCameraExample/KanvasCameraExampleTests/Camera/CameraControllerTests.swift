@@ -30,8 +30,13 @@ final class CameraControllerTests: FBSnapshotTestCase {
         return CameraControllerDelegateStub()
     }
 
-    func newController(delegate: CameraControllerDelegate, settings: CameraSettings = CameraSettings()) -> CameraController {
+    func newController(delegate: CameraControllerDelegate) -> CameraController {
+        let settings = CameraSettings()
         settings.features.ghostFrame = true
+        return newController(delegate:delegate, settings: settings)
+    }
+
+    func newController(delegate: CameraControllerDelegate, settings: CameraSettings) -> CameraController {
         let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = delegate
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
