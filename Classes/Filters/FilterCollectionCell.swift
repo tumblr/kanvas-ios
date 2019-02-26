@@ -8,16 +8,17 @@ import Foundation
 import UIKit
 
 private struct FilterCollectionCellConstants {
+    static let animationDuration: TimeInterval = 0.1
     static let cellPadding: CGFloat = 12
-    static let circleHeight: CGFloat = 80
-    static let circleWidth: CGFloat = 80
+    static let circleDiameter: CGFloat = 72
+    static let circleMaxDiameter: CGFloat = 92
     
     static var minimumHeight: CGFloat {
-        return circleHeight
+        return circleMaxDiameter
     }
     
     static var width: CGFloat {
-        return circleWidth + 2 * cellPadding
+        return circleMaxDiameter + 2 * cellPadding
     }
 }
 
@@ -26,6 +27,8 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     static let minimumHeight = FilterCollectionCellConstants.minimumHeight
     static let width = FilterCollectionCellConstants.width
+    private var cellHeightConstraint: NSLayoutConstraint?
+    private var cellWidthConstraint: NSLayoutConstraint?
     
     private let circleView: UIImageView = {
         let imageView = UIImageView()
@@ -56,26 +59,55 @@ final class FilterCollectionCell: UICollectionViewCell {
         super.prepareForReuse()
         circleView.tintColor = .none
     }
-}
-
-
-// MARK: - Layout
-extension FilterCollectionCell {
+    
+    /// Changes the circle size depending on whether the cell is selected
+    ///
+    /// - Parameter selected: true to fill the shutter button, false to make the circle standard size
+    func setSelected(_ selected: Bool) {
+        if selected {
+            changeSize(size: FilterCollectionCellConstants.circleMaxDiameter)
+        }
+        else {
+            changeSize(size: FilterCollectionCellConstants.circleDiameter)
+        }
+    }
+    
+    // MARK: - Layout
     
     private func setUpView() {
         contentView.addSubview(circleView)
         circleView.accessibilityIdentifier = "Filter Cell View"
         circleView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let heightConstraint = circleView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
+        let widthConstraint = circleView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
         NSLayoutConstraint.activate([
             circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            circleView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor,
-                                                constant: FilterCollectionCellConstants.cellPadding),
-            circleView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
-                                                 constant: -FilterCollectionCellConstants.cellPadding),
+            circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            circleView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: FilterCollectionCellConstants.cellPadding),
+            circleView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -FilterCollectionCellConstants.cellPadding),
             circleView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.topAnchor),
             circleView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.bottomAnchor),
-            circleView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleHeight),
-            circleView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleWidth)
+            heightConstraint,
+            widthConstraint
         ])
+        
+        cellHeightConstraint = heightConstraint
+        cellWidthConstraint = widthConstraint
+    }
+    
+    // MARK: - Animations
+    
+    /// Changes the circle size with an animation
+    ///
+    /// - Parameter size: the new size for the circle
+    private func changeSize(size: CGFloat) {
+        UIView.animate(withDuration: FilterCollectionCellConstants.animationDuration) { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.cellWidthConstraint?.constant = size
+            strongSelf.cellHeightConstraint?.constant = size
+            strongSelf.setNeedsLayout()
+            strongSelf.layoutIfNeeded()
+        }
     }
 }

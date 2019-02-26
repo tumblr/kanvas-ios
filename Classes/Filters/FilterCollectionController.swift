@@ -22,6 +22,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     private lazy var filterCollectionView = FilterCollectionView()
     private var filters: [Filter]
+    private var selectedCell: FilterCollectionCell?
     
     weak var delegate: FilterCollectionControllerDelegate?
     
@@ -147,7 +148,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: 0)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        delegate?.didSelectFilter(filters[indexPath.item])
+        didSelectFilter(at: indexPath)
     }
     
     private func indexPathAtCenter() -> IndexPath? {
@@ -176,4 +177,26 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
             scrollToOptionAt(indexPath.item)
         }
     }
+    
+    // Mark: - Filter Selection
+    
+    /// Sets the selected circle (increasing its size) and deselect the previous circle (making it standard size).
+    /// It also calls the delegate to set the camera filter.
+    ///
+    /// - Returns: Filter array
+    private func didSelectFilter(at indexPath: IndexPath) {
+        if let previousCell = selectedCell {
+            print("setSelected false")
+            previousCell.setSelected(false)
+        }
+        
+        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
+        if let cell = cell {
+            cell.setSelected(true)
+            selectedCell = cell
+        }
+        
+        delegate?.didSelectFilter(filters[indexPath.item])
+    }
+    
 }
