@@ -186,7 +186,6 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     /// - Returns: Filter array
     private func didSelectFilter(at indexPath: IndexPath) {
         if let previousCell = selectedCell {
-            print("setSelected false")
             previousCell.setSelected(false)
         }
         

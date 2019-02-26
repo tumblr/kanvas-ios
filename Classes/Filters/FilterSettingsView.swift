@@ -9,8 +9,8 @@ import UIKit
 
 private struct FilterSettingsViewConstants {
     static let iconSize: CGFloat = 35
-    static let padding: CGFloat = 10
-    static var height: CGFloat = padding + FilterCollectionView.height + padding + iconSize
+    static let padding: CGFloat = 12
+    static var height: CGFloat = FilterCollectionView.height + padding + iconSize
 }
 
 protocol FilterSettingsViewDelegate: class {
