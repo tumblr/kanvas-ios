@@ -8,30 +8,9 @@ import Foundation
 import OpenGLES
 import UIKit
 
-enum BlendType: String {
-    case alpha = "alpha_blend"
-    case color = "color_blend"
-    case overlay = "overlay_blend"
-    case onlyFirst = "FirstTexturePassthrough"
-    case onlySecond = "SecondTexturePassthrough"
-    case fourTexture = "four_texture"
-}
+public struct GLU {
 
-private func printf(_ format: String, args: [CVarArg]) {
-    print(String(format: format, arguments: args), terminator: "")
-}
-private func printf(_ format: String, args: CVarArg...) {
-    printf(format, args: args)
-}
-func LogInfo(_ format: String, args: CVarArg...) {
-    printf(format, args: args)
-}
-func LogError(_ format: String, args: CVarArg...) {
-    printf(format, args: args)
-}
-
-public struct glue {
-    /* Compile a shader from the provided source(s) */
+    /// Compile a shader from the provided source(s)
     @discardableResult
     public static func compileShader(_ target: GLenum, _ count: GLsizei, _ sources: UnsafePointer<UnsafePointer<GLchar>?>, _ shader: inout GLuint) -> GLint
     {
@@ -65,7 +44,7 @@ public struct glue {
     }
     
     
-    /* Link a program with all currently attached shaders */
+    /// Link a program with all currently attached shaders
     public static func linkProgram(_ program: GLuint) -> GLint {
         var status: GLint = 0
         
@@ -184,39 +163,5 @@ public struct glue {
         
         return status
     }
-    
-    static func textureToImage(texture: GLTexture) -> UIImage? {
-        let width = texture.width
-        let height = texture.height
-        let size = width * height * 4
-        let data = CFDataCreateMutable(kCFAllocatorDefault, size)
-        guard let textureData = data else {
-            return nil
-        }
-        CFDataSetLength(textureData, size)
-        
-        let bitsPerComponent: Int = 8
-        let bitsPerPixel: Int = 32
-        let bytesPerRow: Int = 4 * width
-        let colorSpaceRef = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-        let renderingIntent = CGColorRenderingIntent.defaultIntent
-        if let provider = CGDataProvider(data: textureData) {
-            if let cgImage = CGImage(width: width,
-                                     height: height,
-                                     bitsPerComponent: bitsPerComponent,
-                                     bitsPerPixel: bitsPerPixel,
-                                     bytesPerRow: bytesPerRow,
-                                     space: colorSpaceRef,
-                                     bitmapInfo: bitmapInfo,
-                                     provider: provider,
-                                     decode: nil,
-                                     shouldInterpolate: true,
-                                     intent: renderingIntent) {
-                return UIImage(cgImage: cgImage)
-            }
-        }
-        
-        return nil
-    }
+
 }

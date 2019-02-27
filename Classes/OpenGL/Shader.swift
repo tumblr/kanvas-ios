@@ -66,7 +66,7 @@ class Shader {
             ]
         var uniformLocations: [GLint] = []
         
-        glue.createProgram(vertexShader,
+        GLU.createProgram(vertexShader,
                            fragmentShader,
                            attribName,
                            attribLocation,
