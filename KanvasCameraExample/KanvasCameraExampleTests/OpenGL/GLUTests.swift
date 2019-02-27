@@ -7,7 +7,7 @@
 @testable import KanvasCamera
 import XCTest
 
-class GLUETests: XCTestCase {
+class GLUTests: XCTestCase {
 
     override func setUp() {
         super.setUp()

@@ -55,7 +55,6 @@ final class GLRenderer {
             filter.setupFormatDescription(from: sampleBuffer)
         }
         else {
-//            let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) // should this be a copy?
             let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
             let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             if let filteredPixelBuffer = filter.processPixelBuffer(sourcePixelBuffer) {
