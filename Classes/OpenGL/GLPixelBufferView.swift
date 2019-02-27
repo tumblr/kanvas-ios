@@ -7,6 +7,7 @@
 import UIKit
 import CoreVideo
 
+/// OpenGL view for rendering a buffer of pixels.
 final class GLPixelBufferView: UIView {
     private var renderShader: Shader?
     private var oglContext: EAGLContext?
@@ -20,7 +21,8 @@ final class GLPixelBufferView: UIView {
     override class var layerClass: AnyClass {
         return CAEAGLLayer.self
     }
-    
+
+    /// Initializes the OpenGL layer and context
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -38,7 +40,8 @@ final class GLPixelBufferView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+
+    /// Initializes framebuffers, renderbuffers, and a tecture cache
     func initializeBuffers() -> Bool {
         guard let oglContext = oglContext, let layer = self.layer as? CAEAGLLayer else {
             return false
@@ -84,7 +87,9 @@ final class GLPixelBufferView: UIView {
         }
         return success
     }
-    
+
+    /// Dispose of any OpenGL resources: ramebufers, renderbuffers, textureCache.
+    /// Also resets the OpenGL context.
     func reset() {
         guard let oglContext = oglContext else {
             return
@@ -105,19 +110,18 @@ final class GLPixelBufferView: UIView {
             colorBufferHandle = 0
         }
         renderShader?.deleteProgram()
-        if let textureCache = textureCache {
-            CVOpenGLESTextureCacheFlush(textureCache, 0)
-            self.textureCache = nil
-        }
+        flushPixelBufferCache()
+        self.textureCache = nil
         if oldContext !== oglContext {
             EAGLContext.setCurrent(oldContext)
         }
     }
-    
+
     deinit {
         self.reset()
     }
-    
+
+    /// Renders a pixel buffer to a texture, which is applied to a 2D plane positioned to fill the entire view.
     func displayPixelBuffer(_ pixelBuffer: CVPixelBuffer) {
         guard let oglContext = oglContext else {
             return
@@ -231,7 +235,8 @@ final class GLPixelBufferView: UIView {
             EAGLContext.setCurrent(oldContext)
         }
     }
-    
+
+    /// Flushes the texture cache
     func flushPixelBufferCache() {
         if let textureCache = textureCache {
             CVOpenGLESTextureCacheFlush(textureCache, 0)
