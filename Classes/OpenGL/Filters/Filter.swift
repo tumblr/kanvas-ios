@@ -87,7 +87,7 @@ class Filter: FilterProtocol {
             guard let shader = shader else {
                 return false
             }
-            frame = glue.getUniformLocation(shader.program, "inputImageTexture")
+            frame = GLU.getUniformLocation(shader.program, "inputImageTexture")
             
             let maxRetainedBufferCount = ShaderConstants.retainedBufferCount
             bufferPool = createPixelBufferPool(outputDimensions.width, outputDimensions.height, FourCharCode(kCVPixelFormatType_32BGRA), Int32(maxRetainedBufferCount))

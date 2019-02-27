@@ -7,7 +7,7 @@
 @testable import KanvasCamera
 import XCTest
 
-class GLUETests: XCTestCase {
+class GLUTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
@@ -22,7 +22,7 @@ class GLUETests: XCTestCase {
         let fragmentShader = "precision mediump float;\nvoid main() {\n  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n}"
         let cs = (fragmentShader as NSString).utf8String
         var buffer = UnsafePointer(UnsafeMutablePointer<Int8>(mutating: cs))
-        glue.compileShader(GL_FRAGMENT_SHADER.ui, 1, &buffer, &shader)
+        GLU.compileShader(GL_FRAGMENT_SHADER.ui, 1, &buffer, &shader)
     }
 
 }

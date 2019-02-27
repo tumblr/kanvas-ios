@@ -7,7 +7,7 @@
 import Foundation
 
 private struct ActionsViewConstants {
-    static let buttonMargin: CGFloat = CameraConstants.buttonMargin * 3/2
+    static let buttonMargin: CGFloat = CameraConstants.optionHorizontalMargin * 3/2
     static let buttonSize: CGFloat = 50
     static let animationDuration: TimeInterval = 0.5
 }

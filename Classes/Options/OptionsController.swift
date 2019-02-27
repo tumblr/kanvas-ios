@@ -105,7 +105,7 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
         let stackView = UIStackView(arrangedSubviews: optionsStackViews)
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = CameraConstants.buttonSpacing
+        stackView.spacing = CameraConstants.optionSpacing
         return stackView
     }
     

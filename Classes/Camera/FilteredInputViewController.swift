@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Callback protocol for the filters
-protocol FilteredInputViewControllerDelegate {
+protocol FilteredInputViewControllerDelegate: class {
     /// Method to return a filtered pixel buffer
     ///
     /// - Parameter pixelBuffer: the final pixel buffer
@@ -24,7 +24,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         return renderer
     }()
     private weak var previewView: GLPixelBufferView?
-    private let delegate: FilteredInputViewControllerDelegate?
+    private weak var delegate: FilteredInputViewControllerDelegate?
     
     init(delegate: FilteredInputViewControllerDelegate? = nil) {
         self.delegate = delegate
@@ -32,7 +32,8 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        assertionFailure("init(coder:) has not been implemented")
+        return nil
     }
     
     override public func viewDidLoad() {

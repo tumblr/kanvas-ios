@@ -9,7 +9,7 @@ import Foundation
 import OpenGLES
 
 /// Callbacks for opengl rendering
-protocol GLRendererDelegate {
+protocol GLRendererDelegate: class {
     /// Called when renderer has processed a pixel buffer
     ///
     /// - Parameters:
@@ -23,12 +23,14 @@ protocol GLRendererDelegate {
 
 /// Renders pixel buffers with open gl
 final class GLRenderer {
+
     /// Optional delegate
-    var delegate: GLRendererDelegate?
-    private var callbackQueue: DispatchQueue
-    
-    // opengl
+    weak var delegate: GLRendererDelegate?
+
+    // OpenGL Context
     let glContext: EAGLContext?
+
+    private let callbackQueue: DispatchQueue
     private var filter: FilterProtocol
     private var processingImage = false
 
@@ -53,7 +55,6 @@ final class GLRenderer {
             filter.setupFormatDescription(from: sampleBuffer)
         }
         else {
-//            let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) // should this be a copy?
             let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
             let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             if let filteredPixelBuffer = filter.processPixelBuffer(sourcePixelBuffer) {
@@ -87,7 +88,7 @@ final class GLRenderer {
         }
         let status = CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, dataReady: true, makeDataReadyCallback: nil, refcon: nil, formatDescription: formatDescription, sampleTiming: &sampleTime, sampleBufferOut: &buffer)
         guard status == kCVReturnSuccess, let sampleBuffer = buffer else {
-            NSLog("error status for creating sample buffer \(status)")
+            assertionFailure("error status for creating sample buffer \(status)")
             return nil
         }
         
