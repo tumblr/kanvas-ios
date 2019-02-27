@@ -32,7 +32,8 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        assertionFailure("init(coder:) has not been implemented")
+        return nil
     }
     
     override public func viewDidLoad() {

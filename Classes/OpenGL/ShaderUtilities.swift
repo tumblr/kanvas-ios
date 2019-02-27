@@ -53,11 +53,10 @@ public struct glue {
         
         glGetShaderiv(shader, GL_COMPILE_STATUS.ui, &status)
         if status == 0 {
-            
-            LogError("Failed to compile shader:\n")
+            assertionFailure("Failed to compile shader")
             for i in 0..<count.l {
                 if let source = sources[i] {
-                    LogInfo("%s", args: OpaquePointer(source))
+                    assertionFailure("\(OpaquePointer(source))")
                 }
             }
         }
@@ -84,7 +83,7 @@ public struct glue {
         
         glGetProgramiv(program, GL_LINK_STATUS.ui, &status)
         if status == 0 {
-            LogError("Failed to link program %d", args: program)
+            assertionFailure("Failed to link program \(program)")
         }
         
         return status
@@ -109,7 +108,7 @@ public struct glue {
         
         glGetProgramiv(program, GL_VALIDATE_STATUS.ui, &status)
         if status == 0 {
-            LogError("Failed to validate program %d", args: program)
+            assertionFailure("Failed to validate program \(program)")
         }
         
         return status

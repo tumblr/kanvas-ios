@@ -89,7 +89,7 @@ final class GLRenderer {
         }
         let status = CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, dataReady: true, makeDataReadyCallback: nil, refcon: nil, formatDescription: formatDescription, sampleTiming: &sampleTime, sampleBufferOut: &buffer)
         guard status == kCVReturnSuccess, let sampleBuffer = buffer else {
-            NSLog("error status for creating sample buffer \(status)")
+            assertionFailure("error status for creating sample buffer \(status)")
             return nil
         }
         
