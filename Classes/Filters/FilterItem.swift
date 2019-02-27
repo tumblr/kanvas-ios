@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// A representation for a filter to be presented in the FilterCollectionController
-struct Filter {
+struct FilterItem {
     /// The circle color
     let representativeColor: UIColor
 }

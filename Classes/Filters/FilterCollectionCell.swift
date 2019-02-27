@@ -47,10 +47,10 @@ final class FilterCollectionCell: UICollectionViewCell {
         setUpView()
     }
     
-    /// Updates the cell to the Filter properties
+    /// Updates the cell to the FilterItem properties
     ///
-    /// - Parameter item: The Filter to display
-    func bindTo(_ item: Filter) {
+    /// - Parameter item: The FilterItem to display
+    func bindTo(_ item: FilterItem) {
         circleView.tintColor = item.representativeColor
     }
     

@@ -26,8 +26,8 @@ final class FilterCollectionCellTests: FBSnapshotTestCase {
     
     func testFilterCell() {
         let cell = newCell()
-        let filter = Filter(representativeColor: .blue)
-        cell.bindTo(filter)
+        let filterItem = FilterItem(representativeColor: .blue)
+        cell.bindTo(filterItem)
         FBSnapshotVerifyView(cell)
     }
 }

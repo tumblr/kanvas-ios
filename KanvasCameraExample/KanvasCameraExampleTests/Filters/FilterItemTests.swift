@@ -14,7 +14,7 @@ final class FilterTests: XCTestCase {
     
     func testFilterColor() {
         let color = UIColor.blue
-        let filter = Filter(representativeColor: color)
+        let filter = FilterItem(representativeColor: color)
         XCTAssertEqual(filter.representativeColor, color, "Color does not match")
     }
 }

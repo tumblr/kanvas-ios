@@ -8,8 +8,8 @@ import Foundation
 import UIKit
 
 protocol FilterCollectionControllerDelegate: class {
-    /// Callback for when a filter is selected
-    func didSelectFilter(_ filter: Filter)
+    /// Callback for when a filter item is selected
+    func didSelectFilter(_ filterItem: FilterItem)
 }
 
 /// Constants for Collection Controller
@@ -17,24 +17,24 @@ private struct FilterCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.25
 }
 
-/// Controller for handling the filter collection.
+/// Controller for handling the filter item collection.
 final class FilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     private lazy var filterCollectionView = FilterCollectionView()
-    private var filters: [Filter]
+    private var filterItems: [FilterItem]
     private var selectedCell: FilterCollectionCell?
     
     weak var delegate: FilterCollectionControllerDelegate?
     
     /// Initializes the collection with Tumblr colors
     init() {
-        filters = [Filter(representativeColor: .tumblrBrightRed),
-                   Filter(representativeColor: .tumblrBrightPink),
-                   Filter(representativeColor: .tumblrBrightOrange),
-                   Filter(representativeColor: .tumblrBrightYellow),
-                   Filter(representativeColor: .tumblrBrightGreen),
-                   Filter(representativeColor: .tumblrBrightBlue),
-                   Filter(representativeColor: .tumblrBrightPurple)]
+        filterItems = [FilterItem(representativeColor: .tumblrBrightRed),
+                       FilterItem(representativeColor: .tumblrBrightPink),
+                       FilterItem(representativeColor: .tumblrBrightOrange),
+                       FilterItem(representativeColor: .tumblrBrightYellow),
+                       FilterItem(representativeColor: .tumblrBrightGreen),
+                       FilterItem(representativeColor: .tumblrBrightBlue),
+                       FilterItem(representativeColor: .tumblrBrightPurple)]
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -90,11 +90,11 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         }
     }
     
-    /// Returns the collection of filters
+    /// Returns the collection of filter items
     ///
-    /// - Returns: Filter array
-    func getFilters() -> [Filter] {
-        return filters
+    /// - Returns: Filter item array
+    func getFilterItems() -> [FilterItem] {
+        return filterItems
     }
     
     // MARK: - UICollectionViewDataSource
@@ -104,13 +104,13 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filters.count
+        return filterItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilterCollectionCell.identifier, for: indexPath)
         if let cell = cell as? FilterCollectionCell {
-            cell.bindTo(filters[indexPath.item])
+            cell.bindTo(filterItems[indexPath.item])
         }
         return cell
     }
@@ -118,7 +118,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     // MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        guard filters.count > 0, collectionView.bounds != .zero else { return .zero }
+        guard filterItems.count > 0, collectionView.bounds != .zero else { return .zero }
         
         let leftInset = cellBorderWhenCentered(firstCell: true, leftBorder: true, collectionView: collectionView)
         let rightInset = cellBorderWhenCentered(firstCell: false, leftBorder: false, collectionView: collectionView)
@@ -128,10 +128,10 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     private func cellBorderWhenCentered(firstCell: Bool, leftBorder: Bool, collectionView: UICollectionView) -> CGFloat {
         let cellMock = FilterCollectionCell(frame: .zero)
-        if firstCell, let firstFilter = filters.first {
+        if firstCell, let firstFilter = filterItems.first {
             cellMock.bindTo(firstFilter)
         }
-        else if let lastFilter = filters.last {
+        else if let lastFilter = filterItems.last {
             cellMock.bindTo(lastFilter)
         }
         let cellSize = cellMock.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
@@ -195,7 +195,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
             selectedCell = cell
         }
         
-        delegate?.didSelectFilter(filters[indexPath.item])
+        delegate?.didSelectFilter(filterItems[indexPath.item])
     }
     
 }

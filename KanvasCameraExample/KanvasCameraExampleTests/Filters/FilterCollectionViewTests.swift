@@ -12,18 +12,18 @@ import XCTest
 
 final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var filters: [Filter] = []
+    var filters: [FilterItem] = []
     
     override func setUp() {
         super.setUp()
         
-        filters = [Filter(representativeColor: .tumblrBrightRed),
-                   Filter(representativeColor: .tumblrBrightPink),
-                   Filter(representativeColor: .tumblrBrightOrange),
-                   Filter(representativeColor: .tumblrBrightYellow),
-                   Filter(representativeColor: .tumblrBrightGreen),
-                   Filter(representativeColor: .tumblrBrightBlue),
-                   Filter(representativeColor: .tumblrBrightPurple)]
+        filters = [FilterItem(representativeColor: .tumblrBrightRed),
+                   FilterItem(representativeColor: .tumblrBrightPink),
+                   FilterItem(representativeColor: .tumblrBrightOrange),
+                   FilterItem(representativeColor: .tumblrBrightYellow),
+                   FilterItem(representativeColor: .tumblrBrightGreen),
+                   FilterItem(representativeColor: .tumblrBrightBlue),
+                   FilterItem(representativeColor: .tumblrBrightPurple)]
         
         self.recordMode = false
     }

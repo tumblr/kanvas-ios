@@ -9,7 +9,7 @@ import UIKit
 
 protocol FilterSettingsControllerDelegate: class {
     /// Callback for when a filter is selected
-    func didSelectFilter(_ filter: Filter)
+    func didSelectFilter(_ filterItem: FilterItem)
     /// Callback for when the button that shows/hides the filter selector is tapped
     ///
     /// - Parameter visible: whether the filter collection is visible
@@ -68,7 +68,7 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     
     // MARK: - FilterCollectionControllerDelegate
     
-    func didSelectFilter(_ filter: Filter) {
-        delegate?.didSelectFilter(filter)
+    func didSelectFilter(_ filterItem: FilterItem) {
+        delegate?.didSelectFilter(filterItem)
     }
 }
