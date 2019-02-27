@@ -9,7 +9,7 @@ import Foundation
 import OpenGLES
 
 /// Callbacks for opengl rendering
-protocol GLRendererDelegate {
+protocol GLRendererDelegate: class {
     /// Called when renderer has processed a pixel buffer
     ///
     /// - Parameters:
@@ -23,12 +23,14 @@ protocol GLRendererDelegate {
 
 /// Renders pixel buffers with open gl
 final class GLRenderer {
+
     /// Optional delegate
-    var delegate: GLRendererDelegate?
-    private var callbackQueue: DispatchQueue
-    
-    // opengl
+    weak var delegate: GLRendererDelegate?
+
+    // OpenGL Context
     let glContext: EAGLContext?
+
+    private let callbackQueue: DispatchQueue
     private var filter: FilterProtocol
     private var processingImage = false
 
