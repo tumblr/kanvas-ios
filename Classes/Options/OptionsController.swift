@@ -10,7 +10,7 @@ import UIKit
 private struct OptionsControllerConstants {
     static let rowSpacing: CGFloat = 20
     static let animationDuration = 0.25
-    static let imagePreviewRow = 1
+    static let imagePreviewRow = 2
 }
 
 /// An option in this collection can be one of 2 kinds
@@ -66,6 +66,13 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
         
         return optionViews
     }()
+
+    private lazy var imagePreviewOptionsStackView: OptionsStackView<Item>? = {
+        if OptionsControllerConstants.imagePreviewRow < self.optionsStackViews.count {
+            return self.optionsStackViews[OptionsControllerConstants.imagePreviewRow]
+        }
+        return nil
+    }()
     
     private let options: [[Option<Item>]]
     private let spacing: CGFloat
@@ -98,7 +105,7 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
         let stackView = UIStackView(arrangedSubviews: optionsStackViews)
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = CameraConstants.buttonSpacing
+        stackView.spacing = CameraConstants.optionSpacing
         return stackView
     }
     
@@ -109,15 +116,20 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     /// - Parameter mode: The current camera mode
     func configureMode(_ mode: CameraMode) {
         switch mode {
-        case .gif, .stopMotion:
+        case .stopMotion:
             UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
-                self?.optionsStackViews[OptionsControllerConstants.imagePreviewRow].alpha = 1
+                self?.imagePreviewOptionsStackView?.alpha = 1
             }
-        case .photo:
+        case .photo, .gif:
             UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
-                self?.optionsStackViews[OptionsControllerConstants.imagePreviewRow].alpha = 0
+                self?.imagePreviewOptionsStackView?.alpha = 0
             }
         }
+    }
+
+    /// Is the image preview option available?
+    func imagePreviewOptionAvailable() -> Bool {
+        return self.imagePreviewOptionsStackView?.alpha == 1
     }
 }
 

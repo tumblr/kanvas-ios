@@ -19,7 +19,7 @@ final class MediaClipsCollectionViewTests: FBSnapshotTestCase, UICollectionViewD
 
         for _ in 0...3 {
             if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
-                let clip = MediaClip(representativeFrame: image, overlayText: nil)
+                let clip = MediaClip(representativeFrame: image, overlayText: nil, lastFrame: image)
                 clips.append(clip)
             }
         }
