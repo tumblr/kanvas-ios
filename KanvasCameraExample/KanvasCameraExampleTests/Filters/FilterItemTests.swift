@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class FilterTests: XCTestCase {
+final class FilterItemTests: XCTestCase {
     
     func testFilterColor() {
         let color = UIColor.blue
