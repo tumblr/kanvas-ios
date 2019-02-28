@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Callback protocol for the filters
-protocol FilteredInputViewControllerDelegate {
+protocol FilteredInputViewControllerDelegate: class {
     /// Method to return a pixel buffer
     ///
     /// - Parameter pixelBuffer: the final pixel buffer
@@ -24,6 +24,11 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         return renderer
     }()
     private weak var previewView: GLPixelBufferView?
+    private let settings: CameraSettings
+
+    /// Filters
+    private weak var delegate: FilteredInputViewControllerDelegate?
+    private var currentFilter: FilterType = .passthrough
     private lazy var currentFilterLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.textColor = .white
@@ -31,11 +36,6 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         label.textAlignment = .center
         return label
     }()
-    private let delegate: FilteredInputViewControllerDelegate?
-    private let settings: CameraSettings
-
-    /// Filters
-    private var currentFilter: FilterType = .passthrough
     
     init(delegate: FilteredInputViewControllerDelegate? = nil, settings: CameraSettings) {
         self.delegate = delegate
@@ -44,7 +44,8 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        assertionFailure("init(coder:) has not been implemented")
+        return nil
     }
     
     override public func viewDidLoad() {

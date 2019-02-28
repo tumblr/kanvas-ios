@@ -7,6 +7,7 @@
 import UIKit
 import CoreVideo
 
+/// OpenGL view for rendering a buffer of pixels.
 final class GLPixelBufferView: UIView {
     private var renderShader: Shader?
     private var oglContext: EAGLContext?
@@ -20,7 +21,8 @@ final class GLPixelBufferView: UIView {
     override class var layerClass: AnyClass {
         return CAEAGLLayer.self
     }
-    
+
+    /// Initializes the OpenGL layer and context
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -38,7 +40,8 @@ final class GLPixelBufferView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+
+    /// Initializes framebuffers, renderbuffers, and a tecture cache
     func initializeBuffers() -> Bool {
         guard let oglContext = oglContext, let layer = self.layer as? CAEAGLLayer else {
             return false
@@ -62,7 +65,7 @@ final class GLPixelBufferView: UIView {
         bail: repeat {
             glFramebufferRenderbuffer(GL_FRAMEBUFFER.ui, GL_COLOR_ATTACHMENT0.ui, GL_RENDERBUFFER.ui, colorBufferHandle)
             if glCheckFramebufferStatus(GL_FRAMEBUFFER.ui) != GL_FRAMEBUFFER_COMPLETE.ui {
-                NSLog("Failure with framebuffer generation")
+                assertionFailure("Failure with framebuffer generation")
                 success = false
                 break bail
             }
@@ -70,7 +73,7 @@ final class GLPixelBufferView: UIView {
             //  Create a new CVOpenGLESTexture cache
             let err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, nil, oglContext as CVEAGLContext, nil, &textureCache)
             if err != 0 {
-                NSLog("Error at CVOpenGLESTextureCacheCreate %d", err)
+                assertionFailure("Error at CVOpenGLESTextureCacheCreate \(err)")
                 success = false
                 break bail
             }
@@ -84,7 +87,9 @@ final class GLPixelBufferView: UIView {
         }
         return success
     }
-    
+
+    /// Dispose of any OpenGL resources: ramebufers, renderbuffers, textureCache.
+    /// Also resets the OpenGL context.
     func reset() {
         guard let oglContext = oglContext else {
             return
@@ -92,7 +97,7 @@ final class GLPixelBufferView: UIView {
         let oldContext = EAGLContext.current()
         if oldContext !== oglContext {
             if !EAGLContext.setCurrent(oglContext) {
-                NSLog("Problem with OpenGL context")
+                assertionFailure("Problem with OpenGL context")
                 return
             }
         }
@@ -105,19 +110,18 @@ final class GLPixelBufferView: UIView {
             colorBufferHandle = 0
         }
         renderShader?.deleteProgram()
-        if let textureCache = textureCache {
-            CVOpenGLESTextureCacheFlush(textureCache, 0)
-            self.textureCache = nil
-        }
+        flushPixelBufferCache()
+        self.textureCache = nil
         if oldContext !== oglContext {
             EAGLContext.setCurrent(oldContext)
         }
     }
-    
+
     deinit {
         self.reset()
     }
-    
+
+    /// Renders a pixel buffer to a texture, which is applied to a 2D plane positioned to fill the entire view.
     func displayPixelBuffer(_ pixelBuffer: CVPixelBuffer) {
         guard let oglContext = oglContext else {
             return
@@ -126,7 +130,7 @@ final class GLPixelBufferView: UIView {
         let oldContext = EAGLContext.current()
         if oldContext !== oglContext {
             if !EAGLContext.setCurrent(oglContext) {
-                NSLog("Problem with OpenGL context")
+                assertionFailure("Problem with OpenGL context")
                 return
             }
         }
@@ -134,7 +138,7 @@ final class GLPixelBufferView: UIView {
         if frameBufferHandle == 0 {
             let success = self.initializeBuffers()
             if !success {
-                NSLog("Problem initializing OpenGL buffers.")
+                assertionFailure("Problem initializing OpenGL buffers.")
                 return
             }
         }
@@ -142,10 +146,15 @@ final class GLPixelBufferView: UIView {
         // Create a CVOpenGLESTexture from a CVPixelBufferRef
         let frameWidth = CVPixelBufferGetWidth(pixelBuffer)
         let frameHeight = CVPixelBufferGetHeight(pixelBuffer)
+        guard frameWidth > 0 && frameHeight > 0 else {
+            assertionFailure("Provided pixel buffer has a zero width or height")
+            return
+        }
+
         var textureMaybe: CVOpenGLESTexture? = nil
 
         guard let textureCache = textureCache else {
-            NSLog("Problem accessing texture cache")
+            assertionFailure("Problem accessing texture cache")
             return
         }
 
@@ -163,12 +172,12 @@ final class GLPixelBufferView: UIView {
                                                                &textureMaybe)
         
         guard err == 0 else {
-            NSLog("CVOpenGLESTextureCacheCreateTextureFromImage failed (error: %d)", err)
+            assertionFailure("CVOpenGLESTextureCacheCreateTextureFromImage failed (error: \(err)")
             return
         }
 
         guard let texture = textureMaybe else {
-            NSLog("CVOpenGLESTextureCacheCreateTextureFromImage failed to create texture")
+            assertionFailure("CVOpenGLESTextureCacheCreateTextureFromImage failed to create texture")
             return
         }
         
@@ -226,7 +235,8 @@ final class GLPixelBufferView: UIView {
             EAGLContext.setCurrent(oldContext)
         }
     }
-    
+
+    /// Flushes the texture cache
     func flushPixelBufferCache() {
         if let textureCache = textureCache {
             CVOpenGLESTextureCacheFlush(textureCache, 0)

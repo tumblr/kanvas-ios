@@ -7,10 +7,18 @@
 import AVFoundation
 import Foundation
 
+/// Protocol for filters
 protocol FilterProtocol {
+
+    /// Uses the sampleBuffer's dimensions to initialize framebuffers and pixel buffers.
     func setupFormatDescription(from sampleBuffer: CMSampleBuffer)
+
+    /// Uses the provided pixelBuffer to render the filter to a new pixel buffer, and returns the new pixel buffer.
     func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?) -> CVPixelBuffer?
+
+    /// Cleans up all resources allocated by the filter.
     func cleanup()
-    
+
+    /// Output format set by setupFormatDescription
     var outputFormatDescription: CMFormatDescription? { get set }
 }

@@ -79,16 +79,19 @@ final class CameraPreviewView: UIView {
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
         closeButton.applyShadows()
-        addSubview(closeButton)
         closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
+        closeButton.contentHorizontalAlignment = .fill
+        closeButton.contentVerticalAlignment = .fill
+        closeButton.imageView?.contentMode = .scaleAspectFit
+        
+        addSubview(closeButton)
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
-
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.buttonMargin),
-            closeButton.topAnchor.constraint(equalTo: topAnchor, constant: CameraConstants.buttonMargin),
+            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
+            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.buttonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.closeButtonSize)
         ])
     }
 
