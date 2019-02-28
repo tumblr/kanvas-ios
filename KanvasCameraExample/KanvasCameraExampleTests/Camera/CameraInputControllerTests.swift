@@ -63,10 +63,10 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testDeleteSegment() {
         let cameraInputController = newCameraInputController()
-        cameraInputController.deleteSegmentAtIndex(0) // testing for graceful failure
+        cameraInputController.deleteSegment(at: 0) // testing for graceful failure
         cameraInputController.takePhoto(completion: { (image) in
             XCTAssertEqual(cameraInputController.segments().count, 1, "Photo should be taken")
-            cameraInputController.deleteSegmentAtIndex(0)
+            cameraInputController.deleteSegment(at: 0)
             XCTAssertEqual(cameraInputController.segments().count, 0, "Photo should be deleted")
         })
     }
