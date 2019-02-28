@@ -260,7 +260,7 @@ extension CameraRecorder: CameraRecordingProtocol {
                 return
             }
             self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
-                completion(success ? image : nil)
+                completion(success ? filteredImage : nil)
             })
         }
     }
