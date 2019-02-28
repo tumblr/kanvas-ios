@@ -22,7 +22,7 @@ final class GifVideoOutputHandler: NSObject {
     private let videoOutput: AVCaptureVideoDataOutput?
     
     private weak var currentVideoSampleBuffer: CMSampleBuffer?
-    private var currentVideoPixelBuffer: CVPixelBuffer? // todo jimmy weak too?
+    private weak var currentVideoPixelBuffer: CVPixelBuffer?
 
     private var gifLink: CADisplayLink?
     private var gifBuffers: [CMSampleBuffer] = []
@@ -40,6 +40,7 @@ final class GifVideoOutputHandler: NSObject {
     /// Designated initializer for GifVideoOutputHandler
     ///
     /// - Parameter videoOutput: the video data output that the pixel buffer frames will be coming from. Optional for error handling
+    /// - Parameter usePixelBuffer: use the pixel buffer instead of the sample buffer
     required init(videoOutput: AVCaptureVideoDataOutput?, usePixelBuffer: Bool = false) {
         self.videoOutput = videoOutput
         shouldUsePixelBuffers = usePixelBuffer

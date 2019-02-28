@@ -307,7 +307,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        self.currentVideoPixelBuffer = pixelBuffer // TODO jimmy why?!
+        self.currentVideoPixelBuffer = pixelBuffer
         switch currentRecordingMode {
         case .stopMotion:
             currentVideoOutputHandler?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
