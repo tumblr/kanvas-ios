@@ -53,10 +53,10 @@ final class CameraView: UIView {
     
     /// the container for the fullscreen image preview
     private var imagePreviewViewContainer: UIView?
-
+    
     /// the container for the filter settings view
     private var filterSettingsViewContainer: UIView?
-
+    
     /// the container for the options (flash, flip camera)
     private var topOptionsContainer: UIView?
 
@@ -126,9 +126,10 @@ final class CameraView: UIView {
 
     private func setupModeLayoutGuide() {
         addLayoutGuide(modeLayoutGuide)
-        modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
-        modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
-        modeLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor).isActive = true
+        modeLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
+        modeLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
+        modeLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor,
+                                                constant: -MediaClipsEditorView.height).isActive = true
         modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.buttonMargin).isActive = true
     }
 
@@ -159,11 +160,11 @@ final class CameraView: UIView {
     }
     
     private func setupFilterSettingsGuide() {
-        let bottomMargin = ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterCollectionView.height) / 2)
+        let bottomMargin = MediaClipsEditorView.height + ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterCollectionView.height) / 2)
         addLayoutGuide(filterSettingsLayoutGuide)
         filterSettingsLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         filterSettingsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
-        filterSettingsLayoutGuide.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor,
+        filterSettingsLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor,
                                                           constant: -bottomMargin).isActive = true
         filterSettingsLayoutGuide.heightAnchor.constraint(equalToConstant: FilterSettingsView.height).isActive = true
     }
@@ -267,8 +268,7 @@ final class CameraView: UIView {
                             topOptionsContainer,
                             filterSettingsViewContainer,
                             modeAndShootContainer,
-                            clipsContainer,
-                            filterSettingsViewContainer]
+                            clipsContainer]
         orderedViews.forEach { view in
             if let view = view {
                 addSubview(view)
