@@ -19,26 +19,20 @@ public struct GLU {
         shader = glCreateShader(target)
         glShaderSource(shader, count, sources, nil)
         glCompileShader(shader)
-        
-        #if DEBUG
-            var logLength: GLint = 0
-            glGetShaderiv(shader, GL_INFO_LOG_LENGTH.ui, &logLength)
-            if logLength > 0 {
-                let log = UnsafeMutablePointer<GLchar>.allocate(capacity: logLength.l)
-                glGetShaderInfoLog(shader, logLength, &logLength, log)
-                log.deallocate()
-            }
-        #endif
-        
+
         glGetShaderiv(shader, GL_COMPILE_STATUS.ui, &status)
+        #if DEBUG
         if status == 0 {
-            assertionFailure("Failed to compile shader")
-            for i in 0..<count.l {
-                if let source = sources[i] {
-                    assertionFailure("\(OpaquePointer(source))")
-                }
+            let length = 256
+            var infoLog = [CChar](repeating: CChar(0), count: length)
+            var l = GLsizei(0)
+            glGetShaderInfoLog(shader, length.i, &l, &infoLog)
+            if l > 0 {
+                let message = String.init(utf8String: infoLog)
+                assertionFailure("Shader compile log: \(message ?? "No log")")
             }
         }
+        #endif
         
         return status
     }
@@ -62,7 +56,14 @@ public struct GLU {
         
         glGetProgramiv(program, GL_LINK_STATUS.ui, &status)
         if status == 0 {
-            assertionFailure("Failed to link program \(program)")
+            var l = GLsizei(0)
+            let length = 256
+            var infoLog = [CChar](repeating: CChar(0), count: length)
+            glGetProgramInfoLog(program, length.i, &l, &infoLog)
+            if l > 0 {
+                let message = String.init(utf8String: infoLog)
+                assertionFailure("Failed to link program: \(message ?? "No Log")")
+            }
         }
         
         return status
