@@ -9,6 +9,7 @@ import Foundation
 /// Extension for linear interpolation (lerp) and creation of RGBA components
 extension UIColor {
     
+    /// Creates and RGBA from this color
     var rgbaComponents: RGBA {
         return RGBA(color: self)
     }
