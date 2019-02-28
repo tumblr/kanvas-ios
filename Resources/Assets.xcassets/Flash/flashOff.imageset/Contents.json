@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "flashOff.png",
+      "filename" : "flashOff@1x.png",
       "scale" : "1x"
     },
     {

@@ -23,11 +23,10 @@ extension UIView {
             safeGuide.identifier = id
             addLayoutGuide(safeGuide)
             
-            let topOffset: CGFloat = Device.isIPhoneX ? KanvasViewConstants.iPhoneXTopOffset : KanvasViewConstants.normalTopOffset
             NSLayoutConstraint.activate([
                 safeGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
                 safeGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-                safeGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -topOffset),
+                safeGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
                 safeGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
             ])
             
@@ -46,8 +45,6 @@ enum ViewPositioning {
 
 private struct KanvasViewConstants {
     static let animationDuration: TimeInterval = 0.2
-    static let normalTopOffset: CGFloat = 0
-    static let iPhoneXTopOffset: CGFloat = 20
 }
 
 extension UIView {

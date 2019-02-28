@@ -17,7 +17,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
     private var startTime: Date?
     var recordingDelegate: CameraRecordingDelegate? = nil
 
-    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?, segmentsHandler: SegmentsHandlerType) {
+    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?, segmentsHandler: SegmentsHandlerType, settings: CameraSettings) {
         self.recordingDelegate = recordingDelegate
         self.cameraSegmentHandler = segmentsHandler
     }
@@ -91,11 +91,11 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         })
     }
 
-    func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool = false) {
+    func deleteSegment(at index: Int, removeFromDisk: Bool = false) {
         if isRecording() {
             return
         }
-        cameraSegmentHandler.deleteSegment(index: index, removeFromDisk: false)
+        cameraSegmentHandler.deleteSegment(at: index, removeFromDisk: false)
     }
 
     func moveSegment(from originIndex: Int, to destinationIndex: Int) {
@@ -129,6 +129,10 @@ final class CameraRecorderStub: CameraRecordingProtocol {
 
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         currentVideoSample = sampleBuffer
+    }
+
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+
     }
 
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {

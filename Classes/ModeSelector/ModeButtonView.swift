@@ -16,10 +16,10 @@ protocol ModeButtonViewDelegate: class {
 }
 
 private struct ModeButtonViewConstants {
-    static let contentVerticalInset: CGFloat = 8
-    static let contentHorizontalInset: CGFloat = contentVerticalInset * 2
+    static let contentVerticalInset: CGFloat = 6
+    static let contentHorizontalInset: CGFloat = 20
     static let borderWidth: CGFloat = 2
-    static let buttonFont: UIFont = .guava85()
+    static let buttonFont: UIFont = .favoritTumblr85(fontSize: 18.5)
 }
 
 /// The capsule mode button view
