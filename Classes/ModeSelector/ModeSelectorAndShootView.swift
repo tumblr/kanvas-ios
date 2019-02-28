@@ -7,6 +7,7 @@
 import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
+    static let selectorYCenterMargin: CGFloat = (CameraConstants.optionButtonSize / 2)
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 4
     static var shootButtonTopMargin: CGFloat {
@@ -103,7 +104,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         addSubview(modeSelectorButton)
         modeSelectorButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            modeSelectorButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            modeSelectorButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor,
+                                                        constant: ModeSelectorAndShootViewConstants.selectorYCenterMargin),
             modeSelectorButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
         ])
     }

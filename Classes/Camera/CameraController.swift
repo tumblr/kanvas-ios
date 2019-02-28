@@ -74,7 +74,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return controller
     }()
     private lazy var topOptionsController: OptionsController<CameraController> = {
-        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.buttonMargin)
+        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.optionHorizontalMargin)
         controller.delegate = self
         return controller
     }()
