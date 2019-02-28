@@ -36,5 +36,14 @@ final class CameraSettingsTests: XCTestCase {
         let settings = CameraSettings()
         XCTAssert(settings.preferredFlashOption == .off, "Default flash should be off")
     }
+
+    func testCameraFeatures() {
+        let settings = CameraSettings()
+        XCTAssertFalse(settings.features.ghostFrame)
+        XCTAssertFalse(settings.features.openGLPreview)
+        let features = CameraFeatures(ghostFrame: true, openGLPreview: true)
+        XCTAssertTrue(features.ghostFrame)
+        XCTAssertTrue(features.openGLPreview)
+    }
     
 }

@@ -242,8 +242,8 @@ extension CameraRecorder: CameraRecordingProtocol {
         })
     }
 
-    func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool = true) {
-        segmentsHandler.deleteSegment(index: index, removeFromDisk: removeFromDisk)
+    func deleteSegment(at index: Int, removeFromDisk: Bool = true) {
+        segmentsHandler.deleteSegment(at: index, removeFromDisk: removeFromDisk)
     }
 
     func moveSegment(from originIndex: Int, to destinationIndex: Int) {
