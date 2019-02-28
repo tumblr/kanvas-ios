@@ -6,6 +6,9 @@
 
 import UIKit
 
+/// This is a circular gradient. It places its colors evenly distributed
+/// around the center of the circle. The result image looks like
+/// the shape of a cone viewed from above.
 class ConicalGradientLayer: CALayer {
     
     // MARK: Types

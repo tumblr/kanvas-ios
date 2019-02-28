@@ -102,7 +102,6 @@ final class ShootButtonView: IgnoreTouchesView {
         self.baseColor = baseColor
         trigger = .tap
 
-        //super.init(frame: .zero)
         super.init(frame: .zero)
         
         backgroundColor = .clear
