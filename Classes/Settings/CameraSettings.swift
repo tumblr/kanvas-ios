@@ -34,6 +34,9 @@ public struct CameraFeatures {
     /// The OpenGL Camera Preview feature
     public var openGLPreview: Bool = false
 
+    /// The OpenGL Camera Capture feature
+    public var openGLCapture: Bool = false
+
     /// The OpenGL Camera Filters feature
     public var openGLFilters: Bool = false
 

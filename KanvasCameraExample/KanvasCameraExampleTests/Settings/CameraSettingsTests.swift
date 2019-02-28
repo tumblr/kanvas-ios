@@ -41,10 +41,12 @@ final class CameraSettingsTests: XCTestCase {
         let settings = CameraSettings()
         XCTAssertFalse(settings.features.ghostFrame)
         XCTAssertFalse(settings.features.openGLPreview)
+        XCTAssertFalse(settings.features.openGLCapture)
         XCTAssertFalse(settings.features.openGLFilters)
-        let features = CameraFeatures(ghostFrame: true, openGLPreview: true, openGLFilters: true)
+        let features = CameraFeatures(ghostFrame: true, openGLPreview: true,  openGLCapture: true, openGLFilters: true)
         XCTAssertTrue(features.ghostFrame)
         XCTAssertTrue(features.openGLPreview)
+        XCTAssertTrue(features.openGLCapture)
         XCTAssertTrue(features.openGLFilters)
     }
     

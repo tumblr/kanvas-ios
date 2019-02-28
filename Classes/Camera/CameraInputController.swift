@@ -235,7 +235,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, segmentsHandlerType: SegmentsHandlerType.Type) {
         let size = currentResolution()
-        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandlerType.init())
+        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandlerType.init(), settings: settings)
     }
 
     // MARK: - Internal methods
@@ -628,6 +628,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
+        let filteredImage = filteredInputViewController?.filterImageWithCurrentPipeline(image: image)
+        return filteredImage ?? image
+    }
+
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if output == audioDataOutput {
@@ -635,7 +640,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         else if output == videoDataOutput {
             filteredInputViewController?.filterSampleBuffer(sampleBuffer)
-            recorder?.processVideoSampleBuffer(sampleBuffer)
+            if !settings.features.openGLCapture {
+                recorder?.processVideoSampleBuffer(sampleBuffer)
+            }
         }
     }
 
@@ -648,7 +655,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     
     // MARK: - FilteredInputViewControllerDelegate
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-
+        if settings.features.openGLCapture {
+            recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+        }
     }
 
     // MARK: - breakdown
