@@ -15,9 +15,11 @@
   "requires_arc": true,
   "frameworks": [
     "Foundation",
+    "GLKit",
+    "OpenGLES",
     "UIKit"
   ],
-  "source_files": "Classes/**/*.{h,m,swift}",
+  "source_files": "Classes/**/*.{h,m,swift,vsh,glsl}",
   "resources": "Resources/*",
   "dependencies": {
     "TumblrTheme": [

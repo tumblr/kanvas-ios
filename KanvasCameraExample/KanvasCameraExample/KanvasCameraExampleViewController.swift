@@ -16,7 +16,6 @@ final class KanvasCameraExampleViewController: UIViewController {
     private let button = UIButton(type: .custom)
     private var shouldShowWelcomeToolip = true
     private var shouldShowCreationTooltip = true
-    private var shouldEnableGhostFrame = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +45,9 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.enabledModes = [.photo, .gif, .stopMotion]
         settings.defaultMode = .stopMotion
         settings.exportStopMotionPhotoAsVideo = true
+        settings.features.ghostFrame = true
+        settings.features.openGLPreview = true
+        settings.features.openGLCapture = true
         return settings
     }
 
@@ -54,9 +56,6 @@ final class KanvasCameraExampleViewController: UIViewController {
 // MARK: - CameraControllerDelegate
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
-    func cameraShouldEnableGhostFrame() -> Bool {
-        return shouldEnableGhostFrame
-    }
 
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeToolip

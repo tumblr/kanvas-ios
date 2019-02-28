@@ -20,6 +20,12 @@ protocol CameraRecordingDelegate: class {
 
     /// this is called after a video is taken. Methods to change UI, update torch, should be called from this method
     func cameraWillFinishVideo()
+
+    /// this is called after a photo is taken, returns a filtered image if necessary
+    ///
+    /// - Parameter image: the input image
+    /// - Returns: the output filtered image, if necessary
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage?
 }
 
 /// A protocol adopted by the various capture recorders
@@ -34,12 +40,14 @@ protocol CameraRecordingProtocol {
     ///   - audioOutput: AVCaptureAudioDataOutput - for recording the microphone
     ///   - recordingDelegate: delegate for recording methods
     ///   - segmentsHandler: handler for segments and final output creating
+    ///   - cameraSettings: CameraSettings
     init(size: CGSize,
          photoOutput: AVCapturePhotoOutput?,
          videoOutput: AVCaptureVideoDataOutput?,
          audioOutput: AVCaptureAudioDataOutput?,
          recordingDelegate: CameraRecordingDelegate?,
-         segmentsHandler: SegmentsHandlerType)
+         segmentsHandler: SegmentsHandlerType,
+         settings: CameraSettings)
 
     /// the recording delegate for callback methods
     var recordingDelegate: CameraRecordingDelegate? { get set }
@@ -95,7 +103,7 @@ protocol CameraRecordingProtocol {
     ///
     /// - Parameter index: location of the segment from `segments`
     /// - Parameter removeFromDisk: whether to also delete the file from disk
-    func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool)
+    func deleteSegment(at index: Int, removeFromDisk: Bool)
 
     /// moves a segment
     ///
@@ -125,6 +133,13 @@ protocol CameraRecordingProtocol {
     ///
     /// - Parameter sampleBuffer: CMSampleBuffer input to be processed
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer)
+
+    /// process the video pixel buffer at the presentation time
+    ///
+    /// - Parameters:
+    ///   - pixelBuffer: The image buffer
+    ///   - presentationTime: The append time for the buffer
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime)
 
     /// processes the audio buffer
     ///
