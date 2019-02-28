@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Rave Filter
 final class RaveFilter: Filter {
     
     /// The time to pass

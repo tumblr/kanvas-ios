@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Toon Filter
 final class ToonFilter: Filter {
 
     override func setupShader() {

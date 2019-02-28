@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Lego Filter
 final class LegoFilter: Filter {
     
     override func setupShader() {

@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Wave Pool Filter
 final class WavePoolFilter: GroupFilter {
 
     init(glContext: EAGLContext?) {

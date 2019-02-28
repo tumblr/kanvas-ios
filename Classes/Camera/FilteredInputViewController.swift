@@ -126,8 +126,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         else if let nextFilter = FilterType(rawValue: 0) {
             currentFilter = nextFilter
         }
-        renderer.changeFilter(currentFilter)
-        updateCurrentFilterLabel()
+        updateFilter()
     }
 
     func applyPreviousFilter() {
@@ -141,6 +140,10 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
                 currentFilter = previousFilter
             }
         }
+        updateFilter()
+    }
+
+    func updateFilter() {
         renderer.changeFilter(currentFilter)
         updateCurrentFilterLabel()
     }

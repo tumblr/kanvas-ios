@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Mirror Two Filter
 final class MirrorTwoFilter: Filter {
     
     override func setupShader() {

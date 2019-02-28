@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Light Leaks Filter
 final class LightLeaksFilter: Filter {
 
     /// The time to pass

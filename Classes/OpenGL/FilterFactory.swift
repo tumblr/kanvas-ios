@@ -6,61 +6,12 @@
 
 import Foundation
 
-enum FilterType: Int, CaseIterable {
-    case passthrough = 0
-    case film
-    case plasma
-    case emInterference
-    case lego
-    case rgb
-    case rave
-    case chroma
-    case mirrorTwo
-    case mirrorFour
-    case grayscale
-    case lightLeaks
-    case wavePool
-    case magna
-    case toon
-
-    func name() -> String {
-        switch self {
-        case .passthrough:
-            return "None"
-        case .plasma:
-            return "Plasma"
-        case .emInterference:
-            return "EM-Interference (Glitch)"
-        case .film:
-            return "Film/Grainy"
-        case .mirrorTwo:
-            return "Mirror"
-        case .rave:
-            return "Rave"
-        case .lego:
-            return "Lego"
-        case .rgb:
-            return "RGB"
-        case .chroma:
-            return "Chroma"
-        case .mirrorFour:
-            return "Mirror 4"
-        case .grayscale:
-            return "Black & White"
-        case .lightLeaks:
-            return "Rainbow"
-        case .wavePool:
-            return "Water"
-        case .magna:
-            return "Magna"
-        case .toon:
-            return "Toon"
-        }
-    }
-}
-
+/// Creates Filter instances from filter types
 struct FilterFactory {
-    
+
+    /// Creates a filter for the provided type and glContext
+    /// - Parameter type: FilterType to create
+    /// - Parameter glContext: The EAGLContext to bind this filter to.
     static func createFilter(type: FilterType, glContext: EAGLContext?) -> FilterProtocol {
         var newFilter: FilterProtocol
         switch type {

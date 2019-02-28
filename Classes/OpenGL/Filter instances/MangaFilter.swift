@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Manga Filter
 final class MangaFilter: Filter {
     
     override func setupShader() {

@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Plasma Filter
 final class PlasmaFilter: Filter {
     
     /// The time to pass

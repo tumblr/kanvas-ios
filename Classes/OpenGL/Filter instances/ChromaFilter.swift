@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Chroma Filter
 final class ChromaFilter: Filter {
 
     /// The time to pass

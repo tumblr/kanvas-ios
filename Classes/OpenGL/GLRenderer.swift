@@ -104,10 +104,10 @@ final class GLRenderer {
 
     // MARK: - changing filters
     func changeFilter(_ filterType: FilterType) {
-        self.filter.cleanup()
+        filter.cleanup()
 
         self.filterType = filterType
-        self.filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
+        filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
     }
 
     /// Method to call reset on the camera filter

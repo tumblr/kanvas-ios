@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Film Filter
 final class FilmFilter: Filter {
     
     /// The time to pass

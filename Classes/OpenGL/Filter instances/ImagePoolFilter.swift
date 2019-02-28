@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Image Pool Filter
 final class ImagePoolFilter: Filter {
 
     /// The time to pass

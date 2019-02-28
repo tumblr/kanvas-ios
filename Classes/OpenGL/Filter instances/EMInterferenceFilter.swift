@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// EM Interference Filter
 final class EMInterferenceFilter: Filter {
     
     /// The time to pass

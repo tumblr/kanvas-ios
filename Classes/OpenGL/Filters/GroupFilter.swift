@@ -9,7 +9,10 @@ import Foundation
 
 /// A filter that renders shaders in a chain, with one output leading to the next
 class GroupFilter: FilterProtocol {
+
+    /// Output format
     var outputFormatDescription: CMFormatDescription?
+
     private var filters: [FilterProtocol] = []
     
     init(filters: [FilterProtocol]) {

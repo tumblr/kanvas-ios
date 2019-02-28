@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Grayscale Filter
 final class GrayscaleFilter: Filter {
 
     override func setupShader() {

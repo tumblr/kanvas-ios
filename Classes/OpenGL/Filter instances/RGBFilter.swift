@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// RGB Filter
 final class RGBFilter: Filter {
 
     /// The time to pass
