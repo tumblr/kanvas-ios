@@ -109,7 +109,7 @@ final class GifVideoOutputHandler: NSObject {
             cancelGif()
             return
         }
-        guard let buffer = currentVideoSampleBuffer, let pixelBuffer = CMSampleBufferGetImageBuffer(buffer)?.copy() else {
+        guard let buffer = currentVideoSampleBuffer, let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) else {
             // current video sample buffer may not be set yet, so don't necessarily cancelGif
             return
         }
@@ -172,30 +172,5 @@ final class GifVideoOutputHandler: NSObject {
     private func invalidateLink() {
         gifLink?.invalidate()
         gifLink = nil
-    }
-}
-
-// MARK: - CVPixelBuffer copying
-private extension CVPixelBuffer {
-    /// Deep copy a CVPixelBuffer:
-    func copy() -> CVPixelBuffer? {
-        let width = CVPixelBufferGetWidth(self)
-        let height = CVPixelBufferGetHeight(self)
-        let format = CVPixelBufferGetPixelFormatType(self)
-
-        var pixelBuffer: CVPixelBuffer?
-        CVPixelBufferCreate(nil, width, height, format, nil, &pixelBuffer)
-        
-        if let pixelBuffer = pixelBuffer {
-            CVPixelBufferLockBaseAddress(self, .readOnly)
-            CVPixelBufferLockBaseAddress(pixelBuffer, [])
-            let baseAddress = CVPixelBufferGetBaseAddress(self)
-            let dataSize = CVPixelBufferGetDataSize(self)
-            let target = CVPixelBufferGetBaseAddress(pixelBuffer)
-            memcpy(target, baseAddress, dataSize)
-            CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
-            CVPixelBufferUnlockBaseAddress(self, .readOnly)
-        }
-        return pixelBuffer
     }
 }

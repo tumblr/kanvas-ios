@@ -91,11 +91,11 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         })
     }
 
-    func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool = false) {
+    func deleteSegment(at index: Int, removeFromDisk: Bool = false) {
         if isRecording() {
             return
         }
-        cameraSegmentHandler.deleteSegment(index: index, removeFromDisk: false)
+        cameraSegmentHandler.deleteSegment(at: index, removeFromDisk: false)
     }
 
     func moveSegment(from originIndex: Int, to destinationIndex: Int) {

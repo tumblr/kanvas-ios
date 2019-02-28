@@ -67,7 +67,7 @@ final class CameraRecorderTests: XCTestCase {
             cameraRecorder.addSegment(segment)
         }
         XCTAssert(cameraRecorder.segments().count == segments.count, "Wrong number of segments")
-        cameraRecorder.deleteSegmentAtIndex(0, removeFromDisk: false)
+        cameraRecorder.deleteSegment(at: 0, removeFromDisk: false)
         XCTAssert(cameraRecorder.segments().count == segments.count - 1, "CameraRecorder has wrong number of segments after deleting")
     }
 

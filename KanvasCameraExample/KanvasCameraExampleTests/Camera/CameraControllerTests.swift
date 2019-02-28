@@ -30,11 +30,13 @@ final class CameraControllerTests: FBSnapshotTestCase {
         return CameraControllerDelegateStub()
     }
 
-    func newDelegateStubWithoutGhostFrame() -> CameraControllerDelegateStub {
-        return CameraControllerDelegateStub(shouldEnableGhostFrame: false)
+    func newController(delegate: CameraControllerDelegate) -> CameraController {
+        let settings = CameraSettings()
+        settings.features.ghostFrame = true
+        return newController(delegate: delegate, settings: settings)
     }
 
-    func newController(delegate: CameraControllerDelegate, settings: CameraSettings = CameraSettings()) -> CameraController {
+    func newController(delegate: CameraControllerDelegate, settings: CameraSettings) -> CameraController {
         let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = delegate
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
@@ -54,8 +56,10 @@ final class CameraControllerTests: FBSnapshotTestCase {
     }
 
     func testSetupWithStopMotionDisabled() {
-        let delegate = newDelegateStubWithoutGhostFrame()
-        let controller = newController(delegate: delegate)
+        let delegate = newDelegateStub()
+        let settings = CameraSettings()
+        settings.features.ghostFrame = false
+        let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
 
@@ -63,6 +67,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.defaultMode = .gif
+        settings.features.ghostFrame = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -71,6 +76,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.enableStopMotionMode = false
+        settings.features.ghostFrame = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -79,6 +85,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.preferredFlashOption = .on
+        settings.features.ghostFrame = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -87,6 +94,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.imagePreviewOption = .on
+        settings.features.ghostFrame = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -232,6 +240,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func testCameraWithOneMode() {
         let settings = CameraSettings()
         settings.enabledModes = [.photo]
+        settings.features.ghostFrame = true
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
@@ -241,12 +250,6 @@ final class CameraControllerTests: FBSnapshotTestCase {
 }
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
-
-    private let shouldEnableGhostFrame: Bool
-
-    init(shouldEnableGhostFrame: Bool = true) {
-        self.shouldEnableGhostFrame = shouldEnableGhostFrame
-    }
 
     func didDismissWelcomeTooltip() {
     }
@@ -260,10 +263,6 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     
     func cameraShouldShowCreationTooltip() -> Bool {
         return false
-    }
-
-    func cameraShouldEnableGhostFrame() -> Bool {
-        return shouldEnableGhostFrame
     }
 
     var dismissCalled = false
