@@ -19,7 +19,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
     }
     
     func newShootButtonView() -> ShootButtonView {
-        let shootButton = ShootButtonView(baseColor: .white, activeColor: .red)
+        let shootButton = ShootButtonView(baseColor: .white)
         return shootButton
     }
     

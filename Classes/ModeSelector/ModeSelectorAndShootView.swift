@@ -43,7 +43,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     /// - Parameter settings: CameraSettings to determine the default and available modes
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
-        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonInactiveColor, activeColor: KanvasCameraColors.shootButtonActiveColor)
+        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonBaseColor)
         self.settings = settings
 
         super.init(frame: .zero)
@@ -83,7 +83,28 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
             showViews(shownViews: [], hiddenViews: [modeSelectorButton], animated: true)
         }
     }
-
+    
+    /// shows or hides the inner circle used for the press effect
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showPressInnerCircle(_ show: Bool) {
+        shootButton.showPressInnerCircle(show: show)
+    }
+    
+    /// shows or hides the outer translucent circle used for the press effect
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showPressBackgroundCircle(_ show: Bool) {
+        shootButton.showPressBackgroundCircle(show: show)
+    }
+    
+    /// shows or hides the border of the shutter button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showBorderView(_ show: Bool) {
+        shootButton.showBorderView(show: show)
+    }
+    
     // MARK: - UI Layout
 
     private func setUpButtons() {
