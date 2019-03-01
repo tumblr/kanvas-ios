@@ -96,7 +96,7 @@ private extension MediaClipsEditorView {
     func setUpPreview() {
         addSubview(previewButton)
         previewButton.translatesAutoresizingMaskIntoConstraints = false
-        previewButton.setTitle("Preview", for: .normal)
+        previewButton.setTitle(NSLocalizedString("Preview", comment: "Title for the Preview button"), for: .normal)
         previewButton.layer.cornerRadius = 20
         previewButton.backgroundColor = .tumblrBrightBlue
         previewButton.setTitleColor(.white, for: .normal)
