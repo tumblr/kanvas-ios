@@ -113,6 +113,36 @@ final class ModeSelectorAndShootController: UIViewController {
     func hideTooltip() {
         modeView.dismissTooltip()
     }
+    
+    /// shows the inner circle used for the press effect
+    func showPressInnerCircle() {
+        modeView.showPressInnerCircle(true)
+    }
+    
+    /// hides the inner circle image for the press effect
+    func hidePressInnerCircle() {
+        modeView.showPressInnerCircle(false)
+    }
+    
+    /// shows the outer translucent circle used for the press effect
+    func showPressBackgroundCircle() {
+        modeView.showPressBackgroundCircle(true)
+    }
+    
+    /// hides the outer translucent circle used for the press effect
+    func hidePressBackgroundCircle() {
+        modeView.showPressBackgroundCircle(false)
+    }
+    
+    /// shows the border of the shutter button
+    func showBorderView() {
+        modeView.showBorderView(true)
+    }
+    
+    /// hides the border of the shutter button
+    func hideBorderView() {
+        modeView.showBorderView(false)
+    }
 }
 
 extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {

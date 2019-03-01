@@ -33,4 +33,5 @@ struct KanvasCameraImages {
     static let undoImage = UIImage.imageFromCameraBundle(named: "undoButton")
     static let nextImage = UIImage.imageFromCameraBundle(named: "nextButton")
     static let deleteImage = UIImage.imageFromCameraBundle(named: "trashButton")
+    static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
 }

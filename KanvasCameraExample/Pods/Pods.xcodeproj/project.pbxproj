@@ -54,7 +54,10 @@
 		6312FC6B60F8F6FAEAC52C6B98C0FF83 /* KanvasCamera-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BB81F1AC9F694D122E3633E7FA5EC7F9 /* KanvasCamera-dummy.m */; };
 		637EF77BBD39C643A5626C7DC6BB0632 /* ExtendedStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC09D736E959FBEC5750A43B28108E98 /* ExtendedStackView.swift */; };
 		64135540460B2B28CE7EDBA329FF598A /* UIFont+ComposeFonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AAF0939B988AE1169F51641E4927EBF /* UIFont+ComposeFonts.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6514279C22285D6500439E52 /* EasyTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6514279B22285D6500439E52 /* EasyTipView.swift */; };
+		651641BF22299A940065463D /* EasyTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651641BE22299A940065463D /* EasyTipView.swift */; };
+		65F11255222858B400DB8006 /* ConicalGradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F11253222858B400DB8006 /* ConicalGradientLayer.swift */; };
+		65F11256222858B400DB8006 /* RGBA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F11254222858B400DB8006 /* RGBA.swift */; };
+		65F11258222858C400DB8006 /* UIColor+Lerp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F11257222858C400DB8006 /* UIColor+Lerp.swift */; };
 		66E56D2784F7E6E3C277F23A6FAF8714 /* AVURLAsset+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED179854F639D6773CDDDBAB520407F8 /* AVURLAsset+Thumbnail.swift */; };
 		691113283156DEEC22BEA5A4471BCBB7 /* CameraInputOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45FC2573FC51036264C69977CEEECB /* CameraInputOutput.swift */; };
 		6960DB91177453961DED2D5B62D4E535 /* ImagePreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575CB117DF3D31314970572E952DE74A /* ImagePreviewController.swift */; };
@@ -237,7 +240,10 @@
 		60ACBCCC3653961EC3A2406D1125AC82 /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
 		630DD64AF6E511A9DCCA74D5ED44A3D8 /* Pods-KanvasCameraExample-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasCameraExample-Info.plist"; sourceTree = "<group>"; };
 		647CEFF87E0240485EF58FF35EF571AA /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
-		6514279B22285D6500439E52 /* EasyTipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasyTipView.swift; sourceTree = "<group>"; };
+		651641BE22299A940065463D /* EasyTipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasyTipView.swift; sourceTree = "<group>"; };
+		65F11253222858B400DB8006 /* ConicalGradientLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayer.swift; sourceTree = "<group>"; };
+		65F11254222858B400DB8006 /* RGBA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RGBA.swift; sourceTree = "<group>"; };
+		65F11257222858C400DB8006 /* UIColor+Lerp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Lerp.swift"; sourceTree = "<group>"; };
 		69E8AECDC1046BF1138EE46BDB723FFE /* ModeSelectorAndShootController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootController.swift; sourceTree = "<group>"; };
 		6D11A917E16D537C3E7109B520EA4E28 /* Pods-KanvasCameraExampleTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-KanvasCameraExampleTests-dummy.m"; sourceTree = "<group>"; };
 		6F8C44B40B1A73B473753528065634AC /* KanvasCamera-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "KanvasCamera-Info.plist"; sourceTree = "<group>"; };
@@ -469,7 +475,9 @@
 		24F8006D02E8E153BFD0B244DE55D332 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				6514279B22285D6500439E52 /* EasyTipView.swift */,
+				651641BE22299A940065463D /* EasyTipView.swift */,
+				65F11253222858B400DB8006 /* ConicalGradientLayer.swift */,
+				65F11254222858B400DB8006 /* RGBA.swift */,
 				7E8184252DDC4695D0207690975A1CA6 /* Device.swift */,
 				300E9DF7E6C75F620EF7242238EA79C1 /* IgnoreTouchesCollectionView.swift */,
 				B14ED1D1C8F510A024B7DA8CD6AA4E06 /* IgnoreTouchesView.swift */,
@@ -807,6 +815,7 @@
 		FCA4C68A7C12DAA8F95A7555D386C65A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				65F11257222858C400DB8006 /* UIColor+Lerp.swift */,
 				1F00A401EEAC600AF736D5FF3C6AEC7C /* Array+Move.swift */,
 				ED179854F639D6773CDDDBAB520407F8 /* AVURLAsset+Thumbnail.swift */,
 				A7349C4C60AC3035C931CF3994C250E3 /* CGRect+Center.swift */,
@@ -1095,10 +1104,12 @@
 				4DA86534692EB00BAF17F631983E32EF /* CameraPreviewView.swift in Sources */,
 				1CF0EA2D3B4BF308FDA77FD9D5AC2264 /* CameraPreviewViewController.swift in Sources */,
 				9F26F5ED0B6666FC67C418A0513493E9 /* CameraRecorder.swift in Sources */,
+				65F11256222858B400DB8006 /* RGBA.swift in Sources */,
 				334B1D66C0AD25E58CA5FE15B9D78D66 /* CameraRecordingProtocol.swift in Sources */,
 				557E4F35EDDA804526859F9DCDE348FA /* CameraSegmentHandler.swift in Sources */,
 				0A945FE15B17716845A14CE4D36D39F6 /* CameraSettings.swift in Sources */,
 				03C3BBC5D37F96CF7EDB6650717D76F4 /* CameraView.swift in Sources */,
+				65F11255222858B400DB8006 /* ConicalGradientLayer.swift in Sources */,
 				85074B1432F730673D8780B6329028FA /* CameraZoomHandler.swift in Sources */,
 				D7027C607F1046D36165DB5D425AB53E /* CGRect+Center.swift in Sources */,
 				9FE4C2DB0A0B3228C440ADA9DC9C1365 /* ClosedRange+Clamp.swift in Sources */,
@@ -1119,6 +1130,7 @@
 				6312FC6B60F8F6FAEAC52C6B98C0FF83 /* KanvasCamera-dummy.m in Sources */,
 				B2E31A28C9768163512EFBEA65A1A690 /* KanvasCameraAnalyticsProvider.swift in Sources */,
 				93DA4252C4029BB33F96F80DB7BE66B1 /* KanvasCameraColors.swift in Sources */,
+				651641BF22299A940065463D /* EasyTipView.swift in Sources */,
 				AE200D89CE3EB7E0F8ADA7108E9B469F /* KanvasCameraImages.swift in Sources */,
 				A459355AAE6191315B3B28EB777BFFC8 /* KanvasCameraStrings.swift in Sources */,
 				553E73FECB79D99EAECF621A8B801442 /* KanvasCameraTimes.swift in Sources */,
@@ -1126,7 +1138,6 @@
 				93500CBFDC8B5FCB15BEEDEF56006AAD /* MediaClip.swift in Sources */,
 				6BEA44C3D6048F7098F75C336C42B252 /* MediaClipsCollectionCell.swift in Sources */,
 				E015D7CB813F593B6501ABCA34A33FBC /* MediaClipsCollectionController.swift in Sources */,
-				6514279C22285D6500439E52 /* EasyTipView.swift in Sources */,
 				854312D7C6FDC3E33CF2B9A9868584D9 /* MediaClipsCollectionView.swift in Sources */,
 				A44F8D763559FCF103F3B55A2E53FC4D /* MediaClipsEditorView.swift in Sources */,
 				F9E7A2D189394DECC526FFA569720C08 /* MediaClipsEditorViewController.swift in Sources */,
@@ -1139,6 +1150,7 @@
 				5638C70810065B40C5EED9DD28697F89 /* ModeSelectorAndShootController.swift in Sources */,
 				E55D84685ECC0C04B31D19F17F50848A /* ModeSelectorAndShootView.swift in Sources */,
 				803BAD2830110E3DE23B298FDD1789E9 /* NSURL+Media.swift in Sources */,
+				65F11258222858C400DB8006 /* UIColor+Lerp.swift in Sources */,
 				5A091D1FD4A1509B4154669E133FF6EB /* NumTypes+Conversion.swift in Sources */,
 				821E0BADBB4DB35E607A78D6D331C006 /* OptionsController.swift in Sources */,
 				518F0D0F84702879412839A44086EBC8 /* OptionsStackView.swift in Sources */,
