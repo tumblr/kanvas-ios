@@ -228,16 +228,10 @@ final class CameraControllerTests: FBSnapshotTestCase {
 final class CameraControllerDelegateStub: CameraControllerDelegate {
 
     func didDismissWelcomeTooltip() {
-    }
-    
-    func didDismissCreationTooltip() {
+        
     }
     
     func cameraShouldShowWelcomeTooltip() -> Bool {
-        return false
-    }
-    
-    func cameraShouldShowCreationTooltip() -> Bool {
         return false
     }
 

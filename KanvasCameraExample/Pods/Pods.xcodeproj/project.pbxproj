@@ -54,6 +54,7 @@
 		6312FC6B60F8F6FAEAC52C6B98C0FF83 /* KanvasCamera-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BB81F1AC9F694D122E3633E7FA5EC7F9 /* KanvasCamera-dummy.m */; };
 		637EF77BBD39C643A5626C7DC6BB0632 /* ExtendedStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC09D736E959FBEC5750A43B28108E98 /* ExtendedStackView.swift */; };
 		64135540460B2B28CE7EDBA329FF598A /* UIFont+ComposeFonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AAF0939B988AE1169F51641E4927EBF /* UIFont+ComposeFonts.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		651641BF22299A940065463D /* EasyTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651641BE22299A940065463D /* EasyTipView.swift */; };
 		65F11255222858B400DB8006 /* ConicalGradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F11253222858B400DB8006 /* ConicalGradientLayer.swift */; };
 		65F11256222858B400DB8006 /* RGBA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F11254222858B400DB8006 /* RGBA.swift */; };
 		65F11258222858C400DB8006 /* UIColor+Lerp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F11257222858C400DB8006 /* UIColor+Lerp.swift */; };
@@ -237,6 +238,7 @@
 		60ACBCCC3653961EC3A2406D1125AC82 /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
 		630DD64AF6E511A9DCCA74D5ED44A3D8 /* Pods-KanvasCameraExample-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasCameraExample-Info.plist"; sourceTree = "<group>"; };
 		647CEFF87E0240485EF58FF35EF571AA /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
+		651641BE22299A940065463D /* EasyTipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasyTipView.swift; sourceTree = "<group>"; };
 		65F11253222858B400DB8006 /* ConicalGradientLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayer.swift; sourceTree = "<group>"; };
 		65F11254222858B400DB8006 /* RGBA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RGBA.swift; sourceTree = "<group>"; };
 		65F11257222858C400DB8006 /* UIColor+Lerp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Lerp.swift"; sourceTree = "<group>"; };
@@ -471,6 +473,7 @@
 		24F8006D02E8E153BFD0B244DE55D332 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				651641BE22299A940065463D /* EasyTipView.swift */,
 				65F11253222858B400DB8006 /* ConicalGradientLayer.swift */,
 				65F11254222858B400DB8006 /* RGBA.swift */,
 				7E8184252DDC4695D0207690975A1CA6 /* Device.swift */,
@@ -1123,6 +1126,7 @@
 				6312FC6B60F8F6FAEAC52C6B98C0FF83 /* KanvasCamera-dummy.m in Sources */,
 				B2E31A28C9768163512EFBEA65A1A690 /* KanvasCameraAnalyticsProvider.swift in Sources */,
 				93DA4252C4029BB33F96F80DB7BE66B1 /* KanvasCameraColors.swift in Sources */,
+				651641BF22299A940065463D /* EasyTipView.swift in Sources */,
 				AE200D89CE3EB7E0F8ADA7108E9B469F /* KanvasCameraImages.swift in Sources */,
 				A459355AAE6191315B3B28EB777BFFC8 /* KanvasCameraStrings.swift in Sources */,
 				553E73FECB79D99EAECF621A8B801442 /* KanvasCameraTimes.swift in Sources */,
