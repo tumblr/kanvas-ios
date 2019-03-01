@@ -412,7 +412,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             filteredInputViewController?.applyNextFilter()
         case .right:
             filteredInputViewController?.applyPreviousFilter()
-        default: break
+        default:
+            assertionFailure("This UISwipeGestureRecognizer only supports left and right swipe directions.")
         }
     }
 
