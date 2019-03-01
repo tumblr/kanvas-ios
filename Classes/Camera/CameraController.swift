@@ -186,7 +186,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
         cameraView.addImagePreviewView(imagePreviewController.view)
-        cameraView.addFiltersView(filterSettingsController.view)
+        if settings.features.cameraFilters {
+            cameraView.addFiltersView(filterSettingsController.view)
+        }
         bindMediaContentAvailable()
     }
     
