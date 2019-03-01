@@ -46,6 +46,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.exportStopMotionPhotoAsVideo = true
         settings.features.ghostFrame = true
         settings.features.openGLPreview = true
+        settings.features.openGLCapture = true
         return settings
     }
 
