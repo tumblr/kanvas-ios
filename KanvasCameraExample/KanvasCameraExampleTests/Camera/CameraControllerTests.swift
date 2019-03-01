@@ -133,7 +133,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
 
     // MARK: - ModeSelectorAndShootControllerDelegate
     // Open mode doesn't change UI directly because that is done before the delegate function is called
-    // Tap for mode doesn't do anything because it should show preview for photo and gifd modes
+    // Tap for mode doesn't do anything because it should show preview for photo and gif modes
     func testTapForStopMotionModeShouldHideModeButtonAndAddClipAndShowNextButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)

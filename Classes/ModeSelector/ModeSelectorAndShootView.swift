@@ -105,6 +105,11 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         shootButton.showBorderView(show: show)
     }
     
+    /// shows the trash icon
+    func showTrashView(_ show: Bool) {
+        shootButton.showTrashView(show)
+    }
+
     // MARK: - UI Layout
 
     private func setUpButtons() {

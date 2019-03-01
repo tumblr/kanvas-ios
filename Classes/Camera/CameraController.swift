@@ -190,7 +190,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraView.addOptionsView(topOptionsController.view)
         cameraView.addImagePreviewView(imagePreviewController.view)
         bindMediaContentAvailable()
-        bindContentSelected()
     }
     
     override public func viewDidAppear(_ animated: Bool) {
@@ -392,7 +391,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - UI
     private func enableBottomViewButtons(show: Bool) {
-        
         if clipsController.hasClips || settings.enabledModes.count == 1 {
             clipsController.showViews()
             modeAndShootController.hideModeButton()
@@ -412,18 +410,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func bindMediaContentAvailable() {
         disposables.append(clipsController.observe(\.hasClips) { [unowned self] object, _ in
             performUIUpdate {
-                self.enableBottomViewButtons(show: !object.clipIsSelected && object.hasClips)
+                self.enableBottomViewButtons(show: object.hasClips)
             }
         })
         enableBottomViewButtons(show: clipsController.hasClips)
-    }
-    
-    private func bindContentSelected() {
-        disposables.append(clipsController.observe(\.clipIsSelected) { [unowned self] object, _ in
-            performUIUpdate {
-                self.enableBottomViewButtons(show: !object.clipIsSelected && object.hasClips)
-            }
-        })
     }
     
     // MARK: - CameraViewDelegate
@@ -504,7 +494,15 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         default: break
         }
     }
-
+    
+    func didDropToDelete(_ mode: CameraMode) {
+        switch mode {
+        case .stopMotion:
+            clipsController.removeDraggingClip()
+        default: break
+        }
+    }
+    
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
     func optionSelected(_ item: CameraOption) {
@@ -533,6 +531,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipStartedMoving() {
         performUIUpdate { [weak self] in
             self?.enableBottomViewButtons(show: false)
+            self?.modeAndShootController.showTrashView(true)
         }
     }
 
@@ -540,12 +539,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logMovedClip()
         performUIUpdate { [weak self] in
             self?.enableBottomViewButtons(show: true)
+            self?.modeAndShootController.showTrashView(false)
         }
     }
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegment(at: index)
-        updateLastClipPreview()
+        performUIUpdate { [weak self] in
+            self?.modeAndShootController.showTrashView(false)
+            self?.updateLastClipPreview()
+        }
         analyticsProvider?.logDeleteSegment()
     }
 

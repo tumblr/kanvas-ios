@@ -119,5 +119,4 @@ extension MediaClipsEditorView {
     @objc func previewPressed() {
         delegate?.previewButtonWasPressed()
     }
-
 }

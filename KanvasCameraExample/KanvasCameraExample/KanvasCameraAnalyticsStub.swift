@@ -9,6 +9,7 @@ import Foundation
 import KanvasCamera
 
 final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsProvider {
+    
     public func logCameraOpen(mode: CameraMode) {
         logString(string: "\(#function) mode:\(mode.rawValue)")
     }
@@ -60,7 +61,7 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     public func logUndoTapped() {
         logString(string: "\(#function)")
     }
-
+    
     public func logPreviewDismissed() {
         logString(string: "\(#function)")
     }
