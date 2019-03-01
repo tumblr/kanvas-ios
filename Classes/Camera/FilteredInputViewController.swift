@@ -123,7 +123,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         if let nextFilter = FilterType(rawValue: nextFilterInteger) {
             currentFilter = nextFilter
         }
-        else if let nextFilter = FilterType(rawValue: 0) {
+        else if let nextFilter = FilterType.allCases.first {
             currentFilter = nextFilter
         }
         updateFilter()
@@ -135,8 +135,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
             currentFilter = previousFilter
         }
         else {
-            let lastType = FilterType.allCases.count - 1
-            if let previousFilter = FilterType(rawValue: lastType) {
+            if let previousFilter = FilterType.allCases.last {
                 currentFilter = previousFilter
             }
         }
