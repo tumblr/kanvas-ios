@@ -103,13 +103,53 @@ final class ModeSelectorAndShootController: UIViewController {
     func hideModeButton() {
         modeView.showModeButton(false)
     }
-
+    
+    /// shows the tooltip below the mode selector
+    func showTooltip() {
+        modeView.showTooltip()
+    }
+    
+    /// hides the tooltip below the mode selector
+    func hideTooltip() {
+        modeView.dismissTooltip()
+    }
+    
+    /// shows the inner circle used for the press effect
+    func showPressInnerCircle() {
+        modeView.showPressInnerCircle(true)
+    }
+    
+    /// hides the inner circle image for the press effect
+    func hidePressInnerCircle() {
+        modeView.showPressInnerCircle(false)
+    }
+    
+    /// shows the outer translucent circle used for the press effect
+    func showPressBackgroundCircle() {
+        modeView.showPressBackgroundCircle(true)
+    }
+    
+    /// hides the outer translucent circle used for the press effect
+    func hidePressBackgroundCircle() {
+        modeView.showPressBackgroundCircle(false)
+    }
+    
+    /// shows the border of the shutter button
+    func showBorderView() {
+        modeView.showBorderView(true)
+    }
+    
+    /// hides the border of the shutter button
+    func hideBorderView() {
+        modeView.showBorderView(false)
+    }
 }
 
 extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
 
     // MARK: - ModeButtonViewDelegate
     func modeButtonViewDidTap() {
+        hideTooltip()
         let oldMode = modesQueue.rotateOnce()
         if let newMode = currentMode {
             setMode(newMode, from: oldMode)
@@ -124,12 +164,14 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     // MARK: - ShootButtonViewDelegate
     func shootButtonViewDidTap() {
         if let mode = currentMode {
+            hideTooltip()
             delegate?.didTapForMode(mode)
         }
     }
 
     func shootButtonViewDidStartLongPress() {
         if let mode = currentMode {
+            hideTooltip()
             delegate?.didStartPressingForMode(mode)
         }
     }
