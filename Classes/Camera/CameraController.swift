@@ -38,18 +38,10 @@ public protocol CameraControllerDelegate: class {
     /// Called after the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
     
-    /// Called after the creation tooltip is dismissed
-    func didDismissCreationTooltip()
-    
     /// Called to ask if welcome tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
-    
-    /// Called to ask if creation tooltip should be shown
-    ///
-    /// - Returns: Bool for tooltip
-    func cameraShouldShowCreationTooltip() -> Bool
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -196,7 +188,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraView.addImagePreviewView(imagePreviewController.view)
         cameraView.addFiltersView(filterSettingsController.view)
         bindMediaContentAvailable()
-        bindContentSelected()
     }
     
     override public func viewDidAppear(_ animated: Bool) {
@@ -214,25 +205,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.present(controller, animated: true)
     }
     
-    /// The welcome tooltip shows tooltip text for the Capture mode
+    /// Shows the tooltip below the mode selector
     private func showWelcomeTooltip() {
-        let viewModel = ModalViewModel(text: NSLocalizedString("Tap to take a photo or hold to take a video.", comment: "Welcome tooltip for the camera"),
-                                       buttonTitle: NSLocalizedString("Got it", comment: "Welcome confirmation"),
-                                       buttonCallback: { [weak self] in
-                                        self?.delegate?.didDismissWelcomeTooltip()
-        })
-        let controller = ModalController(viewModel: viewModel)
-        present(controller, animated: true, completion: nil)
-    }
-    
-    private func showCreationTooltip() {
-        let viewModel = ModalViewModel(text: NSLocalizedString("Looks great. Keep capturing to add more, or hit next to continue.", comment: "Tooltip message for capturing clips"),
-                                       buttonTitle: NSLocalizedString("Got it", comment: "Tooltip confirmation"),
-                                       buttonCallback: { [weak self] in
-                                        self?.delegate?.didDismissCreationTooltip()
-        })
-        let controller = ModalController(viewModel: viewModel)
-        present(controller, animated: true, completion: nil)
+        modeAndShootController.showTooltip()
     }
     
     private func showDismissTooltip() {
@@ -398,7 +373,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - UI
     private func enableBottomViewButtons(show: Bool) {
-        
         if clipsController.hasClips || settings.enabledModes.count == 1 {
             clipsController.showViews()
             modeAndShootController.hideModeButton()
@@ -418,18 +392,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func bindMediaContentAvailable() {
         disposables.append(clipsController.observe(\.hasClips) { [unowned self] object, _ in
             performUIUpdate {
-                self.enableBottomViewButtons(show: !object.clipIsSelected && object.hasClips)
+                self.enableBottomViewButtons(show: object.hasClips)
             }
         })
         enableBottomViewButtons(show: clipsController.hasClips)
-    }
-    
-    private func bindContentSelected() {
-        disposables.append(clipsController.observe(\.clipIsSelected) { [unowned self] object, _ in
-            performUIUpdate {
-                self.enableBottomViewButtons(show: !object.clipIsSelected && object.hasClips)
-            }
-        })
     }
     
     // MARK: - CameraViewDelegate
@@ -510,7 +476,15 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         default: break
         }
     }
-
+    
+    func didDropToDelete(_ mode: CameraMode) {
+        switch mode {
+        case .stopMotion:
+            clipsController.removeDraggingClip()
+        default: break
+        }
+    }
+    
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
     func optionSelected(_ item: CameraOption) {
@@ -539,6 +513,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipStartedMoving() {
         performUIUpdate { [weak self] in
             self?.enableBottomViewButtons(show: false)
+            self?.modeAndShootController.showTrashView(true)
         }
     }
 
@@ -546,19 +521,20 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logMovedClip()
         performUIUpdate { [weak self] in
             self?.enableBottomViewButtons(show: true)
+            self?.modeAndShootController.showTrashView(false)
         }
     }
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegment(at: index)
-        updateLastClipPreview()
+        performUIUpdate { [weak self] in
+            self?.modeAndShootController.showTrashView(false)
+            self?.updateLastClipPreview()
+        }
         analyticsProvider?.logDeleteSegment()
     }
 
     func mediaClipWasAdded(at index: Int) {
-        if delegate?.cameraShouldShowCreationTooltip() == true {
-            showCreationTooltip()
-        }
         updateLastClipPreview()
     }
 

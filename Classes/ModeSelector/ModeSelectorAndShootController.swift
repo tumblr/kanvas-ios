@@ -26,6 +26,8 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     ///
     /// - Parameter mode: active mode when long press ended
     func didEndPressingForMode(_ mode: CameraMode)
+    /// Function called when a clip was dropped on the capture button to be deleted
+    func didDropToDelete(_ mode: CameraMode)
     
     /// Function called when the user pans to zoom on the capture button
     ///
@@ -110,6 +112,51 @@ final class ModeSelectorAndShootController: UIViewController {
     func hideModeButton() {
         modeView.showModeButton(false)
     }
+    
+    /// shows the tooltip below the mode selector
+    func showTooltip() {
+        modeView.showTooltip()
+    }
+    
+    /// hides the tooltip below the mode selector
+    func hideTooltip() {
+        modeView.dismissTooltip()
+    }
+    
+    /// shows the inner circle used for the press effect
+    func showPressInnerCircle() {
+        modeView.showPressInnerCircle(true)
+    }
+    
+    /// hides the inner circle image for the press effect
+    func hidePressInnerCircle() {
+        modeView.showPressInnerCircle(false)
+    }
+    
+    /// shows the outer translucent circle used for the press effect
+    func showPressBackgroundCircle() {
+        modeView.showPressBackgroundCircle(true)
+    }
+    
+    /// hides the outer translucent circle used for the press effect
+    func hidePressBackgroundCircle() {
+        modeView.showPressBackgroundCircle(false)
+    }
+    
+    /// shows the border of the shutter button
+    func showBorderView() {
+        modeView.showBorderView(true)
+    }
+    
+    /// hides the border of the shutter button
+    func hideBorderView() {
+        modeView.showBorderView(false)
+    }
+
+    /// shows the trash icon
+    func showTrashView(_ show: Bool) {
+        modeView.showTrashView(show)
+    }
 
 }
 
@@ -117,6 +164,7 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
 
     // MARK: - ModeButtonViewDelegate
     func modeButtonViewDidTap() {
+        hideTooltip()
         let oldMode = modesQueue.rotateOnce()
         if let newMode = currentMode {
             setMode(newMode, from: oldMode)
@@ -131,12 +179,14 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     // MARK: - ShootButtonViewDelegate
     func shootButtonViewDidTap() {
         if let mode = currentMode {
+            hideTooltip()
             delegate?.didTapForMode(mode)
         }
     }
 
     func shootButtonViewDidStartLongPress() {
         if let mode = currentMode {
+            hideTooltip()
             delegate?.didStartPressingForMode(mode)
         }
     }
@@ -152,7 +202,13 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
             delegate?.didEndPressingForMode(mode)
         }
     }
-
+    
+    func shootButtonDidReceiveDropInteraction() {
+        if let mode = currentMode {
+            delegate?.didDropToDelete(mode)
+        }
+    }
+    
     func shootButtonDidZoom(currentPoint: CGPoint, gesture: UILongPressGestureRecognizer) {
         if let mode = currentMode {
             delegate?.didPanForZoom(mode, currentPoint, gesture)

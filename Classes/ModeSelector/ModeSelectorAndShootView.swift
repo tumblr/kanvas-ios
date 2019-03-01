@@ -7,6 +7,13 @@
 import Foundation
 
 private struct ModeSelectorAndShootViewConstants {
+    static let tooltipTopMargin: CGFloat = 13.5
+    static let tooltipArrowHeight: CGFloat = 7
+    static let tooltipArrowWidth: CGFloat = 15
+    static let tooltipBubbleWidth: CGFloat = 18
+    static let tooltipBubbleHeight: CGFloat = 12
+    static let tooltipCornerRadius: CGFloat = 6
+    static let tooltipTextFont: UIFont = .favoritTumblr85(fontSize: 15)
     static let selectorYCenterMargin: CGFloat = (CameraConstants.optionButtonSize / 2)
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 4
@@ -37,18 +44,20 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     private let settings: CameraSettings
     private let shootButton: ShootButtonView
     private let modeSelectorButton: ModeButtonView
+    private var tooltip: EasyTipView?
 
     /// Initializer for the mode selector view
     ///
     /// - Parameter settings: CameraSettings to determine the default and available modes
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
-        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonInactiveColor, activeColor: KanvasCameraColors.shootButtonActiveColor)
+        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonBaseColor)
         self.settings = settings
 
         super.init(frame: .zero)
-
         backgroundColor = .clear
+        tooltip = createTooltip()
+        
         setUpButtons()
     }
 
@@ -91,8 +100,60 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         shootButton.enableUserInteraction(enabled)
     }
 
+    /// shows the tooltip below the mode selector
+    func showTooltip() {
+        tooltip?.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
+    }
+    
+    /// hides the tooltip below the mode selector
+    func dismissTooltip() {
+        tooltip?.dismiss()
+    }
+    
+    /// shows or hides the inner circle used for the press effect
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showPressInnerCircle(_ show: Bool) {
+        shootButton.showPressInnerCircle(show: show)
+    }
+    
+    /// shows or hides the outer translucent circle used for the press effect
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showPressBackgroundCircle(_ show: Bool) {
+        shootButton.showPressBackgroundCircle(show: show)
+    }
+    
+    /// shows or hides the border of the shutter button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showBorderView(_ show: Bool) {
+        shootButton.showBorderView(show: show)
+    }
+    
+    /// shows the trash icon
+    func showTrashView(_ show: Bool) {
+        shootButton.showTrashView(show)
+    }
+
     // MARK: - UI Layout
 
+    private func createTooltip() -> EasyTipView {
+        var preferences = EasyTipView.Preferences()
+        preferences.drawing.foregroundColor = .white
+        preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue, .tumblrBrightPurple, .tumblrBrightPink]
+        preferences.drawing.arrowPosition = .top
+        preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
+        preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight
+        preferences.drawing.cornerRadius = ModeSelectorAndShootViewConstants.tooltipCornerRadius
+        preferences.drawing.font = ModeSelectorAndShootViewConstants.tooltipTextFont
+        preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
+        preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
+        preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
+        let text = NSLocalizedString("Tap to switch modes", comment: "Welcome tooltip for the camera")
+        return EasyTipView(text: text, preferences: preferences, delegate: nil)
+    }
+    
     private func setUpButtons() {
         setUpModeSelector()
         setUpShootButton()

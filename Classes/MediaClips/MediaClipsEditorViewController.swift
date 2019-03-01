@@ -54,10 +54,6 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     /// This needs to be dynamic because it will be observed
     @objc private(set) dynamic var hasClips: Bool = false
 
-    /// Check if there is a clip selected
-    /// This needs to be dynamic because it will be observed
-    @objc private(set) dynamic var clipIsSelected: Bool = false
-
     init() {
         super.init(nibName: .none, bundle: .none)
     }
@@ -90,8 +86,18 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     func addNewClip(_ clip: MediaClip) {
         collectionController.addNewClip(clip)
         hasClips = true
-        clipIsSelected = false
         delegate?.mediaClipWasAdded(at: collectionController.getClips().count - 1)
+    }
+    
+    /// Deletes the clip on the current dragging session
+    func removeDraggingClip() {
+        if let index = collectionController.removeDraggingClip() {
+            delegate?.mediaClipWasDeleted(at: index)
+        }
+        else {
+            assertionFailure("Clip was dropped but there is nothing to delete")
+        }
+        hasClips = collectionController.getClips().count > 0
     }
 
     /// Returns the last frame from the last clip of the collection

@@ -10,12 +10,13 @@ import TumblrTheme
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol MediaClipsCollectionCellDelegate {
+protocol MediaClipsCollectionCellDelegate {    
     /// Callback method for dragging the cell
     ///
     /// - Parameter newDragState: The new state of the drag event
     func didChangeState(newDragState: UICollectionViewCell.DragState)
 }
+
 private struct MediaClipsCollectionCellConstants {
     static let cellPadding: CGFloat = 2.9
     static let clipHeight: CGFloat = 64
@@ -81,7 +82,6 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         clipImage.image = .none
-        setSelected(false)
     }
 
     /// updates the cell to the MediaClip properties
@@ -90,13 +90,6 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     func bindTo(_ item: MediaClip) {
         clipImage.image = item.representativeFrame
         clipLabel.text = item.overlayText
-    }
-
-    /// Updates the cell to display the corrent state
-    ///
-    /// - Parameter selected: whether the cell is selected or unselected
-    func setSelected(_ selected: Bool) {
-        clipView.layer.borderColor = selected ? KanvasCameraColors.mediaSelectedBorderColor.cgColor : KanvasCameraColors.mediaBorderColor.cgColor
     }
 }
 
