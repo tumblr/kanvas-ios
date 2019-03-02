@@ -33,6 +33,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func newController(delegate: CameraControllerDelegate) -> CameraController {
         let settings = CameraSettings()
         settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         return newController(delegate: delegate, settings: settings)
     }
 
@@ -59,6 +60,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.features.ghostFrame = false
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -68,6 +70,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let settings = CameraSettings()
         settings.defaultMode = .gif
         settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -77,6 +80,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let settings = CameraSettings()
         settings.enableStopMotionMode = false
         settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -86,6 +90,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let settings = CameraSettings()
         settings.preferredFlashOption = .on
         settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -95,6 +100,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let settings = CameraSettings()
         settings.imagePreviewOption = .on
         settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -217,6 +223,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let settings = CameraSettings()
         settings.enabledModes = [.photo]
         settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
