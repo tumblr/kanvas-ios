@@ -74,10 +74,19 @@ final class ModeSelectorAndShootControllerTests: FBSnapshotTestCase {
         viewController.delegate = newDelegateStub()
         viewController.shootButtonViewDidEndLongPress()
     }
-
+    
+    func testDropInteraction() {
+        let viewController = newViewController()
+        viewController.delegate = newDelegateStub()
+        viewController.shootButtonDidReceiveDropInteraction()
+    }
 }
 
 final class ModeSelectorAndShootDelegateStub: ModeSelectorAndShootControllerDelegate {
+    func didDropToDelete(_ mode: CameraMode) {
+        XCTAssert(mode == .stopMotion, "Mode did not match for shoot button")
+    }
+    
     func didOpenMode(_ mode: CameraMode, andClosed oldMode: CameraMode?) {
         XCTAssert(mode == .photo, "The correct mode did not open properly")
     }

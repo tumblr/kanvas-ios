@@ -6,27 +6,33 @@
 
 import Foundation
 import UIKit
+import TumblrTheme
 
 private struct MediaClipsEditorViewConstants {
-    static let trashSize: CGFloat = 50
-    static let padding: CGFloat = 25
-    static let trashAnimationDuration: TimeInterval = 0.2
-
-    static var height: CGFloat = padding + MediaClipsCollectionView.height + padding + trashSize
+    static let animationDuration: TimeInterval = 0.5
+    static let buttonHorizontalMargin: CGFloat = 28
+    static let buttonRadius: CGFloat = 25
+    static let buttonWidth: CGFloat = 91
+    static let buttonHeight: CGFloat = 40.5
+    static let buttonTopOffset: CGFloat = 4.8
+    static let topPadding: CGFloat = 6
+    static let bottomPadding: CGFloat = 12 + (Device.isIPhoneX ? 12 : 0)
 }
 
 protocol MediaClipsEditorViewDelegate: class {
-    /// Callback for when trash button is selected
-    func trashButtonWasPressed()
+    /// Callback for when preview button is selected
+    func previewButtonWasPressed()
 }
 
 /// View for media clips editor
 final class MediaClipsEditorView: IgnoreTouchesView {
     
-    static let height = MediaClipsEditorViewConstants.height
+    static let height = MediaClipsCollectionView.height +
+                        MediaClipsEditorViewConstants.topPadding +
+                        MediaClipsEditorViewConstants.bottomPadding
 
     let collectionContainer: IgnoreTouchesView
-    let trashButton: UIButton
+    let previewButton: UIButton
 
     weak var delegate: MediaClipsEditorViewDelegate?
 
@@ -36,15 +42,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.accessibilityIdentifier = "Media Clips Collection Container"
         collectionContainer.clipsToBounds = false
 
-        trashButton = UIButton()
-        trashButton.accessibilityIdentifier = "Media Clips Trash Button"
-        trashButton.setImage(KanvasCameraImages.deleteImage, for: .normal)
+        previewButton = UIButton()
+        previewButton.accessibilityIdentifier = "Media Clips Preview Button"
         super.init(frame: .zero)
 
         clipsToBounds = false
+        backgroundColor = KanvasCameraColors.translucentBlack
         setUpViews()
-        trashButton.addTarget(self, action: #selector(trashPressed), for: .touchUpInside)
-        hideTrash()
+        previewButton.addTarget(self, action: #selector(previewPressed), for: .touchUpInside)
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -56,21 +61,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    /// method to animate and fade the trash button in
-    func showTrash() {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.trashAnimationDuration) {
-            self.trashButton.alpha = 1
+    
+    // MARK: - Public interface
+    
+    func show(_ enabled: Bool) {
+        UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
+            self?.alpha = enabled ? 1 : 0
         }
     }
-
-    /// method to animate and fade the trash button out
-    func hideTrash() {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.trashAnimationDuration) {
-            self.trashButton.alpha = 0
-        }
-    }
-
 }
 
 // MARK: - UI Layout
@@ -78,28 +76,38 @@ private extension MediaClipsEditorView {
 
     func setUpViews() {
         setUpCollection()
-        setUpTrash()
+        setUpPreview()
     }
-
+    
     func setUpCollection() {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        let trailingMargin = MediaClipsEditorViewConstants.buttonWidth + MediaClipsEditorViewConstants.buttonHorizontalMargin * 1.5
         NSLayoutConstraint.activate([
-            collectionContainer.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -MediaClipsEditorViewConstants.padding),
+            collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
+                                                       constant: -trailingMargin),
+            collectionContainer.bottomAnchor.constraint(equalTo: bottomAnchor,
+                                                        constant: -MediaClipsEditorViewConstants.bottomPadding),
             collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
         ])
     }
-
-    func setUpTrash() {
-        addSubview(trashButton)
-        trashButton.translatesAutoresizingMaskIntoConstraints = false
+    
+    func setUpPreview() {
+        addSubview(previewButton)
+        previewButton.translatesAutoresizingMaskIntoConstraints = false
+        previewButton.setTitle(NSLocalizedString("Preview", comment: "Title for the Preview button"), for: .normal)
+        previewButton.layer.cornerRadius = 20
+        previewButton.backgroundColor = .tumblrBrightBlue
+        previewButton.setTitleColor(.white, for: .normal)
+        previewButton.titleLabel?.font = .favoritTumblrMedium(fontSize: 14.8)
         NSLayoutConstraint.activate([
-            trashButton.bottomAnchor.constraint(equalTo: collectionContainer.topAnchor, constant: -MediaClipsEditorViewConstants.padding),
-            trashButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            trashButton.widthAnchor.constraint(equalTo: trashButton.heightAnchor),
-            trashButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.trashSize)
+            previewButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
+                                                    constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
+            previewButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonHeight),
+            previewButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonWidth),
+            previewButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor,
+                                                   constant: MediaClipsEditorViewConstants.buttonTopOffset)
         ])
     }
 
@@ -108,8 +116,7 @@ private extension MediaClipsEditorView {
 // MARK: - Button handling
 extension MediaClipsEditorView {
 
-    @objc func trashPressed() {
-        delegate?.trashButtonWasPressed()
+    @objc func previewPressed() {
+        delegate?.previewButtonWasPressed()
     }
-
 }

@@ -133,8 +133,8 @@ final class CameraControllerTests: FBSnapshotTestCase {
 
     // MARK: - ModeSelectorAndShootControllerDelegate
     // Open mode doesn't change UI directly because that is done before the delegate function is called
-    // Tap for mode doesn't do anything because it should show preview for photo and gifd modes
-    func testTapForStopMotionModeShouldHideModeButtonAndAddClipAndShowUndoNextButtons() {
+    // Tap for mode doesn't do anything because it should show preview for photo and gif modes
+    func testTapForStopMotionModeShouldHideModeButtonAndAddClipAndShowNextButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -154,7 +154,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testEndLongPressShouldHideModeButtonAndAddClipAndShowUndoNextButtons() {
+    func testEndLongPressShouldHideModeButtonAndAddClipAndShowNextButtons() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -165,7 +165,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testTapAndLongPressShouldAddTwoClipsAndShowUndoNextButtons() {
+    func testTapAndLongPressShouldAddTwoClipsAndShowNextButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -185,30 +185,6 @@ final class CameraControllerTests: FBSnapshotTestCase {
         controller.closeButtonPressed()
         UIView.setAnimationsEnabled(true)
         XCTAssert(delegate.dismissCalled)
-    }
-
-    func testUndoButtonPressedShouldDeleteLastClip() {
-        let delegate = newDelegateStub()
-        let controller = newController(delegate: delegate)
-        UIView.setAnimationsEnabled(false)
-        controller.didOpenMode(.stopMotion, andClosed: .none)
-        controller.didTapForMode(.stopMotion)
-        controller.didStartPressingForMode(.stopMotion)
-        controller.didEndPressingForMode(.stopMotion)
-        controller.undoButtonPressed()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
-    }
-
-    func testUndoButtonPressedWhenOneClipShouldDisappearUndoAndNextAndShowModeButton() {
-        let delegate = newDelegateStub()
-        let controller = newController(delegate: delegate)
-        UIView.setAnimationsEnabled(false)
-        controller.didOpenMode(.stopMotion, andClosed: .none)
-        controller.didTapForMode(.stopMotion)
-        controller.undoButtonPressed()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
     }
 
     // Can't test `nextButtonPressed` without controller hierarchy

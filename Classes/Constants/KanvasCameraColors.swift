@@ -14,4 +14,7 @@ struct KanvasCameraColors {
     // MARK: - Media
     static let mediaBorderColor: UIColor = .white
     static let mediaSelectedBorderColor: UIColor = .red
+    
+    // MARK: - Clip collection
+    static let translucentBlack = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
 }
