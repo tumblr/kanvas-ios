@@ -16,11 +16,11 @@ import Foundation
     case stopMotion = 0
     case photo
     case gif
-    
+
     private var order: Int {
         return self.rawValue
     }
-    
+
 }
 
 /// Camera Features
@@ -36,6 +36,9 @@ public struct CameraFeatures {
 
     /// The OpenGL Camera Capture feature
     public var openGLCapture: Bool = false
+
+    /// The OpenGL Camera Filters feature
+    public var openGLFilters: Bool = false
 
     /// The Camera Filters feature
     /// This enables the UI to select filters in the camera.
@@ -64,9 +67,9 @@ public struct CameraFeatures {
             return _enabledModes
         }
     }
-    
+
     private var _enabledModes: Set<CameraMode> = DefaultCameraSettings.enabledModes
-    
+
     /**
      Camera mode which starts active.
      - note: Defaults to .none, which will activate the first active
@@ -86,11 +89,11 @@ public struct CameraFeatures {
             return _defaultMode
         }
     }
-    
+
     private var _defaultMode: CameraMode?
-    
+
     // MARK: - Camera Position settings
-    
+
     /// Camera position option which starts active.
     /// - note: Defaults to back.
     /// - note: Can't be unspecified.
@@ -104,22 +107,22 @@ public struct CameraFeatures {
             return _defaultCameraPositionOption
         }
     }
-    
+
     private var _defaultCameraPositionOption: AVCaptureDevice.Position = DefaultCameraSettings.defaultCameraPositionOption
-    
+
     // MARK: - Flash settings
-    
+
     /// Flash option which starts active.
     /// - note: Defaults to flash off.
     public var preferredFlashOption: AVCaptureDevice.FlashMode = DefaultCameraSettings.defaultFlashOption
-    
+
     /// Fullscreen image preview which starts disabled.
     /// - note: Defaults to image preview off.
     public var imagePreviewOption: ImagePreviewMode = DefaultCameraSettings.defaultImagePreviewOption
-    
+
     // MARK: - Landscape support
     public var cameraSupportsLandscape: Bool = DefaultCameraSettings.landscapeIsSupported
-    
+
     // MARK: - Stop motion mode export settings
     public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.exportStopMotionPhotoAsVideo
 
@@ -127,7 +130,7 @@ public struct CameraFeatures {
     public var features = DefaultCameraSettings.features
 
     override public init() { }
-    
+
 }
 
 
@@ -166,7 +169,7 @@ public extension CameraSettings {
             return getMode(.stopMotion)
         }
     }
-    
+
     private func setMode(_ mode: CameraMode, to on: Bool) {
         if on {
             enabledModes.insert(mode)
@@ -175,20 +178,20 @@ public extension CameraSettings {
             enabledModes.remove(mode)
         }
     }
-    
+
     private func getMode(_ mode: CameraMode) -> Bool {
         return enabledModes.contains(mode)
     }
-    
+
 }
 
 // MARK: - Internal utilities
 extension CameraSettings {
-    
+
     var orderedEnabledModes: [CameraMode] {
         return Array(enabledModes).sorted { $0.rawValue < $1.rawValue }
     }
-    
+
     var initialMode: CameraMode {
         // enabledModes will always have at least one value as its precondition.
         guard let firstMode = orderedEnabledModes.first else {
@@ -197,7 +200,7 @@ extension CameraSettings {
         }
         return defaultMode ?? firstMode
     }
-    
+
     var notDefaultFlashOption: AVCaptureDevice.FlashMode {
         if preferredFlashOption == .on {
             return .off
@@ -206,7 +209,7 @@ extension CameraSettings {
             return .on
         }
     }
-    
+
     var notDefaultCameraPositionOption: AVCaptureDevice.Position {
         if defaultCameraPositionOption == .front {
             return .back
@@ -215,7 +218,7 @@ extension CameraSettings {
             return .front
         }
     }
-    
+
     /// Returns the opposite of the value that has been set for the fullscreen image preview
     var notDefaultImagePreviewOption: ImagePreviewMode {
         if imagePreviewOption == .on {
@@ -225,12 +228,12 @@ extension CameraSettings {
             return .on
         }
     }
-    
+
 }
 
 // MARK: - Default settings
 private struct DefaultCameraSettings {
-    
+
     static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
     static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let defaultCameraPositionOption: AVCaptureDevice.Position = .back

@@ -47,6 +47,8 @@
 		764AC46C221D84CD005C82EC /* GLPixelBufferViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC46B221D84CD005C82EC /* GLPixelBufferViewTests.swift */; };
 		764AC46E221D851B005C82EC /* GLRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC46D221D851B005C82EC /* GLRendererTests.swift */; };
 		764AC470221D8588005C82EC /* ShaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC46F221D8588005C82EC /* ShaderTests.swift */; };
+		764AC4802223E07B005C82EC /* FilterInstancesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */; };
+		764AC4822223E3CF005C82EC /* FilterFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC4812223E3CF005C82EC /* FilterFactoryTests.swift */; };
 		764AC476221D86A2005C82EC /* GLUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC475221D86A2005C82EC /* GLUTests.swift */; };
 		76826A0E2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76826A0B2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift */; };
 		76BC5BAE220CCFF2007A9289 /* Array+MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */; };
@@ -139,6 +141,8 @@
 		764AC46B221D84CD005C82EC /* GLPixelBufferViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLPixelBufferViewTests.swift; sourceTree = "<group>"; };
 		764AC46D221D851B005C82EC /* GLRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLRendererTests.swift; sourceTree = "<group>"; };
 		764AC46F221D8588005C82EC /* ShaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderTests.swift; sourceTree = "<group>"; };
+		764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterInstancesTests.swift; sourceTree = "<group>"; };
+		764AC4812223E3CF005C82EC /* FilterFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterFactoryTests.swift; sourceTree = "<group>"; };
 		764AC475221D86A2005C82EC /* GLUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLUTests.swift; sourceTree = "<group>"; };
 		76826A0B2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+FlipLeftMirroredTests.swift"; sourceTree = "<group>"; };
 		76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+MoveTests.swift"; sourceTree = "<group>"; };
@@ -283,6 +287,8 @@
 				764AC46B221D84CD005C82EC /* GLPixelBufferViewTests.swift */,
 				764AC46D221D851B005C82EC /* GLRendererTests.swift */,
 				764AC46F221D8588005C82EC /* ShaderTests.swift */,
+				764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */,
+				764AC4812223E3CF005C82EC /* FilterFactoryTests.swift */,
 				764AC475221D86A2005C82EC /* GLUTests.swift */,
 			);
 			path = OpenGL;
@@ -683,6 +689,7 @@
 				651DEBA72209F17400476F22 /* ConicalGradientLayerTests.swift in Sources */,
 				AB7263EB212CC83B0044ED96 /* KanvasCameraColorsTests.swift in Sources */,
 				0EAE0CB62139D4F2004CD7FF /* CameraControllerTests.swift in Sources */,
+				764AC4822223E3CF005C82EC /* FilterFactoryTests.swift in Sources */,
 				0EAE0CB42139B9B8004CD7FF /* LoadingIndicatorViewTests.swift in Sources */,
 				652DFA1C22281F00007B1EF5 /* FilterCollectionViewTests.swift in Sources */,
 				652DFA1922281F00007B1EF5 /* FilterSettingsViewTests.swift in Sources */,
@@ -692,6 +699,7 @@
 				652DFA1722281F00007B1EF5 /* FilterCollectionControllerTests.swift in Sources */,
 				0EAE0CAC2139A9AA004CD7FF /* ModalPresentationControllerTests.swift in Sources */,
 				ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */,
+				764AC4802223E07B005C82EC /* FilterInstancesTests.swift in Sources */,
 				ABE498FD21370DFD00379F7F /* MediaClipsCollectionCellTests.swift in Sources */,
 				ABE498E52136F22400379F7F /* CameraRecorderTests.swift in Sources */,
 				ABE498DC2134AEB200379F7F /* VideoOutputHandlerTests.swift in Sources */,

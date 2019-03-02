@@ -24,10 +24,22 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         return renderer
     }()
     private weak var previewView: GLPixelBufferView?
+    private let settings: CameraSettings
+
+    /// Filters
     private weak var delegate: FilteredInputViewControllerDelegate?
+    private var currentFilter: FilterType = .passthrough
+    private lazy var currentFilterLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.textColor = .white
+        label.sizeToFit()
+        label.textAlignment = .center
+        return label
+    }()
     
-    init(delegate: FilteredInputViewControllerDelegate? = nil) {
+    init(delegate: FilteredInputViewControllerDelegate? = nil, settings: CameraSettings) {
         self.delegate = delegate
+        self.settings = settings
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -40,6 +52,13 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupPreview()
+
+        if settings.features.openGLFilters {
+            setupFilterLabel()
+            updateCurrentFilterLabel()
+        }
+
+        renderer.changeFilter(currentFilter)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -54,7 +73,11 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         previewView.add(into: view)
         self.previewView = previewView
     }
-    
+
+    private func setupFilterLabel() {
+        currentFilterLabel.add(into: view)
+    }
+
     func filterSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         renderer.processSampleBuffer(sampleBuffer)
     }
@@ -92,5 +115,39 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         }
         NSLog("failed to filter image")
         return image
+    }
+
+    // MARK: - changing filters
+    func applyNextFilter() {
+        let nextFilterInteger = currentFilter.rawValue + 1
+        if let nextFilter = FilterType(rawValue: nextFilterInteger) {
+            currentFilter = nextFilter
+        }
+        else if let nextFilter = FilterType.allCases.first {
+            currentFilter = nextFilter
+        }
+        updateFilter()
+    }
+
+    func applyPreviousFilter() {
+        let previousFilterInteger = currentFilter.rawValue - 1
+        if let previousFilter = FilterType(rawValue: previousFilterInteger) {
+            currentFilter = previousFilter
+        }
+        else {
+            if let previousFilter = FilterType.allCases.last {
+                currentFilter = previousFilter
+            }
+        }
+        updateFilter()
+    }
+
+    func updateFilter() {
+        renderer.changeFilter(currentFilter)
+        updateCurrentFilterLabel()
+    }
+
+    func updateCurrentFilterLabel() {
+        currentFilterLabel.text = currentFilter.name()
     }
 }

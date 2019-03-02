@@ -32,6 +32,7 @@ final class GLRenderer {
 
     private let callbackQueue: DispatchQueue
     private var filter: FilterProtocol
+    private var filterType: FilterType = .passthrough
     private var processingImage = false
 
     /// Designated initializer
@@ -41,7 +42,7 @@ final class GLRenderer {
         self.delegate = delegate
         self.callbackQueue = callbackQueue
         glContext = EAGLContext(api: .openGLES3)
-        filter = Filter(glContext: glContext)
+        filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
     }
     
     /// Call this method to process the sample buffer
@@ -77,7 +78,7 @@ final class GLRenderer {
             processingImage = false
         }
 
-        let imageFilter = Filter(glContext: glContext)
+        let imageFilter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
         var sampleTime = CMSampleTimingInfo()
         var videoInfo: CMVideoFormatDescription?
         CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &videoInfo)
@@ -99,6 +100,14 @@ final class GLRenderer {
         let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer)
         imageFilter.cleanup()
         return filteredPixelBuffer
+    }
+
+    // MARK: - changing filters
+    func changeFilter(_ filterType: FilterType) {
+        filter.cleanup()
+
+        self.filterType = filterType
+        filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
     }
 
     /// Method to call reset on the camera filter
