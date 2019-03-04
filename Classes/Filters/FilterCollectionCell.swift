@@ -33,7 +33,11 @@ final class FilterCollectionCell: UICollectionViewCell {
     private let circleView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
+        imageView.clipsToBounds = true
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = FilterCollectionCellConstants.circleDiameter / 2
+        imageView.layer.borderWidth = 3 * (FilterCollectionCellConstants.circleDiameter/FilterCollectionCellConstants.circleMaxDiameter)
+        imageView.layer.borderColor = UIColor.white.cgColor
         return imageView
     }()
     
@@ -51,25 +55,16 @@ final class FilterCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
-        circleView.tintColor = item.representativeColor
+        guard item.type != .passthrough else { return }
+        circleView.image = KanvasCameraImages.filterTypes[item.type] ?? nil
+        circleView.backgroundColor = KanvasCameraColors.tumblrColors[Int.random(in: 0..<KanvasCameraColors.tumblrColors.count)]
     }
     
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        circleView.tintColor = .none
-    }
-    
-    /// Changes the circle size depending on whether the cell is selected
-    ///
-    /// - Parameter selected: true to fill the shutter button, false to make the circle standard size
-    func setSelected(_ selected: Bool) {
-        if selected {
-            changeSize(size: FilterCollectionCellConstants.circleMaxDiameter)
-        }
-        else {
-            changeSize(size: FilterCollectionCellConstants.circleDiameter)
-        }
+        circleView.image = nil
+        circleView.backgroundColor = nil
     }
     
     // MARK: - Layout
@@ -94,20 +89,5 @@ final class FilterCollectionCell: UICollectionViewCell {
         
         cellHeightConstraint = heightConstraint
         cellWidthConstraint = widthConstraint
-    }
-    
-    // MARK: - Animations
-    
-    /// Changes the circle size with an animation
-    ///
-    /// - Parameter size: the new size for the circle
-    private func changeSize(size: CGFloat) {
-        UIView.animate(withDuration: FilterCollectionCellConstants.animationDuration) { [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.cellWidthConstraint?.constant = size
-            strongSelf.cellHeightConstraint?.constant = size
-            strongSelf.setNeedsLayout()
-            strongSelf.layoutIfNeeded()
-        }
     }
 }

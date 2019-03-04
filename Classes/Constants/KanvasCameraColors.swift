@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import TumblrTheme
 
 // The colors used throughout the module
 struct KanvasCameraColors {
@@ -17,4 +18,16 @@ struct KanvasCameraColors {
     
     // MARK: - Clip collection
     static let translucentBlack = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
+
+    // MARK: - Tumblr Colors List
+    static let tumblrColors = [
+        UIColor.tumblrDeepBlue,
+        UIColor.tumblrBrightBlue,
+        UIColor.tumblrBrightRed,
+        UIColor.tumblrBrightYellow,
+        UIColor.tumblrBrightGreen,
+        UIColor.tumblrBrightPink,
+        UIColor.tumblrBrightPurple,
+        UIColor.tumblrBrightOrange,
+    ]
 }

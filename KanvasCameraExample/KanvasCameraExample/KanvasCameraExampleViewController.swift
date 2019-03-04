@@ -48,7 +48,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.openGLPreview = true
         settings.features.openGLCapture = true
         settings.features.openGLFilters = true
-        settings.features.cameraFilters = false
+        settings.features.cameraFilters = true
         return settings
     }
 

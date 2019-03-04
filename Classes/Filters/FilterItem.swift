@@ -9,6 +9,5 @@ import UIKit
 
 /// A representation for a filter to be presented in the FilterCollectionController
 struct FilterItem {
-    /// The circle color
-    let representativeColor: UIColor
+    let type: FilterType
 }

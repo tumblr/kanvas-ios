@@ -9,18 +9,18 @@ import Foundation
 /// Filter types
 enum FilterType: Int, CaseIterable {
     case passthrough = 0
-    case film
+    case wavePool
     case plasma
     case emInterference
-    case lego
     case rgb
-    case rave
+    case lego
     case chroma
+    case rave
     case mirrorTwo
     case mirrorFour
-    case grayscale
     case lightLeaks
-    case wavePool
+    case film
+    case grayscale
     case magna
     case toon
 
@@ -32,11 +32,11 @@ enum FilterType: Int, CaseIterable {
         case .plasma:
             return "Plasma"
         case .emInterference:
-            return "EM-Interference (Glitch)"
+            return "EM-Interference"
         case .film:
-            return "Film/Grainy"
+            return "Noise"
         case .mirrorTwo:
-            return "Mirror"
+            return "Twop Mirror"
         case .rave:
             return "Rave"
         case .lego:
@@ -46,7 +46,7 @@ enum FilterType: Int, CaseIterable {
         case .chroma:
             return "Chroma"
         case .mirrorFour:
-            return "Mirror 4"
+            return "Four Mirror"
         case .grayscale:
             return "Black & White"
         case .lightLeaks:

@@ -26,15 +26,25 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     weak var delegate: FilterCollectionControllerDelegate?
     
-    /// Initializes the collection with Tumblr colors
+    /// Initializes the collection
     init() {
-        filterItems = [FilterItem(representativeColor: .tumblrBrightRed),
-                       FilterItem(representativeColor: .tumblrBrightPink),
-                       FilterItem(representativeColor: .tumblrBrightOrange),
-                       FilterItem(representativeColor: .tumblrBrightYellow),
-                       FilterItem(representativeColor: .tumblrBrightGreen),
-                       FilterItem(representativeColor: .tumblrBrightBlue),
-                       FilterItem(representativeColor: .tumblrBrightPurple)]
+        filterItems = [
+            FilterItem(type: .passthrough),
+            FilterItem(type: .wavePool),
+            FilterItem(type: .plasma),
+            FilterItem(type: .emInterference),
+            FilterItem(type: .rgb),
+            FilterItem(type: .lego),
+            FilterItem(type: .chroma),
+            FilterItem(type: .rave),
+            FilterItem(type: .mirrorTwo),
+            FilterItem(type: .mirrorFour),
+            FilterItem(type: .lightLeaks),
+            FilterItem(type: .film),
+            FilterItem(type: .grayscale),
+            FilterItem(type: .magna),
+            FilterItem(type: .toon),
+        ]
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -148,7 +158,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: 0)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        didSelectFilter(at: indexPath)
+        delegate?.didSelectFilter(filterItems[indexPath.item])
     }
     
     private func indexPathAtCenter() -> IndexPath? {
@@ -176,26 +186,6 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         if let indexPath = indexPathAtCenter() {
             scrollToOptionAt(indexPath.item)
         }
-    }
-    
-    // Mark: - Filter Selection
-    
-    /// Sets the selected circle (increasing its size) and deselect the previous circle (making it standard size).
-    /// It also calls the delegate to set the camera filter.
-    ///
-    /// - Returns: Filter array
-    private func didSelectFilter(at indexPath: IndexPath) {
-        if let previousCell = selectedCell {
-            previousCell.setSelected(false)
-        }
-        
-        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
-        if let cell = cell {
-            cell.setSelected(true)
-            selectedCell = cell
-        }
-        
-        delegate?.didSelectFilter(filterItems[indexPath.item])
     }
     
 }

@@ -599,7 +599,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - FilterSettingsControllerDelegate
     
     func didSelectFilter(_ filterItem: FilterItem) {
-        // TODO: Apply filter to camera input
+        cameraInputController.applyFilter(filterType: filterItem.type)
     }
     
     func didTapVisibilityButton(visible: Bool) {
