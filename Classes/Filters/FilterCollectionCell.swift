@@ -57,7 +57,7 @@ final class FilterCollectionCell: UICollectionViewCell {
     func bindTo(_ item: FilterItem) {
         guard item.type != .passthrough else { return }
         circleView.image = KanvasCameraImages.filterTypes[item.type] ?? nil
-        circleView.backgroundColor = KanvasCameraColors.tumblrColors[Int.random(in: 0..<KanvasCameraColors.tumblrColors.count)]
+        circleView.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
     }
     
     /// Updates the cell to be reused

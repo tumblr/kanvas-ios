@@ -19,15 +19,9 @@ struct KanvasCameraColors {
     // MARK: - Clip collection
     static let translucentBlack = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
 
-    // MARK: - Tumblr Colors List
-    static let tumblrColors = [
-        UIColor.tumblrDeepBlue,
-        UIColor.tumblrBrightBlue,
-        UIColor.tumblrBrightRed,
-        UIColor.tumblrBrightYellow,
-        UIColor.tumblrBrightGreen,
-        UIColor.tumblrBrightPink,
-        UIColor.tumblrBrightPurple,
-        UIColor.tumblrBrightOrange,
+    // MARK: - Filters
+    static let filterTypes: [FilterType: UIColor] = [
+        .magna: .tumblrBrightPink,
+        .toon: .tumblrBrightOrange,
     ]
 }
