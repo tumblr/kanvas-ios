@@ -148,22 +148,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         guard !isSimulator else { return }
 
         captureSession?.startRunning()
-
-        // have to rebuild the filtered input display setup
-        if filterViewNeedsReset {
-            filteredInputViewController?.reset()
-        }
-
-        filterViewNeedsReset = false
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         guard !isSimulator else { return }
-
-        captureSession?.stopRunning()
-        filterViewNeedsReset = true
     }
 
     func cleanup() {
