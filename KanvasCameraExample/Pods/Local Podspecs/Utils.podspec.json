@@ -1,7 +1,7 @@
 {
-  "name": "TumblrTheme",
+  "name": "Utils",
   "version": "1.0.0",
-  "summary": "Theme, Fonts and Colors shared across the tumblr app",
+  "summary": "CoreTumblr free shared code",
   "license": "Copyright 2018 Tumblr, Inc.",
   "authors": {
     "Tumblr iOS Team": "ios-team@tumblr.com"
@@ -15,13 +15,7 @@
   },
   "requires_arc": true,
   "frameworks": [
-    "Foundation",
-    "UIKit"
+    "Foundation"
   ],
-  "source_files": "Source/*.{h,m,swift}",
-  "dependencies": {
-    "Utils": [
-
-    ]
-  }
+  "source_files": "Source/**/*.{swift}"
 }

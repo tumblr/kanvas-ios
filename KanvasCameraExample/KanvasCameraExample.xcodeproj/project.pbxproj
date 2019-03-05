@@ -32,24 +32,24 @@
 		0EDE7A3B216425BD009DB00F /* ExtendedStackViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3A216425BD009DB00F /* ExtendedStackViewTests.swift */; };
 		0EDE7A3D216425C5009DB00F /* ExtendedButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */; };
 		1A82DCEC21E83A81E483CA0A /* Pods_KanvasCameraExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCEE38E678D0A1C310541517 /* Pods_KanvasCameraExample.framework */; };
+		651641C122299AA00065463D /* EasyTipViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651641C022299AA00065463D /* EasyTipViewTests.swift */; };
+		651DEBA72209F17400476F22 /* ConicalGradientLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */; };
+		651DEBA92209FC4300476F22 /* RGBATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA82209FC4300476F22 /* RGBATests.swift */; };
 		652DFA1722281F00007B1EF5 /* FilterCollectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1122281F00007B1EF5 /* FilterCollectionControllerTests.swift */; };
 		652DFA1822281F00007B1EF5 /* FilterSettingsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1222281F00007B1EF5 /* FilterSettingsControllerTests.swift */; };
 		652DFA1922281F00007B1EF5 /* FilterSettingsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1322281F00007B1EF5 /* FilterSettingsViewTests.swift */; };
 		652DFA1A22281F00007B1EF5 /* FilterItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1422281F00007B1EF5 /* FilterItemTests.swift */; };
 		652DFA1B22281F00007B1EF5 /* FilterCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1522281F00007B1EF5 /* FilterCollectionCellTests.swift */; };
 		652DFA1C22281F00007B1EF5 /* FilterCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1622281F00007B1EF5 /* FilterCollectionViewTests.swift */; };
-		651641C122299AA00065463D /* EasyTipViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651641C022299AA00065463D /* EasyTipViewTests.swift */; };
-		651DEBA72209F17400476F22 /* ConicalGradientLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */; };
-		651DEBA92209FC4300476F22 /* RGBATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA82209FC4300476F22 /* RGBATests.swift */; };
 		65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */; };
 		764AC467221D8485005C82EC /* FilteredInputViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC466221D8485005C82EC /* FilteredInputViewControllerTests.swift */; };
 		764AC46A221D84B5005C82EC /* FilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC469221D84B5005C82EC /* FilterTests.swift */; };
 		764AC46C221D84CD005C82EC /* GLPixelBufferViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC46B221D84CD005C82EC /* GLPixelBufferViewTests.swift */; };
 		764AC46E221D851B005C82EC /* GLRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC46D221D851B005C82EC /* GLRendererTests.swift */; };
 		764AC470221D8588005C82EC /* ShaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC46F221D8588005C82EC /* ShaderTests.swift */; };
+		764AC476221D86A2005C82EC /* GLUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC475221D86A2005C82EC /* GLUTests.swift */; };
 		764AC4802223E07B005C82EC /* FilterInstancesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */; };
 		764AC4822223E3CF005C82EC /* FilterFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC4812223E3CF005C82EC /* FilterFactoryTests.swift */; };
-		764AC476221D86A2005C82EC /* GLUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC475221D86A2005C82EC /* GLUTests.swift */; };
 		76826A0E2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76826A0B2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift */; };
 		76BC5BAE220CCFF2007A9289 /* Array+MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */; };
 		76BC5BAF220CCFF2007A9289 /* ClosedRange+ClampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BC5BAD220CCFF2007A9289 /* ClosedRange+ClampTests.swift */; };
@@ -125,15 +125,15 @@
 		0EDE7A3A216425BD009DB00F /* ExtendedStackViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedStackViewTests.swift; sourceTree = "<group>"; };
 		0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedButtonTests.swift; sourceTree = "<group>"; };
 		304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
+		651641C022299AA00065463D /* EasyTipViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasyTipViewTests.swift; sourceTree = "<group>"; };
+		651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayerTests.swift; sourceTree = "<group>"; };
+		651DEBA82209FC4300476F22 /* RGBATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBATests.swift; sourceTree = "<group>"; };
 		652DFA1122281F00007B1EF5 /* FilterCollectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCollectionControllerTests.swift; sourceTree = "<group>"; };
 		652DFA1222281F00007B1EF5 /* FilterSettingsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsControllerTests.swift; sourceTree = "<group>"; };
 		652DFA1322281F00007B1EF5 /* FilterSettingsViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsViewTests.swift; sourceTree = "<group>"; };
 		652DFA1422281F00007B1EF5 /* FilterItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterItemTests.swift; sourceTree = "<group>"; };
 		652DFA1522281F00007B1EF5 /* FilterCollectionCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCollectionCellTests.swift; sourceTree = "<group>"; };
 		652DFA1622281F00007B1EF5 /* FilterCollectionViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCollectionViewTests.swift; sourceTree = "<group>"; };
-		651641C022299AA00065463D /* EasyTipViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasyTipViewTests.swift; sourceTree = "<group>"; };
-		651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayerTests.swift; sourceTree = "<group>"; };
-		651DEBA82209FC4300476F22 /* RGBATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBATests.swift; sourceTree = "<group>"; };
 		65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewControllerTests.swift; sourceTree = "<group>"; };
 		761E012CE7CCF5C5FED281D1 /* Pods-KanvasCameraExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		764AC466221D8485005C82EC /* FilteredInputViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteredInputViewControllerTests.swift; sourceTree = "<group>"; };
@@ -141,9 +141,9 @@
 		764AC46B221D84CD005C82EC /* GLPixelBufferViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLPixelBufferViewTests.swift; sourceTree = "<group>"; };
 		764AC46D221D851B005C82EC /* GLRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLRendererTests.swift; sourceTree = "<group>"; };
 		764AC46F221D8588005C82EC /* ShaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderTests.swift; sourceTree = "<group>"; };
+		764AC475221D86A2005C82EC /* GLUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLUTests.swift; sourceTree = "<group>"; };
 		764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterInstancesTests.swift; sourceTree = "<group>"; };
 		764AC4812223E3CF005C82EC /* FilterFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterFactoryTests.swift; sourceTree = "<group>"; };
-		764AC475221D86A2005C82EC /* GLUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLUTests.swift; sourceTree = "<group>"; };
 		76826A0B2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+FlipLeftMirroredTests.swift"; sourceTree = "<group>"; };
 		76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+MoveTests.swift"; sourceTree = "<group>"; };
 		76BC5BAD220CCFF2007A9289 /* ClosedRange+ClampTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ClosedRange+ClampTests.swift"; sourceTree = "<group>"; };
@@ -570,11 +570,13 @@
 				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework",
 				"${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework",
+				"${BUILT_PRODUCTS_DIR}/Utils/Utils.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KanvasCamera.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TumblrTheme.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Utils.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -626,12 +628,14 @@
 				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework",
 				"${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework",
+				"${BUILT_PRODUCTS_DIR}/Utils/Utils.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KanvasCamera.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TumblrTheme.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Utils.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
