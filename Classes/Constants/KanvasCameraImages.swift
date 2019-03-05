@@ -31,6 +31,24 @@ struct KanvasCameraImages {
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
     static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
     static let deleteImage = UIImage.imageFromCameraBundle(named: "trashButton")
-    static let filterImage = UIImage.imageFromCameraBundle(named: "filterIcon-smile")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
+    // MARK: - Filters
+    static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
+    static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
+    static let filterTypes: [FilterType: UIImage?] = [
+        .wavePool: UIImage.imageFromCameraBundle(named: "Water"),
+        .plasma: UIImage.imageFromCameraBundle(named: "Plasma"),
+        .emInterference: UIImage.imageFromCameraBundle(named: "EMInter"),
+        .rgb: UIImage.imageFromCameraBundle(named: "RGB"),
+        .lego: UIImage.imageFromCameraBundle(named: "Lego"),
+        .chroma: UIImage.imageFromCameraBundle(named: "Chroma"),
+        .rave: UIImage.imageFromCameraBundle(named: "Rave"),
+        .mirrorTwo: UIImage.imageFromCameraBundle(named: "TwoMirror"),
+        .mirrorFour: UIImage.imageFromCameraBundle(named: "FourMirror"),
+        .lightLeaks: UIImage.imageFromCameraBundle(named: "Rainbow"),
+        .film: UIImage.imageFromCameraBundle(named: "Noise"),
+        .grayscale: UIImage.imageFromCameraBundle(named: "BW"),
+        .magna: nil,
+        .toon: nil,
+    ]
 }

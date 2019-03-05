@@ -36,7 +36,7 @@ final class FilterSettingsView: IgnoreTouchesView {
         
         visibilityButton = UIButton()
         visibilityButton.accessibilityIdentifier = "Filter Visibility Button"
-        visibilityButton.setBackgroundImage(KanvasCameraImages.filterImage, for: .normal)
+        visibilityButton.setBackgroundImage(KanvasCameraImages.discoballUntappedImage, for: .normal)
         super.init(frame: .zero)
         
         clipsToBounds = false

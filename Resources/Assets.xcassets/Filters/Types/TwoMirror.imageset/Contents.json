@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Filters@1x.png",
+      "filename" : "TwoMirror.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Filters@2x.png",
+      "filename" : "TwoMirror@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Filters@3x.png",
+      "filename" : "TwoMirror@3x.png",
       "scale" : "3x"
     }
   ],
