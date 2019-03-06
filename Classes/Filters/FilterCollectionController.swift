@@ -22,7 +22,8 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     private lazy var filterCollectionView = FilterCollectionView()
     private var filterItems: [FilterItem]
-    private var selectedCell: FilterCollectionCell?
+    private let initialCell: Int
+    private let section: Int
     
     weak var delegate: FilterCollectionControllerDelegate?
     
@@ -45,6 +46,8 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
             FilterItem(type: .magna),
             FilterItem(type: .toon),
         ]
+        initialCell = 0
+        section = 0
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -75,8 +78,10 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        scrollToOptionAt(initialCell, animated: false)
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
+        changeSize(IndexPath(item: initialCell, section: section))
     }
     
     private func setUpView() {
@@ -144,20 +149,19 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         else if let lastFilter = filterItems.last {
             cellMock.bindTo(lastFilter)
         }
-        let cellSize = cellMock.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        let cellWidth = cellSize.width
+        let cellWidth = FilterCollectionCell.width
         let center = collectionView.center.x
-        let border = leftBorder ? center - cellWidth/2 : center + cellWidth/2
+        let border = leftBorder ? center - cellWidth / 2 : center + cellWidth / 2
         let inset = leftBorder ? border : collectionView.bounds.width - border
         return inset
     }
     
     // MARK: - Scrolling
     
-    private func scrollToOptionAt(_ index: Int) {
+    private func scrollToOptionAt(_ index: Int, animated: Bool = true) {
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
-        let indexPath = IndexPath(item: index, section: 0)
-        filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        let indexPath = IndexPath(item: index, section: section)
+        filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         delegate?.didSelectFilter(filterItems[indexPath.item])
     }
     
@@ -180,6 +184,20 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         }
     }
     
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if let indexPath = indexPathAtCenter() {
+            scrollToOptionAt(indexPath.item)
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let indexPath = indexPathAtCenter() {
+            changeSize(indexPath)
+            resetSize(for: indexPath.previous())
+            resetSize(for: indexPath.next())
+        }
+    }
+    
     // When the collection is decelerating, but the user taps a cell to stop,
     // the collection needs to set a cell at the center of the screen
     @objc func collectionTapped() {
@@ -188,4 +206,38 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         }
     }
     
+    // MARK: - Animate size change
+    
+    private func changeSize(_ indexPath: IndexPath) {
+        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
+        if let cell = cell {
+            let maxDistance = FilterCollectionCell.width / 2
+            let distance = calculateDistanceFromCenter(cell: cell)
+            let percent = (maxDistance - distance) / maxDistance
+            cell.setSize(percent)
+        }
+    }
+    
+    private func calculateDistanceFromCenter(cell: FilterCollectionCell) -> CGFloat {
+        let cellCenter = cell.frame.center.x
+        let collectionViewCenter = filterCollectionView.collectionView.center.x + filterCollectionView.collectionView.contentOffset.x
+        return abs(collectionViewCenter - cellCenter)
+    }
+    
+    private func resetSize(for indexPath: IndexPath) {
+        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
+        cell?.setStandardSize()
+    }
+}
+
+/// Next and previous index paths
+private extension IndexPath {
+    
+    func previous() -> IndexPath {
+        return IndexPath(item: item - 1, section: section)
+    }
+    
+    func next() -> IndexPath {
+        return IndexPath(item: item + 1, section: section)
+    }
 }
