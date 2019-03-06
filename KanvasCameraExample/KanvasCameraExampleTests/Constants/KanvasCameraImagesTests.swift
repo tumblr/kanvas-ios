@@ -24,14 +24,6 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(imageView)
     }
 
-    func testGifModeImage() {
-        let imageView = newImageView()
-        let image = KanvasCameraImages.gifModeImage
-        XCTAssert(image != nil, "Image not found")
-        imageView.image = image
-        FBSnapshotVerifyView(imageView)
-    }
-
     func testStopMotionModeImage() {
         let imageView = newImageView()
         let image = KanvasCameraImages.stopMotionModeImage

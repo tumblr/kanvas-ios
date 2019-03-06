@@ -9,8 +9,8 @@ import Foundation
 // the images used throughout the module
 struct KanvasCameraImages {
     // MARK: - Mode Selection
-    static let photoModeImage = UIImage.imageFromCameraBundle(named: "photoCameraMode")
-    static let gifModeImage = UIImage.imageFromCameraBundle(named: "gifCameraMode")
+    static let photoModeImage: UIImage? = .none
+    static let gifModeImage: UIImage? = .none
     static let stopMotionModeImage: UIImage? = .none
 
     static func image(for mode: CameraMode) -> UIImage? {
@@ -20,6 +20,7 @@ struct KanvasCameraImages {
         case .stopMotion: return stopMotionModeImage
         }
     }
+    
     // MARK: - Top options
     static let flashOnImage = UIImage.imageFromCameraBundle(named: "flashOn")
     static let flashOffImage = UIImage.imageFromCameraBundle(named: "flashOff")
