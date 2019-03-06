@@ -21,7 +21,7 @@ struct KanvasCameraColors {
 
     // MARK: - Filters
     static let filterTypes: [FilterType: UIColor] = [
-        .magna: .tumblrBrightPink,
+        .manga: .tumblrBrightPink,
         .toon: .tumblrBrightOrange,
     ]
 }

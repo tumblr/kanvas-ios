@@ -6,8 +6,10 @@
 
 import Foundation
 
+
+
 /// Filter types
-enum FilterType: Int, CaseIterable {
+@objc public enum FilterType: Int {
     case passthrough = 0
     case wavePool
     case plasma
@@ -21,42 +23,47 @@ enum FilterType: Int, CaseIterable {
     case lightLeaks
     case film
     case grayscale
-    case magna
+    case manga
     case toon
+    case off
 
-    /// Debug names for the filters.
-    func name() -> String {
+    /// Logging key for a filter type
+    /// Returns a string representing the filter type, or nil if the FilterType is "off",/
+    /// which indicates that the feature is disabled.
+    public func key() -> String? {
         switch self {
         case .passthrough:
-            return "None"
+            return "normal"
         case .plasma:
-            return "Plasma"
+            return "plasma"
         case .emInterference:
-            return "EM-Interference"
+            return "em_interference"
         case .film:
-            return "Noise"
+            return "film"
         case .mirrorTwo:
-            return "Twop Mirror"
+            return "mirror_2"
         case .rave:
-            return "Rave"
+            return "rave"
         case .lego:
-            return "Lego"
+            return "lego"
         case .rgb:
-            return "RGB"
+            return "rgb"
         case .chroma:
-            return "Chroma"
+            return "chroma"
         case .mirrorFour:
-            return "Four Mirror"
+            return "mirror_4"
         case .grayscale:
-            return "Black & White"
+            return "grayscale"
         case .lightLeaks:
-            return "Rainbow"
+            return "light_leaks"
         case .wavePool:
-            return "Water"
-        case .magna:
-            return "Magna"
+            return "wave_pool"
+        case .manga:
+            return "manga"
         case .toon:
-            return "Toon"
+            return "toon"
+        case .off:
+            return nil
         }
     }
 }

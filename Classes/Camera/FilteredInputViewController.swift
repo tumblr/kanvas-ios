@@ -28,7 +28,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
 
     /// Filters
     private weak var delegate: FilteredInputViewControllerDelegate?
-    private var currentFilter: FilterType = .passthrough
+    private(set) var currentFilter: FilterType = .passthrough
     
     init(delegate: FilteredInputViewControllerDelegate? = nil, settings: CameraSettings) {
         self.delegate = delegate
