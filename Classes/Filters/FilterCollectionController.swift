@@ -208,7 +208,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     // MARK: - Animate size change
     
-    /// Changes the cell size according its distance from center
+    /// Changes the cell size according to its distance from center
     ///
     /// - Parameter indexPath: the index path of the cell
     private func changeSize(_ indexPath: IndexPath) {
