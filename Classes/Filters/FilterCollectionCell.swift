@@ -63,7 +63,6 @@ final class FilterCollectionCell: UICollectionViewCell {
         contentView.addSubview(circleView)
         circleView.accessibilityIdentifier = "Filter Cell View"
         circleView.translatesAutoresizingMaskIntoConstraints = false
-        
         circleView.contentMode = .scaleAspectFill
         circleView.clipsToBounds = true
         circleView.layer.masksToBounds = true
@@ -88,7 +87,7 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     // MARK: - Animations
     
-    /// Changes the circle size with an animation
+    /// Changes the circle size
     ///
     /// - Parameter size: the new size for the circle
     private func changeSize(size: CGFloat) {
@@ -99,10 +98,14 @@ final class FilterCollectionCell: UICollectionViewCell {
         circleView.layer.cornerRadius = circleView.frame.height / 2
     }
     
+    /// Sets the circle with smallest size (standard size)
     func setStandardSize() {
         changeSize(size: FilterCollectionCellConstants.circleDiameter)
     }
     
+    /// Changes the circle size according to a percentage
+    ///
+    /// - Parameter percent: 0.0 is the smallest size (standard size), while 1.0 is the biggest size
     func setSize(_ percent: CGFloat) {
         let safePercent = (0...1).clamp(percent)
         let size = (FilterCollectionCellConstants.circleMaxDiameter - FilterCollectionCellConstants.circleDiameter) * safePercent + FilterCollectionCellConstants.circleDiameter

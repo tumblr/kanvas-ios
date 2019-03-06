@@ -208,6 +208,9 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     // MARK: - Animate size change
     
+    /// Changes the cell size according its distance from center
+    ///
+    /// - Parameter indexPath: the index path of the cell
     private func changeSize(_ indexPath: IndexPath) {
         let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
         if let cell = cell {
@@ -224,6 +227,9 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         return abs(collectionViewCenter - cellCenter)
     }
     
+    /// Sets the cell with the standard size (smallest size)
+    ///
+    /// - Parameter indexPath: the index path of the cell
     private func resetSize(for indexPath: IndexPath) {
         let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
         cell?.setStandardSize()
