@@ -13,13 +13,13 @@ protocol CameraViewDelegate: class {
 }
 
 struct CameraConstants {
-    static let optionVerticalMargin: CGFloat = 26
-    static let optionHorizontalMargin: CGFloat = 30
-    static let optionButtonSize: CGFloat = 23
-    static let closeButtonSize: CGFloat = CameraConstants.optionButtonSize - 3
-    static let closeButtonHorizontalMargin: CGFloat = CameraConstants.optionHorizontalMargin - 3
-    static let closeButtonVerticalMargin: CGFloat = CameraConstants.optionVerticalMargin + 1
-    static let optionSpacing: CGFloat = 38
+    static let optionVerticalMargin: CGFloat = 24
+    static let optionHorizontalMargin: CGFloat = 24
+    static let optionButtonSize: CGFloat = 26.5
+    static let closeButtonSize: CGFloat = CameraConstants.optionButtonSize - 0
+    static let closeButtonHorizontalMargin: CGFloat = CameraConstants.optionHorizontalMargin - 0
+    static let closeButtonVerticalMargin: CGFloat = CameraConstants.optionVerticalMargin + 0
+    static let optionSpacing: CGFloat = 33
     fileprivate static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
 }
@@ -182,8 +182,6 @@ final class CameraView: UIView {
         closeButton.accessibilityLabel = "Close Button"
         closeButton.applyShadows()
         closeButton.setImage(KanvasCameraImages.closeImage, for: .normal)
-        closeButton.contentHorizontalAlignment = .fill
-        closeButton.contentVerticalAlignment = .fill
         closeButton.imageView?.contentMode = .scaleAspectFit
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
