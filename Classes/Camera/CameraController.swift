@@ -603,7 +603,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     func didTapVisibilityButton(visible: Bool) {
-        modeAndShootController.enableShootButtonUserInteraction(!visible)
     }
     
     // MARK: - breakdown
