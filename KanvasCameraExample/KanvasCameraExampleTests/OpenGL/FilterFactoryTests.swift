@@ -15,7 +15,7 @@ class FilterFactoryTests: XCTestCase {
     }
 
     func testFilterType() {
-        XCTAssertEqual(FilterType.lego.name(), "Lego")
+        XCTAssertEqual(FilterType.lego.key(), "lego")
     }
 
 }
