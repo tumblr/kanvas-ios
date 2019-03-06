@@ -16,9 +16,6 @@ struct CameraConstants {
     static let optionVerticalMargin: CGFloat = 24
     static let optionHorizontalMargin: CGFloat = 24
     static let optionButtonSize: CGFloat = 26.5
-    static let closeButtonSize: CGFloat = CameraConstants.optionButtonSize - 0
-    static let closeButtonHorizontalMargin: CGFloat = CameraConstants.optionHorizontalMargin - 0
-    static let closeButtonVerticalMargin: CGFloat = CameraConstants.optionVerticalMargin + 0
     static let optionSpacing: CGFloat = 33
     fileprivate static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
@@ -187,10 +184,10 @@ final class CameraView: UIView {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.closeButtonHorizontalMargin),
-            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.closeButtonVerticalMargin),
+            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
+            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.closeButtonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
         ])
     }
 
