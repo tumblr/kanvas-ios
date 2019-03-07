@@ -14,9 +14,8 @@ private struct MediaClipsEditorViewConstants {
     static let buttonRadius: CGFloat = 25
     static let buttonWidth: CGFloat = 91
     static let buttonHeight: CGFloat = 40.5
-    static let buttonTopOffset: CGFloat = 4.8
     static let topPadding: CGFloat = 6
-    static let bottomPadding: CGFloat = 12 + (Device.isIPhoneX ? 12 : 0)
+    static let bottomPadding: CGFloat = 6
 }
 
 protocol MediaClipsEditorViewDelegate: class {
@@ -104,8 +103,7 @@ private extension MediaClipsEditorView {
                                                     constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
             previewButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonHeight),
             previewButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonWidth),
-            previewButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor,
-                                                   constant: MediaClipsEditorViewConstants.buttonTopOffset)
+            previewButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
         ])
     }
 

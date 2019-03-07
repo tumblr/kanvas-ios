@@ -19,8 +19,8 @@ protocol MediaClipsCollectionCellDelegate {
 
 private struct MediaClipsCollectionCellConstants {
     static let cellPadding: CGFloat = 2.9
-    static let clipHeight: CGFloat = 64
-    static let clipWidth: CGFloat = 45
+    static let clipHeight: CGFloat = 60
+    static let clipWidth: CGFloat = 40
     static let borderWidth: CGFloat = 1.1
     static let cornerRadius: CGFloat = 8
     static let font: UIFont = .favoritTumblrMedium(fontSize: 9.5)
