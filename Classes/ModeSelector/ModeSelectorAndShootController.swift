@@ -153,11 +153,15 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.showBorderView(false)
     }
 
-    /// shows the trash icon
-    func showTrashView(_ show: Bool) {
-        modeView.showTrashView(show)
+    /// shows the trash icon closed
+    func showTrashClosed(_ show: Bool) {
+        modeView.showTrashClosed(show)
     }
 
+    /// shows the trash icon opened
+    func showTrashOpened(_ show: Bool) {
+        modeView.showTrashOpened(show)
+    }
 }
 
 extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {

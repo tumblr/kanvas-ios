@@ -59,7 +59,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
         shootButton.configureFor(trigger: .tapAndHold, image: KanvasCameraImages.stopMotionModeImage, timeLimit: KanvasCameraTimes.videoRecordingTime)
-        shootButton.showTrashView(true)
+        shootButton.showTrashClosed(true)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }

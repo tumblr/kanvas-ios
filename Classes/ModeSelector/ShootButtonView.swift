@@ -45,6 +45,8 @@ private struct ShootButtonViewConstants {
     static let borderWidth: CGFloat = 3
     static let innerCircleImageWidth: CGFloat = 64
     static let outerCircleImageWidth: CGFloat = 95 + borderWidth
+    static let trashIconSize: CGFloat = 33
+    static let trashBackgroundImageWidth: CGFloat = 98
     static let longPressMinimumDuration: CFTimeInterval = 0.5
     static let buttonWidth: CGFloat = (imageWidth + 15) * 2
     static let buttonSizeAnimationDuration: TimeInterval = 0.2
@@ -75,7 +77,9 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     private let tapRecognizer: UITapGestureRecognizer
     private let longPressRecognizer: UILongPressGestureRecognizer
     private let borderView: UIView
-    private let trashView: UIImageView
+    private let trashClosed: UIImageView
+    private let trashOpened: UIImageView
+    private let trashBackground: UIImageView
     private let baseColor: UIColor
 
     private var containerWidthConstraint: NSLayoutConstraint?
@@ -99,7 +103,9 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         pressCircleImageView = UIImageView()
         pressBackgroundImageView = UIImageView()
         borderView = UIView()
-        trashView = UIImageView()
+        trashClosed = UIImageView()
+        trashOpened = UIImageView()
+        trashBackground = UIImageView()
         tapRecognizer = UITapGestureRecognizer()
         longPressRecognizer = UILongPressGestureRecognizer()
         timeSegmentLayer = ConicalGradientLayer()
@@ -117,7 +123,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         setUpPressCircleImage(pressCircleImageView)
         setUpPressBackgroundImage(pressBackgroundImageView)
         setUpBorderView()
-        setUpTrashView()
+        setUpTrashViews()
         setUpRecognizers()
         setUpInteractions()
     }
@@ -232,11 +238,64 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         borderView.layer.cornerRadius = borderView.bounds.width / 2
     }
     
-    private func setUpTrashView() {
-        trashView.add(into: containerView)
-        trashView.translatesAutoresizingMaskIntoConstraints = false
-        trashView.image = KanvasCameraImages.deleteImage
-        showTrashView(false)
+    private func setUpTrashViews() {
+        setUpTrashBackground()
+        setUpTrashOpened()
+        setUpTrashClosed()
+    }
+    
+    private func setUpTrashClosed() {
+        addSubview(trashClosed)
+        trashClosed.accessibilityIdentifier = "Camera Shoot Button Trash Closed Image"
+        trashClosed.translatesAutoresizingMaskIntoConstraints = false
+        trashClosed.contentMode = .scaleAspectFit
+        trashClosed.clipsToBounds = true
+        trashClosed.image = KanvasCameraImages.trashClosed
+        NSLayoutConstraint.activate([
+            trashClosed.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashIconSize),
+            trashClosed.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashIconSize),
+            trashClosed.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            trashClosed.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+        ])
+        showTrashClosed(false)
+    }
+    
+    private func setUpTrashOpened() {
+        addSubview(trashOpened)
+        trashOpened.accessibilityIdentifier = "Camera Shoot Button Trash Opened Image"
+        trashOpened.translatesAutoresizingMaskIntoConstraints = false
+        trashOpened.contentMode = .scaleAspectFit
+        trashOpened.clipsToBounds = true
+        trashOpened.image = KanvasCameraImages.trashOpened
+        NSLayoutConstraint.activate([
+            trashOpened.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashIconSize),
+            trashOpened.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashIconSize),
+            trashOpened.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            trashOpened.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+        ])
+        
+        showTrashOpened(false)
+    }
+    
+    private func setUpTrashBackground() {
+        addSubview(trashBackground)
+        trashBackground.accessibilityIdentifier = "Camera Shoot Button Trash Background Image"
+        trashBackground.translatesAutoresizingMaskIntoConstraints = false
+        trashBackground.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
+        trashBackground.tintColor = .tumblrBrightRed
+        
+        trashBackground.contentMode = .scaleAspectFit
+        trashBackground.clipsToBounds = true
+        trashBackground.translatesAutoresizingMaskIntoConstraints = false
+        let distanceToCenter = ShootButtonViewConstants.trashBackgroundImageWidth
+        NSLayoutConstraint.activate([
+            trashBackground.heightAnchor.constraint(equalToConstant: distanceToCenter),
+            trashBackground.widthAnchor.constraint(equalToConstant: distanceToCenter),
+            trashBackground.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            trashBackground.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+        ])
+        
+        trashBackground.alpha = 0
     }
 
     private func setUpRecognizers() {
@@ -470,12 +529,22 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         }
     }
 
-    /// Updates UI for the next button
     ///
-    /// - Parameter enabled: whether to enable the next button or not
-    func showTrashView(_ show: Bool) {
+    ///
+    /// - Parameter show:
+    func showTrashClosed(_ show: Bool) {
         UIView.animate(withDuration: ShootButtonViewConstants.animationDuration) {
-            self.trashView.alpha = show ? 1 : 0
+            self.trashClosed.alpha = show ? 1 : 0
+        }
+    }
+    
+    ///
+    ///
+    /// - Parameter show:
+    func showTrashOpened(_ show: Bool) {
+        UIView.animate(withDuration: ShootButtonViewConstants.animationDuration) {
+            self.trashOpened.alpha = show ? 1 : 0
+            self.trashBackground.alpha = show ? 1 : 0
         }
     }
     
@@ -487,5 +556,15 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
         delegate?.shootButtonDidReceiveDropInteraction()
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidEnter session: UIDropSession) {
+        showTrashClosed(false)
+        showTrashOpened(true)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidExit session: UIDropSession) {
+        showTrashClosed(true)
+        showTrashOpened(false)
     }
 }
