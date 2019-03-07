@@ -32,6 +32,7 @@ struct KanvasCameraImages {
     static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
     static let deleteImage = UIImage.imageFromCameraBundle(named: "trashButton")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
+    static let nextImage = UIImage.imageFromCameraBundle(named: "next")
     // MARK: - Filters
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
     static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")

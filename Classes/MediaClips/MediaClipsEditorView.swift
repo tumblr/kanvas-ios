@@ -12,15 +12,14 @@ private struct MediaClipsEditorViewConstants {
     static let animationDuration: TimeInterval = 0.5
     static let buttonHorizontalMargin: CGFloat = 28
     static let buttonRadius: CGFloat = 25
-    static let buttonWidth: CGFloat = 91
-    static let buttonHeight: CGFloat = 40.5
+    static let nextButtonSize: CGFloat = 49
     static let topPadding: CGFloat = 6
     static let bottomPadding: CGFloat = 6
 }
 
 protocol MediaClipsEditorViewDelegate: class {
-    /// Callback for when preview button is selected
-    func previewButtonWasPressed()
+    /// Callback for when next button is selected
+    func nextButtonWasPressed()
 }
 
 /// View for media clips editor
@@ -31,7 +30,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
                         MediaClipsEditorViewConstants.bottomPadding
 
     let collectionContainer: IgnoreTouchesView
-    let previewButton: UIButton
+    let nextButton: UIButton
 
     weak var delegate: MediaClipsEditorViewDelegate?
 
@@ -41,14 +40,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.accessibilityIdentifier = "Media Clips Collection Container"
         collectionContainer.clipsToBounds = false
 
-        previewButton = UIButton()
-        previewButton.accessibilityIdentifier = "Media Clips Preview Button"
+        nextButton = UIButton()
+        nextButton.accessibilityIdentifier = "Media Clips Preview Button"
         super.init(frame: .zero)
         
         clipsToBounds = false
         backgroundColor = KanvasCameraColors.translucentBlack
         setUpViews()
-        previewButton.addTarget(self, action: #selector(previewPressed), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -75,13 +74,13 @@ private extension MediaClipsEditorView {
 
     func setUpViews() {
         setUpCollection()
-        setUpPreview()
+        setUpNextButton()
     }
     
     func setUpCollection() {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let trailingMargin = MediaClipsEditorViewConstants.buttonWidth + MediaClipsEditorViewConstants.buttonHorizontalMargin * 1.5
+        let trailingMargin = MediaClipsEditorViewConstants.nextButtonSize + MediaClipsEditorViewConstants.buttonHorizontalMargin * 1.5
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
@@ -90,20 +89,18 @@ private extension MediaClipsEditorView {
         ])
     }
     
-    func setUpPreview() {
-        addSubview(previewButton)
-        previewButton.translatesAutoresizingMaskIntoConstraints = false
-        previewButton.setTitle(NSLocalizedString("Preview", comment: "Title for the Preview button"), for: .normal)
-        previewButton.layer.cornerRadius = 20
-        previewButton.backgroundColor = .tumblrBrightBlue
-        previewButton.setTitleColor(.white, for: .normal)
-        previewButton.titleLabel?.font = .favoritTumblrMedium(fontSize: 14.8)
+    func setUpNextButton() {
+        addSubview(nextButton)
+        nextButton.accessibilityLabel = "Next Button"
+        nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            previewButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
-                                                    constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
-            previewButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonHeight),
-            previewButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.buttonWidth),
-            previewButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
+            nextButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
+            nextButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.nextButtonSize),
+            nextButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.nextButtonSize),
+            nextButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
         ])
     }
 
@@ -112,7 +109,7 @@ private extension MediaClipsEditorView {
 // MARK: - Button handling
 extension MediaClipsEditorView {
 
-    @objc func previewPressed() {
-        delegate?.previewButtonWasPressed()
+    @objc func nextPressed() {
+        delegate?.nextButtonWasPressed()
     }
 }
