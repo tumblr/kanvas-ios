@@ -20,13 +20,13 @@ final class FilterCollectionCellTests: FBSnapshotTestCase {
     
     func newCell() -> FilterCollectionCell {
         let frame = CGRect(origin: CGPoint.zero,
-                           size: CGSize(width: FilterCollectionCell.width, height: FilterCollectionCell.minimumHeight))
+                           size: CGSize(width: FilterCollectionCell.width - 20, height: FilterCollectionCell.minimumHeight))
         return FilterCollectionCell(frame: frame)
     }
     
     func testFilterCell() {
         let cell = newCell()
-        let filterItem = FilterItem(representativeColor: .blue)
+        let filterItem = FilterItem(type: .lightLeaks)
         cell.bindTo(filterItem)
         FBSnapshotVerifyView(cell)
     }

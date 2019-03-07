@@ -6,57 +6,64 @@
 
 import Foundation
 
+
+
 /// Filter types
-enum FilterType: Int, CaseIterable {
+@objc public enum FilterType: Int {
     case passthrough = 0
-    case film
+    case wavePool
     case plasma
     case emInterference
-    case lego
     case rgb
-    case rave
+    case lego
     case chroma
+    case rave
     case mirrorTwo
     case mirrorFour
-    case grayscale
     case lightLeaks
-    case wavePool
-    case magna
+    case film
+    case grayscale
+    case manga
     case toon
+    case off
 
-    /// Debug names for the filters.
-    func name() -> String {
+    /// Logging key for a filter type
+    /// Returns a string representing the filter type, or nil if the FilterType is "off",/
+    /// which indicates that the feature is disabled.
+    public func key() -> String? {
         switch self {
         case .passthrough:
-            return "None"
+            return "normal"
         case .plasma:
-            return "Plasma"
+            return "plasma"
         case .emInterference:
-            return "EM-Interference (Glitch)"
+            return "em_interference"
         case .film:
-            return "Film/Grainy"
+            return "film"
         case .mirrorTwo:
-            return "Mirror"
+            return "mirror_2"
         case .rave:
-            return "Rave"
+            return "rave"
         case .lego:
-            return "Lego"
+            return "lego"
         case .rgb:
-            return "RGB"
+            return "rgb"
         case .chroma:
-            return "Chroma"
+            return "chroma"
         case .mirrorFour:
-            return "Mirror 4"
+            return "mirror_4"
         case .grayscale:
-            return "Black & White"
+            return "grayscale"
         case .lightLeaks:
-            return "Rainbow"
+            return "light_leaks"
         case .wavePool:
-            return "Water"
-        case .magna:
-            return "Magna"
+            return "wave_pool"
+        case .manga:
+            return "manga"
         case .toon:
-            return "Toon"
+            return "toon"
+        case .off:
+            return nil
         }
     }
 }

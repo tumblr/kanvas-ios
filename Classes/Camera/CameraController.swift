@@ -288,7 +288,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                            cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                            length: 0,
-                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible())
+                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible(),
+                                                           filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
                 if let url = url {
                     let segment = CameraSegment.video(url)
@@ -309,7 +310,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                            cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                            length: 0,
-                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible())
+                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible(),
+                                                           filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
                 if let image = image {
                     if strongSelf.currentMode == .photo {
@@ -464,7 +466,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
                                                                    cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
                                                                    length: CMTimeGetSeconds(asset.duration),
-                                                                   ghostFrameEnabled: strongSelf.imagePreviewVisible())
+                                                                   ghostFrameEnabled: strongSelf.imagePreviewVisible(),
+                                                                   filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
                 }
                 performUIUpdate {
                     if let url = url, let image = AVURLAsset(url: url).thumbnail() {
@@ -599,11 +602,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - FilterSettingsControllerDelegate
     
     func didSelectFilter(_ filterItem: FilterItem) {
-        // TODO: Apply filter to camera input
+        cameraInputController.applyFilter(filterType: filterItem.type)
+        analyticsProvider?.logFilterSelected(filterType: filterItem.type)
     }
     
     func didTapVisibilityButton(visible: Bool) {
-        modeAndShootController.enableShootButtonUserInteraction(!visible)
+        if visible {
+            analyticsProvider?.logOpenFiltersSelector()
+        }
     }
     
     // MARK: - breakdown

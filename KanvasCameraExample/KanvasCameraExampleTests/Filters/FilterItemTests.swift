@@ -13,8 +13,8 @@ import XCTest
 final class FilterItemTests: XCTestCase {
     
     func testFilterColor() {
-        let color = UIColor.blue
-        let filter = FilterItem(representativeColor: color)
-        XCTAssertEqual(filter.representativeColor, color, "Color does not match")
+        let filterType = FilterType.plasma
+        let filter = FilterItem(type: .plasma)
+        XCTAssertEqual(filter.type, filterType, "Filter type does not match")
     }
 }

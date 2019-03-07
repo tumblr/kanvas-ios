@@ -17,13 +17,23 @@ final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDeleg
     override func setUp() {
         super.setUp()
         
-        filters = [FilterItem(representativeColor: .tumblrBrightRed),
-                   FilterItem(representativeColor: .tumblrBrightPink),
-                   FilterItem(representativeColor: .tumblrBrightOrange),
-                   FilterItem(representativeColor: .tumblrBrightYellow),
-                   FilterItem(representativeColor: .tumblrBrightGreen),
-                   FilterItem(representativeColor: .tumblrBrightBlue),
-                   FilterItem(representativeColor: .tumblrBrightPurple)]
+        filters = [
+            FilterItem(type: .passthrough),
+            FilterItem(type: .wavePool),
+            FilterItem(type: .plasma),
+            FilterItem(type: .emInterference),
+            FilterItem(type: .rgb),
+            FilterItem(type: .lego),
+            FilterItem(type: .chroma),
+            FilterItem(type: .rave),
+            FilterItem(type: .mirrorTwo),
+            FilterItem(type: .mirrorFour),
+            FilterItem(type: .lightLeaks),
+            FilterItem(type: .film),
+            FilterItem(type: .grayscale),
+            FilterItem(type: .manga),
+            FilterItem(type: .toon),
+        ]
         
         self.recordMode = false
     }

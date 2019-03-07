@@ -37,6 +37,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
+    /// Current applied filter type
+    var currentFilterType: FilterType? {
+        return filteredInputViewController?.currentFilter
+    }
+
     private lazy var filteredInputViewController: FilteredInputViewController? = {
         if settings.features.openGLPreview {
             return FilteredInputViewController(delegate: self, settings: settings)
@@ -148,22 +153,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         guard !isSimulator else { return }
 
         captureSession?.startRunning()
-
-        // have to rebuild the filtered input display setup
-        if filterViewNeedsReset {
-            filteredInputViewController?.reset()
-        }
-
-        filterViewNeedsReset = false
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         guard !isSimulator else { return }
-
-        captureSession?.stopRunning()
-        filterViewNeedsReset = true
     }
 
     func cleanup() {
@@ -201,14 +196,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinched)))
-        if settings.features.openGLFilters {
-            let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-            swipeLeft.direction = .left
-            view.addGestureRecognizer(swipeLeft)
-            let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
-            swipeRight.direction = .right
-            view.addGestureRecognizer(swipeRight)
-        }
     }
 
     private func setupPreview() {
@@ -386,6 +373,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         return recorder?.segments() ?? []
     }
 
+    /// Applies the filter
+    func applyFilter(filterType: FilterType) {
+        filteredInputViewController?.applyFilter(type: filterType)
+    }
+
     // MARK: - private methods
 
     @objc private func tapped(gesture: UITapGestureRecognizer) {
@@ -404,17 +396,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     @objc func pinched(_ gesture: UIPinchGestureRecognizer) {
         delegate?.cameraInputControllerPinched(gesture: gesture)
-    }
-    
-    @objc func swiped(_ gesture: UISwipeGestureRecognizer) {
-        switch gesture.direction {
-        case .left:
-            filteredInputViewController?.applyNextFilter()
-        case .right:
-            filteredInputViewController?.applyPreviousFilter()
-        default:
-            assertionFailure("This UISwipeGestureRecognizer only supports left and right swipe directions.")
-        }
     }
 
     private func currentResolution() -> CGSize {

@@ -15,7 +15,8 @@ struct FilterFactory {
     static func createFilter(type: FilterType, glContext: EAGLContext?) -> FilterProtocol {
         var newFilter: FilterProtocol
         switch type {
-        case .passthrough:
+        case .passthrough: fallthrough
+        case .off:
             newFilter = Filter(glContext: glContext)
         case .emInterference:
             newFilter = EMInterferenceFilter(glContext: glContext)
@@ -41,7 +42,7 @@ struct FilterFactory {
             newFilter = LightLeaksFilter(glContext: glContext)
         case .wavePool:
             newFilter = WavePoolFilter(glContext: glContext)
-        case .magna:
+        case .manga:
             newFilter = MangaFilter(glContext: glContext)
         case .toon:
             newFilter = ToonFilter(glContext: glContext)
