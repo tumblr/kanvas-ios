@@ -514,27 +514,27 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipStartedMoving() {
         performUIUpdate { [weak self] in
+            self?.cameraView.updateUI(forDraggingClip: true)
             self?.modeAndShootController.showTrashClosed(true)
             self?.clipsController.hidePreviewButton()
-            self?.cameraView.updateUI(forDraggingClip: true)
         }
     }
 
     func mediaClipFinishedMoving() {
         analyticsProvider?.logMovedClip()
         performUIUpdate { [weak self] in
+            self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.showTrashClosed(false)
             self?.clipsController.showPreviewButton()
-            self?.cameraView.updateUI(forDraggingClip: false)
         }
     }
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegment(at: index)
         performUIUpdate { [weak self] in
+            self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.showTrashOpened(false)
             self?.clipsController.showPreviewButton()
-            self?.cameraView.updateUI(forDraggingClip: false)
             self?.updateLastClipPreview()
         }
         analyticsProvider?.logDeleteSegment()
