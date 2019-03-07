@@ -1,0 +1,6 @@
+framework module SharedUI {
+  umbrella header "SharedUI-umbrella.h"
+
+  export *
+  module * { export * }
+}

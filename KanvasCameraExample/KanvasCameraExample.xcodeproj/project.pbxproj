@@ -569,12 +569,14 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework",
+				"${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework",
 				"${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework",
 				"${BUILT_PRODUCTS_DIR}/Utils/Utils.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KanvasCamera.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SharedUI.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TumblrTheme.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Utils.framework",
 			);
@@ -627,6 +629,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework",
+				"${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework",
 				"${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework",
 				"${BUILT_PRODUCTS_DIR}/Utils/Utils.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
@@ -634,6 +637,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KanvasCamera.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SharedUI.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TumblrTheme.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Utils.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",

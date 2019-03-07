@@ -4,6 +4,7 @@ use_frameworks!
 target 'KanvasCameraExample' do
     pod 'KanvasCamera', :path => '../'
     pod 'TumblrTheme', :path => '../../TumblrTheme'
+    pod 'SharedUI', :path => '../../SharedUI'
     pod 'Utils', :path => '../../Utils'
 end
 
