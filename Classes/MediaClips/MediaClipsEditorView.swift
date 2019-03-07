@@ -10,9 +10,10 @@ import TumblrTheme
 
 private struct MediaClipsEditorViewConstants {
     static let animationDuration: TimeInterval = 0.5
-    static let buttonHorizontalMargin: CGFloat = 28
+    static let buttonHorizontalMargin: CGFloat = 16
     static let buttonRadius: CGFloat = 25
     static let nextButtonSize: CGFloat = 49
+    static let nextButtonCenterYOffset: CGFloat = 3
     static let topPadding: CGFloat = 6
     static let bottomPadding: CGFloat = 6
 }
@@ -100,7 +101,7 @@ private extension MediaClipsEditorView {
             nextButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
             nextButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.nextButtonSize),
             nextButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.nextButtonSize),
-            nextButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
+            nextButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor, constant: -MediaClipsEditorViewConstants.nextButtonCenterYOffset)
         ])
     }
 
