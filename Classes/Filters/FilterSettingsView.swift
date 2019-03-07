@@ -58,7 +58,7 @@ final class FilterSettingsView: IgnoreTouchesView {
 // MARK: - UI Layout
 private extension FilterSettingsView {
     
-    private func setUpViews() {
+    func setUpViews() {
         setUpCollection()
         setUpVisibilityButton()
     }
@@ -74,7 +74,7 @@ private extension FilterSettingsView {
         ])
     }
     
-    private func setUpVisibilityButton() {
+    func setUpVisibilityButton() {
         addSubview(visibilityButton)
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

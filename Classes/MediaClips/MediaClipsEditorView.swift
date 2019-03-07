@@ -64,9 +64,21 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     
     // MARK: - Public interface
     
+    /// shows or hides the complete view
+    ///
+    /// - Parameter show: true to show, false to hide
     func show(_ enabled: Bool) {
         UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
             self?.alpha = enabled ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the preview button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showPreviewButton(_ show: Bool) {
+        UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
+            self?.previewButton.alpha = show ? 1 : 0
         }
     }
 }
