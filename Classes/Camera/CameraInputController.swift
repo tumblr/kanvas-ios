@@ -37,6 +37,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
+    /// Current applied filter type
+    var currentFilterType: FilterType? {
+        return filteredInputViewController?.currentFilter
+    }
+
     private lazy var filteredInputViewController: FilteredInputViewController? = {
         if settings.features.openGLPreview {
             return FilteredInputViewController(delegate: self, settings: settings)
