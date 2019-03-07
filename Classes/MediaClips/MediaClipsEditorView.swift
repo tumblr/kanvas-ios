@@ -42,7 +42,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.clipsToBounds = false
 
         nextButton = UIButton()
-        nextButton.accessibilityIdentifier = "Media Clips Preview Button"
+        nextButton.accessibilityIdentifier = "Media Clips Next Button"
         super.init(frame: .zero)
         
         clipsToBounds = false
