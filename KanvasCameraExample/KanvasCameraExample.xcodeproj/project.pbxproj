@@ -50,6 +50,7 @@
 		764AC4802223E07B005C82EC /* FilterInstancesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */; };
 		764AC4822223E3CF005C82EC /* FilterFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC4812223E3CF005C82EC /* FilterFactoryTests.swift */; };
 		764AC476221D86A2005C82EC /* GLUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764AC475221D86A2005C82EC /* GLUTests.swift */; };
+		7669B5A82230E548000D3EB5 /* UIImage+PixelBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7669B5A72230E548000D3EB5 /* UIImage+PixelBufferTests.swift */; };
 		76826A0E2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76826A0B2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift */; };
 		76BC5BAE220CCFF2007A9289 /* Array+MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */; };
 		76BC5BAF220CCFF2007A9289 /* ClosedRange+ClampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BC5BAD220CCFF2007A9289 /* ClosedRange+ClampTests.swift */; };
@@ -144,6 +145,7 @@
 		764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterInstancesTests.swift; sourceTree = "<group>"; };
 		764AC4812223E3CF005C82EC /* FilterFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterFactoryTests.swift; sourceTree = "<group>"; };
 		764AC475221D86A2005C82EC /* GLUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLUTests.swift; sourceTree = "<group>"; };
+		7669B5A72230E548000D3EB5 /* UIImage+PixelBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+PixelBufferTests.swift"; sourceTree = "<group>"; };
 		76826A0B2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+FlipLeftMirroredTests.swift"; sourceTree = "<group>"; };
 		76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+MoveTests.swift"; sourceTree = "<group>"; };
 		76BC5BAD220CCFF2007A9289 /* ClosedRange+ClampTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ClosedRange+ClampTests.swift"; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */,
 				76BC5BAD220CCFF2007A9289 /* ClosedRange+ClampTests.swift */,
 				76826A0B2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift */,
+				7669B5A72230E548000D3EB5 /* UIImage+PixelBufferTests.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -695,6 +698,7 @@
 				652DFA1922281F00007B1EF5 /* FilterSettingsViewTests.swift in Sources */,
 				0EAE0CAA2139A9AA004CD7FF /* ModalViewModelTests.swift in Sources */,
 				764AC46A221D84B5005C82EC /* FilterTests.swift in Sources */,
+				7669B5A82230E548000D3EB5 /* UIImage+PixelBufferTests.swift in Sources */,
 				65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */,
 				652DFA1722281F00007B1EF5 /* FilterCollectionControllerTests.swift in Sources */,
 				0EAE0CAC2139A9AA004CD7FF /* ModalPresentationControllerTests.swift in Sources */,
