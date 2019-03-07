@@ -45,8 +45,10 @@ private struct ShootButtonViewConstants {
     static let borderWidth: CGFloat = 3
     static let innerCircleImageWidth: CGFloat = 64
     static let outerCircleImageWidth: CGFloat = 95 + borderWidth
-    static let trashIconSize: CGFloat = 33
+    static let trashClosedIconSize: CGFloat = 33
+    static let trashOpenedIconSize: CGFloat = 38
     static let trashBackgroundImageWidth: CGFloat = 98
+    static let trashOpenedCenterYOffset: CGFloat = 2.5
     static let longPressMinimumDuration: CFTimeInterval = 0.5
     static let buttonWidth: CGFloat = (imageWidth + 15) * 2
     static let buttonSizeAnimationDuration: TimeInterval = 0.2
@@ -252,8 +254,8 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         trashClosed.clipsToBounds = true
         trashClosed.image = KanvasCameraImages.trashClosed
         NSLayoutConstraint.activate([
-            trashClosed.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashIconSize),
-            trashClosed.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashIconSize),
+            trashClosed.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashClosedIconSize),
+            trashClosed.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashClosedIconSize),
             trashClosed.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             trashClosed.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
         ])
@@ -268,10 +270,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         trashOpened.clipsToBounds = true
         trashOpened.image = KanvasCameraImages.trashOpened
         NSLayoutConstraint.activate([
-            trashOpened.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashIconSize),
-            trashOpened.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashIconSize),
+            trashOpened.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashOpenedIconSize),
+            trashOpened.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashOpenedIconSize),
             trashOpened.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            trashOpened.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            trashOpened.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor, constant: -ShootButtonViewConstants.trashOpenedCenterYOffset)
         ])
         
         showTrashOpened(false)
@@ -529,18 +531,18 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         }
     }
 
+    /// shows or hides the trash icon closed
     ///
-    ///
-    /// - Parameter show:
+    /// - Parameter show: true to show, false to hide
     func showTrashClosed(_ show: Bool) {
         UIView.animate(withDuration: ShootButtonViewConstants.animationDuration) {
             self.trashClosed.alpha = show ? 1 : 0
         }
     }
     
+    /// shows or hides the trash icon opened with its red background
     ///
-    ///
-    /// - Parameter show:
+    /// - Parameter show: true to show, false to hide
     func showTrashOpened(_ show: Bool) {
         UIView.animate(withDuration: ShootButtonViewConstants.animationDuration) {
             self.trashOpened.alpha = show ? 1 : 0
