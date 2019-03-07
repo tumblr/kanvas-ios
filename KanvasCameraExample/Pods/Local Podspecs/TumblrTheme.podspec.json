@@ -18,5 +18,10 @@
     "Foundation",
     "UIKit"
   ],
-  "source_files": "Source/*.{h,m,swift}"
+  "source_files": "Source/*.{h,m,swift}",
+  "dependencies": {
+    "Utils": [
+
+    ]
+  }
 }

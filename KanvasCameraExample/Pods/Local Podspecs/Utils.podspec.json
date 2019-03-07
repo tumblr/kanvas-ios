@@ -1,0 +1,21 @@
+{
+  "name": "Utils",
+  "version": "1.0.0",
+  "summary": "CoreTumblr free shared code",
+  "license": "Copyright 2018 Tumblr, Inc.",
+  "authors": {
+    "Tumblr iOS Team": "ios-team@tumblr.com"
+  },
+  "source": {
+    "path": "."
+  },
+  "homepage": "https://github.tumblr.net/TumblrMobile/orangina",
+  "platforms": {
+    "ios": "11.0"
+  },
+  "requires_arc": true,
+  "frameworks": [
+    "Foundation"
+  ],
+  "source_files": "Source/**/*.{swift}"
+}
