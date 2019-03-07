@@ -5,11 +5,13 @@
 //
 
 @testable import KanvasCamera
+@testable import SharedUI
 import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
 
+// TODO: This should be moved to SharedUI
 final class EasyTipViewTests: FBSnapshotTestCase {
     
     override func setUp() {
