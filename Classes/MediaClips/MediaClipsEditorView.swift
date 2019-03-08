@@ -15,7 +15,7 @@ private struct MediaClipsEditorViewConstants {
     static let nextButtonSize: CGFloat = 49
     static let nextButtonCenterYOffset: CGFloat = 3
     static let topPadding: CGFloat = 6
-    static let bottomPadding: CGFloat = 6
+    static let bottomPadding: CGFloat = 6 + (Device.isIPhoneX ? 24 : 0)
 }
 
 protocol MediaClipsEditorViewDelegate: class {
