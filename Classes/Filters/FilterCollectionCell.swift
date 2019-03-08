@@ -29,7 +29,7 @@ final class FilterCollectionCell: UICollectionViewCell {
     private var cellHeightConstraint: NSLayoutConstraint?
     private var cellWidthConstraint: NSLayoutConstraint?
     
-    private let circleView = UIImageView()
+    private weak var circleView: UIImageView?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -46,41 +46,44 @@ final class FilterCollectionCell: UICollectionViewCell {
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
         guard item.type != .passthrough else { return }
-        circleView.image = KanvasCameraImages.filterTypes[item.type] ?? nil
-        circleView.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
+        circleView?.image = KanvasCameraImages.filterTypes[item.type] ?? nil
+        circleView?.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
     }
     
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        circleView.image = nil
-        circleView.backgroundColor = nil
+        circleView?.image = nil
+        circleView?.backgroundColor = nil
     }
     
     // MARK: - Layout
     
     private func setUpView() {
-        contentView.addSubview(circleView)
-        circleView.accessibilityIdentifier = "Filter Cell View"
-        circleView.translatesAutoresizingMaskIntoConstraints = false
-        circleView.contentMode = .scaleAspectFill
-        circleView.clipsToBounds = true
-        circleView.layer.masksToBounds = true
-        circleView.layer.cornerRadius = FilterCollectionCellConstants.circleDiameter / 2
-        circleView.layer.borderWidth = 3 * (FilterCollectionCellConstants.circleDiameter/FilterCollectionCellConstants.circleMaxDiameter)
-        circleView.layer.borderColor = UIColor.white.cgColor
+        let imageView = UIImageView()
+        contentView.addSubview(imageView)
+        imageView.accessibilityIdentifier = "Filter Cell View"
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = FilterCollectionCellConstants.circleDiameter / 2
+        imageView.layer.borderWidth = 3 * (FilterCollectionCellConstants.circleDiameter/FilterCollectionCellConstants.circleMaxDiameter)
+        imageView.layer.borderColor = UIColor.white.cgColor
         
-        let heightConstraint = circleView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
-        let widthConstraint = circleView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
+        let heightConstraint = imageView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
+        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
         NSLayoutConstraint.activate([
-            circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
             heightConstraint,
             widthConstraint
         ])
         
         cellHeightConstraint = heightConstraint
         cellWidthConstraint = widthConstraint
+        
+        circleView = imageView
         setNeedsLayout()
         layoutIfNeeded()
     }
@@ -91,11 +94,12 @@ final class FilterCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter size: the new size for the circle
     private func changeSize(size: CGFloat) {
+        guard let imageView = circleView else { return }
         cellWidthConstraint?.constant = size
         cellHeightConstraint?.constant = size
         setNeedsLayout()
         layoutIfNeeded()
-        circleView.layer.cornerRadius = circleView.frame.height / 2
+        imageView.layer.cornerRadius = imageView.frame.height / 2
     }
     
     /// Sets the circle with smallest size (standard size)
