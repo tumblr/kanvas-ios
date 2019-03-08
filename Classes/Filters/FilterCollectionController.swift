@@ -171,25 +171,23 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         let point: CGPoint = CGPoint(x: x, y: y)
         return filterCollectionView.collectionView.indexPathForItem(at: point)
     }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if let indexPath = indexPathAtCenter(), !decelerate {
-            scrollToOptionAt(indexPath.item)
+
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if velocity.x == 0 {
+            if let indexPath = indexPathAtCenter() {
+                scrollToOptionAt(indexPath.item)
+            }
+        } else {
+            let targetOffset = targetContentOffset.pointee
+            let itemWidth = FilterCollectionCell.width
+            let extra = targetOffset.x.truncatingRemainder(dividingBy: itemWidth)
+            let newTargetOffset = targetOffset.x - extra
+            targetContentOffset.pointee.x = newTargetOffset
+            let itemIndex = Int(newTargetOffset / itemWidth)
+            delegate?.didSelectFilter(filterItems[itemIndex])
         }
     }
-    
-    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-        if let indexPath = indexPathAtCenter() {
-            scrollToOptionAt(indexPath.item)
-        }
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if let indexPath = indexPathAtCenter() {
-            scrollToOptionAt(indexPath.item)
-        }
-    }
-    
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let indexPath = indexPathAtCenter() {
             changeSize(indexPath)
