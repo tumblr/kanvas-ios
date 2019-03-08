@@ -18,6 +18,7 @@ protocol MediaClipsCollectionCellDelegate {
 }
 
 private struct MediaClipsCollectionCellConstants {
+    static let animationDuration: TimeInterval = 0.1
     static let cellPadding: CGFloat = 2.9
     static let clipHeight: CGFloat = 64
     static let clipWidth: CGFloat = 45
@@ -90,6 +91,18 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     func bindTo(_ item: MediaClip) {
         clipImage.image = item.representativeFrame
         clipLabel.text = item.overlayText
+    }
+    
+    // MARK: - Public interface
+    
+    /// shows or hides the cell
+    ///
+    /// - Parameter show: true to show, false to hide
+    func show(_ show: Bool) {
+        UIView.animate(withDuration: MediaClipsCollectionCellConstants.animationDuration) { [weak self] in
+            self?.alpha = show ? 1 : 0
+            self?.contentView.alpha = show ? 1 : 0
+        }
     }
 }
 
