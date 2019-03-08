@@ -26,8 +26,6 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     static let minimumHeight = FilterCollectionCellConstants.minimumHeight
     static let width = FilterCollectionCellConstants.width
-    private var cellHeightConstraint: NSLayoutConstraint?
-    private var cellWidthConstraint: NSLayoutConstraint?
     
     private weak var circleView: UIImageView?
     
@@ -70,22 +68,15 @@ final class FilterCollectionCell: UICollectionViewCell {
         imageView.layer.cornerRadius = FilterCollectionCellConstants.circleDiameter / 2
         imageView.layer.borderWidth = 3 * (FilterCollectionCellConstants.circleDiameter/FilterCollectionCellConstants.circleMaxDiameter)
         imageView.layer.borderColor = UIColor.white.cgColor
-        
-        let heightConstraint = imageView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
-        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
+
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            heightConstraint,
-            widthConstraint
+            imageView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter),
+            imageView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
         ])
         
-        cellHeightConstraint = heightConstraint
-        cellWidthConstraint = widthConstraint
-        
         circleView = imageView
-        setNeedsLayout()
-        layoutIfNeeded()
     }
     
     // MARK: - Animations
@@ -93,26 +84,21 @@ final class FilterCollectionCell: UICollectionViewCell {
     /// Changes the circle size
     ///
     /// - Parameter size: the new size for the circle
-    private func changeSize(size: CGFloat) {
-        guard let imageView = circleView else { return }
-        cellWidthConstraint?.constant = size
-        cellHeightConstraint?.constant = size
-        setNeedsLayout()
-        layoutIfNeeded()
-        imageView.layer.cornerRadius = imageView.frame.height / 2
+    private func changeSize(scale: CGFloat) {
+        circleView?.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
     /// Sets the circle with smallest size (standard size)
     func setStandardSize() {
-        changeSize(size: FilterCollectionCellConstants.circleDiameter)
+        changeSize(scale: 1)
     }
     
     /// Changes the circle size according to a percentage
     ///
     /// - Parameter percent: 0.0 is the smallest size (standard size), while 1.0 is the biggest size
     func setSize(_ percent: CGFloat) {
-        let safePercent = (0...1).clamp(percent)
-        let size = (FilterCollectionCellConstants.circleMaxDiameter - FilterCollectionCellConstants.circleDiameter) * safePercent + FilterCollectionCellConstants.circleDiameter
-        changeSize(size: size)
+        let maxIncrement = (FilterCollectionCellConstants.circleMaxDiameter - FilterCollectionCellConstants.circleDiameter) / FilterCollectionCellConstants.circleMaxDiameter
+        let scale = 1 + percent * maxIncrement
+        changeSize(scale: scale)
     }
 }
