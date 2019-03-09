@@ -10,7 +10,7 @@ import UIKit
 private struct FilterCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
     static let circleDiameter: CGFloat = 72
-    static let circleMaxDiameter: CGFloat = 92
+    static let circleMaxDiameter: CGFloat = 96.1
     
     static var minimumHeight: CGFloat {
         return circleMaxDiameter
