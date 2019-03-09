@@ -81,9 +81,9 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     // MARK: - Animations
     
-    /// Changes the circle size
+    /// Changes the circle size with a scale value
     ///
-    /// - Parameter size: the new size for the circle
+    /// - Parameter scale: the new scale for the circle
     private func changeSize(scale: CGFloat) {
         circleView?.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
