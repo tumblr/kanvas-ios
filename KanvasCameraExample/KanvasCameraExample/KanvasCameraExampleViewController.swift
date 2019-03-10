@@ -15,25 +15,67 @@ final class KanvasCameraExampleViewController: UIViewController {
 
     private let button = UIButton(type: .custom)
     private var shouldShowWelcomeTooltip = true
+    private var firstLaunch = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .black
+        view.backgroundColor = .white
         view.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        button.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
 
-        button.setTitle("Start camera!", for: .normal)
-        button.addTarget(self, action: #selector(cameraSelected), for: .touchUpInside)
+        setupButton()
+
+        button.isUserInteractionEnabled = false
     }
 
-    @objc func cameraSelected() {
+    override func viewDidAppear(_ animated: Bool) {
+        launchCameraFirstTime()
+    }
+
+    @objc private func cameraSelected() {
+        launchCamera(animated: true)
+    }
+
+    private func launchCameraFirstTime() {
+        if firstLaunch {
+            firstLaunch = false
+            launchCamera(animated: false)
+
+            button.addTarget(self, action: #selector(cameraSelected), for: .touchUpInside)
+        }
+    }
+
+    private func launchCamera(animated: Bool = true) {
         let settings = customCameraSettings()
         let controller = CameraController(settings: settings, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = self
-        self.present(controller, animated: true, completion: .none)
+        self.present(controller, animated: animated, completion: nil)
+    }
+
+    private func setupButton() {
+
+        // layout
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        button.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+        // border
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.borderWidth = 2
+        button.layer.cornerRadius = 25
+        button.layer.masksToBounds = true
+
+        // background
+        button.setBackgroundImage(UIImage(color: .white), for: .normal)
+        button.setBackgroundImage(UIImage(color: UIColor(hex: 0xEEEEEE)), for: .highlighted)
+
+        // title
+        button.setTitle("Loading...", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.black, for: .highlighted)
+        button.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
     }
 
     /// This returns the customized settings for the CameraController
@@ -67,20 +109,35 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
     func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
         if let media = media {
-            switch media {
-            case .image(let url):
-                if let image = UIImage(contentsOfFile: url.path) {
-                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                }
-            case .video(let url):
-                UISaveVideoAtPathToSavedPhotosAlbum(url.path, nil, nil, nil)
-            }
+            save(media: media)
         }
-        dismiss(animated: true, completion: .none)
+        else {
+            assertionFailure("Failed to create media")
+        }
+        dismissCamera()
     }
 
     func dismissButtonPressed() {
-        button.setTitle("It's okay. Try again later!", for: .normal)
+        dismissCamera()
+    }
+
+    private func save(media: KanvasCameraMedia) {
+        switch media {
+        case .image(let url):
+            if let image = UIImage(contentsOfFile: url.path) {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            }
+            else {
+                assertionFailure("Failed to load captured photo")
+            }
+        case .video(let url):
+            UISaveVideoAtPathToSavedPhotosAlbum(url.path, nil, nil, nil)
+        }
+    }
+
+    private func dismissCamera() {
+        button.setTitle("Start camera", for: .normal)
+        button.isUserInteractionEnabled = true
         dismiss(animated: true, completion: .none)
     }
 }
