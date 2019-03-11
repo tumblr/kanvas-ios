@@ -27,6 +27,8 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
         launchCameraFirstTime()
     }
 
