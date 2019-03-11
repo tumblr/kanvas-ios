@@ -7,9 +7,20 @@
 import Accelerate
 import AVFoundation
 import Foundation
+import VideoToolbox
 
 extension UIImage {
-    
+
+    /// Create a new UIImage from a pixel buffer
+    public convenience init?(pixelBuffer: CVPixelBuffer) {
+        var image: CGImage?
+        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &image)
+        guard let cgImage = image else {
+            return nil
+        }
+        self.init(cgImage: cgImage)
+    }
+
     /// Method to write the image data into a pixel buffer
     ///
     /// - Returns: An optional pixel buffer, can be nil if failed to create

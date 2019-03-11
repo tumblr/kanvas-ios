@@ -28,7 +28,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
 
     /// Filters
     private weak var delegate: FilteredInputViewControllerDelegate?
-    private var currentFilter: FilterType = .passthrough
+    private(set) var currentFilter: FilterType = .passthrough
     
     init(delegate: FilteredInputViewControllerDelegate? = nil, settings: CameraSettings) {
         self.delegate = delegate
@@ -93,8 +93,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     func filterImageWithCurrentPipeline(image: UIImage?) -> UIImage? {
         if let uImage = image, let pixelBuffer = uImage.pixelBuffer() {
             if let filteredPixelBuffer = renderer.processSingleImagePixelBuffer(pixelBuffer) {
-                let ciImage = CIImage(cvPixelBuffer: filteredPixelBuffer)
-                return UIImage(ciImage: ciImage)
+                return UIImage(pixelBuffer: filteredPixelBuffer)
             }
         }
         NSLog("failed to filter image")

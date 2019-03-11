@@ -21,7 +21,7 @@ final class GifVideoOutputHandler: NSObject {
     private let gifQueue = DispatchQueue(label: GifHandlerConstants.queue)
     private let videoOutput: AVCaptureVideoDataOutput?
     
-    private weak var currentVideoSampleBuffer: CMSampleBuffer?
+    private var currentVideoSampleBuffer: CMSampleBuffer?
     private weak var currentVideoPixelBuffer: CVPixelBuffer?
 
     private var gifLink: CADisplayLink?

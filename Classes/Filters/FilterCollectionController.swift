@@ -43,7 +43,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
             FilterItem(type: .lightLeaks),
             FilterItem(type: .film),
             FilterItem(type: .grayscale),
-            FilterItem(type: .magna),
+            FilterItem(type: .manga),
             FilterItem(type: .toon),
         ]
         initialCell = 0
