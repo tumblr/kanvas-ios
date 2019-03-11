@@ -24,8 +24,6 @@ final class KanvasCameraExampleViewController: UIViewController {
         view.addSubview(button)
 
         setupButton()
-
-        button.isUserInteractionEnabled = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -53,6 +51,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     private func setupButton() {
+        button.isUserInteractionEnabled = false
 
         // layout
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -60,12 +59,6 @@ final class KanvasCameraExampleViewController: UIViewController {
         button.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-
-        // border
-        button.layer.borderColor = UIColor.black.cgColor
-        button.layer.borderWidth = 2
-        button.layer.cornerRadius = 25
-        button.layer.masksToBounds = true
 
         // background
         button.setBackgroundImage(UIImage(color: .white), for: .normal)
@@ -76,6 +69,17 @@ final class KanvasCameraExampleViewController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.setTitleColor(.black, for: .highlighted)
         button.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
+    }
+
+    private func resetButton() {
+        button.isUserInteractionEnabled = true
+
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.borderWidth = 2
+        button.layer.cornerRadius = 25
+        button.layer.masksToBounds = true
+
+        button.setTitle("Start camera", for: .normal)
     }
 
     /// This returns the customized settings for the CameraController
@@ -136,8 +140,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     }
 
     private func dismissCamera() {
-        button.setTitle("Start camera", for: .normal)
-        button.isUserInteractionEnabled = true
+        resetButton()
         dismiss(animated: true, completion: .none)
     }
 }
