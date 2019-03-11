@@ -94,10 +94,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     /// - Parameters:
     ///   - baseColor: the color before recording
     init(baseColor: UIColor) {
+        pressBackgroundImageView = UIImageView()
+        pressCircleImageView = UIImageView()
         containerView = UIView()
         imageView = UIImageView()
-        pressCircleImageView = UIImageView()
-        pressBackgroundImageView = UIImageView()
         borderView = UIView()
         trashView = UIImageView()
         tapRecognizer = UITapGestureRecognizer()
@@ -112,8 +112,8 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         backgroundColor = .clear
         isUserInteractionEnabled = true
 
-        setUpPressCircleImage(pressCircleImageView)
         setUpPressBackgroundImage(pressBackgroundImageView)
+        setUpPressCircleImage(pressCircleImageView)
         setUpContainerView()
         setUpImageView(imageView)
         setUpBorderView()
