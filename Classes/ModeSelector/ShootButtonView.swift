@@ -264,16 +264,12 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
         switch trigger {
         case .tap:
+            animateTapEffect()
             if let timeLimit = maximumTime {
                 animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
             }
         case .tapAndHold:
-            showBorderView(show: false, animated: false)
-            showShutterButtonPressed(show: true, animated: false)
-            performUIUpdateAfter(deadline: .now() + 0.1) { [unowned self] in
-                self.showBorderView(show: true, animated: false)
-                self.showShutterButtonPressed(show: false, animated: true)
-            }
+            animateTapEffect()
         case .hold: return // Do nothing on tap
         }
         delegate?.shootButtonViewDidTap()
@@ -424,6 +420,16 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         }, completion: { _ in
             self.isUserInteractionEnabled = true
         })
+    }
+    
+    /// Shows the two concentric circles for a short period of time
+    private func animateTapEffect() {
+        showBorderView(show: false, animated: false)
+        showShutterButtonPressed(show: true, animated: false)
+        performUIUpdateAfter(deadline: .now() + 0.1) { [unowned self] in
+            self.showBorderView(show: true, animated: false)
+            self.showShutterButtonPressed(show: false, animated: true)
+        }
     }
     
     // MARK: - Public interface
