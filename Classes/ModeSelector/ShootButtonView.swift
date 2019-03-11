@@ -112,10 +112,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         backgroundColor = .clear
         isUserInteractionEnabled = true
 
-        setUpContainerView()
-        setUpImageView(imageView)
         setUpPressCircleImage(pressCircleImageView)
         setUpPressBackgroundImage(pressBackgroundImageView)
+        setUpContainerView()
+        setUpImageView(imageView)
         setUpBorderView()
         setUpTrashView()
         setUpRecognizers()
@@ -152,7 +152,43 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         containerView.layer.cornerRadius = containerView.bounds.width / 2
         borderView.layer.cornerRadius = containerView.bounds.width / 2
     }
-
+    
+    private func setUpPressBackgroundImage(_ imageView: UIImageView) {
+        imageView.accessibilityIdentifier = "Camera Shoot Button Press Background Circle Image"
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        
+        addSubview(imageView)
+        imageView.image = KanvasCameraImages.circleImage
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let distanceToCenter = ShootButtonViewConstants.outerCircleImageWidth
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalToConstant: distanceToCenter),
+            imageView.widthAnchor.constraint(equalToConstant: distanceToCenter),
+            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            ])
+        showPressBackgroundCircle(show: false)
+    }
+    
+    private func setUpPressCircleImage(_ imageView: UIImageView) {
+        imageView.accessibilityIdentifier = "Camera Shoot Button Press Inner Circle Image"
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        
+        addSubview(imageView)
+        imageView.image = KanvasCameraImages.circleImage
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.innerCircleImageWidth)
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
+            widthConstraint,
+            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            ])
+        showPressInnerCircle(show: false)
+    }
+    
     private func setUpContainerView() {
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -182,42 +218,6 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
             imageView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor)
         ])
         imageWidthConstraint = widthConstraint
-    }
-
-    private func setUpPressCircleImage(_ imageView: UIImageView) {
-        imageView.accessibilityIdentifier = "Camera Shoot Button Press Inner Circle Image"
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        
-        addSubview(imageView)
-        imageView.image = KanvasCameraImages.circleImage
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.innerCircleImageWidth)
-        NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
-            widthConstraint,
-            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
-            ])
-        showPressInnerCircle(show: false)
-    }
-    
-    private func setUpPressBackgroundImage(_ imageView: UIImageView) {
-        imageView.accessibilityIdentifier = "Camera Shoot Button Press Background Circle Image"
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        
-        addSubview(imageView)
-        imageView.image = KanvasCameraImages.circleImage
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        let distanceToCenter = ShootButtonViewConstants.outerCircleImageWidth
-        NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: distanceToCenter),
-            imageView.widthAnchor.constraint(equalToConstant: distanceToCenter),
-            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
-            ])
-        showPressBackgroundCircle(show: false)
     }
     
     private func setUpBorderView() {
@@ -341,14 +341,21 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         shape.lineJoin = CAShapeLayerLineJoin.bevel
         
         timeSegmentLayer.frame = containerView.bounds
-        timeSegmentLayer.colors = [.tumblrBrightRed,
+        timeSegmentLayer.colors = [.tumblrBrightOrange,
+                                   .tumblrBrightYellow,
+                                   .tumblrBrightGreen,
+                                   .tumblrBrightBlue,
+                                   .tumblrBrightPurple,
+                                   .tumblrBrightRed,
                                    .tumblrBrightPink,
                                    .tumblrBrightOrange,
                                    .tumblrBrightYellow,
                                    .tumblrBrightGreen,
                                    .tumblrBrightBlue,
                                    .tumblrBrightPurple,
-                                   .tumblrBrightRed]
+                                   .tumblrBrightRed,
+                                   .tumblrBrightPink,
+                                   .tumblrBrightOrange]
         timeSegmentLayer.mask = shape
         containerView.layer.addSublayer(timeSegmentLayer)
         
