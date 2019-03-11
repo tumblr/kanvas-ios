@@ -49,7 +49,7 @@ struct KanvasCameraImages {
         .lightLeaks: UIImage.imageFromCameraBundle(named: "Rainbow"),
         .film: UIImage.imageFromCameraBundle(named: "Noise"),
         .grayscale: UIImage.imageFromCameraBundle(named: "BW"),
-        .magna: nil,
+        .manga: nil,
         .toon: nil,
     ]
 }

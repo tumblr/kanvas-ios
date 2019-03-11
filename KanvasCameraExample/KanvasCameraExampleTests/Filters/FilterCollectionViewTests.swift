@@ -31,7 +31,7 @@ final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDeleg
             FilterItem(type: .lightLeaks),
             FilterItem(type: .film),
             FilterItem(type: .grayscale),
-            FilterItem(type: .magna),
+            FilterItem(type: .manga),
             FilterItem(type: .toon),
         ]
         

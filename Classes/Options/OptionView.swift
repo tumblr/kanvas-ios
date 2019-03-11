@@ -23,8 +23,6 @@ final class OptionView: UIView {
         button = ExtendedButton(inset: inset)
         button.contentMode = .scaleAspectFit
         button.setImage(image, for: .normal)
-        button.contentHorizontalAlignment = .fill
-        button.contentVerticalAlignment = .fill
         button.imageView?.contentMode = .scaleAspectFit
         button.applyShadows()
         super.init(frame: .zero)
