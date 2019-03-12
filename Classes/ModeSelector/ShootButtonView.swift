@@ -353,22 +353,23 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         shape.lineJoin = CAShapeLayerLineJoin.bevel
         
         timeSegmentLayer.frame = containerView.bounds
-        timeSegmentLayer.colors = [.tumblrBrightOrange,
-                                   .tumblrBrightYellow,
-                                   .tumblrBrightGreen,
-                                   .tumblrBrightBlue,
+        timeSegmentLayer.colors = [.tumblrBrightBlue,
                                    .tumblrBrightPurple,
-                                   .tumblrBrightRed,
                                    .tumblrBrightPink,
+                                   .tumblrBrightRed,
                                    .tumblrBrightOrange,
                                    .tumblrBrightYellow,
                                    .tumblrBrightGreen,
                                    .tumblrBrightBlue,
                                    .tumblrBrightPurple,
-                                   .tumblrBrightRed,
                                    .tumblrBrightPink,
-                                   .tumblrBrightOrange]
+                                   .tumblrBrightRed,
+                                   .tumblrBrightOrange,
+                                   .tumblrBrightYellow,
+                                   .tumblrBrightGreen,
+                                   .tumblrBrightBlue]
         timeSegmentLayer.mask = shape
+        timeSegmentLayer.transform = CATransform3DMakeRotation(.pi / 2, 0.0, 0.0, 1.0)
         containerView.layer.addSublayer(timeSegmentLayer)
         
         let animateStrokeEnd = CABasicAnimation(keyPath: "strokeEnd")
@@ -390,8 +391,8 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
                        // Different from UIView's border, this isn't inner to the coordinate, but centered in it.
                        // So we need to subtract half the width to make it match the view's border.
                        radius: ShootButtonViewConstants.buttonWidth / 2 - ShootButtonViewConstants.borderWidth / 2,
-                       startAngle: -.pi / 2,
-                       endAngle: 3/2 * .pi,
+                       startAngle: -.pi,
+                       endAngle: .pi,
                        clockwise: true)
         return arcPath.cgPath
     }
