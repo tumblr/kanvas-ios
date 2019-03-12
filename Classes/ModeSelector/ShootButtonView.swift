@@ -15,7 +15,7 @@ import UIKit
 enum CaptureTrigger {
     case tap
     case hold
-    case tapAndHold
+    case tapAndHold(animateCircle: Bool)
 }
 
 /// Protocol to handle capture button user actions
@@ -265,10 +265,11 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         switch trigger {
         case .tap:
             animateTapEffect()
-            if let timeLimit = maximumTime {
-                animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
-            }
-        case .tapAndHold:
+            startCircleAnimation()
+        case .tapAndHold(animateCircle: true):
+            animateTapEffect()
+            startCircleAnimation()
+        case .tapAndHold(animateCircle: false):
             animateTapEffect()
         case .hold: return // Do nothing on tap
         }
@@ -276,7 +277,15 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
 
     @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        guard trigger == .hold || trigger == .tapAndHold else { return }
+        switch trigger {
+        case .hold, .tapAndHold:
+            longPress(recognizer: recognizer)
+        default:
+            break
+        }
+    }
+    
+    private func longPress(recognizer: UILongPressGestureRecognizer) {
         switch recognizer.state {
         case .began:
             updateForLongPress(started: true)
@@ -287,7 +296,14 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
             updateZoom(recognizer: recognizer)
         }
     }
-
+    
+    /// Starts the gradient animation based on the maximum time previously set
+    private func startCircleAnimation() {
+        if let timeLimit = maximumTime {
+            animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
+        }
+    }
+    
     private func updateZoom(recognizer: UILongPressGestureRecognizer) {
         let currentPoint = recognizer.location(in: containerView)
         delegate?.shootButtonDidZoom(currentPoint: currentPoint, gesture: recognizer)
@@ -324,7 +340,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         }
         buttonState = .neutral
     }
-
+    
     private func animateCircle(for time: TimeInterval, completion: @escaping () -> ()) {
         let shape = CAShapeLayer()
         shape.path = createPathForCircle()

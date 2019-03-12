@@ -189,8 +189,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
     private func triggerFor(_ mode: CameraMode) -> CaptureTrigger {
         switch mode {
             case .photo: return .tap
-            case .gif: return .tapAndHold
-            case .stopMotion: return .tapAndHold
+            case .gif: return .tapAndHold(animateCircle: true)
+            case .stopMotion: return .tapAndHold(animateCircle: false)
         }
     }
 }
