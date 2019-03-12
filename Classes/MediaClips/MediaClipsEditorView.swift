@@ -67,9 +67,9 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     /// shows or hides the complete view
     ///
     /// - Parameter show: true to show, false to hide
-    func show(_ enabled: Bool) {
+    func show(_ show: Bool) {
         UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
-            self?.alpha = enabled ? 1 : 0
+            self?.alpha = show ? 1 : 0
         }
     }
     
