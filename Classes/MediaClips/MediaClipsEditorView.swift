@@ -77,7 +77,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     /// - Parameter show: true to show, false to hide
     func showPreviewButton(_ show: Bool) {
         UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
-            self?.previewButton.alpha = show ? 1 : 0
+            self?.nextButton.alpha = show ? 1 : 0
         }
     }
 }
