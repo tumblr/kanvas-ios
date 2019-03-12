@@ -279,13 +279,13 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
         switch trigger {
         case .hold, .tapAndHold:
-            longPress(recognizer: recognizer)
+            onLongPress(recognizer: recognizer)
         default:
             break
         }
     }
     
-    private func longPress(recognizer: UILongPressGestureRecognizer) {
+    private func onLongPress(recognizer: UILongPressGestureRecognizer) {
         switch recognizer.state {
         case .began:
             updateForLongPress(started: true)
