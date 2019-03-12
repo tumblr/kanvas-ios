@@ -91,7 +91,7 @@ final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate
         dragFinished = true
     }
     
-    func previewButtonWasPressed() {
+    func nextButtonWasPressed() {
         
     }
 }
