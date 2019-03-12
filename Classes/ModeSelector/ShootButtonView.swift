@@ -369,7 +369,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
                                    .tumblrBrightGreen,
                                    .tumblrBrightBlue]
         timeSegmentLayer.mask = shape
-        timeSegmentLayer.transform = CATransform3DMakeRotation(.pi / 2, 0.0, 0.0, 1.0)
+        timeSegmentLayer.transform = CATransform3DMakeRotation(-.pi / 2, 0.0, 0.0, 1.0)
         containerView.layer.addSublayer(timeSegmentLayer)
         
         let animateStrokeEnd = CABasicAnimation(keyPath: "strokeEnd")
@@ -391,8 +391,8 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
                        // Different from UIView's border, this isn't inner to the coordinate, but centered in it.
                        // So we need to subtract half the width to make it match the view's border.
                        radius: ShootButtonViewConstants.buttonWidth / 2 - ShootButtonViewConstants.borderWidth / 2,
-                       startAngle: -.pi,
-                       endAngle: .pi,
+                       startAngle: 0,
+                       endAngle: 2 * .pi,
                        clockwise: true)
         return arcPath.cgPath
     }
