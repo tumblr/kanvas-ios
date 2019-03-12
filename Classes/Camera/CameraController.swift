@@ -552,7 +552,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         updateLastClipPreview()
     }
     
-    func previewButtonWasPressed() {
+    func nextButtonWasPressed() {
         showPreviewWithSegments(cameraInputController.segments())
         analyticsProvider?.logNextTapped()
     }

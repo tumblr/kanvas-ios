@@ -9,16 +9,15 @@ import UIKit
 
 private struct FilterCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
-    static let cellPadding: CGFloat = 12
     static let circleDiameter: CGFloat = 72
-    static let circleMaxDiameter: CGFloat = 92
+    static let circleMaxDiameter: CGFloat = 96.1
     
     static var minimumHeight: CGFloat {
         return circleMaxDiameter
     }
     
     static var width: CGFloat {
-        return circleMaxDiameter + 2 * cellPadding
+        return circleMaxDiameter
     }
 }
 
@@ -27,19 +26,8 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     static let minimumHeight = FilterCollectionCellConstants.minimumHeight
     static let width = FilterCollectionCellConstants.width
-    private var cellHeightConstraint: NSLayoutConstraint?
-    private var cellWidthConstraint: NSLayoutConstraint?
     
-    private let circleView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = FilterCollectionCellConstants.circleDiameter / 2
-        imageView.layer.borderWidth = 3 * (FilterCollectionCellConstants.circleDiameter/FilterCollectionCellConstants.circleMaxDiameter)
-        imageView.layer.borderColor = UIColor.white.cgColor
-        return imageView
-    }()
+    private weak var circleView: UIImageView?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -56,38 +44,61 @@ final class FilterCollectionCell: UICollectionViewCell {
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
         guard item.type != .passthrough else { return }
-        circleView.image = KanvasCameraImages.filterTypes[item.type] ?? nil
-        circleView.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
+        circleView?.image = KanvasCameraImages.filterTypes[item.type] ?? nil
+        circleView?.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
     }
     
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        circleView.image = nil
-        circleView.backgroundColor = nil
+        circleView?.image = nil
+        circleView?.backgroundColor = nil
     }
     
     // MARK: - Layout
     
     private func setUpView() {
-        contentView.addSubview(circleView)
-        circleView.accessibilityIdentifier = "Filter Cell View"
-        circleView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let heightConstraint = circleView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
-        let widthConstraint = circleView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
+        let imageView = UIImageView()
+        contentView.addSubview(imageView)
+        imageView.accessibilityIdentifier = "Filter Cell View"
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = FilterCollectionCellConstants.circleDiameter / 2
+        imageView.layer.borderWidth = 3 * (FilterCollectionCellConstants.circleDiameter/FilterCollectionCellConstants.circleMaxDiameter)
+        imageView.layer.borderColor = UIColor.white.cgColor
+
         NSLayoutConstraint.activate([
-            circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            circleView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: FilterCollectionCellConstants.cellPadding),
-            circleView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -FilterCollectionCellConstants.cellPadding),
-            circleView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.topAnchor),
-            circleView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.bottomAnchor),
-            heightConstraint,
-            widthConstraint
+            imageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter),
+            imageView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
         ])
         
-        cellHeightConstraint = heightConstraint
-        cellWidthConstraint = widthConstraint
+        circleView = imageView
+    }
+    
+    // MARK: - Animations
+    
+    /// Changes the circle scale
+    ///
+    /// - Parameter scale: the new scale for the circle, 1.0 is the standard size
+    private func setScale(_ scale: CGFloat) {
+        circleView?.transform = CGAffineTransform(scaleX: scale, y: scale)
+    }
+    
+    /// Sets the circle with standard size
+    func setStandardSize() {
+        setScale(1)
+    }
+    
+    /// Changes the circle size according to a percentage.
+    ///
+    /// - Parameter percent: 0.0 is the standard size, while 1.0 is the biggest size
+    func setSize(percent: CGFloat) {
+        let maxIncrement = (FilterCollectionCellConstants.circleMaxDiameter - FilterCollectionCellConstants.circleDiameter) / FilterCollectionCellConstants.circleMaxDiameter
+        let scale = 1 + percent * maxIncrement
+        setScale(scale)
     }
 }

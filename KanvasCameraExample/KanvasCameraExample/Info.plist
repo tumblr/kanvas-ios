@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Orangina Camera</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,10 +26,10 @@
 	<string>So you can take pictures, you know?</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>So you can record videos, you know?</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>So you can post photos, you know?</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>So you can save pictures, you know?</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>So you can post photos, you know?</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
