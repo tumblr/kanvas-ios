@@ -81,24 +81,25 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     // MARK: - Animations
     
-    /// Changes the circle size with a scale value
+    /// Changes the circle scale
     ///
-    /// - Parameter scale: the new scale for the circle
-    private func changeSize(scale: CGFloat) {
+    /// - Parameter scale: the new scale for the circle, 1.0 is the standard size
+    private func setScale(_ scale: CGFloat) {
         circleView?.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
     /// Sets the circle with smallest size (standard size)
     func setStandardSize() {
-        changeSize(scale: 1)
+        setScale(1)
     }
     
-    /// Changes the circle size according to a percentage
+    /// Changes the circle size according to a percentage.
+    ///
     ///
     /// - Parameter percent: 0.0 is the smallest size (standard size), while 1.0 is the biggest size
-    func setSize(_ percent: CGFloat) {
+    func setSize(percent: CGFloat) {
         let maxIncrement = (FilterCollectionCellConstants.circleMaxDiameter - FilterCollectionCellConstants.circleDiameter) / FilterCollectionCellConstants.circleMaxDiameter
         let scale = 1 + percent * maxIncrement
-        changeSize(scale: scale)
+        setScale(scale)
     }
 }

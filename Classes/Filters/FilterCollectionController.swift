@@ -214,7 +214,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
             let maxDistance = FilterCollectionCell.width / 2
             let distance = calculateDistanceFromCenter(cell: cell)
             let percent = (maxDistance - distance) / maxDistance
-            cell.setSize(percent)
+            cell.setSize(percent: percent)
         }
     }
     
