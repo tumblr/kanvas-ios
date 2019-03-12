@@ -15,6 +15,8 @@ protocol FilterCollectionControllerDelegate: class {
 /// Constants for Collection Controller
 private struct FilterCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.25
+    static let initialCell: Int = 0
+    static let section: Int = 0
 }
 
 /// Controller for handling the filter item collection.
@@ -22,8 +24,6 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     private lazy var filterCollectionView = FilterCollectionView()
     private var filterItems: [FilterItem]
-    private let initialCell: Int
-    private let section: Int
     
     weak var delegate: FilterCollectionControllerDelegate?
     
@@ -46,8 +46,6 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
             FilterItem(type: .manga),
             FilterItem(type: .toon),
         ]
-        initialCell = 0
-        section = 0
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -78,10 +76,10 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollToOptionAt(initialCell, animated: false)
+        scrollToOptionAt(FilterCollectionControllerConstants.initialCell, animated: false)
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
-        changeSize(IndexPath(item: initialCell, section: section))
+        changeSize(IndexPath(item: FilterCollectionControllerConstants.initialCell, section: FilterCollectionControllerConstants.section))
     }
     
     private func setUpView() {
@@ -160,7 +158,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     private func scrollToOptionAt(_ index: Int, animated: Bool = true) {
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
-        let indexPath = IndexPath(item: index, section: section)
+        let indexPath = IndexPath(item: index, section: FilterCollectionControllerConstants.section)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         delegate?.didSelectFilter(filterItems[indexPath.item])
     }
