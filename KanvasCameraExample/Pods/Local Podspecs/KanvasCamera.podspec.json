@@ -24,6 +24,9 @@
   "dependencies": {
     "TumblrTheme": [
 
+    ],
+    "SharedUI": [
+
     ]
   }
 }

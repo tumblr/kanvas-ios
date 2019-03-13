@@ -154,11 +154,13 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Utils/Utils.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Utils/Utils.framework"
 fi
