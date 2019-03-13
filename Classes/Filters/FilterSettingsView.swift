@@ -10,7 +10,7 @@ import UIKit
 private struct FilterSettingsViewConstants {
     static let animationDuration: TimeInterval = 0.25
     static let iconSize: CGFloat = 39
-    static let padding: CGFloat = 12
+    static let padding: CGFloat = 4
     static var height: CGFloat = FilterCollectionView.height + padding + iconSize
 }
 
