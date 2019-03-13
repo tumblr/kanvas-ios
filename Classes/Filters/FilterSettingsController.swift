@@ -63,6 +63,7 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     func didTapVisibilityButton() {
         let visible = !collectionController.isViewVisible()
         collectionController.showView(visible)
+        filterSettingsView.onFilterCollectionShown(visible)
         delegate?.didTapVisibilityButton(visible: visible)
     }
     
