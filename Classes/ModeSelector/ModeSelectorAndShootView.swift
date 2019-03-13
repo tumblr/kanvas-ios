@@ -15,9 +15,9 @@ private struct ModeSelectorAndShootViewConstants {
     static let tooltipBubbleHeight: CGFloat = 12
     static let tooltipCornerRadius: CGFloat = 6
     static let tooltipTextFont: UIFont = .favoritTumblr85(fontSize: 15)
-    static let selectorYCenterMargin: CGFloat = (CameraConstants.optionButtonSize / 2)
+    static let selectorYCenterMargin: CGFloat = CameraConstants.optionButtonSize / 2
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
-    static let shootButtonBottomMargin: CGFloat = 4
+    static let shootButtonBottomMargin: CGFloat = 14
     static var shootButtonTopMargin: CGFloat {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
