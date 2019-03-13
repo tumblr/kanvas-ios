@@ -114,7 +114,7 @@ final class FilterCollectionCell: UICollectionViewCell {
         setScale(scale)
     }
     
-    // MARK: - Recognizers
+    // MARK: - Gesture recognizers
     
     private func setUpRecognizers() {
         let tapRecognizer = UITapGestureRecognizer()
