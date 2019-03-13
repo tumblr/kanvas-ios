@@ -25,7 +25,8 @@ private struct ModeSelectorAndShootViewConstants {
 
 /// Protocol to handle mode selector container and capture button user actions
 protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate {
-    func didDismissTooltip()
+    /// Function called when the welcome tooltip is dismissed
+    func didDismissWelcomeTooltip()
 }
 
 /// View that layouts mode selector container and capture button
@@ -190,7 +191,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     // MARK: - EasyTipViewDelegate
     
     func easyTipViewDidDismiss(_ tipView: EasyTipView) {
-        delegate?.didDismissTooltip()
+        delegate?.didDismissWelcomeTooltip()
     }
     
     // MARK: - Triggers by mode

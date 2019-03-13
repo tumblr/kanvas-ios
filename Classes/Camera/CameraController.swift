@@ -490,7 +490,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
     
-    func didDismissTooltip() {
+    func didDismissWelcomeTooltip() {
         delegate?.didDismissWelcomeTooltip()
     }
     
