@@ -15,7 +15,7 @@ import UIKit
 enum CaptureTrigger {
     case tap
     case hold
-    case tapAndHold
+    case tapAndHold(animateCircle: Bool)
 }
 
 /// Protocol to handle capture button user actions
@@ -94,10 +94,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     /// - Parameters:
     ///   - baseColor: the color before recording
     init(baseColor: UIColor) {
+        pressBackgroundImageView = UIImageView()
+        pressCircleImageView = UIImageView()
         containerView = UIView()
         imageView = UIImageView()
-        pressCircleImageView = UIImageView()
-        pressBackgroundImageView = UIImageView()
         borderView = UIView()
         trashView = UIImageView()
         tapRecognizer = UITapGestureRecognizer()
@@ -112,10 +112,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         backgroundColor = .clear
         isUserInteractionEnabled = true
 
+        setUpPressBackgroundImage(pressBackgroundImageView)
+        setUpPressCircleImage(pressCircleImageView)
         setUpContainerView()
         setUpImageView(imageView)
-        setUpPressCircleImage(pressCircleImageView)
-        setUpPressBackgroundImage(pressBackgroundImageView)
         setUpBorderView()
         setUpTrashView()
         setUpRecognizers()
@@ -152,7 +152,43 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         containerView.layer.cornerRadius = containerView.bounds.width / 2
         borderView.layer.cornerRadius = containerView.bounds.width / 2
     }
-
+    
+    private func setUpPressBackgroundImage(_ imageView: UIImageView) {
+        imageView.accessibilityIdentifier = "Camera Shoot Button Press Background Circle Image"
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        
+        addSubview(imageView)
+        imageView.image = KanvasCameraImages.circleImage
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let distanceToCenter = ShootButtonViewConstants.outerCircleImageWidth
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalToConstant: distanceToCenter),
+            imageView.widthAnchor.constraint(equalToConstant: distanceToCenter),
+            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            ])
+        showPressBackgroundCircle(show: false)
+    }
+    
+    private func setUpPressCircleImage(_ imageView: UIImageView) {
+        imageView.accessibilityIdentifier = "Camera Shoot Button Press Inner Circle Image"
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        
+        addSubview(imageView)
+        imageView.image = KanvasCameraImages.circleImage
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.innerCircleImageWidth)
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
+            widthConstraint,
+            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            ])
+        showPressInnerCircle(show: false)
+    }
+    
     private func setUpContainerView() {
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -182,42 +218,6 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
             imageView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor)
         ])
         imageWidthConstraint = widthConstraint
-    }
-
-    private func setUpPressCircleImage(_ imageView: UIImageView) {
-        imageView.accessibilityIdentifier = "Camera Shoot Button Press Inner Circle Image"
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        
-        addSubview(imageView)
-        imageView.image = KanvasCameraImages.circleImage
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.innerCircleImageWidth)
-        NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
-            widthConstraint,
-            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
-            ])
-        showPressInnerCircle(show: false)
-    }
-    
-    private func setUpPressBackgroundImage(_ imageView: UIImageView) {
-        imageView.accessibilityIdentifier = "Camera Shoot Button Press Background Circle Image"
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        
-        addSubview(imageView)
-        imageView.image = KanvasCameraImages.circleImage
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        let distanceToCenter = ShootButtonViewConstants.outerCircleImageWidth
-        NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: distanceToCenter),
-            imageView.widthAnchor.constraint(equalToConstant: distanceToCenter),
-            imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
-            ])
-        showPressBackgroundCircle(show: false)
     }
     
     private func setUpBorderView() {
@@ -264,23 +264,28 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
         switch trigger {
         case .tap:
-            if let timeLimit = maximumTime {
-                animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
-            }
-        case .tapAndHold:
-            showBorderView(show: false, animated: false)
-            showShutterButtonPressed(show: true, animated: false)
-            performUIUpdateAfter(deadline: .now() + 0.1) { [unowned self] in
-                self.showBorderView(show: true, animated: false)
-                self.showShutterButtonPressed(show: false, animated: true)
-            }
+            animateTapEffect()
+            startCircleAnimation()
+        case .tapAndHold(animateCircle: true):
+            animateTapEffect()
+            startCircleAnimation()
+        case .tapAndHold(animateCircle: false):
+            animateTapEffect()
         case .hold: return // Do nothing on tap
         }
         delegate?.shootButtonViewDidTap()
     }
 
     @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        guard trigger == .hold || trigger == .tapAndHold else { return }
+        switch trigger {
+        case .hold, .tapAndHold:
+            onLongPress(recognizer: recognizer)
+        default:
+            break
+        }
+    }
+    
+    private func onLongPress(recognizer: UILongPressGestureRecognizer) {
         switch recognizer.state {
         case .began:
             updateForLongPress(started: true)
@@ -291,7 +296,14 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
             updateZoom(recognizer: recognizer)
         }
     }
-
+    
+    /// Starts the gradient animation based on the maximum time previously set
+    private func startCircleAnimation() {
+        if let timeLimit = maximumTime {
+            animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
+        }
+    }
+    
     private func updateZoom(recognizer: UILongPressGestureRecognizer) {
         let currentPoint = recognizer.location(in: containerView)
         delegate?.shootButtonDidZoom(currentPoint: currentPoint, gesture: recognizer)
@@ -328,7 +340,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         }
         buttonState = .neutral
     }
-
+    
     private func animateCircle(for time: TimeInterval, completion: @escaping () -> ()) {
         let shape = CAShapeLayer()
         shape.path = createPathForCircle()
@@ -341,15 +353,23 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         shape.lineJoin = CAShapeLayerLineJoin.bevel
         
         timeSegmentLayer.frame = containerView.bounds
-        timeSegmentLayer.colors = [.tumblrBrightRed,
+        timeSegmentLayer.colors = [.tumblrBrightBlue,
+                                   .tumblrBrightPurple,
                                    .tumblrBrightPink,
+                                   .tumblrBrightRed,
                                    .tumblrBrightOrange,
                                    .tumblrBrightYellow,
                                    .tumblrBrightGreen,
                                    .tumblrBrightBlue,
                                    .tumblrBrightPurple,
-                                   .tumblrBrightRed]
+                                   .tumblrBrightPink,
+                                   .tumblrBrightRed,
+                                   .tumblrBrightOrange,
+                                   .tumblrBrightYellow,
+                                   .tumblrBrightGreen,
+                                   .tumblrBrightBlue]
         timeSegmentLayer.mask = shape
+        timeSegmentLayer.transform = CATransform3DMakeRotation(-.pi / 2, 0.0, 0.0, 1.0)
         containerView.layer.addSublayer(timeSegmentLayer)
         
         let animateStrokeEnd = CABasicAnimation(keyPath: "strokeEnd")
@@ -371,8 +391,8 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
                        // Different from UIView's border, this isn't inner to the coordinate, but centered in it.
                        // So we need to subtract half the width to make it match the view's border.
                        radius: ShootButtonViewConstants.buttonWidth / 2 - ShootButtonViewConstants.borderWidth / 2,
-                       startAngle: -.pi / 2,
-                       endAngle: 3/2 * .pi,
+                       startAngle: 0,
+                       endAngle: 2 * .pi,
                        clockwise: true)
         return arcPath.cgPath
     }
@@ -417,6 +437,16 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         }, completion: { _ in
             self.isUserInteractionEnabled = true
         })
+    }
+    
+    /// Shows the two concentric circles for a short period of time
+    private func animateTapEffect() {
+        showBorderView(show: false, animated: false)
+        showShutterButtonPressed(show: true, animated: false)
+        performUIUpdateAfter(deadline: .now() + 0.1) { [unowned self] in
+            self.showBorderView(show: true, animated: false)
+            self.showShutterButtonPressed(show: false, animated: true)
+        }
     }
     
     // MARK: - Public interface
