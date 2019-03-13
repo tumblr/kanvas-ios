@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Discoball_Untapped.png",
+      "filename" : "discoballUntapped@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Discoball_Untapped@2x.png",
+      "filename" : "discoballUntapped@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Discoball_Untapped@3x.png",
+      "filename" : "discoballUntapped@3x.png",
       "scale" : "3x"
     }
   ],

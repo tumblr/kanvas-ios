@@ -8,8 +8,9 @@ import Foundation
 import UIKit
 
 private struct FilterSettingsViewConstants {
-    static let iconSize: CGFloat = 35
-    static let padding: CGFloat = 12
+    static let animationDuration: TimeInterval = 0.25
+    static let iconSize: CGFloat = 39
+    static let padding: CGFloat = 4
     static var height: CGFloat = FilterCollectionView.height + padding + iconSize
 }
 
@@ -36,7 +37,7 @@ final class FilterSettingsView: IgnoreTouchesView {
         
         visibilityButton = UIButton()
         visibilityButton.accessibilityIdentifier = "Filter Visibility Button"
-        visibilityButton.setBackgroundImage(KanvasCameraImages.discoballUntappedImage, for: .normal)
+        visibilityButton.setImage(KanvasCameraImages.discoballUntappedImage, for: .normal)
         super.init(frame: .zero)
         
         clipsToBounds = false
@@ -52,6 +53,18 @@ final class FilterSettingsView: IgnoreTouchesView {
     @available(*, unavailable, message: "use init() instead")
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Public interface
+    
+    /// Updates the UI when the filter collection changes its visibility
+    ///
+    /// - Parameter shown: whether the filter collection is now shown or hidden
+    func onFilterCollectionShown(_ shown: Bool) {
+        UIView.animate(withDuration: FilterSettingsViewConstants.animationDuration) { [weak self] in
+            let image = shown ? KanvasCameraImages.discoballTappedImage : KanvasCameraImages.discoballUntappedImage
+            self?.visibilityButton.setImage(image, for: .normal)
+        }
     }
 }
 
