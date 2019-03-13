@@ -188,6 +188,7 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        draggingCell?.show(true)
         let parameters = UIDragPreviewParameters()
         parameters.backgroundColor = .clear
         return parameters
