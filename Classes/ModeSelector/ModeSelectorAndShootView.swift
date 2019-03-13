@@ -24,11 +24,13 @@ private struct ModeSelectorAndShootViewConstants {
 }
 
 /// Protocol to handle mode selector container and capture button user actions
-protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate { }
+protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate {
+    func didDismissTooltip()
+}
 
 /// View that layouts mode selector container and capture button
 /// Also communicates capture button interactions
-final class ModeSelectorAndShootView: IgnoreTouchesView {
+final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     /// exposed for other classes that need to know the sizing of the buttons
     static let shootButtonSize = ModeSelectorAndShootViewConstants.shootButtonSize
@@ -152,7 +154,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
         let text = NSLocalizedString("Tap to switch modes", comment: "Welcome tooltip for the camera")
-        return EasyTipView(text: text, preferences: preferences, delegate: nil)
+        return EasyTipView(text: text, preferences: preferences, delegate: self)
     }
     
     private func setUpButtons() {
@@ -185,6 +187,12 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         ])
     }
 
+    // MARK: - EasyTipViewDelegate
+    
+    func easyTipViewDidDismiss(_ tipView: EasyTipView) {
+        delegate?.didDismissTooltip()
+    }
+    
     // MARK: - Triggers by mode
     
     private func triggerFor(_ mode: CameraMode) -> CaptureTrigger {

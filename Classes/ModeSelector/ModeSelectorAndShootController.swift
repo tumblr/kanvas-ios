@@ -36,6 +36,8 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     ///     - currentPoint: location of finger on the screen
     ///     - gesture: the long press gesture recognizer that performs the zoom action
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer)
+    
+    func didDismissTooltip()
 }
 
 /// Controller that handles interaction between the mode selector and the capture button
@@ -161,7 +163,12 @@ final class ModeSelectorAndShootController: UIViewController {
 }
 
 extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
-
+    
+    // MARK: - ModeSelectorAndShootViewDelegate
+    func didDismissTooltip() {
+        delegate?.didDismissTooltip()
+    }
+    
     // MARK: - ModeButtonViewDelegate
     func modeButtonViewDidTap() {
         hideTooltip()

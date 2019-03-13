@@ -490,6 +490,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
     
+    func didDismissTooltip() {
+        delegate?.didDismissWelcomeTooltip()
+    }
+    
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
     func optionSelected(_ item: CameraOption) {
