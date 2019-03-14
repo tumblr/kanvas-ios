@@ -111,7 +111,9 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     
     /// hides the tooltip below the mode selector
     func dismissTooltip() {
-        tooltip?.dismiss()
+        if let tooltip = tooltip, tooltip.isVisible() {
+            tooltip.dismiss()
+        }
     }
     
     /// shows or hides the inner circle used for the press effect
