@@ -194,7 +194,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if delegate?.cameraShouldShowWelcomeTooltip() == true && currentMode == .stopMotion {
+        if delegate?.cameraShouldShowWelcomeTooltip() == true {
             showWelcomeTooltip()
         }
     }
