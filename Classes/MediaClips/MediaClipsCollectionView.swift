@@ -13,10 +13,10 @@ private struct MediaClipsCollectionViewConstants {
 }
 
 /// Collection view for the MediaClipsCollectionController
-final class MediaClipsCollectionView: IgnoreTouchesView {
+final class MediaClipsCollectionView: UIView {
 
     static let height = MediaClipsCollectionViewConstants.height
-    let collectionView: IgnoreTouchesCollectionView
+    let collectionView: UICollectionView
     let fadeOutGradient = CAGradientLayer()
 
     init() {
@@ -67,11 +67,11 @@ extension MediaClipsCollectionView {
 }
 
 // MARK: - Collection
-fileprivate func createCollectionView() -> IgnoreTouchesCollectionView {
+fileprivate func createCollectionView() -> UICollectionView {
     let layout = UICollectionViewFlowLayout()
     configureCollectionLayout(layout: layout)
 
-    let collectionView = IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.accessibilityIdentifier = "Media Clips Collection"
     collectionView.backgroundColor = .clear
     configureCollection(collectionView: collectionView)
@@ -86,7 +86,7 @@ fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.minimumLineSpacing = 0
 }
 
-fileprivate func configureCollection(collectionView: IgnoreTouchesCollectionView) {
+fileprivate func configureCollection(collectionView: UICollectionView) {
     collectionView.isScrollEnabled = true
     collectionView.allowsSelection = true
     collectionView.bounces = true
