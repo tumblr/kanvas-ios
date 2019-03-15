@@ -24,11 +24,14 @@ private struct ModeSelectorAndShootViewConstants {
 }
 
 /// Protocol to handle mode selector container and capture button user actions
-protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate { }
+protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate {
+    /// Function called when the welcome tooltip is dismissed
+    func didDismissWelcomeTooltip()
+}
 
 /// View that layouts mode selector container and capture button
 /// Also communicates capture button interactions
-final class ModeSelectorAndShootView: IgnoreTouchesView {
+final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     /// exposed for other classes that need to know the sizing of the buttons
     static let shootButtonSize = ModeSelectorAndShootViewConstants.shootButtonSize
@@ -106,9 +109,11 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         tooltip?.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
     }
     
-    /// hides the tooltip below the mode selector
+    /// dismisses the tooltip below the mode selector
     func dismissTooltip() {
-        tooltip?.dismiss()
+        if let tooltip = tooltip, tooltip.isVisible() {
+            tooltip.dismiss()
+        }
     }
     
     /// shows or hides the inner circle used for the press effect
@@ -152,7 +157,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
         let text = NSLocalizedString("Tap to switch modes", comment: "Welcome tooltip for the camera")
-        return EasyTipView(text: text, preferences: preferences, delegate: nil)
+        return EasyTipView(text: text, preferences: preferences, delegate: self)
     }
     
     private func setUpButtons() {
@@ -185,6 +190,12 @@ final class ModeSelectorAndShootView: IgnoreTouchesView {
         ])
     }
 
+    // MARK: - EasyTipViewDelegate
+    
+    func easyTipViewDidDismiss(_ tipView: EasyTipView) {
+        delegate?.didDismissWelcomeTooltip()
+    }
+    
     // MARK: - Triggers by mode
     
     private func triggerFor(_ mode: CameraMode) -> CaptureTrigger {

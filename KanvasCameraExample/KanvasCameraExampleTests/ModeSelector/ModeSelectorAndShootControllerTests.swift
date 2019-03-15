@@ -106,4 +106,8 @@ final class ModeSelectorAndShootDelegateStub: ModeSelectorAndShootControllerDele
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
         XCTAssert(mode == .stopMotion, "Mode did not match for shoot button")
     }
+    
+    func didDismissWelcomeTooltip() {
+        // Works on every mode
+    }
 }

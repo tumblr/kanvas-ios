@@ -36,6 +36,9 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     ///     - currentPoint: location of finger on the screen
     ///     - gesture: the long press gesture recognizer that performs the zoom action
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer)
+    
+    /// Function called when the welcome tooltip is dismissed
+    func didDismissWelcomeTooltip()
 }
 
 /// Controller that handles interaction between the mode selector and the capture button
@@ -118,8 +121,8 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.showTooltip()
     }
     
-    /// hides the tooltip below the mode selector
-    func hideTooltip() {
+    /// dismisses the tooltip below the mode selector
+    func dismissTooltip() {
         modeView.dismissTooltip()
     }
     
@@ -161,10 +164,15 @@ final class ModeSelectorAndShootController: UIViewController {
 }
 
 extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
-
+    
+    // MARK: - ModeSelectorAndShootViewDelegate
+    func didDismissWelcomeTooltip() {
+        delegate?.didDismissWelcomeTooltip()
+    }
+    
     // MARK: - ModeButtonViewDelegate
     func modeButtonViewDidTap() {
-        hideTooltip()
+        dismissTooltip()
         let oldMode = modesQueue.rotateOnce()
         if let newMode = currentMode {
             setMode(newMode, from: oldMode)
@@ -179,14 +187,14 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     // MARK: - ShootButtonViewDelegate
     func shootButtonViewDidTap() {
         if let mode = currentMode {
-            hideTooltip()
+            dismissTooltip()
             delegate?.didTapForMode(mode)
         }
     }
 
     func shootButtonViewDidStartLongPress() {
         if let mode = currentMode {
-            hideTooltip()
+            dismissTooltip()
             delegate?.didStartPressingForMode(mode)
         }
     }

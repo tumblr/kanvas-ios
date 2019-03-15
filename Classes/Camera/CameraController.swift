@@ -194,7 +194,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if delegate?.cameraShouldShowWelcomeTooltip() == true && currentMode == .stopMotion {
+        if delegate?.cameraShouldShowWelcomeTooltip() == true {
             showWelcomeTooltip()
         }
     }
@@ -405,6 +405,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - CameraViewDelegate
 
     func closeButtonPressed() {
+        modeAndShootController.dismissTooltip()
         if clipsController.hasClips {
             showDismissTooltip()
         }
@@ -488,6 +489,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             clipsController.removeDraggingClip()
         default: break
         }
+    }
+    
+    func didDismissWelcomeTooltip() {
+        delegate?.didDismissWelcomeTooltip()
     }
     
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
@@ -610,6 +615,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if visible {
             analyticsProvider?.logOpenFiltersSelector()
         }
+        modeAndShootController.dismissTooltip()
     }
     
     // MARK: - breakdown
