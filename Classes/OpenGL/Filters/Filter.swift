@@ -191,16 +191,13 @@ class Filter: FilterProtocol {
         }
         shader?.deleteProgram()
         shader = nil
-        if let textureCacheNotNull = textureCache {
-            CVOpenGLESTextureCacheFlush(textureCacheNotNull, 0)
+        if textureCache != nil {
             textureCache = nil
         }
-        if let renderTextureCacheNotNull = renderTextureCache {
-            CVOpenGLESTextureCacheFlush(renderTextureCacheNotNull, 0)
+        if renderTextureCache != nil {
             renderTextureCache = nil
         }
-        if let bufferPoolNotNull = bufferPool {
-            CVPixelBufferPoolFlush(bufferPoolNotNull, [CVPixelBufferPoolFlushFlags.excessBuffers])
+        if bufferPool != nil {
             bufferPool = nil
         }
         if bufferPoolAuxAttributes != nil {
@@ -219,13 +216,11 @@ class Filter: FilterProtocol {
         guard let shader = shader, let pixelBuffer = pixelBuffer, let textureCache = textureCache, let outputFormatDescription = outputFormatDescription, let bufferPool = bufferPool, let renderTextureCache = renderTextureCache else {
             return nil
         }
-        CVPixelBufferLockBaseAddress(pixelBuffer, [])
         let oldContext = EAGLContext.current()
         if oldContext !== glContext {
             _ = EAGLContext.setCurrent(glContext)
         }
         defer {
-            CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
             glFlush()
             if oldContext !== glContext {
                 EAGLContext.setCurrent(oldContext)
