@@ -34,6 +34,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
     private var currentVideoSampleBuffer: CMSampleBuffer?
     private weak var currentVideoPixelBuffer: CVPixelBuffer?
     private var currentAudioSampleBuffer: CMSampleBuffer?
+    private var currentPresentationTime: CMTime?
     private var assetWriter: AVAssetWriter?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     private var videoInput: AVAssetWriterInput?
@@ -65,6 +66,9 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         if let sampleBuffer = currentVideoSampleBuffer {
             startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         }
+        else if let _ = currentVideoPixelBuffer, let presentationTime = currentPresentationTime {
+            startTime = presentationTime
+        }
 
         guard assetWriter.startWriting() else {
             assertionFailure("asset writer couldn't start")
@@ -75,6 +79,9 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         /// add the first frame if already possible
         if let sampleBuffer = currentVideoSampleBuffer {
             processVideoSampleBuffer(sampleBuffer)
+        }
+        else if let pixelBuffer = currentVideoPixelBuffer, let presentationTime = currentPresentationTime {
+            processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
         }
 
         stopRecordingSemaphore.signal()
@@ -89,6 +96,9 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
 
         if let sampleBuffer = currentVideoSampleBuffer {
             startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+        }
+        else if let _ = currentVideoPixelBuffer, let presentationTime = currentPresentationTime {
+            startTime = presentationTime
         }
 
         videoInput?.markAsFinished()
@@ -130,6 +140,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
     func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
         let currentVideoPixelBuffer = pixelBuffer.copy()
         self.currentVideoPixelBuffer = currentVideoPixelBuffer
+        currentPresentationTime = presentationTime
         if recording {
             videoQueue.async {
                 if self.videoInput?.isReadyForMoreMediaData == true {
