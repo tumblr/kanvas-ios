@@ -91,6 +91,7 @@
 		739C578887EFC70A45FE2845526149FF /* UIFont+Orangina.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABF998475A2312F83FF7AD2B560D78B /* UIFont+Orangina.m */; };
 		74AAA60E30BEDE592F7700721D543261 /* UICollectionView+Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CA88E189905DB4A9453C681A94FCB4 /* UICollectionView+Cells.swift */; };
 		75A7993C8625766A92863C880FCDFF14 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE801284E804567DA40E714C461BDFF5 /* TagsViewController.swift */; };
+		76C93B70223BFDB20092C1CA /* Syncronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76C93B6F223BFDB20092C1CA /* Syncronized.swift */; };
 		78C487FB5AD1AC4F70B64578AE65BC9B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E48B5BAA5481A7641341C7213220555 /* Foundation.framework */; };
 		7B3451E42DA497BB43FE1A8200E32076 /* ShowModalFromTopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39429F30E7D1318D69CC1D5597BBB1 /* ShowModalFromTopAnimator.swift */; };
 		7C0324DE0F91B47EEB5A397F89792962 /* String+HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6113FFEC080FDD27123E5733193D1B9 /* String+HexColor.swift */; };
@@ -389,6 +390,7 @@
 		72C449A409BC30841DD84D8701A3966D /* Pods-KanvasCameraExampleTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-KanvasCameraExampleTests-frameworks.sh"; sourceTree = "<group>"; };
 		735DD4E5BA861AF993007E4E49E0DBAD /* SharedUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SharedUI.framework; path = SharedUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7616191FBE60A824B9B77A14F974225B /* FilterSettingsController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterSettingsController.swift; sourceTree = "<group>"; };
+		76C93B6F223BFDB20092C1CA /* Syncronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Syncronized.swift; sourceTree = "<group>"; };
 		76D284DE1BBDE0AC07FDB43C78C8E948 /* PlasmaFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlasmaFilter.swift; sourceTree = "<group>"; };
 		77E587AB2FA6C73481E6F3797B3D8F9E /* ConicalGradientLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayer.swift; sourceTree = "<group>"; };
 		78269CC81AEA78BE1FA53A084B0ED12B /* MediaClipsEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaClipsEditorView.swift; sourceTree = "<group>"; };
@@ -1179,6 +1181,7 @@
 				10ED6842C12AD9B981203ABCEDB8607D /* Queue.swift */,
 				50D2BA56FE2D318E9775DF065DE8AB3B /* RGBA.swift */,
 				B22B57CB886381C07A575433C1D3B711 /* UIUpdate.swift */,
+				76C93B6F223BFDB20092C1CA /* Syncronized.swift */,
 			);
 			name = Utility;
 			path = Classes/Utility;
@@ -1653,6 +1656,7 @@
 				E85807AF06DF00F181F35B527AEBBEF6 /* OptionsStackView.swift in Sources */,
 				6C729278B3E053E6D5FBFD50C15CD3D2 /* OptionView.swift in Sources */,
 				20588BA71932A93275102D2843E0D360 /* PhotoOutputHandler.swift in Sources */,
+				76C93B70223BFDB20092C1CA /* Syncronized.swift in Sources */,
 				5AE4983A3036C16E46588A1863F942E5 /* PlasmaFilter.swift in Sources */,
 				DACC098C65C189CBBD88304469301CD8 /* Queue.swift in Sources */,
 				543E84ACF892FA15FD191AB96008A4C7 /* RaveFilter.swift in Sources */,

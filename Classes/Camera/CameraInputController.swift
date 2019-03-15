@@ -644,6 +644,15 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         var mode: CMAttachmentMode = 0
         let reason = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
         print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
+
+        if (reason as! CFString) == kCMSampleBufferDroppedFrameReason_OutOfBuffers {
+            print("Restarting capture session due to OutOfBuffers")
+            synchronized(self) {
+                filteredInputViewController?.reset()
+                captureSession?.stopRunning()
+                captureSession?.startRunning()
+            }
+        }
     }
     
     // MARK: - FilteredInputViewControllerDelegate
