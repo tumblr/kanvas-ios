@@ -405,6 +405,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - CameraViewDelegate
 
     func closeButtonPressed() {
+        modeAndShootController.dismissTooltip()
         if clipsController.hasClips {
             showDismissTooltip()
         }
@@ -614,6 +615,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if visible {
             analyticsProvider?.logOpenFiltersSelector()
         }
+        modeAndShootController.dismissTooltip()
     }
     
     // MARK: - breakdown

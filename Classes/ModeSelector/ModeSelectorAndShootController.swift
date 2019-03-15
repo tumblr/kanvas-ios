@@ -121,8 +121,8 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.showTooltip()
     }
     
-    /// hides the tooltip below the mode selector
-    func hideTooltip() {
+    /// dismisses the tooltip below the mode selector
+    func dismissTooltip() {
         modeView.dismissTooltip()
     }
     
@@ -172,7 +172,7 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     
     // MARK: - ModeButtonViewDelegate
     func modeButtonViewDidTap() {
-        hideTooltip()
+        dismissTooltip()
         let oldMode = modesQueue.rotateOnce()
         if let newMode = currentMode {
             setMode(newMode, from: oldMode)
@@ -187,14 +187,14 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     // MARK: - ShootButtonViewDelegate
     func shootButtonViewDidTap() {
         if let mode = currentMode {
-            hideTooltip()
+            dismissTooltip()
             delegate?.didTapForMode(mode)
         }
     }
 
     func shootButtonViewDidStartLongPress() {
         if let mode = currentMode {
-            hideTooltip()
+            dismissTooltip()
             delegate?.didStartPressingForMode(mode)
         }
     }
