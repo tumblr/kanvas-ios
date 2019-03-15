@@ -32,8 +32,6 @@ final class CameraRecorder: NSObject {
     private let videoOutput: AVCaptureVideoDataOutput?
     private let audioOutput: AVCaptureAudioDataOutput?
 
-    private var currentVideoPixelBuffer: CVPixelBuffer?
-
     private var currentRecordingMode: CameraMode
     private let segmentsHandler: SegmentsHandlerType
 
@@ -307,7 +305,6 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        self.currentVideoPixelBuffer = pixelBuffer
         switch currentRecordingMode {
         case .stopMotion:
             currentVideoOutputHandler?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)

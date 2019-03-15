@@ -22,7 +22,7 @@ final class GifVideoOutputHandler: NSObject {
     private let videoOutput: AVCaptureVideoDataOutput?
     
     private var currentVideoSampleBuffer: CMSampleBuffer?
-    private weak var currentVideoPixelBuffer: CVPixelBuffer?
+    private var currentVideoPixelBuffer: CVPixelBuffer?
 
     private var gifLink: CADisplayLink?
     private var gifBuffers: [CMSampleBuffer] = []
@@ -127,11 +127,12 @@ final class GifVideoOutputHandler: NSObject {
                 return
             }
             gifPixelBuffers.append(buffer)
+            currentVideoPixelBuffer = nil
             gifFrames += 1
             if gifFrames >= KanvasCameraTimes.gifTotalFrames {
                 gifFinishedBursting()
             }
-    }
+        }
         else {
             guard let buffer = currentVideoSampleBuffer else {
                 // current video sample buffer may not be set yet, so don't necessarily cancelGif

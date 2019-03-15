@@ -81,7 +81,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     private var filterViewNeedsReset: Bool = false
     
     /// The delegate methods for zooming and touches
-    var delegate: CameraInputControllerDelegate?
+    weak var delegate: CameraInputControllerDelegate?
     
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -127,6 +127,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+
+        cleanup()
     }
 
     override public func viewDidLoad() {
@@ -164,9 +166,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func cleanup() {
         guard !isSimulator else { return }
 
-        filteredInputViewController?.cleanup()
-        removeSessionInputsAndOutputs()
         captureSession?.stopRunning()
+        removeSessionInputsAndOutputs()
         captureSession = nil
     }
 

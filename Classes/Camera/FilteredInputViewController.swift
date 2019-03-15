@@ -50,7 +50,6 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        reset()
 
         super.viewDidDisappear(animated)
     }
@@ -84,11 +83,6 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         previewView?.reset()
     }
 
-    func cleanup() {
-        reset()
-        previewView?.removeFromSuperview()
-    }
-    
     // MARK: - filtering image
     func filterImageWithCurrentPipeline(image: UIImage?) -> UIImage? {
         if let uImage = image, let pixelBuffer = uImage.pixelBuffer() {

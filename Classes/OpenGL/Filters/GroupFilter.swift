@@ -45,9 +45,8 @@ class GroupFilter: FilterProtocol {
     }
     
     func cleanup() {
-        filters.forEach() { filter in
-            filter.cleanup()
+        if outputFormatDescription != nil {
+            outputFormatDescription = nil
         }
-        outputFormatDescription = nil
     }
 }

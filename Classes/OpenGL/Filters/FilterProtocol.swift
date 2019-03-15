@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 
 /// Protocol for filters
-protocol FilterProtocol {
+protocol FilterProtocol: class {
 
     /// Uses the sampleBuffer's dimensions to initialize framebuffers and pixel buffers.
     func setupFormatDescription(from sampleBuffer: CMSampleBuffer)
