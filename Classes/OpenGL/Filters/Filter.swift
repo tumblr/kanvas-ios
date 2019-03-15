@@ -155,7 +155,8 @@ class Filter: FilterProtocol {
             }
             if err != noErr {
                 assertionFailure("Error preallocating pixel buffers in pool")
-            } else if let pixelBuffer = pixelBuffer {
+            }
+            else if let pixelBuffer = pixelBuffer {
                 pixelBuffers.append(pixelBuffer)
             }
         }

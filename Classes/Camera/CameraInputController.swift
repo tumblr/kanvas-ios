@@ -642,11 +642,16 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // dropping a sample should be okay here, processor could be busy
         var mode: CMAttachmentMode = 0
-        let reason = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
-        print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
+        let reasonMaybe = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
+        guard let reason = reasonMaybe else {
+            assertionFailure("CMSampleBuffer was dropped for an unknown reason")
+            return
+        }
+        let reasonString = String(describing: reason)
+        print("CMSampleBuffer was dropped for reason: \(reason)")
 
-        if (reason as! CFString) == kCMSampleBufferDroppedFrameReason_OutOfBuffers {
-            print("Restarting capture session due to OutOfBuffers")
+        if reasonString == (kCMSampleBufferDroppedFrameReason_OutOfBuffers as String) {
+            print("Restarting capture session: OutOfBuffers")
             synchronized(self) {
                 filteredInputViewController?.reset()
                 captureSession?.stopRunning()
