@@ -7,6 +7,14 @@
 import Foundation
 import UIKit
 
+/// Delegate for touch events on this cell
+protocol FilterCollectionCellDelegate {
+    /// Callback method when tapping a cell
+    ///
+    /// - Parameter cell: the cell that was tapped
+    func didTap(cell: FilterCollectionCell)
+}
+
 private struct FilterCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
     static let circleDiameter: CGFloat = 72
@@ -29,14 +37,18 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     private weak var circleView: UIImageView?
     
+    var delegate: FilterCollectionCellDelegate?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
+        setUpRecognizers()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
+        setUpRecognizers()
     }
     
     /// Updates the cell to the FilterItem properties
@@ -100,5 +112,17 @@ final class FilterCollectionCell: UICollectionViewCell {
         let maxIncrement = (FilterCollectionCellConstants.circleMaxDiameter - FilterCollectionCellConstants.circleDiameter) / FilterCollectionCellConstants.circleMaxDiameter
         let scale = 1 + percent * maxIncrement
         setScale(scale)
+    }
+    
+    // MARK: - Gesture recognizers
+    
+    private func setUpRecognizers() {
+        let tapRecognizer = UITapGestureRecognizer()
+        contentView.addGestureRecognizer(tapRecognizer)
+        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+    }
+    
+    @objc private func handleTap(recognizer: UITapGestureRecognizer) {
+        delegate?.didTap(cell: self)
     }
 }

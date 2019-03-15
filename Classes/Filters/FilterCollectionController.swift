@@ -20,7 +20,7 @@ private struct FilterCollectionControllerConstants {
 }
 
 /// Controller for handling the filter item collection.
-final class FilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+final class FilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
     
     private lazy var filterCollectionView = FilterCollectionView()
     private var filterItems: [FilterItem]
@@ -124,6 +124,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilterCollectionCell.identifier, for: indexPath)
         if let cell = cell as? FilterCollectionCell {
             cell.bindTo(filterItems[indexPath.item])
+            cell.delegate = self
         }
         return cell
     }
@@ -230,6 +231,17 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     private func resetSize(for indexPath: IndexPath) {
         let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
         cell?.setStandardSize()
+    }
+    
+    // MARK: - FilterCollectionCellDelegate
+    
+    /// Scrolls to the cell that was tapped
+    ///
+    /// - Parameter cell: the cell that was tapped
+    func didTap(cell: FilterCollectionCell) {
+        if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
+            scrollToOptionAt(indexPath.item)
+        }
     }
 }
 
