@@ -20,6 +20,8 @@ private struct CameraInputConstants {
 
 final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, FilteredInputViewControllerDelegate {
 
+    var willCloseSoon = false
+
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
 
@@ -131,6 +133,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         cleanup()
     }
 
+    func stopSession() {
+        captureSession?.stopRunning()
+    }
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -154,6 +160,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         guard !isSimulator else { return }
 
+        guard !willCloseSoon else { return }
+
         captureSession?.startRunning()
     }
 
@@ -161,6 +169,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         super.viewDidDisappear(animated)
 
         guard !isSimulator else { return }
+
+        captureSession?.stopRunning()
     }
 
     func cleanup() {

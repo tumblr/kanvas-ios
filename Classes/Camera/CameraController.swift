@@ -202,6 +202,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - navigation
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
+        cameraInputController.stopSession()
         let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
         controller.delegate = self
         self.present(controller, animated: true)
@@ -415,7 +416,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func handleCloseButtonPressed() {
-        cameraInputController.cleanup()
         performUIUpdate {
             self.delegate?.dismissButtonPressed()
         }
@@ -566,6 +566,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
         }
         performUIUpdate { [weak self] in
+            self?.cameraInputController.willCloseSoon = true
             self?.delegate?.didCreateMedia(media: url.map { .video($0) }, error: url != nil ? nil : CameraControllerError.exportFailure)
         }
     }
