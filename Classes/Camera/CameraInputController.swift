@@ -10,8 +10,9 @@ import UIKit
 
 /// Default values for the input camera
 private struct CameraInputConstants {
-    static let sampleBufferQueue: String = "SampleBufferQueue"
-    static let audioQueue: String = "AudioQueue"
+    static let sessionQueue: String = "kanvas.camera.sessionQueue"
+    static let videoQueue: String = "kanvas.camera.videoQueue"
+    static let audioQueue: String = "kanvas.camera.audioQueue"
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
 }
 
@@ -54,8 +55,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }()
     private let previewLayer = AVCaptureVideoPreviewLayer()
     private let flashLayer = CALayer()
-    private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.sampleBufferQueue)
-    private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, qos: .utility)
+    private let sessionQueue = DispatchQueue(label: CameraInputConstants.sessionQueue, attributes: [])
+    private let videoQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.videoQueue, attributes: [], target: DispatchQueue.global(qos: .userInteractive))
+    private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, attributes: [])
     private let isSimulator = TARGET_OS_SIMULATOR != 0
 
     private var settings: CameraSettings
@@ -80,7 +82,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
     private var recorder: CameraRecordingProtocol?
-    private var filterViewNeedsReset: Bool = false
     
     /// The delegate methods for zooming and touches
     weak var delegate: CameraInputControllerDelegate?
@@ -120,11 +121,15 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
     
     @objc private func appWillResignActive() {
-        captureSession?.stopRunning()
+        sessionQueue.sync {
+            captureSession?.stopRunning()
+        }
     }
 
     @objc private func appDidBecomeActive() {
-        captureSession?.startRunning()
+        sessionQueue.sync {
+            captureSession?.startRunning()
+        }
     }
     
     deinit {
@@ -134,14 +139,18 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     func stopSession() {
-        captureSession?.stopRunning()
+        sessionQueue.sync {
+            captureSession?.stopRunning()
+        }
     }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        createCaptureSession()
-        configureSession()
+        sessionQueue.sync {
+            createCaptureSession()
+            configureSession()
+        }
         setupGestures()
 
         if filteredInputViewController != nil {
@@ -162,7 +171,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         guard !willCloseSoon else { return }
 
-        captureSession?.startRunning()
+        sessionQueue.sync {
+            captureSession?.startRunning()
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -170,7 +181,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         guard !isSimulator else { return }
 
-        captureSession?.stopRunning()
+        sessionQueue.sync {
+            captureSession?.stopRunning()
+        }
     }
 
     func cleanup() {
@@ -240,12 +253,14 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Switches between front and rear camera, if possible
     func switchCameras() {
-        captureSession?.stopRunning()
-        do {
-            try? toggleFrontRearCameras()
-            try? configureCurrentOutput()
+        sessionQueue.sync {
+            captureSession?.stopRunning()
+            do {
+                try? toggleFrontRearCameras()
+                try? configureCurrentOutput()
+            }
+            captureSession?.startRunning()
         }
-        captureSession?.startRunning()
 
         // have to rebuild the filtered input display setup
         filteredInputViewController?.reset()
@@ -499,7 +514,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         else { throw CameraInputError.invalidOperation }
         videoDataOutput = videoOutput
 
-        videoDataOutput?.setSampleBufferDelegate(self, queue: sampleBufferQueue)
+        videoDataOutput?.setSampleBufferDelegate(self, queue: videoQueue)
     }
 
     private func configureAudioDataOutput() throws {
@@ -652,8 +667,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         if reasonString == (kCMSampleBufferDroppedFrameReason_OutOfBuffers as String) {
             print("Restarting capture session: OutOfBuffers")
-            synchronized(self) {
-                filteredInputViewController?.reset()
+            filteredInputViewController?.reset()
+            sessionQueue.sync {
                 captureSession?.stopRunning()
                 captureSession?.startRunning()
             }
