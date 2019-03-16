@@ -58,7 +58,7 @@ final class GLRenderer {
         else {
             let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
 
-            let filteredPixelBufferMaybe: CVPixelBuffer? = synchronized(filter) {
+            let filteredPixelBufferMaybe: CVPixelBuffer? = synchronized(self) {
                 let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
                 return filter.processPixelBuffer(sourcePixelBuffer)
             }
