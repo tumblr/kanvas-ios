@@ -375,10 +375,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - UI
-    private func enableBottomViewButtons(show: Bool) {
-        topOptionsController.configureOptions(areThereClips: clipsController.hasClips)
-        clipsController.showViews(clipsController.hasClips)
-        if clipsController.hasClips || settings.enabledModes.count == 1 {
+    private func updateUI(forClipsPresent hasClips: Bool) {
+        topOptionsController.configureOptions(areThereClips: hasClips)
+        clipsController.showViews(hasClips)
+        if hasClips || settings.enabledModes.count == 1 {
             modeAndShootController.hideModeButton()
         }
         else {
@@ -395,10 +395,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func bindMediaContentAvailable() {
         disposables.append(clipsController.observe(\.hasClips) { [unowned self] object, _ in
             performUIUpdate {
-                self.enableBottomViewButtons(show: object.hasClips)
+                self.updateUI(forClipsPresent: object.hasClips)
             }
         })
-        enableBottomViewButtons(show: clipsController.hasClips)
+        updateUI(forClipsPresent: clipsController.hasClips)
     }
     
     // MARK: - CameraViewDelegate
@@ -521,7 +521,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipStartedMoving() {
         performUIUpdate { [weak self] in
-            self?.enableBottomViewButtons(show: false)
             self?.modeAndShootController.showTrashView(true)
         }
     }
@@ -529,7 +528,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipFinishedMoving() {
         analyticsProvider?.logMovedClip()
         performUIUpdate { [weak self] in
-            self?.enableBottomViewButtons(show: true)
             self?.modeAndShootController.showTrashView(false)
         }
     }
