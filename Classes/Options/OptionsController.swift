@@ -111,12 +111,12 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     
     // MARK: - Public interface
     
-    /// Changes the visibility of the top options depending on the number of clips
+    /// Changes the visibility of the top options depending on the clip collection size
     ///
-    /// - Parameter isClipCollectionEmpty: whether the clip collection is empty
-    func configureOptions(isClipCollectionEmpty: Bool) {
+    /// - Parameter areThereClips: whether there are clips or the collection is empty
+    func configureOptions(areThereClips: Bool) {
         UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
-            self?.imagePreviewOptionsStackView?.alpha = isClipCollectionEmpty ? 0 : 1
+            self?.imagePreviewOptionsStackView?.alpha = areThereClips ? 1 : 0
         }
     }
 

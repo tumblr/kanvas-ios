@@ -376,14 +376,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - UI
     private func enableBottomViewButtons(show: Bool) {
+        topOptionsController.configureOptions(areThereClips: clipsController.hasClips)
+        clipsController.showViews(clipsController.hasClips)
         if clipsController.hasClips || settings.enabledModes.count == 1 {
-            topOptionsController.configureOptions(isClipCollectionEmpty: false)
-            clipsController.showViews()
             modeAndShootController.hideModeButton()
         }
         else {
-            topOptionsController.configureOptions(isClipCollectionEmpty: true)
-            clipsController.hideViews()
             modeAndShootController.showModeButton()
         }
     }
