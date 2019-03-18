@@ -331,7 +331,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func updateMode(_ mode: CameraMode) {
         if mode != currentMode {
             currentMode = mode
-            topOptionsController.configureMode(mode)
             do {
                 try cameraInputController.configureMode(mode)
             } catch {
@@ -378,10 +377,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - UI
     private func enableBottomViewButtons(show: Bool) {
         if clipsController.hasClips || settings.enabledModes.count == 1 {
+            topOptionsController.configureOptions(isClipCollectionEmpty: false)
             clipsController.showViews()
             modeAndShootController.hideModeButton()
         }
         else {
+            topOptionsController.configureOptions(isClipCollectionEmpty: true)
             clipsController.hideViews()
             modeAndShootController.showModeButton()
         }
