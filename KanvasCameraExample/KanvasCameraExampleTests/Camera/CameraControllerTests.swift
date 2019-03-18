@@ -114,7 +114,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
     
-    func testImagePreviewButtonShouldAppearOnStopMotionMode() {
+    func testImagePreviewButtonShouldHideOnStopMotionMode() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -123,7 +123,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
     
-    func testImagePreviewButtonShouldAppearOnGifMode() {
+    func testImagePreviewButtonShouldHideOnGifMode() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
