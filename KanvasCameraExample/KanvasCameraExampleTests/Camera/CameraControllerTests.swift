@@ -30,11 +30,14 @@ final class CameraControllerTests: FBSnapshotTestCase {
         return CameraControllerDelegateStub()
     }
 
-    func newDelegateStubWithoutGhostFrame() -> CameraControllerDelegateStub {
-        return CameraControllerDelegateStub(shouldEnableGhostFrame: false)
+    func newController(delegate: CameraControllerDelegate) -> CameraController {
+        let settings = CameraSettings()
+        settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
+        return newController(delegate: delegate, settings: settings)
     }
 
-    func newController(delegate: CameraControllerDelegate, settings: CameraSettings = CameraSettings()) -> CameraController {
+    func newController(delegate: CameraControllerDelegate, settings: CameraSettings) -> CameraController {
         let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = delegate
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
@@ -54,8 +57,11 @@ final class CameraControllerTests: FBSnapshotTestCase {
     }
 
     func testSetupWithStopMotionDisabled() {
-        let delegate = newDelegateStubWithoutGhostFrame()
-        let controller = newController(delegate: delegate)
+        let delegate = newDelegateStub()
+        let settings = CameraSettings()
+        settings.features.ghostFrame = false
+        settings.features.cameraFilters = true
+        let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
 
@@ -63,6 +69,8 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.defaultMode = .gif
+        settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -71,6 +79,8 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.enableStopMotionMode = false
+        settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -79,6 +89,8 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.preferredFlashOption = .on
+        settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -87,6 +99,8 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
         settings.imagePreviewOption = .on
+        settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
     }
@@ -125,8 +139,8 @@ final class CameraControllerTests: FBSnapshotTestCase {
 
     // MARK: - ModeSelectorAndShootControllerDelegate
     // Open mode doesn't change UI directly because that is done before the delegate function is called
-    // Tap for mode doesn't do anything because it should show preview for photo and gifd modes
-    func testTapForStopMotionModeShouldHideModeButtonAndAddClipAndShowUndoNextButtons() {
+    // Tap for mode doesn't do anything because it should show preview for photo and gif modes
+    func testTapForStopMotionModeShouldHideModeButtonAndAddClipAndShowNextButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -146,7 +160,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testEndLongPressShouldHideModeButtonAndAddClipAndShowUndoNextButtons() {
+    func testEndLongPressShouldHideModeButtonAndAddClipAndShowNextButtons() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -157,7 +171,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testTapAndLongPressShouldAddTwoClipsAndShowUndoNextButtons() {
+    func testTapAndLongPressShouldAddTwoClipsAndShowNextButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
@@ -177,30 +191,6 @@ final class CameraControllerTests: FBSnapshotTestCase {
         controller.closeButtonPressed()
         UIView.setAnimationsEnabled(true)
         XCTAssert(delegate.dismissCalled)
-    }
-
-    func testUndoButtonPressedShouldDeleteLastClip() {
-        let delegate = newDelegateStub()
-        let controller = newController(delegate: delegate)
-        UIView.setAnimationsEnabled(false)
-        controller.didOpenMode(.stopMotion, andClosed: .none)
-        controller.didTapForMode(.stopMotion)
-        controller.didStartPressingForMode(.stopMotion)
-        controller.didEndPressingForMode(.stopMotion)
-        controller.undoButtonPressed()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
-    }
-
-    func testUndoButtonPressedWhenOneClipShouldDisappearUndoAndNextAndShowModeButton() {
-        let delegate = newDelegateStub()
-        let controller = newController(delegate: delegate)
-        UIView.setAnimationsEnabled(false)
-        controller.didOpenMode(.stopMotion, andClosed: .none)
-        controller.didTapForMode(.stopMotion)
-        controller.undoButtonPressed()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
     }
 
     // Can't test `nextButtonPressed` without controller hierarchy
@@ -232,6 +222,8 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func testCameraWithOneMode() {
         let settings = CameraSettings()
         settings.enabledModes = [.photo]
+        settings.features.ghostFrame = true
+        settings.features.cameraFilters = true
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
@@ -242,28 +234,12 @@ final class CameraControllerTests: FBSnapshotTestCase {
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
 
-    private let shouldEnableGhostFrame: Bool
-
-    init(shouldEnableGhostFrame: Bool = true) {
-        self.shouldEnableGhostFrame = shouldEnableGhostFrame
-    }
-
     func didDismissWelcomeTooltip() {
-    }
-    
-    func didDismissCreationTooltip() {
+        
     }
     
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return false
-    }
-    
-    func cameraShouldShowCreationTooltip() -> Bool {
-        return false
-    }
-
-    func cameraShouldEnableGhostFrame() -> Bool {
-        return shouldEnableGhostFrame
     }
 
     var dismissCalled = false

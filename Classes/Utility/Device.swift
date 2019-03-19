@@ -12,6 +12,9 @@ struct Device {
     static let iPhone6ScreenHeight = 667
     static let iPhone6PScreenHeight = 736
     static let iPhoneXScreenHeight = 812
+    static let iPhoneXRScreenHeight = 896
+    static let iPhoneXSScreenHeight = 812
+    static let iPhoneXSMaxScreenHeight = 896
     static let retinaScreenMinScale: CGFloat = 2.0
     
     // Device type
@@ -31,4 +34,10 @@ struct Device {
     static let isIPhone6 = isIPhone && screenMaxLength == iPhone6ScreenHeight
     static let isIPhone6P = isIPhone && screenMaxLength == iPhone6PScreenHeight
     static let isIPhoneX = isIPhone && screenMaxLength == iPhoneXScreenHeight
+    static let isIPhoneXS = isIPhone && screenMaxLength == iPhoneXSScreenHeight
+    static let isIPhoneXR = isIPhone && screenMaxLength == iPhoneXRScreenHeight
+    static let isIPhoneXSMax = isIPhone && screenMaxLength == iPhoneXSMaxScreenHeight
+    
+    // Device group
+    static let belongsToIPhoneXGroup = isIPhoneX || isIPhoneXR || isIPhoneXS || isIPhoneXSMax
 }

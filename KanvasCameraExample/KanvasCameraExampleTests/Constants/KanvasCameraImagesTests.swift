@@ -12,6 +12,7 @@ import XCTest
 final class KanvasCameraImagesTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
+        
         recordMode = false
     }
     
@@ -23,34 +24,10 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(imageView)
     }
 
-    func testGifModeImage() {
-        let imageView = newImageView()
-        let image = KanvasCameraImages.gifModeImage
-        XCTAssert(image != nil, "Image not found")
-        imageView.image = image
-        FBSnapshotVerifyView(imageView)
-    }
-
     func testStopMotionModeImage() {
         let imageView = newImageView()
         let image = KanvasCameraImages.stopMotionModeImage
         /// stop motion image can be nil.
-        imageView.image = image
-        FBSnapshotVerifyView(imageView)
-    }
-
-    func testUndoImage() {
-        let imageView = newImageView()
-        let image = KanvasCameraImages.undoImage
-        XCTAssert(image != nil, "Image not found")
-        imageView.image = image
-        FBSnapshotVerifyView(imageView)
-    }
-
-    func testNextImage() {
-        let imageView = newImageView()
-        let image = KanvasCameraImages.nextImage
-        XCTAssert(image != nil, "Image not found")
         imageView.image = image
         FBSnapshotVerifyView(imageView)
     }

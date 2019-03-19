@@ -72,7 +72,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     /// - Parameters:
     ///   - index: the index of the segment to be deleted
     ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
-    func deleteSegment(index: Int, removeFromDisk: Bool)
+    func deleteSegment(at index: Int, removeFromDisk: Bool)
 
     /// Moves one segment to a new position
     ///
@@ -170,7 +170,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameters:
     ///   - index: the index of the segment to be deleted
     ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
-    func deleteSegment(index: Int, removeFromDisk: Bool = true) {
+    func deleteSegment(at index: Int, removeFromDisk: Bool = true) {
         guard index < segments.count else { return }
         let segment = segments[index]
         let fileManager = FileManager.default

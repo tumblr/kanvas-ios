@@ -13,10 +13,11 @@ private struct MediaClipsCollectionViewConstants {
 }
 
 /// Collection view for the MediaClipsCollectionController
-final class MediaClipsCollectionView: IgnoreTouchesView {
+final class MediaClipsCollectionView: UIView {
 
     static let height = MediaClipsCollectionViewConstants.height
-    let collectionView: IgnoreTouchesCollectionView
+    let collectionView: UICollectionView
+    let fadeOutGradient = CAGradientLayer()
 
     init() {
         collectionView = createCollectionView()
@@ -36,6 +37,10 @@ final class MediaClipsCollectionView: IgnoreTouchesView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func updateFadeOutEffect() {
+        fadeOutGradient.frame = bounds
+    }
 }
 
 // MARK: - Layout
@@ -44,16 +49,29 @@ extension MediaClipsCollectionView {
     private func setUpViews() {
         collectionView.add(into: self)
         collectionView.clipsToBounds = false
+        setFadeOutGradient()
+    }
+    
+    private func setFadeOutGradient() {
+        fadeOutGradient.frame = bounds
+        fadeOutGradient.colors = [UIColor.clear.cgColor,
+                                  UIColor.white.cgColor,
+                                  UIColor.white.cgColor,
+                                  UIColor.clear.cgColor]
+        fadeOutGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        fadeOutGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+        fadeOutGradient.locations = [0, 0.05, 0.9, 1.0]
+        layer.mask = fadeOutGradient
     }
     
 }
 
 // MARK: - Collection
-fileprivate func createCollectionView() -> IgnoreTouchesCollectionView {
+fileprivate func createCollectionView() -> UICollectionView {
     let layout = UICollectionViewFlowLayout()
     configureCollectionLayout(layout: layout)
 
-    let collectionView = IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.accessibilityIdentifier = "Media Clips Collection"
     collectionView.backgroundColor = .clear
     configureCollection(collectionView: collectionView)
@@ -68,7 +86,7 @@ fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.minimumLineSpacing = 0
 }
 
-fileprivate func configureCollection(collectionView: IgnoreTouchesCollectionView) {
+fileprivate func configureCollection(collectionView: UICollectionView) {
     collectionView.isScrollEnabled = true
     collectionView.allowsSelection = true
     collectionView.bounces = true

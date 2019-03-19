@@ -18,7 +18,7 @@ private struct CameraInputConstants {
 /// The class for controlling the device camera.
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
-final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, FilteredInputViewControllerDelegate {
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -37,6 +37,19 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
+    /// Current applied filter type
+    var currentFilterType: FilterType? {
+        return filteredInputViewController?.currentFilter
+    }
+
+    private lazy var filteredInputViewController: FilteredInputViewController? = {
+        if settings.features.openGLPreview {
+            return FilteredInputViewController(delegate: self, settings: settings)
+        }
+        else {
+            return nil
+        }
+    }()
     private let previewLayer = AVCaptureVideoPreviewLayer()
     private let flashLayer = CALayer()
     private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.sampleBufferQueue)
@@ -65,6 +78,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
     private var recorder: CameraRecordingProtocol?
+    private var filterViewNeedsReset: Bool = false
     
     /// The delegate methods for zooming and touches
     var delegate: CameraInputControllerDelegate?
@@ -121,13 +135,39 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         createCaptureSession()
         configureSession()
         setupGestures()
-        setupPreview()
+
+        if filteredInputViewController != nil {
+            setupFilteredPreview()
+        }
+        else {
+            setupPreview()
+        }
+
         setupFlash(defaultOption: settings.preferredFlashOption)
         setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
+    }
 
-        if !isSimulator { // if running on simulator, the startRunning() call takes a long time to return
-            captureSession?.startRunning()
-        }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        guard !isSimulator else { return }
+
+        captureSession?.startRunning()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        guard !isSimulator else { return }
+    }
+
+    func cleanup() {
+        guard !isSimulator else { return }
+
+        filteredInputViewController?.cleanup()
+        removeSessionInputsAndOutputs()
+        captureSession?.stopRunning()
+        captureSession = nil
     }
 
     private func configureSession() {
@@ -165,6 +205,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         view.layer.addSublayer(previewLayer)
     }
 
+    private func setupFilteredPreview() {
+        guard let filteredInputViewController = self.filteredInputViewController else { return }
+
+        load(childViewController: filteredInputViewController, into: view)
+    }
+
     private func setupFlash(defaultOption: AVCaptureDevice.FlashMode) {
         flashLayer.backgroundColor = CameraInputConstants.flashColor.cgColor
         flashLayer.frame = previewLayer.bounds
@@ -176,7 +222,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, segmentsHandlerType: SegmentsHandlerType.Type) {
         let size = currentResolution()
-        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandlerType.init())
+        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandlerType.init(), settings: settings)
     }
 
     // MARK: - Internal methods
@@ -189,6 +235,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             try? configureCurrentOutput()
         }
         captureSession?.startRunning()
+
+        // have to rebuild the filtered input display setup
+        filteredInputViewController?.reset()
     }
 
     /// Changes the current output modes corresponding to camera mode
@@ -303,8 +352,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// Deletes a segment at an index
     ///
     /// - Parameter index: Int
-    func deleteSegmentAtIndex(_ index: Int) {
-        recorder?.deleteSegmentAtIndex(index, removeFromDisk: true)
+    func deleteSegment(at index: Int) {
+        recorder?.deleteSegment(at: index, removeFromDisk: true)
     }
 
     /// Moves a segment inside the sequence
@@ -322,6 +371,11 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// - Returns: an array of CameraSegment
     func segments() -> [CameraSegment] {
         return recorder?.segments() ?? []
+    }
+
+    /// Applies the filter
+    func applyFilter(filterType: FilterType) {
+        filteredInputViewController?.applyFilter(type: filterType)
     }
 
     // MARK: - private methods
@@ -343,7 +397,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     @objc func pinched(_ gesture: UIPinchGestureRecognizer) {
         delegate?.cameraInputControllerPinched(gesture: gesture)
     }
-    
+
     private func currentResolution() -> CGSize {
         var resolution = CGSize(width: 0, height: 0)
         if let formatDescription = currentDevice?.activeFormat.formatDescription {
@@ -556,13 +610,21 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
+        let filteredImage = filteredInputViewController?.filterImageWithCurrentPipeline(image: image)
+        return filteredImage ?? image
+    }
+
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if output == audioDataOutput {
             recorder?.processAudioSampleBuffer(sampleBuffer)
         }
         else if output == videoDataOutput {
-            recorder?.processVideoSampleBuffer(sampleBuffer)
+            filteredInputViewController?.filterSampleBuffer(sampleBuffer)
+            if !settings.features.openGLCapture {
+                recorder?.processVideoSampleBuffer(sampleBuffer)
+            }
         }
     }
 
@@ -573,21 +635,36 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
     }
     
+    // MARK: - FilteredInputViewControllerDelegate
+    func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        if settings.features.openGLCapture {
+            recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+        }
+    }
+
     // MARK: - breakdown
     
     /// Function to remove the current inputs and outputs from the capture session
     func removeSessionInputsAndOutputs() {
         if let input = currentCameraInput {
             captureSession?.removeInput(input)
+            currentCameraInput = nil
         }
         if let audioInput = currentMicInput {
             captureSession?.removeInput(audioInput)
+            currentMicInput = nil
         }
-        if let cameraOutput = currentCaptureOutput {
-            captureSession?.removeOutput(cameraOutput)
+        if let aPhotoOutput = photoOutput {
+            captureSession?.removeOutput(aPhotoOutput)
+            photoOutput = nil
+        }
+        if let aVideoDataOutput = videoDataOutput {
+            captureSession?.removeOutput(aVideoDataOutput)
+            videoDataOutput = nil
         }
         if let audioOutput = audioDataOutput {
             captureSession?.removeOutput(audioOutput)
+            audioDataOutput = nil
         }
     }
 }

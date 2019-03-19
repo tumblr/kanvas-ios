@@ -30,6 +30,9 @@ protocol MediaClipsEditorDelegate: class {
     ///   - originIndex: Index where the clip was at before the moving around action
     ///   - destinationIndex: Index where the clips is ar after the moving around action
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
+    
+    /// Callback for when the next button is selected
+    func nextButtonWasPressed()
 }
 
 /// Controller for handling media clips edition (showing, adding, removing, etc)
@@ -50,10 +53,6 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     /// Is there any clip?
     /// This needs to be dynamic because it will be observed
     @objc private(set) dynamic var hasClips: Bool = false
-
-    /// Check if there is a clip selected
-    /// This needs to be dynamic because it will be observed
-    @objc private(set) dynamic var clipIsSelected: Bool = false
 
     init() {
         super.init(nibName: .none, bundle: .none)
@@ -87,23 +86,35 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     func addNewClip(_ clip: MediaClip) {
         collectionController.addNewClip(clip)
         hasClips = true
-        clipIsSelected = false
         delegate?.mediaClipWasAdded(at: collectionController.getClips().count - 1)
     }
-
-    /// Undoes the last clip added
-    func undo() {
-        editorView.hideTrash()
-        collectionController.removeLastClip()
+    
+    /// Deletes the clip on the current dragging session
+    func removeDraggingClip() {
+        if let index = collectionController.removeDraggingClip() {
+            delegate?.mediaClipWasDeleted(at: index)
+        }
+        else {
+            assertionFailure("Clip was dropped but there is nothing to delete")
+        }
         hasClips = collectionController.getClips().count > 0
-        clipIsSelected = false
     }
 
     /// Returns the last frame from the last clip of the collection
     func getLastFrameFromLastClip() -> UIImage? {
         return collectionController.getLastFrameFromLastClip()
     }
-
+    
+    /// Shows the clip collection and the next button
+    func showViews() {
+        editorView.show(true)
+    }
+    
+    /// Hides the clip collection and the next button
+    func hideViews() {
+        editorView.show(false)
+    }
+    
     // MARK: - MediaClipsControllerDelegate
     func mediaClipStartedMoving() {
         delegate?.mediaClipStartedMoving()
@@ -113,37 +124,11 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         delegate?.mediaClipFinishedMoving()
     }
 
-    func mediaClipWasSelected(at index: Int) {
-        editorView.showTrash()
-        clipIsSelected = true
-    }
-
-    func mediaClipWasDeselected(at index: Int) {
-        editorView.hideTrash()
-        clipIsSelected = false
-    }
-
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         delegate?.mediaClipWasMoved(from: originIndex, to: destinationIndex)
     }
     
-    func mediaClipWasSwipedAndDeleted(at index: Int) {
-        hasClips = collectionController.getClips().count > 0
-        delegate?.mediaClipWasDeleted(at: index)
+    func nextButtonWasPressed() {
+        delegate?.nextButtonWasPressed()
     }
-    
-    // MARK: - MediaClipsEditorViewDelegate
-    func trashButtonWasPressed() {
-        if let index = collectionController.removeSelectedClip() {
-            editorView.hideTrash()
-            delegate?.mediaClipWasDeleted(at: index)
-        }
-        else {
-            assertionFailure("Trash was pressed when there is nothing selected to delete")
-        }
-        hasClips = collectionController.getClips().count > 0
-        editorView.hideTrash()
-        clipIsSelected = false
-    }
-
 }

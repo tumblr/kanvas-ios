@@ -19,7 +19,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
     }
     
     func newShootButtonView() -> ShootButtonView {
-        let shootButton = ShootButtonView(baseColor: .white, activeColor: .red)
+        let shootButton = ShootButtonView(baseColor: .white)
         return shootButton
     }
     
@@ -48,9 +48,19 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tapAndHold, image: KanvasCameraImages.stopMotionModeImage, timeLimit: KanvasCameraTimes.videoRecordingTime)
+        shootButton.configureFor(trigger: .tapAndHold(animateCircle: true), image: KanvasCameraImages.stopMotionModeImage, timeLimit: KanvasCameraTimes.videoRecordingTime)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
-
+    
+    func testShowTrash() {
+        let shootButton = newShootButtonView()
+        let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        shootButton.add(into: uiView)
+        UIView.setAnimationsEnabled(false)
+        shootButton.configureFor(trigger: .tapAndHold(animateCircle: true), image: KanvasCameraImages.stopMotionModeImage, timeLimit: KanvasCameraTimes.videoRecordingTime)
+        shootButton.showTrashView(true)
+        FBSnapshotVerifyView(shootButton)
+        UIView.setAnimationsEnabled(true)
+    }
 }

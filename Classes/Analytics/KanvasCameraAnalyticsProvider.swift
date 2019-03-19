@@ -25,7 +25,8 @@ import Foundation
     ///   - cameraPosition: the back or front camera
     ///   - length: the duration of the video created, in seconds
     ///   - ghostFrameEnabled: whether the ghost frame feature is enabled or not
-    func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval, ghostFrameEnabled: Bool)
+    ///   - filterType: what filter was applied when capturing media. nil when feature is disabled
+    func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval, ghostFrameEnabled: Bool, filterType: FilterType)
     
     /// Logs an event when the flip camera button is tapped
     func logFlipCamera()
@@ -42,7 +43,7 @@ import Foundation
     /// Logs an event when the undo button is tapped
     func logUndoTapped()
 
-    /// Logs an event when the preview (next) button is tapped
+    /// Logs an event when the preview button is tapped
     func logNextTapped()
 
     /// Logs an event if the preview screen is closed without exporting media
@@ -64,4 +65,11 @@ import Foundation
     ///   - clipsCount: the number of clips used, if a video
     ///   - length: the duration of the video created, in seconds
     func logConfirmedMedia(mode: CameraMode, clipsCount: Int, length: TimeInterval)
+
+    /// Logs an event when the filters selector is opened
+    func logOpenFiltersSelector()
+
+    /// Logs an event when a filter is selected
+    /// - Parameter filterType: The selected filter
+    func logFilterSelected(filterType: FilterType)
 }

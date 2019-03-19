@@ -9,75 +9,85 @@ import Foundation
 import KanvasCamera
 
 final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsProvider {
+
     public func logCameraOpen(mode: CameraMode) {
-        logString(string: "\(#function) mode:\(mode.rawValue)")
+        logString(string: "logCameraOpen mode:\(mode.rawValue)")
     }
 
-    public func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval, ghostFrameEnabled: Bool) {
-        logString(string: "\(#function) type:\(type) cameraPosition:\(cameraPosition) length:\(length) ghostFrameEnabled:\(ghostFrameEnabled)")
+    public func logCapturedMedia(type: CameraMode, cameraPosition: AVCaptureDevice.Position, length: TimeInterval, ghostFrameEnabled: Bool, filterType: FilterType) {
+        logString(string: "logCapturedMedia type:\(type) cameraPosition:\(cameraPosition) length:\(length) ghostFrameEnabled:\(ghostFrameEnabled) filterType:\(filterType.key() ?? "null")")
     }
 
     public func logNextTapped() {
-        logString(string: "\(#function)")
+        logString(string: "logNextTapped")
     }
 
     public func logConfirmedMedia(mode: CameraMode, clipsCount: Int, length: TimeInterval) {
-        logString(string: "\(#function) mode:\(mode) clipsCount:\(clipsCount) length:\(length)")
+        logString(string: "logConfirmedMedia mode:\(mode) clipsCount:\(clipsCount) length:\(length)")
     }
 
     public func logDismiss() {
-        logString(string: "\(#function)")
+        logString(string: "logDismiss")
     }
 
     public func logPhotoCaptured(cameraPosition: String) {
-        logString(string: "\(#function) cameraPosition:\(cameraPosition)")
+        logString(string: "logPhotoCaptured cameraPosition:\(cameraPosition)")
     }
 
     public func logGifCaptured(cameraPosition: String) {
-        logString(string: "\(#function) cameraPosition:\(cameraPosition)")
+        logString(string: "logGifCaptured cameraPosition:\(cameraPosition)")
     }
 
     public func logVideoCaptured(cameraPosition: String) {
-        logString(string: "\(#function) cameraPosition:\(cameraPosition)")
+        logString(string: "logVideoCaptured cameraPosition:\(cameraPosition)")
     }
 
     public func logFlipCamera() {
-        logString(string: "\(#function)")
+        logString(string: "logFlipCamera")
     }
 
     public func logDeleteSegment() {
-        logString(string: "\(#function)")
+        logString(string: "logDeleteSegment")
     }
 
     public func logFlashToggled() {
-        logString(string: "\(#function)")
+        logString(string: "logFlashToggled")
     }
     
     public func logImagePreviewToggled(enabled: Bool) {
-        logString(string: "\(#function) enabled:\(enabled)")
+        logString(string: "logImagePreviewToggled enabled:\(enabled)")
     }
     
     public func logUndoTapped() {
-        logString(string: "\(#function)")
+        logString(string: "logUndoTapped")
     }
-
+    
     public func logPreviewDismissed() {
-        logString(string: "\(#function)")
+        logString(string: "logPreviewDismissed")
     }
 
     public func logMovedClip() {
-        logString(string: "\(#function)")
+        logString(string: "logMovedClip")
     }
     
     public func logPinchedZoom() {
-        logString(string: "\(#function)")
+        logString(string: "logPinchedZoom")
     }
     
     public func logSwipedZoom() {
-        logString(string: "\(#function)")
+        logString(string: "logSwipedZoom")
+    }
+
+    public func logOpenFiltersSelector() {
+        logString(string: "logOpenFiltersSelector")
+    }
+
+    public func logFilterSelected(filterType: FilterType) {
+        logString(string: "logFilterSelected filterType:\(filterType.key() ?? "null")")
     }
     
     func logString(string: String) {
         NSLog("\(self): \(string)")
     }
+
 }

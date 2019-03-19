@@ -6,27 +6,32 @@
 
 import Foundation
 import UIKit
+import TumblrTheme
 
 private struct MediaClipsEditorViewConstants {
-    static let trashSize: CGFloat = 50
-    static let padding: CGFloat = 25
-    static let trashAnimationDuration: TimeInterval = 0.2
-
-    static var height: CGFloat = padding + MediaClipsCollectionView.height + padding + trashSize
+    static let animationDuration: TimeInterval = 0.5
+    static let buttonHorizontalMargin: CGFloat = 16
+    static let buttonRadius: CGFloat = 25
+    static let nextButtonSize: CGFloat = 49
+    static let nextButtonCenterYOffset: CGFloat = 3
+    static let topPadding: CGFloat = 6
+    static let bottomPadding: CGFloat = 6 + (Device.belongsToIPhoneXGroup ? 28 : 0)
 }
 
 protocol MediaClipsEditorViewDelegate: class {
-    /// Callback for when trash button is selected
-    func trashButtonWasPressed()
+    /// Callback for when next button is selected
+    func nextButtonWasPressed()
 }
 
 /// View for media clips editor
 final class MediaClipsEditorView: IgnoreTouchesView {
     
-    static let height = MediaClipsEditorViewConstants.height
+    static let height = MediaClipsCollectionView.height +
+                        MediaClipsEditorViewConstants.topPadding +
+                        MediaClipsEditorViewConstants.bottomPadding
 
     let collectionContainer: IgnoreTouchesView
-    let trashButton: UIButton
+    let nextButton: UIButton
 
     weak var delegate: MediaClipsEditorViewDelegate?
 
@@ -36,15 +41,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.accessibilityIdentifier = "Media Clips Collection Container"
         collectionContainer.clipsToBounds = false
 
-        trashButton = UIButton()
-        trashButton.accessibilityIdentifier = "Media Clips Trash Button"
-        trashButton.setImage(KanvasCameraImages.deleteImage, for: .normal)
+        nextButton = UIButton()
+        nextButton.accessibilityIdentifier = "Media Clips Next Button"
         super.init(frame: .zero)
-
+        
         clipsToBounds = false
+        backgroundColor = KanvasCameraColors.translucentBlack
         setUpViews()
-        trashButton.addTarget(self, action: #selector(trashPressed), for: .touchUpInside)
-        hideTrash()
+        nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -56,21 +60,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    /// method to animate and fade the trash button in
-    func showTrash() {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.trashAnimationDuration) {
-            self.trashButton.alpha = 1
+    
+    // MARK: - Public interface
+    
+    func show(_ enabled: Bool) {
+        UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
+            self?.alpha = enabled ? 1 : 0
         }
     }
-
-    /// method to animate and fade the trash button out
-    func hideTrash() {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.trashAnimationDuration) {
-            self.trashButton.alpha = 0
-        }
-    }
-
 }
 
 // MARK: - UI Layout
@@ -78,28 +75,33 @@ private extension MediaClipsEditorView {
 
     func setUpViews() {
         setUpCollection()
-        setUpTrash()
+        setUpNextButton()
     }
-
+    
     func setUpCollection() {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        let trailingMargin = MediaClipsEditorViewConstants.nextButtonSize + MediaClipsEditorViewConstants.buttonHorizontalMargin * 1.5
         NSLayoutConstraint.activate([
-            collectionContainer.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -MediaClipsEditorViewConstants.padding),
+            collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
+            collectionContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -MediaClipsEditorViewConstants.bottomPadding),
             collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
         ])
     }
-
-    func setUpTrash() {
-        addSubview(trashButton)
-        trashButton.translatesAutoresizingMaskIntoConstraints = false
+    
+    func setUpNextButton() {
+        addSubview(nextButton)
+        nextButton.accessibilityLabel = "Next Button"
+        nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            trashButton.bottomAnchor.constraint(equalTo: collectionContainer.topAnchor, constant: -MediaClipsEditorViewConstants.padding),
-            trashButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            trashButton.widthAnchor.constraint(equalTo: trashButton.heightAnchor),
-            trashButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.trashSize)
+            nextButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
+            nextButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.nextButtonSize),
+            nextButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.nextButtonSize),
+            nextButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor, constant: -MediaClipsEditorViewConstants.nextButtonCenterYOffset)
         ])
     }
 
@@ -108,8 +110,7 @@ private extension MediaClipsEditorView {
 // MARK: - Button handling
 extension MediaClipsEditorView {
 
-    @objc func trashPressed() {
-        delegate?.trashButtonWasPressed()
+    @objc func nextPressed() {
+        delegate?.nextButtonWasPressed()
     }
-
 }

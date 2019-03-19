@@ -5,14 +5,23 @@
 //
 
 import Foundation
+import TumblrTheme
 
 // The colors used throughout the module
 struct KanvasCameraColors {
     // MARK: - Shooting
-    static let shootButtonInactiveColor: UIColor = .white
-    static let shootButtonActiveColor: UIColor = .red
+    static let shootButtonBaseColor: UIColor = .white
     
     // MARK: - Media
     static let mediaBorderColor: UIColor = .white
     static let mediaSelectedBorderColor: UIColor = .red
+    
+    // MARK: - Clip collection
+    static let translucentBlack = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
+
+    // MARK: - Filters
+    static let filterTypes: [FilterType: UIColor] = [
+        .manga: .tumblrBrightPink,
+        .toon: .tumblrBrightOrange,
+    ]
 }

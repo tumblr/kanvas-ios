@@ -10,25 +10,22 @@ import TumblrTheme
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol MediaClipsCollectionCellDelegate {
+protocol MediaClipsCollectionCellDelegate {    
     /// Callback method for dragging the cell
     ///
     /// - Parameter newDragState: The new state of the drag event
     func didChangeState(newDragState: UICollectionViewCell.DragState)
-    
-    /// Callback method for swiping the cell
-    ///
-    /// - Parameter cell: The currently swiped cell
-    func didSwipeUp(cell: UICollectionViewCell)
 }
+
 private struct MediaClipsCollectionCellConstants {
-    static let cellPadding: CGFloat = 2
-    static let clipHeight: CGFloat = 80
-    static let clipWidth: CGFloat = 56
-    static let borderWidth: CGFloat = 2
+    static let cellPadding: CGFloat = 2.9
+    static let clipHeight: CGFloat = 60
+    static let clipWidth: CGFloat = 40
+    static let borderWidth: CGFloat = 1.1
     static let cornerRadius: CGFloat = 8
-    static let font: UIFont = .imbe85()
-    static let labelPadding: CGFloat = 6
+    static let font: UIFont = .favoritTumblrMedium(fontSize: 9.5)
+    static let labelHorizontalPadding: CGFloat = 5.5
+    static let labelVerticalPadding: CGFloat = 3.5
     static let labelHeight: CGFloat = 14
     static let clipAlpha: CGFloat = 0.5
 
@@ -64,10 +61,9 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     private let clipLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
-        label.textAlignment = .right
+        label.textAlignment = .left
         label.textColor = .white
         label.font = MediaClipsCollectionCellConstants.font
-        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     /// The touch delegate to be injected
@@ -76,19 +72,16 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
-        setupGestures()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
-        setupGestures()
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         clipImage.image = .none
-        setSelected(false)
     }
 
     /// updates the cell to the MediaClip properties
@@ -97,13 +90,6 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     func bindTo(_ item: MediaClip) {
         clipImage.image = item.representativeFrame
         clipLabel.text = item.overlayText
-    }
-
-    /// Updates the cell to display the corrent state
-    ///
-    /// - Parameter selected: whether the cell is selected or unselected
-    func setSelected(_ selected: Bool) {
-        clipView.layer.borderColor = selected ? KanvasCameraColors.mediaSelectedBorderColor.cgColor : KanvasCameraColors.mediaBorderColor.cgColor
     }
 }
 
@@ -119,11 +105,11 @@ extension MediaClipsCollectionCell {
         contentView.addSubview(clipView)
         clipView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            clipView.centerXAnchor.constraint(equalTo: contentView.safeLayoutGuide.centerXAnchor),
-            clipView.leadingAnchor.constraint(equalTo: contentView.safeLayoutGuide.leadingAnchor, constant: MediaClipsCollectionCellConstants.cellPadding),
-            clipView.trailingAnchor.constraint(equalTo: contentView.safeLayoutGuide.trailingAnchor, constant: -MediaClipsCollectionCellConstants.cellPadding),
-            clipView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeLayoutGuide.topAnchor),
-            clipView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeLayoutGuide.bottomAnchor),
+            clipView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            clipView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: MediaClipsCollectionCellConstants.cellPadding),
+            clipView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -MediaClipsCollectionCellConstants.cellPadding),
+            clipView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.topAnchor),
+            clipView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.bottomAnchor),
             clipView.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.clipHeight),
             clipView.widthAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.clipWidth)
         ])
@@ -133,17 +119,14 @@ extension MediaClipsCollectionCell {
     private func setupLabelConstraints() {
         clipLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            clipLabel.trailingAnchor.constraint(equalTo: clipView.trailingAnchor, constant: -MediaClipsCollectionCellConstants.labelPadding),
-            clipLabel.topAnchor.constraint(equalTo: clipView.topAnchor, constant: MediaClipsCollectionCellConstants.labelPadding),
-            clipLabel.leadingAnchor.constraint(equalTo: clipView.leadingAnchor, constant: MediaClipsCollectionCellConstants.labelPadding),
+            clipLabel.trailingAnchor.constraint(equalTo: clipView.trailingAnchor,
+                                                constant: -MediaClipsCollectionCellConstants.labelHorizontalPadding),
+            clipLabel.bottomAnchor.constraint(equalTo: clipView.bottomAnchor,
+                                              constant: -MediaClipsCollectionCellConstants.labelVerticalPadding),
+            clipLabel.leadingAnchor.constraint(equalTo: clipView.leadingAnchor,
+                                               constant: MediaClipsCollectionCellConstants.labelHorizontalPadding),
             clipLabel.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.labelHeight)
         ])
-    }
-
-    private func setupGestures() {
-        let swipeUpGesture = UISwipeGestureRecognizer(target: self, action: #selector(swiped(gesture:)))
-        swipeUpGesture.direction = .up
-        addGestureRecognizer(swipeUpGesture)
     }
     
     /// This overrides the original function to to notify the drag delegate of the changed state
@@ -152,10 +135,5 @@ extension MediaClipsCollectionCell {
     override func dragStateDidChange(_ dragState: UICollectionViewCell.DragState) {
         super.dragStateDidChange(dragState)
         touchDelegate?.didChangeState(newDragState: dragState)
-    }
-    
-    // MARK: - gestures
-    @objc private func swiped(gesture: UISwipeGestureRecognizer) {
-        touchDelegate?.didSwipeUp(cell: self)
     }
 }

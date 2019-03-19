@@ -9,8 +9,8 @@ import Foundation
 // the images used throughout the module
 struct KanvasCameraImages {
     // MARK: - Mode Selection
-    static let photoModeImage = UIImage.imageFromCameraBundle(named: "photoCameraMode")
-    static let gifModeImage = UIImage.imageFromCameraBundle(named: "gifCameraMode")
+    static let photoModeImage: UIImage? = .none
+    static let gifModeImage: UIImage? = .none
     static let stopMotionModeImage: UIImage? = .none
 
     static func image(for mode: CameraMode) -> UIImage? {
@@ -20,6 +20,7 @@ struct KanvasCameraImages {
         case .stopMotion: return stopMotionModeImage
         }
     }
+    
     // MARK: - Top options
     static let flashOnImage = UIImage.imageFromCameraBundle(named: "flashOn")
     static let flashOffImage = UIImage.imageFromCameraBundle(named: "flashOff")
@@ -30,7 +31,26 @@ struct KanvasCameraImages {
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
     static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
-    static let undoImage = UIImage.imageFromCameraBundle(named: "undoButton")
-    static let nextImage = UIImage.imageFromCameraBundle(named: "nextButton")
     static let deleteImage = UIImage.imageFromCameraBundle(named: "trashButton")
+    static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
+    static let nextImage = UIImage.imageFromCameraBundle(named: "next")
+    // MARK: - Filters
+    static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
+    static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
+    static let filterTypes: [FilterType: UIImage?] = [
+        .wavePool: UIImage.imageFromCameraBundle(named: "Water"),
+        .plasma: UIImage.imageFromCameraBundle(named: "Plasma"),
+        .emInterference: UIImage.imageFromCameraBundle(named: "EMInter"),
+        .rgb: UIImage.imageFromCameraBundle(named: "RGB"),
+        .lego: UIImage.imageFromCameraBundle(named: "Lego"),
+        .chroma: UIImage.imageFromCameraBundle(named: "Chroma"),
+        .rave: UIImage.imageFromCameraBundle(named: "Rave"),
+        .mirrorTwo: UIImage.imageFromCameraBundle(named: "TwoMirror"),
+        .mirrorFour: UIImage.imageFromCameraBundle(named: "FourMirror"),
+        .lightLeaks: UIImage.imageFromCameraBundle(named: "Rainbow"),
+        .film: UIImage.imageFromCameraBundle(named: "Noise"),
+        .grayscale: UIImage.imageFromCameraBundle(named: "BW"),
+        .manga: nil,
+        .toon: nil,
+    ]
 }

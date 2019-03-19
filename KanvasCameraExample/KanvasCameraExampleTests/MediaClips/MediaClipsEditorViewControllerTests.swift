@@ -44,16 +44,6 @@ final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
         XCTAssert(viewController.hasClips, "Editor Controller has no clips")
     }
 
-    func testUndo() {
-        guard let clip = newMediaClip() else { return }
-        let viewController = newViewController()
-        UIView.setAnimationsEnabled(false)
-        viewController.addNewClip(clip)
-        viewController.undo()
-        UIView.setAnimationsEnabled(true)
-        XCTAssert(!viewController.hasClips, "Undo failed, clips still remain")
-    }
-
     func testMoveClipCallsDelegate() {
         guard let clip1 = newMediaClip(), let clip2 = newMediaClip() else { return }
         let delegate = MediaClipsEditorViewControllerDelegateStub()
@@ -77,6 +67,7 @@ final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
 }
 
 final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate {
+    
     var movedWasCalled = false
     var dragStarted = false
     var dragFinished = false
@@ -98,5 +89,9 @@ final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate
     
     func mediaClipFinishedMoving() {
         dragFinished = true
+    }
+    
+    func nextButtonWasPressed() {
+        
     }
 }

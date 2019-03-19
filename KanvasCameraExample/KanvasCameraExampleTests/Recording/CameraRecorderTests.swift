@@ -19,7 +19,8 @@ final class CameraRecorderTests: XCTestCase {
                 videoOutput: nil,
                 audioOutput: nil,
                 recordingDelegate: nil,
-                segmentsHandler: CameraSegmentHandlerStub())
+                segmentsHandler: CameraSegmentHandlerStub(),
+                settings: CameraSettings())
         return cameraRecorder
     }
 
@@ -67,7 +68,7 @@ final class CameraRecorderTests: XCTestCase {
             cameraRecorder.addSegment(segment)
         }
         XCTAssert(cameraRecorder.segments().count == segments.count, "Wrong number of segments")
-        cameraRecorder.deleteSegmentAtIndex(0, removeFromDisk: false)
+        cameraRecorder.deleteSegment(at: 0, removeFromDisk: false)
         XCTAssert(cameraRecorder.segments().count == segments.count - 1, "CameraRecorder has wrong number of segments after deleting")
     }
 
@@ -88,6 +89,10 @@ final class CameraRecorderTests: XCTestCase {
 
 /// This mocks up a camera recorder delegate for future classes that require recording segments
 final class CameraRecorderDelegateStub: CameraRecordingDelegate {
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
+        return image
+    }
+
     var videoStart: Bool
     var videoFinish: Bool
 

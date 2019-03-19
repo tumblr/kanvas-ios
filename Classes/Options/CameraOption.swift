@@ -92,7 +92,7 @@ extension CameraController {
                                                alternateImage: getImage(for: settings.notDefaultFlashOption))),
             ],
         ]
-        if delegate?.cameraShouldEnableGhostFrame() ?? false {
+        if settings.features.ghostFrame {
             options.append([
                 Option(option: settings.imagePreviewOption.cameraOption,
                        image: getImage(for: settings.imagePreviewOption),

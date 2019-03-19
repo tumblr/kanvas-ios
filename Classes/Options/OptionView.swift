@@ -23,6 +23,7 @@ final class OptionView: UIView {
         button = ExtendedButton(inset: inset)
         button.contentMode = .scaleAspectFit
         button.setImage(image, for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
         button.applyShadows()
         super.init(frame: .zero)
         setUpButton()
@@ -49,10 +50,10 @@ final class OptionView: UIView {
         addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor),
-            button.centerYAnchor.constraint(equalTo: centerYAnchor),
-            safeLayoutGuide.heightAnchor.constraint(equalTo: safeLayoutGuide.widthAnchor)
-            ])
+            button.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            button.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            button.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
 }
