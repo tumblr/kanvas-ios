@@ -106,7 +106,20 @@ final class CameraView: UIView {
             showViews(shownViews: views, hiddenViews: [], animated: true)
         }
     }
-
+    
+    /// Updates the UI depending on whether a clip is being dragged
+    ///
+    /// - Parameter isDragging: if the UI should reflect that the user is currently dragging a clip
+    func updateUI(forDraggingClip isDragging: Bool) {
+        let views = [closeButton, topOptionsContainer, filterSettingsViewContainer]
+        if isDragging {
+            showViews(shownViews: [], hiddenViews: views, animated: true)
+        }
+        else {
+            showViews(shownViews: views, hiddenViews: [], animated: true)
+        }
+    }
+    
     // MARK: - Layout
     private func setupLayoutGuides() {
         setupCameraInputGuide()
