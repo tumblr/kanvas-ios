@@ -34,6 +34,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     private var clips: [MediaClip]
     private var draggingClipIndex: IndexPath?
+    private var draggingCell: MediaClipsCollectionCell?
     private var draggingState: UICollectionViewCell.DragState = .none
 
     weak var delegate: MediaClipsCollectionControllerDelegate?
@@ -177,6 +178,7 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         draggingClipIndex = indexPath
+        draggingCell = collectionView.cellForItem(at: indexPath) as? MediaClipsCollectionCell
         let item = clips[indexPath.item]
         // Local object won't be used
         let itemProvider = NSItemProvider(object: item.representativeFrame)
@@ -186,12 +188,19 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        draggingCell?.show(true)
         let parameters = UIDragPreviewParameters()
         parameters.backgroundColor = .clear
         return parameters
     }
     
+    func collectionView(_ collectionView: UICollectionView, dragSessionWillBegin session: UIDragSession) {
+        draggingCell?.show(false)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        draggingCell?.show(true)
+        draggingCell = .none
         draggingClipIndex = .none
     }
 }
@@ -225,7 +234,6 @@ extension MediaClipsCollectionController: UICollectionViewDropDelegate {
         }
         return parameters
     }
-    
 }
 
 // MARK: - MediaClipsCollectionCellDelegate
