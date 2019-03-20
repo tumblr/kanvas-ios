@@ -105,14 +105,11 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         return collectionController.getLastFrameFromLastClip()
     }
     
-    /// Shows the clip collection and the next button
-    func showViews() {
-        editorView.show(true)
-    }
-    
-    /// Hides the clip collection and the next button
-    func hideViews() {
-        editorView.show(false)
+    /// Shows or hides the clip collection and the next button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showViews(_ show: Bool) {
+        editorView.show(show)
     }
     
     // MARK: - MediaClipsControllerDelegate

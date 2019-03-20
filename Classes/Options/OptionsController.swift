@@ -111,19 +111,12 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     
     // MARK: - Public interface
     
-    /// Changes the visibility of the top options depending on the camera mode
+    /// Changes the visibility of the top options depending on the clip collection size
     ///
-    /// - Parameter mode: The current camera mode
-    func configureMode(_ mode: CameraMode) {
-        switch mode {
-        case .stopMotion:
-            UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
-                self?.imagePreviewOptionsStackView?.alpha = 1
-            }
-        case .photo, .gif:
-            UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
-                self?.imagePreviewOptionsStackView?.alpha = 0
-            }
+    /// - Parameter areThereClips: whether there are clips or the collection is empty
+    func configureOptions(areThereClips: Bool) {
+        UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
+            self?.imagePreviewOptionsStackView?.alpha = areThereClips ? 1 : 0
         }
     }
 

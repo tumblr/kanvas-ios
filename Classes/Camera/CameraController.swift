@@ -332,7 +332,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func updateMode(_ mode: CameraMode) {
         if mode != currentMode {
             currentMode = mode
-            topOptionsController.configureMode(mode)
             do {
                 try cameraInputController.configureMode(mode)
             } catch {
@@ -377,13 +376,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - UI
-    private func enableBottomViewButtons(show: Bool) {
-        if clipsController.hasClips || settings.enabledModes.count == 1 {
-            clipsController.showViews()
+    private func updateUI(forClipsPresent hasClips: Bool) {
+        topOptionsController.configureOptions(areThereClips: hasClips)
+        clipsController.showViews(hasClips)
+        if hasClips || settings.enabledModes.count == 1 {
             modeAndShootController.hideModeButton()
         }
         else {
-            clipsController.hideViews()
             modeAndShootController.showModeButton()
         }
     }
@@ -397,10 +396,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func bindMediaContentAvailable() {
         disposables.append(clipsController.observe(\.hasClips) { [unowned self] object, _ in
             performUIUpdate {
-                self.enableBottomViewButtons(show: object.hasClips)
+                self.updateUI(forClipsPresent: object.hasClips)
             }
         })
-        enableBottomViewButtons(show: clipsController.hasClips)
+        updateUI(forClipsPresent: clipsController.hasClips)
     }
     
     // MARK: - CameraViewDelegate
@@ -522,7 +521,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipStartedMoving() {
         performUIUpdate { [weak self] in
-            self?.enableBottomViewButtons(show: false)
             self?.modeAndShootController.showTrashView(true)
         }
     }
@@ -530,7 +528,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipFinishedMoving() {
         analyticsProvider?.logMovedClip()
         performUIUpdate { [weak self] in
-            self?.enableBottomViewButtons(show: true)
             self?.modeAndShootController.showTrashView(false)
         }
     }
