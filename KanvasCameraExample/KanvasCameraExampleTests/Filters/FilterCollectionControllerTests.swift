@@ -19,7 +19,7 @@ final class FilterCollectionControllerTests: FBSnapshotTestCase {
     }
     
     func newViewController() -> FilterCollectionController {
-        let controller = FilterCollectionController()
+        let controller = FilterCollectionController(settings: CameraSettings())
         controller.view.frame = CGRect(x: 0, y: 0, width: 600, height: 600)
         controller.view.setNeedsDisplay()
         return controller

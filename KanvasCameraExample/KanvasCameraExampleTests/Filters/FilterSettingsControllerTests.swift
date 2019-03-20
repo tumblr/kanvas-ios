@@ -19,7 +19,7 @@ final class FilterSettingsControllerTests: FBSnapshotTestCase {
     }
     
     func newViewController() -> FilterSettingsController {
-        let controller = FilterSettingsController()
+        let controller = FilterSettingsController(settings: CameraSettings())
         controller.view.frame = CGRect(x: 0, y: 0, width: 600, height: FilterSettingsView.height)
         controller.view.setNeedsDisplay()
         return controller
