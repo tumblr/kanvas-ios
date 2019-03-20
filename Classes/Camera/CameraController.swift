@@ -83,7 +83,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return controller
     }()
     private lazy var filterSettingsController: FilterSettingsController = {
-        let controller = FilterSettingsController()
+        let controller = FilterSettingsController(settings: self.settings)
         controller.delegate = self
         return controller
     }()
