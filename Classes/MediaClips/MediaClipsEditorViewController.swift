@@ -122,6 +122,16 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         editorView.showPreviewButton(false)
     }
     
+    /// Shows the preview button
+    func showPreviewButton() {
+        editorView.showPreviewButton(true)
+    }
+    
+    /// Hides the preview button
+    func hidePreviewButton() {
+        editorView.showPreviewButton(false)
+    }
+    
     // MARK: - MediaClipsControllerDelegate
     func mediaClipStartedMoving() {
         delegate?.mediaClipStartedMoving()
