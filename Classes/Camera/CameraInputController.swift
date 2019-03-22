@@ -10,8 +10,9 @@ import UIKit
 
 /// Default values for the input camera
 private struct CameraInputConstants {
-    static let sampleBufferQueue: String = "SampleBufferQueue"
-    static let audioQueue: String = "AudioQueue"
+    static let sessionQueue: String = "kanvas.camera.sessionQueue"
+    static let videoQueue: String = "kanvas.camera.videoQueue"
+    static let audioQueue: String = "kanvas.camera.audioQueue"
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
 }
 
@@ -19,6 +20,8 @@ private struct CameraInputConstants {
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
 final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, FilteredInputViewControllerDelegate {
+
+    var willCloseSoon = false
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -52,8 +55,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }()
     private let previewLayer = AVCaptureVideoPreviewLayer()
     private let flashLayer = CALayer()
-    private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.sampleBufferQueue)
-    private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, qos: .utility)
+    private let sessionQueue = DispatchQueue(label: CameraInputConstants.sessionQueue, attributes: [])
+    private let videoQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.videoQueue, attributes: [], target: DispatchQueue.global(qos: .userInteractive))
+    private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, attributes: [])
     private let isSimulator = TARGET_OS_SIMULATOR != 0
 
     private var settings: CameraSettings
@@ -78,10 +82,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
     private var recorder: CameraRecordingProtocol?
-    private var filterViewNeedsReset: Bool = false
     
     /// The delegate methods for zooming and touches
-    var delegate: CameraInputControllerDelegate?
+    weak var delegate: CameraInputControllerDelegate?
     
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -118,22 +121,36 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
     
     @objc private func appWillResignActive() {
-        captureSession?.stopRunning()
+        sessionQueue.sync {
+            captureSession?.stopRunning()
+        }
     }
 
     @objc private func appDidBecomeActive() {
-        captureSession?.startRunning()
+        sessionQueue.sync {
+            captureSession?.startRunning()
+        }
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+
+        cleanup()
+    }
+
+    func stopSession() {
+        sessionQueue.sync {
+            captureSession?.stopRunning()
+        }
     }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        createCaptureSession()
-        configureSession()
+        sessionQueue.sync {
+            createCaptureSession()
+            configureSession()
+        }
         setupGestures()
 
         if filteredInputViewController != nil {
@@ -152,21 +169,28 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         guard !isSimulator else { return }
 
-        captureSession?.startRunning()
+        guard !willCloseSoon else { return }
+
+        sessionQueue.sync {
+            captureSession?.startRunning()
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         guard !isSimulator else { return }
+
+        sessionQueue.sync {
+            captureSession?.stopRunning()
+        }
     }
 
     func cleanup() {
         guard !isSimulator else { return }
 
-        filteredInputViewController?.cleanup()
-        removeSessionInputsAndOutputs()
         captureSession?.stopRunning()
+        removeSessionInputsAndOutputs()
         captureSession = nil
     }
 
@@ -229,12 +253,14 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Switches between front and rear camera, if possible
     func switchCameras() {
-        captureSession?.stopRunning()
-        do {
-            try? toggleFrontRearCameras()
-            try? configureCurrentOutput()
+        sessionQueue.sync {
+            captureSession?.stopRunning()
+            do {
+                try? toggleFrontRearCameras()
+                try? configureCurrentOutput()
+            }
+            captureSession?.startRunning()
         }
-        captureSession?.startRunning()
 
         // have to rebuild the filtered input display setup
         filteredInputViewController?.reset()
@@ -488,7 +514,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         else { throw CameraInputError.invalidOperation }
         videoDataOutput = videoOutput
 
-        videoDataOutput?.setSampleBufferDelegate(self, queue: sampleBufferQueue)
+        videoDataOutput?.setSampleBufferDelegate(self, queue: videoQueue)
     }
 
     private func configureAudioDataOutput() throws {
@@ -631,8 +657,22 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // dropping a sample should be okay here, processor could be busy
         var mode: CMAttachmentMode = 0
-        let reason = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
-        print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
+        let reasonMaybe = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
+        guard let reason = reasonMaybe else {
+            assertionFailure("CMSampleBuffer was dropped for an unknown reason")
+            return
+        }
+        let reasonString = String(describing: reason)
+        print("CMSampleBuffer was dropped for reason: \(reason)")
+
+        if reasonString == (kCMSampleBufferDroppedFrameReason_OutOfBuffers as String) {
+            print("Restarting capture session: OutOfBuffers")
+            filteredInputViewController?.reset()
+            sessionQueue.sync {
+                captureSession?.stopRunning()
+                captureSession?.startRunning()
+            }
+        }
     }
     
     // MARK: - FilteredInputViewControllerDelegate

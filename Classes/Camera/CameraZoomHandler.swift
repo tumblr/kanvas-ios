@@ -14,7 +14,7 @@ private struct CameraZoomConstants {
 }
 
 /// protocol for handling the current zoom on a device
-protocol CameraZoomHandlerDelegate {
+protocol CameraZoomHandlerDelegate: class {
     /// Gets the current device for zooming
     var currentDeviceForZooming: AVCaptureDevice? { get }
 }
@@ -23,7 +23,7 @@ protocol CameraZoomHandlerDelegate {
 final class CameraZoomHandler {
     
     /// The delegate for the camera zoom
-    var delegate: CameraZoomHandlerDelegate?
+    weak var delegate: CameraZoomHandlerDelegate?
     private var initialZoomFactor: CGFloat = CameraZoomConstants.minimumZoom
     /// These two variables act as a reference point for the pan zoom
     private var baseZoom: CGFloat = CameraZoomConstants.minimumZoom

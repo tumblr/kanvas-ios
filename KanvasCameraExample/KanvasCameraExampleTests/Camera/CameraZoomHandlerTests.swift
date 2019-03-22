@@ -10,10 +10,13 @@ import Foundation
 import XCTest
 
 final class CameraZoomHandlerTests: XCTestCase {
+
+    private let cameraZoomHandlerDelegate = CameraZoomHandlerDelegateStub()
+
     /// Cameras require actual devices to function
     func newCameraZoomHandler() -> CameraZoomHandler {
         let cameraZoomHandler = CameraZoomHandler()
-        cameraZoomHandler.delegate = CameraZoomHandlerDelegateStub()
+        cameraZoomHandler.delegate = cameraZoomHandlerDelegate
         return cameraZoomHandler
     }
     

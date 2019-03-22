@@ -23,7 +23,7 @@ class Filter: FilterProtocol {
     var shader: Shader?
     
     /// The output format description from a CMSampleBuffer
-    weak var outputFormatDescription: CMFormatDescription?
+    var outputFormatDescription: CMFormatDescription?
     
     /// Output width for texture
     var outputWidth: Int?
@@ -42,10 +42,12 @@ class Filter: FilterProtocol {
     ///
     /// - Parameter sampleBuffer: the input sample buffer
     func setupFormatDescription(from sampleBuffer: CMSampleBuffer) {
-        if outputFormatDescription == nil, let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
-            let dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription)
-            let _ = initializeBuffersWithOutputDimensions(dimensions)
-            self.outputFormatDescription = formatDescription
+        if outputFormatDescription == nil, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
+            let dimensions = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
+            deleteBuffers()
+            if !initializeBuffersWithOutputDimensions(dimensions) {
+                assertionFailure("Problem initializing filter")
+            }
         }
     }
     
@@ -85,7 +87,7 @@ class Filter: FilterProtocol {
             setupShader()
             
             guard let shader = shader else {
-                return false
+                throw GLError.setupError("Problem initializing shader.")
             }
             frame = GLU.getUniformLocation(shader.program, "inputImageTexture")
             
@@ -96,10 +98,10 @@ class Filter: FilterProtocol {
             }
             
             bufferPoolAuxAttributes = createPixelBufferPoolAuxAttributes(maxRetainedBufferCount)
-            guard let bufferPool = bufferPool else {
+            guard let bufferPool = bufferPool, let bufferPoolAttributes = bufferPoolAuxAttributes else {
                 throw GLError.setupError("Problem allocating the pixel buffers")
             }
-            //preallocatePixelBuffersInPool(bufferPool, bufferPoolAttributes)
+            preallocatePixelBuffersInPool(bufferPool, bufferPoolAttributes)
             
             var outputFormatDescription: CMFormatDescription? = nil
             var testPixelBuffer: CVPixelBuffer? = nil
@@ -130,7 +132,7 @@ class Filter: FilterProtocol {
                                                       kCVPixelFormatOpenGLESCompatibility: true,
                                                       kCVPixelBufferIOSurfacePropertiesKey: NSDictionary()]
 
-        let pixelBufferPoolOptions: NSDictionary = [kCVPixelBufferPoolAllocationThresholdKey: 5, kCVPixelBufferPoolMinimumBufferCountKey: 2]
+        let pixelBufferPoolOptions: NSDictionary = [kCVPixelBufferPoolMinimumBufferCountKey: maxBufferCount]
         
         CVPixelBufferPoolCreate(kCFAllocatorDefault, pixelBufferPoolOptions, sourcePixelBufferOptions, &outputPool)
         
@@ -151,7 +153,10 @@ class Filter: FilterProtocol {
             if err == kCVReturnWouldExceedAllocationThreshold {
                 break
             }
-            if err == noErr, let pixelBuffer = pixelBuffer {
+            if err != noErr {
+                assertionFailure("Error preallocating pixel buffers in pool")
+            }
+            else if let pixelBuffer = pixelBuffer {
                 pixelBuffers.append(pixelBuffer)
             }
         }
@@ -191,16 +196,13 @@ class Filter: FilterProtocol {
         }
         shader?.deleteProgram()
         shader = nil
-        if let textureCacheNotNull = textureCache {
-            CVOpenGLESTextureCacheFlush(textureCacheNotNull, 0)
+        if textureCache != nil {
             textureCache = nil
         }
-        if let renderTextureCacheNotNull = renderTextureCache {
-            CVOpenGLESTextureCacheFlush(renderTextureCacheNotNull, 0)
+        if renderTextureCache != nil {
             renderTextureCache = nil
         }
-        if let bufferPoolNotNull = bufferPool {
-            CVPixelBufferPoolFlush(bufferPoolNotNull, [CVPixelBufferPoolFlushFlags.excessBuffers])
+        if bufferPool != nil {
             bufferPool = nil
         }
         if bufferPoolAuxAttributes != nil {
@@ -219,13 +221,11 @@ class Filter: FilterProtocol {
         guard let shader = shader, let pixelBuffer = pixelBuffer, let textureCache = textureCache, let outputFormatDescription = outputFormatDescription, let bufferPool = bufferPool, let renderTextureCache = renderTextureCache else {
             return nil
         }
-        CVPixelBufferLockBaseAddress(pixelBuffer, [])
         let oldContext = EAGLContext.current()
         if oldContext !== glContext {
             _ = EAGLContext.setCurrent(glContext)
         }
         defer {
-            CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
             glFlush()
             if oldContext !== glContext {
                 EAGLContext.setCurrent(oldContext)

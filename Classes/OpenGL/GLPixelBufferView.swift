@@ -134,6 +134,11 @@ final class GLPixelBufferView: UIView {
                 return
             }
         }
+        defer {
+            if oldContext !== oglContext {
+                EAGLContext.setCurrent(oldContext)
+            }
+        }
         
         if frameBufferHandle == 0 {
             let success = self.initializeBuffers()
@@ -230,10 +235,6 @@ final class GLPixelBufferView: UIView {
 
         glBindTexture(CVOpenGLESTextureGetTarget(texture), 0)
         glBindTexture(GL_TEXTURE_2D.ui, 0)
-
-        if oldContext !== oglContext {
-            EAGLContext.setCurrent(oldContext)
-        }
     }
 
     /// Flushes the texture cache

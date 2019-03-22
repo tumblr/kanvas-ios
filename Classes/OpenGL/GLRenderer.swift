@@ -57,12 +57,16 @@ final class GLRenderer {
         }
         else {
             let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-            if let filteredPixelBuffer = filter.processPixelBuffer(sourcePixelBuffer) {
+
+            let filteredPixelBufferMaybe: CVPixelBuffer? = synchronized(self) {
+                let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+                return filter.processPixelBuffer(sourcePixelBuffer)
+            }
+
+            if let filteredPixelBuffer = filteredPixelBufferMaybe {
                 delegate?.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer, presentationTime: time)
             }
             else {
-                filter.cleanup()
                 delegate?.rendererRanOutOfBuffers()
             }
         }
@@ -104,10 +108,14 @@ final class GLRenderer {
 
     // MARK: - changing filters
     func changeFilter(_ filterType: FilterType) {
-        filter.cleanup()
+        guard self.filterType != filterType else {
+            return
+        }
 
         self.filterType = filterType
-        filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
+        synchronized(self) {
+            filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
+        }
     }
 
     /// Method to call reset on the camera filter

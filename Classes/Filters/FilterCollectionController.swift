@@ -28,7 +28,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     weak var delegate: FilterCollectionControllerDelegate?
     
     /// Initializes the collection
-    init() {
+    init(settings: CameraSettings) {
         filterItems = [
             FilterItem(type: .passthrough),
             FilterItem(type: .wavePool),
@@ -43,9 +43,13 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
             FilterItem(type: .lightLeaks),
             FilterItem(type: .film),
             FilterItem(type: .grayscale),
-            FilterItem(type: .manga),
-            FilterItem(type: .toon),
         ]
+        if settings.features.experimentalCameraFilters {
+            filterItems.append(contentsOf: [
+                FilterItem(type: .manga),
+                FilterItem(type: .toon),
+            ])
+        }
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -180,10 +184,10 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         else {
             let targetOffset = targetContentOffset.pointee
             let itemWidth = FilterCollectionCell.width
-            let extra = targetOffset.x.truncatingRemainder(dividingBy: itemWidth)
-            let newTargetOffset = targetOffset.x - extra
+            let roundedIndex = CGFloat(targetOffset.x / itemWidth).rounded()
+            let newTargetOffset = roundedIndex * itemWidth
             targetContentOffset.pointee.x = newTargetOffset
-            let itemIndex = Int(newTargetOffset / itemWidth)
+            let itemIndex = Int(roundedIndex)
             delegate?.didSelectFilter(filterItems[itemIndex])
         }
     }
