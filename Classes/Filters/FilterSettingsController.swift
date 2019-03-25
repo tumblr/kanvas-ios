@@ -61,6 +61,18 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
         load(childViewController: collectionController, into: filterSettingsView.collectionContainer)
     }
     
+    // MARK: - Public interface
+    
+    /// shows the filter visibility button (discoball)
+    func showFilterVisibilityButton() {
+        filterSettingsView.showVisibilityButton(true)
+    }
+    
+    /// hides the filter visibility button (discoball)
+    func hideFilterVisibilityButton() {
+        filterSettingsView.showVisibilityButton(false)
+    }
+    
     // MARK: - FilterSettingsViewDelegate
     
     func didTapVisibilityButton() {

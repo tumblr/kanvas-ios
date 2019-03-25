@@ -360,7 +360,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         isRecording = event == .started
         cameraView.updateUI(forRecording: isRecording)
         if isRecording {
+            filterSettingsController.hideFilterVisibilityButton()
             modeAndShootController.hideModeButton()
+        } else {
+            filterSettingsController.showFilterVisibilityButton()
         }
         // If it finished recording, then there is at least one clip and button shouldn't be shown.
     }
