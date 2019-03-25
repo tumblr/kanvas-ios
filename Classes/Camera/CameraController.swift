@@ -409,7 +409,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             try audioSession.setActive(false, options: .notifyOthersOnDeactivation)
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
+        }
+        catch {
             NSLog("Audio session setActive() failed: \(error)")
         }
     }
@@ -417,7 +418,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func checkAudioSessionStatus() {
         do {
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        } catch {
+        }
+        catch {
             NSLog("Audio session failed to deactivate: \(error)")
         }
     }
