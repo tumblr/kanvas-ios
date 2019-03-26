@@ -16,7 +16,7 @@ protocol FilterCollectionCellDelegate {
 }
 
 private struct FilterCollectionCellConstants {
-    static let animationDuration: TimeInterval = 0.1
+    static let animationDuration: TimeInterval = 0.2
     static let circleDiameter: CGFloat = 72
     static let circleMaxDiameter: CGFloat = 96.1
     
@@ -58,6 +58,15 @@ final class FilterCollectionCell: UICollectionViewCell {
         guard item.type != .passthrough else { return }
         circleView?.image = KanvasCameraImages.filterTypes[item.type] ?? nil
         circleView?.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
+    }
+    
+    /// shows or hides the cell
+    ///
+    /// - Parameter show: true to show, false to hide
+    func show(_ show: Bool) {
+        UIView.animate(withDuration: FilterCollectionCellConstants.animationDuration) { [weak self] in
+            self?.contentView.alpha = show ? 1 : 0
+        }
     }
     
     /// Updates the cell to be reused

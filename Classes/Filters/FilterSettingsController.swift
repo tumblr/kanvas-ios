@@ -63,14 +63,12 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     
     // MARK: - Public interface
     
-    /// shows the filter visibility button (discoball)
-    func showFilterVisibilityButton() {
-        filterSettingsView.showVisibilityButton(true)
-    }
-    
-    /// hides the filter visibility button (discoball)
-    func hideFilterVisibilityButton() {
-        filterSettingsView.showVisibilityButton(false)
+    /// Updates the UI depending on whether recording is enabled
+    ///
+    /// - Parameter isRecording: if the UI should reflect that the user is currently recording
+    func updateUI(forRecording isRecording: Bool) {
+        filterSettingsView.showVisibilityButton(!isRecording)
+        collectionController.updateUI(forRecording: isRecording)
     }
     
     // MARK: - FilterSettingsViewDelegate
