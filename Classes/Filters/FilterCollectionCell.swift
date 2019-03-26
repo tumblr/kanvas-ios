@@ -135,10 +135,10 @@ final class FilterCollectionCell: UICollectionViewCell {
     }
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(cell: self, recognizer:  recognizer)
+        delegate?.didTap(cell: self, recognizer: recognizer)
     }
     
     @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        delegate?.didLongPress(cell: self, recognizer:  recognizer)
+        delegate?.didLongPress(cell: self, recognizer: recognizer)
     }
 }
