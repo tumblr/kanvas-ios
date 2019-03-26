@@ -96,6 +96,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
     private let cameraZoomHandler: CameraZoomHandler
+    private let feedbackGenerator: UINotificationFeedbackGenerator
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -130,6 +131,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.segmentsHandlerClass = segmentsHandlerClass
         self.analyticsProvider = analyticsProvider
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
+        feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
         cameraZoomHandler.delegate = self
     }
@@ -407,7 +409,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setActive(false, options: .notifyOthersOnDeactivation)
-            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            feedbackGenerator.notificationOccurred(.success)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         }
         catch {
@@ -470,6 +472,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         case .gif:
             takeGif(useLongerDuration: true)
         case .stopMotion:
+            feedbackGenerator.prepare()
             let _ = cameraInputController.startRecording()
             performUIUpdate { [weak self] in
                 self?.updateRecordState(event: .started)
