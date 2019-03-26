@@ -9,7 +9,19 @@ import UIKit
 
 protocol FilterCollectionControllerDelegate: class {
     /// Callback for when a filter item is selected
+    ///
+    /// - Parameter filterItem: the selected filter
     func didSelectFilter(_ filterItem: FilterItem)
+    
+    /// Callback for when the selected filter is tapped
+    ///
+    /// - Parameter recognizer: the tap recognizer
+    func didTapSelectedFilter(recognizer: UITapGestureRecognizer)
+    
+    /// Callback for when the selected filter is longpressed
+    ///
+    /// - Parameter recognizer: the longpress recognizer
+    func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer)
 }
 
 /// Constants for Collection Controller
@@ -97,10 +109,16 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     // MARK: - Public interface
     
+    /// indicates whether the filter selector is visible
+    ///
+    /// - Returns: true if visible, false if hidden
     func isViewVisible() -> Bool {
         return filterCollectionView.alpha > 0
     }
     
+    /// shows or hides the filter selector
+    ///
+    /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
         UIView.animate(withDuration: FilterCollectionControllerConstants.animationDuration) {
             self.filterCollectionView.alpha = show ? 1 : 0
@@ -237,14 +255,32 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         cell?.setStandardSize()
     }
     
+    // MARK: - Private utilities
+    
+    /// Indicates if the cell is inside the shutter button
+    ///
+    /// - Parameter cell: the filter cell
+    /// - Returns: true if the cell is inside the shutter button, false if not
+    private func isSelectedCell(_ cell: FilterCollectionCell) -> Bool {
+        let indexPath = filterCollectionView.collectionView.indexPath(for: cell)
+        let centerIndexPath = indexPathAtCenter()
+        return indexPath == centerIndexPath
+    }
+
     // MARK: - FilterCollectionCellDelegate
     
-    /// Scrolls to the cell that was tapped
-    ///
-    /// - Parameter cell: the cell that was tapped
-    func didTap(cell: FilterCollectionCell) {
-        if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
+    func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
+        if isSelectedCell(cell) {
+            delegate?.didTapSelectedFilter(recognizer: recognizer)
+        }
+        else if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
             scrollToOptionAt(indexPath.item)
+        }
+    }
+    
+    func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
+        if isSelectedCell(cell) {
+            delegate?.didLongPressSelectedFilter(recognizer: recognizer)
         }
     }
 }

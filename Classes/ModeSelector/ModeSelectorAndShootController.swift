@@ -99,6 +99,22 @@ final class ModeSelectorAndShootController: UIViewController {
         }
     }
     
+    // MARK: - Public interface
+    
+    /// generates a tap gesture on the shutter button
+    ///
+    /// - Parameter recognizer: the tap gesture recognizer
+    func tapShootButton(recognizer: UITapGestureRecognizer) {
+        modeView.tapShootButton(recognizer: recognizer)
+    }
+    
+    /// generates a longpress gesture on the shutter button
+    ///
+    /// - Parameter recognizer: the longpress gesture recognizer
+    func longPressShootButton(recognizer: UILongPressGestureRecognizer) {
+        modeView.longPressShootButton(recognizer: recognizer)
+    }
+    
     /// enables or disables the user interation on the shutter button
     ///
     /// - Parameter enabled: true to enable, false to disable

@@ -323,27 +323,11 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
 
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        switch trigger {
-        case .tap:
-            animateTapEffect()
-            startCircleAnimation()
-        case .tapAndHold(animateCircle: true):
-            animateTapEffect()
-            startCircleAnimation()
-        case .tapAndHold(animateCircle: false):
-            animateTapEffect()
-        case .hold: return // Do nothing on tap
-        }
-        delegate?.shootButtonViewDidTap()
+        tap(recognizer: recognizer)
     }
 
     @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        switch trigger {
-        case .hold, .tapAndHold:
-            onLongPress(recognizer: recognizer)
-        default:
-            break
-        }
+        longPress(recognizer: recognizer)
     }
     
     private func onLongPress(recognizer: UILongPressGestureRecognizer) {
@@ -511,6 +495,36 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
     
     // MARK: - Public interface
+    
+    /// generates a tap gesture
+    ///
+    /// - Parameter recognizer: the tap gesture recognizer
+    func tap(recognizer: UITapGestureRecognizer) {
+        switch trigger {
+        case .tap:
+            animateTapEffect()
+            startCircleAnimation()
+        case .tapAndHold(animateCircle: true):
+            animateTapEffect()
+            startCircleAnimation()
+        case .tapAndHold(animateCircle: false):
+            animateTapEffect()
+        case .hold: return // Do nothing on tap
+        }
+        delegate?.shootButtonViewDidTap()
+    }
+    
+    /// generates a longpress gesture
+    ///
+    /// - Parameter recognizer: the longpress gesture recognizer
+    func longPress(recognizer: UILongPressGestureRecognizer) {
+        switch trigger {
+        case .hold, .tapAndHold:
+            onLongPress(recognizer: recognizer)
+        default:
+            break
+        }
+    }
     
     /// enables or disables the user interation on the shutter button
     ///
