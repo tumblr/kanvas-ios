@@ -323,14 +323,38 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
 
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        tap(recognizer: recognizer)
+        onTap(recognizer: recognizer)
     }
 
     @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        longPress(recognizer: recognizer)
+        onLongPress(recognizer: recognizer)
+    }
+    
+    private func onTap(recognizer: UITapGestureRecognizer) {
+        switch trigger {
+        case .tap:
+            animateTapEffect()
+            startCircleAnimation()
+        case .tapAndHold(animateCircle: true):
+            animateTapEffect()
+            startCircleAnimation()
+        case .tapAndHold(animateCircle: false):
+            animateTapEffect()
+        case .hold: return // Do nothing on tap
+        }
+        delegate?.shootButtonViewDidTap()
     }
     
     private func onLongPress(recognizer: UILongPressGestureRecognizer) {
+        switch trigger {
+        case .hold, .tapAndHold:
+            onLongPressAllowed(recognizer: recognizer)
+        default:
+            break
+        }
+    }
+    
+    private func onLongPressAllowed(recognizer: UILongPressGestureRecognizer) {
         switch recognizer.state {
         case .began:
             updateForLongPress(started: true)
@@ -499,31 +523,15 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     /// generates a tap gesture
     ///
     /// - Parameter recognizer: the tap gesture recognizer
-    func tap(recognizer: UITapGestureRecognizer) {
-        switch trigger {
-        case .tap:
-            animateTapEffect()
-            startCircleAnimation()
-        case .tapAndHold(animateCircle: true):
-            animateTapEffect()
-            startCircleAnimation()
-        case .tapAndHold(animateCircle: false):
-            animateTapEffect()
-        case .hold: return // Do nothing on tap
-        }
-        delegate?.shootButtonViewDidTap()
+    func generateTap(recognizer: UITapGestureRecognizer) {
+        onTap(recognizer: recognizer)
     }
     
     /// generates a longpress gesture
     ///
     /// - Parameter recognizer: the longpress gesture recognizer
-    func longPress(recognizer: UILongPressGestureRecognizer) {
-        switch trigger {
-        case .hold, .tapAndHold:
-            onLongPress(recognizer: recognizer)
-        default:
-            break
-        }
+    func generateLongPress(recognizer: UILongPressGestureRecognizer) {
+        onLongPress(recognizer: recognizer)
     }
     
     /// enables or disables the user interation on the shutter button
