@@ -403,7 +403,19 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func applyFilter(filterType: FilterType) {
         filteredInputViewController?.applyFilter(type: filterType)
     }
-
+    
+    /// Activates/deactivates the current audio session
+    ///
+    /// - Parameter active: the new status for the session
+    func setAudioSession(active: Bool) {
+        do {
+            try AVAudioSession.sharedInstance().setActive(active, options: .notifyOthersOnDeactivation)
+        }
+        catch {
+            NSLog("AVAudioSession.setActive() failed: \(error)")
+        }
+    }
+    
     // MARK: - private methods
 
     @objc private func tapped(gesture: UITapGestureRecognizer) {

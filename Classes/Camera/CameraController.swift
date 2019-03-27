@@ -404,26 +404,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         updateUI(forClipsPresent: clipsController.hasClips)
     }
     
+    /// Makes the device vibrate
     private func sendVibrationFeedback() {
-        checkAudioSessionStatus()
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setActive(false, options: .notifyOthersOnDeactivation)
-            feedbackGenerator.notificationOccurred(.success)
-            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-        }
-        catch {
-            NSLog("Audio session setActive() failed: \(error)")
-        }
-    }
-    
-    private func checkAudioSessionStatus() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        }
-        catch {
-            NSLog("Audio session failed to deactivate: \(error)")
-        }
+        cameraInputController.setAudioSession(active: false)
+        feedbackGenerator.notificationOccurred(.success)
+        cameraInputController.setAudioSession(active: true)
     }
     
     // MARK: - CameraViewDelegate
