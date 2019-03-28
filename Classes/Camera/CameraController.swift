@@ -404,13 +404,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         updateUI(forClipsPresent: clipsController.hasClips)
     }
     
-    /// Makes the device vibrate
-    private func sendVibrationFeedback() {
-        cameraInputController.setAudioSession(active: false)
-        feedbackGenerator.notificationOccurred(.success)
-        cameraInputController.setAudioSession(active: true)
-    }
-    
     // MARK: - CameraViewDelegate
 
     func closeButtonPressed() {
@@ -486,7 +479,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                                         lastFrame: strongSelf.getLastFrameFrom(url)))
                     }
                     strongSelf.updateRecordState(event: .ended)
-                    strongSelf.sendVibrationFeedback()
+                    strongSelf.feedbackGenerator.notificationOccurred(.success)
                 }
             })
         default: break

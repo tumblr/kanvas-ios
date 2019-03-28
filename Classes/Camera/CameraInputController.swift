@@ -204,6 +204,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             try configureCameraInputs()
             try configurePhotoOutput()
             try configureVideoDataOutput()
+            try configureAudioDataInput()
             try configureAudioDataOutput()
             try configureCurrentOutput()
             captureSession?.commitConfiguration()
@@ -317,6 +318,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// - Returns: return true if successfully started recording
     func startRecording() -> Bool {
         guard let recorder = self.recorder else { return false }
+        startAudioSession()
         addArtificialFlashIfNecessary()
         recorder.startRecordingVideo()
         return true
@@ -332,6 +334,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         recorder.stopRecordingVideo(completion: { [weak self] url in
             self?.removeArtificialFlashIfNecessary()
+            self?.stopAudioSession()
             completion(url)
         })
     }
@@ -404,16 +407,18 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         filteredInputViewController?.applyFilter(type: filterType)
     }
     
-    /// Activates/deactivates the current audio session
-    ///
-    /// - Parameter active: the new status for the session
-    func setAudioSession(active: Bool) {
-        do {
-            try AVAudioSession.sharedInstance().setActive(active, options: .notifyOthersOnDeactivation)
+    /// Starts the current audio session
+    func startAudioSession() {
+        guard let captureSession = captureSession, let audioInput = currentMicInput else { return }
+        if captureSession.canAddInput(audioInput) {
+            captureSession.addInput(audioInput)
         }
-        catch {
-            NSLog("AVAudioSession.setActive() failed: \(error)")
-        }
+    }
+    
+    /// Stops the current audio session
+    func stopAudioSession() {
+        guard let captureSession = captureSession, let audioInput = currentMicInput else { return }
+        captureSession.removeInput(audioInput)
     }
     
     // MARK: - private methods
@@ -533,11 +538,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         guard let captureSession = self.captureSession, let microphone = microphone else { throw CameraInputError.captureSessionIsMissing }
 
         do {
-            let audioInput = try AVCaptureDeviceInput(device: microphone)
-            currentMicInput = audioInput
-            if captureSession.canAddInput(audioInput) {
-                captureSession.addInput(audioInput)
-            }
             let audioOutput = AVCaptureAudioDataOutput()
             if captureSession.canAddOutput(audioOutput) {
                 captureSession.addOutput(audioOutput)
@@ -550,6 +550,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         } catch {
             print("audio input failed")
         }
+    }
+    
+    private func configureAudioDataInput() throws {
+        guard let microphone = microphone else { return }
+        let audioInput = try AVCaptureDeviceInput(device: microphone)
+        currentMicInput = audioInput
     }
 
     private func configureCurrentOutput() throws {
