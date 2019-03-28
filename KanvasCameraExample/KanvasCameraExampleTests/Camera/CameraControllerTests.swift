@@ -150,7 +150,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testStartLongPressShouldHideUIButButton() {
+    func testStartLongPressShouldHideUIButFilterSelectorAndShutterButton() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)

@@ -11,12 +11,21 @@ import UIKit
 protocol FilterCollectionCellDelegate {
     /// Callback method when tapping a cell
     ///
-    /// - Parameter cell: the cell that was tapped
-    func didTap(cell: FilterCollectionCell)
+    /// - Parameters:
+    ///   - cell: the cell that was tapped
+    ///   - recognizer: the tap gesture recognizer
+    func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer)
+    
+    /// Callback method when long pressing a cell
+    ///
+    /// - Parameters:
+    ///   - cell: the cell that was long-pressed
+    ///   - recognizer: the long-press gesture recognizer
+    func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer)
 }
 
 private struct FilterCollectionCellConstants {
-    static let animationDuration: TimeInterval = 0.1
+    static let animationDuration: TimeInterval = 0.2
     static let circleDiameter: CGFloat = 72
     static let circleMaxDiameter: CGFloat = 96.1
     
@@ -58,6 +67,15 @@ final class FilterCollectionCell: UICollectionViewCell {
         guard item.type != .passthrough else { return }
         circleView?.image = KanvasCameraImages.filterTypes[item.type] ?? nil
         circleView?.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
+    }
+    
+    /// shows or hides the cell
+    ///
+    /// - Parameter show: true to show, false to hide
+    func show(_ show: Bool) {
+        UIView.animate(withDuration: FilterCollectionCellConstants.animationDuration) { [weak self] in
+            self?.contentView.alpha = show ? 1 : 0
+        }
     }
     
     /// Updates the cell to be reused
@@ -118,11 +136,18 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     private func setUpRecognizers() {
         let tapRecognizer = UITapGestureRecognizer()
+        let longPressRecognizer = UILongPressGestureRecognizer()
         contentView.addGestureRecognizer(tapRecognizer)
+        contentView.addGestureRecognizer(longPressRecognizer)
         tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+        longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
     }
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(cell: self)
+        delegate?.didTap(cell: self, recognizer: recognizer)
+    }
+    
+    @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
+        delegate?.didLongPress(cell: self, recognizer: recognizer)
     }
 }

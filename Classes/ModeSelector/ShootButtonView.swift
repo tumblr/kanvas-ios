@@ -323,6 +323,14 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
 
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
+        onTap(recognizer: recognizer)
+    }
+
+    @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
+        onLongPress(recognizer: recognizer)
+    }
+    
+    private func onTap(recognizer: UITapGestureRecognizer) {
         switch trigger {
         case .tap:
             animateTapEffect()
@@ -336,17 +344,17 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         }
         delegate?.shootButtonViewDidTap()
     }
-
-    @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
+    
+    private func onLongPress(recognizer: UILongPressGestureRecognizer) {
         switch trigger {
         case .hold, .tapAndHold:
-            onLongPress(recognizer: recognizer)
+            onLongPressAllowed(recognizer: recognizer)
         default:
             break
         }
     }
     
-    private func onLongPress(recognizer: UILongPressGestureRecognizer) {
+    private func onLongPressAllowed(recognizer: UILongPressGestureRecognizer) {
         switch recognizer.state {
         case .began:
             updateForLongPress(started: true)
@@ -511,6 +519,20 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
     
     // MARK: - Public interface
+    
+    /// generates a tap gesture
+    ///
+    /// - Parameter recognizer: the tap gesture recognizer
+    func generateTap(recognizer: UITapGestureRecognizer) {
+        onTap(recognizer: recognizer)
+    }
+    
+    /// generates a longpress gesture
+    ///
+    /// - Parameter recognizer: the longpress gesture recognizer
+    func generateLongPress(recognizer: UILongPressGestureRecognizer) {
+        onLongPress(recognizer: recognizer)
+    }
     
     /// enables or disables the user interation on the shutter button
     ///
