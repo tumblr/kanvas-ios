@@ -404,6 +404,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         updateUI(forClipsPresent: clipsController.hasClips)
     }
     
+    /// Prepares the device for giving haptic feedback
+    private func prepareHapticFeedback() {
+        feedbackGenerator.prepare()
+    }
+    
+    /// Makes the device give haptic feedback
+    private func generateHapticFeedback() {
+        feedbackGenerator.notificationOccurred(.success)
+    }
+    
     // MARK: - CameraViewDelegate
 
     func closeButtonPressed() {
@@ -450,7 +460,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         case .gif:
             takeGif(useLongerDuration: true)
         case .stopMotion:
-            feedbackGenerator.prepare()
+            prepareHapticFeedback()
             let _ = cameraInputController.startRecording()
             performUIUpdate { [weak self] in
                 self?.updateRecordState(event: .started)
@@ -479,7 +489,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                                         lastFrame: strongSelf.getLastFrameFrom(url)))
                     }
                     strongSelf.updateRecordState(event: .ended)
-                    strongSelf.feedbackGenerator.notificationOccurred(.success)
+                    strongSelf.generateHapticFeedback()
                 }
             })
         default: break
