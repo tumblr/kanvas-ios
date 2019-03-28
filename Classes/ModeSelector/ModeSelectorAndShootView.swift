@@ -74,7 +74,23 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    // MARK: - Public interface
+    
+    /// generates a tap gesture on the shutter button
+    ///
+    /// - Parameter recognizer: the tap gesture recognizer
+    func tapShootButton(recognizer: UITapGestureRecognizer) {
+        shootButton.generateTap(recognizer: recognizer)
+    }
+    
+    /// generates a longpress gesture on the shutter button
+    ///
+    /// - Parameter recognizer: the longpress gesture recognizer
+    func longPressShootButton(recognizer: UILongPressGestureRecognizer) {
+        shootButton.generateLongPress(recognizer: recognizer)
+    }
+    
     /// configures the UI to the correct mode
     ///
     /// - Parameter selectedMode: the mode to switch the UI to

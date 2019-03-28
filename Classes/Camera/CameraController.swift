@@ -521,6 +521,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - MediaClipsEditorDelegate
 
     func mediaClipStartedMoving() {
+        modeAndShootController.enableShootButtonUserInteraction(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
             self?.modeAndShootController.showTrashClosed(true)
@@ -530,6 +531,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipFinishedMoving() {
         analyticsProvider?.logMovedClip()
+        let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
+        modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.showTrashClosed(false)
@@ -539,6 +542,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegment(at: index)
+        let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
+        modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.showTrashOpened(false)
@@ -616,10 +621,19 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logFilterSelected(filterType: filterItem.type)
     }
     
+    func didTapSelectedFilter(recognizer: UITapGestureRecognizer) {
+        modeAndShootController.tapShootButton(recognizer: recognizer)
+    }
+    
+    func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer) {
+        modeAndShootController.longPressShootButton(recognizer: recognizer)
+    }
+    
     func didTapVisibilityButton(visible: Bool) {
         if visible {
             analyticsProvider?.logOpenFiltersSelector()
         }
+        modeAndShootController.enableShootButtonUserInteraction(!visible)
         modeAndShootController.dismissTooltip()
     }
     

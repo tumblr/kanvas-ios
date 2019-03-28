@@ -11,8 +11,17 @@ import UIKit
 protocol FilterCollectionCellDelegate {
     /// Callback method when tapping a cell
     ///
-    /// - Parameter cell: the cell that was tapped
-    func didTap(cell: FilterCollectionCell)
+    /// - Parameters:
+    ///   - cell: the cell that was tapped
+    ///   - recognizer: the tap gesture recognizer
+    func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer)
+    
+    /// Callback method when long pressing a cell
+    ///
+    /// - Parameters:
+    ///   - cell: the cell that was long-pressed
+    ///   - recognizer: the long-press gesture recognizer
+    func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer)
 }
 
 private struct FilterCollectionCellConstants {
@@ -127,11 +136,18 @@ final class FilterCollectionCell: UICollectionViewCell {
     
     private func setUpRecognizers() {
         let tapRecognizer = UITapGestureRecognizer()
+        let longPressRecognizer = UILongPressGestureRecognizer()
         contentView.addGestureRecognizer(tapRecognizer)
+        contentView.addGestureRecognizer(longPressRecognizer)
         tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+        longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
     }
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(cell: self)
+        delegate?.didTap(cell: self, recognizer: recognizer)
+    }
+    
+    @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
+        delegate?.didLongPress(cell: self, recognizer: recognizer)
     }
 }
