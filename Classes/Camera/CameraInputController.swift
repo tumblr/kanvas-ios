@@ -535,7 +535,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     private func configureAudioDataOutput() throws {
-        guard let captureSession = self.captureSession, let microphone = microphone else { throw CameraInputError.captureSessionIsMissing }
+        guard let captureSession = self.captureSession else { throw CameraInputError.captureSessionIsMissing }
 
         do {
             let audioOutput = AVCaptureAudioDataOutput()
