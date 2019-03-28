@@ -8,8 +8,21 @@ import Foundation
 import UIKit
 
 protocol FilterSettingsControllerDelegate: class {
-    /// Callback for when a filter is selected
+    /// Callback for when a filter item is selected
+    ///
+    /// - Parameter filterItem: the selected filter
     func didSelectFilter(_ filterItem: FilterItem)
+    
+    /// Callback for when the selected filter is tapped
+    ///
+    /// - Parameter recognizer: the tap recognizer
+    func didTapSelectedFilter(recognizer: UITapGestureRecognizer)
+    
+    /// Callback for when the selected filter is longpressed
+    ///
+    /// - Parameter recognizer: the longpress recognizer
+    func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer)
+    
     /// Callback for when the button that shows/hides the filter selector is tapped
     ///
     /// - Parameter visible: whether the filter collection is visible
@@ -61,6 +74,15 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
         load(childViewController: collectionController, into: filterSettingsView.collectionContainer)
     }
     
+    // MARK: - Public interface
+    
+    /// indicates whether the filter selector is visible
+    ///
+    /// - Returns: true if visible, false if hidden
+    func isFilterSelectorVisible() -> Bool {
+        return collectionController.isViewVisible()
+    }
+    
     // MARK: - FilterSettingsViewDelegate
     
     func didTapVisibilityButton() {
@@ -74,5 +96,13 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     
     func didSelectFilter(_ filterItem: FilterItem) {
         delegate?.didSelectFilter(filterItem)
+    }
+    
+    func didTapSelectedFilter(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapSelectedFilter(recognizer: recognizer)
+    }
+    
+    func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer) {
+        delegate?.didLongPressSelectedFilter(recognizer: recognizer)
     }
 }
