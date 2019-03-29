@@ -35,6 +35,8 @@ final class GLRenderer {
     private var filterType: FilterType = .passthrough
     private var processingImage = false
 
+    private var filteredPixelBuffer: CVPixelBuffer?
+
     /// Designated initializer
     ///
     /// - Parameter delegate: the callback
@@ -52,22 +54,40 @@ final class GLRenderer {
         if processingImage {
             return
         }
-        if filter.outputFormatDescription == nil {
-            filter.setupFormatDescription(from: sampleBuffer)
+        let filterAlreadyInitialized: Bool = synchronized(self) {
+            if filter.outputFormatDescription == nil {
+                filter.setupFormatDescription(from: sampleBuffer)
+                return false
+            }
+            return true
         }
-        else {
+        if filterAlreadyInitialized {
             let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-
+            let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             let filteredPixelBufferMaybe: CVPixelBuffer? = synchronized(self) {
-                let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
                 return filter.processPixelBuffer(sourcePixelBuffer)
             }
-
             if let filteredPixelBuffer = filteredPixelBufferMaybe {
-                delegate?.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer, presentationTime: time)
+                synchronized(self) {
+                    self.filteredPixelBuffer = filteredPixelBuffer
+                    callbackQueue.async {
+                        let pixelBuffer: CVPixelBuffer? = synchronized(self) {
+                            let pixelBuffer = self.filteredPixelBuffer
+                            if pixelBuffer != nil {
+                                self.filteredPixelBuffer = nil
+                            }
+                            return pixelBuffer
+                        }
+                        if let filteredPixelBuffer = pixelBuffer {
+                            self.delegate?.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer, presentationTime: time)
+                        }
+                    }
+                }
             }
             else {
-                delegate?.rendererRanOutOfBuffers()
+                callbackQueue.async {
+                    self.delegate?.rendererRanOutOfBuffers()
+                }
             }
         }
     }
@@ -120,6 +140,8 @@ final class GLRenderer {
 
     /// Method to call reset on the camera filter
     func reset() {
-        filter.cleanup()
+        synchronized(self) {
+            filter.cleanup()
+        }
     }
 }

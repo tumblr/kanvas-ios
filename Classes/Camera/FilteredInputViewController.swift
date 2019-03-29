@@ -67,9 +67,9 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     
     // MARK: - OpenGLRendererDelegate
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        DispatchQueue.main.async {
-            self.delegate?.filteredPixelBufferReady(pixelBuffer: pixelBuffer, presentationTime: presentationTime)
+        synchronized(self) {
             self.previewView?.displayPixelBuffer(pixelBuffer)
+            self.delegate?.filteredPixelBufferReady(pixelBuffer: pixelBuffer, presentationTime: presentationTime)
         }
     }
     

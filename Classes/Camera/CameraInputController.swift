@@ -21,7 +21,10 @@ private struct CameraInputConstants {
 
 final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, FilteredInputViewControllerDelegate {
 
-    var willCloseSoon = false
+    private var willCloseSoon = false
+
+    private let targetFrameRate: Int32 = 30
+    private let minimumFrameRate: Int32 = 24
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -655,7 +658,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        // dropping a sample should be okay here, processor could be busy
         var mode: CMAttachmentMode = 0
         let reasonMaybe = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
         guard let reason = reasonMaybe else {
@@ -665,16 +667,51 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         let reasonString = String(describing: reason)
         print("CMSampleBuffer was dropped for reason: \(reason)")
 
+        // While dropping a sample is usually OK, OutOfBuffers is problematic because it means the CMSampleBuffer is
+        // being retained for too long. This is either becuase processing each frame is taking too long, OR
+        // CMSampleBuffers are being improperly retained (memory leak). While a blip of OutOfBuffers is probably
+        // processing time, a sustained stream of them is a leak. We might have a combination of both :/
+        // Anyway, this will help us recover from OutOfBuffers (see method doc for more info)
         if reasonString == (kCMSampleBufferDroppedFrameReason_OutOfBuffers as String) {
-            print("Restarting capture session: OutOfBuffers")
-            filteredInputViewController?.reset()
-            sessionQueue.sync {
-                captureSession?.stopRunning()
-                captureSession?.startRunning()
+            recoverFromDroppedFrameOutOfBuffers()
+        }
+    }
+
+    /// Recover from dropping a frame when OutOfBuffers is reported
+    ///
+    /// This is fun. While switching filters, eventually the AVCaptureSession will start spewing
+    /// OutOfBuffers DroppedFrameReason, which hangs the camera output. This is due to a memory leak which isn't easily
+    /// discoverable, so initially it was addressed by restarting the AVCaptureSession. When done on another queue, this
+    /// is really fast on most devices, only noticable with a momentary change of focus, so it was acceptable. However,
+    /// it was discovered on an iPhone 6 that OutOfBuffers seemingly happens for other legitimate reasons, and the
+    /// AVCaptureSession restarts would take much longer, and sometimes many in a row, making the camera fairly unusable.
+    ///
+    /// To recover from OutOfBuffers on all devices, we... flip the max framerate between 30fps and 29fps.
+    ///
+    /// ¯\_(ツ)_/¯
+    ///
+    /// This works because it causes a configuration change, making the AVCaptureSession recreate its internal
+    /// CMSampleBuffer cache.
+    func recoverFromDroppedFrameOutOfBuffers() {
+        sessionQueue.sync {
+            if let session = captureSession, let device = currentDevice {
+                do {
+                    let currentMaxFrameRate: Int32 = device.activeVideoMaxFrameDuration.timescale
+                    let newMaxFrameRate: Int32 = currentMaxFrameRate == targetFrameRate ? targetFrameRate - 1 : targetFrameRate
+                    print("Adjusting framerate to recover from OutOfBuffers")
+                    session.beginConfiguration()
+                    try device.lockForConfiguration()
+                    device.activeVideoMinFrameDuration = CMTimeMake(value: 1, timescale: minimumFrameRate)
+                    device.activeVideoMaxFrameDuration = CMTimeMake(value: 1, timescale: newMaxFrameRate)
+                    device.unlockForConfiguration()
+                    session.commitConfiguration()
+                } catch {
+                    assertionFailure("Failed to lock the device for configuration: \(error)")
+                }
             }
         }
     }
-    
+
     // MARK: - FilteredInputViewControllerDelegate
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
         if settings.features.openGLCapture {
