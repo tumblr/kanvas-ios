@@ -21,7 +21,8 @@ private struct CameraInputConstants {
 
 final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, FilteredInputViewControllerDelegate {
 
-    private var willCloseSoon = false
+    /// Flag used to indicate that this view controller will be closing, and the capture session should not restart.
+    var willCloseSoon = false
 
     private let targetFrameRate: Int32 = 30
     private let minimumFrameRate: Int32 = 24
