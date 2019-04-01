@@ -266,17 +266,21 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                 else {
                     self.hideLoading()
                     // TODO: Localize strings
-                    let viewModel = ModalViewModel(text: "There was an issue loading your post...",
-                                                   confirmTitle: "Try again",
-                                                   confirmCallback: {
-                                                       self.showLoading()
-                                                       self.createFinalContent()
-                                                   },
-                                                   cancelTitle: "Cancel",
-                                                   cancelCallback: { [unowned self] in self.delegate?.didFinishExportingVideo(url: url) },
-                                                   buttonsLayout: .oneBelowTheOther)
-                    let controller = ModalController(viewModel: viewModel)
-                    self.present(controller, animated: true, completion: .none)
+                    let alertController = UIAlertController(title: nil, message: "There was an issue loading your post...", preferredStyle: .alert)
+                    
+                    let cancelButton = UIAlertAction(title: "Cancel", style: .cancel) { [unowned self] _ in
+                        self.delegate?.didFinishExportingVideo(url: url)
+                    }
+                    
+                    let tryAgainButton = UIAlertAction(title: "Try again", style: .default) { [unowned self] _ in
+                        self.showLoading()
+                        self.createFinalContent()
+                    }
+                    
+                    alertController.addAction(tryAgainButton)
+                    alertController.addAction(cancelButton)
+                    
+                    self.present(alertController, animated: true, completion: .none)
                 }
             }
         })
