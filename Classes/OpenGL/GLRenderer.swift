@@ -10,12 +10,20 @@ import OpenGLES
 
 /// Callbacks for opengl rendering
 protocol GLRendererDelegate: class {
-    /// Called when renderer has processed a pixel buffer
+    /// Called when renderer has a processed pixel buffer ready for display. This may skip frames, so it's only
+    /// intended to be used for display purposes.
+    ///
+    /// - Parameters:
+    ///   - pixelBuffer: the filtered pixel buffer
+    func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer)
+
+    /// Called when renderer has a processed pixel buffer ready. This is called for every frame, so this can be
+    /// used for recording purposes.
     ///
     /// - Parameters:
     ///   - pixelBuffer: the filtered pixel buffer
     ///   - presentationTime: The append time
-    func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer, presentationTime: CMTime)
+    func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime)
     
     /// Called when no buffers are available
     func rendererRanOutOfBuffers()
@@ -69,25 +77,35 @@ final class GLRenderer {
             }
             if let filteredPixelBuffer = filteredPixelBufferMaybe {
                 synchronized(self) {
-                    self.filteredPixelBuffer = filteredPixelBuffer
-                    callbackQueue.async {
-                        let pixelBuffer: CVPixelBuffer? = synchronized(self) {
-                            let pixelBuffer = self.filteredPixelBuffer
-                            if pixelBuffer != nil {
-                                self.filteredPixelBuffer = nil
-                            }
-                            return pixelBuffer
-                        }
-                        if let filteredPixelBuffer = pixelBuffer {
-                            self.delegate?.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer, presentationTime: time)
-                        }
-                    }
+                    output(filteredPixelBuffer: filteredPixelBuffer)
+                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: filteredPixelBuffer, presentationTime: time)
                 }
             }
             else {
                 callbackQueue.async {
                     self.delegate?.rendererRanOutOfBuffers()
                 }
+            }
+        }
+    }
+
+    /// Indicate that the filteredPixelBuffer is ready for display
+    ///
+    /// This keeps latency low by dropping frames that haven't been processeed by the delegate yet.
+    /// For this to work, all access to filteredPixelBuffer should be locked, so this method should be called in
+    /// a synchronized(self) block.
+    func output(filteredPixelBuffer: CVPixelBuffer) {
+        self.filteredPixelBuffer = filteredPixelBuffer
+        callbackQueue.async {
+            let pixelBuffer: CVPixelBuffer? = synchronized(self) {
+                let pixelBuffer = self.filteredPixelBuffer
+                if pixelBuffer != nil {
+                    self.filteredPixelBuffer = nil
+                }
+                return pixelBuffer
+            }
+            if let filteredPixelBuffer = pixelBuffer {
+                self.delegate?.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer)
             }
         }
     }
