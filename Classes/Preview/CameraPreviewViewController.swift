@@ -265,7 +265,7 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                 }
                 else {
                     self.hideLoading()
-                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("There was an issue loading your post...", comment: "Alert controller message"), preferredStyle: .alert)
+                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("ErrorMessageUnknown", comment: "Alert controller message"), preferredStyle: .alert)
                     
                     let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel) { [unowned self] _ in
                         self.delegate?.didFinishExportingVideo(url: url)
