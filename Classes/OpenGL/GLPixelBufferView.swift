@@ -16,7 +16,7 @@ final class GLPixelBufferView: UIView {
     private var height: GLint = 0
     private var frameBufferHandle: GLuint = 0
     private var colorBufferHandle: GLuint = 0
-    private var videoFrame: GLint = 0
+    private var inputImageTexture: GLint = 0
     
     override class var layerClass: AnyClass {
         return CAEAGLLayer.self
@@ -79,7 +79,7 @@ final class GLPixelBufferView: UIView {
             }
             renderShader = Shader()
             if let renderShader = renderShader {
-                videoFrame = renderShader.getParameterLocation(name: "videoframe")
+                inputImageTexture = renderShader.getParameterLocation(name: "inputImageTexture")
             }
         } while false
         if !success {
@@ -193,7 +193,7 @@ final class GLPixelBufferView: UIView {
         renderShader?.useProgram()
         glActiveTexture(GL_TEXTURE0.ui)
         glBindTexture(CVOpenGLESTextureGetTarget(texture), CVOpenGLESTextureGetName(texture))
-        glUniform1i(videoFrame, 0)
+        glUniform1i(inputImageTexture, 0)
         
         // Set texture parameters
         glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MIN_FILTER.ui, GL_LINEAR)
