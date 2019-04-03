@@ -68,6 +68,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if let image = imageMaybe {
             pick(image: image)
         }
+        if let mediaURL = mediaURLMaybe {
+            pick(video: mediaURL)
+        }
     }
 
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -91,6 +94,18 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                               overlayText: nil,
                                                               lastFrame: processedImage))
                 }
+            }
+        }
+    }
+
+    func pick(video url: URL) {
+        let recorder = self.cameraInputController.recorder as! CameraRecorder
+        recorder.segmentsHandler.addNewVideoSegment(url: url)
+        performUIUpdate {
+            if let image = AVURLAsset(url: url).thumbnail() {
+                self.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                          overlayText: self.durationStringForAssetAtURL(url),
+                                                          lastFrame: self.getLastFrameFrom(url)))
             }
         }
     }
