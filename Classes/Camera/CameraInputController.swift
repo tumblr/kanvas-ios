@@ -87,7 +87,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         case .video: return videoDataOutput
         }
     }
-    private var recorder: CameraRecordingProtocol?
+    private(set) var recorder: CameraRecordingProtocol?
     
     /// The delegate methods for zooming and touches
     weak var delegate: CameraInputControllerDelegate?

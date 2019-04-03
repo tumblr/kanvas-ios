@@ -21,7 +21,7 @@ final class CameraRecorder: NSObject {
     weak var recordingDelegate: CameraRecordingDelegate?
 
     private var url: URL?
-    private var size: CGSize
+    private(set) var size: CGSize
 
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
@@ -33,7 +33,7 @@ final class CameraRecorder: NSObject {
     private let audioOutput: AVCaptureAudioDataOutput?
 
     private var currentRecordingMode: CameraMode
-    private let segmentsHandler: SegmentsHandlerType
+    let segmentsHandler: SegmentsHandlerType
 
     private let photoOutputHandler: PhotoOutputHandler
     private let gifVideoOutputHandler: GifVideoOutputHandler
@@ -253,14 +253,18 @@ extension CameraRecorder: CameraRecordingProtocol {
             if cameraPosition == .front, let flippedImage = image.flipLeftMirrored() {
                 image = flippedImage
             }
-            guard let filteredImage = self.recordingDelegate?.cameraDidTakePhoto(image: image) else {
-                completion(nil)
-                return
-            }
-            self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
-                completion(success ? filteredImage : nil)
-            })
+            self.process(image: image, completion: completion)
         }
+    }
+
+    func process(image: UIImage, completion: @escaping (UIImage?) -> Void) {
+        guard let filteredImage = self.recordingDelegate?.cameraDidTakePhoto(image: image) else {
+            completion(nil)
+            return
+        }
+        self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
+            completion(success ? filteredImage : nil)
+        })
     }
 
     func exportRecording(completion: @escaping (URL?) -> Void) {

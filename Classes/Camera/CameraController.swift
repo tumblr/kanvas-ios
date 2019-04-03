@@ -7,6 +7,7 @@
 import AVFoundation
 import Foundation
 import UIKit
+import MobileCoreServices
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -45,7 +46,54 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func mediaPickerButtonPressed() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .savedPhotosAlbum
+        imagePickerController.allowsEditing = false
+        imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
+        present(imagePickerController, animated: true, completion: nil)
+    }
+
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        let imageMaybe = info[.originalImage] as? UIImage
+        let mediaURLMaybe = info[.mediaURL] as? URL
+        let imageURLMaybe = info[.imageURL] as? URL
+        print("imageURL \(imageURLMaybe?.absoluteString ?? "?")")
+        print("mediaURL \(mediaURLMaybe?.absoluteString ?? "?")")
+
+        if let image = imageMaybe {
+            pick(image: image)
+        }
+    }
+
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        print("Cancelled!")
+        picker.dismiss(animated: true, completion: nil)
+    }
+
+    func pick(image: UIImage) {
+        let recorder = self.cameraInputController.recorder as! CameraRecorder
+        recorder.process(image: image) { processedImageMaybe in
+            guard let processedImage = processedImageMaybe else {
+                print("No image, wat!?")
+                return
+            }
+            performUIUpdate {
+                if self.currentMode == .photo {
+                    self.showPreviewWithSegments([CameraSegment.image(processedImage, nil)])
+                }
+                else {
+                    self.clipsController.addNewClip(MediaClip(representativeFrame: processedImage,
+                                                              overlayText: nil,
+                                                              lastFrame: processedImage))
+                }
+            }
+        }
+    }
     
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
