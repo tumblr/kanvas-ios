@@ -63,7 +63,9 @@ public class MediaMetadata {
 
     public class func readMediaInfo(fromImage url: URL) throws -> MediaInfo? {
         let data = try Data(contentsOf: url)
-        let source: CGImageSource = CGImageSourceCreateWithData(data as! CFMutableData, nil)!
+        guard let source: CGImageSource = CGImageSourceCreateWithData(data as CFData, nil) else {
+            return nil
+        }
         let metadata = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [String: Any] ?? [:]
         let exif = metadata[kCGImagePropertyExifDictionary as String] as? [String : AnyObject] ?? [:]
         guard let value = exif[kCGImagePropertyExifUserComment as String] as? String else {
