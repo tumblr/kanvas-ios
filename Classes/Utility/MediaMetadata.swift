@@ -43,8 +43,7 @@ public class MediaMetadata {
             assertionFailure()
             return
         }
-        let destination = CGImageDestinationCreateWithURL(url, type, 1, nil)
-        if destination == nil {
+        guard let destination = CGImageDestinationCreateWithURL(url, type, 1, nil) else {
             assertionFailure()
             return
         }
@@ -53,8 +52,8 @@ public class MediaMetadata {
                 kCGImagePropertyExifUserComment: mediaInfo.rawValue
             ]
         ]
-        CGImageDestinationAddImageFromSource(destination!, imageRef, 0, properties as CFDictionary)
-        let success = CGImageDestinationFinalize(destination!)
+        CGImageDestinationAddImageFromSource(destination, imageRef, 0, properties as CFDictionary)
+        let success = CGImageDestinationFinalize(destination)
         if !success {
             assertionFailure()
             return
@@ -67,7 +66,7 @@ public class MediaMetadata {
             return nil
         }
         let metadata = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [String: Any] ?? [:]
-        let exif = metadata[kCGImagePropertyExifDictionary as String] as? [String : AnyObject] ?? [:]
+        let exif = metadata[kCGImagePropertyExifDictionary as String] as? [String: AnyObject] ?? [:]
         guard let value = exif[kCGImagePropertyExifUserComment as String] as? String else {
             return nil
         }
