@@ -225,7 +225,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - Media Content Creation
-    private func saveImageToFile(_ image: UIImage?) -> URL? {
+    private func saveImageToFile(_ image: UIImage?, info: MediaInfo) -> URL? {
         do {
             guard let image = image, let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return nil
@@ -237,9 +237,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             if FileManager.default.fileExists(atPath: fileURL.path) {
                 try FileManager.default.removeItem(at: fileURL)
             }
-            
             if let jpgImageData = image.jpegData(compressionQuality: 1.0) {
                 try jpgImageData.write(to: fileURL, options: .atomic)
+                MediaMetadata.write(mediaInfo: info, toImage: fileURL as NSURL)
             }
             return fileURL
         } catch {
@@ -583,9 +583,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didFinishExportingImage(image: UIImage?) {
         analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: 1, length: 0)
         performUIUpdate { [weak self] in
-            if let url = self?.saveImageToFile(image) {
-                let media = KanvasCameraMedia.image(url)
-                self?.delegate?.didCreateMedia(media: media, error: nil)
+            if let url = self?.saveImageToFile(image, info: .kanvas) {
+                self?.delegate?.didCreateMedia(media: .image(url), error: nil)
             }
             else {
                 self?.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure)
