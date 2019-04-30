@@ -8,25 +8,6 @@ import XCTest
 
 @testable import KanvasCamera
 
-class CameraControllerDelegateStub2: CameraControllerDelegate {
-
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
-
-    }
-
-    func dismissButtonPressed() {
-
-    }
-
-    func didDismissWelcomeTooltip() {
-
-    }
-
-    func cameraShouldShowWelcomeTooltip() -> Bool {
-        return true
-    }
-}
-
 class MediaMetadataTests: XCTestCase {
 
     func testWriteAndReadMetadataWithVideo() {
