@@ -586,7 +586,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             performUIUpdate { [weak self] in
                 self?.delegate?.didCreateMedia(media: .image(url), error: nil)
             }
-        } else {
+        }
+        else {
             performUIUpdate { [weak self] in
                 self?.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure)
             }

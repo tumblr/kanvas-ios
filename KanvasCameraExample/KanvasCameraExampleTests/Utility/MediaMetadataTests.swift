@@ -37,7 +37,11 @@ class MediaMetadataTests: XCTestCase {
         recorder.startRecordingVideo()
         recorder.stopRecordingVideo { _ in
             recorder.exportRecording(completion: { url in
-                let mediaInfo = MediaMetadata.readMediaInfo(fromVideo: url! as NSURL)
+                guard let url = url else {
+                    XCTFail()
+                    return
+                }
+                let mediaInfo = MediaMetadata.readMediaInfo(fromVideo: url as NSURL)
                 XCTAssertEqual(mediaInfo, .kanvas)
                 expectation.fulfill()
             })
