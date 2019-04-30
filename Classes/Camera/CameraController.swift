@@ -225,7 +225,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - Media Content Creation
-    private func saveImageToFile(_ image: UIImage?, info: MediaInfo) -> URL? {
+    class func saveImageToFile(_ image: UIImage?, info: MediaInfo) -> URL? {
         do {
             guard let image = image, let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return nil
@@ -582,11 +582,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didFinishExportingImage(image: UIImage?) {
         analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: 1, length: 0)
-        performUIUpdate { [weak self] in
-            if let url = self?.saveImageToFile(image, info: .kanvas) {
+        if let url = CameraController.saveImageToFile(image, info: .kanvas) {
+            performUIUpdate { [weak self] in
                 self?.delegate?.didCreateMedia(media: .image(url), error: nil)
             }
-            else {
+        } else {
+            performUIUpdate { [weak self] in
                 self?.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure)
             }
         }
