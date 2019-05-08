@@ -7,6 +7,7 @@
 import Foundation
 import AVFoundation
 
+/// Read and write metadata to media files.
 public class MediaMetadata {
 
     class func createAVMetadataItems(from mediaInfo: MediaInfo) -> [AVMetadataItem] {
@@ -20,6 +21,9 @@ public class MediaMetadata {
         return [metadataItem]
     }
 
+    /// Reads media info from a video url
+    /// - Parameter fromVideo: the video URL to read metadata from
+    /// - Returns: MediaInfo
     public class func readMediaInfo(fromVideo url: NSURL) -> MediaInfo? {
         let asset = AVAsset(url: url as URL)
         let metadataItems = asset.metadata
@@ -32,6 +36,9 @@ public class MediaMetadata {
         return MediaInfo(rawValue: value)
     }
 
+    /// Writes media info to an image URL
+    /// - Parameter mediaInfo: MediaInfo to write
+    /// - Parameter toImage: the image URL to write metadata to
     public class func write(mediaInfo: MediaInfo, toImage url: NSURL) {
         let imageRefMaybe = CGImageSourceCreateWithURL(url, nil)
         guard let imageRef = imageRefMaybe else {
@@ -60,6 +67,10 @@ public class MediaMetadata {
         }
     }
 
+    /// Reads media info from an image URL
+    /// - Parameter fromImage: image URL to read metadata from
+    /// - Returns: MediaInfo
+    /// - Throws: when data cannot be read from url
     public class func readMediaInfo(fromImage url: URL) throws -> MediaInfo? {
         let data = try Data(contentsOf: url)
         guard let source: CGImageSource = CGImageSourceCreateWithData(data as CFData, nil) else {
