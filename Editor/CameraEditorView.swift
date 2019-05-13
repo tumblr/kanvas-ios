@@ -19,8 +19,9 @@ protocol CameraEditorViewDelegate: class {
 
 /// Constants for CameraEditorView
 private struct CameraEditorViewConstants {
-    static let confirmButtonSize: CGFloat = 54
-    static let confirmButtonMargin: CGFloat = 64
+    static let confirmButtonSize: CGFloat = 49
+    static let confirmButtonHorizontalMargin: CGFloat = 16
+    static let confirmButtonVerticalMargin: CGFloat = 20
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -95,17 +96,16 @@ final class CameraEditorView: UIView {
     
     private func setUpConfirmButton() {
         confirmButton.accessibilityLabel = "Confirm Button"
-        confirmButton.applyShadows()
         addSubview(confirmButton)
-        confirmButton.setImage(KanvasCameraImages.confirmImage, for: .normal)
+        confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            confirmButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -CameraEditorViewConstants.confirmButtonMargin),
-            confirmButton.heightAnchor.constraint(equalTo: confirmButton.widthAnchor),
-            confirmButton.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize)
+            confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraEditorViewConstants.confirmButtonHorizontalMargin),
+            confirmButton.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize),
+            confirmButton.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize),
+            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -CameraEditorViewConstants.confirmButtonVerticalMargin)
             ])
     }
     
