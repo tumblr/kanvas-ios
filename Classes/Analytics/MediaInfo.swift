@@ -8,5 +8,6 @@ import Foundation
 
 public enum MediaInfo: String {
     case kanvas = "kanvas"
+    case library = "library"
     case unknown = "unknown"
 }
