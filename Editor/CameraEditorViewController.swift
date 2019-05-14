@@ -24,13 +24,20 @@ protocol CameraEditorControllerDelegate: class {
 /// A view controller to preview the segments sequentially
 /// There are two AVPlayers to reduce loading times and the black screen when replacing player items
 
-final class CameraEditorViewController: UIViewController {
+final class CameraEditorViewController: UIViewController, EditionMenuCollectionControllerDelegate {
     
     private lazy var cameraEditorView: CameraEditorView = {
         let editorView = CameraEditorView()
         editorView.delegate = self
         return editorView
     }()
+    
+    private lazy var collectionController: EditionMenuCollectionController = {
+        let controller = EditionMenuCollectionController(settings: self.settings)
+        controller.delegate = self
+        return controller
+    }()
+    
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
     
     private let settings: CameraSettings
@@ -106,6 +113,7 @@ final class CameraEditorViewController: UIViewController {
         cameraEditorView.add(into: view)
         cameraEditorView.setFirstPlayer(player: firstPlayer)
         cameraEditorView.setSecondPlayer(player: secondPlayer)
+        load(childViewController: collectionController, into: cameraEditorView.collectionContainer)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -285,6 +293,12 @@ extension CameraEditorViewController: CameraEditorViewDelegate {
     func closeButtonPressed() {
         stopPlayback()
         delegate?.dismissButtonPressed()
+    }
+    
+    // MARK: - EditionMenuCollectionControllerDelegate
+    
+    func didSelectEditionOption(_ editionOption: EditionOption) {
+        
     }
 }
 

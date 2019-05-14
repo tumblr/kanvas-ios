@@ -34,6 +34,7 @@ final class CameraEditorView: UIView {
     
     private let confirmButton = UIButton()
     private let closeButton = UIButton()
+    let collectionContainer = IgnoreTouchesView()
     
     private var disposables: [NSKeyValueObservation] = []
     weak var delegate: CameraEditorViewDelegate?
@@ -73,6 +74,7 @@ final class CameraEditorView: UIView {
         
         setUpCloseButton()
         setUpConfirmButton()
+        setUpCollection()
     }
     
     // MARK: - views
@@ -106,6 +108,22 @@ final class CameraEditorView: UIView {
             confirmButton.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize),
             confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -CameraEditorViewConstants.confirmButtonVerticalMargin)
+            ])
+    }
+    
+    private func setUpCollection() {
+        collectionContainer.backgroundColor = .clear
+        collectionContainer.accessibilityIdentifier = "Edition Menu Collection Container"
+        collectionContainer.clipsToBounds = false
+        
+        addSubview(collectionContainer)
+        collectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        let trailingMargin = CameraEditorViewConstants.confirmButtonHorizontalMargin * 2 + CameraEditorViewConstants.confirmButtonSize
+        NSLayoutConstraint.activate([
+            collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
+            collectionContainer.centerYAnchor.constraint(equalTo: confirmButton.centerYAnchor),
+            collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
             ])
     }
     

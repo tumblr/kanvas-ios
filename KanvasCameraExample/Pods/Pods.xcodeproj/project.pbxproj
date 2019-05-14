@@ -88,6 +88,10 @@
 		650DCBF42289DA6E00586579 /* CameraEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DCBF32289DA6E00586579 /* CameraEditorView.swift */; };
 		650DCBF82289DA8700586579 /* CameraEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DCBF72289DA8700586579 /* CameraEditorViewController.swift */; };
 		652CBB106334DBA87F438B8E9FB99A5D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E48B5BAA5481A7641341C7213220555 /* Foundation.framework */; };
+		6575938E228AF3B0003DD334 /* EditionMenuCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6575938D228AF3B0003DD334 /* EditionMenuCollectionView.swift */; };
+		65759390228AF519003DD334 /* EditionMenuCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6575938F228AF519003DD334 /* EditionMenuCollectionCell.swift */; };
+		65759392228AF7FB003DD334 /* EditionMenuCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65759391228AF7FB003DD334 /* EditionMenuCollectionController.swift */; };
+		65759394228AF9F7003DD334 /* EditionOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65759393228AF9F7003DD334 /* EditionOption.swift */; };
 		662D6E6375826A7B2761CC8981FA89AA /* UIImage+FlipLeftMirrored.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5775700FBA06848ACE3DB023FBB088 /* UIImage+FlipLeftMirrored.swift */; };
 		668CEEA2E80E94D12AE047645112D23C /* TumblrTheme-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AAEF232750499391DA9D526F72A8378C /* TumblrTheme-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66E96C6478754C304F206F8A663A6C01 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B9901881A4E72791B315BD7CC6151A /* Filter.swift */; };
@@ -389,6 +393,10 @@
 		63E750D1A810E72F0F4F63AE9B6FDDC8 /* FilterSettingsController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterSettingsController.swift; sourceTree = "<group>"; };
 		650DCBF32289DA6E00586579 /* CameraEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEditorView.swift; sourceTree = "<group>"; };
 		650DCBF72289DA8700586579 /* CameraEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEditorViewController.swift; sourceTree = "<group>"; };
+		6575938D228AF3B0003DD334 /* EditionMenuCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionView.swift; sourceTree = "<group>"; };
+		6575938F228AF519003DD334 /* EditionMenuCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionCell.swift; sourceTree = "<group>"; };
+		65759391228AF7FB003DD334 /* EditionMenuCollectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionController.swift; sourceTree = "<group>"; };
+		65759393228AF9F7003DD334 /* EditionOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditionOption.swift; sourceTree = "<group>"; };
 		65DFEBCB57919DE3463F50ECA2237C95 /* CameraInputController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputController.swift; sourceTree = "<group>"; };
 		667FED546554BD7E2DBACEAEEE407634 /* FilterType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterType.swift; sourceTree = "<group>"; };
 		67855AE313F0E02B8C4393DD21D316B0 /* KanvasCamera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KanvasCamera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -849,6 +857,10 @@
 			children = (
 				650DCBF32289DA6E00586579 /* CameraEditorView.swift */,
 				650DCBF72289DA8700586579 /* CameraEditorViewController.swift */,
+				6575938D228AF3B0003DD334 /* EditionMenuCollectionView.swift */,
+				6575938F228AF519003DD334 /* EditionMenuCollectionCell.swift */,
+				65759391228AF7FB003DD334 /* EditionMenuCollectionController.swift */,
+				65759393228AF9F7003DD334 /* EditionOption.swift */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -1571,6 +1583,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				681268953EE80453033B4D1288AD36DB /* Array+Move.swift in Sources */,
+				65759392228AF7FB003DD334 /* EditionMenuCollectionController.swift in Sources */,
 				7D83727F85AB0D270CFAEC2D2F960A0F /* AVURLAsset+Thumbnail.swift in Sources */,
 				6EBFAB65F207109A93F48478C01E16F8 /* CameraController.swift in Sources */,
 				FE519154AE09826EDD62753ED79EDEF7 /* CameraInputController.swift in Sources */,
@@ -1597,6 +1610,7 @@
 				455E82200A7B1E7C3D91751C64FED1EB /* FilmFilter.swift in Sources */,
 				66E96C6478754C304F206F8A663A6C01 /* Filter.swift in Sources */,
 				C42B3A664DF5455EF22D2FA99F759214 /* FilterCollectionCell.swift in Sources */,
+				6575938E228AF3B0003DD334 /* EditionMenuCollectionView.swift in Sources */,
 				1418761EF930FC3648051AF0D9BD149A /* FilterCollectionController.swift in Sources */,
 				831F314D5EB7F69A36DE86A6BF21C6CF /* FilterCollectionView.swift in Sources */,
 				1D604B8CA331FA8EA1E437E325779C0F /* FilteredInputViewController.swift in Sources */,
@@ -1606,6 +1620,7 @@
 				97EDE7997158E6367A4F1ABED2518D59 /* FilterSettingsController.swift in Sources */,
 				E8F9B3BAA0E8B40A03659640E2EA8B7F /* FilterSettingsView.swift in Sources */,
 				0BD7066F06334B96B0C5E37126AAA2D5 /* FilterType.swift in Sources */,
+				65759394228AF9F7003DD334 /* EditionOption.swift in Sources */,
 				FFE2597EE1F409F7CEE27AB97410696F /* GifVideoOutputHandler.swift in Sources */,
 				056AADDF5377784EE4883A47C5E1FD96 /* GLError.swift in Sources */,
 				AD8E5369EA807AB3AB099C2A13E6DDAE /* GLPixelBufferView.swift in Sources */,
@@ -1650,6 +1665,7 @@
 				813B30228F2B4459769E8CD4AA8E2B14 /* OptionsController.swift in Sources */,
 				8339E94507AB825E7E5A4AD0AABD963F /* OptionsStackView.swift in Sources */,
 				B02CA989BC14990D03F99B6F63D0036E /* OptionView.swift in Sources */,
+				65759390228AF519003DD334 /* EditionMenuCollectionCell.swift in Sources */,
 				233B7A49F81D1ACD2B7491E0B0AF764F /* PhotoOutputHandler.swift in Sources */,
 				01204FB0CC1E157E49AFB128CA0F7D05 /* PlasmaFilter.swift in Sources */,
 				0857E38C1F1BAE49B852B7061F195CB4 /* Queue.swift in Sources */,
