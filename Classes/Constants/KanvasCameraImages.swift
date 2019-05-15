@@ -58,7 +58,8 @@ struct KanvasCameraImages {
     ]
     
     // MARK: - Editor
-    static let editorFilters = UIImage.imageFromCameraBundle(named: "editorFilters")
-    static let editorGif = UIImage.imageFromCameraBundle(named: "editorGif")
-    static let editorMedia = UIImage.imageFromCameraBundle(named: "editorMedia")
+    static let editionOptionTypes: [EditionOptionType: UIImage?] = [
+        .filter: UIImage.imageFromCameraBundle(named: "editorFilters"),
+        .media: UIImage.imageFromCameraBundle(named: "editorGif"),
+    ]
 }

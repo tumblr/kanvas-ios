@@ -5,5 +5,10 @@
 //
 
 struct EditionOption {
-    var image: UIImage?
+    var type: EditionOptionType
+}
+
+enum EditionOptionType: Int {
+    case filter
+    case media
 }

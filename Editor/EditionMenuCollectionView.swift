@@ -85,7 +85,7 @@ fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
 }
 
 fileprivate func configureCollection(collectionView: IgnoreTouchesCollectionView) {
-    collectionView.isScrollEnabled = true
+    collectionView.isScrollEnabled = false
     collectionView.allowsSelection = true
     collectionView.bounces = true
     collectionView.alwaysBounceHorizontal = true

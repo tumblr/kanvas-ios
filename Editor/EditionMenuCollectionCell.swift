@@ -7,6 +7,16 @@
 import Foundation
 import UIKit
 
+/// Delegate for touch events on this cell
+protocol EditionMenuCollectionCellDelegate {
+    /// Callback method when tapping a cell
+    ///
+    /// - Parameters:
+    ///   - cell: the cell that was tapped
+    ///   - recognizer: the tap gesture recognizer
+    func didTap(cell: EditionMenuCollectionCell, recognizer: UITapGestureRecognizer)
+}
+
 private struct EditionMenuCollectionCellConstants {
     static let circleDiameter: CGFloat = 49
     static let padding: CGFloat = 8
@@ -27,22 +37,26 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     static let width = EditionMenuCollectionCellConstants.width
     
     private weak var circleView: UIImageView?
+    
+    var delegate: EditionMenuCollectionCellDelegate?
         
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
+        setUpRecognizers()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
+        setUpRecognizers()
     }
     
-    /// Updates the cell to the EditionMenu properties
+    /// Updates the cell according to EditionOption properties
     ///
     /// - Parameter item: The EditionMenu to display
     func bindTo(_ option: EditionOption) {
-        circleView?.image = option.image
+        circleView?.image = KanvasCameraImages.editionOptionTypes[option.type] ?? nil
     }
     
     
@@ -72,5 +86,17 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
             ])
         
         circleView = imageView
+    }
+    
+    // MARK: - Gesture recognizers
+    
+    private func setUpRecognizers() {
+        let tapRecognizer = UITapGestureRecognizer()
+        contentView.addGestureRecognizer(tapRecognizer)
+        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+    }
+    
+    @objc private func handleTap(recognizer: UITapGestureRecognizer) {
+        delegate?.didTap(cell: self, recognizer: recognizer)
     }
 }
