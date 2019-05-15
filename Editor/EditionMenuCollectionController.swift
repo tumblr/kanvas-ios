@@ -16,7 +16,8 @@ protocol EditionMenuCollectionControllerDelegate: class {
 
 /// Constants for Collection Controller
 private struct EditionMenuCollectionControllerConstants {
-    static let horizontalInset: CGFloat = 20
+    static let rightInset: CGFloat = 20
+    static let leftInset: CGFloat = 8
     static let animationDuration: TimeInterval = 0.25
     static let initialCell: Int = 0
     static let section: Int = 0
@@ -36,10 +37,9 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     init(settings: CameraSettings) {
         editionOptions = [
             EditionOption(image: KanvasCameraImages.editorFilters),
-            EditionOption(image: KanvasCameraImages.editorGif),
             EditionOption(image: KanvasCameraImages.editorMedia),
         ]
-
+        
         selectedIndexPath = IndexPath(item: EditionMenuCollectionControllerConstants.initialCell, section: EditionMenuCollectionControllerConstants.section)
         super.init(nibName: .none, bundle: .none)
     }
@@ -107,7 +107,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard editionOptions.count > 0, collectionView.bounds != .zero else { return .zero }
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: EditionMenuCollectionControllerConstants.horizontalInset)
+        return UIEdgeInsets(top: 0, left: EditionMenuCollectionControllerConstants.leftInset, bottom: 0, right: EditionMenuCollectionControllerConstants.rightInset)
     }
     
     // MARK: Option selection

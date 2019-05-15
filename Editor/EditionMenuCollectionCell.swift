@@ -9,7 +9,7 @@ import UIKit
 
 private struct EditionMenuCollectionCellConstants {
     static let circleDiameter: CGFloat = 49
-    static let padding: CGFloat = 5
+    static let padding: CGFloat = 8
     
     static var height: CGFloat {
         return circleDiameter

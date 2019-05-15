@@ -21,7 +21,7 @@ protocol CameraEditorViewDelegate: class {
 private struct CameraEditorViewConstants {
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 16
-    static let confirmButtonVerticalMargin: CGFloat = 20
+    static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
 }
 
 /// A UIView to preview the contents of segments without exporting
