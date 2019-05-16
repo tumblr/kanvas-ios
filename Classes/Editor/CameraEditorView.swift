@@ -20,7 +20,7 @@ protocol CameraEditorViewDelegate: class {
 /// Constants for CameraEditorView
 private struct CameraEditorViewConstants {
     static let confirmButtonSize: CGFloat = 49
-    static let confirmButtonHorizontalMargin: CGFloat = 16
+    static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
 }
 
