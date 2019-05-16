@@ -11,7 +11,7 @@ private struct EditionMenuCollectionViewConstants {
     static var height: CGFloat =  EditionMenuCollectionCell.height
 }
 
-/// Collection view for the EditionMenuCollectionController
+/// Collection view for EditionMenuCollectionController
 final class EditionMenuCollectionView: IgnoreTouchesView {
     
     static let height = EditionMenuCollectionViewConstants.height
