@@ -24,7 +24,7 @@ protocol CameraEditorControllerDelegate: class {
 /// A view controller to preview the segments sequentially
 /// There are two AVPlayers to reduce loading times and the black screen when replacing player items
 
-final class CameraEditorViewController: UIViewController, EditionMenuCollectionControllerDelegate, FilterCollectionControllerDelegate {
+final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate, FilterCollectionControllerDelegate {
     
     private lazy var cameraEditorView: CameraEditorView = {
         let editorView = CameraEditorView()
@@ -243,11 +243,9 @@ final class CameraEditorViewController: UIViewController, EditionMenuCollectionC
         loadingView.removeFromSuperview()
         loadingView.stopLoading()
     }
-}
-
-// MARK: - CameraEditorView
-
-extension CameraEditorViewController: CameraEditorViewDelegate {
+    
+    // MARK: - CameraEditorViewDelegate
+    
     func confirmButtonPressed() {
         stopPlayback()
         showLoading()
@@ -309,6 +307,7 @@ extension CameraEditorViewController: CameraEditorViewDelegate {
         switch editionOption.type {
         case .filter:
             collectionController.showView(false)
+            showConfirmButton(false)
             filterCollectionController.showView(true)
         case .media:
             break
@@ -327,6 +326,15 @@ extension CameraEditorViewController: CameraEditorViewDelegate {
     
     func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer) {
         
+    }
+    
+    // MARK: - Public interface
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        cameraEditorView.showConfirmButton(show)
     }
 }
 

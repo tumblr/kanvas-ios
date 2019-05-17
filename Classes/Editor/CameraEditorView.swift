@@ -19,6 +19,7 @@ protocol CameraEditorViewDelegate: class {
 
 /// Constants for CameraEditorView
 private struct CameraEditorViewConstants {
+    static let animationDuration: TimeInterval = 0.25
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
@@ -204,6 +205,17 @@ final class CameraEditorView: UIView {
         CATransaction.setDisableActions(true)
         action()
         CATransaction.commit()
+    }
+    
+    // MARK: - Public interface
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
+            self.confirmButton.alpha = show ? 1 : 0
+        }
     }
 }
 
