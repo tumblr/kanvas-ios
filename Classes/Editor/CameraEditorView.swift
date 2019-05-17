@@ -23,6 +23,8 @@ private struct CameraEditorViewConstants {
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
+    static let closeMenuButtonSize: CGFloat = 49
+    static let closeMenuButtonHorizontalMargin: CGFloat = 20
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -34,6 +36,7 @@ final class CameraEditorView: UIView {
     private let secondPlayerLayer: AVPlayerLayer = AVPlayerLayer()
     
     private let confirmButton = UIButton()
+    private let closeMenuButton = UIButton()
     private let closeButton = UIButton()
     let collectionContainer = IgnoreTouchesView()
     let filterCollectionContainer = IgnoreTouchesView()
@@ -75,6 +78,7 @@ final class CameraEditorView: UIView {
         }))
         
         setUpCloseButton()
+        setUpCloseMenuButton()
         setUpConfirmButton()
         setUpCollection()
         setUpFilterCollection()
@@ -96,6 +100,23 @@ final class CameraEditorView: UIView {
             closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+            ])
+    }
+    
+    private func setUpCloseMenuButton() {
+        closeMenuButton.accessibilityLabel = "Close Menu Button"
+        closeMenuButton.setImage(KanvasCameraImages.confirmImage, for: .normal)
+        closeMenuButton.imageView?.contentMode = .scaleAspectFit
+        closeMenuButton.alpha = 0
+        
+        addSubview(closeMenuButton)
+        closeMenuButton.addTarget(self, action: #selector(closeMenuButtonPressed), for: .touchUpInside)
+        closeMenuButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            closeMenuButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraEditorViewConstants.closeMenuButtonHorizontalMargin),
+            closeMenuButton.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.closeMenuButtonSize),
+            closeMenuButton.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.closeMenuButtonSize),
+            closeMenuButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin)
             ])
     }
     
@@ -148,6 +169,10 @@ final class CameraEditorView: UIView {
     // MARK: - buttons
     @objc private func closeButtonPressed() {
         delegate?.closeButtonPressed()
+    }
+    
+    @objc private func closeMenuButtonPressed() {
+        
     }
     
     @objc private func confirmButtonPressed() {
@@ -215,6 +240,15 @@ final class CameraEditorView: UIView {
     func showConfirmButton(_ show: Bool) {
         UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
             self.confirmButton.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the button to close a menu (checkmark)
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCloseMenuButton(_ show: Bool) {
+        UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
+            self.closeMenuButton.alpha = show ? 1 : 0
         }
     }
 }
