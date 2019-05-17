@@ -164,7 +164,7 @@ final class CameraEditorView: UIView {
             filterCollectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             filterCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             filterCollectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            filterCollectionContainer.heightAnchor.constraint(equalToConstant: FilterCollectionView.height)
+            filterCollectionContainer.heightAnchor.constraint(equalToConstant: FilterSmallCollectionView.height)
         ])
     }
     

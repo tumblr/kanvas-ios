@@ -24,7 +24,7 @@ protocol CameraEditorControllerDelegate: class {
 /// A view controller to preview the segments sequentially
 /// There are two AVPlayers to reduce loading times and the black screen when replacing player items
 
-final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate, FilterCollectionControllerDelegate {
+final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate, FilterSmallCollectionControllerDelegate {
     
     private lazy var cameraEditorView: CameraEditorView = {
         let editorView = CameraEditorView()
@@ -38,8 +38,8 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         return controller
     }()
     
-    private lazy var filterCollectionController: FilterCollectionController = {
-        let controller = FilterCollectionController(settings: self.settings)
+    private lazy var filterCollectionController: FilterSmallCollectionController = {
+        let controller = FilterSmallCollectionController(settings: self.settings)
         controller.delegate = self
         return controller
     }()
@@ -322,7 +322,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         }
     }
     
-    // MARK: - FilterCollectionControllerDelegate
+    // MARK: - FilterSmallCollectionControllerDelegate
     
     func didSelectFilter(_ filterItem: FilterItem) {
         
