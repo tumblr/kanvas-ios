@@ -301,6 +301,13 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         delegate?.dismissButtonPressed()
     }
     
+    func closeMenuButtonPressed() {
+        filterCollectionController.showView(false)
+        showCloseMenuButton(false)
+        collectionController.showView(true)
+        showConfirmButton(true)
+    }
+    
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
@@ -309,6 +316,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
             collectionController.showView(false)
             showConfirmButton(false)
             filterCollectionController.showView(true)
+            showCloseMenuButton(true)
         case .media:
             break
         }
