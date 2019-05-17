@@ -24,7 +24,7 @@ protocol CameraEditorControllerDelegate: class {
 /// A view controller to preview the segments sequentially
 /// There are two AVPlayers to reduce loading times and the black screen when replacing player items
 
-final class CameraEditorViewController: UIViewController, EditionMenuCollectionControllerDelegate {
+final class CameraEditorViewController: UIViewController, EditionMenuCollectionControllerDelegate, FilterCollectionControllerDelegate {
     
     private lazy var cameraEditorView: CameraEditorView = {
         let editorView = CameraEditorView()
@@ -34,6 +34,12 @@ final class CameraEditorViewController: UIViewController, EditionMenuCollectionC
     
     private lazy var collectionController: EditionMenuCollectionController = {
         let controller = EditionMenuCollectionController(settings: self.settings)
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var filterCollectionController: FilterCollectionController = {
+        let controller = FilterCollectionController(settings: self.settings)
         controller.delegate = self
         return controller
     }()
@@ -113,7 +119,9 @@ final class CameraEditorViewController: UIViewController, EditionMenuCollectionC
         cameraEditorView.add(into: view)
         cameraEditorView.setFirstPlayer(player: firstPlayer)
         cameraEditorView.setSecondPlayer(player: secondPlayer)
+        
         load(childViewController: collectionController, into: cameraEditorView.collectionContainer)
+        load(childViewController: filterCollectionController, into: cameraEditorView.filterCollectionContainer)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -298,6 +306,26 @@ extension CameraEditorViewController: CameraEditorViewDelegate {
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
+        switch editionOption.type {
+        case .filter:
+            collectionController.showView(false)
+            filterCollectionController.showView(true)
+        case .media:
+            break
+        }
+    }
+    
+    // MARK: - FilterCollectionControllerDelegate
+    
+    func didSelectFilter(_ filterItem: FilterItem) {
+        
+    }
+    
+    func didTapSelectedFilter(recognizer: UITapGestureRecognizer) {
+        
+    }
+    
+    func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer) {
         
     }
 }

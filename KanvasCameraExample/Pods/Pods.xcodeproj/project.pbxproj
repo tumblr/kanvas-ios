@@ -880,15 +880,23 @@
 		6527364E228DA9DA00576880 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
+				65617B5B228EE5FC006B44A3 /* Filters */,
 				6527364F228DA9DA00576880 /* CameraEditorViewController.swift */,
+				65273653228DA9DA00576880 /* CameraEditorView.swift */,
 				65273650228DA9DA00576880 /* EditionOption.swift */,
 				65273651228DA9DA00576880 /* EditionMenuCollectionView.swift */,
 				65273652228DA9DA00576880 /* EditionMenuCollectionCell.swift */,
-				65273653228DA9DA00576880 /* CameraEditorView.swift */,
 				65273654228DA9DA00576880 /* EditionMenuCollectionController.swift */,
 			);
 			name = Editor;
 			path = Classes/Editor;
+			sourceTree = "<group>";
+		};
+		65617B5B228EE5FC006B44A3 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Filters;
 			sourceTree = "<group>";
 		};
 		75B25530C4BD9DB68EAC0C455E6F4D15 /* Utility */ = {

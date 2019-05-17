@@ -35,6 +35,7 @@ final class CameraEditorView: UIView {
     private let confirmButton = UIButton()
     private let closeButton = UIButton()
     let collectionContainer = IgnoreTouchesView()
+    let filterCollectionContainer = IgnoreTouchesView()
     
     private var disposables: [NSKeyValueObservation] = []
     weak var delegate: CameraEditorViewDelegate?
@@ -75,6 +76,7 @@ final class CameraEditorView: UIView {
         setUpCloseButton()
         setUpConfirmButton()
         setUpCollection()
+        setUpFilterCollection()
     }
     
     // MARK: - views
@@ -125,6 +127,21 @@ final class CameraEditorView: UIView {
             collectionContainer.centerYAnchor.constraint(equalTo: confirmButton.centerYAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
             ])
+    }
+    
+    func setUpFilterCollection() {
+        filterCollectionContainer.backgroundColor = .clear
+        filterCollectionContainer.accessibilityIdentifier = "Edition Filter Collection Container"
+        filterCollectionContainer.clipsToBounds = false
+        
+        addSubview(filterCollectionContainer)
+        filterCollectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            filterCollectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            filterCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            filterCollectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            filterCollectionContainer.heightAnchor.constraint(equalToConstant: FilterCollectionView.height)
+        ])
     }
     
     // MARK: - buttons
