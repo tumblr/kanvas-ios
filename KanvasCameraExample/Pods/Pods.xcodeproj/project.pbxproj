@@ -881,10 +881,10 @@
 			isa = PBXGroup;
 			children = (
 				6527364F228DA9DA00576880 /* CameraEditorViewController.swift */,
+				65273653228DA9DA00576880 /* CameraEditorView.swift */,
 				65273650228DA9DA00576880 /* EditionOption.swift */,
 				65273651228DA9DA00576880 /* EditionMenuCollectionView.swift */,
 				65273652228DA9DA00576880 /* EditionMenuCollectionCell.swift */,
-				65273653228DA9DA00576880 /* CameraEditorView.swift */,
 				65273654228DA9DA00576880 /* EditionMenuCollectionController.swift */,
 			);
 			name = Editor;

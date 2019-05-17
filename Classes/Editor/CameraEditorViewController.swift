@@ -24,7 +24,7 @@ protocol CameraEditorControllerDelegate: class {
 /// A view controller to preview the segments sequentially
 /// There are two AVPlayers to reduce loading times and the black screen when replacing player items
 
-final class CameraEditorViewController: UIViewController, EditionMenuCollectionControllerDelegate {
+final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate {
     
     private lazy var cameraEditorView: CameraEditorView = {
         let editorView = CameraEditorView()
@@ -235,11 +235,9 @@ final class CameraEditorViewController: UIViewController, EditionMenuCollectionC
         loadingView.removeFromSuperview()
         loadingView.stopLoading()
     }
-}
-
-// MARK: - CameraEditorView
-
-extension CameraEditorViewController: CameraEditorViewDelegate {
+    
+    // MARK: - CameraEditorViewDelegate
+    
     func confirmButtonPressed() {
         stopPlayback()
         showLoading()
@@ -299,6 +297,15 @@ extension CameraEditorViewController: CameraEditorViewDelegate {
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
         
+    }
+    
+    // MARK: - Public interface
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        cameraEditorView.showConfirmButton(show)
     }
 }
 
