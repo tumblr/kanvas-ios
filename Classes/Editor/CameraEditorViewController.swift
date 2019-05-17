@@ -307,5 +307,12 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     func showConfirmButton(_ show: Bool) {
         cameraEditorView.showConfirmButton(show)
     }
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCloseMenuButton(_ show: Bool) {
+        cameraEditorView.showCloseMenuButton(show)
+    }
 }
 
