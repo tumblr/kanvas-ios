@@ -15,6 +15,8 @@ protocol CameraEditorViewDelegate: class {
     func confirmButtonPressed()
     /// A function that is called when the close button is pressed
     func closeButtonPressed()
+    /// A function that is called when the button to close a menu is pressed
+    func closeMenuButtonPressed()
 }
 
 /// Constants for CameraEditorView

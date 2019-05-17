@@ -293,6 +293,12 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         delegate?.dismissButtonPressed()
     }
     
+    func closeMenuButtonPressed() {
+        showCloseMenuButton(false)
+        collectionController.showView(true)
+        showConfirmButton(true)
+    }
+    
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
@@ -308,7 +314,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         cameraEditorView.showConfirmButton(show)
     }
     
-    /// shows or hides the confirm button
+    /// shows or hides the button to close a menu (checkmark)
     ///
     /// - Parameter show: true to show, false to hide
     func showCloseMenuButton(_ show: Bool) {
