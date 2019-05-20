@@ -42,6 +42,8 @@ extension AVCaptureDevice.FlashMode: CameraOptionConvertible {
         case .off: return .flashOff
         case .on: return .flashOn
         case .auto: return .flashOff
+        @unknown default:
+            return .flashOff
         }
     }
 }
@@ -52,6 +54,8 @@ extension AVCaptureDevice.Position: CameraOptionConvertible {
         case .back: return .backCamera
         case .front: return .frontCamera
         case .unspecified: return .backCamera
+        @unknown default:
+            return .backCamera
         }
     }
 }

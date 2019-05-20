@@ -41,6 +41,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         switch currentCameraPosition {
         case .front: return frontCamera
         case .back, .unspecified: return rearCamera
+        @unknown default:
+            return rearCamera
         }
     }
 
@@ -463,6 +465,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 rearCamera = camera
             case .unspecified:
                 break // unspecified cameras are not currently supported
+            @unknown default:
+                break
             }
             if camera.isFocusModeSupported(.continuousAutoFocus) {
                 try camera.lockForConfiguration()
