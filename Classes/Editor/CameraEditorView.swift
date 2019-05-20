@@ -25,7 +25,7 @@ private struct CameraEditorViewConstants {
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
-    static let closeMenuButtonSize: CGFloat = 49
+    static let closeMenuButtonSize: CGFloat = 36
     static let closeMenuButtonHorizontalMargin: CGFloat = 20
 }
 
@@ -116,7 +116,7 @@ final class CameraEditorView: UIView {
             closeMenuButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraEditorViewConstants.closeMenuButtonHorizontalMargin),
             closeMenuButton.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.closeMenuButtonSize),
             closeMenuButton.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.closeMenuButtonSize),
-            closeMenuButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin)
+            closeMenuButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor)
             ])
     }
     
