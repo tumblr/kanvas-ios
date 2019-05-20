@@ -15,26 +15,20 @@ protocol FilterSmallCollectionCellDelegate {
     ///   - cell: the cell that was tapped
     ///   - recognizer: the tap gesture recognizer
     func didTap(cell: FilterSmallCollectionCell, recognizer: UITapGestureRecognizer)
-    
-    /// Callback method when long pressing a cell
-    ///
-    /// - Parameters:
-    ///   - cell: the cell that was long-pressed
-    ///   - recognizer: the long-press gesture recognizer
-    func didLongPress(cell: FilterSmallCollectionCell, recognizer: UILongPressGestureRecognizer)
 }
 
 private struct FilterSmallCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.2
     static let circleDiameter: CGFloat = 50
-    static let circleMaxDiameter: CGFloat = 60
+    static let circleMaxDiameter: CGFloat = 55
+    static let padding: CGFloat = 6
     
     static var minimumHeight: CGFloat {
         return circleMaxDiameter
     }
     
     static var width: CGFloat {
-        return circleMaxDiameter
+        return circleMaxDiameter + 2 * padding
     }
 }
 
@@ -136,19 +130,12 @@ final class FilterSmallCollectionCell: UICollectionViewCell {
     
     private func setUpRecognizers() {
         let tapRecognizer = UITapGestureRecognizer()
-        let longPressRecognizer = UILongPressGestureRecognizer()
         contentView.addGestureRecognizer(tapRecognizer)
-        contentView.addGestureRecognizer(longPressRecognizer)
         tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
-        longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
     }
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
         delegate?.didTap(cell: self, recognizer: recognizer)
-    }
-    
-    @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        delegate?.didLongPress(cell: self, recognizer: recognizer)
     }
 }
 

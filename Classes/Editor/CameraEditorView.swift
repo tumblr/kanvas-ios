@@ -163,7 +163,7 @@ final class CameraEditorView: UIView {
         NSLayoutConstraint.activate([
             filterCollectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             filterCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            filterCollectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            filterCollectionContainer.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
             filterCollectionContainer.heightAnchor.constraint(equalToConstant: FilterSmallCollectionView.height)
         ])
     }
@@ -251,6 +251,15 @@ final class CameraEditorView: UIView {
     func showCloseMenuButton(_ show: Bool) {
         UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
             self.closeMenuButton.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the close button (back caret)
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCloseButton(_ show: Bool) {
+        UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
+            self.closeButton.alpha = show ? 1 : 0
         }
     }
 }

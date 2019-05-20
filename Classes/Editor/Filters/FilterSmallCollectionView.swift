@@ -16,7 +16,7 @@ private struct FilterSmallCollectionViewConstants {
 final class FilterSmallCollectionView: IgnoreTouchesView {
     
     static let height = FilterSmallCollectionViewConstants.height
-    let collectionView: IgnoreTouchesCollectionView
+    let collectionView: UICollectionView
     
     init() {
         collectionView = createCollectionView()
@@ -49,11 +49,11 @@ extension FilterSmallCollectionView {
 }
 
 // MARK: - Collection
-fileprivate func createCollectionView() -> IgnoreTouchesCollectionView {
+fileprivate func createCollectionView() -> UICollectionView {
     let layout = UICollectionViewFlowLayout()
     configureCollectionLayout(layout: layout)
     
-    let collectionView = IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.accessibilityIdentifier = "Filter Collection"
     collectionView.backgroundColor = .clear
     configureCollection(collectionView: collectionView)
@@ -68,7 +68,7 @@ fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.minimumLineSpacing = 0
 }
 
-fileprivate func configureCollection(collectionView: IgnoreTouchesCollectionView) {
+fileprivate func configureCollection(collectionView: UICollectionView) {
     collectionView.isScrollEnabled = true
     collectionView.allowsSelection = true
     collectionView.bounces = true

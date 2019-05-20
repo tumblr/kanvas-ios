@@ -306,6 +306,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         showCloseMenuButton(false)
         collectionController.showView(true)
         showConfirmButton(true)
+        showCloseButton(true)
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
@@ -315,6 +316,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         case .filter:
             collectionController.showView(false)
             showConfirmButton(false)
+            showCloseButton(false)
             filterCollectionController.showView(true)
             showCloseMenuButton(true)
         case .media:
@@ -325,14 +327,6 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     // MARK: - FilterSmallCollectionControllerDelegate
     
     func didSelectFilter(_ filterItem: FilterItem) {
-        
-    }
-    
-    func didTapSelectedFilter(recognizer: UITapGestureRecognizer) {
-        
-    }
-    
-    func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer) {
         
     }
     
@@ -350,6 +344,13 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     /// - Parameter show: true to show, false to hide
     func showCloseMenuButton(_ show: Bool) {
         cameraEditorView.showCloseMenuButton(show)
+    }
+    
+    /// shows or hides the close button (back caret)
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCloseButton(_ show: Bool) {
+        cameraEditorView.showCloseButton(show)
     }
 }
 
