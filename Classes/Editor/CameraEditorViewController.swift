@@ -303,6 +303,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     
     func closeMenuButtonPressed() {
         filterCollectionController.showView(false)
+        showSelectionCircle(false)
         showCloseMenuButton(false)
         collectionController.showView(true)
         showConfirmButton(true)
@@ -318,6 +319,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
             showConfirmButton(false)
             showCloseButton(false)
             filterCollectionController.showView(true)
+            showSelectionCircle(true)
             showCloseMenuButton(true)
         case .media:
             break
@@ -351,6 +353,13 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
         cameraEditorView.showCloseButton(show)
+    }
+    
+    /// shows or hides the filter selection circle
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showSelectionCircle(_ show: Bool) {
+        cameraEditorView.showSelectionCircle(show)
     }
 }
 

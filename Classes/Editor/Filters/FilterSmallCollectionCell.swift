@@ -37,6 +37,7 @@ final class FilterSmallCollectionCell: UICollectionViewCell {
     
     static let minimumHeight = FilterSmallCollectionCellConstants.minimumHeight
     static let width = FilterSmallCollectionCellConstants.width
+    static let cellPadding = FilterSmallCollectionCellConstants.padding
     
     private weak var circleView: UIImageView?
     

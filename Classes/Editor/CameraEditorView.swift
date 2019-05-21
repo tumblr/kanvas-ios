@@ -27,6 +27,9 @@ private struct CameraEditorViewConstants {
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let closeMenuButtonSize: CGFloat = 36
     static let closeMenuButtonHorizontalMargin: CGFloat = 20
+    static let circleCornerRadius: CGFloat = 27.5
+    static let circleSize: CGFloat = 55
+    static let circleBorderWidth: CGFloat = 3
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -40,6 +43,7 @@ final class CameraEditorView: UIView {
     private let confirmButton = UIButton()
     private let closeMenuButton = UIButton()
     private let closeButton = UIButton()
+    private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
     let filterCollectionContainer = IgnoreTouchesView()
     
@@ -84,6 +88,7 @@ final class CameraEditorView: UIView {
         setUpConfirmButton()
         setUpCollection()
         setUpFilterCollection()
+        setUpFilterSelectionCircle()
     }
     
     // MARK: - views
@@ -102,7 +107,7 @@ final class CameraEditorView: UIView {
             closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
-            ])
+        ])
     }
     
     private func setUpCloseMenuButton() {
@@ -134,7 +139,7 @@ final class CameraEditorView: UIView {
             confirmButton.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize),
             confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -CameraEditorViewConstants.confirmButtonVerticalMargin)
-            ])
+        ])
     }
     
     private func setUpCollection() {
@@ -150,7 +155,7 @@ final class CameraEditorView: UIView {
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
             collectionContainer.centerYAnchor.constraint(equalTo: confirmButton.centerYAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
-            ])
+        ])
     }
     
     func setUpFilterCollection() {
@@ -165,6 +170,24 @@ final class CameraEditorView: UIView {
             filterCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             filterCollectionContainer.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
             filterCollectionContainer.heightAnchor.constraint(equalToConstant: FilterSmallCollectionView.height)
+        ])
+    }
+    
+    func setUpFilterSelectionCircle() {
+        filterSelectionCircle.accessibilityIdentifier = "Edition Filter Selection Circle"
+        filterSelectionCircle.clipsToBounds = false
+        filterSelectionCircle.layer.cornerRadius = CameraEditorViewConstants.circleCornerRadius
+        filterSelectionCircle.layer.borderWidth = CameraEditorViewConstants.circleBorderWidth
+        filterSelectionCircle.layer.borderColor = UIColor.white.cgColor
+        filterSelectionCircle.alpha = 0
+        
+        addSubview(filterSelectionCircle)
+        filterSelectionCircle.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            filterSelectionCircle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: FilterSmallCollectionController.leftInset + FilterSmallCollectionCell.cellPadding),
+            filterSelectionCircle.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
+            filterSelectionCircle.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.circleSize),
+            filterSelectionCircle.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.circleSize)
         ])
     }
     
@@ -260,6 +283,15 @@ final class CameraEditorView: UIView {
     func showCloseButton(_ show: Bool) {
         UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
             self.closeButton.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the filter selection circle
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showSelectionCircle(_ show: Bool) {
+        UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
+            self.filterSelectionCircle.alpha = show ? 1 : 0
         }
     }
 }

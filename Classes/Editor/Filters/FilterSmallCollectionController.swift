@@ -25,6 +25,8 @@ private struct FilterSmallCollectionControllerConstants {
 /// Controller for handling the filter item collection.
 final class FilterSmallCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterSmallCollectionCellDelegate {
     
+    static let leftInset = FilterSmallCollectionControllerConstants.leftInset
+    
     private lazy var filterCollectionView = FilterSmallCollectionView()
     private var filterItems: [FilterItem]
     private var selectedIndexPath: IndexPath
