@@ -32,10 +32,15 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     
     /// Initializes the option collection
     init(settings: CameraSettings) {
-        editionOptions = [
-            EditionOption(type: .filter),
-            EditionOption(type: .media),
-        ]
+        editionOptions = []
+        
+        if settings.features.editorFilters {
+            editionOptions.append(EditionOption(type: .filter))
+        }
+        
+        if settings.features.editorMedia {
+            editionOptions.append(EditionOption(type: .media))
+        }
         
         super.init(nibName: .none, bundle: .none)
     }

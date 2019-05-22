@@ -44,6 +44,14 @@ public struct CameraFeatures {
     /// The Experimental Camera Filters feature
     /// This adds experimental filters to the end of the filters picker.
     public var experimentalCameraFilters: Bool = false
+    
+    /// The Editor Filters feature
+    /// This enables the UI to select filters in the editor.
+    public var editorFilters: Bool = false
+    
+    /// The Editor Media feature
+    /// This enables the UI to select media in the editor.
+    public var editorMedia: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera
