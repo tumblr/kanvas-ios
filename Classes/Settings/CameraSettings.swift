@@ -45,6 +45,10 @@ public struct CameraFeatures {
     /// This adds experimental filters to the end of the filters picker.
     public var experimentalCameraFilters: Bool = false
     
+    /// The Editor feature
+    /// This replaces the Preview screen with the Editor.
+    public var editor: Bool = false
+    
     /// The Editor Filters feature
     /// This enables the UI to select filters in the editor.
     public var editorFilters: Bool = false
