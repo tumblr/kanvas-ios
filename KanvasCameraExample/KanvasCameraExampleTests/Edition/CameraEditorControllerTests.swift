@@ -18,6 +18,14 @@ final class CameraEditorControllerTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
+    func getCameraSettings() -> CameraSettings {
+        let settings = CameraSettings()
+        settings.features.editor = true
+        settings.features.editorFilters = true
+        settings.features.editorMedia = true
+        return settings
+    }
+    
     func getAllSegments() -> [CameraSegment] {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
@@ -62,9 +70,10 @@ final class CameraEditorControllerTests: FBSnapshotTestCase {
         return []
     }
     
-    func newViewController(settings: CameraSettings = CameraSettings(), segments: [CameraSegment], delegate: CameraEditorControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil) -> CameraEditorViewController {
+    func newViewController(settings: CameraSettings? = nil, segments: [CameraSegment], delegate: CameraEditorControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil) -> CameraEditorViewController {
+        let cameraSettings = settings ?? getCameraSettings()
         let handler = assetsHandler ?? AssetsHandlerStub()
-        let viewController = CameraEditorViewController(settings: settings, segments: segments, assetsHandler: handler, cameraMode: cameraMode)
+        let viewController = CameraEditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, cameraMode: cameraMode)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
@@ -134,7 +143,7 @@ final class CameraEditorControllerTests: FBSnapshotTestCase {
     func testConfirmPhotoAsVideoInStopMotionMode() {
         let segments = getPhotoSegment()
         let delegate = newDelegateStub()
-        let settings = CameraSettings()
+        let settings = getCameraSettings()
         settings.exportStopMotionPhotoAsVideo = true
         let handler = newAssetHandlerStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .stopMotion)
@@ -146,7 +155,7 @@ final class CameraEditorControllerTests: FBSnapshotTestCase {
     func testConfirmPhotoAsPhotoInStopMotionMode() {
         let segments = getPhotoSegment()
         let delegate = newDelegateStub()
-        let settings = CameraSettings()
+        let settings = getCameraSettings()
         settings.exportStopMotionPhotoAsVideo = true
         let handler = newAssetHandlerStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .photo)
