@@ -321,4 +321,3 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         cameraEditorView.showCloseMenuButton(show)
     }
 }
-
