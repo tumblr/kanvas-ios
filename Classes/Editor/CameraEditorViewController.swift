@@ -21,9 +21,7 @@ protocol CameraEditorControllerDelegate: class {
     func dismissButtonPressed()
 }
 
-/// A view controller to preview the segments sequentially
-/// There are two AVPlayers to reduce loading times and the black screen when replacing player items
-
+/// A view controller to edit the segments
 final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate {
     
     private lazy var cameraEditorView: CameraEditorView = {
@@ -64,7 +62,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         fatalError("init(nibName:bundle:) has not been implemented")
     }
     
-    /// The designated initializer for the preview controller
+    /// The designated initializer for the editor controller
     ///
     /// - Parameters:
     ///   - settings: The CameraSettings instance for export optioins
