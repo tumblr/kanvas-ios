@@ -350,7 +350,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         assetExport.outputFileType = .mp4
         let finalURL = NSURL.createNewVideoURL()
         assetExport.outputURL = finalURL
-        assetExport.metadata = MediaMetadata.createAVMetadataItems(from: .kanvas)
+        assetExport.metadata = KanvasMediaMetadata.createAVMetadataItems(from: .init(source: .kanvas_camera))
         assetExport.shouldOptimizeForNetworkUse = true
 
         assetExport.exportAsynchronously() {
