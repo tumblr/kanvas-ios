@@ -18,8 +18,16 @@ final class EditionMenuCollectionControllerTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
+    func newCameraSettings() -> CameraSettings {
+        let settings = CameraSettings()
+        settings.features.editorFilters = true
+        settings.features.editorMedia = true
+        return settings
+    }
+    
     func newViewController() -> EditionMenuCollectionController {
-        let controller = EditionMenuCollectionController(settings: CameraSettings())
+        let settings = newCameraSettings()
+        let controller = EditionMenuCollectionController(settings: settings)
         controller.view.frame = CGRect(x: 0, y: 0, width: 600, height: 600)
         controller.view.setNeedsDisplay()
         return controller

@@ -295,4 +295,3 @@ final class CameraEditorView: UIView {
         }
     }
 }
-

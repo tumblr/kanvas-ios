@@ -28,6 +28,7 @@ final class EditionMenuCollectionViewTests: FBSnapshotTestCase, UICollectionView
     func newCollectionView() -> EditionMenuCollectionView {
         let collectionView = EditionMenuCollectionView()
         collectionView.frame = CGRect(x: 0, y: 0, width: 320, height: EditionMenuCollectionView.height)
+        collectionView.updateFadeOutEffect()
         return collectionView
     }
     
@@ -41,7 +42,7 @@ final class EditionMenuCollectionViewTests: FBSnapshotTestCase, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return editionOptions.count
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

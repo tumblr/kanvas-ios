@@ -203,9 +203,29 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
         cameraInputController.stopSession()
+        let controller = createNextStepViewController(segments)
+        self.present(controller, animated: true)
+    }
+    
+    private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
+        if settings.features.editor {
+            return createEditorViewController(segments)
+        }
+        else {
+            return createPreviewViewController(segments)
+        }
+    }
+    
+    private func createEditorViewController(_ segments: [CameraSegment]) -> CameraEditorViewController {
         let controller = CameraEditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
         controller.delegate = self
-        self.present(controller, animated: true)
+        return controller
+    }
+    
+    private func createPreviewViewController(_ segments: [CameraSegment]) -> CameraPreviewViewController {
+        let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
+        controller.delegate = self
+        return controller
     }
     
     /// Shows the tooltip below the mode selector
