@@ -10,10 +10,15 @@ import CoreMedia
 
 class GLRendererDelegateStub: GLRendererDelegate {
     var calledRendererReadyForDisplay = false
+    var calledRendererFilteredPixelBufferReady = false
     var calledRendererRanOutOfBuffers = false
 
-    func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+    func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         calledRendererReadyForDisplay = true
+    }
+
+    func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        calledRendererFilteredPixelBufferReady = true
     }
 
     func rendererRanOutOfBuffers() {
