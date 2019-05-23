@@ -166,9 +166,11 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
     }
     
     func scrollToItemPreservingLeftInset(indexPath: IndexPath, animated: Bool) {
-        let layout = filterCollectionView.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        let attri = layout.layoutAttributesForItem(at: indexPath)!
-        filterCollectionView.collectionView.setContentOffset(CGPoint(x: (attri.frame.origin.x - FilterSmallCollectionControllerConstants.leftInset), y: 0), animated: animated)
+        guard let layout = filterCollectionView.collectionView.collectionViewLayout as? UICollectionViewFlowLayout,
+            let attri = layout.layoutAttributesForItem(at: indexPath) else { return }
+        
+        let point = CGPoint(x: (attri.frame.origin.x - FilterSmallCollectionControllerConstants.leftInset), y: 0)
+        filterCollectionView.collectionView.setContentOffset(point, animated: animated)
     }
     
     private func indexPathAtBeginning() -> IndexPath? {

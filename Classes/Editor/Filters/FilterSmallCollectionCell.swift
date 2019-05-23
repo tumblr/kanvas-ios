@@ -139,4 +139,3 @@ final class FilterSmallCollectionCell: UICollectionViewCell {
         delegate?.didTap(cell: self, recognizer: recognizer)
     }
 }
-

@@ -33,4 +33,3 @@ final class FilterSmallCollectionControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 }
-
