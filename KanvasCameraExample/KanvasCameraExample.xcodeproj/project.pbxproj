@@ -296,7 +296,7 @@
 			path = Filters;
 			sourceTree = "<group>";
 		};
-		659660A6228C61F400C2AFC7 /* Edition */ = {
+		659660A6228C61F400C2AFC7 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
 				659660A7228C635700C2AFC7 /* CameraEditorViewTests.swift */,
@@ -306,7 +306,7 @@
 				659660AF228C6A0000C2AFC7 /* EditionMenuCollectionControllerTests.swift */,
 				659660B1228C6A1300C2AFC7 /* EditionOptionTests.swift */,
 			);
-			path = Edition;
+			path = Editor;
 			sourceTree = "<group>";
 		};
 		764AC463221D83BD005C82EC /* OpenGL */ = {
@@ -410,7 +410,7 @@
 				0EAE0CB72139EC81004CD7FF /* KanvasCameraAnalyticsStub.swift */,
 				0EAE0CAE2139B966004CD7FF /* CameraPreview */,
 				0EAE0CA32139A9AA004CD7FF /* Modal */,
-				659660A6228C61F400C2AFC7 /* Edition */,
+				659660A6228C61F400C2AFC7 /* Editor */,
 				0EAE0C8A2139895A004CD7FF /* Camera */,
 				652DFA1022281F00007B1EF5 /* Filters */,
 				ABE4992921375B3700379F7F /* ModeSelector */,
