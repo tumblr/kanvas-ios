@@ -37,6 +37,11 @@
                BlueprintName = "KanvasCameraExampleTests"
                ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "CameraRecorderTests/testPhoto()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>
