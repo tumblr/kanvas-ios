@@ -39,7 +39,13 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "CameraInputControllerTests/testSwitchCameras()">
+               </Test>
+               <Test
                   Identifier = "CameraRecorderTests/testPhoto()">
+               </Test>
+               <Test
+                  Identifier = "CameraRecorderTests/testStopMotion()">
                </Test>
             </SkippedTests>
          </TestableReference>
