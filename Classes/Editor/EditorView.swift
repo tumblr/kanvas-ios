@@ -10,7 +10,7 @@ import UIKit
 
 /// protocol for closing the preview or confirming
 
-protocol CameraEditorViewDelegate: class {
+protocol EditorViewDelegate: class {
     /// A function that is called when the confirm button is pressed
     func confirmButtonPressed()
     /// A function that is called when the close button is pressed
@@ -19,8 +19,8 @@ protocol CameraEditorViewDelegate: class {
     func closeMenuButtonPressed()
 }
 
-/// Constants for CameraEditorView
-private struct CameraEditorViewConstants {
+/// Constants for EditorView
+private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
@@ -31,7 +31,7 @@ private struct CameraEditorViewConstants {
 
 /// A UIView to preview the contents of segments without exporting
 
-final class CameraEditorView: UIView {
+final class EditorView: UIView {
     
     private let imageView: UIImageView = UIImageView()
     private let firstPlayerLayer: AVPlayerLayer = AVPlayerLayer()
@@ -43,7 +43,7 @@ final class CameraEditorView: UIView {
     let collectionContainer = IgnoreTouchesView()
     
     private var disposables: [NSKeyValueObservation] = []
-    weak var delegate: CameraEditorViewDelegate?
+    weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -100,7 +100,7 @@ final class CameraEditorView: UIView {
             closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
-            ])
+        ])
     }
     
     private func setUpCloseMenuButton() {
@@ -113,11 +113,11 @@ final class CameraEditorView: UIView {
         closeMenuButton.addTarget(self, action: #selector(closeMenuButtonPressed), for: .touchUpInside)
         closeMenuButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            closeMenuButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraEditorViewConstants.closeMenuButtonHorizontalMargin),
-            closeMenuButton.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.closeMenuButtonSize),
-            closeMenuButton.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.closeMenuButtonSize),
+            closeMenuButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.closeMenuButtonHorizontalMargin),
+            closeMenuButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.closeMenuButtonSize),
+            closeMenuButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.closeMenuButtonSize),
             closeMenuButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor)
-            ])
+        ])
     }
     
     private func setUpConfirmButton() {
@@ -128,11 +128,11 @@ final class CameraEditorView: UIView {
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraEditorViewConstants.confirmButtonHorizontalMargin),
-            confirmButton.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize),
-            confirmButton.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.confirmButtonSize),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -CameraEditorViewConstants.confirmButtonVerticalMargin)
-            ])
+            confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+            confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+            confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.confirmButtonVerticalMargin)
+        ])
     }
     
     private func setUpCollection() {
@@ -142,13 +142,13 @@ final class CameraEditorView: UIView {
         
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let trailingMargin = CameraEditorViewConstants.confirmButtonHorizontalMargin * 2 + CameraEditorViewConstants.confirmButtonSize
+        let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin * 2 + EditorViewConstants.confirmButtonSize
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
             collectionContainer.centerYAnchor.constraint(equalTo: confirmButton.centerYAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
-            ])
+        ])
     }
     
     // MARK: - buttons
@@ -223,7 +223,7 @@ final class CameraEditorView: UIView {
     ///
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
-        UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.confirmButton.alpha = show ? 1 : 0
         }
     }
@@ -232,7 +232,7 @@ final class CameraEditorView: UIView {
     ///
     /// - Parameter show: true to show, false to hide
     func showCloseMenuButton(_ show: Bool) {
-        UIView.animate(withDuration: CameraEditorViewConstants.animationDuration) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.closeMenuButton.alpha = show ? 1 : 0
         }
     }

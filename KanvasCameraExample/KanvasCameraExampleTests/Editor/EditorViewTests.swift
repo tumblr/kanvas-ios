@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class CameraEditorViewTests: FBSnapshotTestCase {
+final class EditorViewTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -19,8 +19,8 @@ final class CameraEditorViewTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newView() -> CameraEditorView {
-        let view = CameraEditorView()
+    func newView() -> EditorView {
+        let view = EditorView()
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return view
     }

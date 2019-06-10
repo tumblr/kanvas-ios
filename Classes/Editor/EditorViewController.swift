@@ -8,9 +8,9 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// Protocol for camera editor controller methods
+/// Protocol for editor controller methods
 
-protocol CameraEditorControllerDelegate: class {
+protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?)
     
@@ -22,10 +22,10 @@ protocol CameraEditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate {
     
-    private lazy var cameraEditorView: CameraEditorView = {
-        let editorView = CameraEditorView()
+    private lazy var editorView: EditorView = {
+        let editorView = EditorView()
         editorView.delegate = self
         return editorView
     }()
@@ -50,7 +50,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     private var secondPlayer: AVPlayer = AVPlayer()
     private var currentPlayer: AVPlayer
     
-    weak var delegate: CameraEditorControllerDelegate?
+    weak var delegate: EditorControllerDelegate?
     
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -108,10 +108,10 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         super.viewDidLoad()
 
         view.backgroundColor = .black
-        cameraEditorView.add(into: view)
-        cameraEditorView.setFirstPlayer(player: firstPlayer)
-        cameraEditorView.setSecondPlayer(player: secondPlayer)
-        load(childViewController: collectionController, into: cameraEditorView.collectionContainer)
+        editorView.add(into: view)
+        editorView.setFirstPlayer(player: firstPlayer)
+        editorView.setSecondPlayer(player: secondPlayer)
+        load(childViewController: collectionController, into: editorView.collectionContainer)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -157,7 +157,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     }
     
     private func playImage(image: UIImage) {
-        cameraEditorView.setImage(image: image)
+        editorView.setImage(image: image)
         let displayTime = timeIntervalForImageSegments(segments)
         timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
             self?.playNextSegment()
@@ -177,11 +177,11 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         if currentPlayer == firstPlayer {
             currentPlayer = secondPlayer
-            cameraEditorView.showSecondPlayer()
+            editorView.showSecondPlayer()
         }
         else {
             currentPlayer = firstPlayer
-            cameraEditorView.showFirstPlayer()
+            editorView.showFirstPlayer()
         }
         
         if currentPlayer.currentItem == nil {
@@ -234,7 +234,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         loadingView.stopLoading()
     }
     
-    // MARK: - CameraEditorViewDelegate
+    // MARK: - EditorViewDelegate
     
     func confirmButtonPressed() {
         stopPlayback()
@@ -309,13 +309,13 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     ///
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
-        cameraEditorView.showConfirmButton(show)
+        editorView.showConfirmButton(show)
     }
     
     /// shows or hides the button to close a menu (checkmark)
     ///
     /// - Parameter show: true to show, false to hide
     func showCloseMenuButton(_ show: Bool) {
-        cameraEditorView.showCloseMenuButton(show)
+        editorView.showCloseMenuButton(show)
     }
 }

@@ -45,7 +45,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraEditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
     
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -216,8 +216,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
     
-    private func createEditorViewController(_ segments: [CameraSegment]) -> CameraEditorViewController {
-        let controller = CameraEditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
+    private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
         controller.delegate = self
         return controller
     }
@@ -587,7 +587,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logNextTapped()
     }
 
-    // MARK: - CameraPreviewControllerDelegate & CameraEditorControllerDelegate
+    // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
     
     func didFinishExportingVideo(url: URL?) {
         if let videoURL = url {

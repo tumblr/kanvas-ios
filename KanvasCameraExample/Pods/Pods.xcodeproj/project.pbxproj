@@ -86,11 +86,11 @@
 		60A1620879C5A056BA9A956444CF6A50 /* ColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CA393832B9551E958337AC615F52DB /* ColorPickerViewController.swift */; };
 		63AEF34EA9962CFFE6FF2CB63483457F /* ModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3E3C8C2901E23EEF5BBC5891612502 /* ModalViewModel.swift */; };
 		652CBB106334DBA87F438B8E9FB99A5D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E48B5BAA5481A7641341C7213220555 /* Foundation.framework */; };
-		65D0B0402298259900E21E27 /* CameraEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0B03A2298259900E21E27 /* CameraEditorViewController.swift */; };
+		657FC9AB22AED23D007BE5C2 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657FC9A722AED233007BE5C2 /* EditorView.swift */; };
+		657FC9AC22AED23D007BE5C2 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657FC9A822AED233007BE5C2 /* EditorViewController.swift */; };
 		65D0B0412298259900E21E27 /* EditionOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0B03B2298259900E21E27 /* EditionOption.swift */; };
 		65D0B0422298259900E21E27 /* EditionMenuCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0B03C2298259900E21E27 /* EditionMenuCollectionView.swift */; };
 		65D0B0432298259900E21E27 /* EditionMenuCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0B03D2298259900E21E27 /* EditionMenuCollectionCell.swift */; };
-		65D0B0442298259900E21E27 /* CameraEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0B03E2298259900E21E27 /* CameraEditorView.swift */; };
 		65D0B0452298259900E21E27 /* EditionMenuCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0B03F2298259900E21E27 /* EditionMenuCollectionController.swift */; };
 		662D6E6375826A7B2761CC8981FA89AA /* UIImage+FlipLeftMirrored.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BB261AC6952E6E7D091D553628C86F /* UIImage+FlipLeftMirrored.swift */; };
 		668CEEA2E80E94D12AE047645112D23C /* TumblrTheme-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E57DBA7506C0FB36FCDE419E504A19BD /* TumblrTheme-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -386,11 +386,11 @@
 		613C23CE357C6990C07DDACB19785EF9 /* MediaClipsEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaClipsEditorView.swift; sourceTree = "<group>"; };
 		630DD64AF6E511A9DCCA74D5ED44A3D8 /* Pods-KanvasCameraExample-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasCameraExample-Info.plist"; sourceTree = "<group>"; };
 		649BCD8F0FFDEF7127669D00DEFBC973 /* FilterProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterProtocol.swift; sourceTree = "<group>"; };
-		65D0B03A2298259900E21E27 /* CameraEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraEditorViewController.swift; sourceTree = "<group>"; };
+		657FC9A722AED233007BE5C2 /* EditorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		657FC9A822AED233007BE5C2 /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		65D0B03B2298259900E21E27 /* EditionOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditionOption.swift; sourceTree = "<group>"; };
 		65D0B03C2298259900E21E27 /* EditionMenuCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionView.swift; sourceTree = "<group>"; };
 		65D0B03D2298259900E21E27 /* EditionMenuCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionCell.swift; sourceTree = "<group>"; };
-		65D0B03E2298259900E21E27 /* CameraEditorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraEditorView.swift; sourceTree = "<group>"; };
 		65D0B03F2298259900E21E27 /* EditionMenuCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionController.swift; sourceTree = "<group>"; };
 		67855AE313F0E02B8C4393DD21D316B0 /* KanvasCamera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KanvasCamera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BF5B36539E9A47AB15F27039D7297FA /* FilterFactory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterFactory.swift; sourceTree = "<group>"; };
@@ -871,11 +871,11 @@
 		65D0B0392298259900E21E27 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				65D0B03A2298259900E21E27 /* CameraEditorViewController.swift */,
+				657FC9A722AED233007BE5C2 /* EditorView.swift */,
+				657FC9A822AED233007BE5C2 /* EditorViewController.swift */,
 				65D0B03B2298259900E21E27 /* EditionOption.swift */,
 				65D0B03C2298259900E21E27 /* EditionMenuCollectionView.swift */,
 				65D0B03D2298259900E21E27 /* EditionMenuCollectionCell.swift */,
-				65D0B03E2298259900E21E27 /* CameraEditorView.swift */,
 				65D0B03F2298259900E21E27 /* EditionMenuCollectionController.swift */,
 			);
 			name = Editor;
@@ -1586,11 +1586,11 @@
 				65D0B0422298259900E21E27 /* EditionMenuCollectionView.swift in Sources */,
 				6EBFAB65F207109A93F48478C01E16F8 /* CameraController.swift in Sources */,
 				FE519154AE09826EDD62753ED79EDEF7 /* CameraInputController.swift in Sources */,
-				65D0B0402298259900E21E27 /* CameraEditorViewController.swift in Sources */,
 				732D0AFF9F0EA2C12367754338A955DF /* CameraInputControllerDelegate.swift in Sources */,
 				7402C5248B66BB9B195804CE1A5E2AC8 /* CameraInputOutput.swift in Sources */,
 				6B14E8171AE1B36E089A9186EF810A1A /* CameraOption.swift in Sources */,
 				FF1FE6787C03BD15AAD6AFA086747C40 /* CameraPreviewView.swift in Sources */,
+				657FC9AB22AED23D007BE5C2 /* EditorView.swift in Sources */,
 				26AAFC4B3B2807A49C82B6C43F937E02 /* CameraPreviewViewController.swift in Sources */,
 				8DBEBA8E85CBC1A5210636A72FFCDCF1 /* CameraRecorder.swift in Sources */,
 				1837BE5C37A49124FBB6D3CAECA0D1B2 /* CameraRecordingProtocol.swift in Sources */,
@@ -1678,7 +1678,6 @@
 				B0BFD1626B382833C436B445DEB57B95 /* ToonFilter.swift in Sources */,
 				363F6249D315EFF25B6DDD9BDBA1059C /* UIButton+Shadows.swift in Sources */,
 				FA298FC8F0B3BE525E962EE10262A392 /* UICollectionView+Cells.swift in Sources */,
-				65D0B0442298259900E21E27 /* CameraEditorView.swift in Sources */,
 				8915259A3E7A74A0F4E31BB41AE524DE /* UIColor+Lerp.swift in Sources */,
 				83EC9FAB779671201FC79A46720350C1 /* UIFont+Utils.swift in Sources */,
 				FED906CEC370E29F6F650390E981AC37 /* UIImage+Camera.swift in Sources */,
@@ -1687,6 +1686,7 @@
 				22429B8B1E5E8A2FBD2AC0E8D31B90FF /* UIUpdate.swift in Sources */,
 				7C2D893D4FA6C2E8638E180A2666DE03 /* UIView+Layout.swift in Sources */,
 				E2ADFEF1DB60AAE2344ACACDBBCCF929 /* UIViewController+Load.swift in Sources */,
+				657FC9AC22AED23D007BE5C2 /* EditorViewController.swift in Sources */,
 				0B5664E4364BD306AA0A947548136F21 /* VideoOutputHandler.swift in Sources */,
 				6BFCD9AFE4BFD8048BD37167FEB316C8 /* WaveFilter.swift in Sources */,
 				13B2AF5F80777EC1A3F43EECE06B429C /* WavePoolFilter.swift in Sources */,
