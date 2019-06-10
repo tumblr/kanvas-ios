@@ -56,6 +56,10 @@ public struct CameraFeatures {
     /// The Editor Media feature
     /// This enables the UI to select media in the editor.
     public var editorMedia: Bool = false
+    
+    /// The Editor Drawing feature
+    /// This enables the UI to draw in the editor.
+    public var editorDrawing: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera
