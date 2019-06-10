@@ -598,19 +598,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework",
-				"${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework",
-				"${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework",
-				"${BUILT_PRODUCTS_DIR}/Utils/Utils.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KanvasCamera.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SharedUI.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TumblrTheme.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Utils.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -658,21 +651,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework",
-				"${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework",
-				"${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework",
-				"${BUILT_PRODUCTS_DIR}/Utils/Utils.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KanvasCamera.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SharedUI.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TumblrTheme.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Utils.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
