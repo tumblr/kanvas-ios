@@ -724,6 +724,7 @@
 		3A592F95BBF62601C793ADC842EDA758 /* KanvasCamera */ = {
 			isa = PBXGroup;
 			children = (
+				65BDECD722B008CD009E6C68 /* Abstract */,
 				B701CA799F9D41EB15283B55C73E1B8A /* Analytics */,
 				A43F10AE0E26F3956968BAA68FF3A572 /* Camera */,
 				B29A0B7129083C4D17B810F6707A012F /* Constants */,
@@ -882,6 +883,13 @@
 				659BFA6022982B8B003AB4A3 /* FilterSmallCollectionCell.swift */,
 			);
 			path = Filters;
+			sourceTree = "<group>";
+		};
+		65BDECD722B008CD009E6C68 /* Abstract */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Abstract;
 			sourceTree = "<group>";
 		};
 		65D0B0392298259900E21E27 /* Editor */ = {

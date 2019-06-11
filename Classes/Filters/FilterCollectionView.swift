@@ -9,7 +9,7 @@ import UIKit
 
 private struct FilterCollectionViewConstants {
     static var bufferSize: CGFloat = 10
-    static var height: CGFloat = FilterCollectionCell.minimumHeight + FilterCollectionViewConstants.bufferSize
+    static var height: CGFloat = FilterCollectionCellConstants.minimumHeight + FilterCollectionViewConstants.bufferSize
 }
 
 /// Collection view for the FilterCollectionController
@@ -63,7 +63,7 @@ fileprivate func createCollectionView() -> IgnoreTouchesCollectionView {
 fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.scrollDirection = .horizontal
     layout.itemSize = UICollectionViewFlowLayout.automaticSize
-    layout.estimatedItemSize = CGSize(width: FilterCollectionCell.width, height: FilterCollectionCell.minimumHeight)
+    layout.estimatedItemSize = CGSize(width: FilterCollectionCellConstants.width, height: FilterCollectionCellConstants.minimumHeight)
     layout.minimumInteritemSpacing = 0
     layout.minimumLineSpacing = 0
 }

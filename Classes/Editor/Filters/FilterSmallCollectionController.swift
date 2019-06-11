@@ -23,7 +23,7 @@ private struct FilterSmallCollectionControllerConstants {
 }
 
 /// Controller for handling the filter item collection.
-final class FilterSmallCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterSmallCollectionCellDelegate {
+final class FilterSmallCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
     
     static let leftInset = FilterSmallCollectionControllerConstants.leftInset
     
@@ -151,8 +151,8 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard filterItems.count > 0, collectionView.bounds != .zero else { return .zero }
-        let cellsOnScreen = filterCollectionView.collectionView.frame.width / FilterSmallCollectionCell.width
-        let rightInset = (cellsOnScreen - 1) * FilterSmallCollectionCell.width
+        let cellsOnScreen = filterCollectionView.collectionView.frame.width / FilterSmallCollectionCellConstants.width
+        let rightInset = (cellsOnScreen - 1) * FilterSmallCollectionCellConstants.width
         return UIEdgeInsets(top: 0, left: FilterSmallCollectionControllerConstants.leftInset, bottom: 0, right: rightInset)
     }
     
@@ -174,7 +174,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
     }
     
     private func indexPathAtBeginning() -> IndexPath? {
-        let x = FilterSmallCollectionControllerConstants.leftInset + (FilterSmallCollectionCell.width / 2) + filterCollectionView.collectionView.contentOffset.x
+        let x = FilterSmallCollectionControllerConstants.leftInset + (FilterSmallCollectionCellConstants.width / 2) + filterCollectionView.collectionView.contentOffset.x
         let y = filterCollectionView.collectionView.center.y + filterCollectionView.collectionView.contentOffset.y
         let point: CGPoint = CGPoint(x: x, y: y)
         return filterCollectionView.collectionView.indexPathForItem(at: point)
@@ -188,7 +188,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
         }
         else {
             let targetOffset = targetContentOffset.pointee
-            let itemWidth = FilterSmallCollectionCell.width
+            let itemWidth = FilterSmallCollectionCellConstants.width
             let roundedIndex = CGFloat(targetOffset.x / itemWidth).rounded()
             let newTargetOffset = roundedIndex * itemWidth
             targetContentOffset.pointee.x = newTargetOffset
@@ -221,7 +221,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
     private func changeSize(_ indexPath: IndexPath) {
         let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterSmallCollectionCell
         if let cell = cell {
-            let maxDistance = FilterSmallCollectionCell.width / 2
+            let maxDistance = FilterSmallCollectionCellConstants.width / 2
             let distance = calculateDistanceFromFirstCell(cell: cell)
             let percent = (maxDistance - distance) / maxDistance
             cell.setSize(percent: percent)
@@ -249,7 +249,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
     
     private func calculateDistanceFromFirstCell(cell: FilterSmallCollectionCell) -> CGFloat {
         let cellCenter = cell.frame.center.x
-        let firstCellCenter = FilterSmallCollectionControllerConstants.leftInset + (FilterSmallCollectionCell.width / 2) + filterCollectionView.collectionView.contentOffset.x
+        let firstCellCenter = FilterSmallCollectionControllerConstants.leftInset + (FilterSmallCollectionCellConstants.width / 2) + filterCollectionView.collectionView.contentOffset.x
         return abs(firstCellCenter - cellCenter)
     }
     
@@ -261,12 +261,16 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
         cell?.setStandardSize()
     }
     
-    // MARK: - FilterSmallCollectionCellDelegate
+    // MARK: - FilterCollectionCellDelegate
     
-    func didTap(cell: FilterSmallCollectionCell, recognizer: UITapGestureRecognizer) {
+    func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
         if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
             scrollToOptionAt(indexPath.item)
         }
+    }
+    
+    func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
+        // Nothing
     }
 }
 

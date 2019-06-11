@@ -180,7 +180,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         else if let lastFilter = filterItems.last {
             cellMock.bindTo(lastFilter)
         }
-        let cellWidth = FilterCollectionCell.width
+        let cellWidth = FilterCollectionCellConstants.width
         let center = collectionView.center.x
         let border = leftBorder ? center - cellWidth / 2 : center + cellWidth / 2
         let inset = leftBorder ? border : collectionView.bounds.width - border
@@ -211,7 +211,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
         }
         else {
             let targetOffset = targetContentOffset.pointee
-            let itemWidth = FilterCollectionCell.width
+            let itemWidth = FilterCollectionCellConstants.width
             let roundedIndex = CGFloat(targetOffset.x / itemWidth).rounded()
             let newTargetOffset = roundedIndex * itemWidth
             targetContentOffset.pointee.x = newTargetOffset
@@ -244,7 +244,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     private func changeSize(_ indexPath: IndexPath) {
         let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
         if let cell = cell {
-            let maxDistance = FilterCollectionCell.width / 2
+            let maxDistance = FilterCollectionCellConstants.width / 2
             let distance = calculateDistanceFromCenter(cell: cell)
             let percent = (maxDistance - distance) / maxDistance
             cell.setSize(percent: percent)

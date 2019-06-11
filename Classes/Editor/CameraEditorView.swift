@@ -184,7 +184,7 @@ final class CameraEditorView: UIView {
         addSubview(filterSelectionCircle)
         filterSelectionCircle.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            filterSelectionCircle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: FilterSmallCollectionController.leftInset + FilterSmallCollectionCell.cellPadding),
+            filterSelectionCircle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: FilterSmallCollectionController.leftInset + FilterSmallCollectionCellConstants.cellPadding),
             filterSelectionCircle.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
             filterSelectionCircle.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.circleSize),
             filterSelectionCircle.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.circleSize)

@@ -9,7 +9,7 @@ import UIKit
 
 private struct FilterSmallCollectionViewConstants {
     static var bufferSize: CGFloat = 10
-    static var height: CGFloat = FilterSmallCollectionCell.minimumHeight + FilterSmallCollectionViewConstants.bufferSize
+    static var height: CGFloat = FilterSmallCollectionCellConstants.minimumHeight + FilterSmallCollectionViewConstants.bufferSize
 }
 
 /// Collection view for the FilterSmallCollectionController
@@ -63,7 +63,7 @@ fileprivate func createCollectionView() -> UICollectionView {
 fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.scrollDirection = .horizontal
     layout.itemSize = UICollectionViewFlowLayout.automaticSize
-    layout.estimatedItemSize = CGSize(width: FilterSmallCollectionCell.width, height: FilterSmallCollectionCell.minimumHeight)
+    layout.estimatedItemSize = CGSize(width: FilterSmallCollectionCellConstants.width, height: FilterSmallCollectionCellConstants.minimumHeight)
     layout.minimumInteritemSpacing = 0
     layout.minimumLineSpacing = 0
 }
