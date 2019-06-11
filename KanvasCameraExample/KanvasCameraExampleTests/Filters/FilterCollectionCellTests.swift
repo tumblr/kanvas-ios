@@ -20,7 +20,7 @@ final class FilterCollectionCellTests: FBSnapshotTestCase {
     
     func newCell() -> FilterCollectionCell {
         let frame = CGRect(origin: CGPoint.zero,
-                           size: CGSize(width: FilterCollectionCell.width - 20, height: FilterCollectionCell.minimumHeight))
+                           size: CGSize(width: FilterCollectionCellConstants.width - 20, height: FilterCollectionCellConstants.minimumHeight))
         return FilterCollectionCell(frame: frame)
     }
     
