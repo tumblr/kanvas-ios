@@ -55,7 +55,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
             filterItems.append(contentsOf: [
                 FilterItem(type: .manga),
                 FilterItem(type: .toon),
-                ])
+            ])
         }
         selectedIndexPath = IndexPath(item: FilterSmallCollectionControllerConstants.initialCell, section: FilterSmallCollectionControllerConstants.section)
         super.init(nibName: .none, bundle: .none)

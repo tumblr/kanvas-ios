@@ -99,7 +99,7 @@ final class FilterSmallCollectionCell: UICollectionViewCell {
             imageView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: FilterSmallCollectionCellConstants.circleDiameter),
             imageView.widthAnchor.constraint(equalToConstant: FilterSmallCollectionCellConstants.circleDiameter)
-            ])
+        ])
         
         circleView = imageView
     }

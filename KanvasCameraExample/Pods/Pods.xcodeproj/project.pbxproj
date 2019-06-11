@@ -889,10 +889,10 @@
 			children = (
 				659BFA5D22982B8B003AB4A3 /* Filters */,
 				65D0B03A2298259900E21E27 /* CameraEditorViewController.swift */,
+				65D0B03E2298259900E21E27 /* CameraEditorView.swift */,
 				65D0B03B2298259900E21E27 /* EditionOption.swift */,
 				65D0B03C2298259900E21E27 /* EditionMenuCollectionView.swift */,
 				65D0B03D2298259900E21E27 /* EditionMenuCollectionCell.swift */,
-				65D0B03E2298259900E21E27 /* CameraEditorView.swift */,
 				65D0B03F2298259900E21E27 /* EditionMenuCollectionController.swift */,
 			);
 			name = Editor;
