@@ -139,7 +139,7 @@ public extension CameraSettings {
     /**
      Enables/disables photo mode.
      */
-    public var enablePhotoMode: Bool {
+    var enablePhotoMode: Bool {
         set {
             setMode(.photo, to: newValue)
         }
@@ -150,7 +150,7 @@ public extension CameraSettings {
     /**
      Enables/disables gif mode.
      */
-    public var enableGifMode: Bool {
+    var enableGifMode: Bool {
         set {
             setMode(.gif, to: newValue)
         }
@@ -161,7 +161,7 @@ public extension CameraSettings {
     /**
      Enables/disables stop motion mode.
      */
-    public var enableStopMotionMode: Bool {
+    var enableStopMotionMode: Bool {
         set {
             setMode(.stopMotion, to: newValue)
         }

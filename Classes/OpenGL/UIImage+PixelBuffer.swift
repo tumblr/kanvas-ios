@@ -33,11 +33,11 @@ extension UIImage {
         let height = Int(size.height)
         var initialBuffer: CVPixelBuffer?
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        let attributes: NSDictionary = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
-                          kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue,
-                          kCVPixelBufferIOSurfacePropertiesKey: NSDictionary(),
-                          kCVPixelBufferOpenGLESCompatibilityKey: kCFBooleanTrue,
-                          kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue]
+        let attributes: NSDictionary = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferIOSurfacePropertiesKey: NSDictionary(),
+                                        kCVPixelBufferOpenGLESCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue as Any]
         
         let status = CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA, attributes as CFDictionary, &initialBuffer)
         guard status == kCVReturnSuccess, let pixelBuffer = initialBuffer else {

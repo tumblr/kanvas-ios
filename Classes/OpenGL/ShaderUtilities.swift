@@ -156,9 +156,11 @@ public struct GLU {
         
         // Release vertex and fragment shaders
         if vertShader != 0 {
+            glDetachShader(prog, vertShader)
             glDeleteShader(vertShader)
         }
         if fragShader != 0 {
+            glDetachShader(prog, fragShader)
             glDeleteShader(fragShader)
         }
         

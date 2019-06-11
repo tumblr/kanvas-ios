@@ -65,12 +65,13 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         renderer.processSampleBuffer(sampleBuffer)
     }
     
-    // MARK: - OpenGLRendererDelegate
-    func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        DispatchQueue.main.async {
-            self.delegate?.filteredPixelBufferReady(pixelBuffer: pixelBuffer, presentationTime: presentationTime)
-            self.previewView?.displayPixelBuffer(pixelBuffer)
-        }
+    // MARK: - GLRendererDelegate
+    func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
+        self.previewView?.displayPixelBuffer(pixelBuffer)
+    }
+
+    func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        self.delegate?.filteredPixelBufferReady(pixelBuffer: pixelBuffer, presentationTime: presentationTime)
     }
     
     func rendererRanOutOfBuffers() {
