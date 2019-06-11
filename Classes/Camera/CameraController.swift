@@ -379,7 +379,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - UI
     private func updateUI(forClipsPresent hasClips: Bool) {
         topOptionsController.configureOptions(areThereClips: hasClips)
-        // clipsController.showViews(hasClips)
+        clipsController.showViews(hasClips)
         if hasClips || settings.enabledModes.count == 1 {
             modeAndShootController.hideModeButton()
         }
