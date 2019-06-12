@@ -267,8 +267,8 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     ///
     /// - Returns: the collection of unselected cells
     private func getUnselectedCells() -> [FilterCollectionCell] {
-        let collectionView = filterCollectionView.collectionView
-        guard let visibleCells = collectionView.visibleCells as? [FilterCollectionCell] else { return [] }
+        guard let collectionView = filterCollectionView.collectionView,
+            let visibleCells = collectionView.visibleCells as? [FilterCollectionCell] else { return [] }
         let unselectedCells = visibleCells.filter { cell in
             collectionView.indexPath(for: cell) != selectedIndexPath
         }

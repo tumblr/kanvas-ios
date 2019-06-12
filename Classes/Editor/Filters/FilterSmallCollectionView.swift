@@ -7,78 +7,31 @@
 import Foundation
 import UIKit
 
-private struct FilterSmallCollectionViewConstants {
+private struct FilterSmallCollectionViewPrivateConstants {
     static var bufferSize: CGFloat = 10
-    static var height: CGFloat = FilterSmallCollectionCellConstants.minimumHeight + FilterSmallCollectionViewConstants.bufferSize
+    static var height: CGFloat = FilterSmallCollectionCellConstants.minimumHeight + FilterSmallCollectionViewPrivateConstants.bufferSize
+}
+
+struct FilterSmallCollectionViewConstants {
+    static let height = FilterSmallCollectionViewPrivateConstants.height
 }
 
 /// Collection view for the FilterSmallCollectionController
-final class FilterSmallCollectionView: IgnoreTouchesView {
+final class FilterSmallCollectionView: FilterCollectionView {
     
-    static let height = FilterSmallCollectionViewConstants.height
-    let collectionView: UICollectionView
-    
-    init() {
-        collectionView = createCollectionView()
-        
-        super.init(frame: .zero)
-        
-        clipsToBounds = false
-        setUpViews()
+    override var height: CGFloat {
+        return FilterSmallCollectionViewConstants.height
     }
     
-    @available(*, unavailable, message: "use init() instead")
-    override init(frame: CGRect) {
-        fatalError("init(frame:) has not been implemented")
+    override var cellWidth: CGFloat {
+        return FilterSmallCollectionCellConstants.width
     }
     
-    @available(*, unavailable, message: "use init() instead")
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-// MARK: - Layout
-extension FilterSmallCollectionView {
-    
-    private func setUpViews() {
-        collectionView.add(into: self)
-        collectionView.clipsToBounds = false
+    override var cellMinimumHeight: CGFloat {
+        return FilterSmallCollectionCellConstants.minimumHeight
     }
     
-}
-
-// MARK: - Collection
-fileprivate func createCollectionView() -> UICollectionView {
-    let layout = UICollectionViewFlowLayout()
-    configureCollectionLayout(layout: layout)
-    
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    collectionView.accessibilityIdentifier = "Filter Collection"
-    collectionView.backgroundColor = .clear
-    configureCollection(collectionView: collectionView)
-    return collectionView
-}
-
-fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
-    layout.scrollDirection = .horizontal
-    layout.itemSize = UICollectionViewFlowLayout.automaticSize
-    layout.estimatedItemSize = CGSize(width: FilterSmallCollectionCellConstants.width, height: FilterSmallCollectionCellConstants.minimumHeight)
-    layout.minimumInteritemSpacing = 0
-    layout.minimumLineSpacing = 0
-}
-
-fileprivate func configureCollection(collectionView: UICollectionView) {
-    collectionView.isScrollEnabled = true
-    collectionView.allowsSelection = true
-    collectionView.bounces = true
-    collectionView.alwaysBounceHorizontal = true
-    collectionView.alwaysBounceVertical = false
-    collectionView.showsHorizontalScrollIndicator = false
-    collectionView.showsVerticalScrollIndicator = false
-    collectionView.autoresizesSubviews = true
-    collectionView.contentInset = .zero
-    collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
-    collectionView.dragInteractionEnabled = true
-    collectionView.reorderingCadence = .immediate
+    override internal func create(layout: UICollectionViewFlowLayout) -> UICollectionView {
+        return UICollectionView(frame: .zero, collectionViewLayout: layout)
+    }
 }

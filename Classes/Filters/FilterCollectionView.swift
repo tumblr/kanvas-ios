@@ -7,22 +7,38 @@
 import Foundation
 import UIKit
 
-private struct FilterCollectionViewConstants {
+private struct FilterCollectionViewPrivateConstants {
     static var bufferSize: CGFloat = 10
-    static var height: CGFloat = FilterCollectionCellConstants.minimumHeight + FilterCollectionViewConstants.bufferSize
+    static var height: CGFloat = FilterCollectionCellConstants.minimumHeight + FilterCollectionViewPrivateConstants.bufferSize
+}
+
+struct FilterCollectionViewConstants {
+    static let height = FilterCollectionViewPrivateConstants.height
 }
 
 /// Collection view for the FilterCollectionController
-final class FilterCollectionView: IgnoreTouchesView {
+class FilterCollectionView: IgnoreTouchesView {
     
-    static let height = FilterCollectionViewConstants.height
-    let collectionView: IgnoreTouchesCollectionView
+    var height: CGFloat {
+        return FilterCollectionViewConstants.height
+    }
+    
+    var cellWidth: CGFloat {
+        return FilterCollectionCellConstants.width
+    }
+    
+    var cellMinimumHeight: CGFloat {
+        return FilterCollectionCellConstants.minimumHeight
+    }
+    
+    var collectionView: UICollectionView!
 
+    // MARK: - Initializers
+    
     init() {
-        collectionView = createCollectionView()
-        
         super.init(frame: .zero)
         
+        collectionView = createCollectionView()
         clipsToBounds = false
         setUpViews()
     }
@@ -36,49 +52,51 @@ final class FilterCollectionView: IgnoreTouchesView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-// MARK: - Layout
-extension FilterCollectionView {
+    
+    // MARK: - Layout
     
     private func setUpViews() {
         collectionView.add(into: self)
         collectionView.clipsToBounds = false
     }
     
-}
-
-// MARK: - Collection
-fileprivate func createCollectionView() -> IgnoreTouchesCollectionView {
-    let layout = UICollectionViewFlowLayout()
-    configureCollectionLayout(layout: layout)
+    // MARK: - Collection
     
-    let collectionView = IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
-    collectionView.accessibilityIdentifier = "Filter Collection"
-    collectionView.backgroundColor = .clear
-    configureCollection(collectionView: collectionView)
-    return collectionView
-}
-
-fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
-    layout.scrollDirection = .horizontal
-    layout.itemSize = UICollectionViewFlowLayout.automaticSize
-    layout.estimatedItemSize = CGSize(width: FilterCollectionCellConstants.width, height: FilterCollectionCellConstants.minimumHeight)
-    layout.minimumInteritemSpacing = 0
-    layout.minimumLineSpacing = 0
-}
-
-fileprivate func configureCollection(collectionView: IgnoreTouchesCollectionView) {
-    collectionView.isScrollEnabled = true
-    collectionView.allowsSelection = true
-    collectionView.bounces = true
-    collectionView.alwaysBounceHorizontal = true
-    collectionView.alwaysBounceVertical = false
-    collectionView.showsHorizontalScrollIndicator = false
-    collectionView.showsVerticalScrollIndicator = false
-    collectionView.autoresizesSubviews = true
-    collectionView.contentInset = .zero
-    collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
-    collectionView.dragInteractionEnabled = true
-    collectionView.reorderingCadence = .immediate
+    private func createCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        configureCollectionLayout(layout: layout)
+        
+        let collectionView = create(layout: layout)
+        collectionView.accessibilityIdentifier = "Filter Collection"
+        collectionView.backgroundColor = .clear
+        configureCollection(collectionView: collectionView)
+        return collectionView
+    }
+    
+    internal func create(layout: UICollectionViewFlowLayout) -> UICollectionView {
+        return IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
+    }
+    
+    private func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
+        layout.scrollDirection = .horizontal
+        layout.itemSize = UICollectionViewFlowLayout.automaticSize
+        layout.estimatedItemSize = CGSize(width: cellWidth, height: cellMinimumHeight)
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+    }
+    
+    private func configureCollection(collectionView: UICollectionView) {
+        collectionView.isScrollEnabled = true
+        collectionView.allowsSelection = true
+        collectionView.bounces = true
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.alwaysBounceVertical = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.autoresizesSubviews = true
+        collectionView.contentInset = .zero
+        collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
+        collectionView.dragInteractionEnabled = true
+        collectionView.reorderingCadence = .immediate
+    }
 }

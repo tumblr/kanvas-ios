@@ -11,7 +11,7 @@ private struct FilterSettingsViewConstants {
     static let animationDuration: TimeInterval = 0.25
     static let iconSize: CGFloat = 39
     static let padding: CGFloat = 4
-    static var height: CGFloat = FilterCollectionView.height + padding + iconSize
+    static var height: CGFloat = FilterCollectionViewConstants.height + padding + iconSize
 }
 
 protocol FilterSettingsViewDelegate: class {
@@ -92,7 +92,7 @@ private extension FilterSettingsView {
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            collectionContainer.heightAnchor.constraint(equalToConstant: FilterCollectionView.height)
+            collectionContainer.heightAnchor.constraint(equalToConstant: FilterCollectionViewConstants.height)
         ])
     }
     
