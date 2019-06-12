@@ -38,15 +38,15 @@ struct FilterCollectionCellConstants {
 /// The cell in FilterCollectionView to display an individual filter
 class FilterCollectionCell: UICollectionViewCell {
     
-    public var circleDiameter: CGFloat {
+    internal var circleDiameter: CGFloat {
         return FilterCollectionCellPrivateConstants.circleDiameter
     }
     
-    public var circleMaxDiameter: CGFloat {
+    internal var circleMaxDiameter: CGFloat {
         return FilterCollectionCellPrivateConstants.circleMaxDiameter
     }
     
-    public var animationDuration: TimeInterval {
+    internal var animationDuration: TimeInterval {
         return FilterCollectionCellPrivateConstants.animationDuration
     }
     

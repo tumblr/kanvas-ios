@@ -19,15 +19,15 @@ struct FilterCollectionViewConstants {
 /// Collection view for the FilterCollectionController
 class FilterCollectionView: IgnoreTouchesView {
     
-    var height: CGFloat {
+    internal var height: CGFloat {
         return FilterCollectionViewConstants.height
     }
     
-    var cellWidth: CGFloat {
+    internal var cellWidth: CGFloat {
         return FilterCollectionCellConstants.width
     }
     
-    var cellMinimumHeight: CGFloat {
+    internal var cellMinimumHeight: CGFloat {
         return FilterCollectionCellConstants.minimumHeight
     }
     

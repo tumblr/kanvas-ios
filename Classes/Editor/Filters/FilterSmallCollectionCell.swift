@@ -43,29 +43,15 @@ struct FilterSmallCollectionCellConstants {
 /// The cell in FilterSmallCollectionView to display an individual filter
 final class FilterSmallCollectionCell: FilterCollectionCell {
     
-    override var circleDiameter: CGFloat {
+    override internal var circleDiameter: CGFloat {
         return FilterSmallCollectionCellPrivateConstants.circleDiameter
     }
     
-    override var circleMaxDiameter: CGFloat {
+    override internal var circleMaxDiameter: CGFloat {
         return FilterSmallCollectionCellPrivateConstants.circleMaxDiameter
     }
     
-    override var animationDuration: TimeInterval {
+    override internal var animationDuration: TimeInterval {
         return FilterSmallCollectionCellPrivateConstants.animationDuration
     }
-    
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        circleDiameter =
-//        circleMaxDiameter =
-//        animationDuration = FilterSmallCollectionCellPrivateConstants.animationDuration
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        super.init(coder: aDecoder)
-//        circleDiameter = FilterSmallCollectionCellPrivateConstants.circleDiameter
-//        circleMaxDiameter = FilterSmallCollectionCellPrivateConstants.circleMaxDiameter
-//        animationDuration = FilterSmallCollectionCellPrivateConstants.animationDuration
-//    }
 }

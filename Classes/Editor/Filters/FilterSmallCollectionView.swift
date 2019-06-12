@@ -19,15 +19,15 @@ struct FilterSmallCollectionViewConstants {
 /// Collection view for the FilterSmallCollectionController
 final class FilterSmallCollectionView: FilterCollectionView {
     
-    override var height: CGFloat {
+    override internal var height: CGFloat {
         return FilterSmallCollectionViewConstants.height
     }
     
-    override var cellWidth: CGFloat {
+    override internal var cellWidth: CGFloat {
         return FilterSmallCollectionCellConstants.width
     }
     
-    override var cellMinimumHeight: CGFloat {
+    override internal var cellMinimumHeight: CGFloat {
         return FilterSmallCollectionCellConstants.minimumHeight
     }
     
