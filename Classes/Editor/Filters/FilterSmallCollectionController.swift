@@ -7,138 +7,36 @@
 import Foundation
 import UIKit
 
-protocol FilterSmallCollectionControllerDelegate: class {
-    /// Callback for when a filter item is selected
-    ///
-    /// - Parameter filterItem: the selected filter
-    func didSelectFilter(_ filterItem: FilterItem)
-}
-
 /// Constants for Collection Controller
 private struct FilterSmallCollectionControllerConstants {
-    static let animationDuration: TimeInterval = 0.25
-    static let initialCell: Int = 0
-    static let section: Int = 0
     static let leftInset: CGFloat = 11
 }
 
 /// Controller for handling the filter item collection.
-final class FilterSmallCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
+final class FilterSmallCollectionController: FilterCollectionController {
     
     static let leftInset = FilterSmallCollectionControllerConstants.leftInset
     
-    private lazy var filterCollectionView = FilterSmallCollectionView()
-    private var filterItems: [FilterItem]
-    private var selectedIndexPath: IndexPath
-    private let feedbackGenerator = UINotificationFeedbackGenerator()
-    
-    weak var delegate: FilterSmallCollectionControllerDelegate?
-    
-    /// Initializes the collection
-    init(settings: CameraSettings) {
-        filterItems = [
-            FilterItem(type: .passthrough),
-            FilterItem(type: .wavePool),
-            FilterItem(type: .plasma),
-            FilterItem(type: .emInterference),
-            FilterItem(type: .rgb),
-            FilterItem(type: .lego),
-            FilterItem(type: .chroma),
-            FilterItem(type: .rave),
-            FilterItem(type: .mirrorTwo),
-            FilterItem(type: .mirrorFour),
-            FilterItem(type: .lightLeaks),
-            FilterItem(type: .film),
-            FilterItem(type: .grayscale),
-        ]
-        if settings.features.experimentalCameraFilters {
-            filterItems.append(contentsOf: [
-                FilterItem(type: .manga),
-                FilterItem(type: .toon),
-            ])
-        }
-        selectedIndexPath = IndexPath(item: FilterSmallCollectionControllerConstants.initialCell, section: FilterSmallCollectionControllerConstants.section)
-        super.init(nibName: .none, bundle: .none)
+    override internal func createFilterCollectionView() -> FilterCollectionView {
+        return FilterSmallCollectionView()
     }
     
-    @available(*, unavailable, message: "use init() instead")
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override internal func getCollectionCellType() -> FilterCollectionCell.Type {
+        return FilterSmallCollectionCell.self
     }
     
-    @available(*, unavailable, message: "use init() instead")
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        fatalError("init(nibName:bundle:) has not been implemented")
-    }
-    
-    // MARK: - View Life Cycle
-    
-    override func loadView() {
-        view = filterCollectionView
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        filterCollectionView.collectionView.register(cell: FilterSmallCollectionCell.self)
-        filterCollectionView.collectionView.delegate = self
-        filterCollectionView.collectionView.dataSource = self
-        setUpView()
-        setUpRecognizers()
-    }
-    
+    // Needed despite being the same as in the superclass (prevents a bug from happening)
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollToOptionAt(FilterSmallCollectionControllerConstants.initialCell, animated: false)
+        scrollToOptionAt(initialCell, animated: false)
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
-        changeSize(IndexPath(item: FilterSmallCollectionControllerConstants.initialCell, section: FilterSmallCollectionControllerConstants.section))
-    }
-    
-    private func setUpView() {
-        filterCollectionView.alpha = 0
-    }
-    
-    private func setUpRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(collectionTapped))
-        filterCollectionView.collectionView.addGestureRecognizer(tapRecognizer)
-    }
-    
-    // MARK: - Public interface
-    
-    /// indicates whether the filter selector is visible
-    ///
-    /// - Returns: true if visible, false if hidden
-    func isViewVisible() -> Bool {
-        return filterCollectionView.alpha > 0
-    }
-    
-    /// shows or hides the filter selector
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showView(_ show: Bool) {
-        UIView.animate(withDuration: FilterSmallCollectionControllerConstants.animationDuration) {
-            self.filterCollectionView.alpha = show ? 1 : 0
-        }
-    }
-    
-    /// Returns the collection of filter items
-    ///
-    /// - Returns: Filter item array
-    func getFilterItems() -> [FilterItem] {
-        return filterItems
+        changeSize(IndexPath(item: initialCell, section: section))
     }
     
     // MARK: - UICollectionViewDataSource
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filterItems.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilterSmallCollectionCell.identifier, for: indexPath)
         if let cell = cell as? FilterSmallCollectionCell {
             cell.bindTo(filterItems[indexPath.item])
@@ -149,10 +47,12 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
     
     // MARK: - UICollectionViewDelegateFlowLayout
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard filterItems.count > 0, collectionView.bounds != .zero else { return .zero }
+        
         let cellsOnScreen = filterCollectionView.collectionView.frame.width / FilterSmallCollectionCellConstants.width
         let rightInset = (cellsOnScreen - 1) * FilterSmallCollectionCellConstants.width
+        
         return UIEdgeInsets(top: 0, left: FilterSmallCollectionControllerConstants.leftInset, bottom: 0, right: rightInset)
     }
     
@@ -160,7 +60,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
     
     private func scrollToOptionAt(_ index: Int, animated: Bool = true) {
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
-        let indexPath = IndexPath(item: index, section: FilterSmallCollectionControllerConstants.section)
+        let indexPath = IndexPath(item: index, section: section)
         scrollToItemPreservingLeftInset(indexPath: indexPath, animated: animated)
         selectFilter(index: indexPath.item)
     }
@@ -180,7 +80,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
         return filterCollectionView.collectionView.indexPathForItem(at: point)
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if velocity.x == 0 {
             if let indexPath = indexPathAtBeginning() {
                 scrollToOptionAt(indexPath.item)
@@ -197,7 +97,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
         }
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let indexPath = indexPathAtBeginning() {
             changeSize(indexPath)
             resetSize(for: indexPath.previous())
@@ -207,7 +107,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
     
     // When the collection is decelerating, but the user taps a cell to stop,
     // the collection needs to set a cell at the center of the screen
-    @objc func collectionTapped() {
+    @objc override func collectionTapped() {
         if let indexPath = indexPathAtBeginning() {
             scrollToOptionAt(indexPath.item)
         }
@@ -237,7 +137,7 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
         if isViewVisible() {
             feedbackGenerator.notificationOccurred(.success)
         }
-        selectedIndexPath = IndexPath(item: index, section: FilterSmallCollectionControllerConstants.section)
+        selectedIndexPath = IndexPath(item: index, section: section)
         delegate?.didSelectFilter(filterItems[index])
     }
     
@@ -253,35 +153,13 @@ final class FilterSmallCollectionController: UIViewController, UICollectionViewD
         return abs(firstCellCenter - cellCenter)
     }
     
-    /// Sets the cell with the standard size (smallest size)
-    ///
-    /// - Parameter indexPath: the index path of the cell
-    private func resetSize(for indexPath: IndexPath) {
-        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterSmallCollectionCell
-        cell?.setStandardSize()
-    }
-    
     // MARK: - FilterCollectionCellDelegate
     
-    func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
+    override func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
         if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
             scrollToOptionAt(indexPath.item)
         }
     }
     
-    func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
-        // Nothing
-    }
-}
-
-/// Next and previous index paths
-private extension IndexPath {
-    
-    func previous() -> IndexPath {
-        return IndexPath(item: item - 1, section: section)
-    }
-    
-    func next() -> IndexPath {
-        return IndexPath(item: item + 1, section: section)
-    }
+    override func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {}
 }

@@ -24,19 +24,17 @@ protocol FilterCollectionControllerDelegate: class {
     func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer)
 }
 
-/// Constants for Collection Controller
-private struct FilterCollectionControllerConstants {
-    static let animationDuration: TimeInterval = 0.25
-    static let initialCell: Int = 0
-    static let section: Int = 0
-}
-
 /// Controller for handling the filter item collection.
-final class FilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
+class FilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
     
-    private lazy var filterCollectionView = FilterCollectionView()
-    private var filterItems: [FilterItem]
-    private var selectedIndexPath: IndexPath
+    internal var filterCollectionView: FilterCollectionView!
+    internal var filterItems: [FilterItem]
+    internal var selectedIndexPath: IndexPath
+    internal let feedbackGenerator = UINotificationFeedbackGenerator()
+    
+    internal let animationDuration = 0.25
+    internal let initialCell: Int = 0
+    internal let section: Int = 0
     
     weak var delegate: FilterCollectionControllerDelegate?
     
@@ -63,8 +61,13 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
                 FilterItem(type: .toon),
             ])
         }
-        selectedIndexPath = IndexPath(item: FilterCollectionControllerConstants.initialCell, section: FilterCollectionControllerConstants.section)
+        selectedIndexPath = IndexPath(item: initialCell, section: section)
         super.init(nibName: .none, bundle: .none)
+        filterCollectionView = createFilterCollectionView()
+    }
+    
+    internal func createFilterCollectionView() -> FilterCollectionView {
+        return FilterCollectionView()
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -85,19 +88,23 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        filterCollectionView.collectionView.register(cell: FilterCollectionCell.self)
+        filterCollectionView.collectionView.register(cell: getCollectionCellType())
         filterCollectionView.collectionView.delegate = self
         filterCollectionView.collectionView.dataSource = self
         setUpView()
         setUpRecognizers()
     }
     
+    internal func getCollectionCellType() -> FilterCollectionCell.Type {
+        return FilterCollectionCell.self
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollToOptionAt(FilterCollectionControllerConstants.initialCell, animated: false)
+        scrollToOptionAt(initialCell, animated: false)
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
-        changeSize(IndexPath(item: FilterCollectionControllerConstants.initialCell, section: FilterCollectionControllerConstants.section))
+        changeSize(IndexPath(item: initialCell, section: section))
     }
     
     private func setUpView() {
@@ -122,7 +129,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: FilterCollectionControllerConstants.animationDuration) {
+        UIView.animate(withDuration: animationDuration) {
             self.filterCollectionView.alpha = show ? 1 : 0
         }
     }
@@ -191,7 +198,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     
     private func scrollToOptionAt(_ index: Int, animated: Bool = true) {
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
-        let indexPath = IndexPath(item: index, section: FilterCollectionControllerConstants.section)
+        let indexPath = IndexPath(item: index, section: section)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         selectFilter(index: indexPath.item)
     }
@@ -282,7 +289,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     ///
     /// - Parameter index: position of the filter in the collection
     private func selectFilter(index: Int) {
-        selectedIndexPath = IndexPath(item: index, section: FilterCollectionControllerConstants.section)
+        selectedIndexPath = IndexPath(item: index, section: section)
         delegate?.didSelectFilter(filterItems[index])
     }
     
@@ -295,7 +302,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
     /// Sets the cell with the standard size (smallest size)
     ///
     /// - Parameter indexPath: the index path of the cell
-    private func resetSize(for indexPath: IndexPath) {
+    internal func resetSize(for indexPath: IndexPath) {
         let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
         cell?.setStandardSize()
     }
@@ -331,7 +338,7 @@ final class FilterCollectionController: UIViewController, UICollectionViewDelega
 }
 
 /// Next and previous index paths
-private extension IndexPath {
+internal extension IndexPath {
     
     func previous() -> IndexPath {
         return IndexPath(item: item - 1, section: section)
