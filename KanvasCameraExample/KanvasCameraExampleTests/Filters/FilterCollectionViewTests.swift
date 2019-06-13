@@ -40,7 +40,7 @@ final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDeleg
     
     func newCollectionView() -> FilterCollectionView {
         let collectionView = FilterCollectionView()
-        collectionView.frame = CGRect(x: 0, y: 0, width: 320, height: FilterCollectionView.height)
+        collectionView.frame = CGRect(x: 0, y: 0, width: 320, height: FilterCollectionViewConstants.height)
         return collectionView
     }
     
