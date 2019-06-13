@@ -113,7 +113,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     
     private func setUpRecognizers() {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(collectionTapped))
-        filterCollectionView?.collectionView.addGestureRecognizer(tapRecognizer)
+        filterCollectionView.collectionView.addGestureRecognizer(tapRecognizer)
     }
     
     // MARK: - Public interface
@@ -324,7 +324,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
         if isSelectedCell(cell) {
             delegate?.didTapSelectedFilter(recognizer: recognizer)
         }
-        else if let indexPath = filterCollectionView?.collectionView.indexPath(for: cell) {
+        else if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
             scrollToOptionAt(indexPath.item)
         }
     }
