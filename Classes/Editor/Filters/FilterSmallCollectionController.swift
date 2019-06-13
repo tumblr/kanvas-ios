@@ -48,7 +48,7 @@ final class FilterSmallCollectionController: FilterCollectionController {
     // MARK: - UICollectionViewDelegateFlowLayout
     
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        guard let filterCollectionView = filterCollectionView, filterItems.count > 0, collectionView.bounds != .zero else { return .zero }
+        guard filterItems.count > 0, collectionView.bounds != .zero else { return .zero }
         
         let cellsOnScreen = filterCollectionView.collectionView.frame.width / FilterSmallCollectionCellConstants.width
         let rightInset = (cellsOnScreen - 1) * FilterSmallCollectionCellConstants.width
