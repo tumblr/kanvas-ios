@@ -29,8 +29,8 @@ final class FilterSmallCollectionController: FilterCollectionController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         scrollToOptionAt(initialCell, animated: false)
-        filterCollectionView?.collectionView.collectionViewLayout.invalidateLayout()
-        filterCollectionView?.collectionView.layoutIfNeeded()
+        filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
+        filterCollectionView.collectionView.layoutIfNeeded()
         changeSize(IndexPath(item: initialCell, section: section))
     }
     
@@ -59,16 +59,14 @@ final class FilterSmallCollectionController: FilterCollectionController {
     // MARK: - Scrolling
     
     internal override func scrollToOptionAt(_ index: Int, animated: Bool = true) {
-        guard let filterCollectionView = filterCollectionView,
-            filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
+        guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: section)
         scrollToItemPreservingLeftInset(indexPath: indexPath, animated: animated)
         selectFilter(index: indexPath.item)
     }
     
     private func scrollToItemPreservingLeftInset(indexPath: IndexPath, animated: Bool) {
-        guard let filterCollectionView = filterCollectionView,
-            let layout = filterCollectionView.collectionView.collectionViewLayout as? UICollectionViewFlowLayout,
+        guard let layout = filterCollectionView.collectionView.collectionViewLayout as? UICollectionViewFlowLayout,
             let attri = layout.layoutAttributesForItem(at: indexPath) else { return }
         
         let point = CGPoint(x: (attri.frame.origin.x - FilterSmallCollectionControllerConstants.leftInset), y: 0)
@@ -76,7 +74,6 @@ final class FilterSmallCollectionController: FilterCollectionController {
     }
     
     private func indexPathAtBeginning() -> IndexPath? {
-        guard let filterCollectionView = filterCollectionView else { return IndexPath(item: 0, section: 0) }
         let x = FilterSmallCollectionControllerConstants.leftInset + (FilterSmallCollectionCellConstants.width / 2) + filterCollectionView.collectionView.contentOffset.x
         let y = filterCollectionView.collectionView.center.y + filterCollectionView.collectionView.contentOffset.y
         let point: CGPoint = CGPoint(x: x, y: y)
@@ -109,7 +106,7 @@ final class FilterSmallCollectionController: FilterCollectionController {
     }
     
     // When the collection is decelerating, but the user taps a cell to stop,
-    // the collection needs to set a cell at the center of the screen
+    // the collection needs to set a cell at the left of the screen
     @objc override func collectionTapped() {
         if let indexPath = indexPathAtBeginning() {
             scrollToOptionAt(indexPath.item)
@@ -118,11 +115,11 @@ final class FilterSmallCollectionController: FilterCollectionController {
     
     // MARK: - Animate size change
     
-    /// Changes the cell size according to its distance from center
+    /// Changes the cell size according to its distance from the selection circle
     ///
     /// - Parameter indexPath: the index path of the cell
     override internal func changeSize(_ indexPath: IndexPath) {
-        let cell = filterCollectionView?.collectionView.cellForItem(at: indexPath) as? FilterSmallCollectionCell
+        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterSmallCollectionCell
         if let cell = cell {
             let maxDistance = FilterSmallCollectionCellConstants.width / 2
             let distance = calculateDistanceFromFirstCell(cell: cell)
@@ -145,7 +142,6 @@ final class FilterSmallCollectionController: FilterCollectionController {
     }
     
     private func calculateDistanceFromFirstCell(cell: FilterSmallCollectionCell) -> CGFloat {
-        guard let filterCollectionView = filterCollectionView else { return CGFloat(0) }
         let cellCenter = cell.frame.center.x
         let firstCellCenter = FilterSmallCollectionControllerConstants.leftInset + (FilterSmallCollectionCellConstants.width / 2) + filterCollectionView.collectionView.contentOffset.x
         return abs(firstCellCenter - cellCenter)
@@ -154,7 +150,7 @@ final class FilterSmallCollectionController: FilterCollectionController {
     // MARK: - FilterCollectionCellDelegate
     
     override func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
-        if let indexPath = filterCollectionView?.collectionView.indexPath(for: cell) {
+        if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
             scrollToOptionAt(indexPath.item)
         }
     }
