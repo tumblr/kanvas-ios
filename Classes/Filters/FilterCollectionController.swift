@@ -27,7 +27,7 @@ protocol FilterCollectionControllerDelegate: class {
 /// Controller for handling the filter item collection.
 class FilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
     
-    internal var filterCollectionView: FilterCollectionView!
+    internal var filterCollectionView: FilterCollectionView?
     internal var filterItems: [FilterItem]
     internal var selectedIndexPath: IndexPath
     internal let feedbackGenerator = UINotificationFeedbackGenerator()
@@ -88,9 +88,9 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        filterCollectionView.collectionView.register(cell: getCollectionCellType())
-        filterCollectionView.collectionView.delegate = self
-        filterCollectionView.collectionView.dataSource = self
+        filterCollectionView?.collectionView.register(cell: getCollectionCellType())
+        filterCollectionView?.collectionView.delegate = self
+        filterCollectionView?.collectionView.dataSource = self
         setUpView()
         setUpRecognizers()
     }
@@ -102,18 +102,18 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         scrollToOptionAt(initialCell, animated: false)
-        filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
-        filterCollectionView.collectionView.layoutIfNeeded()
+        filterCollectionView?.collectionView.collectionViewLayout.invalidateLayout()
+        filterCollectionView?.collectionView.layoutIfNeeded()
         changeSize(IndexPath(item: initialCell, section: section))
     }
     
     private func setUpView() {
-        filterCollectionView.alpha = 0
+        filterCollectionView?.alpha = 0
     }
     
     private func setUpRecognizers() {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(collectionTapped))
-        filterCollectionView.collectionView.addGestureRecognizer(tapRecognizer)
+        filterCollectionView?.collectionView.addGestureRecognizer(tapRecognizer)
     }
     
     // MARK: - Public interface
@@ -122,6 +122,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     ///
     /// - Returns: true if visible, false if hidden
     func isViewVisible() -> Bool {
+        guard let filterCollectionView = filterCollectionView else { return false }
         return filterCollectionView.alpha > 0
     }
     
@@ -130,7 +131,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
         UIView.animate(withDuration: animationDuration) {
-            self.filterCollectionView.alpha = show ? 1 : 0
+            self.filterCollectionView?.alpha = show ? 1 : 0
         }
     }
     
@@ -138,7 +139,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     ///
     /// - Parameter isRecording: if the UI should reflect that the user is currently recording
     func updateUI(forRecording isRecording: Bool) {
-        filterCollectionView.collectionView.isUserInteractionEnabled = !isRecording
+        filterCollectionView?.collectionView.isUserInteractionEnabled = !isRecording
         showUnselectedFilters(!isRecording)
     }
     
@@ -196,14 +197,16 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     
     // MARK: - Scrolling
     
-    private func scrollToOptionAt(_ index: Int, animated: Bool = true) {
-        guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
+    internal func scrollToOptionAt(_ index: Int, animated: Bool = true) {
+        guard let filterCollectionView = filterCollectionView,
+            filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: section)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         selectFilter(index: indexPath.item)
     }
     
     private func indexPathAtCenter() -> IndexPath? {
+        guard let filterCollectionView = filterCollectionView else { return IndexPath(item: 0, section: section) }
         let x = filterCollectionView.collectionView.center.x + filterCollectionView.collectionView.contentOffset.x
         let y = filterCollectionView.collectionView.center.y + filterCollectionView.collectionView.contentOffset.y
         let point: CGPoint = CGPoint(x: x, y: y)
@@ -248,8 +251,8 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     /// Changes the cell size according to its distance from center
     ///
     /// - Parameter indexPath: the index path of the cell
-    private func changeSize(_ indexPath: IndexPath) {
-        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
+    internal func changeSize(_ indexPath: IndexPath) {
+        let cell = filterCollectionView?.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
         if let cell = cell {
             let maxDistance = FilterCollectionCellConstants.width / 2
             let distance = calculateDistanceFromCenter(cell: cell)
@@ -274,7 +277,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     ///
     /// - Returns: the collection of unselected cells
     private func getUnselectedCells() -> [FilterCollectionCell] {
-        guard let collectionView = filterCollectionView.collectionView,
+        guard let collectionView = filterCollectionView?.collectionView,
             let visibleCells = collectionView.visibleCells as? [FilterCollectionCell] else { return [] }
         let unselectedCells = visibleCells.filter { cell in
             collectionView.indexPath(for: cell) != selectedIndexPath
@@ -288,12 +291,13 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     /// Selects a filter
     ///
     /// - Parameter index: position of the filter in the collection
-    private func selectFilter(index: Int) {
+    internal func selectFilter(index: Int) {
         selectedIndexPath = IndexPath(item: index, section: section)
         delegate?.didSelectFilter(filterItems[index])
     }
     
     private func calculateDistanceFromCenter(cell: FilterCollectionCell) -> CGFloat {
+        guard let filterCollectionView = filterCollectionView else { return CGFloat(0) }
         let cellCenter = cell.frame.center.x
         let collectionViewCenter = filterCollectionView.collectionView.center.x + filterCollectionView.collectionView.contentOffset.x
         return abs(collectionViewCenter - cellCenter)
@@ -303,7 +307,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     ///
     /// - Parameter indexPath: the index path of the cell
     internal func resetSize(for indexPath: IndexPath) {
-        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
+        let cell = filterCollectionView?.collectionView.cellForItem(at: indexPath) as? FilterCollectionCell
         cell?.setStandardSize()
     }
     
@@ -314,7 +318,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
     /// - Parameter cell: the filter cell
     /// - Returns: true if the cell is inside the shutter button, false if not
     private func isSelectedCell(_ cell: FilterCollectionCell) -> Bool {
-        let indexPath = filterCollectionView.collectionView.indexPath(for: cell)
+        let indexPath = filterCollectionView?.collectionView.indexPath(for: cell)
         let centerIndexPath = indexPathAtCenter()
         return indexPath == centerIndexPath
     }
@@ -325,7 +329,7 @@ class FilterCollectionController: UIViewController, UICollectionViewDelegate, UI
         if isSelectedCell(cell) {
             delegate?.didTapSelectedFilter(recognizer: recognizer)
         }
-        else if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
+        else if let indexPath = filterCollectionView?.collectionView.indexPath(for: cell) {
             scrollToOptionAt(indexPath.item)
         }
     }
