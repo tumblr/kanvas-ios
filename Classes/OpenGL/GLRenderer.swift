@@ -48,7 +48,7 @@ final class GLRenderer {
     /// Designated initializer
     ///
     /// - Parameter delegate: the callback
-    init(delegate: GLRendererDelegate?, callbackQueue: DispatchQueue = DispatchQueue.main) {
+    init(delegate: GLRendererDelegate? = nil, callbackQueue: DispatchQueue = DispatchQueue.main) {
         self.delegate = delegate
         self.callbackQueue = callbackQueue
         glContext = EAGLContext(api: .openGLES3)

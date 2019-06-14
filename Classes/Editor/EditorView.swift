@@ -33,7 +33,7 @@ private struct EditorViewConstants {
 
 final class EditorView: UIView {
     
-    private let imageView: UIImageView = UIImageView()
+    weak var playerView: GLPlayerView?
     
     private let confirmButton = UIButton()
     private let closeMenuButton = UIButton()
@@ -54,10 +54,10 @@ final class EditorView: UIView {
     }
     
     private func setupViews() {
-        imageView.backgroundColor = .black
-        imageView.contentMode = .scaleAspectFill
-        imageView.add(into: self)
-        
+        let playerView = GLPlayerView()
+        playerView.add(into: self)
+        self.playerView = playerView
+
         setUpCloseButton()
         setUpCloseMenuButton()
         setUpConfirmButton()
