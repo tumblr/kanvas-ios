@@ -20,7 +20,6 @@ struct Device {
     // Device type
     static let isIPad = UIDevice.current.userInterfaceIdiom == .pad
     static let isIPhone = UIDevice.current.userInterfaceIdiom == .phone
-    static let isRetina = UIScreen.main.scale >= retinaScreenMinScale
     
     // Width and height of current device
     static let screenWidth = Int(UIScreen.main.bounds.size.width)
