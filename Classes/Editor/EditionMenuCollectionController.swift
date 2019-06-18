@@ -118,7 +118,8 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     ///
     /// - Parameter index: position of the option in the collection
     private func selectEditionOption(index: Int) {
-        delegate?.didSelectEditionOption(editionOptions[index])
+        guard let option = editionOptions.object(at: index) else { return }
+        delegate?.didSelectEditionOption(option)
     }
     
     // MARK: - EditionMenuCollectionCellDelegate
