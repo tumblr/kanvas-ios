@@ -130,17 +130,3 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         }
     }
 }
-
-/// Returns the object located at the specified index.
-/// If the index is beyond the end of the array, nil is returned.
-///
-/// - Parameter index: an index within the bounds of the array
-private extension Array {
-    func object(at index: Int) -> Element? {
-        guard index >= 0, index < endIndex else {
-            return nil
-        }
-        
-        return self[index]
-    }
-}

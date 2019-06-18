@@ -134,10 +134,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     private func resumePlayback() {
-        guard segments.count > currentSegmentIndex else {
+        guard segments.count > currentSegmentIndex, let segment = segments.object(at: currentSegmentIndex) else {
             return
         }
-        let segment = segments[currentSegmentIndex]
+        
         if let image = segment.image {
             playImage(image: image)
         }
