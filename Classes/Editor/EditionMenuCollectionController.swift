@@ -98,8 +98,8 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditionMenuCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? EditionMenuCollectionCell {
-            cell.bindTo(editionOptions[indexPath.item])
+        if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
+            cell.bindTo(option)
             cell.delegate = self
         }
         return cell
@@ -127,5 +127,19 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         if let indexPath = editionMenuCollectionView.collectionView.indexPath(for: cell) {
             selectEditionOption(index: indexPath.item)
         }
+    }
+}
+
+/// Returns the object located at the specified index.
+/// If the index is beyond the end of the array, nil is returned.
+///
+/// - Parameter index: an index within the bounds of the array
+private extension Array {
+    func object(at index: Int) -> Element? {
+        guard index >= 0, index < endIndex else {
+            return nil
+        }
+        
+        return self[index]
     }
 }
