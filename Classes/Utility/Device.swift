@@ -28,7 +28,6 @@ struct Device {
     static let screenMinLength = Int(min(screenWidth, screenHeight))
     
     // Device model
-    static let isIPhone4OrLess = isIPhone && screenMaxLength < iPhone4OrLessScreenMaxHeight
     static let isIPhone5 = isIPhone && screenMaxLength == iPhone5ScreenHeight
     static let isIPhone6 = isIPhone && screenMaxLength == iPhone6ScreenHeight
     static let isIPhone6P = isIPhone && screenMaxLength == iPhone6PScreenHeight
