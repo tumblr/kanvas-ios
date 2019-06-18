@@ -36,7 +36,7 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     static let height = EditionMenuCollectionCellConstants.height
     static let width = EditionMenuCollectionCellConstants.width
     
-    private weak var circleView: UIImageView?
+    private let circleView = UIImageView()
     
     var delegate: EditionMenuCollectionCellDelegate?
         
@@ -56,36 +56,34 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter item: The EditionMenu to display
     func bindTo(_ option: EditionOption) {
-        circleView?.image = KanvasCameraImages.editionOptionTypes[option.type] ?? nil
+        circleView.image = KanvasCameraImages.editionOptionTypes[option.type] ?? nil
     }
     
     
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        circleView?.image = nil
-        circleView?.backgroundColor = nil
+        circleView.image = nil
+        circleView.backgroundColor = nil
     }
     
     // MARK: - Layout
     
     private func setUpView() {
-        let imageView = UIImageView()
-        contentView.addSubview(imageView)
-        imageView.accessibilityIdentifier = "Edition Menu Cell View"
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.masksToBounds = true
+        contentView.addSubview(circleView)
+        circleView.accessibilityIdentifier = "Edition Menu Cell View"
+        circleView.translatesAutoresizingMaskIntoConstraints = false
+        circleView.contentMode = .scaleAspectFill
+        circleView.clipsToBounds = true
+        circleView.layer.masksToBounds = true
         
         NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: EditionMenuCollectionCellConstants.circleDiameter),
-            imageView.widthAnchor.constraint(equalToConstant: EditionMenuCollectionCellConstants.circleDiameter)
-            ])
+            circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            circleView.heightAnchor.constraint(equalToConstant: EditionMenuCollectionCellConstants.circleDiameter),
+            circleView.widthAnchor.constraint(equalToConstant: EditionMenuCollectionCellConstants.circleDiameter)
+        ])
         
-        circleView = imageView
     }
     
     // MARK: - Gesture recognizers
