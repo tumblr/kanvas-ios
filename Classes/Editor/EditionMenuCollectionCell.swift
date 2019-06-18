@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol EditionMenuCollectionCellDelegate {
+protocol EditionMenuCollectionCellDelegate: class {
     /// Callback method when tapping a cell
     ///
     /// - Parameters:
@@ -38,7 +38,7 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     
     private let circleView = UIImageView()
     
-    var delegate: EditionMenuCollectionCellDelegate?
+    weak var delegate: EditionMenuCollectionCellDelegate?
         
     override init(frame: CGRect) {
         super.init(frame: frame)
