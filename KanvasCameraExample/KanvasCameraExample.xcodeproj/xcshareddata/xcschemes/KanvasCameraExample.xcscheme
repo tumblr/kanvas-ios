@@ -50,6 +50,9 @@
                <Test
                   Identifier = "CameraRecorderTests/testStopMotion()">
                </Test>
+               <Test
+                  Identifier = "CameraSegmentHandlerTests/testMerge()">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
