@@ -15,8 +15,9 @@ private struct EditionMenuCollectionViewConstants {
 final class EditionMenuCollectionView: IgnoreTouchesView {
     
     static let height = EditionMenuCollectionViewConstants.height
+    
+    private let fadeOutGradient = CAGradientLayer()
     let collectionView: UICollectionView
-    let fadeOutGradient = CAGradientLayer()
     
     init() {
         collectionView = MenuCollectionView(frame: .zero, collectionViewLayout: MenuCollectionViewLayout())
