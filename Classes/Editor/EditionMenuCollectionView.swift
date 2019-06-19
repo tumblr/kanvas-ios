@@ -15,11 +15,13 @@ private struct EditionMenuCollectionViewConstants {
 final class EditionMenuCollectionView: IgnoreTouchesView {
     
     static let height = EditionMenuCollectionViewConstants.height
-    let collectionView: IgnoreTouchesCollectionView
+    let collectionView: UICollectionView
     let fadeOutGradient = CAGradientLayer()
     
     init() {
-        collectionView = createCollectionView()
+        collectionView = MenuCollectionView(frame: .zero, collectionViewLayout: MenuCollectionViewLayout())
+        collectionView.accessibilityIdentifier = "Edition Menu Collection"
+        collectionView.backgroundColor = .clear
         
         super.init(frame: .zero)
         
@@ -37,13 +39,7 @@ final class EditionMenuCollectionView: IgnoreTouchesView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateFadeOutEffect() {
-        fadeOutGradient.frame = bounds
-    }
-}
-
-// MARK: - Layout
-extension EditionMenuCollectionView {
+    // MARK: - Layout
     
     private func setUpViews() {
         collectionView.add(into: self)
@@ -62,39 +58,58 @@ extension EditionMenuCollectionView {
         fadeOutGradient.locations = [0, 0.02, 0.9, 1.0]
         layer.mask = fadeOutGradient
     }
-}
-
-// MARK: - Collection
-fileprivate func createCollectionView() -> IgnoreTouchesCollectionView {
-    let layout = UICollectionViewFlowLayout()
-    configureCollectionLayout(layout: layout)
     
-    let collectionView = IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
-    collectionView.accessibilityIdentifier = "Edition Menu Collection"
-    collectionView.backgroundColor = .clear
-    configureCollection(collectionView: collectionView)
-    return collectionView
+    func updateFadeOutEffect() {
+        fadeOutGradient.frame = bounds
+    }
 }
 
-fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
-    layout.scrollDirection = .horizontal
-    layout.itemSize = UICollectionViewFlowLayout.automaticSize
-    layout.estimatedItemSize = CGSize(width: EditionMenuCollectionCell.width, height: EditionMenuCollectionCell.height)
-    layout.minimumInteritemSpacing = 0
-    layout.minimumLineSpacing = 0
+
+private class MenuCollectionView: IgnoreTouchesCollectionView {
+    
+    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+        super.init(frame: frame, collectionViewLayout: layout)
+        configure()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        configure()
+    }
+    
+    private func configure() {
+        isScrollEnabled = false
+        allowsSelection = true
+        bounces = true
+        alwaysBounceHorizontal = true
+        alwaysBounceVertical = false
+        showsHorizontalScrollIndicator = false
+        showsVerticalScrollIndicator = false
+        autoresizesSubviews = true
+        contentInset = .zero
+        decelerationRate = UIScrollView.DecelerationRate.fast
+        dragInteractionEnabled = true
+        reorderingCadence = .immediate
+    }
 }
 
-fileprivate func configureCollection(collectionView: IgnoreTouchesCollectionView) {
-    collectionView.isScrollEnabled = false
-    collectionView.allowsSelection = true
-    collectionView.bounces = true
-    collectionView.alwaysBounceHorizontal = true
-    collectionView.alwaysBounceVertical = false
-    collectionView.showsHorizontalScrollIndicator = false
-    collectionView.showsVerticalScrollIndicator = false
-    collectionView.autoresizesSubviews = true
-    collectionView.contentInset = .zero
-    collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
-    collectionView.dragInteractionEnabled = true
-    collectionView.reorderingCadence = .immediate
+private class MenuCollectionViewLayout: UICollectionViewFlowLayout {
+
+    override init() {
+        super.init()
+        configure()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        configure()
+    }
+    
+    private func configure() {
+        scrollDirection = .horizontal
+        itemSize = UICollectionViewFlowLayout.automaticSize
+        estimatedItemSize = CGSize(width: EditionMenuCollectionCell.width, height: EditionMenuCollectionCell.height)
+        minimumInteritemSpacing = 0
+        minimumLineSpacing = 0
+    }
 }
