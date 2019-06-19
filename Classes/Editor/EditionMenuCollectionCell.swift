@@ -56,7 +56,7 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter item: The EditionMenu to display
     func bindTo(_ option: EditionOption) {
-        circleView.image = KanvasCameraImages.editionOptionTypes[option.type] ?? nil
+        circleView.image = KanvasCameraImages.editionOptionTypes[option] ?? nil
     }
     
     

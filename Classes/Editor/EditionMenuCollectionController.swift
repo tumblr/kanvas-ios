@@ -35,11 +35,11 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         editionOptions = []
         
         if settings.features.editorFilters {
-            editionOptions.append(EditionOption(type: .filter))
+            editionOptions.append(.filter)
         }
         
         if settings.features.editorMedia {
-            editionOptions.append(EditionOption(type: .media))
+            editionOptions.append(.media)
         }
         
         super.init(nibName: .none, bundle: .none)
