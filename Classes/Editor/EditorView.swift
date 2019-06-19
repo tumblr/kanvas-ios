@@ -34,8 +34,6 @@ private struct EditorViewConstants {
 final class EditorView: UIView {
     
     private let imageView: UIImageView = UIImageView()
-    private let firstPlayerLayer: AVPlayerLayer = AVPlayerLayer()
-    private let secondPlayerLayer: AVPlayerLayer = AVPlayerLayer()
     
     private let confirmButton = UIButton()
     private let closeMenuButton = UIButton()
@@ -59,24 +57,6 @@ final class EditorView: UIView {
         imageView.backgroundColor = .black
         imageView.contentMode = .scaleAspectFill
         imageView.add(into: self)
-        
-        imageView.layer.addSublayer(firstPlayerLayer)
-        imageView.layer.addSublayer(secondPlayerLayer)
-        
-        firstPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        secondPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        
-        performLayerActionsWithoutAnimation {
-            firstPlayerLayer.opacity = 0
-            secondPlayerLayer.opacity = 0
-        }
-        
-        disposables.append(observe(\.bounds, options: [], changeHandler: { (editorView, _) in
-            performUIUpdate {
-                editorView.firstPlayerLayer.frame = editorView.bounds
-                editorView.secondPlayerLayer.frame = editorView.bounds
-            }
-        }))
         
         setUpCloseButton()
         setUpCloseMenuButton()
@@ -162,59 +142,6 @@ final class EditorView: UIView {
     
     @objc private func confirmButtonPressed() {
         delegate?.confirmButtonPressed()
-    }
-    
-    // MARK: - internal methods
-    
-    /// Binds the AVPlayer to the first player layer
-    ///
-    /// - Parameter player: The player to bind. Can be nil
-    func setFirstPlayer(player: AVPlayer?) {
-        firstPlayerLayer.player = player
-    }
-    
-    /// Binds the AVPlayer to the second player layer
-    ///
-    /// - Parameter player: The player to bind, can be nil
-    func setSecondPlayer(player: AVPlayer?) {
-        secondPlayerLayer.player = player
-    }
-    
-    /// Sets the image for the ImageView
-    ///
-    /// - Parameter image: the image to display
-    func setImage(image: UIImage) {
-        imageView.image = image
-        performLayerActionsWithoutAnimation {
-            firstPlayerLayer.opacity = 0
-            secondPlayerLayer.opacity = 0
-        }
-    }
-    
-    /// Shows the first player layer and hides the second
-    func showFirstPlayer() {
-        performLayerActionsWithoutAnimation {
-            firstPlayerLayer.opacity = 1
-            secondPlayerLayer.opacity = 0
-        }
-    }
-    
-    /// Shows the second player layer and hides the first
-    func showSecondPlayer() {
-        performLayerActionsWithoutAnimation {
-            firstPlayerLayer.opacity = 0
-            secondPlayerLayer.opacity = 1
-        }
-    }
-    
-    // MARK: - layer helper
-    
-    /// changing values on a layer has implicit animations, unless you explicitly disable them
-    private func performLayerActionsWithoutAnimation(_ action:() -> Void) {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        action()
-        CATransaction.commit()
     }
     
     // MARK: - Public interface

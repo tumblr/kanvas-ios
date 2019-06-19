@@ -43,13 +43,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let assetsHandler: AssetsHandlerType
     private let cameraMode: CameraMode?
     
-    private var currentSegmentIndex: Int = 0
-    private var timer: Timer = Timer()
-    
-    private var firstPlayer: AVPlayer = AVPlayer()
-    private var secondPlayer: AVPlayer = AVPlayer()
-    private var currentPlayer: AVPlayer
-    
     weak var delegate: EditorControllerDelegate?
     
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
@@ -74,34 +67,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
-        self.currentPlayer = firstPlayer
         
         super.init(nibName: .none, bundle: .none)
-        setupNotifications()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func setupNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
-    }
-    
-    @objc private func appDidBecomeActive() {
-        resumePlayback()
-    }
-    
-    @objc private func appWillResignActive() {
-        timer.invalidate()
-        currentPlayer.pause()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        restartPlayback()
     }
     
     override public func viewDidLoad() {
@@ -109,8 +76,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
         view.backgroundColor = .black
         editorView.add(into: view)
-        editorView.setFirstPlayer(player: firstPlayer)
-        editorView.setSecondPlayer(player: secondPlayer)
         load(childViewController: collectionController, into: editorView.collectionContainer)
     }
     
@@ -120,105 +85,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
-    }
-    
-    // MARK: - playback methods
-    
-    private func restartPlayback() {
-        currentPlayer.pause()
-        timer.invalidate()
-        currentSegmentIndex = 0
-        if let firstSegment = segments.first {
-            playSegment(segment: firstSegment)
-        }
-    }
-    
-    private func resumePlayback() {
-        guard segments.count > currentSegmentIndex, let segment = segments.object(at: currentSegmentIndex) else {
-            return
-        }
-        
-        if let image = segment.image {
-            playImage(image: image)
-        }
-        else if segment.videoURL != nil {
-            currentPlayer.play()
-        }
-    }
-    
-    private func playSegment(segment: CameraSegment) {
-        if let image = segment.image {
-            playImage(image: image)
-        }
-        else if let url = segment.videoURL {
-            playVideo(url: url)
-        }
-        queueNextSegment()
-    }
-    
-    private func playImage(image: UIImage) {
-        editorView.setImage(image: image)
-        let displayTime = timeIntervalForImageSegments(segments)
-        timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
-            self?.playNextSegment()
-        })
-    }
-    
-    private func timeIntervalForImageSegments(_ segments: [CameraSegment]) -> TimeInterval {
-        for segment in segments {
-            if segment.image == nil {
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
-            }
-        }
-        return CMTimeGetSeconds(CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale))
-    }
-    
-    private func playVideo(url: URL) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-        if currentPlayer == firstPlayer {
-            currentPlayer = secondPlayer
-            editorView.showSecondPlayer()
-        }
-        else {
-            currentPlayer = firstPlayer
-            editorView.showFirstPlayer()
-        }
-        
-        if currentPlayer.currentItem == nil {
-            currentPlayer.replaceCurrentItem(with: AVPlayerItem(url: url))
-        }
-        currentPlayer.play()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(playNextSegment), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-    }
-    
-    @objc private func queueNextSegment() {
-        let nextSegmentIndex = (currentSegmentIndex + 1) % segments.count
-        guard nextSegmentIndex < segments.count else { return }
-        let nextSegment = segments[nextSegmentIndex]
-        var playerItem: AVPlayerItem? = nil
-        if let url = nextSegment.videoURL, nextSegment.image == nil {
-            playerItem = AVPlayerItem(url: url)
-        }
-        if currentPlayer == firstPlayer {
-            secondPlayer.replaceCurrentItem(with: playerItem)
-        }
-        else if currentPlayer == secondPlayer {
-            firstPlayer.replaceCurrentItem(with: playerItem)
-        }
-    }
-    
-    @objc private func playNextSegment() {
-        currentPlayer.pause()
-        currentPlayer.seek(to: CMTime.zero)
-        currentSegmentIndex = (currentSegmentIndex + 1) % segments.count
-        guard currentSegmentIndex < segments.count else { return }
-        playSegment(segment: segments[currentSegmentIndex])
-    }
-    
-    private func stopPlayback() {
-        timer.invalidate()
-        currentPlayer.pause()
     }
     
     // MARK: - Loading Indicator
@@ -237,7 +103,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - EditorViewDelegate
     
     func confirmButtonPressed() {
-        stopPlayback()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
             // If the camera mode is .stopMotion and the `exportStopMotionPhotoAsVideo` is true,
@@ -290,7 +155,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func closeButtonPressed() {
-        stopPlayback()
         delegate?.dismissButtonPressed()
     }
     
