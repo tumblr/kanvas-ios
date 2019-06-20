@@ -1,0 +1,108 @@
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+//
+
+import Foundation
+import AVFoundation
+import Photos
+
+enum GLMediaExporterError: Error {
+    case failedDeleteExistingFile
+    case noMediaToExport
+    case noPresets
+    case noCompositor
+    case export(Error)
+    case saveToLibrary(Error)
+    case unauthorizedToSaveToLibrary
+}
+
+class GLMediaExporter {
+
+    var filterType: FilterType?
+
+    var progressTimer: Timer?
+
+    init(filterType: FilterType?) {
+        self.filterType = filterType
+    }
+
+    @objc func updateProgress(_ timer: Timer) {
+        guard let exportSession = timer.userInfo as? AVAssetExportSession else {
+            return
+        }
+        print(exportSession.progress)
+    }
+
+    func export(image: UIImage, completion: (UIImage) -> Void) {
+        guard let filterType = filterType else {
+            completion(image)
+            return
+        }
+        guard let pixelBuffer = image.pixelBuffer() else {
+            return
+        }
+        guard let sampleBuffer = pixelBuffer.sampleBuffer() else {
+            return
+        }
+        let renderer = GLRenderer()
+        renderer.changeFilter(filterType)
+        // LOL I have to call this twice, because this was written for video, where the first frame only initializes
+        // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
+        renderer.processSampleBuffer(sampleBuffer)
+        renderer.processSampleBuffer(sampleBuffer) { (filteredPixelBuffer, time) in
+            guard let processedImage = UIImage(pixelBuffer: filteredPixelBuffer) else {
+                return
+            }
+            completion(processedImage)
+        }
+    }
+
+    func export(video url: URL, completion: @escaping (URL) -> Void) {
+        guard let filterType = filterType else {
+            completion(url)
+            return
+        }
+        let filePath = NSTemporaryDirectory().appending("ExportedProject.mov")
+        let fileExists = FileManager.default.fileExists(atPath: filePath)
+        if fileExists {
+            do {
+                try FileManager.default.removeItem(atPath: filePath)
+            } catch {
+                print("An error occured deleting the file: \(error)")
+            }
+        }
+        let outputURL = URL(fileURLWithPath: filePath)
+
+        let asset = AVAsset(url: url)
+        let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
+        videoComposition.customVideoCompositorClass = GLVideoCompositor.self
+
+        // TODO shouldn't I always pick the highest quality, not the first?
+        let presets = AVAssetExportSession.exportPresets(compatibleWith: asset)
+        guard let presetName = presets.first else {
+            return
+        }
+
+        let exportSession = AVAssetExportSession(asset: asset, presetName: presetName)
+        exportSession?.outputFileType = .mov
+        exportSession?.outputURL = outputURL
+        exportSession?.shouldOptimizeForNetworkUse = true
+        exportSession?.videoComposition = videoComposition
+        guard let glVideoCompositor = exportSession?.customVideoCompositor as? GLVideoCompositor else {
+            return
+        }
+        glVideoCompositor.filterType = filterType
+        self.progressTimer = Timer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: exportSession, repeats: true)
+        exportSession?.exportAsynchronously {
+            self.progressTimer?.invalidate()
+            self.progressTimer = nil
+            guard exportSession?.status == .completed else {
+                if let error = exportSession?.error { print("An export error occurred: \(error.localizedDescription)") }
+                return
+            }
+            completion(outputURL)
+        }
+    }
+}

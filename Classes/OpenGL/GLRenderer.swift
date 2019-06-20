@@ -38,9 +38,9 @@ final class GLRenderer {
     // OpenGL Context
     let glContext: EAGLContext?
 
-    private let callbackQueue: DispatchQueue
+    private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
-    private var filterType: FilterType = .passthrough
+    private(set) var filterType: FilterType = .passthrough
     private var processingImage = false
 
     private var filteredPixelBuffer: CVPixelBuffer?
@@ -48,17 +48,19 @@ final class GLRenderer {
     /// Designated initializer
     ///
     /// - Parameter delegate: the callback
-    init(delegate: GLRendererDelegate? = nil, callbackQueue: DispatchQueue = DispatchQueue.main) {
-        self.delegate = delegate
-        self.callbackQueue = callbackQueue
+    init() {
         glContext = EAGLContext(api: .openGLES3)
         filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
+    }
+
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
+        processSampleBuffer(sampleBuffer) { (_, _) in }
     }
     
     /// Call this method to process the sample buffer
     ///
     /// - Parameter sampleBuffer: the camera feed sample buffer
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, completion: (CVPixelBuffer, CMTime) -> Void) {
         if processingImage {
             return
         }
@@ -79,6 +81,7 @@ final class GLRenderer {
                 synchronized(self) {
                     output(filteredPixelBuffer: filteredPixelBuffer)
                     self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: filteredPixelBuffer, presentationTime: time)
+                    completion(filteredPixelBuffer, time)
                 }
             }
             else {
