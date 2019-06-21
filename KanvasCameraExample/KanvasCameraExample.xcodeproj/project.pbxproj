@@ -30,6 +30,8 @@
 		651DEBA72209F17400476F22 /* ConicalGradientLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */; };
 		651DEBA92209FC4300476F22 /* RGBATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA82209FC4300476F22 /* RGBATests.swift */; };
 		652DFA1A22281F00007B1EF5 /* FilterItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1422281F00007B1EF5 /* FilterItemTests.swift */; };
+		653D062C22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653D062B22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift */; };
+		653D062E22BD2C49007118C5 /* FilterCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653D062D22BD2C49007118C5 /* FilterCollectionTests.swift */; };
 		65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */; };
 		65E46B9322BD22CA004FD226 /* FilterSettingsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */; };
 		65E46B9422BD22CA004FD226 /* FilterSettingsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */; };
@@ -130,6 +132,8 @@
 		651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayerTests.swift; sourceTree = "<group>"; };
 		651DEBA82209FC4300476F22 /* RGBATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBATests.swift; sourceTree = "<group>"; };
 		652DFA1422281F00007B1EF5 /* FilterItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterItemTests.swift; sourceTree = "<group>"; };
+		653D062B22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollectionInnerCellTests.swift; sourceTree = "<group>"; };
+		653D062D22BD2C49007118C5 /* FilterCollectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollectionTests.swift; sourceTree = "<group>"; };
 		65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsViewTests.swift; sourceTree = "<group>"; };
@@ -274,6 +278,8 @@
 			isa = PBXGroup;
 			children = (
 				652DFA1422281F00007B1EF5 /* FilterItemTests.swift */,
+				653D062B22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift */,
+				653D062D22BD2C49007118C5 /* FilterCollectionTests.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -702,6 +708,7 @@
 				ABE4990121370FAB00379F7F /* MediaClipsEditorViewTests.swift in Sources */,
 				0EAE0C89213985E8004CD7FF /* CameraSegmentHandlerStub.swift in Sources */,
 				65E46B9522BD22CA004FD226 /* CameraFilterCollectionControllerTests.swift in Sources */,
+				653D062C22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift in Sources */,
 				764AC470221D8588005C82EC /* ShaderTests.swift in Sources */,
 				0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */,
 				ABE49906213712E100379F7F /* OptionsControllerTests.swift in Sources */,
@@ -748,6 +755,7 @@
 				ABE4991F2137307500379F7F /* QueueTests.swift in Sources */,
 				65E46BA622BD22DE004FD226 /* EditionMenuCollectionControllerTests.swift in Sources */,
 				65E46BA722BD22DE004FD226 /* EditorViewTests.swift in Sources */,
+				653D062E22BD2C49007118C5 /* FilterCollectionTests.swift in Sources */,
 				764AC467221D8485005C82EC /* FilteredInputViewControllerTests.swift in Sources */,
 				ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */,
 				ABE4991E2137307500379F7F /* IgnoreTouchesViewTests.swift in Sources */,
