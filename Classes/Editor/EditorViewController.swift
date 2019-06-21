@@ -195,7 +195,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         }
     }
     
-    // MARK: - FilterSmallCollectionControllerDelegate
+    // MARK: - EditorFilterCollectionControllerDelegate
     
     func didSelectFilter(_ filterItem: FilterItem) {
         
