@@ -23,13 +23,14 @@ private struct EditorFilterCollectionControllerConstants {
 }
 
 /// Controller for handling the filter item collection.
-final class EditorFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
+final class EditorFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate, ScrollHandlerDelegate {
     
     static let leftInset = EditorFilterCollectionControllerConstants.leftInset
     
     private lazy var filterCollectionView = FilterCollectionView(cellWidth: EditorFilterCollectionCell.width, cellHeight: EditorFilterCollectionCell.minimumHeight)
     private var filterItems: [FilterItem]
     private var selectedIndexPath: IndexPath
+    private var scrollHandler: ScrollHandler?
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     
     weak var delegate: EditorFilterCollectionControllerDelegate?
@@ -58,7 +59,11 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
             ])
         }
         selectedIndexPath = IndexPath(item: EditorFilterCollectionControllerConstants.initialCell, section: EditorFilterCollectionControllerConstants.section)
+        
         super.init(nibName: .none, bundle: .none)
+        
+        scrollHandler = ScrollHandler(collectionView: filterCollectionView.collectionView, cellWidth: EditorFilterCollectionCell.width, cellHeight: EditorFilterCollectionCell.minimumHeight)
+        scrollHandler?.delegate = self
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -158,7 +163,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     
     // MARK: - Scrolling
     
-    private func scrollToOptionAt(_ index: Int, animated: Bool = true) {
+    func scrollToOptionAt(_ index: Int, animated: Bool = true) {
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: EditorFilterCollectionControllerConstants.section)
         scrollToItemPreservingLeftInset(indexPath: indexPath, animated: animated)
@@ -173,7 +178,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         filterCollectionView.collectionView.setContentOffset(point, animated: animated)
     }
     
-    private func indexPathAtBeginning() -> IndexPath? {
+    func indexPathAtSelectionCircle() -> IndexPath? {
         let x = EditorFilterCollectionControllerConstants.leftInset + (EditorFilterCollectionCell.width / 2) + filterCollectionView.collectionView.contentOffset.x
         let y = filterCollectionView.collectionView.center.y + filterCollectionView.collectionView.contentOffset.y
         let point: CGPoint = CGPoint(x: x, y: y)
@@ -181,36 +186,15 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if velocity.x == 0 {
-            if let indexPath = indexPathAtBeginning() {
-                scrollToOptionAt(indexPath.item)
-            }
-        }
-        else {
-            let targetOffset = targetContentOffset.pointee
-            let itemWidth = EditorFilterCollectionCell.width
-            let roundedIndex = CGFloat(targetOffset.x / itemWidth).rounded()
-            let newTargetOffset = roundedIndex * itemWidth
-            targetContentOffset.pointee.x = newTargetOffset
-            let itemIndex = Int(roundedIndex)
-            selectFilter(index: itemIndex)
-        }
+        scrollHandler?.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let indexPath = indexPathAtBeginning() {
-            changeSize(indexPath)
-            resetSize(for: indexPath.previous())
-            resetSize(for: indexPath.next())
-        }
+        scrollHandler?.scrollViewDidScroll(scrollView)
     }
     
-    // When the collection is decelerating, but the user taps a cell to stop,
-    // the collection needs to set a cell at the center of the screen
     @objc func collectionTapped() {
-        if let indexPath = indexPathAtBeginning() {
-            scrollToOptionAt(indexPath.item)
-        }
+        scrollHandler?.collectionTapped()
     }
     
     // MARK: - Animate size change
@@ -222,7 +206,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? EditorFilterCollectionCell
         if let cell = cell {
             let maxDistance = EditorFilterCollectionCell.width / 2
-            let distance = calculateDistanceFromFirstCell(cell: cell)
+            let distance = calculateDistanceFromSelectionCircle(cell: cell)
             let percent = (maxDistance - distance) / maxDistance
             cell.setSize(percent: percent)
         }
@@ -233,7 +217,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     /// Selects a filter
     ///
     /// - Parameter index: position of the filter in the collection
-    private func selectFilter(index: Int) {
+    func selectFilter(index: Int) {
         if isViewVisible() {
             feedbackGenerator.notificationOccurred(.success)
         }
@@ -241,7 +225,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         delegate?.didSelectFilter(filterItems[index])
     }
     
-    private func calculateDistanceFromFirstCell(cell: EditorFilterCollectionCell) -> CGFloat {
+    func calculateDistanceFromSelectionCircle(cell: FilterCollectionCell) -> CGFloat {
         let cellCenter = cell.frame.center.x
         let firstCellCenter = EditorFilterCollectionControllerConstants.leftInset + (EditorFilterCollectionCell.width / 2) + filterCollectionView.collectionView.contentOffset.x
         return abs(firstCellCenter - cellCenter)
@@ -251,8 +235,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     ///
     /// - Parameter indexPath: the index path of the cell
     private func resetSize(for indexPath: IndexPath) {
-        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? EditorFilterCollectionCell
-        cell?.setStandardSize()
+        scrollHandler?.resetSize(for: indexPath)
     }
     
     // MARK: - FilterCollectionCellDelegate

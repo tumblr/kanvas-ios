@@ -74,6 +74,7 @@
 		61A164CCDD84EC1571E58EEFD22AF4A1 /* PostFormKeyboardTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C04B71EF770F2443F8C43C514C89349 /* PostFormKeyboardTracker.swift */; };
 		61E9E1BDAA547A398EE55583A6C71814 /* UIColor+SharedColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049B3415F8D3B932A9391C3EBD134AC3 /* UIColor+SharedColors.swift */; };
 		63FC98E7DD5AD36AF92AC81CAF01A8C5 /* AppColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E3064C7AA3143DE1518305CCDF07D3 /* AppColorScheme.swift */; };
+		6572821122BD4FD700B30FFF /* ScrollHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6572820F22BD4F1500B30FFF /* ScrollHandler.swift */; };
 		657AD53422B9543800B4A672 /* Array+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657AD53322B9543800B4A672 /* Array+Object.swift */; };
 		65AC1B4922AEE0E500624D93 /* EditionOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC1B4322AEE0E500624D93 /* EditionOption.swift */; };
 		65AC1B4A22AEE0E500624D93 /* EditionMenuCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AC1B4422AEE0E500624D93 /* EditionMenuCollectionView.swift */; };
@@ -392,6 +393,7 @@
 		64663A438104E5367A2116B7490FA3DC /* MirrorTwoFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MirrorTwoFilter.swift; sourceTree = "<group>"; };
 		6497B92A5A994D8E7E88D5A218B8E490 /* UIColor+Lerp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIColor+Lerp.swift"; sourceTree = "<group>"; };
 		650AF300344E5C785DAB6F8D19D060F3 /* ShowModalFromTopAnimator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShowModalFromTopAnimator.swift; path = Source/ShowModalFromTopAnimator.swift; sourceTree = "<group>"; };
+		6572820F22BD4F1500B30FFF /* ScrollHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollHandler.swift; sourceTree = "<group>"; };
 		657AD53322B9543800B4A672 /* Array+Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Object.swift"; sourceTree = "<group>"; };
 		657BADF65D4BA8E9957EF41AEFF96C43 /* TagsViewEditCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsViewEditCell.swift; sourceTree = "<group>"; };
 		65AC1B4322AEE0E500624D93 /* EditionOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditionOption.swift; sourceTree = "<group>"; };
@@ -1145,6 +1147,7 @@
 				65E46B7522BD1E67004FD226 /* FilterCollectionInnerCell.swift */,
 				204F625FE1674C2A204BF805CA56E2E3 /* FilterCollectionCell.swift */,
 				8BA0F2379820C52A6649DFAF4AB54EC3 /* FilterItem.swift */,
+				6572820F22BD4F1500B30FFF /* ScrollHandler.swift */,
 			);
 			name = Filters;
 			path = Classes/Filters;
@@ -1556,6 +1559,7 @@
 				276FAE319525AF6FAD4FA2312107709A /* CameraPreviewView.swift in Sources */,
 				8B050A6F12C4BB325A985D2132A64AB0 /* CameraPreviewViewController.swift in Sources */,
 				9D3BDBA8D9DF3EAC309AD8BDF4303280 /* CameraRecorder.swift in Sources */,
+				6572821122BD4FD700B30FFF /* ScrollHandler.swift in Sources */,
 				657AD53422B9543800B4A672 /* Array+Object.swift in Sources */,
 				BD720AF21B3583A5E45D414803258B3A /* CameraRecordingProtocol.swift in Sources */,
 				BCFC63E8A7B6AE0AE43DB593762D0EC4 /* CameraSegmentHandler.swift in Sources */,

@@ -32,11 +32,12 @@ private struct CameraFilterCollectionControllerConstants {
 }
 
 /// Controller for handling the filter item collection.
-final class CameraFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
+final class CameraFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate, ScrollHandlerDelegate {
     
     private lazy var filterCollectionView = FilterCollectionView(cellWidth: CameraFilterCollectionCell.width, cellHeight: CameraFilterCollectionCell.minimumHeight, ignoreTouches: true)
     private var filterItems: [FilterItem]
     private var selectedIndexPath: IndexPath
+    private var scrollHandler: ScrollHandler?
     
     weak var delegate: CameraFilterCollectionControllerDelegate?
     
@@ -65,6 +66,9 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         }
         selectedIndexPath = IndexPath(item: CameraFilterCollectionControllerConstants.initialCell, section: CameraFilterCollectionControllerConstants.section)
         super.init(nibName: .none, bundle: .none)
+        
+        scrollHandler = ScrollHandler(collectionView: filterCollectionView.collectionView, cellWidth: CameraFilterCollectionCell.width, cellHeight: CameraFilterCollectionCell.minimumHeight)
+        scrollHandler?.delegate = self
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -97,7 +101,7 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         scrollToOptionAt(CameraFilterCollectionControllerConstants.initialCell, animated: false)
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
-        changeSize(IndexPath(item: CameraFilterCollectionControllerConstants.initialCell, section: CameraFilterCollectionControllerConstants.section))
+        scrollHandler?.changeSize(IndexPath(item: CameraFilterCollectionControllerConstants.initialCell, section: CameraFilterCollectionControllerConstants.section))
     }
     
     private func setUpView() {
@@ -189,14 +193,14 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     
     // MARK: - Scrolling
     
-    private func scrollToOptionAt(_ index: Int, animated: Bool = true) {
+    func scrollToOptionAt(_ index: Int, animated: Bool = true) {
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: CameraFilterCollectionControllerConstants.section)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         selectFilter(index: indexPath.item)
     }
     
-    private func indexPathAtCenter() -> IndexPath? {
+    func indexPathAtSelectionCircle() -> IndexPath? {
         let x = filterCollectionView.collectionView.center.x + filterCollectionView.collectionView.contentOffset.x
         let y = filterCollectionView.collectionView.center.y + filterCollectionView.collectionView.contentOffset.y
         let point: CGPoint = CGPoint(x: x, y: y)
@@ -204,51 +208,15 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if velocity.x == 0 {
-            if let indexPath = indexPathAtCenter() {
-                scrollToOptionAt(indexPath.item)
-            }
-        }
-        else {
-            let targetOffset = targetContentOffset.pointee
-            let itemWidth = CameraFilterCollectionCell.width
-            let roundedIndex = CGFloat(targetOffset.x / itemWidth).rounded()
-            let newTargetOffset = roundedIndex * itemWidth
-            targetContentOffset.pointee.x = newTargetOffset
-            let itemIndex = Int(roundedIndex)
-            selectFilter(index: itemIndex)
-        }
+        scrollHandler?.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let indexPath = indexPathAtCenter() {
-            changeSize(indexPath)
-            resetSize(for: indexPath.previous())
-            resetSize(for: indexPath.next())
-        }
+        scrollHandler?.scrollViewDidScroll(scrollView)
     }
     
-    // When the collection is decelerating, but the user taps a cell to stop,
-    // the collection needs to set a cell at the center of the screen
     @objc func collectionTapped() {
-        if let indexPath = indexPathAtCenter() {
-            scrollToOptionAt(indexPath.item)
-        }
-    }
-    
-    // MARK: - Animate size change
-    
-    /// Changes the cell size according to its distance from center
-    ///
-    /// - Parameter indexPath: the index path of the cell
-    private func changeSize(_ indexPath: IndexPath) {
-        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? CameraFilterCollectionCell
-        if let cell = cell {
-            let maxDistance = CameraFilterCollectionCell.width / 2
-            let distance = calculateDistanceFromCenter(cell: cell)
-            let percent = (maxDistance - distance) / maxDistance
-            cell.setSize(percent: percent)
-        }
+        scrollHandler?.collectionTapped()
     }
     
     // MARK: - Unselected filters
@@ -281,12 +249,12 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     /// Selects a filter
     ///
     /// - Parameter index: position of the filter in the collection
-    private func selectFilter(index: Int) {
+    func selectFilter(index: Int) {
         selectedIndexPath = IndexPath(item: index, section: CameraFilterCollectionControllerConstants.section)
         delegate?.didSelectFilter(filterItems[index])
     }
     
-    private func calculateDistanceFromCenter(cell: CameraFilterCollectionCell) -> CGFloat {
+    func calculateDistanceFromSelectionCircle(cell: FilterCollectionCell) -> CGFloat {
         let cellCenter = cell.frame.center.x
         let collectionViewCenter = filterCollectionView.collectionView.center.x + filterCollectionView.collectionView.contentOffset.x
         return abs(collectionViewCenter - cellCenter)
@@ -296,8 +264,7 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     ///
     /// - Parameter indexPath: the index path of the cell
     private func resetSize(for indexPath: IndexPath) {
-        let cell = filterCollectionView.collectionView.cellForItem(at: indexPath) as? CameraFilterCollectionCell
-        cell?.setStandardSize()
+        scrollHandler?.resetSize(for: indexPath)
     }
     
     // MARK: - Private utilities
@@ -308,7 +275,7 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     /// - Returns: true if the cell is inside the shutter button, false if not
     private func isSelectedCell(_ cell: FilterCollectionCell) -> Bool {
         let indexPath = filterCollectionView.collectionView.indexPath(for: cell)
-        let centerIndexPath = indexPathAtCenter()
+        let centerIndexPath = indexPathAtSelectionCircle()
         return indexPath == centerIndexPath
     }
     
