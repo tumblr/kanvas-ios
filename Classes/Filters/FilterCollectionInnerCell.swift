@@ -32,7 +32,6 @@ protocol FilterCollectionCellDimensions {
     var width: CGFloat { get }
 }
 
-/// The cell in FilterSmallCollectionView to display an individual filter
 final class FilterCollectionInnerCell: UICollectionViewCell {
     
     private static var animationDuration: TimeInterval = 0.2

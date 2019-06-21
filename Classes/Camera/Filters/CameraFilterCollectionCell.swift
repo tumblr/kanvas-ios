@@ -7,23 +7,6 @@
 import Foundation
 import UIKit
 
-/// Delegate for touch events on this cell
-protocol CameraFilterCollectionCellDelegate {
-    /// Callback method when tapping a cell
-    ///
-    /// - Parameters:
-    ///   - cell: the cell that was tapped
-    ///   - recognizer: the tap gesture recognizer
-    func didTap(cell: CameraFilterCollectionCell, recognizer: UITapGestureRecognizer)
-    
-    /// Callback method when long pressing a cell
-    ///
-    /// - Parameters:
-    ///   - cell: the cell that was long-pressed
-    ///   - recognizer: the long-press gesture recognizer
-    func didLongPress(cell: CameraFilterCollectionCell, recognizer: UILongPressGestureRecognizer)
-}
-
 private struct CameraFilterCollectionCellDimensions: FilterCollectionCellDimensions {
     var circleDiameter: CGFloat = 72
     var circleMaxDiameter: CGFloat = 96.1
@@ -40,7 +23,7 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     static let width = dimensions.width
     
     private let innerCell: FilterCollectionInnerCell
-    var delegate: CameraFilterCollectionCellDelegate?
+    var delegate: FilterCollectionCellDelegate?
     
     override init(frame: CGRect) {
         innerCell = FilterCollectionInnerCell(dimensions: CameraFilterCollectionCell.dimensions)

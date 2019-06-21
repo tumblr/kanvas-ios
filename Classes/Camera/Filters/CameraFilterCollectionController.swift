@@ -32,7 +32,7 @@ private struct CameraFilterCollectionControllerConstants {
 }
 
 /// Controller for handling the filter item collection.
-final class CameraFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CameraFilterCollectionCellDelegate {
+final class CameraFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
     
     private lazy var filterCollectionView = FilterCollectionView(cellWidth: CameraFilterCollectionCell.width, cellHeight: CameraFilterCollectionCell.minimumHeight, ignoreTouches: true)
     private var filterItems: [FilterItem]
@@ -314,7 +314,8 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     
     // MARK: - FilterCollectionCellDelegate
     
-    func didTap(cell: CameraFilterCollectionCell, recognizer: UITapGestureRecognizer) {
+    func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
+        guard let cell = cell as? CameraFilterCollectionCell else { return }
         if isSelectedCell(cell) {
             delegate?.didTapSelectedFilter(recognizer: recognizer)
         }
@@ -323,7 +324,8 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         }
     }
     
-    func didLongPress(cell: CameraFilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
+    func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
+        guard let cell = cell as? CameraFilterCollectionCell else { return }
         if isSelectedCell(cell) {
             delegate?.didLongPressSelectedFilter(recognizer: recognizer)
         }

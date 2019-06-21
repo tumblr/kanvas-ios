@@ -6,7 +6,24 @@
 
 import Foundation
 
-protocol FilterCollectionCell {
+/// Delegate for touch events on this cell
+protocol FilterCollectionCellDelegate {
+    /// Callback method when tapping a cell
+    ///
+    /// - Parameters:
+    ///   - cell: the cell that was tapped
+    ///   - recognizer: the tap gesture recognizer
+    func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer)
+    
+    /// Callback method when long pressing a cell
+    ///
+    /// - Parameters:
+    ///   - cell: the cell that was long-pressed
+    ///   - recognizer: the long-press gesture recognizer
+    func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer)
+}
+
+protocol FilterCollectionCell: UICollectionViewCell {
     func setStandardSize()
     func setSize(percent: CGFloat)
     func show(_ show: Bool)

@@ -23,7 +23,7 @@ private struct EditorFilterCollectionControllerConstants {
 }
 
 /// Controller for handling the filter item collection.
-final class EditorFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditorFilterCollectionCellDelegate {
+final class EditorFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
     
     static let leftInset = EditorFilterCollectionControllerConstants.leftInset
     
@@ -261,11 +261,15 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         cell?.setStandardSize()
     }
     
-    // MARK: - FilterSmallCollectionCellDelegate
+    // MARK: - FilterCollectionCellDelegate
     
-    func didTap(cell: EditorFilterCollectionCell, recognizer: UITapGestureRecognizer) {
-        if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
+    func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
+        if let cell = cell as? EditorFilterCollectionCell, let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
             scrollToOptionAt(indexPath.item)
         }
+    }
+    
+    func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
+        
     }
 }

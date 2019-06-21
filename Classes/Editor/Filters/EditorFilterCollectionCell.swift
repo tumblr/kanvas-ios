@@ -7,16 +7,6 @@
 import Foundation
 import UIKit
 
-/// Delegate for touch events on this cell
-protocol EditorFilterCollectionCellDelegate {
-    /// Callback method when tapping a cell
-    ///
-    /// - Parameters:
-    ///   - cell: the cell that was tapped
-    ///   - recognizer: the tap gesture recognizer
-    func didTap(cell: EditorFilterCollectionCell, recognizer: UITapGestureRecognizer)
-}
-
 private struct EditorFilterCollectionCellDimensions: FilterCollectionCellDimensions {
     var circleDiameter: CGFloat = 50
     var circleMaxDiameter: CGFloat = 55
@@ -25,7 +15,7 @@ private struct EditorFilterCollectionCellDimensions: FilterCollectionCellDimensi
     var width: CGFloat { return circleMaxDiameter + 2 * padding }
 }
 
-/// The cell in FilterSmallCollectionView to display an individual filter
+/// The cell in FilterCollectionView to display an individual filter
 final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCell, FilterCollectionInnerCellDelegate {
     
     private static let dimensions = EditorFilterCollectionCellDimensions()
@@ -34,7 +24,7 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     static let cellPadding = dimensions.padding
     
     private let innerCell: FilterCollectionInnerCell
-    var delegate: EditorFilterCollectionCellDelegate?
+    var delegate: FilterCollectionCellDelegate?
     
     override init(frame: CGRect) {
         innerCell = FilterCollectionInnerCell(dimensions: EditorFilterCollectionCell.dimensions)
