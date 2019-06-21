@@ -10,7 +10,7 @@ import UIKit
 
 /// Protocol for camera editor controller methods
 
-protocol CameraEditorControllerDelegate: class {
+protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?)
     
@@ -23,10 +23,10 @@ protocol CameraEditorControllerDelegate: class {
 
 
 /// A view controller to edit the segments
-final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate {
     
-    private lazy var cameraEditorView: CameraEditorView = {
-        let editorView = CameraEditorView()
+    private lazy var editorView: EditorView = {
+        let editorView = EditorView()
         editorView.delegate = self
         return editorView
     }()
@@ -53,11 +53,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     private var currentSegmentIndex: Int = 0
     private var timer: Timer = Timer()
     
-    private var firstPlayer: AVPlayer = AVPlayer()
-    private var secondPlayer: AVPlayer = AVPlayer()
-    private var currentPlayer: AVPlayer
-    
-    weak var delegate: CameraEditorControllerDelegate?
+    weak var delegate: EditorControllerDelegate?
     
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -81,46 +77,18 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
-        self.currentPlayer = firstPlayer
         
         super.init(nibName: .none, bundle: .none)
-        setupNotifications()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func setupNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
-    }
-    
-    @objc private func appDidBecomeActive() {
-        resumePlayback()
-    }
-    
-    @objc private func appWillResignActive() {
-        timer.invalidate()
-        currentPlayer.pause()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        restartPlayback()
     }
     
     override public func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .black
-        cameraEditorView.add(into: view)
-        cameraEditorView.setFirstPlayer(player: firstPlayer)
-        cameraEditorView.setSecondPlayer(player: secondPlayer)
+        editorView.add(into: view)
         
-        load(childViewController: collectionController, into: cameraEditorView.collectionContainer)
-        load(childViewController: filterCollectionController, into: cameraEditorView.filterCollectionContainer)
+        load(childViewController: collectionController, into: editorView.collectionContainer)
+        load(childViewController: filterCollectionController, into: editorView.filterCollectionContainer)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -129,105 +97,6 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
-    }
-    
-    // MARK: - playback methods
-    
-    private func restartPlayback() {
-        currentPlayer.pause()
-        timer.invalidate()
-        currentSegmentIndex = 0
-        if let firstSegment = segments.first {
-            playSegment(segment: firstSegment)
-        }
-    }
-    
-    private func resumePlayback() {
-        guard segments.count > currentSegmentIndex else {
-            return
-        }
-        let segment = segments[currentSegmentIndex]
-        if let image = segment.image {
-            playImage(image: image)
-        }
-        else if segment.videoURL != nil {
-            currentPlayer.play()
-        }
-    }
-    
-    private func playSegment(segment: CameraSegment) {
-        if let image = segment.image {
-            playImage(image: image)
-        }
-        else if let url = segment.videoURL {
-            playVideo(url: url)
-        }
-        queueNextSegment()
-    }
-    
-    private func playImage(image: UIImage) {
-        cameraEditorView.setImage(image: image)
-        let displayTime = timeIntervalForImageSegments(segments)
-        timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
-            self?.playNextSegment()
-        })
-    }
-    
-    private func timeIntervalForImageSegments(_ segments: [CameraSegment]) -> TimeInterval {
-        for segment in segments {
-            if segment.image == nil {
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
-            }
-        }
-        return CMTimeGetSeconds(CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale))
-    }
-    
-    private func playVideo(url: URL) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-        if currentPlayer == firstPlayer {
-            currentPlayer = secondPlayer
-            cameraEditorView.showSecondPlayer()
-        }
-        else {
-            currentPlayer = firstPlayer
-            cameraEditorView.showFirstPlayer()
-        }
-        
-        if currentPlayer.currentItem == nil {
-            currentPlayer.replaceCurrentItem(with: AVPlayerItem(url: url))
-        }
-        currentPlayer.play()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(playNextSegment), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-    }
-    
-    @objc private func queueNextSegment() {
-        let nextSegmentIndex = (currentSegmentIndex + 1) % segments.count
-        guard nextSegmentIndex < segments.count else { return }
-        let nextSegment = segments[nextSegmentIndex]
-        var playerItem: AVPlayerItem? = nil
-        if let url = nextSegment.videoURL, nextSegment.image == nil {
-            playerItem = AVPlayerItem(url: url)
-        }
-        if currentPlayer == firstPlayer {
-            secondPlayer.replaceCurrentItem(with: playerItem)
-        }
-        else if currentPlayer == secondPlayer {
-            firstPlayer.replaceCurrentItem(with: playerItem)
-        }
-    }
-    
-    @objc private func playNextSegment() {
-        currentPlayer.pause()
-        currentPlayer.seek(to: CMTime.zero)
-        currentSegmentIndex = (currentSegmentIndex + 1) % segments.count
-        guard currentSegmentIndex < segments.count else { return }
-        playSegment(segment: segments[currentSegmentIndex])
-    }
-    
-    private func stopPlayback() {
-        timer.invalidate()
-        currentPlayer.pause()
     }
     
     // MARK: - Loading Indicator
@@ -246,7 +115,6 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     // MARK: - CameraEditorViewDelegate
     
     func confirmButtonPressed() {
-        stopPlayback()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
             // If the camera mode is .stopMotion and the `exportStopMotionPhotoAsVideo` is true,
@@ -278,25 +146,27 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
                 }
                 else {
                     self.hideLoading()
-                    // TODO: Localize strings
-                    let viewModel = ModalViewModel(text: "There was an issue loading your post...",
-                                                   confirmTitle: "Try again",
-                                                   confirmCallback: {
-                                                    self.showLoading()
-                                                    self.createFinalContent()
-                    },
-                                                   cancelTitle: "Cancel",
-                                                   cancelCallback: { [unowned self] in self.delegate?.didFinishExportingVideo(url: url) },
-                                                   buttonsLayout: .oneBelowTheOther)
-                    let controller = ModalController(viewModel: viewModel)
-                    self.present(controller, animated: true, completion: .none)
+                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"), preferredStyle: .alert)
+                    
+                    let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel) { [unowned self] _ in
+                        self.delegate?.didFinishExportingVideo(url: url)
+                    }
+                    
+                    let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { [unowned self] _ in
+                        self.showLoading()
+                        self.createFinalContent()
+                    }
+                    
+                    alertController.addAction(tryAgainButton)
+                    alertController.addAction(cancelButton)
+                    
+                    self.present(alertController, animated: true, completion: .none)
                 }
             }
         })
     }
     
     func closeButtonPressed() {
-        stopPlayback()
         delegate?.dismissButtonPressed()
     }
     
@@ -312,7 +182,7 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
-        switch editionOption.type {
+        switch editionOption {
         case .filter:
             collectionController.showView(false)
             showConfirmButton(false)
@@ -337,27 +207,27 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
     ///
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
-        cameraEditorView.showConfirmButton(show)
+        editorView.showConfirmButton(show)
     }
     
     /// shows or hides the button to close a menu (checkmark)
     ///
     /// - Parameter show: true to show, false to hide
     func showCloseMenuButton(_ show: Bool) {
-        cameraEditorView.showCloseMenuButton(show)
+        editorView.showCloseMenuButton(show)
     }
     
     /// shows or hides the close button (back caret)
     ///
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
-        cameraEditorView.showCloseButton(show)
+        editorView.showCloseButton(show)
     }
     
     /// shows or hides the filter selection circle
     ///
     /// - Parameter show: true to show, false to hide
     func showSelectionCircle(_ show: Bool) {
-        cameraEditorView.showSelectionCircle(show)
+        editorView.showSelectionCircle(show)
     }
 }

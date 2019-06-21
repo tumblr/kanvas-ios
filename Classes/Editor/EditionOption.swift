@@ -4,11 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-struct EditionOption {
-    var type: EditionOptionType
-}
-
-enum EditionOptionType: Int {
+enum EditionOption: Int {
     case filter
     case media
 }

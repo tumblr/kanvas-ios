@@ -18,8 +18,8 @@ final class EditionMenuCollectionViewTests: FBSnapshotTestCase, UICollectionView
         super.setUp()
         
         editionOptions = [
-            EditionOption(type: .filter),
-            EditionOption(type: .media),
+            .filter,
+            .media,
         ]
         
         self.recordMode = false

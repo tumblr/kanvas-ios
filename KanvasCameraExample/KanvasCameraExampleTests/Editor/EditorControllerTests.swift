@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class CameraEditorControllerTests: FBSnapshotTestCase {
+final class EditorControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -70,17 +70,17 @@ final class CameraEditorControllerTests: FBSnapshotTestCase {
         return []
     }
     
-    func newViewController(settings: CameraSettings? = nil, segments: [CameraSegment], delegate: CameraEditorControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil) -> CameraEditorViewController {
+    func newViewController(settings: CameraSettings? = nil, segments: [CameraSegment], delegate: EditorControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil) -> EditorViewController {
         let cameraSettings = settings ?? getCameraSettings()
         let handler = assetsHandler ?? AssetsHandlerStub()
-        let viewController = CameraEditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, cameraMode: cameraMode)
+        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, cameraMode: cameraMode)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
     }
     
-    func newDelegateStub() -> CameraEditorControllerDelegateStub {
-        let stub = CameraEditorControllerDelegateStub()
+    func newDelegateStub() -> EditorControllerDelegateStub {
+        let stub = EditorControllerDelegateStub()
         return stub
     }
     
@@ -204,7 +204,7 @@ final class CameraEditorControllerTests: FBSnapshotTestCase {
     
 }
 
-final class CameraEditorControllerDelegateStub: CameraEditorControllerDelegate {
+final class EditorControllerDelegateStub: EditorControllerDelegate {
     private(set) var closeCalled = false
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false

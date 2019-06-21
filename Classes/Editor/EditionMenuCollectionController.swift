@@ -35,11 +35,11 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         editionOptions = []
         
         if settings.features.editorFilters {
-            editionOptions.append(EditionOption(type: .filter))
+            editionOptions.append(.filter)
         }
         
         if settings.features.editorMedia {
-            editionOptions.append(EditionOption(type: .media))
+            editionOptions.append(.media)
         }
         
         super.init(nibName: .none, bundle: .none)
@@ -98,8 +98,8 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditionMenuCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? EditionMenuCollectionCell {
-            cell.bindTo(editionOptions[indexPath.item])
+        if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
+            cell.bindTo(option)
             cell.delegate = self
         }
         return cell
@@ -118,7 +118,8 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     ///
     /// - Parameter index: position of the option in the collection
     private func selectEditionOption(index: Int) {
-        delegate?.didSelectEditionOption(editionOptions[index])
+        guard let option = editionOptions.object(at: index) else { return }
+        delegate?.didSelectEditionOption(option)
     }
     
     // MARK: - EditionMenuCollectionCellDelegate
