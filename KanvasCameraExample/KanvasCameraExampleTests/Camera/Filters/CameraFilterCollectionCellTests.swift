@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class FilterSmallCollectionCellTests: FBSnapshotTestCase {
+final class CameraFilterCollectionCellTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,10 +18,10 @@ final class FilterSmallCollectionCellTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newCell() -> FilterSmallCollectionCell {
+    func newCell() -> CameraFilterCollectionCell {
         let frame = CGRect(origin: CGPoint.zero,
-                           size: CGSize(width: FilterSmallCollectionCellConstants.width - 20, height: FilterSmallCollectionCellConstants.minimumHeight))
-        return FilterSmallCollectionCell(frame: frame)
+                           size: CGSize(width: CameraFilterCollectionCell.width - 20, height: CameraFilterCollectionCell.minimumHeight))
+        return CameraFilterCollectionCell(frame: frame)
     }
     
     func testFilterCell() {

@@ -7,38 +7,17 @@
 import Foundation
 import UIKit
 
-private struct FilterCollectionViewPrivateConstants {
-    static var bufferSize: CGFloat = 10
-    static var height: CGFloat = FilterCollectionCellConstants.minimumHeight + FilterCollectionViewPrivateConstants.bufferSize
-}
-
-struct FilterCollectionViewConstants {
-    static let height = FilterCollectionViewPrivateConstants.height
-}
-
-/// Collection view for the FilterCollectionController
-class FilterCollectionView: IgnoreTouchesView {
+final class FilterCollectionView: IgnoreTouchesView {
     
-    internal var height: CGFloat {
-        return FilterCollectionViewConstants.height
-    }
+    let collectionView: FilterCollection
     
-    internal var cellWidth: CGFloat {
-        return FilterCollectionCellConstants.width
-    }
-    
-    internal var cellMinimumHeight: CGFloat {
-        return FilterCollectionCellConstants.minimumHeight
-    }
-    
-    var collectionView: UICollectionView!
-
-    // MARK: - Initializers
-    
-    init() {
+    init(cellWidth: CGFloat, cellHeight: CGFloat, ignoreTouches: Bool = false) {
+        let layout = FilterCollectionLayout(cellWidth: cellWidth, minimumHeight: cellHeight)
+        collectionView = FilterCollection(frame: .zero, collectionViewLayout: layout, ignoreTouches: ignoreTouches)
+        collectionView.accessibilityIdentifier = "Filter Collection"
+        
         super.init(frame: .zero)
         
-        collectionView = createCollectionView()
         clipsToBounds = false
         setUpViews()
     }
@@ -53,50 +32,71 @@ class FilterCollectionView: IgnoreTouchesView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Layout
-    
     private func setUpViews() {
         collectionView.add(into: self)
         collectionView.clipsToBounds = false
     }
     
-    // MARK: - Collection
+}
+
+final class FilterCollection: UICollectionView {
     
-    private func createCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout()
-        configureCollectionLayout(layout: layout)
+    var ignoreTouches = false
+    
+    init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout, ignoreTouches: Bool) {
+        super.init(frame: frame, collectionViewLayout: layout)
+        self.ignoreTouches = ignoreTouches
+        configure()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configure() {
+        backgroundColor = .clear
+        isScrollEnabled = true
+        allowsSelection = true
+        bounces = true
+        alwaysBounceHorizontal = true
+        alwaysBounceVertical = false
+        showsHorizontalScrollIndicator = false
+        showsVerticalScrollIndicator = false
+        autoresizesSubviews = true
+        contentInset = .zero
+        decelerationRate = UIScrollView.DecelerationRate.fast
+        dragInteractionEnabled = true
+        reorderingCadence = .immediate
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
         
-        let collectionView = create(layout: layout)
-        collectionView.accessibilityIdentifier = "Filter Collection"
-        collectionView.backgroundColor = .clear
-        configureCollection(collectionView: collectionView)
-        return collectionView
+        if ignoreTouches {
+            return hitView == self ? nil : hitView
+        }
+        else {
+            return hitView
+        }
+    }
+}
+
+private final class FilterCollectionLayout: UICollectionViewFlowLayout {
+    
+    init(cellWidth: CGFloat, minimumHeight: CGFloat) {
+        super.init()
+        configure(cellWidth: cellWidth, minimumHeight: minimumHeight)
     }
     
-    internal func create(layout: UICollectionViewFlowLayout) -> UICollectionView {
-        return IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
-    private func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
-        layout.scrollDirection = .horizontal
-        layout.itemSize = UICollectionViewFlowLayout.automaticSize
-        layout.estimatedItemSize = CGSize(width: cellWidth, height: cellMinimumHeight)
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
-    }
-    
-    private func configureCollection(collectionView: UICollectionView) {
-        collectionView.isScrollEnabled = true
-        collectionView.allowsSelection = true
-        collectionView.bounces = true
-        collectionView.alwaysBounceHorizontal = true
-        collectionView.alwaysBounceVertical = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.autoresizesSubviews = true
-        collectionView.contentInset = .zero
-        collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
-        collectionView.dragInteractionEnabled = true
-        collectionView.reorderingCadence = .immediate
+    private func configure(cellWidth: CGFloat, minimumHeight: CGFloat) {
+        scrollDirection = .horizontal
+        itemSize = UICollectionViewFlowLayout.automaticSize
+        estimatedItemSize = CGSize(width: cellWidth, height: minimumHeight)
+        minimumInteritemSpacing = 0
+        minimumLineSpacing = 0
     }
 }

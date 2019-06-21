@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDelegate, UICollectionViewDataSource {
+final class EditorFilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var filters: [FilterItem] = []
     
@@ -39,14 +39,14 @@ final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDeleg
     }
     
     func newCollectionView() -> FilterCollectionView {
-        let collectionView = FilterCollectionView()
-        collectionView.frame = CGRect(x: 0, y: 0, width: 320, height: FilterCollectionViewConstants.height)
+        let collectionView = FilterCollectionView(cellWidth: EditorFilterCollectionCell.width, cellHeight: EditorFilterCollectionCell.minimumHeight)
+        collectionView.frame = CGRect(x: 0, y: 0, width: 320, height: EditorFilterCollectionCell.minimumHeight + 10)
         return collectionView
     }
     
     func testCompareCollectionView() {
         let view = newCollectionView()
-        view.collectionView.register(cell: FilterCollectionCell.self)
+        view.collectionView.register(cell: EditorFilterCollectionCell.self)
         view.collectionView.delegate = self
         view.collectionView.dataSource = self
         view.collectionView.reloadData()
@@ -58,8 +58,8 @@ final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilterCollectionCell.identifier, for: indexPath)
-        if let filterCell = cell as? FilterCollectionCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditorFilterCollectionCell.identifier, for: indexPath)
+        if let filterCell = cell as? EditorFilterCollectionCell {
             filterCell.bindTo(filters[indexPath.item])
         }
         return cell

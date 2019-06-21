@@ -23,7 +23,7 @@ protocol CameraEditorControllerDelegate: class {
 
 
 /// A view controller to edit the segments
-final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate, FilterCollectionControllerDelegate {
+final class CameraEditorViewController: UIViewController, CameraEditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate {
     
     private lazy var cameraEditorView: CameraEditorView = {
         let editorView = CameraEditorView()
@@ -37,8 +37,8 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         return controller
     }()
     
-    private lazy var filterCollectionController: FilterSmallCollectionController = {
-        let controller = FilterSmallCollectionController(settings: self.settings)
+    private lazy var filterCollectionController: EditorFilterCollectionController = {
+        let controller = EditorFilterCollectionController(settings: self.settings)
         controller.delegate = self
         return controller
     }()
@@ -325,15 +325,11 @@ final class CameraEditorViewController: UIViewController, CameraEditorViewDelega
         }
     }
     
-    // MARK: - FilterCollectionControllerDelegate
+    // MARK: - FilterSmallCollectionControllerDelegate
     
     func didSelectFilter(_ filterItem: FilterItem) {
         
     }
-    
-    func didTapSelectedFilter(recognizer: UITapGestureRecognizer) {}
-    
-    func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer) {}
     
     // MARK: - Public interface
     

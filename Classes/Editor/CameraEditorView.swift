@@ -30,6 +30,7 @@ private struct CameraEditorViewConstants {
     static let circleCornerRadius: CGFloat = 27.5
     static let circleSize: CGFloat = 55
     static let circleBorderWidth: CGFloat = 3
+    static let collectionViewHeight = CameraFilterCollectionCell.minimumHeight + 10
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -169,7 +170,7 @@ final class CameraEditorView: UIView {
             filterCollectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             filterCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             filterCollectionContainer.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
-            filterCollectionContainer.heightAnchor.constraint(equalToConstant: FilterSmallCollectionViewConstants.height)
+            filterCollectionContainer.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.collectionViewHeight)
         ])
     }
     
@@ -184,7 +185,7 @@ final class CameraEditorView: UIView {
         addSubview(filterSelectionCircle)
         filterSelectionCircle.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            filterSelectionCircle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: FilterSmallCollectionController.leftInset + FilterSmallCollectionCellConstants.cellPadding),
+            filterSelectionCircle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorFilterCollectionController.leftInset + EditorFilterCollectionCell.cellPadding),
             filterSelectionCircle.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
             filterSelectionCircle.heightAnchor.constraint(equalToConstant: CameraEditorViewConstants.circleSize),
             filterSelectionCircle.widthAnchor.constraint(equalToConstant: CameraEditorViewConstants.circleSize)
