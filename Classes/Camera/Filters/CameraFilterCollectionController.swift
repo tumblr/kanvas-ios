@@ -306,7 +306,7 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     ///
     /// - Parameter cell: the filter cell
     /// - Returns: true if the cell is inside the shutter button, false if not
-    private func isSelectedCell(_ cell: CameraFilterCollectionCell) -> Bool {
+    private func isSelectedCell(_ cell: FilterCollectionCell) -> Bool {
         let indexPath = filterCollectionView.collectionView.indexPath(for: cell)
         let centerIndexPath = indexPathAtCenter()
         return indexPath == centerIndexPath
@@ -315,7 +315,6 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     // MARK: - FilterCollectionCellDelegate
     
     func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
-        guard let cell = cell as? CameraFilterCollectionCell else { return }
         if isSelectedCell(cell) {
             delegate?.didTapSelectedFilter(recognizer: recognizer)
         }
@@ -325,7 +324,6 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     }
     
     func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
-        guard let cell = cell as? CameraFilterCollectionCell else { return }
         if isSelectedCell(cell) {
             delegate?.didLongPressSelectedFilter(recognizer: recognizer)
         }

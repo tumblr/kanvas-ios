@@ -241,12 +241,6 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         delegate?.didSelectFilter(filterItems[index])
     }
     
-    private func calculateDistanceFromCenter(cell: EditorFilterCollectionCell) -> CGFloat {
-        let cellCenter = cell.frame.center.x
-        let collectionViewCenter = filterCollectionView.collectionView.center.x + filterCollectionView.collectionView.contentOffset.x
-        return abs(collectionViewCenter - cellCenter)
-    }
-    
     private func calculateDistanceFromFirstCell(cell: EditorFilterCollectionCell) -> CGFloat {
         let cellCenter = cell.frame.center.x
         let firstCellCenter = EditorFilterCollectionControllerConstants.leftInset + (EditorFilterCollectionCell.width / 2) + filterCollectionView.collectionView.contentOffset.x
