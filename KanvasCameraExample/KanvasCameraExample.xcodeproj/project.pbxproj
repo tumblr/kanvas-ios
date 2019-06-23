@@ -51,6 +51,8 @@
 		76BC5BAE220CCFF2007A9289 /* Array+MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */; };
 		76BC5BAF220CCFF2007A9289 /* ClosedRange+ClampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BC5BAD220CCFF2007A9289 /* ClosedRange+ClampTests.swift */; };
 		76E4D0852277976500CF3B35 /* MediaMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76E4D0842277976500CF3B35 /* MediaMetadataTests.swift */; };
+		76ED1DCC22BF2DF400E6AF79 /* GLPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76ED1DCB22BF2DF400E6AF79 /* GLPlayerTests.swift */; };
+		76ED1DCE22BF2E6D00E6AF79 /* GLPlayerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76ED1DCD22BF2E6D00E6AF79 /* GLPlayerViewTests.swift */; };
 		AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E5212CC83B0044ED96 /* KanvasCameraStringsTests.swift */; };
 		AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E6212CC83B0044ED96 /* KanvasCameraImagesTests.swift */; };
 		AB7263EB212CC83B0044ED96 /* KanvasCameraColorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E7212CC83B0044ED96 /* KanvasCameraColorsTests.swift */; };
@@ -143,6 +145,8 @@
 		76BC5BAC220CCFF1007A9289 /* Array+MoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+MoveTests.swift"; sourceTree = "<group>"; };
 		76BC5BAD220CCFF2007A9289 /* ClosedRange+ClampTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ClosedRange+ClampTests.swift"; sourceTree = "<group>"; };
 		76E4D0842277976500CF3B35 /* MediaMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaMetadataTests.swift; sourceTree = "<group>"; };
+		76ED1DCB22BF2DF400E6AF79 /* GLPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLPlayerTests.swift; sourceTree = "<group>"; };
+		76ED1DCD22BF2E6D00E6AF79 /* GLPlayerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLPlayerViewTests.swift; sourceTree = "<group>"; };
 		7FD18CF4703E381AA074395F /* Pods-KanvasCameraExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		A4E5C17CE13C14A294FC20A5 /* libPods-KanvasCameraExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasCameraExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB7263E5212CC83B0044ED96 /* KanvasCameraStringsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KanvasCameraStringsTests.swift; sourceTree = "<group>"; };
@@ -274,6 +278,8 @@
 				764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */,
 				764AC4812223E3CF005C82EC /* FilterFactoryTests.swift */,
 				764AC475221D86A2005C82EC /* GLUTests.swift */,
+				76ED1DCB22BF2DF400E6AF79 /* GLPlayerTests.swift */,
+				76ED1DCD22BF2E6D00E6AF79 /* GLPlayerViewTests.swift */,
 			);
 			path = OpenGL;
 			sourceTree = "<group>";
@@ -640,6 +646,7 @@
 				651DEBA92209FC4300476F22 /* RGBATests.swift in Sources */,
 				ABE498FB21370DFD00379F7F /* MediaClipTests.swift in Sources */,
 				76BC5BAF220CCFF2007A9289 /* ClosedRange+ClampTests.swift in Sources */,
+				76ED1DCE22BF2E6D00E6AF79 /* GLPlayerViewTests.swift in Sources */,
 				764AC46C221D84CD005C82EC /* GLPixelBufferViewTests.swift in Sources */,
 				0EAE0CB82139EC81004CD7FF /* KanvasCameraAnalyticsStub.swift in Sources */,
 				65FA24C122B95C59007E47E9 /* Array+ObjectTests.swift in Sources */,
@@ -696,6 +703,7 @@
 				ABE49908213712E100379F7F /* OptionViewTests.swift in Sources */,
 				ABE4990021370FAB00379F7F /* MediaClipsEditorViewControllerTests.swift in Sources */,
 				76E4D0852277976500CF3B35 /* MediaMetadataTests.swift in Sources */,
+				76ED1DCC22BF2DF400E6AF79 /* GLPlayerTests.swift in Sources */,
 				764AC476221D86A2005C82EC /* GLUTests.swift in Sources */,
 				0E29275F21879C18009E1FCF /* CameraZoomHandlerTests.swift in Sources */,
 				AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */,
