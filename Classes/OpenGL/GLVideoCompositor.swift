@@ -75,7 +75,8 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
         renderingQueue.async {
             if self.shouldCancelAllRequests {
                 asyncVideoCompositionRequest.finishCancelledRequest()
-            } else {
+            }
+            else {
                 guard let trackID = asyncVideoCompositionRequest.sourceTrackIDs.first else {
                     asyncVideoCompositionRequest.finish(with: GLVideoCompositorError.missingTrack)
                     return
