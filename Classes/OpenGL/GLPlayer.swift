@@ -48,7 +48,7 @@ class GLPlayer {
     var queuedOutput: AVAssetReaderTrackOutput?
     var queuedReader: AVAssetReader?
 
-    var framerate: Int = 30
+    var frameRate: Int = 30
     var timeRange: CMTimeRange?
 
     weak var delegate: GLPlayerDelegate?
@@ -73,6 +73,7 @@ class GLPlayer {
         }
 
         stop()
+        renderer.reset()
 
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
@@ -89,6 +90,9 @@ class GLPlayer {
             return
         }
 
+        stop()
+        renderer.reset()
+
         imageSampleBuffer = sampleBuffer
         url = nil
 
@@ -96,6 +100,9 @@ class GLPlayer {
     }
 
     func play(url: URL) {
+        stop()
+        renderer.reset()
+
         if url == queuedURL {
             self.reader = queuedReader
             self.output = queuedOutput
@@ -114,7 +121,7 @@ class GLPlayer {
         }
 
         timeRange = output.track.timeRange
-        framerate = Int(output.track.nominalFrameRate)
+        frameRate = Int(output.track.nominalFrameRate)
         reader.startReading()
 
         self.url = url
@@ -134,12 +141,30 @@ class GLPlayer {
     }
 
     private func play() {
+        if let imageSampleBuffer = imageSampleBuffer {
+            // again, this twice crap
+            renderer.processSampleBuffer(imageSampleBuffer)
+            renderer.processSampleBuffer(imageSampleBuffer)
+        }
+        else if let sampleBuffer = output?.copyNextSampleBuffer() {
+            // again, this twice crap
+            renderer.processSampleBuffer(sampleBuffer)
+            renderer.processSampleBuffer(sampleBuffer)
+        }
         if displayLink == nil {
             let link = CADisplayLink(target: self, selector: #selector(step))
-            link.add(to: .main, forMode: .common)
             self.displayLink = link
         }
-        self.displayLink?.preferredFramesPerSecond = framerate
+        unpause()
+        self.displayLink?.preferredFramesPerSecond = frameRate
+    }
+
+    func pause() {
+        displayLink?.remove(from: .main, forMode: .common)
+    }
+
+    func unpause() {
+        self.displayLink?.add(to: .main, forMode: .common)
     }
 
     func stop() {
