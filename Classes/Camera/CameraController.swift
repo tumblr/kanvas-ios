@@ -61,9 +61,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         picker.dismiss(animated: true, completion: nil)
         let imageMaybe = info[.originalImage] as? UIImage
         let mediaURLMaybe = info[.mediaURL] as? URL
-        let imageURLMaybe = info[.imageURL] as? URL
-        print("imageURL \(imageURLMaybe?.absoluteString ?? "?")")
-        print("mediaURL \(mediaURLMaybe?.absoluteString ?? "?")")
 
         if let image = imageMaybe {
             pick(image: image)
@@ -74,37 +71,26 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("Cancelled!")
         picker.dismiss(animated: true, completion: nil)
     }
 
     func pick(image: UIImage) {
-        guard let recorder = self.cameraInputController.recorder as? CameraRecorder else {
-            return
-        }
-        recorder.process(image: image) { processedImageMaybe in
-            guard let processedImage = processedImageMaybe else {
-                print("No image, wat!?")
-                return
+        performUIUpdate {
+            if self.currentMode == .photo {
+                self.showPreviewWithSegments([CameraSegment.image(processedImage, nil)])
             }
-            performUIUpdate {
-                if self.currentMode == .photo {
-                    self.showPreviewWithSegments([CameraSegment.image(processedImage, nil)])
-                }
-                else {
-                    self.clipsController.addNewClip(MediaClip(representativeFrame: processedImage,
-                                                              overlayText: nil,
-                                                              lastFrame: processedImage))
-                }
+            else {
+                self.clipsController.addNewClip(MediaClip(representativeFrame: processedImage,
+                                                          overlayText: nil,
+                                                          lastFrame: processedImage))
             }
         }
     }
 
     func pick(video url: URL) {
-        guard let recorder = self.cameraInputController.recorder as? CameraRecorder else {
-            return
+        if let recorder = self.cameraInputController.recorder as? CameraRecorder {
+            recorder.segmentsHandler.addNewVideoSegment(url: url)
         }
-        recorder.segmentsHandler.addNewVideoSegment(url: url)
         performUIUpdate {
             if let image = AVURLAsset(url: url).thumbnail() {
                 self.clipsController.addNewClip(MediaClip(representativeFrame: image,
