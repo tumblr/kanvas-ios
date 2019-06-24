@@ -46,7 +46,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     func mediaPickerButtonPressed() {
         let imagePickerController = UIImagePickerController()
@@ -57,7 +57,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         present(imagePickerController, animated: true, completion: nil)
     }
 
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true, completion: nil)
         let imageMaybe = info[.originalImage] as? UIImage
         let mediaURLMaybe = info[.mediaURL] as? URL
@@ -79,7 +79,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func pick(image: UIImage) {
-        let recorder = self.cameraInputController.recorder as! CameraRecorder
+        guard let recorder = self.cameraInputController.recorder as? CameraRecorder else {
+            return
+        }
         recorder.process(image: image) { processedImageMaybe in
             guard let processedImage = processedImageMaybe else {
                 print("No image, wat!?")
@@ -99,7 +101,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func pick(video url: URL) {
-        let recorder = self.cameraInputController.recorder as! CameraRecorder
+        guard let recorder = self.cameraInputController.recorder as? CameraRecorder else {
+            return
+        }
         recorder.segmentsHandler.addNewVideoSegment(url: url)
         performUIUpdate {
             if let image = AVURLAsset(url: url).thumbnail() {
@@ -266,9 +270,29 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
         cameraInputController.stopSession()
+        let controller = createNextStepViewController(segments)
+        self.present(controller, animated: true)
+    }
+    
+    private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
+        if settings.features.editor {
+            return createEditorViewController(segments)
+        }
+        else {
+            return createPreviewViewController(segments)
+        }
+    }
+    
+    private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
+        controller.delegate = self
+        return controller
+    }
+    
+    private func createPreviewViewController(_ segments: [CameraSegment]) -> CameraPreviewViewController {
         let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
         controller.delegate = self
-        self.present(controller, animated: true)
+        return controller
     }
     
     /// Shows the tooltip below the mode selector
@@ -630,7 +654,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logNextTapped()
     }
 
-    // MARK: - CameraPreviewControllerDelegate
+    // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
     
     func didFinishExportingVideo(url: URL?) {
         if let videoURL = url {
