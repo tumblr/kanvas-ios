@@ -18,16 +18,18 @@ class MediaPickerButtonView: UIView {
 
     weak var delegate: MediaPickerButtonViewDelegate?
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(settings: CameraSettings) {
+        super.init(frame: .zero)
 
-        let buttonView = UIButton(type: .roundedRect)
-        buttonView.accessibilityLabel = "Media Picker Button"
-        buttonView.backgroundColor = .white
-        buttonView.applyShadows()
-        buttonView.addTarget(self, action: #selector(buttonTouchUpInside), for: .touchUpInside)
-        buttonView.add(into: self)
-        self.buttonView = buttonView
+        if settings.features.mediaPicking {
+            let buttonView = UIButton(type: .roundedRect)
+            buttonView.accessibilityLabel = "Media Picker Button"
+            buttonView.backgroundColor = .white
+            buttonView.applyShadows()
+            buttonView.addTarget(self, action: #selector(buttonTouchUpInside), for: .touchUpInside)
+            buttonView.add(into: self)
+            self.buttonView = buttonView
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

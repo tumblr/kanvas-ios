@@ -21,7 +21,7 @@ class MediaPickerButtonViewTests: XCTestCase {
     }
 
     func testStuff() {
-        let _ = MediaPickerButtonView(frame: .zero)
+        let _ = MediaPickerButtonView(settings: CameraSettings())
     }
 
 }

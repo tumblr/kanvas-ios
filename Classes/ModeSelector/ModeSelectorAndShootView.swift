@@ -58,7 +58,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
         shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonBaseColor)
-        mediaPickerButton = MediaPickerButtonView()
+        mediaPickerButton = MediaPickerButtonView(settings: settings)
         self.settings = settings
 
         super.init(frame: .zero)

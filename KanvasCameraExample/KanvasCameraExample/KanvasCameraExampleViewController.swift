@@ -99,6 +99,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editor = false
         settings.features.editorFilters = true
         settings.features.editorMedia = true
+        settings.features.mediaPicking = true
         return settings
     }
 
