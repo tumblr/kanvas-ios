@@ -689,11 +689,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func pick(image: UIImage) {
-        performUIUpdate {
-            if self.currentMode == .photo {
+        if self.currentMode == .photo {
+            performUIUpdate {
                 self.showPreviewWithSegments([CameraSegment.image(image, nil)])
             }
-            else {
+        }
+        else {
+            if let recorder = self.cameraInputController.recorder as? CameraRecorder {
+                recorder.segmentsHandler.addNewImageSegment(image: image, size: image.size) { _,_ in }
+            }
+            performUIUpdate {
                 self.clipsController.addNewClip(MediaClip(representativeFrame: image,
                                                           overlayText: nil,
                                                           lastFrame: image))
