@@ -166,6 +166,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.showTrashOpened(show)
     }
 
+    func toggleMediaPickerButton(_ visible: Bool) {
+        mediaPickerButton.showButton(visible)
+    }
+
     // MARK: - UI Layout
 
     private func createTooltip() -> EasyTipView {
@@ -191,6 +195,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
     
     private func setUpButtons() {
+        addSubview(modeSelectorButton)
+        addSubview(mediaPickerButton)
+        addSubview(shootButton)
+
         setUpModeSelector()
         setUpShootButton()
         setUpMediaPickerButton()
@@ -198,8 +206,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     private func setUpModeSelector() {
         modeSelectorButton.accessibilityIdentifier = "Mode Options Selector Button"
-        
-        addSubview(modeSelectorButton)
+
         modeSelectorButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             modeSelectorButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor,
@@ -211,7 +218,6 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private func setUpShootButton() {
         shootButton.accessibilityIdentifier = "Shoot Button"
 
-        addSubview(shootButton)
         shootButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.shootButtonBottomMargin),
@@ -222,13 +228,12 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
 
     private func setUpMediaPickerButton() {
-        addSubview(mediaPickerButton)
         mediaPickerButton.translatesAutoresizingMaskIntoConstraints = false
         let guide = UILayoutGuide()
         addLayoutGuide(guide)
         NSLayoutConstraint.activate([
-            guide.topAnchor.constraint(equalTo: shootButton.bottomAnchor),
-            guide.bottomAnchor.constraint(equalTo: shootButton.topAnchor),
+            guide.topAnchor.constraint(equalTo: shootButton.topAnchor),
+            guide.bottomAnchor.constraint(equalTo: shootButton.bottomAnchor),
             guide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: shootButton.leadingAnchor),
         ])

@@ -34,6 +34,10 @@ class MediaPickerButtonView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func showButton(_ visible: Bool) {
+        buttonView?.alpha = visible ? 1 : 0
+    }
+
     @objc func buttonTouchUpInside() {
         delegate?.mediaPickerButtonDidPress()
     }

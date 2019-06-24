@@ -183,6 +183,10 @@ final class ModeSelectorAndShootController: UIViewController {
     func showTrashOpened(_ show: Bool) {
         modeView.showTrashOpened(show)
     }
+
+    func toggleMediaPickerButton(_ visible: Bool) {
+        modeView.toggleMediaPickerButton(visible)
+    }
 }
 
 extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {

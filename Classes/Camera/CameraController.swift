@@ -665,6 +665,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             analyticsProvider?.logOpenFiltersSelector()
         }
         modeAndShootController.enableShootButtonUserInteraction(!visible)
+        modeAndShootController.toggleMediaPickerButton(!visible)
         modeAndShootController.dismissTooltip()
     }
 
