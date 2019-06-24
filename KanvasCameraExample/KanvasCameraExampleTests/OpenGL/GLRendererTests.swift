@@ -38,7 +38,8 @@ class GLRendererTests: XCTestCase {
 
     func testInit() {
         let delegate = GLRendererDelegateStub()
-        let _ = GLRenderer(delegate: delegate)
+        let renderer = GLRenderer()
+        renderer.delegate = delegate
     }
 
 }

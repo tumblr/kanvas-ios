@@ -39,6 +39,8 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     
     /// Function called when the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
+
+    func didTapMediaPickerButton()
 }
 
 /// Controller that handles interaction between the mode selector and the capture button
@@ -241,5 +243,9 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
         if let mode = currentMode {
             delegate?.didPanForZoom(mode, currentPoint, gesture)
         }
+    }
+
+    func mediaPickerButtonDidPress() {
+        delegate?.didTapMediaPickerButton()
     }
 }

@@ -10,9 +10,6 @@ import Foundation
 protocol CameraViewDelegate: class {
     /// A function that is called when the close button is pressed
     func closeButtonPressed()
-
-    /// A function that is called when the media picker button is pressed
-    func mediaPickerButtonPressed()
 }
 
 struct CameraConstants {
@@ -191,7 +188,6 @@ final class CameraView: UIView {
     
     private func setUpViews() {
         setUpCloseButton()
-        setUpMediaPickerButton()
     }
 
     private func setUpCloseButton() {
@@ -211,30 +207,10 @@ final class CameraView: UIView {
         ])
     }
 
-    private func setUpMediaPickerButton() {
-        addSubview(mediaPickerButton)
-        mediaPickerButton.accessibilityLabel = "Media Picker Button"
-        mediaPickerButton.applyShadows()
-        mediaPickerButton.backgroundColor = .white
-        mediaPickerButton.addTarget(self, action: #selector(mediaPickerButtonPressed), for: .touchUpInside)
-        mediaPickerButton.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            mediaPickerButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
-            mediaPickerButton.topAnchor.constraint(equalTo: closeButton.bottomAnchor, constant: CameraConstants.optionVerticalMargin),
-            mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
-            mediaPickerButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
-        ])
-    }
-
     // MARK: - UIButton
 
     @objc private func closeButtonPressed() {
         delegate?.closeButtonPressed()
-    }
-
-    @objc private func mediaPickerButtonPressed() {
-        delegate?.mediaPickerButtonPressed()
     }
 
     // MARK: - adding subviews
