@@ -63,8 +63,6 @@ final class CameraView: UIView {
 
     private let closeButton: UIButton
 
-    private let mediaPickerButton: UIButton
-
     weak var delegate: CameraViewDelegate?
 
     private let numberOfOptionRows: CGFloat
@@ -78,7 +76,6 @@ final class CameraView: UIView {
 
         // Main views
         closeButton = UIButton()
-        mediaPickerButton = UIButton()
 
         super.init(frame: .zero)
 
@@ -101,7 +98,7 @@ final class CameraView: UIView {
     ///
     /// - Parameter isRecording: if the UI should reflect that the user is currently recording
     func updateUI(forRecording isRecording: Bool) {
-        let views = [clipsContainer, closeButton, mediaPickerButton, topOptionsContainer]
+        let views = [clipsContainer, closeButton, topOptionsContainer]
         if isRecording {
             showViews(shownViews: [], hiddenViews: views, animated: true)
         }
@@ -114,7 +111,7 @@ final class CameraView: UIView {
     ///
     /// - Parameter isDragging: if the UI should reflect that the user is currently dragging a clip
     func updateUI(forDraggingClip isDragging: Bool) {
-        let views = [closeButton, mediaPickerButton, topOptionsContainer, filterSettingsViewContainer]
+        let views = [closeButton, topOptionsContainer, filterSettingsViewContainer]
         if isDragging {
             showViews(shownViews: [], hiddenViews: views, animated: true)
         }
@@ -283,7 +280,6 @@ final class CameraView: UIView {
         let orderedViews = [cameraInputViewContainer,
                             imagePreviewViewContainer,
                             closeButton,
-                            mediaPickerButton,
                             topOptionsContainer,
                             filterSettingsViewContainer,
                             modeAndShootContainer,
