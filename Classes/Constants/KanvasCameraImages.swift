@@ -27,6 +27,7 @@ struct KanvasCameraImages {
     static let cameraPositionImage = UIImage.imageFromCameraBundle(named: "cameraPosition")
     static let imagePreviewOnImage = UIImage.imageFromCameraBundle(named: "imagePreviewOn")
     static let imagePreviewOffImage = UIImage.imageFromCameraBundle(named: "imagePreviewOff")
+    
     // MARK: - General
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
@@ -35,6 +36,7 @@ struct KanvasCameraImages {
     static let trashOpened = UIImage.imageFromCameraBundle(named: "trashOpened")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
     static let nextImage = UIImage.imageFromCameraBundle(named: "next")
+    
     // MARK: - Filters
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
     static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
@@ -53,5 +55,11 @@ struct KanvasCameraImages {
         .grayscale: UIImage.imageFromCameraBundle(named: "BW"),
         .manga: nil,
         .toon: nil,
+    ]
+    
+    // MARK: - Editor
+    static let editionOptionTypes: [EditionOption: UIImage?] = [
+        .filter: UIImage.imageFromCameraBundle(named: "editorFilters"),
+        .media: UIImage.imageFromCameraBundle(named: "editorMedia"),
     ]
 }

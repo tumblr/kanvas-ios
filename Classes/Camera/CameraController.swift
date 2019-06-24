@@ -45,7 +45,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
     
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -205,9 +205,29 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
         cameraInputController.stopSession()
+        let controller = createNextStepViewController(segments)
+        self.present(controller, animated: true)
+    }
+    
+    private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
+        if settings.features.editor {
+            return createEditorViewController(segments)
+        }
+        else {
+            return createPreviewViewController(segments)
+        }
+    }
+    
+    private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
+        controller.delegate = self
+        return controller
+    }
+    
+    private func createPreviewViewController(_ segments: [CameraSegment]) -> CameraPreviewViewController {
         let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
         controller.delegate = self
-        self.present(controller, animated: true)
+        return controller
     }
     
     /// Shows the tooltip below the mode selector
@@ -227,7 +247,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - Media Content Creation
-    private func saveImageToFile(_ image: UIImage?) -> URL? {
+    class func saveImageToFile(_ image: UIImage?, info: MediaInfo) -> URL? {
         do {
             guard let image = image, let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return nil
@@ -239,9 +259,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             if FileManager.default.fileExists(atPath: fileURL.path) {
                 try FileManager.default.removeItem(at: fileURL)
             }
-            
             if let jpgImageData = image.jpegData(compressionQuality: 1.0) {
                 try jpgImageData.write(to: fileURL, options: .atomic)
+                MediaMetadata.write(mediaInfo: info, toImage: fileURL as NSURL)
             }
             return fileURL
         } catch {
@@ -361,6 +381,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func updateRecordState(event: RecordingEvent) {
         isRecording = event == .started
         cameraView.updateUI(forRecording: isRecording)
+        filterSettingsController.updateUI(forRecording: isRecording)
         if isRecording {
             modeAndShootController.hideModeButton()
         }
@@ -580,7 +601,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logNextTapped()
     }
 
-    // MARK: - CameraPreviewControllerDelegate
+    // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
     
     func didFinishExportingVideo(url: URL?) {
         if let videoURL = url {
@@ -595,12 +616,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didFinishExportingImage(image: UIImage?) {
         analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: 1, length: 0)
-        performUIUpdate { [weak self] in
-            if let url = self?.saveImageToFile(image) {
-                let media = KanvasCameraMedia.image(url)
-                self?.delegate?.didCreateMedia(media: media, error: nil)
+        if let url = CameraController.saveImageToFile(image, info: .kanvas) {
+            performUIUpdate { [weak self] in
+                self?.delegate?.didCreateMedia(media: .image(url), error: nil)
             }
-            else {
+        }
+        else {
+            performUIUpdate { [weak self] in
                 self?.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure)
             }
         }

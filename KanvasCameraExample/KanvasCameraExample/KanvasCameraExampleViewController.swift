@@ -96,6 +96,9 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.openGLPreview = true
         settings.features.openGLCapture = true
         settings.features.cameraFilters = true
+        settings.features.editor = true
+        settings.features.editorFilters = true
+        settings.features.editorMedia = true
         return settings
     }
 
@@ -128,16 +131,44 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     }
 
     private func save(media: KanvasCameraMedia) {
+        PHPhotoLibrary.requestAuthorization { authorizationStatus in
+            switch authorizationStatus {
+            case .notDetermined:
+                print("Photo Library Authorization: Not Determined... not saving!!")
+                return
+            case .restricted:
+                print("Photo Library Authorization: Restricted... not saving!!")
+                return
+            case .denied:
+                print("Photo Library Authorization: Denied... not saving!!")
+                return
+            case .authorized:
+                print("Photo Library Authorization: Authorized")
+            }
+        }
         switch media {
-        case .image(let url):
-            if let image = UIImage(contentsOfFile: url.path) {
-                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        case let .image(url):
+            moveToLibrary(url: url, resourceType: .photo)
+        case let .video(url):
+            moveToLibrary(url: url, resourceType: .video)
+        }
+    }
+
+    private func moveToLibrary(url: URL, resourceType: PHAssetResourceType) {
+        PHPhotoLibrary.shared().performChanges({
+            let req = PHAssetCreationRequest.forAsset()
+            let options = PHAssetResourceCreationOptions()
+            options.shouldMoveFile = true
+            req.addResource(with: resourceType, fileURL: url, options: options)
+        }) { (success, error) in
+            guard success else {
+                guard let err = error else {
+                    assertionFailure("Neigher a success or failure!")
+                    return
+                }
+                print("\(err)")
+                return
             }
-            else {
-                assertionFailure("Failed to load captured photo")
-            }
-        case .video(let url):
-            UISaveVideoAtPathToSavedPhotosAlbum(url.path, nil, nil, nil)
         }
     }
 

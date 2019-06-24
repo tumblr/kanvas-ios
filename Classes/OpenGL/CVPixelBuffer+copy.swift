@@ -15,11 +15,11 @@ extension CVPixelBuffer {
         let format = CVPixelBufferGetPixelFormatType(self)
         
         var pixelBuffer: CVPixelBuffer?
-        let attributes: NSDictionary = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
-                                        kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue,
+        let attributes: NSDictionary = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue as Any,
                                         kCVPixelBufferIOSurfacePropertiesKey: NSDictionary(),
-                                        kCVPixelBufferOpenGLESCompatibilityKey: kCFBooleanTrue,
-                                        kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue]
+                                        kCVPixelBufferOpenGLESCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue as Any]
 
         CVPixelBufferCreate(nil, width, height, format, attributes, &pixelBuffer)
         

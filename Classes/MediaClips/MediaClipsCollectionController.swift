@@ -247,6 +247,8 @@ extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
             delegate?.mediaClipStartedMoving()
         case .none:
             delegate?.mediaClipFinishedMoving()
+        @unknown default:
+            break
         }
     }
 }

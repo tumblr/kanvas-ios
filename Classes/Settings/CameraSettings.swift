@@ -44,6 +44,22 @@ public struct CameraFeatures {
     /// The Experimental Camera Filters feature
     /// This adds experimental filters to the end of the filters picker.
     public var experimentalCameraFilters: Bool = false
+    
+    /// The Editor feature
+    /// This replaces the Preview screen with the Editor.
+    public var editor: Bool = false
+    
+    /// The Editor Filters feature
+    /// This enables the UI to select filters in the editor.
+    public var editorFilters: Bool = false
+    
+    /// The Editor Media feature
+    /// This enables the UI to select media in the editor.
+    public var editorMedia: Bool = false
+    
+    /// The Editor Drawing feature
+    /// This enables the UI to draw in the editor.
+    public var editorDrawing: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera
@@ -139,7 +155,7 @@ public extension CameraSettings {
     /**
      Enables/disables photo mode.
      */
-    public var enablePhotoMode: Bool {
+    var enablePhotoMode: Bool {
         set {
             setMode(.photo, to: newValue)
         }
@@ -150,7 +166,7 @@ public extension CameraSettings {
     /**
      Enables/disables gif mode.
      */
-    public var enableGifMode: Bool {
+    var enableGifMode: Bool {
         set {
             setMode(.gif, to: newValue)
         }
@@ -161,7 +177,7 @@ public extension CameraSettings {
     /**
      Enables/disables stop motion mode.
      */
-    public var enableStopMotionMode: Bool {
+    var enableStopMotionMode: Bool {
         set {
             setMode(.stopMotion, to: newValue)
         }

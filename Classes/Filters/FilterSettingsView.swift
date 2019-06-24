@@ -66,6 +66,15 @@ final class FilterSettingsView: IgnoreTouchesView {
             self?.visibilityButton.setImage(image, for: .normal)
         }
     }
+    
+    /// Shows or hides the visibility button (discoball)
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showVisibilityButton(_ show: Bool) {
+        UIView.animate(withDuration: FilterSettingsViewConstants.animationDuration) { [weak self] in
+            self?.visibilityButton.alpha = show ? 1 : 0
+        }
+    }
 }
 
 // MARK: - UI Layout
