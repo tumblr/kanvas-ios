@@ -110,4 +110,8 @@ final class ModeSelectorAndShootDelegateStub: ModeSelectorAndShootControllerDele
     func didDismissWelcomeTooltip() {
         // Works on every mode
     }
+
+    func didTapMediaPickerButton() {
+        // Works on every mode
+    }
 }
