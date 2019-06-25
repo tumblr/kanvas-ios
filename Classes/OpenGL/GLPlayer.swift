@@ -8,6 +8,11 @@ import UIKit
 import CoreMedia
 import AVFoundation
 
+enum GLPlayerMedia {
+    case image(UIImage)
+    case video(URL)
+}
+
 class GLPlayerView: UIView {
 
     weak var pixelBufferView: GLPixelBufferView?
@@ -26,32 +31,51 @@ class GLPlayerView: UIView {
 
 }
 
-protocol GLPlayerDelegate: class {
-    func glPlayerDidFinishPlaying()
-}
-
 class GLPlayer {
+
+    private struct Constants {
+        static let onlyImagesFrameDuration: CMTimeValue = 120
+        static let frameDuration: CMTimeValue = 300
+        static let timescale: CMTimeScale = 600
+    }
+
+    private enum GLPlayerMediaInternal {
+        case image(UIImage, CMSampleBuffer)
+        case video(URL, AVAssetReader, AVAssetReaderTrackOutput)
+
+        func sampleBuffer() -> CMSampleBuffer? {
+            switch self {
+            case .image(_, let sampleBuffer):
+                return sampleBuffer
+            default:
+                return nil
+            }
+        }
+
+        func assetReaderOutput() -> (AVAssetReader?, AVAssetReaderTrackOutput?) {
+            switch self {
+            case .video(_, let reader, let output):
+                return (reader, output)
+            default:
+                return (nil, nil)
+            }
+        }
+    }
+
+    private var playableMedia: [GLPlayerMediaInternal] = []
+    private var currentlyPlayingMediaIndex: Int = -1
+    private var currentlyPlayingMedia: GLPlayerMediaInternal? {
+        guard currentlyPlayingMediaIndex >= 0 && currentlyPlayingMediaIndex < playableMedia.count else {
+            return nil
+        }
+        return playableMedia[currentlyPlayingMediaIndex]
+    }
+    private var timer: Timer?
+    private var displayLink: CADisplayLink?
 
     let renderer: GLRenderer
 
     weak var playerView: GLPlayerView?
-
-    var displayLink: CADisplayLink?
-
-    var imageSampleBuffer: CMSampleBuffer?
-
-    var url: URL?
-    var output: AVAssetReaderTrackOutput?
-    var reader: AVAssetReader?
-
-    var queuedURL: URL?
-    var queuedOutput: AVAssetReaderTrackOutput?
-    var queuedReader: AVAssetReader?
-
-    var frameRate: Int = 30
-    var timeRange: CMTimeRange?
-
-    weak var delegate: GLPlayerDelegate?
 
     init() {
         renderer = GLRenderer()
@@ -60,127 +84,189 @@ class GLPlayer {
 
     deinit {
         stop()
+    }
+
+    // MARK: - Public API
+
+    var filterType: FilterType? {
+        get {
+            return renderer.filterType
+        }
+        set {
+            renderer.changeFilter(newValue ?? .off)
+            refreshMediaAfterFilterChange()
+        }
+    }
+
+    func play(media: [GLPlayerMedia]) {
+        guard media.count > 0 else {
+            return
+        }
+        currentlyPlayingMediaIndex = 0
+        loadAll(media: media)
+        playCurrentMedia()
+    }
+
+    func stop() {
+        currentlyPlayingMediaIndex = -1
+        displayLink?.invalidate()
+        displayLink = nil
+        timer?.invalidate()
+        timer = nil
+        for item in playableMedia {
+            switch item {
+            case .image(_, _):
+                break
+            case .video(_, let reader, _):
+                reader.cancelReading()
+            }
+        }
+        playableMedia.removeAll()
         renderer.reset()
     }
 
-    func playStill(image: UIImage) {
-        guard let pixelBuffer = image.pixelBuffer() else {
-            return
-        }
-
-        guard let sampleBuffer = pixelBuffer.sampleBuffer() else {
-            return
-        }
-
-        stop()
+    func pause() {
+        displayLink?.invalidate()
+        displayLink = nil
+        timer?.invalidate()
+        timer = nil
         renderer.reset()
+    }
+
+    func resume() {
+        // A AVAssetReader and AVAssetReaderTrackOutput combo needs to be re-created when the app comes back
+        // from the background. Without this, the AVAssetReaderTrackOutput thinks it is ready for reading, but
+        // copyNextSampleBuffer returns nil, thought reset(forReadingTimeRanges:) doesn't think it should be.
+        reloadAllMedia()
+
+        renderer.reset()
+        playCurrentMedia()
+    }
+
+    // MARK: - Media loading
+
+    private func loadAll(media: [GLPlayerMedia]) {
+        playableMedia.removeAll()
+        for item in media {
+            guard let internalMedia = GLPlayer.loadMedia(media: item) else { continue }
+            playableMedia.append(internalMedia)
+        }
+    }
+
+    private static func loadMedia(media: GLPlayerMedia) -> GLPlayerMediaInternal? {
+        switch media {
+        case .image(let image):
+            return loadImageMedia(image: image)
+        case .video(let url):
+            return loadVideoMedia(url: url)
+        }
+    }
+
+    private func reloadAllMedia() {
+        var newPlayableMedia: [GLPlayerMediaInternal] = []
+        for item in playableMedia {
+            guard let internalMedia = GLPlayer.reloadMedia(media: item) else { continue }
+            newPlayableMedia.append(internalMedia)
+        }
+        playableMedia.removeAll()
+        playableMedia.append(contentsOf: newPlayableMedia)
+    }
+
+    private static func reloadMedia(media: GLPlayerMediaInternal) -> GLPlayerMediaInternal? {
+        switch media {
+        case .image(let image, _):
+            return loadImageMedia(image: image)
+        case .video(let url, let oldReader, _):
+            oldReader.cancelReading()
+            return loadVideoMedia(url: url)
+        }
+    }
+
+    private static func loadVideoMedia(url: URL) -> GLPlayerMediaInternal? {
+        let (readerMaybe, outputMaybe) = GLPlayer.getReaderAndOutput(url: url)
+        guard let reader = readerMaybe, let output = outputMaybe else {
+            return nil
+        }
+        // Yes, we start reading immediately! This is a slight optimization, as this results in all the video media
+        // being ready for reading, meaning less delay in-between loading videos.
+        reader.startReading()
+        return GLPlayerMediaInternal.video(url, reader, output)
+    }
+
+    private static func loadImageMedia(image: UIImage) -> GLPlayerMediaInternal? {
+        guard let sampleBuffer = image.pixelBuffer()?.sampleBuffer() else {
+            return nil
+        }
+        return GLPlayerMediaInternal.image(image, sampleBuffer)
+    }
+
+    // MARK: - Playback
+
+    private func playCurrentMedia() {
+        guard let currentlyPlayingMedia = currentlyPlayingMedia else {
+            return
+        }
+        switch currentlyPlayingMedia {
+        case .image(_, _):
+            playStill()
+        case .video(_, _, _):
+            playVideo()
+        }
+    }
+
+    private func playNextMedia() {
+        if currentlyPlayingMediaIndex + 1 < playableMedia.count {
+            currentlyPlayingMediaIndex += 1
+        }
+        else if currentlyPlayingMediaIndex < 0 {
+            currentlyPlayingMediaIndex = 0
+        }
+        else {
+            currentlyPlayingMediaIndex = 0
+        }
+        playCurrentMedia()
+    }
+
+    private func playStill() {
+        guard let sampleBuffer = currentlyPlayingMedia?.sampleBuffer() else {
+            return
+        }
 
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
         renderer.processSampleBuffer(sampleBuffer)
         renderer.processSampleBuffer(sampleBuffer)
-    }
 
-    func play(image: UIImage) {
-        guard let pixelBuffer = image.pixelBuffer() else {
+        // If we're only playing one image, don't do anything else!
+        guard playableMedia.count > 1 else {
             return
         }
 
-        guard let sampleBuffer = pixelBuffer.sampleBuffer() else {
+        if timer?.isValid ?? false {
+            timer?.invalidate()
+        }
+        let displayTime = timeIntervalForImageSegments()
+        timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
+            self?.playNextMedia()
+        })
+    }
+
+    private func playVideo() {
+        guard let currentlyPlayingMedia = currentlyPlayingMedia else {
+            return
+        }
+        let (readerMaybe, outputMaybe) = currentlyPlayingMedia.assetReaderOutput()
+        guard let _ = readerMaybe, let output = outputMaybe else {
             return
         }
 
-        stop()
-        renderer.reset()
-
-        imageSampleBuffer = sampleBuffer
-        url = nil
-
-        play()
-    }
-
-    func play(url: URL) {
-        stop()
-        renderer.reset()
-
-        if url == queuedURL {
-            self.reader = queuedReader
-            self.output = queuedOutput
-            queuedReader = nil
-            queuedOutput = nil
-            queuedURL = nil
-        }
-        else {
-            let (readerMaybe, outputMaybe) = GLPlayer.getReaderAndOutput(url: url)
-            self.reader = readerMaybe
-            self.output = outputMaybe
-        }
-
-        guard let reader = self.reader, let output = self.output else {
-            return
-        }
-
-        timeRange = output.track.timeRange
-        frameRate = Int(output.track.nominalFrameRate)
-        reader.startReading()
-
-        self.url = url
-        imageSampleBuffer = nil
-
-        play()
-    }
-
-    func queue(url: URL) {
-        guard url != queuedURL else {
-            return
-        }
-        let (reader, output) = GLPlayer.getReaderAndOutput(url: url)
-        queuedURL = url
-        queuedOutput = output
-        queuedReader = reader
-    }
-
-    private func play() {
-        if let imageSampleBuffer = imageSampleBuffer {
-            // again, this twice crap
-            renderer.processSampleBuffer(imageSampleBuffer)
-            renderer.processSampleBuffer(imageSampleBuffer)
-        }
-        else if let sampleBuffer = output?.copyNextSampleBuffer() {
-            // again, this twice crap
-            renderer.processSampleBuffer(sampleBuffer)
-            renderer.processSampleBuffer(sampleBuffer)
-        }
         if displayLink == nil {
             let link = CADisplayLink(target: self, selector: #selector(step))
             self.displayLink = link
         }
-        unpause()
-        self.displayLink?.preferredFramesPerSecond = frameRate
-    }
-
-    func pause() {
-        displayLink?.remove(from: .main, forMode: .common)
-    }
-
-    func unpause() {
         self.displayLink?.add(to: .main, forMode: .common)
-    }
-
-    func stop() {
-        url = nil
-        imageSampleBuffer = nil
-        reader?.cancelReading()
-        displayLink?.invalidate()
-        displayLink = nil
-        reader = nil
-        output = nil
-    }
-
-    func rewind() {
-        if let timeRange = timeRange {
-            output?.reset(forReadingTimeRanges: [timeRange as NSValue])
-        }
+        let frameRate = output.track.nominalFrameRate
+        self.displayLink?.preferredFramesPerSecond = Int(ceil(frameRate))
     }
 
     private static func getReaderAndOutput(url: URL) -> (AVAssetReader?, AVAssetReaderTrackOutput?) {
@@ -198,21 +284,52 @@ class GLPlayer {
         return (reader, trackOutput)
     }
 
-    @objc func step() {
+    @objc private func step() {
         guard let displayLink = displayLink else {
             return
         }
-        let actualFramesPerSecond = 1 / (displayLink.targetTimestamp - displayLink.timestamp)
-        print(actualFramesPerSecond)
+        //let actualFramesPerSecond = 1 / (displayLink.targetTimestamp - displayLink.timestamp)
+        //print(actualFramesPerSecond)
 
-        if let imageSampleBuffer = imageSampleBuffer {
-            renderer.processSampleBuffer(imageSampleBuffer)
+        guard let currentlyPlayingMedia = currentlyPlayingMedia else {
+            return
         }
-        else if let sampleBuffer = output?.copyNextSampleBuffer() {
+        let (_, output) = currentlyPlayingMedia.assetReaderOutput()
+        if let sampleBuffer = output?.copyNextSampleBuffer() {
             renderer.processSampleBuffer(sampleBuffer)
         }
         else {
-            delegate?.glPlayerDidFinishPlaying()
+            displayLink.remove(from: .main, forMode: .common)
+            if let timeRange = output?.track.timeRange {
+                output?.reset(forReadingTimeRanges: [timeRange as NSValue])
+            }
+            playNextMedia()
+        }
+    }
+
+    private func timeIntervalForImageSegments() -> TimeInterval {
+        for media in playableMedia {
+            switch media {
+            case .image(_, _):
+                break
+            case .video(_, _, _):
+                return CMTimeGetSeconds(CMTimeMake(value: Constants.frameDuration, timescale: Constants.timescale))
+            }
+        }
+        return CMTimeGetSeconds(CMTimeMake(value: Constants.onlyImagesFrameDuration, timescale: Constants.timescale))
+    }
+
+    private func refreshMediaAfterFilterChange() {
+        // When changing the filter, we need to reload the image. Videos don't need any special treatment since the
+        // next frame will use the new filter.
+        guard let currentlyPlayingMedia = currentlyPlayingMedia else {
+            return
+        }
+        switch currentlyPlayingMedia {
+        case .image(_, _):
+            playCurrentMedia()
+        default:
+            break
         }
     }
 }
