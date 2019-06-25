@@ -170,6 +170,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         mediaPickerButton.showButton(visible)
     }
 
+    func setMediaPickerButtonThumbnail(_ image: UIImage) {
+        mediaPickerButton.setThumbnail(image)
+    }
+
     // MARK: - UI Layout
 
     private func createTooltip() -> EasyTipView {

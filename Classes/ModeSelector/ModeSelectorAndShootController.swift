@@ -6,6 +6,8 @@
 
 import Foundation
 
+import Photos
+
 /// Protocol for handling mode selector and capture button events
 protocol ModeSelectorAndShootControllerDelegate: class {
     /// Function called when a mode was selected
@@ -99,6 +101,9 @@ final class ModeSelectorAndShootController: UIViewController {
         if modesQueue.count == 1 {
             hideModeButton()
         }
+        fetchMostRecentPhotoLibraryThumbnail { image in
+            self.setMediaPickerButtonThumbnail(image)
+        }
     }
     
     // MARK: - Public interface
@@ -186,6 +191,26 @@ final class ModeSelectorAndShootController: UIViewController {
 
     func toggleMediaPickerButton(_ visible: Bool) {
         modeView.toggleMediaPickerButton(visible)
+    }
+
+    func setMediaPickerButtonThumbnail(_ image: UIImage) {
+        modeView.setMediaPickerButtonThumbnail(image)
+    }
+
+    func fetchMostRecentPhotoLibraryThumbnail(completion: @escaping (UIImage) -> Void) {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchOptions.fetchLimit = 1
+        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+        if fetchResult.count > 0 {
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.isSynchronous = true // This is to just return a thumbnail
+            PHImageManager.default().requestImage(for: fetchResult.object(at: 0) as PHAsset, targetSize: view.frame.size, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+                if let image = image {
+                    completion(image)
+                }
+            })
+        }
     }
 }
 

@@ -25,7 +25,11 @@ class MediaPickerButtonView: UIView {
             let buttonView = UIButton(type: .roundedRect)
             buttonView.accessibilityLabel = "Media Picker Button"
             buttonView.backgroundColor = .white
-            buttonView.applyShadows()
+            buttonView.layer.borderColor = UIColor.white.cgColor
+            buttonView.layer.borderWidth = 2
+            buttonView.layer.cornerRadius = 7
+            buttonView.layer.masksToBounds = true
+            buttonView.clipsToBounds = true
             buttonView.addTarget(self, action: #selector(buttonTouchUpInside), for: .touchUpInside)
             buttonView.add(into: self)
             self.buttonView = buttonView
@@ -38,6 +42,10 @@ class MediaPickerButtonView: UIView {
 
     func showButton(_ visible: Bool) {
         buttonView?.alpha = visible ? 1 : 0
+    }
+
+    func setThumbnail(_ image: UIImage) {
+        buttonView?.setBackgroundImage(image, for: .normal)
     }
 
     @objc func buttonTouchUpInside() {
