@@ -23,7 +23,7 @@ protocol EditorControllerDelegate: class {
 
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, GLPlayerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate {
 
     private lazy var editorView: EditorView = {
         let editorView = EditorView()
@@ -91,18 +91,28 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
 
     @objc private func appDidBecomeActive() {
-        resumePlayback()
+        player.resume()
     }
 
     @objc private func appWillResignActive() {
-        timer.invalidate()
-        player.stop()
+        player.pause()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        restartPlayback()
+        let media: [GLPlayerMedia] = segments.compactMap {segment in
+            if let image = segment.image {
+                return GLPlayerMedia.image(image)
+            }
+            else if let url = segment.videoURL {
+                return GLPlayerMedia.video(url)
+            }
+            else {
+                return nil
+            }
+        }
+        player.play(media: media)
     }
     
     override public func viewDidLoad() {
@@ -119,85 +129,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
-    }
-    
-    // MARK: - playback methods
-
-    private func restartPlayback() {
-        timer.invalidate()
-        currentSegmentIndex = 0
-        if let firstSegment = segments.first {
-            playSegment(segment: firstSegment)
-        }
-    }
-
-    private func resumePlayback() {
-        guard segments.count > currentSegmentIndex else {
-            return
-        }
-        let segment = segments[currentSegmentIndex]
-        if let image = segment.image {
-            playImage(image: image)
-        }
-        else if let url = segment.videoURL {
-            playVideo(url: url)
-        }
-    }
-
-    private func playSegment(segment: CameraSegment) {
-        if let image = segment.image {
-            playImage(image: image)
-        }
-        else if let url = segment.videoURL {
-            playVideo(url: url)
-        }
-        queueNextSegment()
-    }
-
-    private func playImage(image: UIImage) {
-        player.play(image: image)
-        let displayTime = timeIntervalForImageSegments(segments)
-        timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
-            self?.playNextSegment()
-        })
-    }
-
-    private func timeIntervalForImageSegments(_ segments: [CameraSegment]) -> TimeInterval {
-        for segment in segments {
-            if segment.image == nil {
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
-            }
-        }
-        return CMTimeGetSeconds(CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale))
-    }
-
-    func glPlayerDidFinishPlaying() {
-        playNextSegment()
-    }
-
-    private func playVideo(url: URL) {
-        player.delegate = self
-        player.play(url: url)
-    }
-
-    @objc private func queueNextSegment() {
-        let nextSegmentIndex = (currentSegmentIndex + 1) % segments.count
-        guard nextSegmentIndex < segments.count else { return }
-        let nextSegment = segments[nextSegmentIndex]
-        if let url = nextSegment.videoURL {
-            player.queue(url: url)
-        }
-    }
-
-    @objc private func playNextSegment() {
-        currentSegmentIndex = (currentSegmentIndex + 1) % segments.count
-        guard currentSegmentIndex < segments.count else { return }
-        playSegment(segment: segments[currentSegmentIndex])
-    }
-
-    private func stopPlayback() {
-        timer.invalidate()
-        player.stop()
     }
 
     // MARK: - Loading Indicator
@@ -216,7 +147,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - EditorViewDelegate
     
     func confirmButtonPressed() {
-        stopPlayback()
+        player.stop()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
             // If the camera mode is .stopMotion and the `exportStopMotionPhotoAsVideo` is true,
@@ -269,7 +200,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func closeButtonPressed() {
-        stopPlayback()
+        player.stop()
         delegate?.dismissButtonPressed()
     }
     

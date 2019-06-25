@@ -40,7 +40,7 @@ final class GLRenderer {
 
     private let callbackQueue: DispatchQueue
     private var filter: FilterProtocol
-    private var filterType: FilterType = .passthrough
+    private(set) var filterType: FilterType = .passthrough
     private var processingImage = false
 
     private var filteredPixelBuffer: CVPixelBuffer?
