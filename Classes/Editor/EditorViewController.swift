@@ -50,9 +50,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let cameraMode: CameraMode?
-    
-    private var currentSegmentIndex: Int = 0
-    private var timer: Timer = Timer()
 
     private let player: GLPlayer
 
