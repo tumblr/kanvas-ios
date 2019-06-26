@@ -229,6 +229,15 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
+    func testCameraWithMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        settings.features.mediaPicking = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
+
     // Can't test `dismissButtonPressed` because it requires presenting and dismissing preview controller.
 }
 
