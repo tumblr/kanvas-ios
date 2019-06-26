@@ -14,7 +14,7 @@ protocol MediaPickerButtonViewDelegate: class {
 
 final class MediaPickerButtonView: UIView {
 
-    private weak var buttonView: UIButton?
+    private var buttonView = UIButton(type: .roundedRect)
 
     weak var delegate: MediaPickerButtonViewDelegate?
 
@@ -22,7 +22,6 @@ final class MediaPickerButtonView: UIView {
         super.init(frame: .zero)
 
         if settings.features.mediaPicking {
-            let buttonView = UIButton(type: .roundedRect)
             buttonView.accessibilityLabel = "Media Picker Button"
             buttonView.backgroundColor = .white
             buttonView.layer.borderColor = UIColor.white.cgColor
@@ -32,7 +31,6 @@ final class MediaPickerButtonView: UIView {
             buttonView.clipsToBounds = true
             buttonView.addTarget(self, action: #selector(buttonTouchUpInside), for: .touchUpInside)
             buttonView.add(into: self)
-            self.buttonView = buttonView
         }
     }
 
@@ -41,11 +39,11 @@ final class MediaPickerButtonView: UIView {
     }
 
     func showButton(_ visible: Bool) {
-        buttonView?.alpha = visible ? 1 : 0
+        buttonView.alpha = visible ? 1 : 0
     }
 
     func setThumbnail(_ image: UIImage) {
-        buttonView?.setBackgroundImage(image, for: .normal)
+        buttonView.setBackgroundImage(image, for: .normal)
     }
 
     @objc func buttonTouchUpInside() {
