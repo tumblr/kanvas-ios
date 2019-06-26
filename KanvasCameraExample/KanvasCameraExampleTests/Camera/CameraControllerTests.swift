@@ -233,8 +233,22 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let settings = CameraSettings()
         settings.enabledModes = [.photo]
         settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
+
+    func testCameraWithFiltersOpenHidesMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        UIView.setAnimationsEnabled(false)
+        controller.testingOnlyTapDiscoball()
+        UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }
 

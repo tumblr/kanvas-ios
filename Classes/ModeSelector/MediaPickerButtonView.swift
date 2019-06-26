@@ -14,6 +14,13 @@ protocol MediaPickerButtonViewDelegate: class {
 
 final class MediaPickerButtonView: UIView {
 
+    private struct Constants {
+        static let borderWidth: CGFloat = 2
+        static let cornerRadius: CGFloat = 7
+        static let borderColor: CGColor = UIColor.white.cgColor
+        static let backgroundColor: UIColor = .white
+    }
+
     private var buttonView = UIButton(type: .roundedRect)
 
     weak var delegate: MediaPickerButtonViewDelegate?
@@ -23,10 +30,10 @@ final class MediaPickerButtonView: UIView {
 
         if settings.features.mediaPicking {
             buttonView.accessibilityLabel = "Media Picker Button"
-            buttonView.backgroundColor = .white
-            buttonView.layer.borderColor = UIColor.white.cgColor
-            buttonView.layer.borderWidth = 2
-            buttonView.layer.cornerRadius = 7
+            buttonView.backgroundColor = Constants.backgroundColor
+            buttonView.layer.borderColor = Constants.borderColor
+            buttonView.layer.borderWidth = Constants.borderWidth
+            buttonView.layer.cornerRadius = Constants.cornerRadius
             buttonView.layer.masksToBounds = true
             buttonView.clipsToBounds = true
             buttonView.addTarget(self, action: #selector(buttonTouchUpInside), for: .touchUpInside)
@@ -39,7 +46,12 @@ final class MediaPickerButtonView: UIView {
     }
 
     func showButton(_ visible: Bool) {
-        buttonView.alpha = visible ? 1 : 0
+        if visible {
+            showViews(shownViews: [buttonView], hiddenViews: [], animated: true)
+        }
+        else {
+            showViews(shownViews: [], hiddenViews: [buttonView], animated: true)
+        }
     }
 
     func setThumbnail(_ image: UIImage) {
