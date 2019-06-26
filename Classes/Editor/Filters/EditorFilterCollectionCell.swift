@@ -24,7 +24,7 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     static let cellPadding = dimensions.padding
     
     private let innerCell: FilterCollectionInnerCell
-    var delegate: FilterCollectionCellDelegate?
+    weak var delegate: FilterCollectionCellDelegate?
     
     override init(frame: CGRect) {
         innerCell = FilterCollectionInnerCell(dimensions: EditorFilterCollectionCell.dimensions)
