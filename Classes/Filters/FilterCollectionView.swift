@@ -41,11 +41,11 @@ final class FilterCollectionView: IgnoreTouchesView {
 
 final class FilterCollection: UICollectionView {
     
-    var ignoreTouches = false
+    private let ignoreTouches: Bool
     
-    init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout, ignoreTouches: Bool) {
-        super.init(frame: frame, collectionViewLayout: layout)
+    init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout, ignoreTouches: Bool = false) {
         self.ignoreTouches = ignoreTouches
+        super.init(frame: frame, collectionViewLayout: layout)
         configure()
     }
     
