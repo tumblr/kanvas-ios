@@ -679,7 +679,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if let image = imageMaybe {
             pick(image: image)
         }
-        if let mediaURL = mediaURLMaybe {
+        else if let mediaURL = mediaURLMaybe {
             pick(video: mediaURL)
         }
     }
