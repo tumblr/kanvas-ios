@@ -12,7 +12,7 @@ protocol MediaPickerButtonViewDelegate: class {
     func mediaPickerButtonDidPress()
 }
 
-class MediaPickerButtonView: UIView {
+final class MediaPickerButtonView: UIView {
 
     private weak var buttonView: UIButton?
 
