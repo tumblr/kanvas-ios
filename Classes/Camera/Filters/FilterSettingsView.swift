@@ -11,7 +11,8 @@ private struct FilterSettingsViewConstants {
     static let animationDuration: TimeInterval = 0.25
     static let iconSize: CGFloat = 39
     static let padding: CGFloat = 4
-    static var height: CGFloat = FilterCollectionView.height + padding + iconSize
+    static let collectionViewHeight = CameraFilterCollectionCell.minimumHeight + 10
+    static let height: CGFloat = collectionViewHeight + padding + iconSize
 }
 
 protocol FilterSettingsViewDelegate: class {
@@ -23,6 +24,7 @@ protocol FilterSettingsViewDelegate: class {
 final class FilterSettingsView: IgnoreTouchesView {
 
     static let height: CGFloat = FilterSettingsViewConstants.height
+    static let collectionViewHeight: CGFloat = FilterSettingsViewConstants.collectionViewHeight
     
     let collectionContainer: IgnoreTouchesView
     let visibilityButton: UIButton
@@ -92,7 +94,7 @@ private extension FilterSettingsView {
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            collectionContainer.heightAnchor.constraint(equalToConstant: FilterCollectionView.height)
+            collectionContainer.heightAnchor.constraint(equalToConstant: FilterSettingsViewConstants.collectionViewHeight)
         ])
     }
     

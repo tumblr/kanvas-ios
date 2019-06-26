@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDelegate, UICollectionViewDataSource {
+final class CameraFilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var filters: [FilterItem] = []
     
@@ -39,14 +39,14 @@ final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDeleg
     }
     
     func newCollectionView() -> FilterCollectionView {
-        let collectionView = FilterCollectionView()
-        collectionView.frame = CGRect(x: 0, y: 0, width: 320, height: FilterCollectionView.height)
+        let collectionView = FilterCollectionView(cellWidth: CameraFilterCollectionCell.width, cellHeight: CameraFilterCollectionCell.minimumHeight)
+        collectionView.frame = CGRect(x: 0, y: 0, width: 320, height: CameraFilterCollectionCell.minimumHeight + 10)
         return collectionView
     }
     
     func testCompareCollectionView() {
         let view = newCollectionView()
-        view.collectionView.register(cell: FilterCollectionCell.self)
+        view.collectionView.register(cell: CameraFilterCollectionCell.self)
         view.collectionView.delegate = self
         view.collectionView.dataSource = self
         view.collectionView.reloadData()
@@ -58,8 +58,8 @@ final class FilterCollectionViewTests: FBSnapshotTestCase, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilterCollectionCell.identifier, for: indexPath)
-        if let filterCell = cell as? FilterCollectionCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CameraFilterCollectionCell.identifier, for: indexPath)
+        if let filterCell = cell as? CameraFilterCollectionCell {
             filterCell.bindTo(filters[indexPath.item])
         }
         return cell

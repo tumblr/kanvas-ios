@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// Protocol for editor controller methods
+/// Protocol for camera editor controller methods
 
 protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
@@ -23,8 +23,8 @@ protocol EditorControllerDelegate: class {
 
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate {
-
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate {
+    
     private lazy var editorView: EditorView = {
         let editorView = EditorView()
         editorView.delegate = self
@@ -38,16 +38,20 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         return controller
     }()
     
+    private lazy var filterCollectionController: EditorFilterCollectionController = {
+        let controller = EditorFilterCollectionController(settings: self.settings)
+        controller.delegate = self
+        return controller
+    }()
+    
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
     
     private let settings: CameraSettings
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let cameraMode: CameraMode?
+
     private let player: GLPlayer
-    
-    private var currentSegmentIndex: Int = 0
-    private var timer: Timer = Timer()
     private var filterType: FilterType?
 
     weak var delegate: EditorControllerDelegate?
@@ -119,7 +123,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
         view.backgroundColor = .black
         editorView.add(into: view)
+        
         load(childViewController: collectionController, into: editorView.collectionContainer)
+        load(childViewController: filterCollectionController, into: editorView.filterCollectionContainer)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -143,7 +149,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         loadingView.stopLoading()
     }
     
-    // MARK: - EditorViewDelegate
+    // MARK: - CameraEditorViewDelegate
     
     func confirmButtonPressed() {
         player.stop()
@@ -221,15 +227,34 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func closeMenuButtonPressed() {
+        filterCollectionController.showView(false)
+        showSelectionCircle(false)
         showCloseMenuButton(false)
         collectionController.showView(true)
         showConfirmButton(true)
+        showCloseButton(true)
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
-        
+        switch editionOption {
+        case .filter:
+            collectionController.showView(false)
+            showConfirmButton(false)
+            showCloseButton(false)
+            filterCollectionController.showView(true)
+            showSelectionCircle(true)
+            showCloseMenuButton(true)
+        case .media:
+            break
+        }
+    }
+    
+    // MARK: - EditorFilterCollectionControllerDelegate
+    
+    func didSelectFilter(_ filterItem: FilterItem) {
+        player.filterType = filterItem.type
     }
     
     // MARK: - Public interface
@@ -246,5 +271,19 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showCloseMenuButton(_ show: Bool) {
         editorView.showCloseMenuButton(show)
+    }
+    
+    /// shows or hides the close button (back caret)
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCloseButton(_ show: Bool) {
+        editorView.showCloseButton(show)
+    }
+    
+    /// shows or hides the filter selection circle
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showSelectionCircle(_ show: Bool) {
+        editorView.showSelectionCircle(show)
     }
 }
