@@ -688,7 +688,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         picker.dismiss(animated: true, completion: nil)
     }
 
-    func pick(image: UIImage) {
+    private func pick(image: UIImage) {
         if self.currentMode == .photo {
             performUIUpdate {
                 self.showPreviewWithSegments([CameraSegment.image(image, nil)])
@@ -706,7 +706,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    func pick(video url: URL) {
+    private func pick(video url: URL) {
         if let recorder = self.cameraInputController.recorder as? CameraRecorder {
             recorder.segmentsHandler.addNewVideoSegment(url: url)
         }
