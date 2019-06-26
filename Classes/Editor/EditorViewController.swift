@@ -52,7 +52,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let cameraMode: CameraMode?
 
     private let player: GLPlayer
-    private var filterType: FilterType?
+    private var filterType: FilterType? {
+        didSet {
+            player.filterType = filterType
+        }
+    }
 
     weak var delegate: EditorControllerDelegate?
     
@@ -182,14 +186,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private func createFinalContent() {
         assetsHandler.mergeAssets(segments: segments, completion: { url in
-            if let filterType = self.filterType, let url = url {
-                let exporter = GLMediaExporter(filterType: filterType)
-                exporter.export(video: url) { newURL in
-                    self.finishCreatingFinalContent(url: newURL)
-                }
+            guard let url = url else {
+                self.finishCreatingFinalContent(url: nil)
+                return
             }
-            else {
-                self.finishCreatingFinalContent(url: url)
+            let exporter = GLMediaExporter(filterType: self.filterType)
+            exporter.export(video: url) { newURL in
+                self.finishCreatingFinalContent(url: newURL)
             }
         })
     }
@@ -254,7 +257,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - EditorFilterCollectionControllerDelegate
     
     func didSelectFilter(_ filterItem: FilterItem) {
-        player.filterType = filterItem.type
+        self.filterType = filterItem.type
     }
     
     // MARK: - Public interface
