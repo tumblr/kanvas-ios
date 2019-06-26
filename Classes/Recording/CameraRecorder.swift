@@ -253,18 +253,14 @@ extension CameraRecorder: CameraRecordingProtocol {
             if cameraPosition == .front, let flippedImage = image.flipLeftMirrored() {
                 image = flippedImage
             }
-            self.process(image: image, completion: completion)
+            guard let filteredImage = self.recordingDelegate?.cameraDidTakePhoto(image: image) else {
+                completion(nil)
+                return
+            }
+            self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
+                completion(success ? filteredImage : nil)
+            })
         }
-    }
-
-    func process(image: UIImage, completion: @escaping (UIImage?) -> Void) {
-        guard let filteredImage = self.recordingDelegate?.cameraDidTakePhoto(image: image) else {
-            completion(nil)
-            return
-        }
-        self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
-            completion(success ? filteredImage : nil)
-        })
     }
 
     func exportRecording(completion: @escaping (URL?) -> Void) {
