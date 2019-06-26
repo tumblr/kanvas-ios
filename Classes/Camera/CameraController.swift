@@ -669,10 +669,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         modeAndShootController.dismissTooltip()
     }
 
-    func testingOnlyTapDiscoball() {
-        filterSettingsController.didTapVisibilityButton()
-    }
-
     // MARK: - UIImagePickerControllerDelegate
 
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {

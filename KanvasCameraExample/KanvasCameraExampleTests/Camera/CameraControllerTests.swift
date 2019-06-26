@@ -247,7 +247,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate, settings: settings)
         UIView.setAnimationsEnabled(false)
-        controller.testingOnlyTapDiscoball()
+        controller.didTapVisibilityButton(visible: true)
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }
