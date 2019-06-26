@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class EditionMenuCollectionCellTests: FBSnapshotTestCase {
+final class CameraFilterCollectionCellTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,16 +18,16 @@ final class EditionMenuCollectionCellTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newCell() -> EditionMenuCollectionCell {
+    func newCell() -> CameraFilterCollectionCell {
         let frame = CGRect(origin: CGPoint.zero,
-                           size: CGSize(width: EditionMenuCollectionCell.width - 20, height: EditionMenuCollectionCell.height))
-        return EditionMenuCollectionCell(frame: frame)
+                           size: CGSize(width: CameraFilterCollectionCell.width - 20, height: CameraFilterCollectionCell.minimumHeight))
+        return CameraFilterCollectionCell(frame: frame)
     }
     
     func testFilterCell() {
         let cell = newCell()
-        let editionOption = EditionOption.media
-        cell.bindTo(editionOption)
+        let filterItem = FilterItem(type: .lightLeaks)
+        cell.bindTo(filterItem)
         FBSnapshotVerifyView(cell)
     }
 }

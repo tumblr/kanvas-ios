@@ -13,8 +13,7 @@ import XCTest
 final class EditionOptionTests: XCTestCase {
     
     func testOptionType() {
-        let editionOptionType = EditionOptionType.media
-        let editionOption = EditionOption(type: .media)
-        XCTAssertEqual(editionOption.type, editionOptionType, "Edition option type does not match")
+        let editionOption = EditionOption.media
+        XCTAssertEqual(editionOption, .media, "Edition option type does not match")
     }
 }

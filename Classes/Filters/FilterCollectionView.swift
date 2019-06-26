@@ -7,19 +7,14 @@
 import Foundation
 import UIKit
 
-private struct FilterCollectionViewConstants {
-    static var bufferSize: CGFloat = 10
-    static var height: CGFloat = FilterCollectionCell.minimumHeight + FilterCollectionViewConstants.bufferSize
-}
-
-/// Collection view for the FilterCollectionController
 final class FilterCollectionView: IgnoreTouchesView {
     
-    static let height = FilterCollectionViewConstants.height
-    let collectionView: IgnoreTouchesCollectionView
-
-    init() {
-        collectionView = createCollectionView()
+    let collectionView: FilterCollection
+    
+    init(cellWidth: CGFloat, cellHeight: CGFloat, ignoreTouches: Bool = false) {
+        let layout = FilterCollectionLayout(cellWidth: cellWidth, minimumHeight: cellHeight)
+        collectionView = FilterCollection(frame: .zero, collectionViewLayout: layout, ignoreTouches: ignoreTouches)
+        collectionView.accessibilityIdentifier = "Filter Collection"
         
         super.init(frame: .zero)
         
@@ -36,10 +31,6 @@ final class FilterCollectionView: IgnoreTouchesView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-// MARK: - Layout
-extension FilterCollectionView {
     
     private func setUpViews() {
         collectionView.add(into: self)
@@ -48,37 +39,64 @@ extension FilterCollectionView {
     
 }
 
-// MARK: - Collection
-fileprivate func createCollectionView() -> IgnoreTouchesCollectionView {
-    let layout = UICollectionViewFlowLayout()
-    configureCollectionLayout(layout: layout)
+final class FilterCollection: UICollectionView {
     
-    let collectionView = IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
-    collectionView.accessibilityIdentifier = "Filter Collection"
-    collectionView.backgroundColor = .clear
-    configureCollection(collectionView: collectionView)
-    return collectionView
+    private let ignoreTouches: Bool
+    
+    init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout, ignoreTouches: Bool) {
+        self.ignoreTouches = ignoreTouches
+        super.init(frame: frame, collectionViewLayout: layout)
+        configure()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configure() {
+        backgroundColor = .clear
+        isScrollEnabled = true
+        allowsSelection = true
+        bounces = true
+        alwaysBounceHorizontal = true
+        alwaysBounceVertical = false
+        showsHorizontalScrollIndicator = false
+        showsVerticalScrollIndicator = false
+        autoresizesSubviews = true
+        contentInset = .zero
+        decelerationRate = UIScrollView.DecelerationRate.fast
+        dragInteractionEnabled = true
+        reorderingCadence = .immediate
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+        
+        if ignoreTouches {
+            return hitView == self ? nil : hitView
+        }
+        else {
+            return hitView
+        }
+    }
 }
 
-fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
-    layout.scrollDirection = .horizontal
-    layout.itemSize = UICollectionViewFlowLayout.automaticSize
-    layout.estimatedItemSize = CGSize(width: FilterCollectionCell.width, height: FilterCollectionCell.minimumHeight)
-    layout.minimumInteritemSpacing = 0
-    layout.minimumLineSpacing = 0
-}
-
-fileprivate func configureCollection(collectionView: IgnoreTouchesCollectionView) {
-    collectionView.isScrollEnabled = true
-    collectionView.allowsSelection = true
-    collectionView.bounces = true
-    collectionView.alwaysBounceHorizontal = true
-    collectionView.alwaysBounceVertical = false
-    collectionView.showsHorizontalScrollIndicator = false
-    collectionView.showsVerticalScrollIndicator = false
-    collectionView.autoresizesSubviews = true
-    collectionView.contentInset = .zero
-    collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
-    collectionView.dragInteractionEnabled = true
-    collectionView.reorderingCadence = .immediate
+private final class FilterCollectionLayout: UICollectionViewFlowLayout {
+    
+    init(cellWidth: CGFloat, minimumHeight: CGFloat) {
+        super.init()
+        configure(cellWidth: cellWidth, minimumHeight: minimumHeight)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configure(cellWidth: CGFloat, minimumHeight: CGFloat) {
+        scrollDirection = .horizontal
+        itemSize = UICollectionViewFlowLayout.automaticSize
+        estimatedItemSize = CGSize(width: cellWidth, height: minimumHeight)
+        minimumInteritemSpacing = 0
+        minimumLineSpacing = 0
+    }
 }
