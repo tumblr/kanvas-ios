@@ -137,6 +137,7 @@ final class ModeSelectorAndShootController: UIViewController {
     /// hides the camera mode button
     func hideModeButton() {
         modeView.showModeButton(false)
+        dismissTooltip()
     }
     
     /// shows the tooltip below the mode selector
