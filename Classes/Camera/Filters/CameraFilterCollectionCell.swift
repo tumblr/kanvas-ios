@@ -23,7 +23,7 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     static let width = dimensions.width
     
     private let innerCell: FilterCollectionInnerCell
-    var delegate: FilterCollectionCellDelegate?
+    weak var delegate: FilterCollectionCellDelegate?
     
     override init(frame: CGRect) {
         innerCell = FilterCollectionInnerCell(dimensions: CameraFilterCollectionCell.dimensions)
