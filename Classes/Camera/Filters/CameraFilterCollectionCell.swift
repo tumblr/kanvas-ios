@@ -8,9 +8,9 @@ import Foundation
 import UIKit
 
 private struct CameraFilterCollectionCellDimensions: FilterCollectionCellDimensions {
-    var circleDiameter: CGFloat = 72
-    var circleMaxDiameter: CGFloat = 96.1
-    var padding: CGFloat = 0
+    let circleDiameter: CGFloat = 72
+    let circleMaxDiameter: CGFloat = 96.1
+    let padding: CGFloat = 0
     var minimumHeight: CGFloat { return circleMaxDiameter }
     var width: CGFloat { return circleMaxDiameter }
 }

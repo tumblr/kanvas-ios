@@ -8,9 +8,9 @@ import Foundation
 import UIKit
 
 private struct EditorFilterCollectionCellDimensions: FilterCollectionCellDimensions {
-    var circleDiameter: CGFloat = 50
-    var circleMaxDiameter: CGFloat = 55
-    var padding: CGFloat = 6
+    let circleDiameter: CGFloat = 50
+    let circleMaxDiameter: CGFloat = 55
+    let padding: CGFloat = 6
     var minimumHeight: CGFloat { return circleMaxDiameter }
     var width: CGFloat { return circleMaxDiameter + 2 * padding }
 }
@@ -64,7 +64,7 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         super.prepareForReuse()
         innerCell.prepareForReuse()
     }
-        
+    
     /// Sets the circle with standard size
     func setStandardSize() {
         innerCell.setStandardSize()
