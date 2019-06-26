@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol FilterCollectionInnerCellDelegate {
+protocol FilterCollectionInnerCellDelegate: class {
     /// Callback method when tapping a cell
     ///
     /// - Parameters:
@@ -37,7 +37,7 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     private static var animationDuration: TimeInterval = 0.2
     
     private var dimensions: FilterCollectionCellDimensions
-    var delegate: FilterCollectionInnerCellDelegate?
+    weak var delegate: FilterCollectionInnerCellDelegate?
     
     private weak var circleView: UIImageView?
     
