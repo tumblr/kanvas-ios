@@ -42,13 +42,7 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.add(into: self)
     }
     
-    func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(cell: self, recognizer: recognizer)
-    }
-    
-    func didLongPress(cell: FilterCollectionInnerCell, recognizer: UILongPressGestureRecognizer) {
-        delegate?.didLongPress(cell: self, recognizer: recognizer)
-    }
+    // MARK: - FilterCollectionCell
     
     /// Updates the cell to the FilterItem properties
     ///
@@ -70,8 +64,6 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.prepareForReuse()
     }
     
-    
-    // MARK: - Animations
     /// Sets the circle with standard size
     func setStandardSize() {
         innerCell.setStandardSize()
@@ -82,5 +74,15 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     /// - Parameter percent: 0.0 is the standard size, while 1.0 is the biggest size
     func setSize(percent: CGFloat) {
         innerCell.setSize(percent: percent)
+    }
+    
+    // MARK: - FilterCollectionInnerCellDelegate
+    
+    func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {
+        delegate?.didTap(cell: self, recognizer: recognizer)
+    }
+    
+    func didLongPress(cell: FilterCollectionInnerCell, recognizer: UILongPressGestureRecognizer) {
+        delegate?.didLongPress(cell: self, recognizer: recognizer)
     }
 }

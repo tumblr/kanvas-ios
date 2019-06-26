@@ -43,13 +43,7 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.add(into: self)
     }
     
-    func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(cell: self, recognizer: recognizer)
-    }
-    
-    func didLongPress(cell: FilterCollectionInnerCell, recognizer: UILongPressGestureRecognizer) {
-        
-    }
+    // MARK: - FilterCollectionCell
     
     /// Updates the cell to the FilterItem properties
     ///
@@ -70,9 +64,7 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         super.prepareForReuse()
         innerCell.prepareForReuse()
     }
-    
-    // MARK: - Animations
-    
+        
     /// Sets the circle with standard size
     func setStandardSize() {
         innerCell.setStandardSize()
@@ -83,5 +75,15 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     /// - Parameter percent: 0.0 is the standard size, while 1.0 is the biggest size
     func setSize(percent: CGFloat) {
         innerCell.setSize(percent: percent)
+    }
+    
+    // MARK: - FilterCollectionInnerCellDelegate
+    
+    func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {
+        delegate?.didTap(cell: self, recognizer: recognizer)
+    }
+    
+    func didLongPress(cell: FilterCollectionInnerCell, recognizer: UILongPressGestureRecognizer) {
+        // Necessary method to conform delegate protocol. Does nothing in this case.
     }
 }
