@@ -237,7 +237,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - EditorFilterCollectionControllerDelegate
     
     func didSelectFilter(_ filterItem: FilterItem) {
-        
+        player.filterType = filterItem.type
     }
     
     // MARK: - Public interface
