@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class FilterCollectionControllerTests: FBSnapshotTestCase {
+final class CameraFilterCollectionControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,8 +18,8 @@ final class FilterCollectionControllerTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newViewController() -> FilterCollectionController {
-        let controller = FilterCollectionController(settings: CameraSettings())
+    func newViewController() -> CameraFilterCollectionController {
+        let controller = CameraFilterCollectionController(settings: CameraSettings())
         controller.view.frame = CGRect(x: 0, y: 0, width: 600, height: 600)
         controller.view.setNeedsDisplay()
         return controller
