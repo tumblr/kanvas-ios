@@ -60,6 +60,10 @@ public struct CameraFeatures {
     /// The Editor Drawing feature
     /// This enables the UI to draw in the editor.
     public var editorDrawing: Bool = false
+
+    /// The Media Picker feature
+    /// This enables the UI to pick media instead of using the camera.
+    public var mediaPicking: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera

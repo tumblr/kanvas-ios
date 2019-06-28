@@ -6,6 +6,8 @@
 
 import Foundation
 
+import Photos
+
 /// Protocol for handling mode selector and capture button events
 protocol ModeSelectorAndShootControllerDelegate: class {
     /// Function called when a mode was selected
@@ -39,6 +41,8 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     
     /// Function called when the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
+
+    func didTapMediaPickerButton()
 }
 
 /// Controller that handles interaction between the mode selector and the capture button
@@ -97,6 +101,9 @@ final class ModeSelectorAndShootController: UIViewController {
         if modesQueue.count == 1 {
             hideModeButton()
         }
+        fetchMostRecentPhotoLibraryThumbnail { image in
+            self.setMediaPickerButtonThumbnail(image)
+        }
     }
     
     // MARK: - Public interface
@@ -130,6 +137,7 @@ final class ModeSelectorAndShootController: UIViewController {
     /// hides the camera mode button
     func hideModeButton() {
         modeView.showModeButton(false)
+        dismissTooltip()
     }
     
     /// shows the tooltip below the mode selector
@@ -180,6 +188,30 @@ final class ModeSelectorAndShootController: UIViewController {
     /// shows the trash icon opened
     func showTrashOpened(_ show: Bool) {
         modeView.showTrashOpened(show)
+    }
+
+    func toggleMediaPickerButton(_ visible: Bool) {
+        modeView.toggleMediaPickerButton(visible)
+    }
+
+    func setMediaPickerButtonThumbnail(_ image: UIImage) {
+        modeView.setMediaPickerButtonThumbnail(image)
+    }
+
+    func fetchMostRecentPhotoLibraryThumbnail(completion: @escaping (UIImage) -> Void) {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchOptions.fetchLimit = 1
+        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+        if fetchResult.count > 0 {
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.isSynchronous = true // This is to just return a thumbnail
+            PHImageManager.default().requestImage(for: fetchResult.object(at: 0) as PHAsset, targetSize: view.frame.size, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+                if let image = image {
+                    completion(image)
+                }
+            })
+        }
     }
 }
 
@@ -241,5 +273,9 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
         if let mode = currentMode {
             delegate?.didPanForZoom(mode, currentPoint, gesture)
         }
+    }
+
+    func mediaPickerButtonDidPress() {
+        delegate?.didTapMediaPickerButton()
     }
 }
