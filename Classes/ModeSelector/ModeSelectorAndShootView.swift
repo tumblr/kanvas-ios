@@ -168,7 +168,13 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private func createTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
         preferences.drawing.foregroundColor = .white
-        preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue, .tumblrBrightPurple, .tumblrBrightPink]
+        preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue,
+                                                         .tumblrBrightPurple,
+                                                         .tumblrBrightPink,
+                                                         .tumblrBrightRed,
+                                                         .tumblrBrightOrange,
+                                                         .tumblrBrightYellow,
+                                                         .tumblrBrightGreen,]
         preferences.drawing.arrowPosition = .top
         preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
         preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight

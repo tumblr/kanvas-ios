@@ -45,7 +45,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
     
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -203,9 +203,29 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
         cameraInputController.stopSession()
+        let controller = createNextStepViewController(segments)
+        self.present(controller, animated: true)
+    }
+    
+    private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
+        if settings.features.editor {
+            return createEditorViewController(segments)
+        }
+        else {
+            return createPreviewViewController(segments)
+        }
+    }
+    
+    private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
+        controller.delegate = self
+        return controller
+    }
+    
+    private func createPreviewViewController(_ segments: [CameraSegment]) -> CameraPreviewViewController {
         let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
         controller.delegate = self
-        self.present(controller, animated: true)
+        return controller
     }
     
     /// Shows the tooltip below the mode selector
@@ -567,7 +587,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logNextTapped()
     }
 
-    // MARK: - CameraPreviewControllerDelegate
+    // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
     
     func didFinishExportingVideo(url: URL?) {
         if let videoURL = url {
