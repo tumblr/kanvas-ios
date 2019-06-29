@@ -9,6 +9,7 @@ import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
+import Photos
 
 final class CameraControllerTests: FBSnapshotTestCase {
 
@@ -230,12 +231,27 @@ final class CameraControllerTests: FBSnapshotTestCase {
     }
 
     func testCameraWithMediaPickerButton() {
+        var placeholder: PHObjectPlaceholder?
+        try? PHPhotoLibrary.shared().performChangesAndWait {
+            guard let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) else { return }
+            let request = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            placeholder = request.placeholderForCreatedAsset
+        }
+        defer {
+            if let placeholder = placeholder {
+                try? PHPhotoLibrary.shared().performChangesAndWait {
+                    let result = PHAsset.fetchAssets(withLocalIdentifiers: [placeholder.localIdentifier], options: nil)
+                    PHAssetChangeRequest.deleteAssets(result)
+                }
+            }
+        }
         let settings = CameraSettings()
         settings.enabledModes = [.photo]
         settings.features.mediaPicking = true
         settings.features.cameraFilters = true
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate, settings: settings)
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 2.0))
         FBSnapshotVerifyView(controller.view)
     }
 
