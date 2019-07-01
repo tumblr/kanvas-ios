@@ -161,6 +161,7 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
         case editorFilters(Bool)
         case editorMedia(Bool)
         case editorDrawing(Bool)
+        case mediaPicking(Bool)
 
         var name: String {
             switch self {
@@ -182,6 +183,8 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
                 return "Editor Media"
             case .editorDrawing(_):
                 return "Editor Drawing"
+            case .mediaPicking(_):
+                return "Media Picking"
             }
         }
 
@@ -205,6 +208,8 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
                 return enabled
             case .editorDrawing(let enabled):
                 return enabled
+            case .mediaPicking(let enabled):
+                return enabled
             }
         }
     }
@@ -220,6 +225,7 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
             .editorFilters(settings.features.editorFilters),
             .editorMedia(settings.features.editorMedia),
             .editorDrawing(settings.features.editorDrawing),
+            .mediaPicking(settings.features.mediaPicking),
         ]
     }
 
@@ -252,6 +258,9 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
         case .editorDrawing(_):
             featuresData[indexPath.row] = .editorDrawing(value)
             settings.features.editorDrawing = value
+        case .mediaPicking(_):
+            featuresData[indexPath.row] = .mediaPicking(value)
+            settings.features.mediaPicking = value
         }
     }
 
