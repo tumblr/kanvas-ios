@@ -8,6 +8,7 @@ import AVFoundation
 import Foundation
 import UIKit
 import MobileCoreServices
+import Photos
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -43,11 +44,13 @@ public protocol CameraControllerDelegate: class {
     ///
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
+
+    func provideMediaPickerThumbnail(completion: @escaping (UIImage?) -> Void)
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
 public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
+
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
 
@@ -524,7 +527,36 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
         present(imagePickerController, animated: true, completion: nil)
     }
-    
+
+    func provideMediaPickerThumbnail(completion: @escaping (UIImage?) -> Void) {
+        delegate?.provideMediaPickerThumbnail { image in
+            if let image = image {
+                completion(image)
+                return
+            }
+            else {
+                self.fetchMostRecentPhotoLibraryImage(completion: completion)
+            }
+        }
+    }
+
+    private func fetchMostRecentPhotoLibraryImage(completion: @escaping (UIImage?) -> Void) {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchOptions.fetchLimit = 1
+        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+        if fetchResult.count > 0 {
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.isSynchronous = true // This is to just return a thumbnail
+            PHImageManager.default().requestImage(for: fetchResult.object(at: 0) as PHAsset, targetSize: view.frame.size, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+                completion(image)
+            })
+        }
+        else {
+            completion(nil)
+        }
+    }
+
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
     func optionSelected(_ item: CameraOption) {
@@ -718,7 +750,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             }
         }
     }
-    
+
     // MARK: - breakdown
     
     /// This function should be called to stop the camera session and properly breakdown the inputs

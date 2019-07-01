@@ -244,6 +244,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         NSLayoutConstraint.activate([
             mediaPickerButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
             mediaPickerButton.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
+            mediaPickerButton.widthAnchor.constraint(equalToConstant: 30),
+            mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
         ])
     }
 
