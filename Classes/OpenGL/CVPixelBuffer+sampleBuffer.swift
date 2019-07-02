@@ -9,6 +9,8 @@ import AVFoundation
 
 extension CVPixelBuffer {
 
+    /// Create a CMSampleBuffer from this image buffer.
+    /// - returns: CMSampleBuffer?
     func sampleBuffer() -> CMSampleBuffer? {
         var sampleBufferMaybe: CMSampleBuffer?
         var formatDescriptionMaybe: CMFormatDescription?

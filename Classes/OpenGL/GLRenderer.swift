@@ -29,7 +29,7 @@ protocol GLRendererDelegate: class {
     func rendererRanOutOfBuffers()
 }
 
-protocol GLRendererProtocol: class {
+protocol GLRendering: class {
     var delegate: GLRendererDelegate? { get set }
     var filterType: FilterType { get }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer)
@@ -40,7 +40,7 @@ protocol GLRendererProtocol: class {
 }
 
 /// Renders pixel buffers with open gl
-final class GLRenderer: GLRendererProtocol {
+final class GLRenderer: GLRendering {
 
     /// Optional delegate
     weak var delegate: GLRendererDelegate?

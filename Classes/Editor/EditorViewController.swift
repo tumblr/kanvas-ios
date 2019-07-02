@@ -89,10 +89,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         setupNotifications()
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     private func setupNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)

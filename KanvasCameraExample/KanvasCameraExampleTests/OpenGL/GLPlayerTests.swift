@@ -12,7 +12,7 @@ import AVFoundation
 
 class GLPlayerTests: XCTestCase {
 
-    class GLRendererMock: GLRendererProtocol {
+    class GLRendererMock: GLRendering {
         weak var delegate: GLRendererDelegate?
 
         private(set) var filterType: FilterType = .passthrough
@@ -69,13 +69,29 @@ class GLPlayerTests: XCTestCase {
             XCTFail("Could not load sample.mp4")
             return
         }
+
+        let asset = AVAsset(url: videoURL)
+        guard let videoTrack = asset.tracks(withMediaType: .video).first else {
+            XCTFail("Could not find a video track")
+            return
+        }
+        let frameRate = videoTrack.nominalFrameRate
+
         let renderer = mockRenderer()
         let player = GLPlayer(renderer: renderer)
         player.play(media: [
             GLPlayerMedia.video(videoURL)
         ])
+
+        // Let the video play for one second
         RunLoop.main.run(until: Date(timeIntervalSinceNow: 1))
-        XCTAssertEqual(renderer.processedSampleBufferCallCount, 30, "Expected processSampleBuffer to be called 30 times (30 fps)")
+
+        // After a second, processedSampleBuffer should have been called for each frame of video.
+        // Using greater-than since we'll most likely be called faster than the framerate.
+        // Also, always checking processedSampleBufferCallCount - 1 since the first call is initialization.
+        // AAAlso, compare against frameRate - 5, since the tests could be slow...
+        print(renderer.processedSampleBufferCallCount - 1, UInt(frameRate))
+        XCTAssertGreaterThan(renderer.processedSampleBufferCallCount - 1, UInt(frameRate - 5), "Expected processSampleBuffer to be called for approximately each frame of video")
         XCTAssertNotNil(renderer.processedSampleBuffer, "Expected processSampleBuffer to be called")
     }
 
