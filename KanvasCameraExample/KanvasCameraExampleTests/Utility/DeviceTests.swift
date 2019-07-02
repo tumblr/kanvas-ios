@@ -9,7 +9,11 @@ import XCTest
 
 /// Tests the Device struct
 final class DeviceTests: XCTestCase {
-    
+
+    func testKanvasDevice() {
+        XCTAssertEqual(Int(UIScreen.main.bounds.size.height), KanvasDevice.screenHeight, "typealias KanvasDevice isn't working as expected")
+    }
+
     func testDeviceIsIPhone() {
         let isIPhone = UIDevice.current.userInterfaceIdiom == .phone
         XCTAssertEqual(isIPhone, Device.isIPhone, "isIPhone property is not working as expected")
