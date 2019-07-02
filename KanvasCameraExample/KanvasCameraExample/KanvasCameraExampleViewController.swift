@@ -358,6 +358,11 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         dismissCamera()
     }
 
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        // Providing nil signals CameraController to load the thumbnail itself
+        completion(nil)
+    }
+
     private func save(media: KanvasCameraMedia) {
         PHPhotoLibrary.requestAuthorization { authorizationStatus in
             switch authorizationStatus {

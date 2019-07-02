@@ -6,8 +6,6 @@
 
 import Foundation
 
-import Photos
-
 /// Protocol for handling mode selector and capture button events
 protocol ModeSelectorAndShootControllerDelegate: class {
     /// Function called when a mode was selected
@@ -43,6 +41,8 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     func didDismissWelcomeTooltip()
 
     func didTapMediaPickerButton()
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
 }
 
 /// Controller that handles interaction between the mode selector and the capture button
@@ -101,9 +101,7 @@ final class ModeSelectorAndShootController: UIViewController {
         if modesQueue.count == 1 {
             hideModeButton()
         }
-        fetchMostRecentPhotoLibraryThumbnail { image in
-            self.setMediaPickerButtonThumbnail(image)
-        }
+        loadMediaPickerThumbnail()
     }
     
     // MARK: - Public interface
@@ -194,24 +192,17 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.toggleMediaPickerButton(visible)
     }
 
-    func setMediaPickerButtonThumbnail(_ image: UIImage) {
-        modeView.setMediaPickerButtonThumbnail(image)
+    func loadMediaPickerThumbnail() {
+        delegate?.provideMediaPickerThumbnail(targetSize: modeView.thumbnailSize) { image in
+            guard let image = image else {
+                return
+            }
+            self.setMediaPickerButtonThumbnail(image)
+        }
     }
 
-    func fetchMostRecentPhotoLibraryThumbnail(completion: @escaping (UIImage) -> Void) {
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchOptions.fetchLimit = 1
-        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
-        if fetchResult.count > 0 {
-            let requestOptions = PHImageRequestOptions()
-            requestOptions.isSynchronous = true // This is to just return a thumbnail
-            PHImageManager.default().requestImage(for: fetchResult.object(at: 0) as PHAsset, targetSize: view.frame.size, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
-                if let image = image {
-                    completion(image)
-                }
-            })
-        }
+    func setMediaPickerButtonThumbnail(_ image: UIImage) {
+        modeView.setMediaPickerButtonThumbnail(image)
     }
 }
 

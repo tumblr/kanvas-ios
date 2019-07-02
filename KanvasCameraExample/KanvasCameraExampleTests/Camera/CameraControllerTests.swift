@@ -9,6 +9,7 @@ import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
+import Photos
 
 final class CameraControllerTests: FBSnapshotTestCase {
 
@@ -282,5 +283,10 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
 
     func dismissButtonPressed() {
         dismissCalled = true
+    }
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) })
+        completion(image)
     }
 }

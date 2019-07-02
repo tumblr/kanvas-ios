@@ -15,8 +15,8 @@ protocol MediaPickerButtonViewDelegate: class {
 final class MediaPickerButtonView: UIView {
 
     private struct Constants {
-        static let borderWidth: CGFloat = 2
-        static let cornerRadius: CGFloat = 7
+        static let borderWidth: CGFloat = 1
+        static let cornerRadius: CGFloat = 5
         static let borderColor: CGColor = UIColor.white.cgColor
         static let backgroundColor: UIColor = .white
     }
