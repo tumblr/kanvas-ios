@@ -288,9 +288,6 @@ class GLPlayer {
         guard let displayLink = displayLink else {
             return
         }
-        //let actualFramesPerSecond = 1 / (displayLink.targetTimestamp - displayLink.timestamp)
-        //print(actualFramesPerSecond)
-
         guard let currentlyPlayingMedia = currentlyPlayingMedia else {
             return
         }
@@ -341,7 +338,7 @@ extension GLPlayer: GLRendererDelegate {
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-
+        // Empty since this method is for storage rather tha rendering
     }
 
     func rendererRanOutOfBuffers() {
