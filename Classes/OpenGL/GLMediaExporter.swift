@@ -8,6 +8,7 @@ import Foundation
 import AVFoundation
 import Photos
 
+/// Errors that can be thrown from GLMediaExporter
 enum GLMediaExporterError: Error {
     case failedDeleteExistingFile
     case noMediaToExport
@@ -18,23 +19,23 @@ enum GLMediaExporterError: Error {
     case unauthorizedToSaveToLibrary
 }
 
+/// Exports media with frame-by-frame OpenGL processing
 class GLMediaExporter {
 
+    /// The FilterType to apply frame-by-frame processing with.
     var filterType: FilterType?
 
-    var progressTimer: Timer?
+    /// A timer you can hook into to get progress updates from an export.
+    private(set) var progressTimer: Timer?
 
+    /// Default initializer
     init(filterType: FilterType?) {
         self.filterType = filterType
     }
 
-    @objc func updateProgress(_ timer: Timer) {
-        guard let exportSession = timer.userInfo as? AVAssetExportSession else {
-            return
-        }
-        print(exportSession.progress)
-    }
-
+    /// Exports an image
+    /// - Parameter image: UIImage to export
+    /// - Parameter completion: callback which is invoked with the processed UIImage
     func export(image: UIImage, completion: (UIImage) -> Void) {
         guard let filterType = filterType else {
             completion(image)
@@ -59,6 +60,9 @@ class GLMediaExporter {
         }
     }
 
+    /// Exports a video
+    /// - Parameter video: URL of a video to export
+    /// - Parameter completion: callback which is invoked with the processed video URL
     func export(video url: URL, completion: @escaping (URL) -> Void) {
         guard let filterType = filterType else {
             completion(url)
@@ -104,5 +108,12 @@ class GLMediaExporter {
             }
             completion(outputURL)
         }
+    }
+
+    @objc private func updateProgress(_ timer: Timer) {
+        guard let exportSession = timer.userInfo as? AVAssetExportSession else {
+            return
+        }
+        print(exportSession.progress)
     }
 }

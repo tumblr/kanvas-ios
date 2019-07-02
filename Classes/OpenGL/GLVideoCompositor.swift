@@ -7,12 +7,15 @@
 import Foundation
 import AVFoundation
 
+/// Errors that can be thrown from GLVideoCompositor
 enum GLVideoCompositorError: Error {
     case missingTrack
     case missingSourceFrame
     case missingSampleBuffer
 }
 
+/// Implements AVVideoCompositing, which allows for getting a CVPixelBuffer for each video frame,
+/// and providing a new CVPixelBuffer to use as the frame in the output video.
 class GLVideoCompositor: NSObject, AVVideoCompositing {
 
     var sourcePixelBufferAttributes: [String: Any]? {
@@ -27,15 +30,19 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
         ]
     }
 
-    var shouldCancelAllRequests = false
+    private var shouldCancelAllRequests = false
 
     private var renderingQueue = DispatchQueue(label: "kanvas.videocompositor.renderingqueue")
 
     private var renderContextQueue = DispatchQueue(label: "kanvas.videocompositor.rendercontextqueue")
 
-    private var renderContext: AVVideoCompositionRenderContext?
-
     private var internalRenderContextDidChange = false
+
+    private var firstFrame: Bool = true
+
+    private var asyncVideoCompositionRequests: [AVAsynchronousVideoCompositionRequest] = []
+
+    private var renderContext: AVVideoCompositionRenderContext?
 
     private var renderContextDidChange: Bool {
         get {
@@ -46,17 +53,15 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
         }
     }
 
+    /// The GLRenderer that should be used to process frames
     let renderer: GLRenderer
 
-    var firstFrame: Bool = true
-
+    /// The FilterType used to process each frame
     var filterType: FilterType {
         didSet {
             renderer.changeFilter(filterType)
         }
     }
-
-    var asyncVideoCompositionRequests: [AVAsynchronousVideoCompositionRequest] = []
 
     override init() {
         renderer = GLRenderer()
