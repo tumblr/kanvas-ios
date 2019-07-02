@@ -12,7 +12,7 @@ import AVFoundation
 
 class GLPlayerTests: XCTestCase {
 
-    class GLRendererMock: GLRendererProtocol {
+    class GLRendererMock: GLRendering {
         weak var delegate: GLRendererDelegate?
 
         private(set) var filterType: FilterType = .passthrough

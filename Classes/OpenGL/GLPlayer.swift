@@ -73,11 +73,11 @@ final class GLPlayer {
     private var timer: Timer?
     private var displayLink: CADisplayLink?
 
-    let renderer: GLRendererProtocol
+    let renderer: GLRendering
 
     weak var playerView: GLPlayerView?
 
-    init(renderer: GLRendererProtocol?) {
+    init(renderer: GLRendering?) {
         self.renderer = renderer ?? GLRenderer()
         self.renderer.delegate = self
     }
