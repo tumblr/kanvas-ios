@@ -529,13 +529,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func provideMediaPickerThumbnail(completion: @escaping (UIImage?) -> Void) {
-        delegate?.provideMediaPickerThumbnail { image in
+        delegate?.provideMediaPickerThumbnail { [weak self] image in
             if let image = image {
                 completion(image)
                 return
             }
             else {
-                self.fetchMostRecentPhotoLibraryImage(completion: completion)
+                self?.fetchMostRecentPhotoLibraryImage(completion: completion)
             }
         }
     }
