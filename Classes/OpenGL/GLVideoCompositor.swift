@@ -31,18 +31,13 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
     }
 
     private var shouldCancelAllRequests = false
-
-    private var renderingQueue = DispatchQueue(label: "kanvas.videocompositor.renderingqueue")
-
-    private var renderContextQueue = DispatchQueue(label: "kanvas.videocompositor.rendercontextqueue")
-
     private var internalRenderContextDidChange = false
+    private var firstFrame = true
 
-    private var firstFrame: Bool = true
-
-    private var asyncVideoCompositionRequests: [AVAsynchronousVideoCompositionRequest] = []
-
+    private let renderingQueue: DispatchQueue
+    private let renderContextQueue: DispatchQueue
     private var renderContext: AVVideoCompositionRenderContext?
+    private var asyncVideoCompositionRequests: [AVAsynchronousVideoCompositionRequest] = []
 
     private var renderContextDidChange: Bool {
         get {
@@ -53,8 +48,8 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
         }
     }
 
-    /// The GLRenderer that should be used to process frames
-    let renderer: GLRenderer
+    /// The GLRendering object that should be used to process frames
+    let renderer: GLRendering
 
     /// The FilterType used to process each frame
     var filterType: FilterType {
@@ -63,8 +58,20 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
         }
     }
 
-    override init() {
-        renderer = GLRenderer()
+    /// Convenience initializer
+    override convenience init() {
+        self.init(
+            renderingQueue: DispatchQueue(label: "kanvas.videocompositor.renderingqueue"),
+            renderContextQueue: DispatchQueue(label: "kanvas.videocompositor.rendercontextqueue"),
+            renderer: GLRenderer()
+        )
+    }
+
+    /// Designated initializer
+    init(renderingQueue: DispatchQueue, renderContextQueue: DispatchQueue, renderer: GLRendering) {
+        self.renderingQueue = renderingQueue
+        self.renderContextQueue = renderContextQueue
+        self.renderer = renderer
         filterType = .passthrough
         super.init()
         renderer.delegate = self
