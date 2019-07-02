@@ -144,9 +144,9 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
         settings.features.openGLPreview = true
         settings.features.openGLCapture = true
         settings.features.cameraFilters = true
-        settings.features.editor = false
+        settings.features.editor = true
         settings.features.editorFilters = true
-        settings.features.editorMedia = true
+        settings.features.editorMedia = false
         settings.features.mediaPicking = true
         return settings
     }
