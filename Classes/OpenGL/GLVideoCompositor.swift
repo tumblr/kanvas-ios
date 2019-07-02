@@ -11,7 +11,6 @@ enum GLVideoCompositorError: Error {
     case missingTrack
     case missingSourceFrame
     case missingSampleBuffer
-
 }
 
 class GLVideoCompositor: NSObject, AVVideoCompositing {
@@ -85,7 +84,7 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
                     asyncVideoCompositionRequest.finish(with: GLVideoCompositorError.missingSourceFrame)
                     return
                 }
-                //guard let dstPixels = renderContext?.newPixelBuffer() else { return }
+
                 if self.renderContextDidChange {
                     self.renderContextDidChange = false
                 }
@@ -96,9 +95,7 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
                 }
 
                 self.asyncVideoCompositionRequests.insert(asyncVideoCompositionRequest, at: 0)
-                print("Added \(self.asyncVideoCompositionRequests.count)")
 
-                // GAH FIRST FRAME BULLSHIT!
                 if self.firstFrame {
                     self.renderer.processSampleBuffer(sampleBuffer)
                     self.firstFrame = false
@@ -122,6 +119,7 @@ class GLVideoCompositor: NSObject, AVVideoCompositing {
 extension GLVideoCompositor: GLRendererDelegate {
 
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
+        // Empty since this method is for rendering, not storage
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
@@ -129,13 +127,12 @@ extension GLVideoCompositor: GLRendererDelegate {
             guard let asyncVideoCompositionRequest = self.asyncVideoCompositionRequests.popLast() else {
                 return
             }
-            print("Popped \(self.asyncVideoCompositionRequests.count)")
             asyncVideoCompositionRequest.finish(withComposedVideoFrame: pixelBuffer)
         }
     }
 
     func rendererRanOutOfBuffers() {
-        print("Ugh...")
+        // Nothing we can do here...
     }
 
 }
