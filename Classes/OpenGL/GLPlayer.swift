@@ -163,11 +163,7 @@ final class GLPlayer {
     }
 
     private func reloadAllMedia() {
-        var newPlayableMedia: [GLPlayerMediaInternal] = []
-        for item in playableMedia {
-            guard let internalMedia = GLPlayer.reloadMedia(media: item) else { continue }
-            newPlayableMedia.append(internalMedia)
-        }
+        let newPlayableMedia = playableMedia.compactMap { GLPlayer.reloadMedia(media: $0) }
         playableMedia.removeAll()
         playableMedia.append(contentsOf: newPlayableMedia)
     }
