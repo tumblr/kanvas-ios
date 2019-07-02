@@ -20,7 +20,7 @@ class GLPlayerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let pixelBufferView = GLPixelBufferView(frame: .zero)
+        let pixelBufferView = GLPixelBufferView(frame: frame)
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
@@ -73,13 +73,13 @@ class GLPlayer {
     private var timer: Timer?
     private var displayLink: CADisplayLink?
 
-    let renderer: GLRenderer
+    let renderer: GLRendererProtocol
 
     weak var playerView: GLPlayerView?
 
-    init() {
-        renderer = GLRenderer()
-        renderer.delegate = self
+    init(renderer: GLRendererProtocol?) {
+        self.renderer = renderer ?? GLRenderer()
+        self.renderer.delegate = self
     }
 
     deinit {
