@@ -4,7 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-struct Device {
+typealias Device = KanvasDevice
+
+public struct KanvasDevice {
     
     // Dimension and scale constants
     static let iPhone4OrLessScreenMaxHeight = 568
@@ -37,5 +39,5 @@ struct Device {
     static let isIPhoneXSMax = isIPhone && screenMaxLength == iPhoneXSMaxScreenHeight
     
     // Device group
-    static let belongsToIPhoneXGroup = isIPhoneX || isIPhoneXR || isIPhoneXS || isIPhoneXSMax
+    public static let belongsToIPhoneXGroup = isIPhoneX || isIPhoneXR || isIPhoneXS || isIPhoneXSMax
 }

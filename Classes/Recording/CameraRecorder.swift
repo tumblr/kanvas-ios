@@ -21,7 +21,7 @@ final class CameraRecorder: NSObject {
     weak var recordingDelegate: CameraRecordingDelegate?
 
     private var url: URL?
-    private var size: CGSize
+    private(set) var size: CGSize
 
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
@@ -33,7 +33,7 @@ final class CameraRecorder: NSObject {
     private let audioOutput: AVCaptureAudioDataOutput?
 
     private var currentRecordingMode: CameraMode
-    private let segmentsHandler: SegmentsHandlerType
+    let segmentsHandler: SegmentsHandlerType
 
     private let photoOutputHandler: PhotoOutputHandler
     private let gifVideoOutputHandler: GifVideoOutputHandler

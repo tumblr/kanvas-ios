@@ -7,6 +7,7 @@
 import AVFoundation
 import Foundation
 import UIKit
+import MobileCoreServices
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -45,7 +46,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -514,6 +515,15 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didDismissWelcomeTooltip() {
         delegate?.didDismissWelcomeTooltip()
     }
+
+    func didTapMediaPickerButton() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .savedPhotosAlbum
+        imagePickerController.allowsEditing = false
+        imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
+        present(imagePickerController, animated: true, completion: nil)
+    }
     
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
@@ -655,7 +665,58 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             analyticsProvider?.logOpenFiltersSelector()
         }
         modeAndShootController.enableShootButtonUserInteraction(!visible)
+        modeAndShootController.toggleMediaPickerButton(!visible)
         modeAndShootController.dismissTooltip()
+    }
+
+    // MARK: - UIImagePickerControllerDelegate
+
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        let imageMaybe = info[.originalImage] as? UIImage
+        let mediaURLMaybe = info[.mediaURL] as? URL
+
+        if let image = imageMaybe {
+            pick(image: image)
+        }
+        else if let mediaURL = mediaURLMaybe {
+            pick(video: mediaURL)
+        }
+    }
+
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+
+    private func pick(image: UIImage) {
+        if self.currentMode == .photo {
+            performUIUpdate {
+                self.showPreviewWithSegments([CameraSegment.image(image, nil)])
+            }
+        }
+        else {
+            if let recorder = self.cameraInputController.recorder as? CameraRecorder {
+                recorder.segmentsHandler.addNewImageSegment(image: image, size: image.size) { _,_ in }
+            }
+            performUIUpdate {
+                self.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                          overlayText: nil,
+                                                          lastFrame: image))
+            }
+        }
+    }
+
+    private func pick(video url: URL) {
+        if let recorder = self.cameraInputController.recorder as? CameraRecorder {
+            recorder.segmentsHandler.addNewVideoSegment(url: url)
+        }
+        performUIUpdate {
+            if let image = AVURLAsset(url: url).thumbnail() {
+                self.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                          overlayText: self.durationStringForAssetAtURL(url),
+                                                          lastFrame: self.getLastFrameFrom(url)))
+            }
+        }
     }
     
     // MARK: - breakdown

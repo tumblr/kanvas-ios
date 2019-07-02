@@ -20,7 +20,7 @@ class GLPlayerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let pixelBufferView = GLPixelBufferView(frame: .zero)
+        let pixelBufferView = GLPixelBufferView(frame: frame)
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
@@ -73,13 +73,13 @@ class GLPlayer {
     private var timer: Timer?
     private var displayLink: CADisplayLink?
 
-    let renderer: GLRenderer
+    let renderer: GLRendererProtocol
 
     weak var playerView: GLPlayerView?
 
-    init() {
-        renderer = GLRenderer()
-        renderer.delegate = self
+    init(renderer: GLRendererProtocol?) {
+        self.renderer = renderer ?? GLRenderer()
+        self.renderer.delegate = self
     }
 
     deinit {
@@ -288,9 +288,6 @@ class GLPlayer {
         guard let displayLink = displayLink else {
             return
         }
-        //let actualFramesPerSecond = 1 / (displayLink.targetTimestamp - displayLink.timestamp)
-        //print(actualFramesPerSecond)
-
         guard let currentlyPlayingMedia = currentlyPlayingMedia else {
             return
         }
@@ -341,7 +338,7 @@ extension GLPlayer: GLRendererDelegate {
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-
+        // Empty since this method is for storage rather tha rendering
     }
 
     func rendererRanOutOfBuffers() {

@@ -82,8 +82,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
-        self.player = GLPlayer()
-        
+
+        self.player = GLPlayer(renderer: GLRenderer())
+
         super.init(nibName: .none, bundle: .none)
         setupNotifications()
     }
