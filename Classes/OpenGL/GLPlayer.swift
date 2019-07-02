@@ -13,7 +13,7 @@ enum GLPlayerMedia {
     case video(URL)
 }
 
-class GLPlayerView: UIView {
+final class GLPlayerView: UIView {
 
     weak var pixelBufferView: GLPixelBufferView?
 
@@ -31,7 +31,7 @@ class GLPlayerView: UIView {
 
 }
 
-class GLPlayer {
+final class GLPlayer {
 
     private struct Constants {
         static let onlyImagesFrameDuration: CMTimeValue = 120
