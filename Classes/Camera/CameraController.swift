@@ -45,7 +45,7 @@ public protocol CameraControllerDelegate: class {
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
 
-    func provideMediaPickerThumbnail(completion: @escaping (UIImage?) -> Void)
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -528,27 +528,28 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         present(imagePickerController, animated: true, completion: nil)
     }
 
-    func provideMediaPickerThumbnail(completion: @escaping (UIImage?) -> Void) {
-        delegate?.provideMediaPickerThumbnail { [weak self] image in
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        delegate?.provideMediaPickerThumbnail(targetSize: targetSize) { [weak self] image in
             if let image = image {
                 completion(image)
                 return
             }
             else {
-                self?.fetchMostRecentPhotoLibraryImage(completion: completion)
+                self?.fetchMostRecentPhotoLibraryImage(targetSize: targetSize, completion: completion)
             }
         }
     }
 
-    private func fetchMostRecentPhotoLibraryImage(completion: @escaping (UIImage?) -> Void) {
+    private func fetchMostRecentPhotoLibraryImage(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchOptions.fetchLimit = 1
         let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
         if fetchResult.count > 0 {
             let requestOptions = PHImageRequestOptions()
-            requestOptions.isSynchronous = true // This is to just return a thumbnail
-            PHImageManager.default().requestImage(for: fetchResult.object(at: 0) as PHAsset, targetSize: view.frame.size, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+            requestOptions.deliveryMode = .opportunistic
+            requestOptions.resizeMode = .fast
+            PHImageManager.default().requestImage(for: fetchResult.object(at: 0) as PHAsset, targetSize: targetSize, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
                 completion(image)
             })
         }

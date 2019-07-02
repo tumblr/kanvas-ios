@@ -285,7 +285,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         dismissCalled = true
     }
 
-    func provideMediaPickerThumbnail(completion: @escaping (UIImage?) -> Void) {
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
         let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) })
         completion(image)
     }

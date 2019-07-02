@@ -21,6 +21,7 @@ private struct ModeSelectorAndShootViewConstants {
     static var shootButtonTopMargin: CGFloat {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
+    static let mediaPickerButtonSize: CGFloat = 30
 }
 
 /// Protocol to handle mode selector container and capture button user actions
@@ -174,6 +175,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         mediaPickerButton.setThumbnail(image)
     }
 
+    var thumbnailSize: CGSize {
+        return CGSize(width: ModeSelectorAndShootViewConstants.mediaPickerButtonSize, height: ModeSelectorAndShootViewConstants.mediaPickerButtonSize)
+    }
+
     // MARK: - UI Layout
 
     private func createTooltip() -> EasyTipView {
@@ -244,7 +249,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         NSLayoutConstraint.activate([
             mediaPickerButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
             mediaPickerButton.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
-            mediaPickerButton.widthAnchor.constraint(equalToConstant: 30),
+            mediaPickerButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.mediaPickerButtonSize),
             mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
         ])
     }

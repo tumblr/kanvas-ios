@@ -42,7 +42,7 @@ protocol ModeSelectorAndShootControllerDelegate: class {
 
     func didTapMediaPickerButton()
 
-    func provideMediaPickerThumbnail(completion: @escaping (UIImage?) -> Void)
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
 }
 
 /// Controller that handles interaction between the mode selector and the capture button
@@ -193,7 +193,7 @@ final class ModeSelectorAndShootController: UIViewController {
     }
 
     func loadMediaPickerThumbnail() {
-        delegate?.provideMediaPickerThumbnail { image in
+        delegate?.provideMediaPickerThumbnail(targetSize: modeView.thumbnailSize) { image in
             guard let image = image else {
                 return
             }

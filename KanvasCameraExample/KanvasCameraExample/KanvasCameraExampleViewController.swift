@@ -358,7 +358,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         dismissCamera()
     }
 
-    func provideMediaPickerThumbnail(completion: @escaping (UIImage?) -> Void) {
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
         // Providing nil signals CameraController to load the thumbnail itself
         completion(nil)
     }
