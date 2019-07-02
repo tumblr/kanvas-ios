@@ -158,67 +158,61 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
             // If the camera mode is .stopMotion and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
-            let exporter = GLMediaExporter(filterType: filterType)
             if let cameraMode = cameraMode, cameraMode == .stopMotion && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
-                exporter.export(video: videoURL) { exportedVideoURL in
-                    performUIUpdate {
-                        self.delegate?.didFinishExportingVideo(url: exportedVideoURL)
-                        self.hideLoading()
-                    }
-                }
+                createFinalVideo(videoURL: videoURL)
             }
             else {
-                exporter.export(image: image) { exportedImage in
-                    performUIUpdate {
-                        self.delegate?.didFinishExportingImage(image: exportedImage)
-                        self.hideLoading()
-                    }
-                }
+                createFinalImage(image: image)
             }
         }
         else {
-            createFinalContent()
+            assetsHandler.mergeAssets(segments: segments) { [weak self] url in
+                guard let url = url else {
+                    self?.handleExportError()
+                    return
+                }
+                self?.createFinalVideo(videoURL: url)
+            }
         }
     }
-    
-    private func createFinalContent() {
-        assetsHandler.mergeAssets(segments: segments, completion: { url in
-            guard let url = url else {
-                self.finishCreatingFinalContent(url: nil)
-                return
-            }
-            let exporter = GLMediaExporter(filterType: self.filterType)
-            exporter.export(video: url) { newURL in
-                self.finishCreatingFinalContent(url: newURL)
-            }
-        })
-    }
 
-    private func finishCreatingFinalContent(url: URL?) {
-        performUIUpdate {
-            if let url = url {
+    private func createFinalVideo(videoURL: URL) {
+        let exporter = GLMediaExporter(filterType: filterType)
+        exporter.export(video: videoURL) { (exportedVideoURL, _) in
+            performUIUpdate {
+                guard let url = exportedVideoURL else {
+                    self.hideLoading()
+                    self.handleExportError()
+                    return
+                }
                 self.delegate?.didFinishExportingVideo(url: url)
                 self.hideLoading()
             }
-            else {
+        }
+    }
+
+    private func createFinalImage(image: UIImage) {
+        let exporter = GLMediaExporter(filterType: filterType)
+        exporter.export(image: image) { (exportedImage, _) in
+            performUIUpdate {
+                guard let image = exportedImage else {
+                    self.hideLoading()
+                    self.handleExportError()
+                    return
+                }
+                self.delegate?.didFinishExportingImage(image: image)
                 self.hideLoading()
-                let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"), preferredStyle: .alert)
-
-                let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel) { [unowned self] _ in
-                    self.delegate?.didFinishExportingVideo(url: url)
-                }
-
-                let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { [unowned self] _ in
-                    self.showLoading()
-                    self.createFinalContent()
-                }
-
-                alertController.addAction(tryAgainButton)
-                alertController.addAction(cancelButton)
-
-                self.present(alertController, animated: true, completion: .none)
             }
         }
+    }
+
+    private func handleExportError() {
+        let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"), preferredStyle: .alert)
+        let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { _ in
+            alertController.dismiss(animated: true, completion: .none)
+        }
+        alertController.addAction(tryAgainButton)
+        self.present(alertController, animated: true, completion: .none)
     }
     
     func closeButtonPressed() {

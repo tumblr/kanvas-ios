@@ -10,13 +10,14 @@ import Photos
 
 /// Errors that can be thrown from GLMediaExporter
 enum GLMediaExporterError: Error {
-    case failedDeleteExistingFile
-    case noMediaToExport
+    case failedDeleteExistingFile(Error)
     case noPresets
     case noCompositor
     case export(Error)
-    case saveToLibrary(Error)
-    case unauthorizedToSaveToLibrary
+    case incomplete
+    case noPixelBuffer
+    case noSampleBuffer
+    case noProcessedImage
 }
 
 /// Exports media with frame-by-frame OpenGL processing
@@ -36,15 +37,17 @@ class GLMediaExporter {
     /// Exports an image
     /// - Parameter image: UIImage to export
     /// - Parameter completion: callback which is invoked with the processed UIImage
-    func export(image: UIImage, completion: (UIImage) -> Void) {
+    func export(image: UIImage, completion: (UIImage?, Error?) -> Void) {
         guard let filterType = filterType else {
-            completion(image)
+            completion(image, nil)
             return
         }
         guard let pixelBuffer = image.pixelBuffer() else {
+            completion(nil, GLMediaExporterError.noPixelBuffer)
             return
         }
         guard let sampleBuffer = pixelBuffer.sampleBuffer() else {
+            completion(nil, GLMediaExporterError.noSampleBuffer)
             return
         }
         let renderer = GLRenderer()
@@ -54,18 +57,19 @@ class GLMediaExporter {
         renderer.processSampleBuffer(sampleBuffer)
         renderer.processSampleBuffer(sampleBuffer) { (filteredPixelBuffer, time) in
             guard let processedImage = UIImage(pixelBuffer: filteredPixelBuffer) else {
+                completion(nil, GLMediaExporterError.noProcessedImage)
                 return
             }
-            completion(processedImage)
+            completion(processedImage, nil)
         }
     }
 
     /// Exports a video
     /// - Parameter video: URL of a video to export
     /// - Parameter completion: callback which is invoked with the processed video URL
-    func export(video url: URL, completion: @escaping (URL) -> Void) {
+    func export(video url: URL, completion: @escaping (URL?, Error?) -> Void) {
         guard let filterType = filterType else {
-            completion(url)
+            completion(url, nil)
             return
         }
         let filePath = NSTemporaryDirectory().appending("ExportedProject.mov")
@@ -74,7 +78,8 @@ class GLMediaExporter {
             do {
                 try FileManager.default.removeItem(atPath: filePath)
             } catch {
-                print("An error occured deleting the file: \(error)")
+                completion(nil, GLMediaExporterError.failedDeleteExistingFile(error))
+                return
             }
         }
         let outputURL = URL(fileURLWithPath: filePath)
@@ -86,6 +91,7 @@ class GLMediaExporter {
         // TODO shouldn't I always pick the highest quality, not the first?
         let presets = AVAssetExportSession.exportPresets(compatibleWith: asset)
         guard let presetName = presets.first else {
+            completion(nil, GLMediaExporterError.noPresets)
             return
         }
 
@@ -95,6 +101,7 @@ class GLMediaExporter {
         exportSession?.shouldOptimizeForNetworkUse = true
         exportSession?.videoComposition = videoComposition
         guard let glVideoCompositor = exportSession?.customVideoCompositor as? GLVideoCompositor else {
+            completion(nil, GLMediaExporterError.noCompositor)
             return
         }
         glVideoCompositor.filterType = filterType
@@ -103,10 +110,15 @@ class GLMediaExporter {
             self.progressTimer?.invalidate()
             self.progressTimer = nil
             guard exportSession?.status == .completed else {
-                if let error = exportSession?.error { print("An export error occurred: \(error.localizedDescription)") }
+                if let error = exportSession?.error {
+                    completion(nil, GLMediaExporterError.export(error))
+                }
+                else {
+                    completion(nil, GLMediaExporterError.incomplete)
+                }
                 return
             }
-            completion(outputURL)
+            completion(outputURL, nil)
         }
     }
 
