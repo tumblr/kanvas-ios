@@ -8,11 +8,13 @@ import UIKit
 import CoreMedia
 import AVFoundation
 
+/// Types of media the player can play.
 enum GLPlayerMedia {
     case image(UIImage)
     case video(URL)
 }
 
+/// View for rendering the player.
 final class GLPlayerView: UIView {
 
     weak var pixelBufferView: GLPixelBufferView?
@@ -31,6 +33,7 @@ final class GLPlayerView: UIView {
 
 }
 
+/// Controls the playback of many GLPlayerMedia
 final class GLPlayer {
 
     private struct Constants {
@@ -73,10 +76,14 @@ final class GLPlayer {
     private var timer: Timer?
     private var displayLink: CADisplayLink?
 
+    /// The GLRendering instance for the player.
     let renderer: GLRendering
 
+    /// The GLPlayerView that this controls.
     weak var playerView: GLPlayerView?
 
+    /// Default initializer
+    /// - Parameter renderer: GLRendering instance for this player to use.
     init(renderer: GLRendering?) {
         self.renderer = renderer ?? GLRenderer()
         self.renderer.delegate = self
@@ -88,6 +95,7 @@ final class GLPlayer {
 
     // MARK: - Public API
 
+    /// The FilterYype for the GLPlayer to use to process frames with
     var filterType: FilterType? {
         get {
             return renderer.filterType
@@ -98,6 +106,8 @@ final class GLPlayer {
         }
     }
 
+    /// Plays a list of media repeatidly.
+    /// - Parameter media: the list of GLPlayerMedia to play
     func play(media: [GLPlayerMedia]) {
         guard media.count > 0 else {
             return
@@ -107,6 +117,7 @@ final class GLPlayer {
         playCurrentMedia()
     }
 
+    /// Stops the playback of media
     func stop() {
         currentlyPlayingMediaIndex = -1
         displayLink?.invalidate()
@@ -125,6 +136,7 @@ final class GLPlayer {
         renderer.reset()
     }
 
+    /// Pauses the playback of media.
     func pause() {
         displayLink?.invalidate()
         displayLink = nil
@@ -133,6 +145,9 @@ final class GLPlayer {
         renderer.reset()
     }
 
+    /// Resumes the playback of media.
+    /// Can be used to resume playback after a call to `pause`.
+    /// Unspecified behavior if used after `stop` ¯\_(ツ)_/¯
     func resume() {
         // A AVAssetReader and AVAssetReaderTrackOutput combo needs to be re-created when the app comes back
         // from the background. Without this, the AVAssetReaderTrackOutput thinks it is ready for reading, but
