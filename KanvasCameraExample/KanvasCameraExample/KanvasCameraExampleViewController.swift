@@ -20,6 +20,8 @@ final class KanvasCameraExampleViewController: UIViewController {
     private let button = UIButton(type: .custom)
     private let featuresTable = UITableView(frame: .zero)
     private var shouldShowWelcomeTooltip = true
+    private var shouldShowColorSelecterTooltip = true
+    private var shouldShowStrokeSelectorAnimation = true
     private var firstLaunch = true
     private lazy var featuresData: [KanvasFeature] = {
         return buildFeaturesData()
@@ -147,6 +149,7 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
         settings.features.editor = true
         settings.features.editorFilters = true
         settings.features.editorMedia = false
+        settings.features.editorDrawing = true
         settings.features.mediaPicking = true
         return settings
     }
@@ -342,6 +345,22 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
     func didDismissWelcomeTooltip() {
         shouldShowWelcomeTooltip = false
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        return shouldShowColorSelecterTooltip
+    }
+    
+    func didDismissColorSelecterTooltip() {
+        shouldShowColorSelecterTooltip = false
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        shouldShowStrokeSelectorAnimation = false
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        return shouldShowStrokeSelectorAnimation
     }
 
     func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
