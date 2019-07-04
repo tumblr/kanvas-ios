@@ -306,7 +306,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             UIView.addKeyframe(withRelativeStartTime: 3.5 / duration, relativeDuration: 0.5 / duration, animations: {
                 self.drawingView.overlay.alpha = 0
             })
-        }, completion:{ _ in
+        }, completion: { _ in
             self.drawingView.isUserInteractionEnabled = true
         })
     }
@@ -348,7 +348,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     private func strokeSelectorPanned(recognizer: UILongPressGestureRecognizer) {
         let point = getStrokeCirclePosition(with: recognizer, in: drawingView.strokeSelectorPannableArea)
-        if (drawingView.strokeSelectorPannableArea.bounds.contains(point)) {
+        if drawingView.strokeSelectorPannableArea.bounds.contains(point) {
             setStrokeCircleLocation(location: point)
             setStrokeCircleSize(percent: 100.0 - point.y)
         }
