@@ -30,4 +30,12 @@ final class DrawingViewTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(view)
     }
     
+    // Cannot test DrawingCanvas since touchesBegan cannot be called programmatically
+    func testDrawingCanvas() {
+        let view = newView()
+        let drawingCanvas = DrawingCanvas()
+        drawingCanvas.backgroundColor = .blue
+        drawingCanvas.add(into: view)
+        FBSnapshotVerifyView(view)
+    }
 }
