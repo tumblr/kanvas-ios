@@ -8,7 +8,7 @@ import Foundation
 
 /// MMCQ (modified median cut quantization) algorithm from
 /// the Leptonica library (http://www.leptonica.com/).
-open class MMCQ {
+final class MMCQ {
     
     // Use only upper 5 bits of 8 bits
     private static let signalBits = 5
@@ -91,7 +91,8 @@ open class MMCQ {
         func makeRange(min: UInt8, max: UInt8) -> CountableRange<Int> {
             if min <= max {
                 return Int(min) ..< Int(max + 1)
-            } else {
+            }
+            else {
                 return Int(max) ..< Int(max)
             }
         }
@@ -107,7 +108,8 @@ open class MMCQ {
         func getVolume(forceRecalculate force: Bool = false) -> Int {
             if let volume = volume, !force {
                 return volume
-            } else {
+            }
+            else {
                 let volume = (Int(rMax) - Int(rMin) + 1) * (Int(gMax) - Int(gMin) + 1) * (Int(bMax) - Int(bMin) + 1)
                 self.volume = volume
                 return volume
@@ -121,7 +123,8 @@ open class MMCQ {
         func getCount(forceRecalculate force: Bool = false) -> Int {
             if let count = count, !force {
                 return count
-            } else {
+            }
+            else {
                 var count = 0
                 for i in rRange {
                     for j in gRange {
@@ -139,7 +142,8 @@ open class MMCQ {
         func getAverage(forceRecalculate force: Bool = false) -> Color {
             if let average = average, !force {
                 return average
-            } else {
+            }
+            else {
                 var ntot = 0
                 
                 var rSum = 0
@@ -165,7 +169,8 @@ open class MMCQ {
                     let g = UInt8(gSum / ntot)
                     let b = UInt8(bSum / ntot)
                     average = Color(r: r, g: g, b: b)
-                } else {
+                }
+                else {
                     let r = UInt8(min(MMCQ.multiplier * (Int(rMin) + Int(rMax) + 1) / 2, 255))
                     let g = UInt8(min(MMCQ.multiplier * (Int(gMin) + Int(gMax) + 1) / 2, 255))
                     let b = UInt8(min(MMCQ.multiplier * (Int(bMin) + Int(bMax) + 1) / 2, 255))
@@ -357,7 +362,8 @@ open class MMCQ {
             var d2: Int
             if left <= right {
                 d2 = min(vboxMax - 1, i + right / 2)
-            } else {
+            }
+            else {
                 // 2.0 and cast to int is necessary to have the same
                 // behaviour as in JavaScript
                 d2 = max(vboxMin, Int(Double(i - 1) - Double(left) / 2.0))
@@ -468,7 +474,8 @@ open class MMCQ {
         if aCount == bCount {
             // If count is 0 for both (or the same), sort by volume
             return aVolume < bVolume
-        } else {
+        }
+        else {
             // Otherwise sort by products
             let aProduct = Int64(aCount) * Int64(aVolume)
             let bProduct = Int64(bCount) * Int64(bVolume)

@@ -6,7 +6,7 @@
 
 import UIKit
 
-public class ColorThief {
+final class ColorThief {
     
     public static let defaultQuality = 10
     public static let defaultIgnoreWhite = true
@@ -78,7 +78,8 @@ public class ColorThief {
         }
         if isCompatibleImage(cgImage) {
             return makeBytesFromCompatibleImage(cgImage)
-        } else {
+        }
+        else {
             return makeBytesFromIncompatibleImage(cgImage)
         }
     }
