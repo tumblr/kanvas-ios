@@ -29,6 +29,7 @@ protocol DrawingControllerDelegate: class {
     
     /// Called when the color selecter is panned
     ///
+    /// - Parameter point: location to take the color from
     /// - Returns: Color from image
     func getColor(from point: CGPoint) -> UIColor
 }
@@ -112,17 +113,46 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         setUpColorSelecter()
     }
     
-    
-    // MARK: - Gesture Recognizers
-    
+    /// Sets up the options for the top menu
     private func setUpTopOptions() {
-        let confirmOption = createOption(image: KanvasCameraImages.editorConfirmImage, selector: #selector(confirmButtonTapped(recognizer:)))
-        let undoOption = createOption(image: KanvasCameraImages.undoImage, selector: #selector(undoButtonTapped(recognizer:)))
-        let eraserOption = createOption(image: KanvasCameraImages.eraserUnselectedImage, selector: #selector(eraseButtonTapped(recognizer:)))
+        let confirmOption = createOption(image: KanvasCameraImages.editorConfirmImage,
+                                         selector: #selector(confirmButtonTapped(recognizer:)))
+        let undoOption = createOption(image: KanvasCameraImages.undoImage,
+                                      selector: #selector(undoButtonTapped(recognizer:)))
+        let eraserOption = createOption(image: KanvasCameraImages.eraserUnselectedImage,
+                                        selector: #selector(eraseButtonTapped(recognizer:)))
+        
         drawingView.topButtonContainer.addArrangedSubview(confirmOption)
         drawingView.topButtonContainer.addArrangedSubview(undoOption)
         drawingView.topButtonContainer.addArrangedSubview(eraserOption)
     }
+    
+    /// Sets up the options for the texture selector
+    private func setUpTextureOptions() {
+        let sharpieOption = createOption(image: KanvasCameraImages.sharpieImage,
+                                         selector: #selector(sharpieOptionTapped(recognizer:)))
+        let markerOption = createOption(image: KanvasCameraImages.markerImage,
+                                        selector: #selector(markerOptionTapped(recognizer:)))
+        let pencilOption = createOption(image: KanvasCameraImages.pencilImage,
+                                        selector: #selector(pencilOptionTapped(recognizer:)))
+        
+        drawingView.textureOptionsStackView.addArrangedSubview(sharpieOption)
+        drawingView.textureOptionsStackView.addArrangedSubview(markerOption)
+        drawingView.textureOptionsStackView.addArrangedSubview(pencilOption)
+    }
+    
+    /// creates an option for a stack view
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func createOption(image: UIImage?, selector: Selector) -> UIImageView {
+        let option = UIImageView(image: image)
+        option.isUserInteractionEnabled = true
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: selector)
+        option.addGestureRecognizer(tapRecognizer)
+        return option
+    }
+    
+    // MARK: - Gesture Recognizers
     
     private func setUpStrokeButton() {
         let longPressRecognizer = UILongPressGestureRecognizer()
@@ -135,26 +165,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         let tapRecognizer = UITapGestureRecognizer()
         tapRecognizer.addTarget(self, action: #selector(textureButtonTapped(recognizer:)))
         drawingView.textureButton.addGestureRecognizer(tapRecognizer)
-    }
-    
-    private func setUpTextureOptions() {
-        let sharpieOption = createOption(image: KanvasCameraImages.sharpieImage, selector: #selector(sharpieOptionTapped(recognizer:)))
-        let markerOption = createOption(image: KanvasCameraImages.markerImage, selector: #selector(markerOptionTapped(recognizer:)))
-        let pencilOption = createOption(image: KanvasCameraImages.pencilImage, selector: #selector(pencilOptionTapped(recognizer:)))
-        drawingView.textureOptionsStackView.addArrangedSubview(sharpieOption)
-        drawingView.textureOptionsStackView.addArrangedSubview(markerOption)
-        drawingView.textureOptionsStackView.addArrangedSubview(pencilOption)
-    }
-    
-    /// creates an option for the texture selector (marker, sharpie, pencil)
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func createOption(image: UIImage?, selector: Selector) -> UIImageView {
-        let option = UIImageView(image: image)
-        option.isUserInteractionEnabled = true
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: selector)
-        option.addGestureRecognizer(tapRecognizer)
-        return option
     }
     
     private func setUpColorPickerButton() {
@@ -199,16 +209,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     // MARK: - View animations
     
-    /// toggles the erase icon (selected or unselected)
+    /// toggles the erase icon
+    ///
+    /// - Parameter selected: true to selected icon, false to unselected icon
     private func changeEraseIcon(selected: Bool) {
         drawingView.changeEraseIcon(selected: selected)
-    }
-    
-    /// enables or disables the drawing canvas
-    ///
-    /// - Parameter enable: true to enable, false to disable
-    private func enableDrawingCanvas(_ enable: Bool) {
-        drawingView.enableDrawingCanvas(enable)
     }
     
     /// shows or hides the bottom panel (it includes the buttons menu and the color picker)
@@ -281,6 +286,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.showTooltip(show)
     }
     
+    /// enables or disables the user interaction on the drawing canvas
+    ///
+    /// - Parameter enable: true to enable, false to disable
+    private func enableDrawingCanvas(_ enable: Bool) {
+        drawingView.enableDrawingCanvas(enable)
+    }
+    
+    /// Shows the stroke selector animation for onboarding
     private func showStrokeSelectorAnimation() {
         let duration = 4.0
         let maxScale = DrawingView.strokeCircleMaxSize / DrawingView.strokeCircleMinSize
@@ -421,7 +434,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     }
     
     @objc private func colorPickerSelectorTapped(recognizer: UITapGestureRecognizer) {
-        selectColor(recognizer: recognizer, addToColorCollection: true)
+        selectColor(recognizer: recognizer)
     }
     
     @objc private func colorPickerSelectorPanned(recognizer: UIPanGestureRecognizer) {
@@ -429,7 +442,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         case .changed:
             selectColor(recognizer: recognizer)
         case .ended:
-            selectColor(recognizer: recognizer, addToColorCollection: true)
+            selectColor(recognizer: recognizer)
         default:
             break
         }
@@ -443,7 +456,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         case .changed:
             selectColor(recognizer: recognizer)
         case .ended, .cancelled, .failed:
-            selectColor(recognizer: recognizer, addToColorCollection: true)
+            selectColor(recognizer: recognizer)
             setColorPickerMainColors()
         default:
             break
@@ -486,7 +499,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.setColorPickerLightToDarkColors(drawingColor)
     }
     
-    private func selectColor(recognizer: UIGestureRecognizer, addToColorCollection: Bool = false) {
+    private func selectColor(recognizer: UIGestureRecognizer) {
         guard let selectorView = recognizer.view else { return }
         let point = getColorPosition(with: recognizer, in: selectorView)
         let color = getColor(at: point.x + DrawingView.horizontalSelectorPadding)
@@ -565,12 +578,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     func didDismissColorSelecterTooltip() {
         delegate?.didDismissColorSelecterTooltip()
-    }
-    
-    // MARK: - ColorCollectionControllerDelegate
-    
-    func didSelectColor(_ color: UIColor) {
-        setDrawingColor(color)
     }
     
     // MARK: - Public interface
