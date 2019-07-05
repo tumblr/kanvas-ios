@@ -519,7 +519,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         
         guard let locations: [NSNumber] = drawingView.colorPickerGradient.locations,
             let colors = drawingView.colorPickerGradient.colors as? [CGColor],
-            let upperBound = locations.firstIndex(where: { CGFloat($0) > colorPickerPercent }) else { return defaultColor }
+            let upperBound = locations.firstIndex(where: { CGFloat($0.floatValue) > colorPickerPercent }) else { return defaultColor }
         
         let lowerBound = upperBound - 1
         
