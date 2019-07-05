@@ -40,6 +40,9 @@
 		656194AC22CE2F1000D0DDFA /* ColorThiefTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656194AA22CE2F1000D0DDFA /* ColorThiefTests.swift */; };
 		656194AF22CE2F3F00D0DDFA /* CALayer+ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656194AD22CE2F3F00D0DDFA /* CALayer+ColorTests.swift */; };
 		656194B022CE2F3F00D0DDFA /* UIImage+DominantColorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656194AE22CE2F3F00D0DDFA /* UIImage+DominantColorsTests.swift */; };
+		65A9154D22CFA1B1000918AF /* ColorCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9154A22CFA1B1000918AF /* ColorCollectionCellTests.swift */; };
+		65A9154E22CFA1B1000918AF /* ColorCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9154B22CFA1B1000918AF /* ColorCollectionViewTests.swift */; };
+		65A9154F22CFA1B1000918AF /* ColorCollectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9154C22CFA1B1000918AF /* ColorCollectionControllerTests.swift */; };
 		65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */; };
 		65E46B9322BD22CA004FD226 /* FilterSettingsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */; };
 		65E46B9422BD22CA004FD226 /* FilterSettingsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */; };
@@ -153,6 +156,9 @@
 		656194AA22CE2F1000D0DDFA /* ColorThiefTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorThiefTests.swift; sourceTree = "<group>"; };
 		656194AD22CE2F3F00D0DDFA /* CALayer+ColorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+ColorTests.swift"; sourceTree = "<group>"; };
 		656194AE22CE2F3F00D0DDFA /* UIImage+DominantColorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+DominantColorsTests.swift"; sourceTree = "<group>"; };
+		65A9154A22CFA1B1000918AF /* ColorCollectionCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionCellTests.swift; sourceTree = "<group>"; };
+		65A9154B22CFA1B1000918AF /* ColorCollectionViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewTests.swift; sourceTree = "<group>"; };
+		65A9154C22CFA1B1000918AF /* ColorCollectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionControllerTests.swift; sourceTree = "<group>"; };
 		65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsViewTests.swift; sourceTree = "<group>"; };
@@ -299,6 +305,7 @@
 		651D4B5B22CE67A5004AB75C /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
+				65A9154922CFA1B1000918AF /* ColorCollection */,
 				651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */,
 				651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */,
 				651D4B6022CE683B004AB75C /* DrawingViewTests.swift */,
@@ -324,6 +331,16 @@
 				656194AA22CE2F1000D0DDFA /* ColorThiefTests.swift */,
 			);
 			path = ColorThief;
+			sourceTree = "<group>";
+		};
+		65A9154922CFA1B1000918AF /* ColorCollection */ = {
+			isa = PBXGroup;
+			children = (
+				65A9154A22CFA1B1000918AF /* ColorCollectionCellTests.swift */,
+				65A9154B22CFA1B1000918AF /* ColorCollectionViewTests.swift */,
+				65A9154C22CFA1B1000918AF /* ColorCollectionControllerTests.swift */,
+			);
+			path = ColorCollection;
 			sourceTree = "<group>";
 		};
 		65E46B8D22BD22CA004FD226 /* Filters */ = {
@@ -741,6 +758,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65A9154E22CFA1B1000918AF /* ColorCollectionViewTests.swift in Sources */,
 				65E46BA522BD22DE004FD226 /* EditorFilterCollectionCellTests.swift in Sources */,
 				ABE4990C213722D300379F7F /* OptionTests.swift in Sources */,
 				65E46BA422BD22DE004FD226 /* EditorFilterCollectionViewTests.swift in Sources */,
@@ -804,6 +822,7 @@
 				ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */,
 				65E46B9322BD22CA004FD226 /* FilterSettingsControllerTests.swift in Sources */,
 				65E46BA822BD22DE004FD226 /* EditionMenuCollectionCellTests.swift in Sources */,
+				65A9154D22CFA1B1000918AF /* ColorCollectionCellTests.swift in Sources */,
 				76826A0E2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift in Sources */,
 				ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */,
 				0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */,
@@ -814,6 +833,7 @@
 				65E46BA722BD22DE004FD226 /* EditorViewTests.swift in Sources */,
 				653D062E22BD2C49007118C5 /* FilterCollectionTests.swift in Sources */,
 				651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */,
+				65A9154F22CFA1B1000918AF /* ColorCollectionControllerTests.swift in Sources */,
 				764AC467221D8485005C82EC /* FilteredInputViewControllerTests.swift in Sources */,
 				ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */,
 				651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */,

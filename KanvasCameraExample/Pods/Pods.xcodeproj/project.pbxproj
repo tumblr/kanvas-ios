@@ -93,6 +93,9 @@
 		656194A622CE2E4000D0DDFA /* CALayer+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656194A422CE2E4000D0DDFA /* CALayer+Color.swift */; };
 		656194A722CE2E4000D0DDFA /* UIImage+DominantColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656194A522CE2E4000D0DDFA /* UIImage+DominantColors.swift */; };
 		657377C0E13F2CCC2FD51A94BD5AA217 /* GLError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD84E34004CD01944DEE780A5F72EAA8 /* GLError.swift */; };
+		65A9155422CFA1C6000918AF /* ColorCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9155122CFA1C6000918AF /* ColorCollectionController.swift */; };
+		65A9155522CFA1C6000918AF /* ColorCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9155222CFA1C6000918AF /* ColorCollectionView.swift */; };
+		65A9155622CFA1C6000918AF /* ColorCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9155322CFA1C6000918AF /* ColorCollectionCell.swift */; };
 		65F9EEEC22CE45AA00B5C00B /* DrawingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F9EEE922CE45AA00B5C00B /* DrawingController.swift */; };
 		65F9EEED22CE45AA00B5C00B /* CircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F9EEEA22CE45AA00B5C00B /* CircularImageView.swift */; };
 		65F9EEEE22CE45AA00B5C00B /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F9EEEB22CE45AA00B5C00B /* DrawingView.swift */; };
@@ -416,6 +419,9 @@
 		656194A122CE2E2D00D0DDFA /* MMCQ.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMCQ.swift; sourceTree = "<group>"; };
 		656194A422CE2E4000D0DDFA /* CALayer+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Color.swift"; sourceTree = "<group>"; };
 		656194A522CE2E4000D0DDFA /* UIImage+DominantColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+DominantColors.swift"; sourceTree = "<group>"; };
+		65A9155122CFA1C6000918AF /* ColorCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionController.swift; sourceTree = "<group>"; };
+		65A9155222CFA1C6000918AF /* ColorCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionView.swift; sourceTree = "<group>"; };
+		65A9155322CFA1C6000918AF /* ColorCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionCell.swift; sourceTree = "<group>"; };
 		65F9EEE922CE45AA00B5C00B /* DrawingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingController.swift; sourceTree = "<group>"; };
 		65F9EEEA22CE45AA00B5C00B /* CircularImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularImageView.swift; sourceTree = "<group>"; };
 		65F9EEEB22CE45AA00B5C00B /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
@@ -889,9 +895,20 @@
 			path = ColorThief;
 			sourceTree = "<group>";
 		};
+		65A9155022CFA1C6000918AF /* ColorCollection */ = {
+			isa = PBXGroup;
+			children = (
+				65A9155122CFA1C6000918AF /* ColorCollectionController.swift */,
+				65A9155222CFA1C6000918AF /* ColorCollectionView.swift */,
+				65A9155322CFA1C6000918AF /* ColorCollectionCell.swift */,
+			);
+			path = ColorCollection;
+			sourceTree = "<group>";
+		};
 		65F9EEE822CE459300B5C00B /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
+				65A9155022CFA1C6000918AF /* ColorCollection */,
 				65F9EEEA22CE45AA00B5C00B /* CircularImageView.swift */,
 				65F9EEE922CE45AA00B5C00B /* DrawingController.swift */,
 				65F9EEEB22CE45AA00B5C00B /* DrawingView.swift */,
@@ -1738,6 +1755,7 @@
 				53A971F5A5E5C2BA97E05A5F4CEDA3F0 /* FilterCollectionInnerCell.swift in Sources */,
 				E1B1D02D8ADECB23AC179D57026F2F28 /* FilterCollectionView.swift in Sources */,
 				FF2FE4B92D0A0320276ED15173BB16EA /* FilteredInputViewController.swift in Sources */,
+				65A9155522CFA1C6000918AF /* ColorCollectionView.swift in Sources */,
 				7B1FE5FCB307AC0377DE1D23872B7371 /* FilterFactory.swift in Sources */,
 				73AFDB25297987DA5EF882694DE5C2C1 /* FilterItem.swift in Sources */,
 				8AEB555B0E88C998F457A147A702C007 /* FilterProtocol.swift in Sources */,
@@ -1754,6 +1772,7 @@
 				803635AA4C6F0C4011D39DE3FBDBA9F3 /* IgnoreTouchesCollectionView.swift in Sources */,
 				3ED3C6D8403EBEBE8EEBDA8329BE3DDD /* IgnoreTouchesView.swift in Sources */,
 				23ECF72FD105B0EBB89F533D88276EAE /* ImagePoolFilter.swift in Sources */,
+				65A9155422CFA1C6000918AF /* ColorCollectionController.swift in Sources */,
 				8CF6E56B814EEEC5A4AE9444F88783C7 /* ImagePreviewController.swift in Sources */,
 				0269A4BBB0F5949C8B696A2369F4D032 /* IndexPath+Order.swift in Sources */,
 				7522778A34186F2E6F197A5934E03FD9 /* KanvasCamera-dummy.m in Sources */,
@@ -1812,6 +1831,7 @@
 				4827630D70D4EEDF6A0C0B10CDFA4F8B /* UIImage+PixelBuffer.swift in Sources */,
 				BD0B2C923A3A04CD7759B343C84D497A /* UIUpdate.swift in Sources */,
 				5A070B9F47957DA52DE9B6BC5F9E0F9A /* UIView+Layout.swift in Sources */,
+				65A9155622CFA1C6000918AF /* ColorCollectionCell.swift in Sources */,
 				2528599CA4A1637734B5F25CD9C25747 /* UIViewController+Load.swift in Sources */,
 				D03DED50A167B72F49CED5477F7DB2D1 /* VideoOutputHandler.swift in Sources */,
 				1E2D57608726DC12D58D5777AC7C7310 /* WaveFilter.swift in Sources */,

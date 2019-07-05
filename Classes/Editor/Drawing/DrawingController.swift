@@ -45,7 +45,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, ColorCollectionControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -53,6 +53,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         let view = DrawingView()
         view.delegate = self
         return view
+    }()
+    
+    private lazy var colorCollectionController: ColorCollectionController = {
+        let controller = ColorCollectionController()
+        controller.delegate = self
+        return controller
     }()
     
     // Drawing
@@ -95,6 +101,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         super.viewDidLoad()
         setUpView()
         setUpRecognizers()
+        
+        load(childViewController: colorCollectionController, into: drawingView.colorCollection)
     }
     
     private func setUpView() {
@@ -200,10 +208,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.colorSelecter.addGestureRecognizer(panRecognizer)
     }
     
-    private func setDrawingColor(_ color: UIColor) {
+    private func setDrawingColor(_ color: UIColor, addToColorCollection: Bool = false) {
         drawingColor = color
         mode = .draw
         changeEraseIcon(selected: false)
+        
+        if addToColorCollection {
+            colorCollectionController.addColor(color)
+        }
     }
     
     
@@ -434,7 +446,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     }
     
     @objc private func colorPickerSelectorTapped(recognizer: UITapGestureRecognizer) {
-        selectColor(recognizer: recognizer)
+        selectColor(recognizer: recognizer, addToColorCollection: true)
     }
     
     @objc private func colorPickerSelectorPanned(recognizer: UIPanGestureRecognizer) {
@@ -442,7 +454,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         case .changed:
             selectColor(recognizer: recognizer)
         case .ended:
-            selectColor(recognizer: recognizer)
+            selectColor(recognizer: recognizer, addToColorCollection: true)
         default:
             break
         }
@@ -456,7 +468,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         case .changed:
             selectColor(recognizer: recognizer)
         case .ended, .cancelled, .failed:
-            selectColor(recognizer: recognizer)
+            selectColor(recognizer: recognizer, addToColorCollection: true)
             setColorPickerMainColors()
         default:
             break
@@ -478,7 +490,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             let currentLocation = moveColorSelecter(recognizer: recognizer)
             let color = getColor(at: currentLocation)
             setEyeDropperColor(color)
-            setDrawingColor(color)
+            setDrawingColor(color, addToColorCollection: true)
             
             showColorSelecter(false)
             showColorPickerContainer(true)
@@ -499,12 +511,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.setColorPickerLightToDarkColors(drawingColor)
     }
     
-    private func selectColor(recognizer: UIGestureRecognizer) {
+    private func selectColor(recognizer: UIGestureRecognizer, addToColorCollection: Bool = false) {
         guard let selectorView = recognizer.view else { return }
         let point = getColorPosition(with: recognizer, in: selectorView)
         let color = getColor(at: point.x + DrawingView.horizontalSelectorPadding)
         setEyeDropperColor(color)
-        setDrawingColor(color)
+        setDrawingColor(color, addToColorCollection: addToColorCollection)
     }
     
     private func getColorPosition(with recognizer: UIGestureRecognizer, in view: UIView) -> CGPoint {
@@ -580,7 +592,21 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         delegate?.didDismissColorSelecterTooltip()
     }
     
+    // MARK: - ColorCollectionControllerDelegate
+    
+    func didSelectColor(_ color: UIColor) {
+        setDrawingColor(color)
+    }
+    
     // MARK: - Public interface
+    
+    
+    /// Adds colors to the color carousel
+    ///
+    /// - Parameter colors: list of colors to be added
+    func addColorsForCarousel(colors: [UIColor]) {
+        colorCollectionController.addColors(colors)
+    }
     
     /// shows or hides the drawing menu
     ///

@@ -142,6 +142,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
         view.backgroundColor = .black
         editorView.add(into: view)
+        drawingController.addColorsForCarousel(colors: KanvasCameraImages.confirmImage!.getDominantColors(count: 3))
         
         load(childViewController: collectionController, into: editorView.collectionContainer)
         load(childViewController: filterCollectionController, into: editorView.filterCollectionContainer)
