@@ -305,6 +305,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func takeGif(useLongerDuration: Bool = false) {
         guard !isRecording else { return }
         updatePhotoCaptureState(event: .started)
+        AudioServicesPlaySystemSoundWithCompletion(SystemSoundID(1108), nil)
         cameraInputController.takeGif(useLongerDuration: useLongerDuration, completion: { [weak self] url in
             defer {
                 self?.updatePhotoCaptureState(event: .ended)
