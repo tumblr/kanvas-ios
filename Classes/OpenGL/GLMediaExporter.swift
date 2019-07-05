@@ -21,7 +21,7 @@ enum GLMediaExporterError: Error {
 }
 
 /// Exports media with frame-by-frame OpenGL processing
-class GLMediaExporter {
+final class GLMediaExporter {
 
     /// The FilterType to apply frame-by-frame processing with.
     var filterType: FilterType?

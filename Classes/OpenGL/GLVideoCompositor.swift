@@ -16,7 +16,7 @@ enum GLVideoCompositorError: Error {
 
 /// Implements AVVideoCompositing, which allows for getting a CVPixelBuffer for each video frame,
 /// and providing a new CVPixelBuffer to use as the frame in the output video.
-class GLVideoCompositor: NSObject, AVVideoCompositing {
+final class GLVideoCompositor: NSObject, AVVideoCompositing {
 
     var sourcePixelBufferAttributes: [String: Any]? {
         return [

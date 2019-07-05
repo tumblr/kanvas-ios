@@ -9,7 +9,7 @@ import XCTest
 
 @testable import KanvasCamera
 
-class GLVideoCompositorTests: XCTestCase {
+final class GLVideoCompositorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
