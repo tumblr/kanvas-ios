@@ -85,9 +85,12 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     static let strokeCircleMinSize = DrawingViewConstants.strokeCircleMinSize
     static let strokeCircleMaxSize = DrawingViewConstants.strokeCircleMaxSize
     
-    // Drawing
+    // Drawing views
     let drawingCanvas: DrawingCanvas
     let temporalImageView: UIImageView
+    
+    // Black traslucent overlay used for onboarding
+    let overlay: UIView
     
     // Main containers
     let topButtonContainer: UIStackView
@@ -104,7 +107,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     let strokeSelectorPannableArea: UIView
     let strokeSelectorCircle: UIImageView
     
-    
     // Texture
     let textureButton: CircularImageView
     let textureSelectorBackground: CircularImageView
@@ -112,17 +114,18 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     // Color picker
     let colorPickerButton: CircularImageView
+    let closeColorPickerButton: CircularImageView
+    
+    // Color picker gradient
     let colorPickerSelectorBackground: CircularImageView
     let colorPickerSelectorPannableArea: UIView
     let colorPickerGradient: CAGradientLayer
-    let closeColorPickerButton: CircularImageView
     
     // Eye Dropper
     let eyeDropperButton: CircularImageView
     
     // Color selecter
     let colorSelecter: CircularImageView
-    let overlay: UIView
     var tooltip: EasyTipView?
     
     // Color collection
@@ -177,52 +180,24 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         setUpTopButtons()
         setUpOverlay()
         setUpBottomPanel()
+        setUpBottomMenuContainer()
         setUpBottomMenu()
+        setUpColorPickerContainer()
         setUpColorPicker()
     }
     
-    private func setUpBottomMenu() {
-        setUpBottomMenuContainer()
-        
-        setUpStrokeButton()
-        setUpStrokeButtonCircle()
-        setUpStrokeSelectorBackground()
-        setUpStrokeSelectorPannableArea()
-        setUpStrokeSelectorCircle()
-        
-        setUpTextureButton()
-        setUpTextureSelectorBackground()
-        setUpTextureOptions()
-        
-        setUpColorCollection()
-    }
-    
+    /// Sets up the color picker menu
     private func setUpColorPicker() {
-        setUpColorPickerContainer()
         setUpColorPickerButton()
         setUpCloseColorPickerButton()
         setUpEyeDropper()
         setUpColorPickerSelector()
         setUpColorPickerSelectorPannableArea()
-        
         setUpColorSelecter()
         setUpTooltip()
     }
     
-    private func setUpDrawingCanvas() {
-        drawingCanvas.accessibilityIdentifier = "Editor Drawing Canvas"
-        drawingCanvas.translatesAutoresizingMaskIntoConstraints = false
-        drawingCanvas.clipsToBounds = true
-        addSubview(drawingCanvas)
-        
-        NSLayoutConstraint.activate([
-            drawingCanvas.topAnchor.constraint(equalTo: topAnchor),
-            drawingCanvas.bottomAnchor.constraint(equalTo: bottomAnchor),
-            drawingCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
-            drawingCanvas.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-    }
-    
+    /// Sets up a view where the drawing will be saved temporarily
     private func setUpDrawingTemporalImageView() {
         temporalImageView.accessibilityIdentifier = "Editor Temporal Image View"
         temporalImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -239,6 +214,21 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         temporalImageView.alpha = 0
     }
     
+    private func setUpDrawingCanvas() {
+        drawingCanvas.accessibilityIdentifier = "Editor Drawing Canvas"
+        drawingCanvas.translatesAutoresizingMaskIntoConstraints = false
+        drawingCanvas.clipsToBounds = true
+        addSubview(drawingCanvas)
+        
+        NSLayoutConstraint.activate([
+            drawingCanvas.topAnchor.constraint(equalTo: topAnchor),
+            drawingCanvas.bottomAnchor.constraint(equalTo: bottomAnchor),
+            drawingCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
+            drawingCanvas.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+    
+    /// Sets up the top buttons stack view
     private func setUpTopButtons() {
         topButtonContainer.accessibilityIdentifier = "Editor Top Button Container"
         topButtonContainer.axis = .vertical
@@ -257,28 +247,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
-    private func setUpBottomPanel() {
-        bottomPanelContainer.accessibilityIdentifier = "Editor Bottom Panel Container"
-        bottomPanelContainer.translatesAutoresizingMaskIntoConstraints = false
-        bottomPanelContainer.clipsToBounds = true
-        addSubview(bottomPanelContainer)
-        
-        NSLayoutConstraint.activate([
-            bottomPanelContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            bottomPanelContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            bottomPanelContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -DrawingViewConstants.bottomMargin),
-            bottomPanelContainer.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
-        ])
-    }
-    
-    private func setUpBottomMenuContainer() {
-        bottomMenuContainer.accessibilityIdentifier = "Editor Bottom Menu Container"
-        bottomMenuContainer.translatesAutoresizingMaskIntoConstraints = false
-        bottomMenuContainer.clipsToBounds = true
-        
-        bottomMenuContainer.add(into: bottomPanelContainer)
-    }
-    
+    /// Sets up the translucent black view used for onboarding
     private func setUpOverlay() {
         overlay.accessibilityIdentifier = "Editor Overlay"
         overlay.translatesAutoresizingMaskIntoConstraints = false
@@ -295,6 +264,48 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         
         overlay.alpha = 0
     }
+    
+    /// Sets up a view that holds the main menu and also the color picker
+    private func setUpBottomPanel() {
+        bottomPanelContainer.accessibilityIdentifier = "Editor Bottom Panel Container"
+        bottomPanelContainer.translatesAutoresizingMaskIntoConstraints = false
+        bottomPanelContainer.clipsToBounds = true
+        addSubview(bottomPanelContainer)
+        
+        NSLayoutConstraint.activate([
+            bottomPanelContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            bottomPanelContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            bottomPanelContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -DrawingViewConstants.bottomMargin),
+            bottomPanelContainer.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
+        ])
+    }
+    
+    /// Sets up the main menu container. It contains the stroke, texture and gradient buttons,
+    /// as well as the color colection.
+    private func setUpBottomMenuContainer() {
+        bottomMenuContainer.accessibilityIdentifier = "Editor Bottom Menu Container"
+        bottomMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        bottomMenuContainer.clipsToBounds = true
+        
+        bottomMenuContainer.add(into: bottomPanelContainer)
+    }
+    
+    /// Sets up components of the main bottom menu
+    private func setUpBottomMenu() {
+        setUpStrokeButton()
+        setUpStrokeButtonCircle()
+        setUpStrokeSelectorBackground()
+        setUpStrokeSelectorPannableArea()
+        setUpStrokeSelectorCircle()
+        
+        setUpTextureButton()
+        setUpTextureSelectorBackground()
+        setUpTextureOptions()
+        
+        setUpColorCollection()
+    }
+    
+    // MARK: Layout: Stroke selector
     
     private func setUpStrokeButton() {
         strokeButton.accessibilityIdentifier = "Editor Stroke Button"
@@ -374,6 +385,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
+    // MARK: Layout: Texture selector
+    
     private func setUpTextureButton() {
         textureButton.contentMode = .center
         textureButton.image = KanvasCameraImages.pencilImage
@@ -423,6 +436,9 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
+    // MARK: Layout: Color picker
+    
+    /// Sets up the gradient button that opens the color picker menu
     private func setUpColorPickerButton() {
         colorPickerButton.image = KanvasCameraImages.gradientImage
         bottomMenuContainer.addSubview(colorPickerButton)
@@ -437,6 +453,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
+    /// Sets up the container that holds the close button, eyedropper, color picker gradient
     private func setUpColorPickerContainer() {
         colorPickerContainer.accessibilityIdentifier = "Editor Color Picker Container"
         colorPickerContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -517,6 +534,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorPickerGradient.locations = [0.0, 0.5, 1.0]
     }
     
+    /// Sets up the area of the color picker in which the user can pan
     private func setUpColorPickerSelectorPannableArea() {
         colorPickerSelectorPannableArea.accessibilityIdentifier = "Editor Color Picker Selector Pannable Area"
         colorPickerSelectorPannableArea.translatesAutoresizingMaskIntoConstraints = false
@@ -530,6 +548,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
+    /// Sets up the draggable circle that is shown when the eyedropper is pressed
     private func setUpColorSelecter() {
         colorSelecter.backgroundColor = UIColor.black.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
         colorSelecter.layer.cornerRadius = DrawingViewConstants.colorSelecterSize / 2
@@ -546,6 +565,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorSelecter.alpha = 0
     }
     
+    /// Sets up the color collection that contains the dominant colors as well as the last colors selected
     private func setUpColorCollection() {
         colorCollection.backgroundColor = .clear
         colorCollection.accessibilityIdentifier = "Color Collection Container"
@@ -563,6 +583,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
+    /// Sets up the tooltip that is shown on top of the color selecter
     private func setUpTooltip() {
         var preferences = EasyTipView.Preferences()
         preferences.drawing.foregroundColor = DrawingViewConstants.tooltipForegroundColor
@@ -726,6 +747,7 @@ protocol DrawingCanvasDelegate: class {
     func onCanvasTouchesEnded()
 }
 
+/// View that shows/hides the menus when touched
 final class DrawingCanvas: UIView {
     
     weak var delegate: DrawingCanvasDelegate?
