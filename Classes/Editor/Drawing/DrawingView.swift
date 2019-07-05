@@ -715,7 +715,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
         else {
             UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
-                self.tooltip?.alpha = 0
+                self.tooltip?.removeFromSuperview()
+                self.tooltip?.dismiss()
             }
             delegate?.didDismissColorSelecterTooltip()
         }

@@ -38,6 +38,11 @@ private struct DrawingControllerConstants {
     static let animationDuration: TimeInterval = 0.25
 }
 
+private enum DrawingMode {
+    case draw
+    case erase
+}
+
 /// Controller for handling the drawing menu.
 final class DrawingController: UIViewController, DrawingViewDelegate {
     
@@ -584,9 +589,4 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         })
     }
 
-}
-
-private enum DrawingMode {
-    case draw
-    case erase
 }
