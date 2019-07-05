@@ -172,7 +172,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     // MARK: - Layout
     
     private func setUpViews() {
-        setUpDrawingTemporalCanvas()
+        setUpDrawingTemporalImageView()
         setUpDrawingCanvas()
         setUpTopButtons()
         setUpOverlay()
@@ -223,7 +223,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
-    private func setUpDrawingTemporalCanvas() {
+    private func setUpDrawingTemporalImageView() {
         temporalImageView.accessibilityIdentifier = "Editor Temporal Image View"
         temporalImageView.translatesAutoresizingMaskIntoConstraints = false
         temporalImageView.clipsToBounds = true
