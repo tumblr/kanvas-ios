@@ -80,6 +80,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     private lazy var cameraInputController: CameraInputController = {
         let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass, delegate: self)
+        addChild(controller)
         return controller
     }()
     private lazy var imagePreviewController: ImagePreviewController = {
