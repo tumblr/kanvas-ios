@@ -22,6 +22,8 @@ import TumblrTheme
 
     private var pageViewController: TMPageViewController?
 
+    private var preferences: [String: Bool] = [:]
+
     private lazy var kanvasNavigationController: UINavigationController = {
         let kanvasAnalyticsProvider = KanvasCameraAnalyticsStub()
 
@@ -136,12 +138,11 @@ extension SplitViewController: CameraControllerDelegate {
     }
 
     func didDismissWelcomeTooltip() {
-        // ???
+        preferences["kanvasWelcomeTooltipDismissed"] = true
     }
 
     func cameraShouldShowWelcomeTooltip() -> Bool {
-        // ugh
-        return true
+        return preferences["kanvasWelcomeTooltipDismissed"] != true
     }
 
     func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
