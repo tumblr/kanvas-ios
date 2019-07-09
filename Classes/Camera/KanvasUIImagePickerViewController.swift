@@ -6,12 +6,12 @@
 
 import UIKit
 
-extension UIImagePickerController {
-    override open var prefersStatusBarHidden: Bool {
+class KanvasUIImagePickerViewController: UIImagePickerController {
+    override var prefersStatusBarHidden: Bool {
         return true
     }
 
-    override open var childForStatusBarHidden: UIViewController? {
+    override var childForStatusBarHidden: UIViewController? {
         return nil
     }
 }

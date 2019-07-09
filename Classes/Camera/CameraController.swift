@@ -521,7 +521,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didTapMediaPickerButton() {
-        let imagePickerController = UIImagePickerController()
+        let imagePickerController = KanvasUIImagePickerViewController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .savedPhotosAlbum
         imagePickerController.allowsEditing = false
