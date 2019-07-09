@@ -203,6 +203,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
+    override public func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        modeAndShootController.resetMediaPickerButton()
+    }
+
     // MARK: - navigation
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {

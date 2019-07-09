@@ -204,6 +204,10 @@ final class ModeSelectorAndShootController: UIViewController {
     func setMediaPickerButtonThumbnail(_ image: UIImage) {
         modeView.setMediaPickerButtonThumbnail(image)
     }
+
+    func resetMediaPickerButton() {
+        modeView.resetMediaPickerButton()
+    }
 }
 
 extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
