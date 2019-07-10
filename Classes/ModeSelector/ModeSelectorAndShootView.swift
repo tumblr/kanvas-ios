@@ -176,7 +176,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
 
     func resetMediaPickerButton() {
-        mediaPickerButton.removeGlow()
+        mediaPickerButton.stopGlow(animated: false)
     }
 
     var thumbnailSize: CGSize {

@@ -8,10 +8,14 @@ import Foundation
 
 import UIKit
 
+/// Media Picker Button Delegate
 protocol MediaPickerButtonViewDelegate: class {
+
+    /// Called when the media picker button is pressed
     func mediaPickerButtonDidPress()
 }
 
+/// Media Picker Button
 final class MediaPickerButtonView: UIView {
 
     private struct Constants {
@@ -20,9 +24,15 @@ final class MediaPickerButtonView: UIView {
         static let borderColor: CGColor = UIColor.white.cgColor
         static let backgroundColor: UIColor = .white
         static let shadowColor: CGColor = UIColor.black.cgColor
-        static let shadowOffset: CGSize = CGSize(width: 0, height: 0)
+        static let shadowOffset: CGSize = .zero
         static let shadowOpacity: Float = 0.5
         static let shadowRadius: CGFloat = 1
+        static let glowRadius: CGFloat = 10
+        static let glowOffIntensity: CGFloat = 0
+        static let glowOnIntensity: CGFloat = 0.6
+        static let glowAnimationDuration: TimeInterval = 0.1
+        static let glowOpacity: Float = 1
+        static let glowOffset: CGSize = .zero
     }
 
     private var buttonView = UIButton()
@@ -31,6 +41,10 @@ final class MediaPickerButtonView: UIView {
 
     weak var delegate: MediaPickerButtonViewDelegate?
 
+    // MARK: Internal API
+
+    /// Designated constructor
+    /// - parameter settings: camera settings
     init(settings: CameraSettings) {
         super.init(frame: .zero)
 
@@ -59,6 +73,8 @@ final class MediaPickerButtonView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    /// Shows or hides the button
+    /// - parameter visible: Whether to make the button visible or not
     func showButton(_ visible: Bool) {
         if visible {
             showViews(shownViews: [buttonView], hiddenViews: [], animated: true)
@@ -68,25 +84,44 @@ final class MediaPickerButtonView: UIView {
         }
     }
 
+    /// Sets the thumbnail of the button
+    /// - parameter image: thumbnail
     func setThumbnail(_ image: UIImage) {
         buttonView.setBackgroundImage(image, for: .normal)
         buttonView.setBackgroundImage(image, for: .highlighted)
         buttonView.setBackgroundImage(image, for: .selected)
     }
 
+    /// Resets the media picker button
+    func reset() {
+        stopGlow(animated: false)
+    }
+
+    // MARK: Private API
+
     @objc private func buttonTouchUpInside() {
         delegate?.mediaPickerButtonDidPress()
     }
 
     @objc private func startGlow() {
-        addGlow()
+        setupGlow(color: .white, intensity: Constants.glowOffIntensity)
+        UIView.animate(withDuration: Constants.glowAnimationDuration) { [weak self] in
+            self?.glowView?.alpha = Constants.glowOnIntensity
+        }
     }
 
-    @objc private func stopGlow() {
-        removeGlow()
+    @objc private func stopGlow(animated: Bool) {
+        if animated {
+            UIView.animate(withDuration: Constants.glowAnimationDuration) { [weak self] in
+                self?.glowView?.alpha = Constants.glowOffIntensity
+            }
+        }
+        else {
+            glowView?.alpha = Constants.glowOffIntensity
+        }
     }
 
-    private func addGlow(color: UIColor = .white, intensity: CGFloat = 0.6) {
+    private func setupGlow(color: UIColor, intensity: CGFloat) {
         guard self.glowView == nil else {
             return
         }
@@ -112,15 +147,10 @@ final class MediaPickerButtonView: UIView {
 
         glowView.alpha = intensity
         glowView.layer.shadowColor = color.cgColor
-        glowView.layer.shadowOffset = CGSize.zero
-        glowView.layer.shadowRadius = 10
-        glowView.layer.shadowOpacity = 1.0
+        glowView.layer.shadowOffset = Constants.glowOffset
+        glowView.layer.shadowRadius = Constants.glowRadius
+        glowView.layer.shadowOpacity = Constants.glowOpacity
 
         self.glowView = glowView
-    }
-
-    func removeGlow() {
-        self.glowView?.removeFromSuperview()
-        self.glowView = nil
     }
 }
