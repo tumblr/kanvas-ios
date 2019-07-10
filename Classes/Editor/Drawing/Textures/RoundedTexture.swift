@@ -18,10 +18,8 @@ class RoundedTexture: Texture {
     }
     
     func drawPoint(context: CGContext, on point: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
-        let height = strokeSize / 2
-        
         context.addArc(center: point,
-                       radius: height / 2.0,
+                       radius: strokeSize / 2.0,
                        startAngle: 0,
                        endAngle: CGFloat(2.0) * .pi,
                        clockwise: false)
@@ -32,35 +30,12 @@ class RoundedTexture: Texture {
     }
     
     func drawLine(context: CGContext, from startPoint: CGPoint, to endPoint: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
-        let height = strokeSize / 2
-        
-        let adjacentCathetus = endPoint.x - startPoint.x
-        let oppositeCathetus = startPoint.y - endPoint.y
-        let angle = atan(oppositeCathetus / adjacentCathetus)
-        
-        let horizontalOffset = CGFloat(sin(angle)) * height / 2.0
-        let verticalOffset = CGFloat(cos(angle)) * height / 2.0
-        
-        let points: [CGPoint] = [
-            CGPoint(x: startPoint.x - horizontalOffset, y: startPoint.y - verticalOffset),
-            CGPoint(x: startPoint.x + horizontalOffset, y: startPoint.y + verticalOffset),
-            CGPoint(x: endPoint.x + horizontalOffset, y: endPoint.y + verticalOffset),
-            CGPoint(x: endPoint.x - horizontalOffset, y: endPoint.y - verticalOffset)
-        ]
-        
-        context.addLines(between: points)
+        print(strokeSize)
+        context.addLines(between: [startPoint, endPoint])
         context.setBlendMode(blendMode)
-        context.setFillColor(color.cgColor)
-        context.fillPath()
-        
-        for limitPoint in [startPoint, endPoint] {
-            context.addArc(center: limitPoint,
-                           radius: height / 2.0,
-                           startAngle: 0,
-                           endAngle: CGFloat(2.0) * .pi,
-                           clockwise: false)
-            
-            context.fillPath()
-        }
+        context.setStrokeColor(color.cgColor)
+        context.setLineWidth(strokeSize)
+        context.setLineCap(.round)
+        context.strokePath()
     }
 }

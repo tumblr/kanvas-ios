@@ -10,7 +10,7 @@ import Foundation
 class Sharpie: Texture {
     
     let roundedTexture: RoundedTexture
-    let minimumStroke: CGFloat = 11
+    let minimumStroke: CGFloat = 7
     let maximumStroke: CGFloat = 18
     
     init() {

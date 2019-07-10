@@ -542,6 +542,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         let scale = 1.0 + maxIncrement * percent / 100.0
         drawingView.strokeSelectorCircle.transform = CGAffineTransform(scaleX: scale, y: scale)
         drawingView.strokeButtonCircle.transform = CGAffineTransform(scaleX: scale, y: scale)
+        strokeSizePercent = percent
     }
     
     @objc private func textureButtonTapped(recognizer: UITapGestureRecognizer) {
