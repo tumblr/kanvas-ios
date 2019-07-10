@@ -46,6 +46,7 @@ final class EditorView: UIView {
     let collectionContainer = IgnoreTouchesView()
     let filterCollectionContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
+    let drawingCanvas = IgnoreTouchesView()
     
     private var disposables: [NSKeyValueObservation] = []
     weak var delegate: EditorViewDelegate?
@@ -64,6 +65,7 @@ final class EditorView: UIView {
         let playerView = GLPlayerView()
         playerView.add(into: self)
         self.playerView = playerView
+        drawingCanvas.add(into: self)
 
         setUpCloseButton()
         setUpCloseMenuButton()

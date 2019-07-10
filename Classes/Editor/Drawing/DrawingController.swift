@@ -42,6 +42,15 @@ private struct DrawingControllerConstants {
 private enum DrawingMode {
     case draw
     case erase
+    
+    var blendMode: CGBlendMode {
+        switch self {
+        case .draw:
+            return .normal
+        case .erase:
+            return .clear
+        }
+    }
 }
 
 /// Controller for handling the drawing menu.
@@ -63,8 +72,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
     
     // Drawing
     var drawingLayer: CALayer?
+    private var drawingCollection: [UIImage]
     private var drawingColor: UIColor
     private var mode: DrawingMode
+    private var texture: Texture
+    private var strokeSizePercent: CGFloat
+    private var lastDrawingPoint: CGPoint
     
     // Color picker and selecter
     private var colorSelecterOrigin: CGPoint
@@ -73,9 +86,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
     // MARK: Initializers
     
     init() {
+        drawingCollection = []
         drawingColor = .tumblrBrightBlue
         colorSelecterOrigin = CGPoint.zero
         mode = .draw
+        texture = Sharpie()
+        strokeSizePercent = 0.0
+        colorSelecterOrigin = CGPoint.zero
+        lastDrawingPoint = .zero
         
         super.init(nibName: .none, bundle: .none)
     }
@@ -110,6 +128,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
     }
     
     private func setUpRecognizers() {
+        setUpDrawingCanvas()
         setUpTopOptions()
         setUpStrokeButton()
         setUpTextureButton()
@@ -119,6 +138,24 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         setUpEyeDropper()
         setUpColorPickerSelectorPannableArea()
         setUpColorSelecter()
+    }
+    
+    private func setUpDrawingCanvas() {
+        let panRecognizer = UIPanGestureRecognizer()
+        let longPressRecognizer = UILongPressGestureRecognizer()
+        let tapRecognizer = UITapGestureRecognizer()
+        
+        longPressRecognizer.addTarget(self, action: #selector(drawingCanvasLongPressed(recognizer:)))
+        panRecognizer.addTarget(self, action: #selector(drawingCanvasPanned(recognizer:)))
+        tapRecognizer.addTarget(self, action: #selector(drawingCanvasTapped(recognizer:)))
+        
+        longPressRecognizer.cancelsTouchesInView = false
+        panRecognizer.cancelsTouchesInView = false
+        tapRecognizer.cancelsTouchesInView = false
+        
+        drawingView.drawingCanvas.addGestureRecognizer(panRecognizer)
+        drawingView.drawingCanvas.addGestureRecognizer(longPressRecognizer)
+        drawingView.drawingCanvas.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the options for the top menu
@@ -208,6 +245,60 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         drawingView.colorSelecter.addGestureRecognizer(panRecognizer)
     }
     
+
+    // MARK: - Drawing
+    
+    private func prepareDrawing(on point: CGPoint) {
+        lastDrawingPoint = point
+    }
+    
+    private func draw(to endPoint: CGPoint) {
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+        
+        let maxIncrement = (texture.maximumStroke / texture.minimumStroke) - 1
+        let scale = 1.0 + maxIncrement * strokeSizePercent / 100.0
+        let strokeSize = texture.minimumStroke * scale
+        let startPoint = lastDrawingPoint
+        texture.drawLine(context: context, from: startPoint, to: endPoint, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
+        
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingView.temporalImageView.image = image
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
+    private func endDrawing() {
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds, blendMode: .normal, alpha: 1.0)
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingCollection.append(image)
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
+    private func fillBackground() {
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+        
+        context.setBlendMode(mode.blendMode)
+        context.setFillColor(drawingColor.cgColor)
+        context.fill(drawingView.drawingCanvas.bounds)
+        
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingView.temporalImageView.image = image
+            drawingCollection.append(image)
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
     private func setDrawingColor(_ color: UIColor, addToColorCollection: Bool = false) {
         drawingColor = color
         mode = .draw
@@ -216,6 +307,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         if addToColorCollection {
             colorCollectionController.addColor(color)
         }
+    }
+    
+    func undo() {
+        guard drawingCollection.count > 0 else { return }
+        drawingCollection.removeLast()
+        drawingView.temporalImageView.image = drawingCollection.last
+        drawingLayer?.contents = drawingCollection.last?.cgImage
     }
     
     
@@ -343,13 +441,58 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
     
     // MARK: - Gesture Recognizers
     
+    @objc private func drawingCanvasTapped(recognizer: UITapGestureRecognizer) {
+        let currentPoint = recognizer.location(in: view)
+        
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+        
+        let maxIncrement = (texture.maximumStroke / texture.minimumStroke) - 1
+        let scale = 1.0 + maxIncrement * strokeSizePercent / 100.0
+        let strokeSize = texture.minimumStroke * scale
+        texture.drawPoint(context: context, on: currentPoint, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
+        
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingView.temporalImageView.image = image
+            drawingCollection.append(image)
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
+    @objc private func drawingCanvasPanned(recognizer: UIPanGestureRecognizer) {
+        let currentPoint = recognizer.location(in: view)
+        switch recognizer.state {
+        case .began:
+            prepareDrawing(on: currentPoint)
+        case .changed:
+            draw(to: currentPoint)
+            prepareDrawing(on: currentPoint)
+        case .ended:
+            endDrawing()
+        default:
+            break
+        }
+    }
+    
+    @objc private func drawingCanvasLongPressed(recognizer: UILongPressGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            fillBackground()
+        default:
+            break
+        }
+    }
+    
     @objc private func confirmButtonTapped(recognizer: UITapGestureRecognizer) {
         showTextureSelectorBackground(false)
         delegate?.didTapCloseButton()
     }
     
     @objc private func undoButtonTapped(recognizer: UITapGestureRecognizer) {
-        
+        undo()
     }
     
     @objc private func eraseButtonTapped(recognizer: UITapGestureRecognizer) {
@@ -406,16 +549,19 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
     }
     
     @objc private func pencilOptionTapped(recognizer: UITapGestureRecognizer) {
+        texture = Pencil()
         changeTextureIcon(image: KanvasCameraImages.pencilImage)
         showTextureSelectorBackground(false)
     }
     
     @objc private func markerOptionTapped(recognizer: UITapGestureRecognizer) {
+        texture = Marker()
         changeTextureIcon(image: KanvasCameraImages.markerImage)
         showTextureSelectorBackground(false)
     }
     
     @objc private func sharpieOptionTapped(recognizer: UITapGestureRecognizer) {
+        texture = Sharpie()
         changeTextureIcon(image: KanvasCameraImages.sharpieImage)
         showTextureSelectorBackground(false)
     }
