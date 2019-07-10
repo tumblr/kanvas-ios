@@ -30,7 +30,6 @@ class RoundedTexture: Texture {
     }
     
     func drawLine(context: CGContext, from startPoint: CGPoint, to endPoint: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
-        print(strokeSize)
         context.addLines(between: [startPoint, endPoint])
         context.setBlendMode(blendMode)
         context.setStrokeColor(color.cgColor)
