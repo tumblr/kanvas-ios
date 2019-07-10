@@ -13,17 +13,36 @@ import UIKit
 /// The camera can be customized with CameraSettings
 final class KanvasCameraExampleViewController: UIViewController {
 
+    private struct Constants {
+        static let featureCellReuseIdentifier = "featureCell"
+    }
+
     private let button = UIButton(type: .custom)
+    private let featuresTable = UITableView(frame: .zero)
     private var shouldShowWelcomeTooltip = true
     private var firstLaunch = true
+    private lazy var featuresData: [KanvasFeature] = {
+        return buildFeaturesData()
+    }()
+    private lazy var settings: CameraSettings = {
+        return KanvasCameraExampleViewController.customCameraSettings()
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
         view.addSubview(button)
+        view.addSubview(featuresTable)
 
         setupButton()
+        setupFeaturesTable()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        showFeaturesTableAfterFirstTime()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -46,9 +65,9 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let settings = customCameraSettings()
         let controller = CameraController(settings: settings, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = self
+        controller.modalTransitionStyle = .crossDissolve
         self.present(controller, animated: animated, completion: nil)
     }
 
@@ -56,38 +75,67 @@ final class KanvasCameraExampleViewController: UIViewController {
         button.isUserInteractionEnabled = false
 
         // layout
+        let buttonOffset: CGFloat = KanvasDevice.belongsToIPhoneXGroup ? 95 : 101
+        let buttonWidth: CGFloat = 90
         button.translatesAutoresizingMaskIntoConstraints = false
         button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        button.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -buttonOffset).isActive = true
+        button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
+        button.heightAnchor.constraint(equalToConstant: buttonWidth).isActive = true
 
         // background
         button.setBackgroundImage(UIImage(color: .white), for: .normal)
         button.setBackgroundImage(UIImage(color: UIColor(hex: 0xEEEEEE)), for: .highlighted)
 
         // title
-        button.setTitle("Loading...", for: .normal)
+        button.setTitle("", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.setTitleColor(.black, for: .highlighted)
         button.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
+    }
+
+    private func setupFeaturesTable() {
+        // layout
+        featuresTable.translatesAutoresizingMaskIntoConstraints = false
+        featuresTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        featuresTable.bottomAnchor.constraint(equalTo: button.topAnchor).isActive = true
+        featuresTable.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        featuresTable.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        featuresTable.alpha = 0
+
+        // table view
+        featuresTable.delegate = self
+        featuresTable.dataSource = self
+        featuresTable.register(FeatureTableViewCell.self, forCellReuseIdentifier: Constants.featureCellReuseIdentifier)
+    }
+
+    private func showFeaturesTableAfterFirstTime() {
+        if !firstLaunch {
+            featuresTable.alpha = 1
+        }
     }
 
     private func resetButton() {
         button.isUserInteractionEnabled = true
 
         button.layer.borderColor = UIColor.black.cgColor
-        button.layer.borderWidth = 2
-        button.layer.cornerRadius = 25
+        button.layer.borderWidth = 3
+        button.layer.cornerRadius = button.bounds.width / 2
         button.layer.masksToBounds = true
 
-        button.setTitle("Start camera", for: .normal)
+        button.setTitle("Start", for: .normal)
     }
+
+}
+
+// MARK: - Kanvas Features and UITableViewDelegate and UITableViewDataSource
+
+extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDataSource, FeatureTableViewCellDelegate {
 
     /// This returns the customized settings for the CameraController
     ///
     /// - Returns: an instance of CameraSettings
-    private func customCameraSettings() -> CameraSettings {
+    private static func customCameraSettings() -> CameraSettings {
         let settings = CameraSettings()
         settings.enabledModes = [.photo, .gif, .stopMotion]
         settings.defaultMode = .stopMotion
@@ -98,10 +146,190 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.cameraFilters = true
         settings.features.editor = true
         settings.features.editorFilters = true
-        settings.features.editorMedia = true
+        settings.features.editorMedia = false
+        settings.features.mediaPicking = true
         return settings
     }
 
+    private enum KanvasFeature {
+        case ghostFrame(Bool)
+        case openGLPreview(Bool)
+        case openGLCapture(Bool)
+        case cameraFilters(Bool)
+        case experimentalCameraFilters(Bool)
+        case editor(Bool)
+        case editorFilters(Bool)
+        case editorMedia(Bool)
+        case editorDrawing(Bool)
+        case mediaPicking(Bool)
+
+        var name: String {
+            switch self {
+            case .ghostFrame(_):
+                return "Camera Ghost Frame"
+            case .openGLPreview(_):
+                return "Camera OpenGL"
+            case .openGLCapture(_):
+                return "Camera OpenGL Capture"
+            case .cameraFilters(_):
+                return "Camera Filters"
+            case .experimentalCameraFilters(_):
+                return "Camera Filters (experimental)"
+            case .editor(_):
+                return "Editor"
+            case .editorFilters(_):
+                return "Editor Filters"
+            case .editorMedia(_):
+                return "Editor Media"
+            case .editorDrawing(_):
+                return "Editor Drawing"
+            case .mediaPicking(_):
+                return "Media Picking"
+            }
+        }
+
+        var enabled: Bool {
+            switch self {
+            case .ghostFrame(let enabled):
+                return enabled
+            case .openGLPreview(let enabled):
+                return enabled
+            case .openGLCapture(let enabled):
+                return enabled
+            case .cameraFilters(let enabled):
+                return enabled
+            case .experimentalCameraFilters(let enabled):
+                return enabled
+            case .editor(let enabled):
+                return enabled
+            case .editorFilters(let enabled):
+                return enabled
+            case .editorMedia(let enabled):
+                return enabled
+            case .editorDrawing(let enabled):
+                return enabled
+            case .mediaPicking(let enabled):
+                return enabled
+            }
+        }
+    }
+
+    private func buildFeaturesData() -> [KanvasFeature] {
+        return [
+            .ghostFrame(settings.features.ghostFrame),
+            .openGLPreview(settings.features.openGLPreview),
+            .openGLCapture(settings.features.openGLCapture),
+            .cameraFilters(settings.features.cameraFilters),
+            .experimentalCameraFilters(settings.features.experimentalCameraFilters),
+            .editor(settings.features.editor),
+            .editorFilters(settings.features.editorFilters),
+            .editorMedia(settings.features.editorMedia),
+            .editorDrawing(settings.features.editorDrawing),
+            .mediaPicking(settings.features.mediaPicking),
+        ]
+    }
+
+    private func updateFeaturesData(value: Bool, indexPath: IndexPath) {
+        switch featuresData[indexPath.row] {
+        case .ghostFrame(_):
+            featuresData[indexPath.row] = .ghostFrame(value)
+            settings.features.ghostFrame = value
+        case .openGLPreview(_):
+            featuresData[indexPath.row] = .openGLPreview(value)
+            settings.features.openGLPreview = value
+        case .openGLCapture(_):
+            featuresData[indexPath.row] = .openGLCapture(value)
+            settings.features.openGLCapture = value
+        case .cameraFilters(_):
+            featuresData[indexPath.row] = .cameraFilters(value)
+            settings.features.cameraFilters = value
+        case .experimentalCameraFilters(_):
+            featuresData[indexPath.row] = .experimentalCameraFilters(value)
+            settings.features.experimentalCameraFilters = value
+        case .editor(_):
+            featuresData[indexPath.row] = .editor(value)
+            settings.features.editor = value
+        case .editorFilters(_):
+            featuresData[indexPath.row] = .editorFilters(value)
+            settings.features.editorFilters = value
+        case .editorMedia(_):
+            featuresData[indexPath.row] = .editorMedia(value)
+            settings.features.editorMedia = value
+        case .editorDrawing(_):
+            featuresData[indexPath.row] = .editorDrawing(value)
+            settings.features.editorDrawing = value
+        case .mediaPicking(_):
+            featuresData[indexPath.row] = .mediaPicking(value)
+            settings.features.mediaPicking = value
+        }
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return featuresData.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.featureCellReuseIdentifier, for: indexPath)
+        guard let featureCell = cell as? FeatureTableViewCell else {
+            return cell
+        }
+        featureCell.indexPath = indexPath
+        featureCell.delegate = self
+        featureCell.textLabel?.text = featuresData[indexPath.row].name
+        featureCell.toggleSwitch(featuresData[indexPath.row].enabled, animated: false)
+        return featureCell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? FeatureTableViewCell else {
+            return
+        }
+        let newValue = !featuresData[indexPath.row].enabled
+        cell.toggleSwitch(newValue, animated: true)
+        updateFeaturesData(value: newValue, indexPath: indexPath)
+    }
+
+    func featureTableViewCell(didToggle value: Bool, indexPath: IndexPath) {
+        updateFeaturesData(value: value, indexPath: indexPath)
+    }
+}
+
+protocol FeatureTableViewCellDelegate: class {
+    func featureTableViewCell(didToggle value: Bool, indexPath: IndexPath)
+}
+
+private class FeatureTableViewCell: UITableViewCell {
+
+    private let switchView: UISwitch = UISwitch(frame: .zero)
+
+    var indexPath: IndexPath?
+
+    weak var delegate: FeatureTableViewCellDelegate?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        selectionStyle = .none
+
+        switchView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(switchView)
+        switchView.rightAnchor.constraint(equalTo: self.layoutMarginsGuide.rightAnchor).isActive = true
+        switchView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        switchView.addTarget(self, action: #selector(switchTouchUpInside), for: .touchUpInside)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func switchTouchUpInside() {
+        guard let indexPath = indexPath else { return }
+        delegate?.featureTableViewCell(didToggle: switchView.isOn, indexPath: indexPath)
+    }
+
+    func toggleSwitch(_ value: Bool, animated: Bool) {
+        switchView.setOn(value, animated: animated)
+    }
 }
 
 // MARK: - CameraControllerDelegate
@@ -128,6 +356,11 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
     func dismissButtonPressed() {
         dismissCamera()
+    }
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        // Providing nil signals CameraController to load the thumbnail itself
+        completion(nil)
     }
 
     private func save(media: KanvasCameraMedia) {

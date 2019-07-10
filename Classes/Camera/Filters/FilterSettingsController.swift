@@ -30,7 +30,7 @@ protocol FilterSettingsControllerDelegate: class {
 }
 
 /// Controller for handling the filter selector
-final class FilterSettingsController: UIViewController, FilterSettingsViewDelegate, FilterCollectionControllerDelegate {
+final class FilterSettingsController: UIViewController, FilterSettingsViewDelegate, CameraFilterCollectionControllerDelegate {
     weak var delegate: FilterSettingsControllerDelegate?
 
     let settings: CameraSettings
@@ -41,8 +41,8 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
         return view
     }()
     
-    private lazy var collectionController: FilterCollectionController = {
-        let controller = FilterCollectionController(settings: self.settings)
+    private lazy var collectionController: CameraFilterCollectionController = {
+        let controller = CameraFilterCollectionController(settings: self.settings)
         controller.delegate = self
         return controller
     }()

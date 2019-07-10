@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// Protocol for editor controller methods
+/// Protocol for camera editor controller methods
 
 protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
@@ -21,17 +21,25 @@ protocol EditorControllerDelegate: class {
     func dismissButtonPressed()
 }
 
+
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate {
     
     private lazy var editorView: EditorView = {
         let editorView = EditorView()
         editorView.delegate = self
+        player.playerView = editorView.playerView
         return editorView
     }()
     
     private lazy var collectionController: EditionMenuCollectionController = {
         let controller = EditionMenuCollectionController(settings: self.settings)
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var filterCollectionController: EditorFilterCollectionController = {
+        let controller = EditorFilterCollectionController(settings: self.settings)
         controller.delegate = self
         return controller
     }()
@@ -42,7 +50,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let cameraMode: CameraMode?
-    
+
+    private let player: GLPlayer
+
     weak var delegate: EditorControllerDelegate?
     
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
@@ -67,8 +77,41 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
+
+        self.player = GLPlayer(renderer: GLRenderer())
         
         super.init(nibName: .none, bundle: .none)
+        setupNotifications()
+    }
+
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+    }
+
+    @objc private func appDidBecomeActive() {
+        player.resume()
+    }
+
+    @objc private func appWillResignActive() {
+        player.pause()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        let media: [GLPlayerMedia] = segments.compactMap {segment in
+            if let image = segment.image {
+                return GLPlayerMedia.image(image)
+            }
+            else if let url = segment.videoURL {
+                return GLPlayerMedia.video(url)
+            }
+            else {
+                return nil
+            }
+        }
+        player.play(media: media)
     }
     
     override public func viewDidLoad() {
@@ -76,7 +119,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
         view.backgroundColor = .black
         editorView.add(into: view)
+        
         load(childViewController: collectionController, into: editorView.collectionContainer)
+        load(childViewController: filterCollectionController, into: editorView.filterCollectionContainer)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -86,7 +131,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
-    
+
     // MARK: - Loading Indicator
     /// Shows the loading indicator on this view
     func showLoading() {
@@ -100,9 +145,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         loadingView.stopLoading()
     }
     
-    // MARK: - EditorViewDelegate
+    // MARK: - CameraEditorViewDelegate
     
     func confirmButtonPressed() {
+        player.stop()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
             // If the camera mode is .stopMotion and the `exportStopMotionPhotoAsVideo` is true,
@@ -155,19 +201,39 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func closeButtonPressed() {
+        player.stop()
         delegate?.dismissButtonPressed()
     }
     
     func closeMenuButtonPressed() {
+        filterCollectionController.showView(false)
+        showSelectionCircle(false)
         showCloseMenuButton(false)
         collectionController.showView(true)
         showConfirmButton(true)
+        showCloseButton(true)
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
-        
+        switch editionOption {
+        case .filter:
+            collectionController.showView(false)
+            showConfirmButton(false)
+            showCloseButton(false)
+            filterCollectionController.showView(true)
+            showSelectionCircle(true)
+            showCloseMenuButton(true)
+        case .media:
+            break
+        }
+    }
+    
+    // MARK: - EditorFilterCollectionControllerDelegate
+    
+    func didSelectFilter(_ filterItem: FilterItem) {
+        player.filterType = filterItem.type
     }
     
     // MARK: - Public interface
@@ -184,5 +250,19 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showCloseMenuButton(_ show: Bool) {
         editorView.showCloseMenuButton(show)
+    }
+    
+    /// shows or hides the close button (back caret)
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCloseButton(_ show: Bool) {
+        editorView.showCloseButton(show)
+    }
+    
+    /// shows or hides the filter selection circle
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showSelectionCircle(_ show: Bool) {
+        editorView.showSelectionCircle(show)
     }
 }

@@ -174,7 +174,7 @@ final class CameraView: UIView {
     }
     
     private func setupFilterSettingsGuide() {
-        let bottomMargin = MediaClipsEditorView.height + ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterCollectionView.height) / 2)
+        let bottomMargin = MediaClipsEditorView.height + ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterSettingsView.collectionViewHeight) / 2)
         addLayoutGuide(filterSettingsLayoutGuide)
         filterSettingsLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         filterSettingsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true

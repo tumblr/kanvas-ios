@@ -21,10 +21,11 @@ private struct ModeSelectorAndShootViewConstants {
     static var shootButtonTopMargin: CGFloat {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
+    static let mediaPickerButtonSize: CGFloat = 30
 }
 
 /// Protocol to handle mode selector container and capture button user actions
-protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate {
+protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate, MediaPickerButtonViewDelegate {
     /// Function called when the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
 }
@@ -42,12 +43,14 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         didSet {
             shootButton.delegate = delegate
             modeSelectorButton.delegate = delegate
+            mediaPickerButton.delegate = delegate
         }
     }
 
     private let settings: CameraSettings
     private let shootButton: ShootButtonView
     private let modeSelectorButton: ModeButtonView
+    private let mediaPickerButton: MediaPickerButtonView
     private var tooltip: EasyTipView?
 
     /// Initializer for the mode selector view
@@ -56,6 +59,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
         shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonBaseColor)
+        mediaPickerButton = MediaPickerButtonView(settings: settings)
         self.settings = settings
 
         super.init(frame: .zero)
@@ -163,6 +167,18 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.showTrashOpened(show)
     }
 
+    func toggleMediaPickerButton(_ visible: Bool) {
+        mediaPickerButton.showButton(visible)
+    }
+
+    func setMediaPickerButtonThumbnail(_ image: UIImage) {
+        mediaPickerButton.setThumbnail(image)
+    }
+
+    var thumbnailSize: CGSize {
+        return CGSize(width: ModeSelectorAndShootViewConstants.mediaPickerButtonSize, height: ModeSelectorAndShootViewConstants.mediaPickerButtonSize)
+    }
+
     // MARK: - UI Layout
 
     private func createTooltip() -> EasyTipView {
@@ -188,14 +204,18 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
     
     private func setUpButtons() {
+        addSubview(modeSelectorButton)
+        addSubview(mediaPickerButton)
+        addSubview(shootButton)
+
         setUpModeSelector()
         setUpShootButton()
+        setUpMediaPickerButton()
     }
 
     private func setUpModeSelector() {
         modeSelectorButton.accessibilityIdentifier = "Mode Options Selector Button"
-        
-        addSubview(modeSelectorButton)
+
         modeSelectorButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             modeSelectorButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor,
@@ -207,13 +227,30 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private func setUpShootButton() {
         shootButton.accessibilityIdentifier = "Shoot Button"
 
-        addSubview(shootButton)
         shootButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.shootButtonBottomMargin),
             shootButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             shootButton.heightAnchor.constraint(equalTo: shootButton.widthAnchor),
             shootButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.shootButtonSize)
+        ])
+    }
+
+    private func setUpMediaPickerButton() {
+        mediaPickerButton.translatesAutoresizingMaskIntoConstraints = false
+        let guide = UILayoutGuide()
+        addLayoutGuide(guide)
+        NSLayoutConstraint.activate([
+            guide.topAnchor.constraint(equalTo: shootButton.topAnchor),
+            guide.bottomAnchor.constraint(equalTo: shootButton.bottomAnchor),
+            guide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            guide.trailingAnchor.constraint(equalTo: shootButton.leadingAnchor),
+        ])
+        NSLayoutConstraint.activate([
+            mediaPickerButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+            mediaPickerButton.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
+            mediaPickerButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.mediaPickerButtonSize),
+            mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
         ])
     }
 

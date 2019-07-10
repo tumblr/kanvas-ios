@@ -26,7 +26,7 @@ final class EditionMenuCollectionCellTests: FBSnapshotTestCase {
     
     func testFilterCell() {
         let cell = newCell()
-        let editionOption = EditionOption(type: .media)
+        let editionOption = EditionOption.media
         cell.bindTo(editionOption)
         FBSnapshotVerifyView(cell)
     }

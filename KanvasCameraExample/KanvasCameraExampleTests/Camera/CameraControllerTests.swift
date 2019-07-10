@@ -9,6 +9,7 @@ import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
+import Photos
 
 final class CameraControllerTests: FBSnapshotTestCase {
 
@@ -229,6 +230,29 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
+    func testCameraWithMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
+
+    func testCameraWithFiltersOpenHidesMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        UIView.setAnimationsEnabled(false)
+        controller.didTapVisibilityButton(visible: true)
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(controller.view)
+    }
+
     // Can't test `dismissButtonPressed` because it requires presenting and dismissing preview controller.
 }
 
@@ -259,5 +283,10 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
 
     func dismissButtonPressed() {
         dismissCalled = true
+    }
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) })
+        completion(image)
     }
 }

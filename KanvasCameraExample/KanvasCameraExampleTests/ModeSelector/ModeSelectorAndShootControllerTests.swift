@@ -110,4 +110,12 @@ final class ModeSelectorAndShootDelegateStub: ModeSelectorAndShootControllerDele
     func didDismissWelcomeTooltip() {
         // Works on every mode
     }
+
+    func didTapMediaPickerButton() {
+        // Works on every mode
+    }
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        completion(nil)
+    }
 }

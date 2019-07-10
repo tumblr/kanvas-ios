@@ -269,6 +269,7 @@ class Filter: FilterProtocol {
             if err == kCVReturnWouldExceedAllocationThreshold {
                 // Flush the texture cache to potentially release the retained buffers and try again to create a pixel buffer
                 CVOpenGLESTextureCacheFlush(renderTextureCache, 0)
+                CVOpenGLESTextureCacheFlush(textureCache, 0)
                 err = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(kCFAllocatorDefault, bufferPool, bufferPoolAuxAttributes, &dstPixelBuffer)
             }
             if err != 0 {

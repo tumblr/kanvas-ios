@@ -7,6 +7,8 @@
 import AVFoundation
 import Foundation
 import UIKit
+import MobileCoreServices
+import Photos
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -42,11 +44,13 @@ public protocol CameraControllerDelegate: class {
     ///
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate {
-    
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
 
@@ -528,7 +532,46 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didDismissWelcomeTooltip() {
         delegate?.didDismissWelcomeTooltip()
     }
-    
+
+    func didTapMediaPickerButton() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .savedPhotosAlbum
+        imagePickerController.allowsEditing = false
+        imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
+        present(imagePickerController, animated: true, completion: nil)
+    }
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        delegate?.provideMediaPickerThumbnail(targetSize: targetSize) { [weak self] image in
+            if let image = image {
+                completion(image)
+                return
+            }
+            else {
+                self?.fetchMostRecentPhotoLibraryImage(targetSize: targetSize, completion: completion)
+            }
+        }
+    }
+
+    private func fetchMostRecentPhotoLibraryImage(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchOptions.fetchLimit = 1
+        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+        if fetchResult.count > 0 {
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.deliveryMode = .opportunistic
+            requestOptions.resizeMode = .fast
+            PHImageManager.default().requestImage(for: fetchResult.object(at: 0) as PHAsset, targetSize: targetSize, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+                completion(image)
+            })
+        }
+        else {
+            completion(nil)
+        }
+    }
+
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
 
     func optionSelected(_ item: CameraOption) {
@@ -669,9 +712,60 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             analyticsProvider?.logOpenFiltersSelector()
         }
         modeAndShootController.enableShootButtonUserInteraction(!visible)
+        modeAndShootController.toggleMediaPickerButton(!visible)
         modeAndShootController.dismissTooltip()
     }
-    
+
+    // MARK: - UIImagePickerControllerDelegate
+
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        let imageMaybe = info[.originalImage] as? UIImage
+        let mediaURLMaybe = info[.mediaURL] as? URL
+
+        if let image = imageMaybe {
+            pick(image: image)
+        }
+        else if let mediaURL = mediaURLMaybe {
+            pick(video: mediaURL)
+        }
+    }
+
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+
+    private func pick(image: UIImage) {
+        if self.currentMode == .photo {
+            performUIUpdate {
+                self.showPreviewWithSegments([CameraSegment.image(image, nil)])
+            }
+        }
+        else {
+            if let recorder = self.cameraInputController.recorder as? CameraRecorder {
+                recorder.segmentsHandler.addNewImageSegment(image: image, size: image.size) { _,_ in }
+            }
+            performUIUpdate {
+                self.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                          overlayText: nil,
+                                                          lastFrame: image))
+            }
+        }
+    }
+
+    private func pick(video url: URL) {
+        if let recorder = self.cameraInputController.recorder as? CameraRecorder {
+            recorder.segmentsHandler.addNewVideoSegment(url: url)
+        }
+        performUIUpdate {
+            if let image = AVURLAsset(url: url).thumbnail() {
+                self.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                          overlayText: self.durationStringForAssetAtURL(url),
+                                                          lastFrame: self.getLastFrameFrom(url)))
+            }
+        }
+    }
+
     // MARK: - breakdown
     
     /// This function should be called to stop the camera session and properly breakdown the inputs
