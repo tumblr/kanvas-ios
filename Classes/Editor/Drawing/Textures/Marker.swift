@@ -9,8 +9,9 @@ import Foundation
 
 final class Marker: Texture {
     
-    static let angle: Float = 3.0 * Float.pi / 4.0
-    static let alpha: CGFloat = 0.5
+    static let distanceCoefficient: CGFloat = 0.1
+    static let strokeAngle: Float = 3.0 * Float.pi / 4.0
+    static let alpha: CGFloat = 0.6
     let minimumStroke: CGFloat = 18
     let maximumStroke: CGFloat = 40
     
@@ -23,14 +24,25 @@ final class Marker: Texture {
     func drawLine(context: CGContext, from startPoint: CGPoint, to endPoint: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
         let height = strokeSize / 2
         
-        let horizontalOffset = CGFloat(cos(Marker.angle)) * height / 2.0
-        let verticalOffset = CGFloat(sin(Marker.angle)) * height / 2.0
+        let angleXOffset = CGFloat(cos(Marker.strokeAngle)) * height / 2.0
+        let angleYOffset = CGFloat(sin(Marker.strokeAngle)) * height / 2.0
+        
+        let distanceX = endPoint.x - startPoint.x
+        let distanceY = endPoint.y - startPoint.y
+        var directionAngle = atan(-distanceY/distanceX)
+        
+        if (distanceY < 0 && distanceX < 0) || (distanceY > 0 && distanceX < 0) {
+            directionAngle = directionAngle + .pi
+        }
+        
+        let distanceXOffset = Marker.distanceCoefficient * cos(directionAngle)
+        let distanceYOffset = Marker.distanceCoefficient * sin(directionAngle)
         
         let points: [CGPoint] = [
-            CGPoint(x: startPoint.x + horizontalOffset, y: startPoint.y - verticalOffset),
-            CGPoint(x: startPoint.x - horizontalOffset, y: startPoint.y + verticalOffset),
-            CGPoint(x: endPoint.x - horizontalOffset, y: endPoint.y + verticalOffset),
-            CGPoint(x: endPoint.x + horizontalOffset, y: endPoint.y - verticalOffset)
+            CGPoint(x: startPoint.x + angleXOffset, y: startPoint.y - angleYOffset),
+            CGPoint(x: startPoint.x - angleXOffset, y: startPoint.y + angleYOffset),
+            CGPoint(x: endPoint.x - angleXOffset + distanceXOffset, y: endPoint.y + angleYOffset - distanceYOffset),
+            CGPoint(x: endPoint.x + angleXOffset + distanceXOffset, y: endPoint.y - angleYOffset - distanceYOffset)
         ]
         
         context.setAlpha(Marker.alpha)
