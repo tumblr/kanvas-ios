@@ -101,6 +101,8 @@
 		65A9155422CFA1C6000918AF /* ColorCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9155122CFA1C6000918AF /* ColorCollectionController.swift */; };
 		65A9155522CFA1C6000918AF /* ColorCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9155222CFA1C6000918AF /* ColorCollectionView.swift */; };
 		65A9155622CFA1C6000918AF /* ColorCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A9155322CFA1C6000918AF /* ColorCollectionCell.swift */; };
+		65DE631122D8BB57002F0A62 /* HorizontalCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DE631022D8BB57002F0A62 /* HorizontalCollectionLayout.swift */; };
+		65DE631522D8BC16002F0A62 /* HorizontalCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DE631422D8BC16002F0A62 /* HorizontalCollectionView.swift */; };
 		65F9EEEC22CE45AA00B5C00B /* DrawingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F9EEE922CE45AA00B5C00B /* DrawingController.swift */; };
 		65F9EEED22CE45AA00B5C00B /* CircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F9EEEA22CE45AA00B5C00B /* CircularImageView.swift */; };
 		65F9EEEE22CE45AA00B5C00B /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F9EEEB22CE45AA00B5C00B /* DrawingView.swift */; };
@@ -432,6 +434,8 @@
 		65A9155122CFA1C6000918AF /* ColorCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionController.swift; sourceTree = "<group>"; };
 		65A9155222CFA1C6000918AF /* ColorCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionView.swift; sourceTree = "<group>"; };
 		65A9155322CFA1C6000918AF /* ColorCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionCell.swift; sourceTree = "<group>"; };
+		65DE631022D8BB57002F0A62 /* HorizontalCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalCollectionLayout.swift; sourceTree = "<group>"; };
+		65DE631422D8BC16002F0A62 /* HorizontalCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalCollectionView.swift; sourceTree = "<group>"; };
 		65F9EEE922CE45AA00B5C00B /* DrawingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingController.swift; sourceTree = "<group>"; };
 		65F9EEEA22CE45AA00B5C00B /* CircularImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularImageView.swift; sourceTree = "<group>"; };
 		65F9EEEB22CE45AA00B5C00B /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
@@ -927,6 +931,15 @@
 			path = ColorCollection;
 			sourceTree = "<group>";
 		};
+		65DE630F22D8BB39002F0A62 /* HorizontalCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				65DE631422D8BC16002F0A62 /* HorizontalCollectionView.swift */,
+				65DE631022D8BB57002F0A62 /* HorizontalCollectionLayout.swift */,
+			);
+			path = HorizontalCollectionView;
+			sourceTree = "<group>";
+		};
 		65F9EEE822CE459300B5C00B /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
@@ -993,6 +1006,7 @@
 		82A403522EFF55A745A267415D28DB19 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				65DE630F22D8BB39002F0A62 /* HorizontalCollectionView */,
 				6561949F22CE2E2D00D0DDFA /* ColorThief */,
 				9058DAFD82C8E0A77A32784217137FDE /* ConicalGradientLayer.swift */,
 				2F01826CAF1752556AC811F22C6153F7 /* Device.swift */,
@@ -1815,6 +1829,7 @@
 				C9A06E9ABC1F424CE118F65F511EB528 /* MediaClipsCollectionCell.swift in Sources */,
 				B052C040B4B7AF71D5B7DD5D190620C2 /* MediaClipsCollectionController.swift in Sources */,
 				216422B0F76052B31DFF1165FCB20CAB /* MediaClipsCollectionView.swift in Sources */,
+				65DE631122D8BB57002F0A62 /* HorizontalCollectionLayout.swift in Sources */,
 				0756692363DE5020FFB03ADD2B58B7C5 /* MediaClipsEditorView.swift in Sources */,
 				656B359022D62C1400014AF6 /* Texture.swift in Sources */,
 				A27458BA8A357794A59C8F436EF948DF /* MediaClipsEditorViewController.swift in Sources */,
@@ -1856,6 +1871,7 @@
 				39DEB8BEF4E439B885CBD846D740D451 /* UIFont+Utils.swift in Sources */,
 				C6BE4CA3E6F596D3F9478F13DA9C90CC /* UIImage+Camera.swift in Sources */,
 				C099685B70C2C587719888F2AF189CEC /* UIImage+FlipLeftMirrored.swift in Sources */,
+				65DE631522D8BC16002F0A62 /* HorizontalCollectionView.swift in Sources */,
 				4827630D70D4EEDF6A0C0B10CDFA4F8B /* UIImage+PixelBuffer.swift in Sources */,
 				BD0B2C923A3A04CD7759B343C84D497A /* UIUpdate.swift in Sources */,
 				5A070B9F47957DA52DE9B6BC5F9E0F9A /* UIView+Layout.swift in Sources */,
