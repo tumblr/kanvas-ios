@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol ColorCollectionCellDelegate {
+protocol ColorCollectionCellDelegate: class {
     /// Callback method when selecting a cell
     ///
     /// - Parameters:
@@ -37,7 +37,7 @@ final class ColorCollectionCell: UICollectionViewCell {
     
     private weak var circleView: UIImageView?
     
-    var delegate: ColorCollectionCellDelegate?
+    weak var delegate: ColorCollectionCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
