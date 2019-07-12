@@ -26,4 +26,3 @@ final class HorizontalCollectionLayout: UICollectionViewFlowLayout {
         minimumLineSpacing = 0
     }
 }
-
