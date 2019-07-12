@@ -92,6 +92,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         controller.delegate = self
         return controller
     }()
+
+    private weak var overlayViewController: UIViewController?
     
     private let settings: CameraSettings
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
@@ -210,6 +212,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraInputController.stopSession()
         let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
+        overlayViewController = controller
     }
     
     private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
@@ -758,5 +761,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// This function should be called to stop the camera session and properly breakdown the inputs
     public func cleanup() {
         cameraInputController.cleanup()
+    }
+
+    /// Hides the overlaying view controller
+    public func hideOverlay(completion: @escaping () -> ()) {
+        overlayViewController?.dismiss(animated: true, completion: completion)
     }
 }
