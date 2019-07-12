@@ -35,7 +35,7 @@ final class ColorCollectionCell: UICollectionViewCell {
     static let height = ColorCollectionCellConstants.height
     static let width = ColorCollectionCellConstants.width
     
-    private weak var circleView: UIImageView?
+    private weak var circleView: CircularImageView?
     
     weak var delegate: ColorCollectionCellDelegate?
     
@@ -72,13 +72,6 @@ final class ColorCollectionCell: UICollectionViewCell {
         let imageView = CircularImageView()
         contentView.addSubview(imageView)
         imageView.accessibilityIdentifier = "Color Cell View"
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = ColorCollectionCellConstants.circleDiameter / 2
-        imageView.layer.borderWidth = 2
-        imageView.layer.borderColor = UIColor.white.cgColor
         
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
