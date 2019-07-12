@@ -66,12 +66,18 @@ final class ColorCollectionController: UIViewController, UICollectionViewDelegat
     
     // MARK: - Public interface
     
+    /// adds a color at the beginning of the collection
+    ///
+    /// - Parameter color: the color to append
     func addColor(_ color: UIColor) {
         colors.insert(color, at: 0)
         colorCollectionView.collectionView.reloadData()
         colorCollectionView.collectionView.setContentOffset(.zero, animated: false)
     }
     
+    /// adds an array of colors at the beginning of the collection
+    ///
+    /// - Parameter colorCollection: the colors to append
     func addColors(_ colorCollection: [UIColor]) {
         colors.insert(contentsOf: colorCollection, at: 0)
         colorCollectionView.collectionView.reloadData()

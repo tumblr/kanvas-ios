@@ -14,12 +14,14 @@ private struct ColorCollectionViewConstants {
 /// Collection view for ColorCollectionController
 final class ColorCollectionView: IgnoreTouchesView {
     
+    let collectionView: HorizontalCollectionView
     static let height = ColorCollectionViewConstants.height
-    let collectionView: IgnoreTouchesCollectionView
     let fadeOutGradient = CAGradientLayer()
     
     init() {
-        collectionView = createCollectionView()
+        let layout = HorizontalCollectionLayout(cellWidth: ColorCollectionCell.width, minimumHeight: ColorCollectionCell.height)
+        collectionView = HorizontalCollectionView(frame: .zero, collectionViewLayout: layout, ignoreTouches: false)
+        collectionView.accessibilityIdentifier = "Color Collection"
         
         super.init(frame: .zero)
         
@@ -37,18 +39,14 @@ final class ColorCollectionView: IgnoreTouchesView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateFadeOutEffect() {
-        fadeOutGradient.frame = bounds
-    }
-}
-
-// MARK: - Layout
-extension ColorCollectionView {
-    
     private func setUpViews() {
         collectionView.add(into: self)
         collectionView.clipsToBounds = false
         setFadeOutGradient()
+    }
+    
+    func updateFadeOutEffect() {
+        fadeOutGradient.frame = bounds
     }
     
     private func setFadeOutGradient() {
@@ -62,39 +60,5 @@ extension ColorCollectionView {
         fadeOutGradient.locations = [0, 0.02, 0.9, 1.0]
         layer.mask = fadeOutGradient
     }
-}
-
-// MARK: - Collection
-fileprivate func createCollectionView() -> IgnoreTouchesCollectionView {
-    let layout = UICollectionViewFlowLayout()
-    configureCollectionLayout(layout: layout)
     
-    let collectionView = IgnoreTouchesCollectionView(frame: .zero, collectionViewLayout: layout)
-    collectionView.accessibilityIdentifier = "Color Collection"
-    collectionView.backgroundColor = .clear
-    configureCollection(collectionView: collectionView)
-    return collectionView
-}
-
-fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
-    layout.scrollDirection = .horizontal
-    layout.itemSize = UICollectionViewFlowLayout.automaticSize
-    layout.estimatedItemSize = CGSize(width: ColorCollectionCell.width, height: ColorCollectionCell.height)
-    layout.minimumInteritemSpacing = 0
-    layout.minimumLineSpacing = 0
-}
-
-fileprivate func configureCollection(collectionView: IgnoreTouchesCollectionView) {
-    collectionView.isScrollEnabled = true
-    collectionView.allowsSelection = true
-    collectionView.bounces = true
-    collectionView.alwaysBounceHorizontal = true
-    collectionView.alwaysBounceVertical = false
-    collectionView.showsHorizontalScrollIndicator = false
-    collectionView.showsVerticalScrollIndicator = false
-    collectionView.autoresizesSubviews = true
-    collectionView.contentInset = .zero
-    collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
-    collectionView.dragInteractionEnabled = true
-    collectionView.reorderingCadence = .immediate
 }
