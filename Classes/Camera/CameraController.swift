@@ -103,6 +103,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
     private let cameraZoomHandler: CameraZoomHandler
+    private let feedbackGenerator: UINotificationFeedbackGenerator
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -137,6 +138,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.segmentsHandlerClass = segmentsHandlerClass
         self.analyticsProvider = analyticsProvider
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
+        feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
         cameraZoomHandler.delegate = self
     }
@@ -204,6 +206,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if delegate?.cameraShouldShowWelcomeTooltip() == true {
             showWelcomeTooltip()
         }
+    }
+
+    override public func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        modeAndShootController.resetMediaPickerButton()
     }
 
     // MARK: - navigation
@@ -309,6 +316,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func takeGif(useLongerDuration: Bool = false) {
         guard !isRecording else { return }
         updatePhotoCaptureState(event: .started)
+        AudioServicesPlaySystemSoundWithCompletion(SystemSoundID(1108), nil)
         cameraInputController.takeGif(useLongerDuration: useLongerDuration, completion: { [weak self] url in
             defer {
                 self?.updatePhotoCaptureState(event: .ended)
@@ -431,6 +439,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         updateUI(forClipsPresent: clipsController.hasClips)
     }
     
+    /// Prepares the device for giving haptic feedback
+    private func prepareHapticFeedback() {
+        feedbackGenerator.prepare()
+    }
+    
+    /// Makes the device give haptic feedback
+    private func generateHapticFeedback() {
+        feedbackGenerator.notificationOccurred(.success)
+    }
+    
     // MARK: - CameraViewDelegate
 
     func closeButtonPressed() {
@@ -477,6 +495,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         case .gif:
             takeGif(useLongerDuration: true)
         case .stopMotion:
+            prepareHapticFeedback()
             let _ = cameraInputController.startRecording()
             performUIUpdate { [weak self] in
                 self?.updateRecordState(event: .started)
@@ -505,6 +524,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                                         lastFrame: strongSelf.getLastFrameFrom(url)))
                     }
                     strongSelf.updateRecordState(event: .ended)
+                    strongSelf.generateHapticFeedback()
                 }
             })
         default: break
@@ -524,7 +544,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didTapMediaPickerButton() {
-        let imagePickerController = UIImagePickerController()
+        let imagePickerController = KanvasUIImagePickerViewController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .savedPhotosAlbum
         imagePickerController.allowsEditing = false
