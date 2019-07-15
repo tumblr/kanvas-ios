@@ -97,9 +97,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         setUpRecognizers()
     }
     
+    // MARK: - View
+    
     private func setUpView() {
         drawingView.alpha = 0
     }
+    
+    // MARK: - Gesture Recognizers
     
     private func setUpRecognizers() {
         setUpTopOptions()
@@ -113,46 +117,27 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         setUpColorSelecter()
     }
     
-    /// Sets up the options for the top menu
+    /// Sets up the gesture recognizers for the top options
     private func setUpTopOptions() {
-        let confirmOption = createOption(image: KanvasCameraImages.editorConfirmImage,
-                                         selector: #selector(confirmButtonTapped(recognizer:)))
-        let undoOption = createOption(image: KanvasCameraImages.undoImage,
-                                      selector: #selector(undoButtonTapped(recognizer:)))
-        let eraserOption = createOption(image: KanvasCameraImages.eraserUnselectedImage,
-                                        selector: #selector(eraseButtonTapped(recognizer:)))
+        let confirmButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
+        let undoButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(undoButtonTapped(recognizer:)))
+        let eraseButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(eraseButtonTapped(recognizer:)))
         
-        drawingView.topButtonContainer.addArrangedSubview(confirmOption)
-        drawingView.topButtonContainer.addArrangedSubview(undoOption)
-        drawingView.topButtonContainer.addArrangedSubview(eraserOption)
+        drawingView.confirmButton.addGestureRecognizer(confirmButtonRecognizer)
+        drawingView.undoButton.addGestureRecognizer(undoButtonRecognizer)
+        drawingView.eraseButton.addGestureRecognizer(eraseButtonRecognizer)
     }
     
-    /// Sets up the options for the texture selector
+    /// Sets up the gesture recognizers for the texture options
     private func setUpTextureOptions() {
-        let sharpieOption = createOption(image: KanvasCameraImages.sharpieImage,
-                                         selector: #selector(sharpieOptionTapped(recognizer:)))
-        let markerOption = createOption(image: KanvasCameraImages.markerImage,
-                                        selector: #selector(markerOptionTapped(recognizer:)))
-        let pencilOption = createOption(image: KanvasCameraImages.pencilImage,
-                                        selector: #selector(pencilOptionTapped(recognizer:)))
+        let sharpieButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(sharpieButtonTapped(recognizer:)))
+        let pencilButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(pencilButtonTapped(recognizer:)))
+        let markerButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(markerButtonTapped(recognizer:)))
         
-        drawingView.textureOptionsStackView.addArrangedSubview(sharpieOption)
-        drawingView.textureOptionsStackView.addArrangedSubview(markerOption)
-        drawingView.textureOptionsStackView.addArrangedSubview(pencilOption)
+        drawingView.sharpieButton.addGestureRecognizer(sharpieButtonRecognizer)
+        drawingView.pencilButton.addGestureRecognizer(pencilButtonRecognizer)
+        drawingView.markerButton.addGestureRecognizer(markerButtonRecognizer)
     }
-    
-    /// creates an option for a stack view
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func createOption(image: UIImage?, selector: Selector) -> UIImageView {
-        let option = UIImageView(image: image)
-        option.isUserInteractionEnabled = true
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: selector)
-        option.addGestureRecognizer(tapRecognizer)
-        return option
-    }
-    
-    // MARK: - Gesture Recognizers
     
     private func setUpStrokeButton() {
         let longPressRecognizer = UILongPressGestureRecognizer()
@@ -329,7 +314,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         })
     }
     
-    // MARK: - Gesture Recognizers
+    // MARK: - Gesture Recognizer Selectors
     
     @objc private func confirmButtonTapped(recognizer: UITapGestureRecognizer) {
         showTextureSelectorBackground(false)
@@ -393,17 +378,17 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         showTextureSelectorBackground(true)
     }
     
-    @objc private func pencilOptionTapped(recognizer: UITapGestureRecognizer) {
+    @objc private func pencilButtonTapped(recognizer: UITapGestureRecognizer) {
         changeTextureIcon(image: KanvasCameraImages.pencilImage)
         showTextureSelectorBackground(false)
     }
     
-    @objc private func markerOptionTapped(recognizer: UITapGestureRecognizer) {
+    @objc private func markerButtonTapped(recognizer: UITapGestureRecognizer) {
         changeTextureIcon(image: KanvasCameraImages.markerImage)
         showTextureSelectorBackground(false)
     }
     
-    @objc private func sharpieOptionTapped(recognizer: UITapGestureRecognizer) {
+    @objc private func sharpieButtonTapped(recognizer: UITapGestureRecognizer) {
         changeTextureIcon(image: KanvasCameraImages.sharpieImage)
         showTextureSelectorBackground(false)
     }
