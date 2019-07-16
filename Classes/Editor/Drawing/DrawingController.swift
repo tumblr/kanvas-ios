@@ -636,7 +636,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
     
     // MARK: - Public interface
     
-    
     /// Adds colors to the color carousel
     ///
     /// - Parameter colors: list of colors to be added
