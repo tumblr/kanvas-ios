@@ -255,9 +255,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         
         drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
         
-        let maxIncrement = (texture.maximumStroke / texture.minimumStroke) - 1
-        let scale = 1.0 + maxIncrement * strokeSizePercent / 100.0
-        let strokeSize = texture.minimumStroke * scale
+        let strokeSize = calculateStrokeSize()
         let startPoint = lastDrawingPoint
         texture.drawLine(context: context, from: startPoint, to: endPoint, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
         
@@ -286,9 +284,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         
         drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
         
-        let maxIncrement = (texture.maximumStroke / texture.minimumStroke) - 1
-        let scale = 1.0 + maxIncrement * strokeSizePercent / 100.0
-        let strokeSize = texture.minimumStroke * scale
+        let strokeSize = calculateStrokeSize()
         texture.drawPoint(context: context, on: point, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
         
         if let image = UIGraphicsGetImageFromCurrentImageContext() {
@@ -316,6 +312,15 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
             drawingLayer?.contents = image.cgImage
         }
         UIGraphicsEndImageContext()
+    }
+    
+    /// Calculates the stroke size for drawing, according to the texture and the stroke selector
+    ///
+    /// - Returns: Stroke size
+    private func calculateStrokeSize() -> CGFloat {
+        let maxIncrement = (texture.maximumStroke / texture.minimumStroke) - 1
+        let scale = 1.0 + maxIncrement * strokeSizePercent / 100.0
+        return texture.minimumStroke * scale
     }
     
     /// Sets a new color for drawing
