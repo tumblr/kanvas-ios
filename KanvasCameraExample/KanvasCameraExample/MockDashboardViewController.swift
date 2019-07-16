@@ -42,4 +42,8 @@ class MockDashboardViewController: UIViewController {
     @objc func openKanvas() {
         delegate?.kanvasButtonTapped()
     }
+
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
+    }
 }
