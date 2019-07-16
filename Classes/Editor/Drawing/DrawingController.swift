@@ -239,11 +239,17 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
     
     // MARK: - Drawing
     
-    private func prepareDrawing(on point: CGPoint) {
+    /// Sets the initial point for a line
+    ///
+    /// - Parameter point: location from which the line will start
+    private func prepareLine(on point: CGPoint) {
         lastDrawingPoint = point
     }
     
-    private func draw(to endPoint: CGPoint) {
+    /// Draws a line to a specified point
+    ///
+    /// - Parameter point: location where the line ends
+    private func drawLine(to endPoint: CGPoint) {
         UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
@@ -262,7 +268,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         UIGraphicsEndImageContext()
     }
     
-    private func endDrawing() {
+    /// Saves the drawing state and copies it to the layer
+    private func endLineDrawing() {
         UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
         drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds, blendMode: .normal, alpha: 1.0)
         if let image = UIGraphicsGetImageFromCurrentImageContext() {
@@ -272,6 +279,27 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         UIGraphicsEndImageContext()
     }
     
+    /// Draws a point on a specified point
+    private func drawPoint(on point: CGPoint) {
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+        
+        let maxIncrement = (texture.maximumStroke / texture.minimumStroke) - 1
+        let scale = 1.0 + maxIncrement * strokeSizePercent / 100.0
+        let strokeSize = texture.minimumStroke * scale
+        texture.drawPoint(context: context, on: point, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
+        
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingView.temporalImageView.image = image
+            drawingCollection.append(image)
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
+    /// Paints the complete background with a color
     private func fillBackground() {
         UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
@@ -303,6 +331,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
         }
     }
     
+    /// Takes the drawing back to a previous state
     func undo() {
         guard drawingCollection.count > 0 else { return }
         drawingCollection.removeLast()
@@ -437,35 +466,19 @@ final class DrawingController: UIViewController, DrawingViewDelegate, ColorColle
     
     @objc private func drawingCanvasTapped(recognizer: UITapGestureRecognizer) {
         let currentPoint = recognizer.location(in: view)
-        
-        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
-        guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
-        
-        let maxIncrement = (texture.maximumStroke / texture.minimumStroke) - 1
-        let scale = 1.0 + maxIncrement * strokeSizePercent / 100.0
-        let strokeSize = texture.minimumStroke * scale
-        texture.drawPoint(context: context, on: currentPoint, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
-        
-        if let image = UIGraphicsGetImageFromCurrentImageContext() {
-            drawingView.temporalImageView.image = image
-            drawingCollection.append(image)
-            drawingLayer?.contents = image.cgImage
-        }
-        UIGraphicsEndImageContext()
+        drawPoint(on: currentPoint)
     }
     
     @objc private func drawingCanvasPanned(recognizer: UIPanGestureRecognizer) {
         let currentPoint = recognizer.location(in: view)
         switch recognizer.state {
         case .began:
-            prepareDrawing(on: currentPoint)
+            prepareLine(on: currentPoint)
         case .changed:
-            draw(to: currentPoint)
-            prepareDrawing(on: currentPoint)
+            drawLine(to: currentPoint)
+            prepareLine(on: currentPoint)
         case .ended:
-            endDrawing()
+            endLineDrawing()
         default:
             break
         }
