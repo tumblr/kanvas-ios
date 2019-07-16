@@ -68,7 +68,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     init() {
         drawingColor = .tumblrBrightBlue
-        colorSelecterOrigin = CGPoint.zero
+        colorSelecterOrigin = .zero
         mode = .draw
         
         super.init(nibName: .none, bundle: .none)
@@ -139,6 +139,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.markerButton.addGestureRecognizer(markerButtonRecognizer)
     }
     
+    /// Sets up the gesture recognizer for the stroke button
     private func setUpStrokeButton() {
         let longPressRecognizer = UILongPressGestureRecognizer()
         longPressRecognizer.addTarget(self, action: #selector(strokeButtonLongPressed(recognizer:)))
@@ -146,30 +147,35 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.strokeButton.addGestureRecognizer(longPressRecognizer)
     }
     
+    /// Sets up the gesture recognizer for the texture button
     private func setUpTextureButton() {
         let tapRecognizer = UITapGestureRecognizer()
         tapRecognizer.addTarget(self, action: #selector(textureButtonTapped(recognizer:)))
         drawingView.textureButton.addGestureRecognizer(tapRecognizer)
     }
     
+    /// Sets up the gesture recognizer for gradient button that opens the color picker
     private func setUpColorPickerButton() {
         let tapRecognizer = UITapGestureRecognizer()
         tapRecognizer.addTarget(self, action: #selector(colorPickerTapped(recognizer:)))
         drawingView.colorPickerButton.addGestureRecognizer(tapRecognizer)
     }
     
+    /// Sets up the gesture recognizer for the cross button that closes the color picker
     private func setUpCloseColorPickerButton() {
         let tapRecognizer = UITapGestureRecognizer()
         tapRecognizer.addTarget(self, action: #selector(closeColorPickerButtonTapped(recognizer:)))
         drawingView.closeColorPickerButton.addGestureRecognizer(tapRecognizer)
     }
     
+    /// Sets up the gesture recognizer for the eye dropper button
     private func setUpEyeDropper() {
         let tapRecognizer = UITapGestureRecognizer()
         tapRecognizer.addTarget(self, action: #selector(eyeDropperTapped(recognizer:)))
         drawingView.eyeDropperButton.addGestureRecognizer(tapRecognizer)
     }
     
+    /// Sets up the gesture recognizer for the selectable area of the color picker horizontal gradient
     private func setUpColorPickerSelectorPannableArea() {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(colorPickerSelectorTapped(recognizer:)))
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(colorPickerSelectorPanned(recognizer:)))
@@ -179,12 +185,16 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.colorPickerSelectorPannableArea.addGestureRecognizer(longPressRecognizer)
     }
     
+    /// Sets up the gesture recognizer for the color selecter (circle that picks a color from the background media)
     private func setUpColorSelecter() {
         let panRecognizer = UIPanGestureRecognizer()
         panRecognizer.addTarget(self, action: #selector(colorSelecterPanned(recognizer:)))
         drawingView.colorSelecter.addGestureRecognizer(panRecognizer)
     }
     
+    /// Sets a new color for drawing
+    ///
+    /// - Parameter color: the new color for drawing
     private func setDrawingColor(_ color: UIColor) {
         drawingColor = color
         mode = .draw
@@ -194,84 +204,84 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     // MARK: - View animations
     
-    /// toggles the erase icon
+    /// Toggles the erase icon
     ///
     /// - Parameter selected: true to selected icon, false to unselected icon
     private func changeEraseIcon(selected: Bool) {
         drawingView.changeEraseIcon(selected: selected)
     }
     
-    /// shows or hides the bottom panel (it includes the buttons menu and the color picker)
+    /// Shows or hides the bottom panel (it includes the buttons menu and the color picker)
     ///
     /// - Parameter show: true to show, false to hide
     func showBottomPanel(_ show: Bool) {
         drawingView.showBottomPanel(show)
     }
     
-    /// shows or hides the stroke selector
+    /// Shows or hides the stroke selector
     ///
     /// - Parameter show: true to show, false to hide
     private func showStrokeSelectorBackground(_ show: Bool) {
         drawingView.showStrokeSelectorBackground(show)
     }
     
-    /// changes the image inside the texture button
+    /// Changes the image inside the texture button
     ///
     /// - Parameter image: the new image for the icon
     private func changeTextureIcon(image: UIImage?) {
         drawingView.changeTextureIcon(image: image)
     }
     
-    /// shows or hides the texture selector
+    /// Shows or hides the texture selector
     ///
     /// - Parameter show: true to show, false to hide
     private func showTextureSelectorBackground(_ show: Bool) {
         drawingView.showTextureSelectorBackground(show)
     }
     
-    /// shows or hides the color picker and its buttons
+    /// Shows or hides the color picker and its buttons
     ///
     /// - Parameter show: true to show, false to hide
     private func showColorPickerContainer(_ show: Bool) {
         drawingView.showColorPickerContainer(show)
     }
     
-    /// shows or hides the stroke, texture, gradient, and recently-used color buttons
+    /// Shows or hides the stroke, texture, gradient, and recently-used color buttons
     ///
     /// - Parameter show: true to show, false to hide
     private func showBottomMenu(_ show: Bool) {
         drawingView.showBottomMenu(show)
     }
     
-    /// shows or hides the erase and undo buttons
+    /// Shows or hides the erase and undo buttons
     ///
     /// - Parameter show: true to show, false to hide
     private func showTopButtons(_ show: Bool) {
         drawingView.showTopButtons(show)
     }
     
-    /// shows or hides the color selecter
+    /// Shows or hides the color selecter
     ///
     /// - Parameter show: true to show, false to hide
     private func showColorSelecter(_ show: Bool) {
         drawingView.showColorSelecter(show)
     }
     
-    /// shows or hides the overlay of the color selecter
+    /// Shows or hides the overlay of the color selecter
     ///
     /// - Parameter show: true to show, false to hide
     private func showOverlay(_ show: Bool) {
         drawingView.showOverlay(show)
     }
     
-    /// shows or hides the tooltip above color selecter
+    /// Shows or hides the tooltip above color selecter
     ///
     /// - Parameter show: true to show, false to hide
     func showTooltip(_ show: Bool) {
         drawingView.showTooltip(show)
     }
     
-    /// enables or disables the user interaction on the drawing canvas
+    /// Enables or disables the user interaction on the drawing canvas
     ///
     /// - Parameter enable: true to enable, false to disable
     private func enableDrawingCanvas(_ enable: Bool) {
@@ -350,23 +360,36 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     }
     
     private func strokeSelectorPanned(recognizer: UILongPressGestureRecognizer) {
-        let point = getStrokeCirclePosition(with: recognizer, in: drawingView.strokeSelectorPannableArea)
+        let point = getSelectedLocation(with: recognizer, in: drawingView.strokeSelectorPannableArea)
         if drawingView.strokeSelectorPannableArea.bounds.contains(point) {
             setStrokeCircleLocation(location: point)
             setStrokeCircleSize(percent: 100.0 - point.y)
         }
     }
     
-    private func getStrokeCirclePosition(with recognizer: UILongPressGestureRecognizer, in view: UIView) -> CGPoint {
+    /// Gets the position of the user's finger on screen,
+    /// but adjusts it to fit the horizontal center of the selector.
+    ///
+    /// - Parameter recognizer: the gesture recognizer
+    /// - Parameter view: the view that contains the circle
+    /// - Returns: location of the user's finger
+    private func getSelectedLocation(with recognizer: UILongPressGestureRecognizer, in view: UIView) -> CGPoint {
         let x = DrawingView.verticalSelectorWidth / 2
         let y = recognizer.location(in: view).y
         return CGPoint(x: x, y: y)
     }
     
+    /// Changes the stroke circle location inside the stroke selector
+    ///
+    /// - Parameter location: the new position of the circle
     private func setStrokeCircleLocation(location: CGPoint) {
         drawingView.strokeSelectorCircle.center = location
     }
     
+    /// Changes the stroke circle size according to a percent that goes from
+    /// the minimum size (0) to the maximum size (100)
+    ///
+    /// - Parameter percent: the new size of the circle
     private func setStrokeCircleSize(percent: CGFloat) {
         let maxIncrement = (DrawingView.strokeCircleMaxSize / DrawingView.strokeCircleMinSize) - 1
         let scale = 1.0 + maxIncrement * percent / 100.0
@@ -476,6 +499,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     // MARK: - Color Picker
     
+    
     private func setColorPickerMainColors() {
         drawingView.setColorPickerMainColors()
     }
@@ -486,13 +510,19 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     private func selectColor(recognizer: UIGestureRecognizer) {
         guard let selectorView = recognizer.view else { return }
-        let point = getColorPosition(with: recognizer, in: selectorView)
+        let point = getSelectedGradientLocation(with: recognizer, in: selectorView)
         let color = getColor(at: point.x + DrawingView.horizontalSelectorPadding)
         setEyeDropperColor(color)
         setDrawingColor(color)
     }
     
-    private func getColorPosition(with recognizer: UIGestureRecognizer, in view: UIView) -> CGPoint {
+    /// Gets the position of the color picker gradient that the user is touching.
+    /// If the user goes beyond the limits of the view, the location is set to the limit of it.
+    ///
+    /// - Parameter recognizer: the gesture recognizer
+    /// - Parameter view: the color picker gradient
+    /// - Returns: point inside the color picker
+    private func getSelectedGradientLocation(with recognizer: UIGestureRecognizer, in view: UIView) -> CGPoint {
         let x = recognizer.location(in: view).x
         let y = drawingView.colorPickerSelectorBackground.frame.height / 2
         var point = CGPoint(x: x, y: y)
@@ -509,14 +539,25 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         return point
     }
     
+    /// Sets a new color for the eye dropper button background
+    ///
+    /// - Parameter color: new color for the eye dropper
     private func setEyeDropperColor(_ color: UIColor) {
         drawingView.eyeDropperButton.backgroundColor = color
     }
     
+    /// Sets a new color for the color selecter background
+    ///
+    /// - Parameter color: new color for the color selecter
     private func setColorSelecterColor(_ color: UIColor) {
         drawingView.colorSelecter.backgroundColor = color.withAlphaComponent(DrawingView.colorSelecterAlpha)
     }
     
+    /// Gets the color that has been selected from the color picker gradient
+    ///
+    /// - Parameter x: the horizontal position inside the gradient
+    /// - Parameter defaultColor: a color to return in case of an error
+    /// - Returns: the selected color
     private func getColor(at x: CGFloat, defaultColor: UIColor = .white) -> UIColor {
         let colorPickerPercent = x / drawingView.colorPickerSelectorBackground.frame.width
         
@@ -533,6 +574,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         return UIColor.lerp(from: RGBA(color: firstColor), to: RGBA(color: secondColor), percent: CGFloat(percentBetweenColors))
     }
     
+    /// Takes the color selecter back to its initial position (same position as the eye dropper's)
     private func resetColorSelecterLocation() {
         let initialPoint = drawingView.colorPickerContainer.convert(drawingView.eyeDropperButton.center, to: drawingView)
         drawingView.colorSelecter.center = initialPoint
@@ -541,12 +583,17 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         colorSelecterOrigin = initialPoint
     }
     
+    /// Changes the background color of the color selecter to the one from its initial position
     private func resetColorSelecterColor() {
         let color = getColor(at: colorSelecterOrigin)
         setColorSelecterColor(color)
         setDrawingColor(color)
     }
     
+    /// Changes the location of the color selecter to the location of the user's finger
+    ///
+    /// - Parameter recognizer: the gesture recognizer
+    /// - Returns: the new location of the color selecter
     private func moveColorSelecter(recognizer: UIPanGestureRecognizer) -> CGPoint {
         let translation = recognizer.translation(in: drawingView.colorSelecter.superview)
         let point = CGPoint(x: colorSelecterOrigin.x + translation.x, y: colorSelecterOrigin.y + translation.y)
@@ -554,6 +601,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         return point
     }
     
+    /// Gets the color of a certain point of the media playing on the background
+    ///
+    /// - Parameter point: the location to take the color from
+    /// - Returns: the color of the pixel
     private func getColor(at point: CGPoint) -> UIColor {
         guard let delegate = delegate else { return .black }
         return delegate.getColor(from: point)
