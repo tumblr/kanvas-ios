@@ -17,7 +17,7 @@ struct CameraConstants {
     static let optionHorizontalMargin: CGFloat = 24
     static let optionButtonSize: CGFloat = 26.5
     static let optionSpacing: CGFloat = 33
-    fileprivate static let hidingAnimationDuration: CGFloat = 0.2
+    private static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
 }
 
