@@ -466,7 +466,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - ModeSelectorAndShootControllerDelegate
 
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
-        if mode == .stopMotion || mode == .stitch {
+        if  [.stopMotion, .stitch].contains(mode) {
             cameraZoomHandler.setZoom(point: currentPoint, gesture: gesture)
         }
     }

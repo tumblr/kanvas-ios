@@ -328,7 +328,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func currentClipDuration() -> TimeInterval? {
-        guard currentRecordingMode == .stopMotion || currentRecordingMode == .stitch else {
+        guard [.stopMotion, .stitch].contains(currentRecordingMode) else {
             return nil
         }
         return currentVideoOutputHandler?.currentClipDuration()

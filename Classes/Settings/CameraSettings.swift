@@ -151,7 +151,7 @@ public struct CameraFeatures {
     // MARK: - Landscape support
     public var cameraSupportsLandscape: Bool = DefaultCameraSettings.landscapeIsSupported
 
-    // MARK: - Stitch mode export settings
+    // MARK: - Stop motion/stitch mode export settings
     public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.exportStopMotionPhotoAsVideo
 
     /// MARK: - Camera features
@@ -273,7 +273,7 @@ extension CameraSettings {
 // MARK: - Default settings
 private struct DefaultCameraSettings {
 
-    static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+    static let enabledModes: Set<CameraMode> = [.photo, .gif, .stitch]
     static let newCameraModes: Bool = false
     static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let defaultCameraPositionOption: AVCaptureDevice.Position = .back
