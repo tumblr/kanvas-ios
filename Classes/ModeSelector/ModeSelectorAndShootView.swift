@@ -270,7 +270,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         switch mode {
             case .photo: return .tap
             case .gif: return .tapAndHold(animateCircle: true)
-            case .stopMotion: return .tapAndHold(animateCircle: false)
+            case .stopMotion, .stitch: return .tapAndHold(animateCircle: false)
         }
     }
 }

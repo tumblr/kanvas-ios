@@ -66,7 +66,7 @@ final class CameraRecorder: NSObject {
         self.segmentsHandler = segmentsHandler
         self.settings = settings
 
-        currentRecordingMode = .stopMotion
+        currentRecordingMode = settings.newCameraModes ? .stitch : .stopMotion
 
         super.init()
 
@@ -134,7 +134,7 @@ final class CameraRecorder: NSObject {
             switch currentRecordingMode {
             case .gif:
                 cancelGif()
-            case .stopMotion:
+            case .stopMotion, .stitch:
                 stopRecordingVideo(completion: { _ in })
             default:
                 break
@@ -166,7 +166,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
     func isRecording() -> Bool {
         switch currentRecordingMode {
-        case .stopMotion:
+        case .stopMotion, .stitch:
             if let handler = currentVideoOutputHandler {
                 return handler.recording
             }
@@ -203,7 +203,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         let outputHandler = VideoOutputHandler()
         videoOutputHandlers.append(outputHandler)
 
-        currentRecordingMode = .stopMotion
+        currentRecordingMode = settings.newCameraModes ? .stitch : .stopMotion
         recordingDelegate?.cameraWillTakeVideo()
 
         setupAssetWriter(url: NSURL.createNewVideoURL())
@@ -296,7 +296,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         switch currentRecordingMode {
-        case .stopMotion:
+        case .stopMotion, .stitch:
             currentVideoOutputHandler?.processVideoSampleBuffer(sampleBuffer)
         case .gif:
             gifVideoOutputHandler.processVideoSampleBuffer(sampleBuffer)
@@ -306,7 +306,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
     func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
         switch currentRecordingMode {
-        case .stopMotion:
+        case .stopMotion, .stitch:
             currentVideoOutputHandler?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
         case .gif:
             gifVideoOutputHandler.processVideoPixelBuffer(pixelBuffer)
@@ -316,7 +316,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         switch currentRecordingMode {
-        case .stopMotion:
+        case .stopMotion, .stitch:
             currentVideoOutputHandler?.processAudioSampleBuffer(sampleBuffer)
         default: break
         }
@@ -328,7 +328,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func currentClipDuration() -> TimeInterval? {
-        guard currentRecordingMode == .stopMotion else {
+        guard currentRecordingMode == .stopMotion || currentRecordingMode == .stitch else {
             return nil
         }
         return currentVideoOutputHandler?.currentClipDuration()

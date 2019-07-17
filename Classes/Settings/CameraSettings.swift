@@ -12,10 +12,12 @@ import Foundation
 /// - photo: Capturing photos
 /// - gif: Capturing gifs, a sequence of photos
 /// - stopMotion: Capturing stop motions, a sequence of images and/or videos
+/// - stitch: Capturing stop motions, a sequence of images and/or videos
 @objc public enum CameraMode: Int {
     case stopMotion = 0
     case photo
     case gif
+    case stitch
 
     private var order: Int {
         return self.rawValue
@@ -44,6 +46,10 @@ public struct CameraFeatures {
     /// The Experimental Camera Filters feature
     /// This adds experimental filters to the end of the filters picker.
     public var experimentalCameraFilters: Bool = false
+    
+    /// The New Camera Modes
+    /// This changes the camera modes to Normal and Stitch
+    public var newCameraModes = false
     
     /// The Editor feature
     /// This replaces the Preview screen with the Editor.
@@ -89,6 +95,8 @@ public struct CameraFeatures {
     }
 
     private var _enabledModes: Set<CameraMode> = DefaultCameraSettings.enabledModes
+    
+    public var newCameraModes: Bool = false
 
     /**
      Camera mode which starts active.
@@ -143,7 +151,7 @@ public struct CameraFeatures {
     // MARK: - Landscape support
     public var cameraSupportsLandscape: Bool = DefaultCameraSettings.landscapeIsSupported
 
-    // MARK: - Stop motion mode export settings
+    // MARK: - Stitch mode export settings
     public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.exportStopMotionPhotoAsVideo
 
     /// MARK: - Camera features
@@ -189,6 +197,17 @@ public extension CameraSettings {
             return getMode(.stopMotion)
         }
     }
+    /**
+     Enables/disables stitch mode.
+     */
+    var enableStitchMode: Bool {
+        set {
+            setMode(.stitch, to: newValue)
+        }
+        get {
+            return getMode(.stitch)
+        }
+    }
 
     private func setMode(_ mode: CameraMode, to on: Bool) {
         if on {
@@ -216,7 +235,7 @@ extension CameraSettings {
         // enabledModes will always have at least one value as its precondition.
         guard let firstMode = orderedEnabledModes.first else {
             assertionFailure("should have at least one enabled mode")
-            return CameraMode.stopMotion
+            return newCameraModes ? .stitch : .stopMotion
         }
         return defaultMode ?? firstMode
     }
@@ -255,6 +274,7 @@ extension CameraSettings {
 private struct DefaultCameraSettings {
 
     static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+    static let newCameraModes: Bool = false
     static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let defaultCameraPositionOption: AVCaptureDevice.Position = .back
     static let defaultImagePreviewOption: ImagePreviewMode = .off

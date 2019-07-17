@@ -466,7 +466,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - ModeSelectorAndShootControllerDelegate
 
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
-        if mode == .stopMotion {
+        if mode == .stopMotion || mode == .stitch {
             cameraZoomHandler.setZoom(point: currentPoint, gesture: gesture)
         }
     }
@@ -481,7 +481,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             takeGif()
         case .photo:
             takePhoto()
-        case .stopMotion:
+        case .stopMotion, .stitch:
             takePhoto()
         }
     }
@@ -490,7 +490,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         switch mode {
         case .gif:
             takeGif(useLongerDuration: true)
-        case .stopMotion:
+        case .stopMotion, .stitch:
             prepareHapticFeedback()
             let _ = cameraInputController.startRecording()
             performUIUpdate { [weak self] in
@@ -502,7 +502,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didEndPressingForMode(_ mode: CameraMode) {
         switch mode {
-        case .stopMotion:
+        case .stopMotion, .stitch:
             cameraInputController.endRecording(completion: { [weak self] url in
                 guard let strongSelf = self else { return }
                 if let videoURL = url {
@@ -529,7 +529,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func didDropToDelete(_ mode: CameraMode) {
         switch mode {
-        case .stopMotion:
+        case .stopMotion, .stitch:
             clipsController.removeDraggingClip()
         default: break
         }

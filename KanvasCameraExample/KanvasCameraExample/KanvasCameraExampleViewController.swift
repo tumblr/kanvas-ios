@@ -137,8 +137,9 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
     /// - Returns: an instance of CameraSettings
     private static func customCameraSettings() -> CameraSettings {
         let settings = CameraSettings()
-        settings.enabledModes = [.photo, .gif, .stopMotion]
-        settings.defaultMode = .stopMotion
+        settings.enabledModes = [.photo, .gif, .stitch]
+        settings.defaultMode = .stitch
+        settings.newCameraModes = true
         settings.exportStopMotionPhotoAsVideo = true
         settings.features.ghostFrame = true
         settings.features.openGLPreview = true
