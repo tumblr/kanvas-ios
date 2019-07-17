@@ -12,6 +12,7 @@ struct KanvasCameraImages {
     static let photoModeImage: UIImage? = .none
     static let gifModeImage: UIImage? = .none
     static let stopMotionModeImage: UIImage? = .none
+    static let normalModeImage: UIImage? = .none
     static let stitchModeImage: UIImage? = .none
 
     static func image(for mode: CameraMode) -> UIImage? {
@@ -19,6 +20,7 @@ struct KanvasCameraImages {
         case .photo: return photoModeImage
         case .gif: return gifModeImage
         case .stopMotion: return stopMotionModeImage
+        case .normal: return normalModeImage
         case .stitch: return stitchModeImage
         }
     }

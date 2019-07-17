@@ -74,14 +74,16 @@ protocol CameraRecordingProtocol {
 
     /// starts recording video
     ///
+    /// - Parameter mode: Current camera mode
     /// - Returns: returns whether it has successfully started
-    func startRecordingVideo()
+    func startRecordingVideo(on mode: CameraMode)
 
     /// stops recording video, and exports the recording to a local file
     ///
+    /// - Parameter mode: Current camera mode
     /// - Parameter completion: URL of the local video clip, can be nil if erroring
     /// - Returns: Void
-    func stopRecordingVideo(completion: @escaping (URL?) -> Void)
+    func stopRecordingVideo(on mode: CameraMode, completion: @escaping (URL?) -> Void)
 
     /// cancels the current recording and discards the segment
     func cancelRecording()

@@ -66,7 +66,7 @@ final class CameraRecorder: NSObject {
         self.segmentsHandler = segmentsHandler
         self.settings = settings
 
-        currentRecordingMode = settings.newCameraModes ? .stitch : .stopMotion
+        currentRecordingMode = settings.newCameraModes ? .normal : .stopMotion
 
         super.init()
 
@@ -134,8 +134,8 @@ final class CameraRecorder: NSObject {
             switch currentRecordingMode {
             case .gif:
                 cancelGif()
-            case .stopMotion, .stitch:
-                stopRecordingVideo(completion: { _ in })
+            case .stopMotion, .normal, .stitch:
+                stopRecordingVideo(on: currentRecordingMode, completion: { _ in })
             default:
                 break
             }
@@ -166,7 +166,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
     func isRecording() -> Bool {
         switch currentRecordingMode {
-        case .stopMotion, .stitch:
+        case .stopMotion, .normal, .stitch:
             if let handler = currentVideoOutputHandler {
                 return handler.recording
             }
@@ -195,7 +195,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     // MARK: - video
-    func startRecordingVideo() {
+    func startRecordingVideo(on mode: CameraMode) {
         if isRecording() {
             return
         }
@@ -203,7 +203,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         let outputHandler = VideoOutputHandler()
         videoOutputHandlers.append(outputHandler)
 
-        currentRecordingMode = settings.newCameraModes ? .stitch : .stopMotion
+        currentRecordingMode = mode
         recordingDelegate?.cameraWillTakeVideo()
 
         setupAssetWriter(url: NSURL.createNewVideoURL())
@@ -213,14 +213,16 @@ extension CameraRecorder: CameraRecordingProtocol {
         outputHandler.startRecordingVideo(assetWriter: assetWriter, pixelBufferAdaptor: pixelBufferAdaptor, audioInput: assetWriterAudioInput)
     }
 
-    func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
+    func stopRecordingVideo(on mode: CameraMode, completion: @escaping (URL?) -> Void) {
         if let videoOutputHandler = currentVideoOutputHandler {
             videoOutputHandler.stopRecordingVideo { [weak self] success in
                 if let strongSelf = self {
                     strongSelf.recordingDelegate?.cameraWillFinishVideo()
                     strongSelf.removeVideoOutputHandler(videoOutputHandler)
                     if success, let url = videoOutputHandler.assetWriterURL() {
-                        strongSelf.segmentsHandler.addNewVideoSegment(url: url)
+                        if  [.stopMotion, .stitch].contains(mode) {
+                            strongSelf.segmentsHandler.addNewVideoSegment(url: url)
+                        }
                         completion(url)
                     }
                     else {
@@ -296,7 +298,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         switch currentRecordingMode {
-        case .stopMotion, .stitch:
+        case .stopMotion, .normal, .stitch:
             currentVideoOutputHandler?.processVideoSampleBuffer(sampleBuffer)
         case .gif:
             gifVideoOutputHandler.processVideoSampleBuffer(sampleBuffer)
@@ -306,7 +308,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
     func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
         switch currentRecordingMode {
-        case .stopMotion, .stitch:
+        case .stopMotion, .normal, .stitch:
             currentVideoOutputHandler?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
         case .gif:
             gifVideoOutputHandler.processVideoPixelBuffer(pixelBuffer)
@@ -316,7 +318,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         switch currentRecordingMode {
-        case .stopMotion, .stitch:
+        case .stopMotion, .normal, .stitch:
             currentVideoOutputHandler?.processAudioSampleBuffer(sampleBuffer)
         default: break
         }
@@ -328,7 +330,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func currentClipDuration() -> TimeInterval? {
-        guard [.stopMotion, .stitch].contains(currentRecordingMode) else {
+        guard [.stopMotion, .normal, .stitch].contains(currentRecordingMode) else {
             return nil
         }
         return currentVideoOutputHandler?.currentClipDuration()

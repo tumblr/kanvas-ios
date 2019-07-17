@@ -281,7 +281,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         switch mode {
         case .photo:
             currentCameraOutput = .photo
-        case .gif, .stopMotion, .stitch:
+        case .gif, .stopMotion, .normal, .stitch:
             currentCameraOutput = .video
         }
         do { try configureCurrentOutput() } catch {
@@ -322,23 +322,23 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// Starts video recording using the CameraRecordingProtocol type
     ///
     /// - Returns: return true if successfully started recording
-    func startRecording() -> Bool {
+    func startRecording(on mode: CameraMode) -> Bool {
         guard let recorder = self.recorder else { return false }
         startAudioSession()
         addArtificialFlashIfNecessary()
-        recorder.startRecordingVideo()
+        recorder.startRecordingVideo(on: mode)
         return true
     }
 
     /// Finishes video recording
     ///
     /// - Parameter completion: returns a local file URL if successful
-    func endRecording(completion: @escaping (URL?) -> Void) {
+    func endRecording(on mode: CameraMode, completion: @escaping (URL?) -> Void) {
         guard let recorder = recorder else {
             completion(nil)
             return
         }
-        recorder.stopRecordingVideo(completion: { [weak self] url in
+        recorder.stopRecordingVideo(on: mode, completion: { [weak self] url in
             self?.removeArtificialFlashIfNecessary()
             self?.stopAudioSession()
             completion(url)

@@ -21,7 +21,7 @@ struct KanvasCameraTimes {
         switch mode {
         case .photo: return 0
         case .gif: return gifRecordingTime
-        case .stopMotion, .stitch: return videoRecordingTime
+        case .stopMotion, .normal, .stitch: return videoRecordingTime
         }
     }
     // MARK: - Stop motion

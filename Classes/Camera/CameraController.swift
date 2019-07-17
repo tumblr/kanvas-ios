@@ -347,7 +347,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                            filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
                 if let image = image {
-                    if strongSelf.currentMode == .photo {
+                    if [.photo, .normal].contains(strongSelf.currentMode) {
                         strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil)])
                     }
                     else {
@@ -466,7 +466,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - ModeSelectorAndShootControllerDelegate
 
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
-        if  [.stopMotion, .stitch].contains(mode) {
+        if  [.stopMotion, .normal, .stitch].contains(mode) {
             cameraZoomHandler.setZoom(point: currentPoint, gesture: gesture)
         }
     }
@@ -479,9 +479,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         switch mode {
         case .gif:
             takeGif()
-        case .photo:
-            takePhoto()
-        case .stopMotion, .stitch:
+        case .photo, .stopMotion, .normal, .stitch:
             takePhoto()
         }
     }
@@ -490,9 +488,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         switch mode {
         case .gif:
             takeGif(useLongerDuration: true)
-        case .stopMotion, .stitch:
+        case .stopMotion, .normal, .stitch:
             prepareHapticFeedback()
-            let _ = cameraInputController.startRecording()
+            let _ = cameraInputController.startRecording(on: mode)
             performUIUpdate { [weak self] in
                 self?.updateRecordState(event: .started)
             }
@@ -502,8 +500,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didEndPressingForMode(_ mode: CameraMode) {
         switch mode {
-        case .stopMotion, .stitch:
-            cameraInputController.endRecording(completion: { [weak self] url in
+        case .stopMotion, .normal, .stitch:
+            cameraInputController.endRecording(on: mode, completion: { [weak self] url in
                 guard let strongSelf = self else { return }
                 if let videoURL = url {
                     let asset = AVURLAsset(url: videoURL)
@@ -514,12 +512,20 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                                    filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
                 }
                 performUIUpdate {
-                    if let url = url, let image = AVURLAsset(url: url).thumbnail() {
-                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
-                                                                        overlayText: strongSelf.durationStringForAssetAtURL(url),
-                                                                        lastFrame: strongSelf.getLastFrameFrom(url)))
+                    if let url = url {
+                        if mode == .normal {
+                            strongSelf.showPreviewWithSegments([CameraSegment.video(url)])
+                            strongSelf.updateRecordState(event: .ended)
+                            strongSelf.updateUI(forClipsPresent: false)
+                        }
+                        else if let image = AVURLAsset(url: url).thumbnail() {
+                            strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                            overlayText: strongSelf.durationStringForAssetAtURL(url),
+                                                                            lastFrame: strongSelf.getLastFrameFrom(url)))
+                            strongSelf.updateRecordState(event: .ended)
+                        }
                     }
-                    strongSelf.updateRecordState(event: .ended)
+                    
                     strongSelf.generateHapticFeedback()
                 }
             })
@@ -529,7 +535,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func didDropToDelete(_ mode: CameraMode) {
         switch mode {
-        case .stopMotion, .stitch:
+        case .stopMotion, .normal , .stitch:
             clipsController.removeDraggingClip()
         default: break
         }

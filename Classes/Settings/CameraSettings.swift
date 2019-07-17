@@ -17,6 +17,7 @@ import Foundation
     case stopMotion = 0
     case photo
     case gif
+    case normal
     case stitch
 
     private var order: Int {
@@ -198,6 +199,17 @@ public extension CameraSettings {
         }
     }
     /**
+     Enables/disables normal mode.
+     */
+    var enableNormalMode: Bool {
+        set {
+            setMode(.normal, to: newValue)
+        }
+        get {
+            return getMode(.normal)
+        }
+    }
+    /**
      Enables/disables stitch mode.
      */
     var enableStitchMode: Bool {
@@ -235,7 +247,7 @@ extension CameraSettings {
         // enabledModes will always have at least one value as its precondition.
         guard let firstMode = orderedEnabledModes.first else {
             assertionFailure("should have at least one enabled mode")
-            return newCameraModes ? .stitch : .stopMotion
+            return newCameraModes ? .normal : .stopMotion
         }
         return defaultMode ?? firstMode
     }
