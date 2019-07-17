@@ -24,23 +24,10 @@ import TumblrTheme
 
     private var preferences: [String: Bool] = [:]
 
+    private let kanvasSettings: CameraSettings
+
     private lazy var kanvasNavigationController: UINavigationController = {
         let kanvasAnalyticsProvider = KanvasCameraAnalyticsStub()
-
-        let kanvasSettings = CameraSettings()
-        kanvasSettings.features.ghostFrame = true
-        kanvasSettings.features.openGLPreview = true
-        kanvasSettings.features.openGLCapture = true
-        kanvasSettings.features.cameraFilters = true
-        kanvasSettings.features.experimentalCameraFilters = true
-        kanvasSettings.features.editor = true
-        kanvasSettings.features.editorFilters = true
-        kanvasSettings.features.editorMedia = true
-        kanvasSettings.features.editorDrawing = true
-        kanvasSettings.features.mediaPicking = true
-        kanvasSettings.enabledModes = [.stopMotion, .photo, .gif]
-        kanvasSettings.defaultMode = .stopMotion
-
         let kanvasViewController = CameraController(settings: kanvasSettings, analyticsProvider: kanvasAnalyticsProvider)
         kanvasViewController.delegate = self
 
@@ -55,17 +42,22 @@ import TumblrTheme
     @objc lazy var tumblrTabBarController: UIViewController = {
         let tabBarController = MockDashboardViewController(nibName: nil, bundle: nil)
         tabBarController.delegate = self
+        tabBarController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
         let tumblrNavigationController = UINavigationController(navigationBarClass: nil, toolbarClass: nil)
         tumblrNavigationController.delegate = self
-        //tumblrNavigationController.isNavigationBarHidden = true
         tumblrNavigationController.viewControllers = [tabBarController]
         return tumblrNavigationController
     }()
 
+    @objc func doneButtonTapped() {
+        dismiss(animated: true, completion: .none)
+    }
+
     // MARK: - Initializers
 
     /// Designated initializer.
-    @objc init() {
+    @objc init(settings: CameraSettings) {
+        kanvasSettings = settings
 
         super.init(nibName: nil, bundle: nil)
 
