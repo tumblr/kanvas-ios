@@ -273,7 +273,7 @@ extension CameraSettings {
 // MARK: - Default settings
 private struct DefaultCameraSettings {
 
-    static let enabledModes: Set<CameraMode> = [.photo, .gif, .stitch]
+    static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
     static let newCameraModes: Bool = false
     static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let defaultCameraPositionOption: AVCaptureDevice.Position = .back
