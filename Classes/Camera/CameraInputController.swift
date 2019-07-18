@@ -308,13 +308,14 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Takes a photo using the CameraRecordingProtocol type
     ///
+    /// - Parameter mode: current camera mode
     /// - Parameter completion: returns a UIImage if successful
-    func takePhoto(completion: @escaping (UIImage?) -> Void) {
+    func takePhoto(on mode: CameraMode, completion: @escaping (UIImage?) -> Void) {
         guard let recorder = recorder else {
             completion(nil)
             return
         }
-        recorder.takePhoto(cameraPosition: currentCameraPosition, completion: { (image) in
+        recorder.takePhoto(on: mode, cameraPosition: currentCameraPosition, completion: { (image) in
             completion(image)
         })
     }
@@ -333,12 +334,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// Finishes video recording
     ///
     /// - Parameter completion: returns a local file URL if successful
-    func endRecording(on mode: CameraMode, completion: @escaping (URL?) -> Void) {
+    func endRecording(completion: @escaping (URL?) -> Void) {
         guard let recorder = recorder else {
             completion(nil)
             return
         }
-        recorder.stopRecordingVideo(on: mode, completion: { [weak self] url in
+        recorder.stopRecordingVideo(completion: { [weak self] url in
             self?.removeArtificialFlashIfNecessary()
             self?.stopAudioSession()
             completion(url)

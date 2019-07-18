@@ -80,20 +80,20 @@ protocol CameraRecordingProtocol {
 
     /// stops recording video, and exports the recording to a local file
     ///
-    /// - Parameter mode: Current camera mode
     /// - Parameter completion: URL of the local video clip, can be nil if erroring
     /// - Returns: Void
-    func stopRecordingVideo(on mode: CameraMode, completion: @escaping (URL?) -> Void)
+    func stopRecordingVideo(completion: @escaping (URL?) -> Void)
 
     /// cancels the current recording and discards the segment
     func cancelRecording()
 
     /// takes a photo and appends to the segments.
     ///
+    /// - Parameter mode: current camera mode
     /// - Parameter cameraPosition: camera used when taking the photo (back or front camera). This is an optional value
     /// - Parameter completion: returns a UIImage if successful
     /// - Returns: Void
-    func takePhoto(cameraPosition: AVCaptureDevice.Position?, completion: @escaping (UIImage?) -> Void)
+    func takePhoto(on mode: CameraMode, cameraPosition: AVCaptureDevice.Position?, completion: @escaping (UIImage?) -> Void)
 
     /// composites a video and exports the resulting file to mp4
     ///

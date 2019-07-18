@@ -12,6 +12,7 @@ import Foundation
 /// - photo: Capturing photos
 /// - gif: Capturing gifs, a sequence of photos
 /// - stopMotion: Capturing stop motions, a sequence of images and/or videos
+/// - normal: Capturing single photo or single video
 /// - stitch: Capturing stop motions, a sequence of images and/or videos
 @objc public enum CameraMode: Int {
     case stopMotion = 0

@@ -182,7 +182,6 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             }
         }
         segments.remove(at: index)
-        print("Segments \(segments.count)")
     }
     
     /// Moves a segment to a new index

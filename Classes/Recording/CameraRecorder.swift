@@ -135,7 +135,7 @@ final class CameraRecorder: NSObject {
             case .gif:
                 cancelGif()
             case .stopMotion, .normal, .stitch:
-                stopRecordingVideo(on: currentRecordingMode, completion: { _ in })
+                stopRecordingVideo(completion: { _ in })
             default:
                 break
             }
@@ -213,14 +213,14 @@ extension CameraRecorder: CameraRecordingProtocol {
         outputHandler.startRecordingVideo(assetWriter: assetWriter, pixelBufferAdaptor: pixelBufferAdaptor, audioInput: assetWriterAudioInput)
     }
 
-    func stopRecordingVideo(on mode: CameraMode, completion: @escaping (URL?) -> Void) {
+    func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
         if let videoOutputHandler = currentVideoOutputHandler {
             videoOutputHandler.stopRecordingVideo { [weak self] success in
                 if let strongSelf = self {
                     strongSelf.recordingDelegate?.cameraWillFinishVideo()
                     strongSelf.removeVideoOutputHandler(videoOutputHandler)
                     if success, let url = videoOutputHandler.assetWriterURL() {
-                        if  [.stopMotion, .stitch].contains(mode) {
+                        if [.stopMotion, .stitch].contains(strongSelf.currentRecordingMode) {
                             strongSelf.segmentsHandler.addNewVideoSegment(url: url)
                         }
                         completion(url)
@@ -237,12 +237,12 @@ extension CameraRecorder: CameraRecordingProtocol {
         videoOutputHandlers = videoOutputHandlers.filter() { $0 != handler }
     }
 
-    func takePhoto(cameraPosition: AVCaptureDevice.Position? = .back, completion: @escaping (UIImage?) -> Void) {
+    func takePhoto(on mode: CameraMode, cameraPosition: AVCaptureDevice.Position? = .back, completion: @escaping (UIImage?) -> Void) {
         guard isRecording() == false else {
             return
         }
         
-        currentRecordingMode = .photo
+        currentRecordingMode = mode
 
         let settings = recordingDelegate?.photoSettings(for: photoOutput)
         takingPhoto = true
@@ -259,9 +259,15 @@ extension CameraRecorder: CameraRecordingProtocol {
                 completion(nil)
                 return
             }
-            self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
-                completion(success ? filteredImage : nil)
-            })
+            
+            if [.stopMotion, .stitch].contains(self.currentRecordingMode) {
+                self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
+                    completion(success ? filteredImage : nil)
+                })
+            }
+            else {
+                completion(filteredImage)
+            }
         }
     }
 

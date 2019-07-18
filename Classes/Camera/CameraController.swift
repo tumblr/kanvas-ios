@@ -335,7 +335,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func takePhoto() {
         guard !isRecording else { return }
         updatePhotoCaptureState(event: .started)
-        cameraInputController.takePhoto(completion: { [weak self] image in
+        cameraInputController.takePhoto(on: currentMode, completion: { [weak self] image in
             defer {
                 self?.updatePhotoCaptureState(event: .ended)
             }
@@ -501,7 +501,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didEndPressingForMode(_ mode: CameraMode) {
         switch mode {
         case .stopMotion, .normal, .stitch:
-            cameraInputController.endRecording(on: mode, completion: { [weak self] url in
+            cameraInputController.endRecording(completion: { [weak self] url in
                 guard let strongSelf = self else { return }
                 if let videoURL = url {
                     let asset = AVURLAsset(url: videoURL)
@@ -535,7 +535,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func didDropToDelete(_ mode: CameraMode) {
         switch mode {
-        case .stopMotion, .normal , .stitch:
+        case .stopMotion, .stitch:
             clipsController.removeDraggingClip()
         default: break
         }
