@@ -32,7 +32,7 @@ enum CameraOption {
 }
 
 // MARK: - Setting to CameraOption conversion
-fileprivate protocol CameraOptionConvertible {
+private protocol CameraOptionConvertible {
     var cameraOption: CameraOption { get }
 }
 
