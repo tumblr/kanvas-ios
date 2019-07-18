@@ -900,18 +900,11 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		6593DE5022E0F98500812207 /* Drawing */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Drawing;
-			sourceTree = "<group>";
-		};
 		6593DE5122E0F99500812207 /* ColorThief */ = {
 			isa = PBXGroup;
 			children = (
-				6593DE5222E0F99500812207 /* MMCQ.swift */,
 				6593DE5322E0F99500812207 /* ColorThieft.swift */,
+				6593DE5222E0F99500812207 /* MMCQ.swift */,
 			);
 			path = ColorThief;
 			sourceTree = "<group>";
@@ -1116,7 +1109,6 @@
 		A608505D12C8996BC2D1C534B15EA4EA /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				6593DE5022E0F98500812207 /* Drawing */,
 				8B62282E002388F0B992299986CF44B4 /* Filters */,
 				1060CB7C2FA4B3131B3B168F759B5032 /* EditionMenuCollectionCell.swift */,
 				92738A99714CCE0BE4C20EF4160D348C /* EditionMenuCollectionController.swift */,
