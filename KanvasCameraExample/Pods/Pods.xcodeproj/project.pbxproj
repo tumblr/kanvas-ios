@@ -92,6 +92,8 @@
 		6288913944E5F5D90DE67F83B66F2345 /* UIFont+ComposeFonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 155D212975A8CC57A021341ED0A645E0 /* UIFont+ComposeFonts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6593DE5422E0F99500812207 /* MMCQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6593DE5222E0F99500812207 /* MMCQ.swift */; };
 		6593DE5522E0F99500812207 /* ColorThieft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6593DE5322E0F99500812207 /* ColorThieft.swift */; };
+		65D3884D22E0FDCD00C23E6E /* CALayer+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D3884B22E0FDCD00C23E6E /* CALayer+Color.swift */; };
+		65D3884E22E0FDCD00C23E6E /* UIImage+DominantColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D3884C22E0FDCD00C23E6E /* UIImage+DominantColors.swift */; };
 		6723CF1481DBAF4E648E16C010B7B8B7 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0127E5AE83087823F333B82E383F477 /* CameraView.swift */; };
 		67E0ED9109E6A2354B4D4B70221592D1 /* GroupFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A93D9B73AD9FD8B7FD824C4B454572 /* GroupFilter.swift */; };
 		694F8E1D6E1F0894C9C50A7CE915A73E /* ChromaFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50917C19D23F026A306C0E3AD4D2D70 /* ChromaFilter.swift */; };
@@ -427,6 +429,8 @@
 		64BFA0D991BE6DCD00B92D1AEABAA367 /* CameraInputOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputOutput.swift; sourceTree = "<group>"; };
 		6593DE5222E0F99500812207 /* MMCQ.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMCQ.swift; sourceTree = "<group>"; };
 		6593DE5322E0F99500812207 /* ColorThieft.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorThieft.swift; sourceTree = "<group>"; };
+		65D3884B22E0FDCD00C23E6E /* CALayer+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Color.swift"; sourceTree = "<group>"; };
+		65D3884C22E0FDCD00C23E6E /* UIImage+DominantColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+DominantColors.swift"; sourceTree = "<group>"; };
 		65E0D4BFD967A8573CA678FD7CAC3771 /* VideoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VideoOutputHandler.swift; sourceTree = "<group>"; };
 		677A29D8AA4BC1FF6D7DF73E6C6C98EB /* ModeSelectorAndShootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootView.swift; sourceTree = "<group>"; };
 		69FA3B418327FD6E83864893C8286299 /* NSLayoutConstraint+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Utils.swift"; path = "Source/NSLayoutConstraint+Utils.swift"; sourceTree = "<group>"; };
@@ -662,6 +666,7 @@
 				1BD3FF93C8BD07A93D26A87413692DB4 /* Array+Move.swift */,
 				F45215C97FCD7ABCB5B1EC2243B5920E /* Array+Object.swift */,
 				122BCF4854DE6F45EC662465306307B5 /* AVURLAsset+Thumbnail.swift */,
+				65D3884B22E0FDCD00C23E6E /* CALayer+Color.swift */,
 				20F852FD8311137FBE59C4B7C3B270F4 /* CGRect+Center.swift */,
 				BAE72EC284F98FCC7063466F46F007C3 /* ClosedRange+Clamp.swift */,
 				13EE894E7DF8D7E0C00D267ADDBB6F37 /* IndexPath+Order.swift */,
@@ -671,6 +676,7 @@
 				62322F5CE84BFD48B12B8FB1DBA96C1D /* UIColor+Lerp.swift */,
 				725BD9A66C4D87E5FF51939FD269D866 /* UIFont+Utils.swift */,
 				C0F38E34CACC7D8E4C5255788B8F0E80 /* UIImage+Camera.swift */,
+				65D3884C22E0FDCD00C23E6E /* UIImage+DominantColors.swift */,
 				C18D964D135FE90C453C3ECE73BF2A51 /* UIImage+FlipLeftMirrored.swift */,
 				CED5BD3F92E266C6DB90FE28A9172A54 /* UIView+Layout.swift */,
 				3C243CC7E93A8DF9FD667EC2F61EC0C0 /* UIViewController+Load.swift */,
@@ -1711,6 +1717,7 @@
 				C9BC2DB464E95F4A5D784C9CF058A375 /* CameraSettings.swift in Sources */,
 				6723CF1481DBAF4E648E16C010B7B8B7 /* CameraView.swift in Sources */,
 				0A3C69F8E49540FE466B3BE2FD27654D /* CameraZoomHandler.swift in Sources */,
+				65D3884E22E0FDCD00C23E6E /* UIImage+DominantColors.swift in Sources */,
 				293878657356C579C86969EF52997145 /* CGRect+Center.swift in Sources */,
 				694F8E1D6E1F0894C9C50A7CE915A73E /* ChromaFilter.swift in Sources */,
 				E8A10FF94D2CD641E47D866F9061D411 /* ClosedRange+Clamp.swift in Sources */,
@@ -1726,6 +1733,7 @@
 				8D8AF1862E67EF8CD07D1AB36D8E090F /* EditorFilterCollectionController.swift in Sources */,
 				F567866E1402590AB6759054B08990E4 /* EditorView.swift in Sources */,
 				0D39C910D66F564977D758793CE467A5 /* EditorViewController.swift in Sources */,
+				65D3884D22E0FDCD00C23E6E /* CALayer+Color.swift in Sources */,
 				767A5A739FB0E9A18CD7F0961C5B1AB6 /* EMInterferenceFilter.swift in Sources */,
 				3301EE69604BDBE4C830903716E10C10 /* ExtendedButton.swift in Sources */,
 				98F7167AE9339CD818BE1512E1DD1106 /* ExtendedStackView.swift in Sources */,
