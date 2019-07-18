@@ -28,7 +28,7 @@ final class CameraRecorderTests: XCTestCase {
     func testPhoto() {
         let cameraRecorder = setupCameraRecorder()
         let expectation = XCTestExpectation(description: "photo")
-        cameraRecorder.takePhoto(completion: { image in
+        cameraRecorder.takePhoto(on: .photo, completion: { image in
             expectation.fulfill()
         })
         wait(for: [expectation], timeout: 5)
@@ -55,7 +55,7 @@ final class CameraRecorderTests: XCTestCase {
         let blockExpectation = XCTestExpectation(description: "block expectation")
         XCTAssert(cameraRecorder.isRecording(), "CameraRecorder failed to start recording")
 
-        cameraRecorder.stopRecordingVideo(on: mode, completion: { url in
+        cameraRecorder.stopRecordingVideo(completion: { url in
             blockExpectation.fulfill()
             XCTAssert(delegate.videoFinish, "Delegate was not called to finish video")
         })
