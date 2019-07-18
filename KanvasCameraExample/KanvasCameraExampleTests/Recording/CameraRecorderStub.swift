@@ -38,7 +38,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         return nil
     }
 
-    func startRecordingVideo() {
+    func startRecordingVideo(on mode: CameraMode) {
         if isRecording() {
             return
         }
@@ -46,7 +46,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         startTime = Date()
     }
 
-    func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
+    func stopRecordingVideo(on mode: CameraMode, completion: @escaping (URL?) -> Void) {
         if isRecording() {
             recording = false
             if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {

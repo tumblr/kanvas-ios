@@ -47,9 +47,9 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testTakeVideo() {
         let cameraInputController = newCameraInputController()
-        let started = cameraInputController.startRecording()
+        let started = cameraInputController.startRecording(on: .stopMotion)
         XCTAssert(started, "Recording should have started")
-        cameraInputController.endRecording { (url) in
+        cameraInputController.endRecording(on: .stopMotion) { (url) in
             XCTAssertNotNil(url, "URL should not be nil")
         }
     }
