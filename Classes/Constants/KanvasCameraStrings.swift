@@ -20,7 +20,7 @@ struct KanvasCameraStrings {
     static let stopMotionModeName: String = NSLocalizedString("Capture", comment: "Stop motion camera mode")
     
     // normalModeName: used in the camera mode button
-    static let normalModeName: String = NSLocalizedString("Normal", comment: "Stop motion camera mode")
+    static let normalModeName: String = NSLocalizedString("Normal", comment: "Normal camera mode")
     
     // stitchModeName: used in the camera mode button
     static let stitchModeName: String = NSLocalizedString("Stitch", comment: "Stitch camera mode")
