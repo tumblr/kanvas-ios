@@ -96,8 +96,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     let overlay: UIView
     
     // Main containers
-    let topButtonContainer: UIStackView
-    let bottomPanelContainer: UIView
+    private let topButtonContainer: UIStackView
+    private let bottomPanelContainer: UIView
     
     // Top buttons
     let confirmButton: UIButton
@@ -105,7 +105,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     let eraseButton: UIButton
     
     // Bottom panel containers
-    let bottomMenuContainer: UIView
+    private let bottomMenuContainer: UIView
     let colorPickerContainer: UIView
     
     // Stroke
@@ -137,7 +137,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     // Color selecter
     let colorSelecter: CircularImageView
-    var tooltip: EasyTipView?
+    private var tooltip: EasyTipView?
     
     // Color collection
     let colorCollection: UIView
