@@ -48,10 +48,6 @@ public struct CameraFeatures {
     /// This adds experimental filters to the end of the filters picker.
     public var experimentalCameraFilters: Bool = false
     
-    /// The New Camera Modes
-    /// This changes the camera modes to Normal and Stitch
-    public var newCameraModes = false
-    
     /// The Editor feature
     /// This replaces the Preview screen with the Editor.
     public var editor: Bool = false
@@ -71,6 +67,10 @@ public struct CameraFeatures {
     /// The Media Picker feature
     /// This enables the UI to pick media instead of using the camera.
     public var mediaPicking: Bool = false
+    
+    /// The New Camera Modes
+    /// This replaces Capture and Photo modes with Normal and Stitch modes
+    public var newCameraModes = false
 }
 
 // A class that defines the settings for the Kanvas Camera
@@ -96,8 +96,6 @@ public struct CameraFeatures {
     }
 
     private var _enabledModes: Set<CameraMode> = DefaultCameraSettings.enabledModes
-    
-    public var newCameraModes: Bool = false
 
     /**
      Camera mode which starts active.
@@ -247,7 +245,7 @@ extension CameraSettings {
         // enabledModes will always have at least one value as its precondition.
         guard let firstMode = orderedEnabledModes.first else {
             assertionFailure("should have at least one enabled mode")
-            return newCameraModes ? .normal : .stopMotion
+            return features.newCameraModes ? .normal : .stopMotion
         }
         return defaultMode ?? firstMode
     }
@@ -286,7 +284,6 @@ extension CameraSettings {
 private struct DefaultCameraSettings {
 
     static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
-    static let newCameraModes: Bool = false
     static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let defaultCameraPositionOption: AVCaptureDevice.Position = .back
     static let defaultImagePreviewOption: ImagePreviewMode = .off

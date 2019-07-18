@@ -66,7 +66,7 @@ final class CameraRecorder: NSObject {
         self.segmentsHandler = segmentsHandler
         self.settings = settings
 
-        currentRecordingMode = settings.newCameraModes ? .normal : .stopMotion
+        currentRecordingMode = settings.features.newCameraModes ? .normal : .stopMotion
 
         super.init()
 

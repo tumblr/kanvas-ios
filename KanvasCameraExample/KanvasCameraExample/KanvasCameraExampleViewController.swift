@@ -15,6 +15,10 @@ final class KanvasCameraExampleViewController: UIViewController {
 
     private struct Constants {
         static let featureCellReuseIdentifier = "featureCell"
+        static let standardModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+        static let newModes: Set<CameraMode> = [.gif, .normal, .stitch]
+        static let defaultStandardMode: CameraMode = .stopMotion
+        static let defaultNewMode: CameraMode = .normal
     }
 
     private let button = UIButton(type: .custom)
@@ -131,16 +135,12 @@ final class KanvasCameraExampleViewController: UIViewController {
 // MARK: - Kanvas Features and UITableViewDelegate and UITableViewDataSource
 
 extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDataSource, FeatureTableViewCellDelegate {
-
+    
     /// This returns the customized settings for the CameraController
     ///
     /// - Returns: an instance of CameraSettings
     private static func customCameraSettings() -> CameraSettings {
         let settings = CameraSettings()
-        settings.enabledModes = [.photo, .gif, .stopMotion, .normal, .stitch]
-        settings.defaultMode = .normal
-        settings.newCameraModes = true
-        settings.exportStopMotionPhotoAsVideo = true
         settings.features.ghostFrame = true
         settings.features.openGLPreview = true
         settings.features.openGLCapture = true
@@ -149,6 +149,10 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
         settings.features.editorFilters = true
         settings.features.editorMedia = false
         settings.features.mediaPicking = true
+        settings.features.newCameraModes = true
+        settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
+        settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
+        settings.exportStopMotionPhotoAsVideo = true
         return settings
     }
 
@@ -163,6 +167,7 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
         case editorMedia(Bool)
         case editorDrawing(Bool)
         case mediaPicking(Bool)
+        case newCameraModes(Bool)
 
         var name: String {
             switch self {
@@ -186,6 +191,8 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
                 return "Editor Drawing"
             case .mediaPicking(_):
                 return "Media Picking"
+            case .newCameraModes(_):
+                return "New Camera Modes"
             }
         }
 
@@ -211,6 +218,8 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
                 return enabled
             case .mediaPicking(let enabled):
                 return enabled
+            case .newCameraModes(let enabled):
+                return enabled
             }
         }
     }
@@ -227,6 +236,7 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
             .editorMedia(settings.features.editorMedia),
             .editorDrawing(settings.features.editorDrawing),
             .mediaPicking(settings.features.mediaPicking),
+            .newCameraModes(settings.features.newCameraModes),
         ]
     }
 
@@ -262,6 +272,11 @@ extension KanvasCameraExampleViewController: UITableViewDelegate, UITableViewDat
         case .mediaPicking(_):
             featuresData[indexPath.row] = .mediaPicking(value)
             settings.features.mediaPicking = value
+        case .newCameraModes(_):
+            featuresData[indexPath.row] = .newCameraModes(value)
+            settings.features.newCameraModes = value
+            settings.enabledModes = value ? Constants.newModes : Constants.standardModes
+            settings.defaultMode = value ? Constants.defaultNewMode : Constants.defaultStandardMode
         }
     }
 
