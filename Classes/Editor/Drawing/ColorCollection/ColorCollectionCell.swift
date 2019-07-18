@@ -35,7 +35,7 @@ final class ColorCollectionCell: UICollectionViewCell {
     static let height = ColorCollectionCellConstants.height
     static let width = ColorCollectionCellConstants.width
     
-    private weak var circleView: CircularImageView?
+    private var circleView = CircularImageView()
     
     weak var delegate: ColorCollectionCellDelegate?
     
@@ -55,32 +55,29 @@ final class ColorCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter color: The UIColor to display
     func bindTo(_ color: UIColor) {
-        circleView?.backgroundColor = color
+        circleView.backgroundColor = color
     }
     
     
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        circleView?.image = nil
-        circleView?.backgroundColor = nil
+        circleView.image = nil
+        circleView.backgroundColor = nil
     }
     
     // MARK: - Layout
     
     private func setUpView() {
-        let imageView = CircularImageView()
-        contentView.addSubview(imageView)
-        imageView.accessibilityIdentifier = "Color Cell View"
+        contentView.addSubview(circleView)
+        circleView.accessibilityIdentifier = "Color Cell View"
         
         NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: ColorCollectionCellConstants.circleDiameter),
-            imageView.widthAnchor.constraint(equalToConstant: ColorCollectionCellConstants.circleDiameter)
+            circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            circleView.heightAnchor.constraint(equalToConstant: ColorCollectionCellConstants.circleDiameter),
+            circleView.widthAnchor.constraint(equalToConstant: ColorCollectionCellConstants.circleDiameter)
         ])
-        
-        circleView = imageView
     }
     
     
