@@ -21,7 +21,7 @@ private struct ModeSelectorAndShootViewConstants {
     static var shootButtonTopMargin: CGFloat {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
-    static let mediaPickerButtonSize: CGFloat = 30
+    static let mediaPickerButtonSize: CGFloat = 35
 }
 
 /// Protocol to handle mode selector container and capture button user actions
@@ -173,6 +173,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     func setMediaPickerButtonThumbnail(_ image: UIImage) {
         mediaPickerButton.setThumbnail(image)
+    }
+
+    func resetMediaPickerButton() {
+        mediaPickerButton.reset()
     }
 
     var thumbnailSize: CGSize {

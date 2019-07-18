@@ -14,7 +14,10 @@ extension UIImage {
     /// - Parameter count: Number of colors wanted
     /// - Returns: returns a collection with the dominant colors
     func getDominantColors(count: Int) -> [UIColor] {
-        guard let colorPalette = ColorThief.getPalette(from: self, colorCount: count, quality: 1, ignoreWhite: false) else { return [] }
+        guard let colorPalette = ColorThief.getPalette(from: self, colorCount: count, quality: 1, ignoreWhite: false) else {
+            return []
+        }
+        
         return colorPalette.map { $0.makeUIColor() }
     }
 }
