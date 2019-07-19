@@ -67,7 +67,7 @@ extension MediaClipsCollectionView {
 }
 
 // MARK: - Collection
-fileprivate func createCollectionView() -> UICollectionView {
+private func createCollectionView() -> UICollectionView {
     let layout = UICollectionViewFlowLayout()
     configureCollectionLayout(layout: layout)
 
@@ -78,7 +78,7 @@ fileprivate func createCollectionView() -> UICollectionView {
     return collectionView
 }
 
-fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
+private func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.scrollDirection = .horizontal
     layout.itemSize = UICollectionViewFlowLayout.automaticSize
     layout.estimatedItemSize = CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)
@@ -86,7 +86,7 @@ fileprivate func configureCollectionLayout(layout: UICollectionViewFlowLayout) {
     layout.minimumLineSpacing = 0
 }
 
-fileprivate func configureCollection(collectionView: UICollectionView) {
+private func configureCollection(collectionView: UICollectionView) {
     collectionView.isScrollEnabled = true
     collectionView.allowsSelection = true
     collectionView.bounces = true
