@@ -124,7 +124,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     /// Shows or hides the bottom panel (it includes the buttons menu and the color picker)
     ///
     /// - Parameter show: true to show, false to hide
-    func showBottomPanel(_ show: Bool) {
+    private func showBottomPanel(_ show: Bool) {
         drawingView.showBottomPanel(show)
     }
     
