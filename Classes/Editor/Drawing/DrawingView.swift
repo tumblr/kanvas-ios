@@ -139,7 +139,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     static let horizontalSelectorPadding = DrawingViewConstants.horizontalSelectorPadding
     static let verticalSelectorWidth = DrawingViewConstants.verticalSelectorWidth
-    static let colorSelecterAlpha = DrawingViewConstants.colorSelecterAlpha
     static let strokeCircleMinSize = DrawingViewConstants.strokeCircleMinSize
     static let strokeCircleMaxSize = DrawingViewConstants.strokeCircleMaxSize
     
@@ -148,50 +147,50 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     let temporalImageView: UIImageView
     
     // Black traslucent overlay used for onboarding
-    let overlay: UIView
+    private let overlay: UIView
     
     // Main containers
     private let topButtonContainer: UIStackView
     private let bottomPanelContainer: UIView
     
     // Top buttons
-    let confirmButton: UIButton
-    let undoButton: UIButton
-    let eraseButton: UIButton
+    private let confirmButton: UIButton
+    private let undoButton: UIButton
+    private let eraseButton: UIButton
     
     // Bottom panel containers
     private let bottomMenuContainer: UIView
-    let colorPickerContainer: UIView
+    private let colorPickerContainer: UIView
     
     // Stroke
-    let strokeButton: CircularImageView
-    let strokeButtonCircle: UIImageView
-    let strokeSelectorBackground: CircularImageView
+    private let strokeButton: CircularImageView
+    private let strokeButtonCircle: UIImageView
+    private let strokeSelectorBackground: CircularImageView
+    private let strokeSelectorCircle: UIImageView
     let strokeSelectorPannableArea: UIView
-    let strokeSelectorCircle: UIImageView
     
     // Texture
-    let textureButton: CircularImageView
-    let textureSelectorBackground: CircularImageView
-    let textureOptionsContainer: UIStackView
-    let sharpieButton: UIButton
-    let pencilButton: UIButton
-    let markerButton: UIButton
+    private let textureButton: CircularImageView
+    private let textureSelectorBackground: CircularImageView
+    private let textureOptionsContainer: UIStackView
+    private let sharpieButton: UIButton
+    private let pencilButton: UIButton
+    private let markerButton: UIButton
     
     // Color picker
-    let colorPickerButton: CircularImageView
-    let closeColorPickerButton: CircularImageView
+    private let colorPickerButton: CircularImageView
+    private let closeColorPickerButton: CircularImageView
     
     // Color picker gradient
-    let colorPickerSelectorBackground: CircularImageView
-    let colorPickerSelectorPannableArea: UIView
-    let colorPickerGradient: CAGradientLayer
+    private let colorPickerSelectorBackground: CircularImageView
+    private let colorPickerSelectorPannableArea: UIView
+    private let colorPickerGradient: CAGradientLayer
     
     // Eye Dropper
-    let eyeDropperButton: CircularImageView
+    private let eyeDropperButton: CircularImageView
     
     // Color selecter
-    let colorSelecter: CircularImageView
+    private let colorSelecter: CircularImageView
     private var tooltip: EasyTipView?
     
     // Color collection
@@ -841,6 +840,42 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }, completion: nil)
     }
     
+    /// Shows the stroke selector animation for onboarding
+    func showStrokeSelectorAnimation() {
+        let duration = 4.0
+        let maxScale = DrawingView.strokeCircleMaxSize / DrawingView.strokeCircleMinSize
+        let maxHeight = (strokeSelectorPannableArea.bounds.height + strokeSelectorCircle.bounds.height) / 2
+        
+        self.enableDrawingCanvas(false)
+        
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5 / duration, animations: {
+                self.overlay.alpha = 1
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.5 / duration, relativeDuration: 0.5 / duration, animations: {
+                self.strokeSelectorBackground.alpha = 1
+            })
+            UIView.addKeyframe(withRelativeStartTime: 1.0 / duration, relativeDuration: 1.0 / duration, animations: {
+                var transform = CGAffineTransform(translationX: 0.0, y: -maxHeight)
+                transform = transform.concatenating(CGAffineTransform(scaleX: maxScale, y: maxScale))
+                self.strokeSelectorCircle.transform = transform
+            })
+            UIView.addKeyframe(withRelativeStartTime: 2.0 / duration, relativeDuration: 1.0 / duration, animations: {
+                var transform = CGAffineTransform(translationX: 0.0, y: 0.0)
+                transform = transform.concatenating(CGAffineTransform(scaleX: 1.0, y: 1.0))
+                self.strokeSelectorCircle.transform = transform
+            })
+            UIView.addKeyframe(withRelativeStartTime: 3.0 / duration, relativeDuration: 0.5 / duration, animations: {
+                self.strokeSelectorBackground.alpha = 0
+            })
+            UIView.addKeyframe(withRelativeStartTime: 3.5 / duration, relativeDuration: 0.5 / duration, animations: {
+                self.overlay.alpha = 0
+            })
+        }, completion: { _ in
+            self.enableDrawingCanvas(true)
+        })
+    }
+    
     /// shows or hides the bottom panel (it includes the buttons menu and the color picker)
     ///
     /// - Parameter show: true to show, false to hide
@@ -939,11 +974,86 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
     }
     
+    // MARK: - Public interface
+    
     /// enables or disables drawing on the drawing canvas
     ///
     /// - Parameter enable: true to enable, false to disable
     func enableDrawingCanvas(_ enable: Bool) {
         drawingCanvas.isUserInteractionEnabled = enable
+    }
+    
+    /// Sets a new color for the eye dropper button background
+    ///
+    /// - Parameter color: new color for the eye dropper
+    func setEyeDropperColor(_ color: UIColor) {
+        eyeDropperButton.backgroundColor = color
+    }
+    
+    /// Sets a new color for the color selecter background
+    ///
+    /// - Parameter color: new color for the color selecter
+    func setColorSelecterColor(_ color: UIColor) {
+        eyeDropperButton.backgroundColor = color.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
+    }
+    
+    /// Changes color selector location on screen
+    ///
+    /// - Parameter point: the new location
+    func moveColorSelecter(to point: CGPoint) {
+        colorSelecter.center = point
+    }
+    
+    /// Applies a transformation to the color selecter
+    ///
+    /// - Parameter transform: the transformation to apply
+    func transformColorSelecter(_ transform: CGAffineTransform) {
+        colorSelecter.transform = transform
+    }
+    
+    /// Applies a transformation to the circles inside stroke button and stroke selector
+    ///
+    /// - Parameter transform: the transformation to apply
+    func transformStrokeCircles(_ transform: CGAffineTransform) {
+        strokeButtonCircle.transform = transform
+        strokeSelectorCircle.transform = transform
+    }
+    
+    /// Calculates the color selecter initial location expressed in screen coordinates
+    ///
+    /// - Returns: the initial location for the color selecter
+    func getColorSelecterInitialLocation() -> CGPoint {
+        return colorPickerContainer.convert(eyeDropperButton.center, to: self)
+    }
+    
+    /// Changes the stroke circle location inside the stroke selector
+    ///
+    /// - Parameter location: the new position of the circle
+    func moveStrokeSelectorCircle(to location: CGPoint) {
+        strokeSelectorCircle.center = location
+    }
+    
+    /// Gets the color picker rect
+    ///
+    /// - Returns: frame of the color picker background
+    func getColorPickerDimensions() -> CGRect {
+        return colorPickerSelectorBackground.frame
+    }
+    
+    /// Gets the color picker gradient colors
+    ///
+    /// - Returns: collection of colors
+    func getColorPickerGradientColors() -> [CGColor] {
+        guard let colors = colorPickerGradient.colors as? [CGColor] else { return [] }
+        return colors
+    }
+    
+    /// Gets the color picker color locations
+    ///
+    /// - Returns: collection of locations
+    func getColorPickerGradientLocations() -> [NSNumber] {
+        guard let locations = colorPickerGradient.locations else { return [] }
+        return locations
     }
     
     // MARK: - DrawingCanvasDelegate

@@ -198,42 +198,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.enableDrawingCanvas(enable)
     }
     
-    /// Shows the stroke selector animation for onboarding
-    private func showStrokeSelectorAnimation() {
-        let duration = 4.0
-        let maxScale = DrawingView.strokeCircleMaxSize / DrawingView.strokeCircleMinSize
-        let maxHeight = (drawingView.strokeSelectorPannableArea.bounds.height + drawingView.strokeSelectorCircle.bounds.height) / 2
-        
-        drawingView.isUserInteractionEnabled = false
-        
-        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5 / duration, animations: {
-                self.drawingView.overlay.alpha = 1
-            })
-            UIView.addKeyframe(withRelativeStartTime: 0.5 / duration, relativeDuration: 0.5 / duration, animations: {
-                self.drawingView.strokeSelectorBackground.alpha = 1
-            })
-            UIView.addKeyframe(withRelativeStartTime: 1.0 / duration, relativeDuration: 1.0 / duration, animations: {
-                var transform = CGAffineTransform(translationX: 0.0, y: -maxHeight)
-                transform = transform.concatenating(CGAffineTransform(scaleX: maxScale, y: maxScale))
-                self.drawingView.strokeSelectorCircle.transform = transform
-            })
-            UIView.addKeyframe(withRelativeStartTime: 2.0 / duration, relativeDuration: 1.0 / duration, animations: {
-                var transform = CGAffineTransform(translationX: 0.0, y: 0.0)
-                transform = transform.concatenating(CGAffineTransform(scaleX: 1.0, y: 1.0))
-                self.drawingView.strokeSelectorCircle.transform = transform
-            })
-            UIView.addKeyframe(withRelativeStartTime: 3.0 / duration, relativeDuration: 0.5 / duration, animations: {
-                self.drawingView.strokeSelectorBackground.alpha = 0
-            })
-            UIView.addKeyframe(withRelativeStartTime: 3.5 / duration, relativeDuration: 0.5 / duration, animations: {
-                self.drawingView.overlay.alpha = 0
-            })
-        }, completion: { _ in
-            self.drawingView.isUserInteractionEnabled = true
-        })
-    }
-    
     // MARK: - DrawingViewDelegate
     
     func didDismissColorSelecterTooltip() {
@@ -396,8 +360,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     /// Changes the stroke circle location inside the stroke selector
     ///
     /// - Parameter location: the new position of the circle
-    private func setStrokeCircleLocation(location: CGPoint) {
-        drawingView.strokeSelectorCircle.center = location
+    private func moveStrokeSelectorCircle(to location: CGPoint) {
+        drawingView.moveStrokeSelectorCircle(to: location)
     }
     
     /// Changes the stroke circle size according to a percent that goes from
@@ -407,14 +371,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     private func setStrokeCircleSize(percent: CGFloat) {
         let maxIncrement = (DrawingView.strokeCircleMaxSize / DrawingView.strokeCircleMinSize) - 1
         let scale = 1.0 + maxIncrement * percent / 100.0
-        drawingView.strokeSelectorCircle.transform = CGAffineTransform(scaleX: scale, y: scale)
-        drawingView.strokeButtonCircle.transform = CGAffineTransform(scaleX: scale, y: scale)
+        drawingView.transformStrokeCircles(CGAffineTransform(scaleX: scale, y: scale))
     }
     
     private func strokeSelectorPanned(recognizer: UILongPressGestureRecognizer) {
         let point = getSelectedLocation(with: recognizer, in: drawingView.strokeSelectorPannableArea)
         if drawingView.strokeSelectorPannableArea.bounds.contains(point) {
-            setStrokeCircleLocation(location: point)
+            moveStrokeSelectorCircle(to: point)
             setStrokeCircleSize(percent: 100.0 - point.y)
         }
     }
@@ -444,8 +407,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     /// - Parameter view: the color picker gradient
     /// - Returns: point inside the color picker
     private func getSelectedGradientLocation(with recognizer: UIGestureRecognizer, in view: UIView) -> CGPoint {
+        let dimensions = drawingView.getColorPickerDimensions()
+        let y = dimensions.height / 2
         let x = recognizer.location(in: view).x
-        let y = drawingView.colorPickerSelectorBackground.frame.height / 2
         var point = CGPoint(x: x, y: y)
         
         if !view.bounds.contains(point) {
@@ -462,16 +426,16 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     /// Sets a new color for the eye dropper button background
     ///
-    /// - Parameter color: new color for the eye dropper
+    /// - Parameter color: new color for the eye dropper button
     private func setEyeDropperColor(_ color: UIColor) {
-        drawingView.eyeDropperButton.backgroundColor = color
+        drawingView.setEyeDropperColor(color)
     }
     
     /// Sets a new color for the color selecter background
     ///
     /// - Parameter color: new color for the color selecter
     private func setColorSelecterColor(_ color: UIColor) {
-        drawingView.colorSelecter.backgroundColor = color.withAlphaComponent(DrawingView.colorSelecterAlpha)
+        drawingView.setColorSelecterColor(color)
     }
     
     /// Gets the color that has been selected from the color picker gradient
@@ -480,11 +444,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     /// - Parameter defaultColor: a color to return in case of an error
     /// - Returns: the selected color
     private func getColor(at x: CGFloat, defaultColor: UIColor = .white) -> UIColor {
-        let colorPickerPercent = x / drawingView.colorPickerSelectorBackground.frame.width
+        let colorPickerPercent = x / drawingView.getColorPickerDimensions().width
         
-        guard let locations: [NSNumber] = drawingView.colorPickerGradient.locations,
-            let colors = drawingView.colorPickerGradient.colors as? [CGColor],
-            let upperBound = locations.firstIndex(where: { CGFloat($0.floatValue) > colorPickerPercent }) else { return defaultColor }
+        let locations = drawingView.getColorPickerGradientLocations()
+        let colors = drawingView.getColorPickerGradientColors()
+        
+        guard let upperBound = locations.firstIndex(where: { CGFloat($0.floatValue) > colorPickerPercent }) else {
+            return defaultColor
+        }
         
         let lowerBound = upperBound - 1
         
@@ -497,9 +464,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     /// Takes the color selecter back to its initial position (same position as the eye dropper's)
     private func resetColorSelecterLocation() {
-        let initialPoint = drawingView.colorPickerContainer.convert(drawingView.eyeDropperButton.center, to: drawingView)
-        drawingView.colorSelecter.center = initialPoint
-        drawingView.colorSelecter.transform = CGAffineTransform(scaleX: 0, y: 0)
+        let initialPoint = drawingView.getColorSelecterInitialLocation()
+        drawingView.moveColorSelecter(to: initialPoint)
+        drawingView.transformColorSelecter(CGAffineTransform(scaleX: 0, y: 0))
         
         colorSelecterOrigin = initialPoint
     }
@@ -516,9 +483,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     /// - Parameter recognizer: the gesture recognizer
     /// - Returns: the new location of the color selecter
     private func moveColorSelecter(recognizer: UIPanGestureRecognizer) -> CGPoint {
-        let translation = recognizer.translation(in: drawingView.colorSelecter.superview)
+        let translation = recognizer.translation(in: drawingView)
         let point = CGPoint(x: colorSelecterOrigin.x + translation.x, y: colorSelecterOrigin.y + translation.y)
-        drawingView.colorSelecter.center = point
+        drawingView.moveColorSelecter(to: point)
         return point
     }
     
@@ -542,7 +509,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             self.drawingView.alpha = show ? 1 : 0
         }, completion: { _ in
             if show && self.delegate?.editorShouldShowStrokeSelectorAnimation() == true {
-                self.showStrokeSelectorAnimation()
+                self.drawingView.showStrokeSelectorAnimation()
                 self.delegate?.didEndStrokeSelectorAnimation()
             }
         })
