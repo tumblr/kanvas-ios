@@ -354,7 +354,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             strokeSelectorPanned(recognizer: recognizer)
         case .ended:
             showStrokeSelectorBackground(false)
-        default:
+        case .cancelled, .failed, .possible:
             break
         }
     }
@@ -447,11 +447,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     @objc private func colorPickerSelectorPanned(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
-        case .changed:
+        case .changed, .ended:
             selectColor(recognizer: recognizer)
-        case .ended:
-            selectColor(recognizer: recognizer)
-        default:
+        case .possible, .began, .cancelled, .failed:
             break
         }
     }
@@ -466,7 +464,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         case .ended, .cancelled, .failed:
             selectColor(recognizer: recognizer)
             setColorPickerMainColors()
-        default:
+        case .possible:
             break
         }
     }
@@ -492,7 +490,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             showColorPickerContainer(true)
             showTopButtons(true)
             enableDrawingCanvas(true)
-        default:
+        case .possible:
             break
         }
     }
