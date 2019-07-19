@@ -356,6 +356,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             showStrokeSelectorBackground(false)
         case .cancelled, .failed, .possible:
             break
+        @unknown default:
+            break
         }
     }
     
@@ -451,7 +453,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             selectColor(recognizer: recognizer)
         case .possible, .began, .cancelled, .failed:
             break
+        @unknown default:
+            break
         }
+        
     }
     
     @objc private func colorPickerSelectorLongPressed(recognizer: UILongPressGestureRecognizer) {
@@ -465,6 +470,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             selectColor(recognizer: recognizer)
             setColorPickerMainColors()
         case .possible:
+            break
+        @unknown default:
             break
         }
     }
@@ -491,6 +498,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             showTopButtons(true)
             enableDrawingCanvas(true)
         case .possible:
+            break
+        @unknown default:
             break
         }
     }
