@@ -395,7 +395,8 @@ final class MMCQ {
             return [vbox1, vbox2]
         }
         
-        fatalError("VBox can't be cut")
+        print("VBox can't be cut")
+        return []
     }
     
     static func quantize(_ pixels: [UInt8], quality: Int, ignoreWhite: Bool, maxColors: Int) -> ColorMap? {

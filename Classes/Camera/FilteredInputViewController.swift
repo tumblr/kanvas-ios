@@ -20,7 +20,8 @@ protocol FilteredInputViewControllerDelegate: class {
 /// class for controlling filters and rendering with opengl
 final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     private lazy var renderer: GLRenderer = {
-        let renderer = GLRenderer(delegate: self)
+        let renderer = GLRenderer()
+        renderer.delegate = self
         return renderer
     }()
     private weak var previewView: GLPixelBufferView?

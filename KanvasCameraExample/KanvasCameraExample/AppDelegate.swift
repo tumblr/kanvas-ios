@@ -14,6 +14,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let applicationViewController = KanvasCameraExampleViewController(nibName: nil, bundle: nil)
+        applicationViewController.view.tintColor = .tumblrWhite
+        window?.rootViewController = applicationViewController
+        window?.makeKeyAndVisible()
         return true
     }
 
