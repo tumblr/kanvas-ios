@@ -94,102 +94,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
-        setUpRecognizers()
     }
     
     // MARK: - View
     
     private func setUpView() {
         drawingView.alpha = 0
-    }
-    
-    // MARK: - Gesture Recognizers
-    
-    private func setUpRecognizers() {
-        setUpTopOptions()
-        setUpStrokeButton()
-        setUpTextureButton()
-        setUpTextureOptions()
-        setUpColorPickerButton()
-        setUpCloseColorPickerButton()
-        setUpEyeDropper()
-        setUpColorPickerSelectorPannableArea()
-        setUpColorSelecter()
-    }
-    
-    /// Sets up the gesture recognizers for the top options
-    private func setUpTopOptions() {
-        let confirmButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
-        let undoButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(undoButtonTapped(recognizer:)))
-        let eraseButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(eraseButtonTapped(recognizer:)))
-        
-        drawingView.confirmButton.addGestureRecognizer(confirmButtonRecognizer)
-        drawingView.undoButton.addGestureRecognizer(undoButtonRecognizer)
-        drawingView.eraseButton.addGestureRecognizer(eraseButtonRecognizer)
-    }
-    
-    /// Sets up the gesture recognizers for the texture options
-    private func setUpTextureOptions() {
-        let sharpieButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(sharpieButtonTapped(recognizer:)))
-        let pencilButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(pencilButtonTapped(recognizer:)))
-        let markerButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(markerButtonTapped(recognizer:)))
-        
-        drawingView.sharpieButton.addGestureRecognizer(sharpieButtonRecognizer)
-        drawingView.pencilButton.addGestureRecognizer(pencilButtonRecognizer)
-        drawingView.markerButton.addGestureRecognizer(markerButtonRecognizer)
-    }
-    
-    /// Sets up the gesture recognizer for the stroke button
-    private func setUpStrokeButton() {
-        let longPressRecognizer = UILongPressGestureRecognizer()
-        longPressRecognizer.addTarget(self, action: #selector(strokeButtonLongPressed(recognizer:)))
-        longPressRecognizer.minimumPressDuration = 0
-        drawingView.strokeButton.addGestureRecognizer(longPressRecognizer)
-    }
-    
-    /// Sets up the gesture recognizer for the texture button
-    private func setUpTextureButton() {
-        let tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer.addTarget(self, action: #selector(textureButtonTapped(recognizer:)))
-        drawingView.textureButton.addGestureRecognizer(tapRecognizer)
-    }
-    
-    /// Sets up the gesture recognizer for gradient button that opens the color picker
-    private func setUpColorPickerButton() {
-        let tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer.addTarget(self, action: #selector(colorPickerTapped(recognizer:)))
-        drawingView.colorPickerButton.addGestureRecognizer(tapRecognizer)
-    }
-    
-    /// Sets up the gesture recognizer for the cross button that closes the color picker
-    private func setUpCloseColorPickerButton() {
-        let tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer.addTarget(self, action: #selector(closeColorPickerButtonTapped(recognizer:)))
-        drawingView.closeColorPickerButton.addGestureRecognizer(tapRecognizer)
-    }
-    
-    /// Sets up the gesture recognizer for the eye dropper button
-    private func setUpEyeDropper() {
-        let tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer.addTarget(self, action: #selector(eyeDropperTapped(recognizer:)))
-        drawingView.eyeDropperButton.addGestureRecognizer(tapRecognizer)
-    }
-    
-    /// Sets up the gesture recognizer for the selectable area of the color picker horizontal gradient
-    private func setUpColorPickerSelectorPannableArea() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(colorPickerSelectorTapped(recognizer:)))
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(colorPickerSelectorPanned(recognizer:)))
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(colorPickerSelectorLongPressed(recognizer:)))
-        drawingView.colorPickerSelectorPannableArea.addGestureRecognizer(tapRecognizer)
-        drawingView.colorPickerSelectorPannableArea.addGestureRecognizer(panRecognizer)
-        drawingView.colorPickerSelectorPannableArea.addGestureRecognizer(longPressRecognizer)
-    }
-    
-    /// Sets up the gesture recognizer for the color selecter (circle that picks a color from the background media)
-    private func setUpColorSelecter() {
-        let panRecognizer = UIPanGestureRecognizer()
-        panRecognizer.addTarget(self, action: #selector(colorSelecterPanned(recognizer:)))
-        drawingView.colorSelecter.addGestureRecognizer(panRecognizer)
     }
     
     /// Sets a new color for drawing
@@ -324,18 +234,22 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         })
     }
     
-    // MARK: - Gesture Recognizer Selectors
+    // MARK: - DrawingViewDelegate
     
-    @objc private func confirmButtonTapped(recognizer: UITapGestureRecognizer) {
+    func didDismissColorSelecterTooltip() {
+        delegate?.didDismissColorSelecterTooltip()
+    }
+    
+    func didTapConfirmButton() {
         showTextureSelectorBackground(false)
         delegate?.didTapCloseButton()
     }
     
-    @objc private func undoButtonTapped(recognizer: UITapGestureRecognizer) {
+    func didTapUndoButton() {
         
     }
     
-    @objc private func eraseButtonTapped(recognizer: UITapGestureRecognizer) {
+    func didTapEraseButton() {
         if mode == .draw {
             mode = .erase
             changeEraseIcon(selected: true)
@@ -346,28 +260,126 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         }
     }
     
-    @objc private func strokeButtonLongPressed(recognizer: UILongPressGestureRecognizer) {
+    func didLongPressStrokeButton(recognizer: UILongPressGestureRecognizer) {
         switch recognizer.state {
         case .began:
             showStrokeSelectorBackground(true)
         case .changed:
             strokeSelectorPanned(recognizer: recognizer)
-        case .ended:
+        case .ended, .cancelled, .failed:
             showStrokeSelectorBackground(false)
-        case .cancelled, .failed, .possible:
+        case .possible:
             break
         @unknown default:
             break
         }
     }
     
-    private func strokeSelectorPanned(recognizer: UILongPressGestureRecognizer) {
-        let point = getSelectedLocation(with: recognizer, in: drawingView.strokeSelectorPannableArea)
-        if drawingView.strokeSelectorPannableArea.bounds.contains(point) {
-            setStrokeCircleLocation(location: point)
-            setStrokeCircleSize(percent: 100.0 - point.y)
+    func didTapTextureButton() {
+        showTextureSelectorBackground(true)
+    }
+    
+    func didTapPencilButton() {
+        changeTextureIcon(image: KanvasCameraImages.pencilImage)
+        showTextureSelectorBackground(false)
+    }
+    
+    func didTapSharpieButton() {
+        changeTextureIcon(image: KanvasCameraImages.sharpieImage)
+        showTextureSelectorBackground(false)
+    }
+    
+    func didTapMarkerButton() {
+        changeTextureIcon(image: KanvasCameraImages.markerImage)
+        showTextureSelectorBackground(false)
+    }
+    
+    func didTapColorPickerButton() {
+        showBottomMenu(false)
+        showTextureSelectorBackground(false)
+        showColorPickerContainer(true)
+    }
+    
+    func didTapCloseColorPickerButton() {
+        showColorPickerContainer(false)
+        showBottomMenu(true)
+    }
+    
+    func didTapEyeDropper() {
+        resetColorSelecterLocation()
+        showColorPickerContainer(false)
+        showTopButtons(false)
+        resetColorSelecterColor()
+        showColorSelecter(true)
+        enableDrawingCanvas(false)
+        
+        if delegate?.editorShouldShowColorSelecterTooltip() == true {
+            showOverlay(true)
+            showTooltip(true)
         }
     }
+    
+    func didTapColorPickerSelector(recognizer: UITapGestureRecognizer) {
+        selectColor(recognizer: recognizer)
+    }
+    
+    func didPanColorPickerSelector(recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .changed, .ended:
+            selectColor(recognizer: recognizer)
+        case .possible, .began, .cancelled, .failed:
+            break
+        @unknown default:
+            break
+        }
+    }
+    
+    func didLongPressColorPickerSelector(recognizer: UILongPressGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            selectColor(recognizer: recognizer)
+            setColorPickerLightToDarkColors()
+        case .changed:
+            selectColor(recognizer: recognizer)
+        case .ended, .cancelled, .failed:
+            selectColor(recognizer: recognizer)
+            setColorPickerMainColors()
+        case .possible:
+            break
+        @unknown default:
+            break
+        }
+    }
+    
+    func didPanColorSelecter(recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            if delegate?.editorShouldShowColorSelecterTooltip() == true {
+                showTooltip(false)
+                showOverlay(false)
+            }
+        case .changed:
+            let currentLocation = moveColorSelecter(recognizer: recognizer)
+            let color = getColor(at: currentLocation)
+            setColorSelecterColor(color)
+        case .ended, .failed, .cancelled:
+            let currentLocation = moveColorSelecter(recognizer: recognizer)
+            let color = getColor(at: currentLocation)
+            setEyeDropperColor(color)
+            setDrawingColor(color)
+            
+            showColorSelecter(false)
+            showColorPickerContainer(true)
+            showTopButtons(true)
+            enableDrawingCanvas(true)
+        case .possible:
+            break
+        @unknown default:
+            break
+        }
+    }
+    
+    // MARK: - Private utilities
     
     /// Gets the position of the user's finger on screen,
     /// but adjusts it to fit the horizontal center of the selector.
@@ -399,113 +411,15 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.strokeButtonCircle.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
-    @objc private func textureButtonTapped(recognizer: UITapGestureRecognizer) {
-        showTextureSelectorBackground(true)
-    }
-    
-    @objc private func pencilButtonTapped(recognizer: UITapGestureRecognizer) {
-        changeTextureIcon(image: KanvasCameraImages.pencilImage)
-        showTextureSelectorBackground(false)
-    }
-    
-    @objc private func markerButtonTapped(recognizer: UITapGestureRecognizer) {
-        changeTextureIcon(image: KanvasCameraImages.markerImage)
-        showTextureSelectorBackground(false)
-    }
-    
-    @objc private func sharpieButtonTapped(recognizer: UITapGestureRecognizer) {
-        changeTextureIcon(image: KanvasCameraImages.sharpieImage)
-        showTextureSelectorBackground(false)
-    }
-    
-    @objc private func colorPickerTapped(recognizer: UITapGestureRecognizer) {
-        showBottomMenu(false)
-        showTextureSelectorBackground(false)
-        showColorPickerContainer(true)
-    }
-    
-    @objc private func closeColorPickerButtonTapped(recognizer: UITapGestureRecognizer) {
-        showColorPickerContainer(false)
-        showBottomMenu(true)
-    }
-    
-    @objc private func eyeDropperTapped(recognizer: UITapGestureRecognizer) {
-        resetColorSelecterLocation()
-        showColorPickerContainer(false)
-        showTopButtons(false)
-        resetColorSelecterColor()
-        showColorSelecter(true)
-        enableDrawingCanvas(false)
-        
-        if delegate?.editorShouldShowColorSelecterTooltip() == true {
-            showOverlay(true)
-            showTooltip(true)
-        }
-    }
-    
-    @objc private func colorPickerSelectorTapped(recognizer: UITapGestureRecognizer) {
-        selectColor(recognizer: recognizer)
-    }
-    
-    @objc private func colorPickerSelectorPanned(recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case .changed, .ended:
-            selectColor(recognizer: recognizer)
-        case .possible, .began, .cancelled, .failed:
-            break
-        @unknown default:
-            break
-        }
-        
-    }
-    
-    @objc private func colorPickerSelectorLongPressed(recognizer: UILongPressGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            selectColor(recognizer: recognizer)
-            setColorPickerLightToDarkColors()
-        case .changed:
-            selectColor(recognizer: recognizer)
-        case .ended, .cancelled, .failed:
-            selectColor(recognizer: recognizer)
-            setColorPickerMainColors()
-        case .possible:
-            break
-        @unknown default:
-            break
-        }
-    }
-    
-    @objc private func colorSelecterPanned(recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            if delegate?.editorShouldShowColorSelecterTooltip() == true {
-                showTooltip(false)
-                showOverlay(false)
-            }
-        case .changed:
-            let currentLocation = moveColorSelecter(recognizer: recognizer)
-            let color = getColor(at: currentLocation)
-            setColorSelecterColor(color)
-        case .ended, .failed, .cancelled:
-            let currentLocation = moveColorSelecter(recognizer: recognizer)
-            let color = getColor(at: currentLocation)
-            setEyeDropperColor(color)
-            setDrawingColor(color)
-            
-            showColorSelecter(false)
-            showColorPickerContainer(true)
-            showTopButtons(true)
-            enableDrawingCanvas(true)
-        case .possible:
-            break
-        @unknown default:
-            break
+    private func strokeSelectorPanned(recognizer: UILongPressGestureRecognizer) {
+        let point = getSelectedLocation(with: recognizer, in: drawingView.strokeSelectorPannableArea)
+        if drawingView.strokeSelectorPannableArea.bounds.contains(point) {
+            setStrokeCircleLocation(location: point)
+            setStrokeCircleSize(percent: 100.0 - point.y)
         }
     }
     
     // MARK: - Color Picker
-    
     
     private func setColorPickerMainColors() {
         drawingView.setColorPickerMainColors()
@@ -617,11 +531,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         return delegate.getColor(from: point)
     }
     
-    // MARK: - DrawingViewDelegate
-    
-    func didDismissColorSelecterTooltip() {
-        delegate?.didDismissColorSelecterTooltip()
-    }
     
     // MARK: - Public interface
     

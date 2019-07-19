@@ -12,6 +12,61 @@ protocol DrawingViewDelegate: class {
     
     /// Called after the color selecter tooltip is dismissed
     func didDismissColorSelecterTooltip()
+    
+    /// Called when the confirm button is selected
+    func didTapConfirmButton()
+    
+    /// Called when the undo button is selected
+    func didTapUndoButton()
+    
+    /// Called when the erase button is selected
+    func didTapEraseButton()
+    
+    /// Called when the stroke button is held
+    ///
+    /// - Parameter recognizer: the long press gesture recognizer
+    func didLongPressStrokeButton(recognizer: UILongPressGestureRecognizer)
+    
+    /// Called when the texture button is selected
+    func didTapTextureButton()
+    
+    /// Called when the pencil texture is selected
+    func didTapPencilButton()
+    
+    /// Called when the sharpie texture is selected
+    func didTapSharpieButton()
+    
+    /// Called when the marker texture is selected
+    func didTapMarkerButton()
+    
+    /// Called when the gradient button (that opens the color picker) is selected
+    func didTapColorPickerButton()
+    
+    /// Called when the cross button (that closes the color picker) is selected
+    func didTapCloseColorPickerButton()
+    
+    /// Called when the eye dropper button is selected
+    func didTapEyeDropper()
+    
+    /// Called when the color picker gradient is tapped
+    ///
+    /// - Parameter recognizer: the tap gesture recognizer
+    func didTapColorPickerSelector(recognizer: UITapGestureRecognizer)
+    
+    /// Called when the color picker gradient is panned
+    ///
+    /// - Parameter recognizer: the pan gesture recognizer
+    func didPanColorPickerSelector(recognizer: UIPanGestureRecognizer)
+    
+    /// Called when the color picker gradient is long pressed
+    ///
+    /// - Parameter recognizer: the long press gesture recognizer
+    func didLongPressColorPickerSelector(recognizer: UILongPressGestureRecognizer)
+    
+    /// Called when the color selecter is panned
+    ///
+    /// - Parameter recognizer: the pan gesture recognizer
+    func didPanColorSelecter(recognizer: UIPanGestureRecognizer)
 }
 
 private struct DrawingViewConstants {
@@ -289,6 +344,14 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         undoButton.setBackgroundImage(KanvasCameraImages.undoImage, for: .normal)
         eraseButton.setBackgroundImage(KanvasCameraImages.eraserUnselectedImage, for: .normal)
         
+        let confirmButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
+        let undoButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(undoButtonTapped(recognizer:)))
+        let eraseButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(eraseButtonTapped(recognizer:)))
+        
+        confirmButton.addGestureRecognizer(confirmButtonRecognizer)
+        undoButton.addGestureRecognizer(undoButtonRecognizer)
+        eraseButton.addGestureRecognizer(eraseButtonRecognizer)
+        
         topButtonContainer.addArrangedSubview(confirmButton)
         topButtonContainer.addArrangedSubview(undoButton)
         topButtonContainer.addArrangedSubview(eraseButton)
@@ -350,6 +413,11 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             strokeButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             strokeButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
+        
+        let longPressRecognizer = UILongPressGestureRecognizer()
+        longPressRecognizer.addTarget(self, action: #selector(strokeButtonLongPressed(recognizer:)))
+        longPressRecognizer.minimumPressDuration = 0
+        strokeButton.addGestureRecognizer(longPressRecognizer)
     }
     
     /// Sets up the black circle inside the stroke button
@@ -438,6 +506,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             textureButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             textureButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
+        
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.addTarget(self, action: #selector(textureButtonTapped(recognizer:)))
+        textureButton.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the rounded white background for the texture selector
@@ -480,6 +552,14 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         pencilButton.setBackgroundImage(KanvasCameraImages.pencilImage, for: .normal)
         markerButton.setBackgroundImage(KanvasCameraImages.markerImage, for: .normal)
         
+        let sharpieButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(sharpieButtonTapped(recognizer:)))
+        let pencilButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(pencilButtonTapped(recognizer:)))
+        let markerButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(markerButtonTapped(recognizer:)))
+        
+        sharpieButton.addGestureRecognizer(sharpieButtonRecognizer)
+        pencilButton.addGestureRecognizer(pencilButtonRecognizer)
+        markerButton.addGestureRecognizer(markerButtonRecognizer)
+
         textureOptionsContainer.addArrangedSubview(sharpieButton)
         textureOptionsContainer.addArrangedSubview(pencilButton)
         textureOptionsContainer.addArrangedSubview(markerButton)
@@ -500,6 +580,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             colorPickerButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             colorPickerButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
+        
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.addTarget(self, action: #selector(colorPickerButtonTapped(recognizer:)))
+        colorPickerButton.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the container that holds the close button, eyedropper, color picker gradient
@@ -525,6 +609,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             closeColorPickerButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             closeColorPickerButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
+        
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.addTarget(self, action: #selector(closeColorPickerButtonTapped(recognizer:)))
+        closeColorPickerButton.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the eye dropper button in the color picker menu
@@ -544,6 +632,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             eyeDropperButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             eyeDropperButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
+        
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.addTarget(self, action: #selector(eyeDropperTapped(recognizer:)))
+        eyeDropperButton.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the horizontal gradient view in the color picker menu
@@ -600,6 +692,13 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             colorPickerSelectorPannableArea.bottomAnchor.constraint(equalTo: colorPickerSelectorBackground.bottomAnchor),
             colorPickerSelectorPannableArea.topAnchor.constraint(equalTo: colorPickerSelectorBackground.topAnchor),
         ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(colorPickerSelectorTapped(recognizer:)))
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(colorPickerSelectorPanned(recognizer:)))
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(colorPickerSelectorLongPressed(recognizer:)))
+        colorPickerSelectorPannableArea.addGestureRecognizer(tapRecognizer)
+        colorPickerSelectorPannableArea.addGestureRecognizer(panRecognizer)
+        colorPickerSelectorPannableArea.addGestureRecognizer(longPressRecognizer)
     }
     
     /// Sets up the draggable circle that is shown when the eyedropper is pressed
@@ -617,6 +716,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
         
         colorSelecter.alpha = 0
+        
+        let panRecognizer = UIPanGestureRecognizer()
+        panRecognizer.addTarget(self, action: #selector(colorSelecterPanned(recognizer:)))
+        colorSelecter.addGestureRecognizer(panRecognizer)
     }
     
     /// Sets up the color collection that contains the dominant colors as well as the last colors selected
@@ -654,6 +757,67 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         tooltip = EasyTipView(text: text, preferences: preferences)
     }
     
+    // MARK: - Gesture recognizers
+    
+    @objc func confirmButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapConfirmButton()
+    }
+    
+    @objc func undoButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapUndoButton()
+    }
+    
+    @objc func eraseButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapEraseButton()
+    }
+    
+    @objc func strokeButtonLongPressed(recognizer: UILongPressGestureRecognizer) {
+        delegate?.didLongPressStrokeButton(recognizer: recognizer)
+    }
+    
+    @objc func textureButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapTextureButton()
+    }
+    
+    @objc func sharpieButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapSharpieButton()
+    }
+    
+    @objc func pencilButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapPencilButton()
+    }
+    
+    @objc func markerButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapMarkerButton()
+    }
+    
+    @objc func colorPickerButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapColorPickerButton()
+    }
+    
+    @objc func closeColorPickerButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapCloseColorPickerButton()
+    }
+    
+    @objc func eyeDropperTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapEyeDropper()
+    }
+    
+    @objc func colorPickerSelectorTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapColorPickerSelector(recognizer: recognizer)
+    }
+    
+    @objc func colorPickerSelectorPanned(recognizer: UIPanGestureRecognizer) {
+        delegate?.didPanColorPickerSelector(recognizer: recognizer)
+    }
+    
+    @objc func colorPickerSelectorLongPressed(recognizer: UILongPressGestureRecognizer) {
+        delegate?.didLongPressColorPickerSelector(recognizer: recognizer)
+    }
+    
+    @objc func colorSelecterPanned(recognizer: UIPanGestureRecognizer) {
+        delegate?.didPanColorSelecter(recognizer: recognizer)
+    }
     
     // MARK: - Gradients
     
