@@ -12,7 +12,7 @@ final class KanvasUIImagePickerViewControllerTests: XCTestCase {
 
     func testPrefersStatusBarHidden() {
         let c = KanvasUIImagePickerViewController(nibName: nil, bundle: nil)
-        XCTAssert(c.prefersStatusBarHidden == true)
+        XCTAssert(c.prefersStatusBarHidden == false)
     }
 
     func testChildForStatusBarHidden() {

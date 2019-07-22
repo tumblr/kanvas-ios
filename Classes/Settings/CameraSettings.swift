@@ -73,7 +73,7 @@ public struct CameraFeatures {
     public var mediaPicking: Bool = false
     
     /// The New Camera Modes
-    /// This replaces Capture and Photo modes with Normal and Stitch modes
+    /// This replaces Capture, Photo and Loop modes with Normal, Stitch and GIF modes
     public var newCameraModes = false
 }
 

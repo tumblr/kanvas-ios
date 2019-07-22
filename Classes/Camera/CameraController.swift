@@ -80,6 +80,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     private lazy var cameraInputController: CameraInputController = {
         let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass, delegate: self)
+        addChild(controller)
         return controller
     }()
     private lazy var imagePreviewController: ImagePreviewController = {
@@ -150,8 +151,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 
-    override public var prefersStatusBarHidden: Bool {
-        return true
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+    override public var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
     }
 
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {

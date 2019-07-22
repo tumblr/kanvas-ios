@@ -8,7 +8,7 @@ import UIKit
 
 final class KanvasUIImagePickerViewController: UIImagePickerController {
     override var prefersStatusBarHidden: Bool {
-        return true
+        return false
     }
 
     override var childForStatusBarHidden: UIViewController? {
