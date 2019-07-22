@@ -748,7 +748,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func pick(image: UIImage) {
-        if self.currentMode == .photo {
+        if [.photo, .normal].contains(currentMode) {
             performUIUpdate {
                 self.showPreviewWithSegments([CameraSegment.image(image, nil)])
             }
@@ -766,14 +766,19 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func pick(video url: URL) {
-        if let recorder = self.cameraInputController.recorder as? CameraRecorder {
-            recorder.segmentsHandler.addNewVideoSegment(url: url)
+        if currentMode == .normal {
+            self.showPreviewWithSegments([CameraSegment.video(url)])
         }
-        performUIUpdate {
-            if let image = AVURLAsset(url: url).thumbnail() {
-                self.clipsController.addNewClip(MediaClip(representativeFrame: image,
-                                                          overlayText: self.durationStringForAssetAtURL(url),
-                                                          lastFrame: self.getLastFrameFrom(url)))
+        else {
+            if let recorder = self.cameraInputController.recorder as? CameraRecorder {
+                recorder.segmentsHandler.addNewVideoSegment(url: url)
+            }
+            performUIUpdate {
+                if let image = AVURLAsset(url: url).thumbnail() {
+                    self.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                              overlayText: self.durationStringForAssetAtURL(url),
+                                                              lastFrame: self.getLastFrameFrom(url)))
+                }
             }
         }
     }
