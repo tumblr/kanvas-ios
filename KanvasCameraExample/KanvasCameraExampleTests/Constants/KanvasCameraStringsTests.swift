@@ -15,7 +15,7 @@ final class KanvasCameraStringsTests: XCTestCase {
     }
 
     func testGifName() {
-        XCTAssert(KanvasCameraStrings.name(for: .gif) == "Loop", "String does not match for gif")
+        XCTAssert(KanvasCameraStrings.name(for: .loop) == "Loop", "String does not match for gif")
     }
 
     func testStopMotionName() {

@@ -14,16 +14,16 @@ final class CameraSettingsTests: XCTestCase {
     func testDefaultSettings() {
         let settings = CameraSettings()
         
-        XCTAssert(settings.enabledModes == [.photo, .gif, .stopMotion], "Expected default settings for camera modes to be enabled.")
+        XCTAssert(settings.enabledModes == [.photo, .loop, .stopMotion], "Expected default settings for camera modes to be enabled.")
         XCTAssert(settings.defaultCameraPositionOption == .back, "Expected camera to open to back position.")
     }
     
     func testEnabledModes() {
         let settings = CameraSettings()
         settings.enabledModes = [.photo]
-        settings.defaultMode = .gif
+        settings.defaultMode = .loop
         XCTAssert(settings.defaultMode == .none, "Camera mode should have no default since setting gif is unsupported")
-        XCTAssert(settings.enableGifMode == false, "Gif mode should be disabled")
+        XCTAssert(settings.enableLoopMode == false, "Gif mode should be disabled")
         XCTAssert(settings.enableStopMotionMode == false, "Stop motion mode should be disabled")
     }
     

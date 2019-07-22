@@ -10,16 +10,19 @@ import Foundation
 /// Camera Modes available
 ///
 /// - photo: Capturing photos
-/// - gif: Capturing gifs, a sequence of photos
 /// - stopMotion: Capturing stop motions, a sequence of images and/or videos
+/// - loop: Capturing gifs, a sequence of photos
 /// - normal: Capturing single photo or single video
 /// - stitch: Capturing stop motions, a sequence of images and/or videos
+/// - gif: Capturing gifs, a sequence of photos
+
 @objc public enum CameraMode: Int {
     case stopMotion = 0
     case photo
-    case gif
+    case loop
     case normal
     case stitch
+    case gif
 
     private var order: Int {
         return self.rawValue
@@ -176,14 +179,14 @@ public extension CameraSettings {
         }
     }
     /**
-     Enables/disables gif mode.
+     Enables/disables loop mode.
      */
-    var enableGifMode: Bool {
+    var enableLoopMode: Bool {
         set {
-            setMode(.gif, to: newValue)
+            setMode(.loop, to: newValue)
         }
         get {
-            return getMode(.gif)
+            return getMode(.loop)
         }
     }
     /**
@@ -217,6 +220,17 @@ public extension CameraSettings {
         }
         get {
             return getMode(.stitch)
+        }
+    }
+    /**
+     Enables/disables GIF mode.
+     */
+    var enableGIFMode: Bool {
+        set {
+            setMode(.gif, to: newValue)
+        }
+        get {
+            return getMode(.gif)
         }
     }
 
@@ -284,7 +298,7 @@ extension CameraSettings {
 // MARK: - Default settings
 private struct DefaultCameraSettings {
 
-    static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+    static let enabledModes: Set<CameraMode> = [.photo, .loop, .stopMotion]
     static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let defaultCameraPositionOption: AVCaptureDevice.Position = .back
     static let defaultImagePreviewOption: ImagePreviewMode = .off

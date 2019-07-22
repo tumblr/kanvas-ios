@@ -132,7 +132,7 @@ final class CameraRecorder: NSObject {
     @objc private func appWillResignActive() {
         if isRecording() {
             switch currentRecordingMode {
-            case .gif:
+            case .loop, .gif:
                 cancelGif()
             case .stopMotion, .normal, .stitch:
                 stopRecordingVideo(completion: { _ in })
@@ -175,7 +175,7 @@ extension CameraRecorder: CameraRecordingProtocol {
             }
         case .photo:
             return takingPhoto
-        case .gif:
+        case .loop, .gif:
             return gifVideoOutputHandler.recording
         }
     }
@@ -291,7 +291,7 @@ extension CameraRecorder: CameraRecordingProtocol {
             completion(nil)
             return
         }
-        currentRecordingMode = .gif
+        currentRecordingMode = settings.features.newCameraModes ? .gif : .loop
         recordingDelegate?.cameraWillTakeVideo()
 
         setupAssetWriter(url: NSURL.createNewVideoURL())
@@ -306,7 +306,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         switch currentRecordingMode {
         case .stopMotion, .normal, .stitch:
             currentVideoOutputHandler?.processVideoSampleBuffer(sampleBuffer)
-        case .gif:
+        case .loop, .gif:
             gifVideoOutputHandler.processVideoSampleBuffer(sampleBuffer)
         default: break
         }
@@ -316,7 +316,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         switch currentRecordingMode {
         case .stopMotion, .normal, .stitch:
             currentVideoOutputHandler?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
-        case .gif:
+        case .loop, .gif:
             gifVideoOutputHandler.processVideoPixelBuffer(pixelBuffer)
         default: break
         }

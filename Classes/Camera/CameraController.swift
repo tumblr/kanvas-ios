@@ -477,7 +477,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didTapForMode(_ mode: CameraMode) {
         switch mode {
-        case .gif:
+        case .loop, .gif:
             takeGif()
         case .photo, .stopMotion, .normal, .stitch:
             takePhoto()
@@ -486,7 +486,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didStartPressingForMode(_ mode: CameraMode) {
         switch mode {
-        case .gif:
+        case .loop, .gif:
             takeGif(useLongerDuration: true)
         case .stopMotion, .normal, .stitch:
             prepareHapticFeedback()

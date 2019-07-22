@@ -15,7 +15,7 @@ final class KanvasCameraExampleViewController: UIViewController {
 
     private struct Constants {
         static let featureCellReuseIdentifier = "featureCell"
-        static let standardModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+        static let standardModes: Set<CameraMode> = [.photo, .loop, .stopMotion]
         static let newModes: Set<CameraMode> = [.gif, .normal, .stitch]
         static let defaultStandardMode: CameraMode = .stopMotion
         static let defaultNewMode: CameraMode = .normal

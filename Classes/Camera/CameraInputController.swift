@@ -281,7 +281,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         switch mode {
         case .photo:
             currentCameraOutput = .photo
-        case .gif, .stopMotion, .normal, .stitch:
+        case .loop, .stopMotion, .normal, .stitch, .gif:
             currentCameraOutput = .video
         }
         do { try configureCurrentOutput() } catch {
