@@ -42,6 +42,8 @@
 		6578F83F22E120BD002B952C /* UIImage+DominantColorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83D22E120BD002B952C /* UIImage+DominantColorsTests.swift */; };
 		659F37E822E7511E00DA5F6B /* StrokeSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37E722E7511E00DA5F6B /* StrokeSelectorViewTests.swift */; };
 		659F37EA22E7512A00DA5F6B /* StrokeSelectorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37E922E7512A00DA5F6B /* StrokeSelectorControllerTests.swift */; };
+		659F37F222E760F800DA5F6B /* TextureSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37F122E760F800DA5F6B /* TextureSelectorController.swift */; };
+		659F37F422E7610300DA5F6B /* TextureSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37F322E7610300DA5F6B /* TextureSelectorView.swift */; };
 		65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */; };
 		65E46B9322BD22CA004FD226 /* FilterSettingsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */; };
 		65E46B9422BD22CA004FD226 /* FilterSettingsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */; };
@@ -163,6 +165,8 @@
 		6578F83D22E120BD002B952C /* UIImage+DominantColorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+DominantColorsTests.swift"; sourceTree = "<group>"; };
 		659F37E722E7511E00DA5F6B /* StrokeSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeSelectorViewTests.swift; sourceTree = "<group>"; };
 		659F37E922E7512A00DA5F6B /* StrokeSelectorControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeSelectorControllerTests.swift; sourceTree = "<group>"; };
+		659F37F122E760F800DA5F6B /* TextureSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorController.swift; sourceTree = "<group>"; };
+		659F37F322E7610300DA5F6B /* TextureSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorView.swift; sourceTree = "<group>"; };
 		65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsViewTests.swift; sourceTree = "<group>"; };
@@ -317,6 +321,7 @@
 			isa = PBXGroup;
 			children = (
 				659F37E622E7511100DA5F6B /* StrokeSelector */,
+				659F37F022E760D900DA5F6B /* TextureSelector */,
 				651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */,
 				651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */,
 				651D4B6022CE683B004AB75C /* DrawingViewTests.swift */,
@@ -347,10 +352,19 @@
 		659F37E622E7511100DA5F6B /* StrokeSelector */ = {
 			isa = PBXGroup;
 			children = (
-				659F37E722E7511E00DA5F6B /* StrokeSelectorViewTests.swift */,
 				659F37E922E7512A00DA5F6B /* StrokeSelectorControllerTests.swift */,
+				659F37E722E7511E00DA5F6B /* StrokeSelectorViewTests.swift */,
 			);
 			path = StrokeSelector;
+			sourceTree = "<group>";
+		};
+		659F37F022E760D900DA5F6B /* TextureSelector */ = {
+			isa = PBXGroup;
+			children = (
+				659F37F122E760F800DA5F6B /* TextureSelectorController.swift */,
+				659F37F322E7610300DA5F6B /* TextureSelectorView.swift */,
+			);
+			path = TextureSelector;
 			sourceTree = "<group>";
 		};
 		65E46B8D22BD22CA004FD226 /* Filters */ = {
@@ -831,6 +845,7 @@
 				65E46B9722BD22CA004FD226 /* CameraFilterCollectionCellTests.swift in Sources */,
 				65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */,
 				ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */,
+				659F37F422E7610300DA5F6B /* TextureSelectorView.swift in Sources */,
 				764AC4802223E07B005C82EC /* FilterInstancesTests.swift in Sources */,
 				ABE498FD21370DFD00379F7F /* MediaClipsCollectionCellTests.swift in Sources */,
 				ABE498E52136F22400379F7F /* CameraRecorderTests.swift in Sources */,
@@ -853,6 +868,7 @@
 				65E46BA722BD22DE004FD226 /* EditorViewTests.swift in Sources */,
 				653D062E22BD2C49007118C5 /* FilterCollectionTests.swift in Sources */,
 				651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */,
+				659F37F222E760F800DA5F6B /* TextureSelectorController.swift in Sources */,
 				764AC467221D8485005C82EC /* FilteredInputViewControllerTests.swift in Sources */,
 				ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */,
 				651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */,

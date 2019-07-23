@@ -45,7 +45,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, TextureSelectorControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -57,6 +57,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     private lazy var strokeSelectorController: StrokeSelectorController = {
         let controller = StrokeSelectorController()
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var textureSelectorController: TextureSelectorController = {
+        let controller = TextureSelectorController()
         controller.delegate = self
         return controller
     }()
@@ -102,6 +108,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         setUpView()
         
         load(childViewController: strokeSelectorController, into: drawingView.strokeSelectorContainer)
+        load(childViewController: textureSelectorController, into: drawingView.textureSelectorContainer)
     }
     
     // MARK: - View
@@ -134,20 +141,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     /// - Parameter show: true to show, false to hide
     private func showBottomPanel(_ show: Bool) {
         drawingView.showBottomPanel(show)
-    }
-    
-    /// Changes the image inside the texture button
-    ///
-    /// - Parameter image: the new image for the icon
-    private func changeTextureIcon(image: UIImage?) {
-        drawingView.changeTextureIcon(image: image)
-    }
-    
-    /// Shows or hides the texture selector
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showTextureSelectorBackground(_ show: Bool) {
-        drawingView.showTextureSelectorBackground(show)
     }
     
     /// Shows or hides the color picker and its buttons
@@ -219,7 +212,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     }
     
     func didTapConfirmButton() {
-        showTextureSelectorBackground(false)
+        textureSelectorController.showSelector(false)
         delegate?.didTapCloseButton()
     }
     
@@ -238,28 +231,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         }
     }
     
-    func didTapTextureButton() {
-        showTextureSelectorBackground(true)
-    }
-    
-    func didTapPencilButton() {
-        changeTextureIcon(image: KanvasCameraImages.pencilImage)
-        showTextureSelectorBackground(false)
-    }
-    
-    func didTapSharpieButton() {
-        changeTextureIcon(image: KanvasCameraImages.sharpieImage)
-        showTextureSelectorBackground(false)
-    }
-    
-    func didTapMarkerButton() {
-        changeTextureIcon(image: KanvasCameraImages.markerImage)
-        showTextureSelectorBackground(false)
-    }
-    
     func didTapColorPickerButton() {
         showBottomMenu(false)
-        showTextureSelectorBackground(false)
+        textureSelectorController.showSelector(false)
         showColorPickerContainer(true)
     }
     

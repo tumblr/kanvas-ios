@@ -55,13 +55,6 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
         strokeSelectorView.showStrokeSelectorAnimation()
     }
     
-    /// Shows or hides the stroke selector
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showStrokeSelectorBackground(_ show: Bool) {
-        strokeSelectorView.showStrokeSelectorBackground(show)
-    }
-    
     // MARK: - StrokeSelectorViewDelegate
     
     func didAnimationStart() {
@@ -88,6 +81,13 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     }
     
     // MARK: - Private utilities
+    
+    /// Shows or hides the stroke selector
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showStrokeSelectorBackground(_ show: Bool) {
+        strokeSelectorView.showStrokeSelectorBackground(show)
+    }
     
     /// Gets the position of the user's finger on screen,
     /// but adjusts it to fit the horizontal center of the selector.

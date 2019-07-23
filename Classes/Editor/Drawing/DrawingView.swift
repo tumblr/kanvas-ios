@@ -22,18 +22,6 @@ protocol DrawingViewDelegate: class {
     /// Called when the erase button is selected
     func didTapEraseButton()
     
-    /// Called when the texture button is selected
-    func didTapTextureButton()
-    
-    /// Called when the pencil texture is selected
-    func didTapPencilButton()
-    
-    /// Called when the sharpie texture is selected
-    func didTapSharpieButton()
-    
-    /// Called when the marker texture is selected
-    func didTapMarkerButton()
-    
     /// Called when the gradient button (that opens the color picker) is selected
     func didTapColorPickerButton()
     
@@ -87,7 +75,6 @@ private struct DrawingViewConstants {
     static let horizontalSelectorHeight: CGFloat = CircularImageView.size
     
     // Texture
-    static let textureOptionSize = CircularImageView.size
     static let textureSelectorPadding: CGFloat = 7
     
     // Color picker
@@ -154,12 +141,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     let strokeSelectorContainer: UIView
     
     // Texture
-    private let textureButton: CircularImageView
-    private let textureSelectorBackground: CircularImageView
-    private let textureOptionsContainer: UIStackView
-    private let sharpieButton: UIButton
-    private let pencilButton: UIButton
-    private let markerButton: UIButton
+    let textureSelectorContainer: UIView
     
     // Color picker
     private let colorPickerButton: CircularImageView
@@ -191,17 +173,12 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         undoButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
         eraseButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
         strokeSelectorContainer = UIView()
-        textureButton = CircularImageView()
-        textureSelectorBackground = CircularImageView()
+        textureSelectorContainer = UIView()
         closeColorPickerButton = CircularImageView()
         eyeDropperButton = CircularImageView()
         colorCollection = UIView()
         colorPickerButton = CircularImageView()
         colorPickerSelectorBackground = CircularImageView()
-        textureOptionsContainer = ExtendedStackView(inset: DrawingViewConstants.stackViewInset)
-        sharpieButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        pencilButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        markerButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
         colorPickerSelectorPannableArea = UIView()
         colorPickerGradient = CAGradientLayer()
         colorSelecter = CircularImageView()
@@ -364,12 +341,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     /// Sets up components of the main bottom menu
     private func setUpBottomMenu() {
         setUpStrokeSelectorContainer()
-        
-        setUpTextureButton()
-        setUpTextureSelectorBackground()
-        setUpTextureOptionContainer()
-        setUpTextureOptions()
-        
+        setUpTextureSelectorContainer()
         setUpColorCollection()
     }
     
@@ -391,79 +363,20 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     // MARK: Layout: Texture selector
     
-    /// Sets up the texture button in the main menu
-    private func setUpTextureButton() {
-        textureButton.contentMode = .center
-        textureButton.image = KanvasCameraImages.pencilImage
-        textureButton.accessibilityIdentifier = "Editor Texture Button"
-        textureButton.backgroundColor = .white
-        bottomMenuContainer.addSubview(textureButton)
+    private func setUpTextureSelectorContainer() {
+        textureSelectorContainer.accessibilityIdentifier = "Editor Texture Selector Container"
+        textureSelectorContainer.clipsToBounds = false
+        textureSelectorContainer.translatesAutoresizingMaskIntoConstraints = false
+        bottomMenuContainer.addSubview(textureSelectorContainer)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
         let margin = DrawingViewConstants.leftMargin + cellSpace
         NSLayoutConstraint.activate([
-            textureButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
-            textureButton.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
-            textureButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
-            textureButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
+            textureSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
+            textureSelectorContainer.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
+            textureSelectorContainer.heightAnchor.constraint(equalToConstant: TextureSelectorView.selectorHeight),
+            textureSelectorContainer.widthAnchor.constraint(equalToConstant: TextureSelectorView.selectorWidth),
         ])
-        
-        let tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer.addTarget(self, action: #selector(textureButtonTapped(recognizer:)))
-        textureButton.addGestureRecognizer(tapRecognizer)
-    }
-    
-    /// Sets up the rounded white background for the texture selector
-    private func setUpTextureSelectorBackground() {
-        textureSelectorBackground.accessibilityIdentifier = "Editor Texture Selector Background"
-        textureSelectorBackground.backgroundColor = .white
-        bottomMenuContainer.addSubview(textureSelectorBackground)
-        
-        let cellSpace = CircularImageView.size + CircularImageView.padding * 2
-        let margin = DrawingViewConstants.leftMargin + cellSpace
-        NSLayoutConstraint.activate([
-            textureSelectorBackground.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
-            textureSelectorBackground.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
-            textureSelectorBackground.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
-            textureSelectorBackground.widthAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorWidth),
-        ])
-        
-        textureSelectorBackground.alpha = 0
-    }
-    
-    /// Sets up the stack view that holds the texture options
-    private func setUpTextureOptionContainer() {
-        textureOptionsContainer.translatesAutoresizingMaskIntoConstraints = false
-        textureOptionsContainer.axis = .vertical
-        textureOptionsContainer.distribution = .equalSpacing
-        textureOptionsContainer.alignment = .center
-        textureSelectorBackground.addSubview(textureOptionsContainer)
-        
-        NSLayoutConstraint.activate([
-            textureOptionsContainer.leadingAnchor.constraint(equalTo: textureSelectorBackground.leadingAnchor),
-            textureOptionsContainer.trailingAnchor.constraint(equalTo: textureSelectorBackground.trailingAnchor),
-            textureOptionsContainer.topAnchor.constraint(equalTo: textureSelectorBackground.topAnchor, constant: DrawingViewConstants.textureSelectorPadding),
-            textureOptionsContainer.bottomAnchor.constraint(equalTo: textureSelectorBackground.bottomAnchor, constant: -DrawingViewConstants.textureSelectorPadding),
-        ])
-    }
-    
-    /// Adds the texture options to the stack view
-    private func setUpTextureOptions() {
-        sharpieButton.setBackgroundImage(KanvasCameraImages.sharpieImage, for: .normal)
-        pencilButton.setBackgroundImage(KanvasCameraImages.pencilImage, for: .normal)
-        markerButton.setBackgroundImage(KanvasCameraImages.markerImage, for: .normal)
-        
-        let sharpieButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(sharpieButtonTapped(recognizer:)))
-        let pencilButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(pencilButtonTapped(recognizer:)))
-        let markerButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(markerButtonTapped(recognizer:)))
-        
-        sharpieButton.addGestureRecognizer(sharpieButtonRecognizer)
-        pencilButton.addGestureRecognizer(pencilButtonRecognizer)
-        markerButton.addGestureRecognizer(markerButtonRecognizer)
-
-        textureOptionsContainer.addArrangedSubview(sharpieButton)
-        textureOptionsContainer.addArrangedSubview(pencilButton)
-        textureOptionsContainer.addArrangedSubview(markerButton)
     }
     
     // MARK: Layout: Color picker
@@ -672,22 +585,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         delegate?.didTapEraseButton()
     }
     
-    @objc func textureButtonTapped(recognizer: UITapGestureRecognizer) {
-        delegate?.didTapTextureButton()
-    }
-    
-    @objc func sharpieButtonTapped(recognizer: UITapGestureRecognizer) {
-        delegate?.didTapSharpieButton()
-    }
-    
-    @objc func pencilButtonTapped(recognizer: UITapGestureRecognizer) {
-        delegate?.didTapPencilButton()
-    }
-    
-    @objc func markerButtonTapped(recognizer: UITapGestureRecognizer) {
-        delegate?.didTapMarkerButton()
-    }
-    
     @objc func colorPickerButtonTapped(recognizer: UITapGestureRecognizer) {
         delegate?.didTapColorPickerButton()
     }
@@ -744,24 +641,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     func showBottomPanel(_ show: Bool) {
         UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
             self.bottomPanelContainer.alpha = show ? 1 : 0
-        }
-    }
-    
-    /// changes the image inside the texture button
-    ///
-    /// - Parameter image: the new image for the icon
-    func changeTextureIcon(image: UIImage?) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
-            self.textureButton.image = image
-        }
-    }
-    
-    /// shows or hides the texture selector
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTextureSelectorBackground(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
-            self.textureSelectorBackground.alpha = show ? 1 : 0
         }
     }
     
