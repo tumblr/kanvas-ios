@@ -44,6 +44,8 @@
 		659F37EA22E7512A00DA5F6B /* StrokeSelectorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37E922E7512A00DA5F6B /* StrokeSelectorControllerTests.swift */; };
 		659F37F222E760F800DA5F6B /* TextureSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37F122E760F800DA5F6B /* TextureSelectorController.swift */; };
 		659F37F422E7610300DA5F6B /* TextureSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37F322E7610300DA5F6B /* TextureSelectorView.swift */; };
+		659F37F722E788DE00DA5F6B /* ColorPickerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37F622E788DE00DA5F6B /* ColorPickerControllerTests.swift */; };
+		659F37F922E788EB00DA5F6B /* ColorPickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37F822E788EB00DA5F6B /* ColorPickerViewTests.swift */; };
 		65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */; };
 		65E46B9322BD22CA004FD226 /* FilterSettingsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */; };
 		65E46B9422BD22CA004FD226 /* FilterSettingsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */; };
@@ -167,6 +169,8 @@
 		659F37E922E7512A00DA5F6B /* StrokeSelectorControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeSelectorControllerTests.swift; sourceTree = "<group>"; };
 		659F37F122E760F800DA5F6B /* TextureSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorController.swift; sourceTree = "<group>"; };
 		659F37F322E7610300DA5F6B /* TextureSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorView.swift; sourceTree = "<group>"; };
+		659F37F622E788DE00DA5F6B /* ColorPickerControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerControllerTests.swift; sourceTree = "<group>"; };
+		659F37F822E788EB00DA5F6B /* ColorPickerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewTests.swift; sourceTree = "<group>"; };
 		65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsViewTests.swift; sourceTree = "<group>"; };
@@ -320,6 +324,7 @@
 		651D4B5B22CE67A5004AB75C /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
+				659F37F522E7880600DA5F6B /* ColorPicker */,
 				659F37E622E7511100DA5F6B /* StrokeSelector */,
 				659F37F022E760D900DA5F6B /* TextureSelector */,
 				651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */,
@@ -365,6 +370,15 @@
 				659F37F322E7610300DA5F6B /* TextureSelectorView.swift */,
 			);
 			path = TextureSelector;
+			sourceTree = "<group>";
+		};
+		659F37F522E7880600DA5F6B /* ColorPicker */ = {
+			isa = PBXGroup;
+			children = (
+				659F37F622E788DE00DA5F6B /* ColorPickerControllerTests.swift */,
+				659F37F822E788EB00DA5F6B /* ColorPickerViewTests.swift */,
+			);
+			path = ColorPicker;
 			sourceTree = "<group>";
 		};
 		65E46B8D22BD22CA004FD226 /* Filters */ = {
@@ -822,6 +836,8 @@
 				0EAE0C9B21399ED9004CD7FF /* CameraConstantsTests.swift in Sources */,
 				76ED1DD622C15A9B00E6AF79 /* MediaPickerButtonViewTests.swift in Sources */,
 				6578F83A22E12098002B952C /* MMCQTests.swift in Sources */,
+				659F37F922E788EB00DA5F6B /* ColorPickerViewTests.swift in Sources */,
+				659F37F722E788DE00DA5F6B /* ColorPickerControllerTests.swift in Sources */,
 				AB7263EF212CCBB30044ED96 /* CameraSegmentHandlerTests.swift in Sources */,
 				0EAE0CB12139B966004CD7FF /* CameraPreviewControllerTests.swift in Sources */,
 				0E6450B921B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift in Sources */,
