@@ -43,17 +43,21 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
         fatalError("init(nibName:bundle:) has not been implemented")
     }
     
+    
     // MARK: - View Life Cycle
     
     override func loadView() {
         view = strokeSelectorView
     }
     
+    
     // MARK: - Public interface
     
-    func showStrokeSelectorAnimation() {
-        strokeSelectorView.showStrokeSelectorAnimation()
+    /// Shows the animation for onboarding
+    func showAnimation() {
+        strokeSelectorView.showAnimation()
     }
+    
     
     // MARK: - StrokeSelectorViewDelegate
     
@@ -68,11 +72,11 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     func didLongPressStrokeButton(recognizer: UILongPressGestureRecognizer) {
         switch recognizer.state {
         case .began:
-            showStrokeSelectorBackground(true)
+            strokeSelectorView.showSelectorBackground(true)
         case .changed:
-            strokeSelectorPanned(recognizer: recognizer)
+            selectorPanned(recognizer: recognizer)
         case .ended, .cancelled, .failed:
-            showStrokeSelectorBackground(false)
+            strokeSelectorView.showSelectorBackground(false)
         case .possible:
             break
         @unknown default:
@@ -80,13 +84,15 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
         }
     }
     
+    
     // MARK: - Private utilities
     
-    /// Shows or hides the stroke selector
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showStrokeSelectorBackground(_ show: Bool) {
-        strokeSelectorView.showStrokeSelectorBackground(show)
+    private func selectorPanned(recognizer: UILongPressGestureRecognizer) {
+        let point = getSelectedLocation(with: recognizer, in: strokeSelectorView.selectorPannableArea)
+        if strokeSelectorView.selectorPannableArea.bounds.contains(point) {
+            strokeSelectorView.moveSelectorCircle(to: point)
+            setCircleSize(percent: 100.0 - point.y)
+        }
     }
     
     /// Gets the position of the user's finger on screen,
@@ -96,33 +102,18 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     /// - Parameter view: the view that contains the circle
     /// - Returns: location of the user's finger
     private func getSelectedLocation(with recognizer: UILongPressGestureRecognizer, in view: UIView) -> CGPoint {
-        let x = StrokeSelectorView.verticalSelectorWidth / 2
+        let x = StrokeSelectorView.selectorWidth / 2
         let y = recognizer.location(in: view).y
         return CGPoint(x: x, y: y)
-    }
-    
-    /// Changes the stroke circle location inside the stroke selector
-    ///
-    /// - Parameter location: the new position of the circle
-    private func moveStrokeSelectorCircle(to location: CGPoint) {
-        strokeSelectorView.moveStrokeSelectorCircle(to: location)
     }
     
     /// Changes the stroke circle size according to a percent that goes from
     /// the minimum size (0) to the maximum size (100)
     ///
     /// - Parameter percent: the new size of the circle
-    private func setStrokeCircleSize(percent: CGFloat) {
+    private func setCircleSize(percent: CGFloat) {
         let maxIncrement = (StrokeSelectorView.strokeCircleMaxSize / StrokeSelectorView.strokeCircleMinSize) - 1
         let scale = 1.0 + maxIncrement * percent / 100.0
-        strokeSelectorView.transformStrokeCircles(CGAffineTransform(scaleX: scale, y: scale))
-    }
-    
-    private func strokeSelectorPanned(recognizer: UILongPressGestureRecognizer) {
-        let point = getSelectedLocation(with: recognizer, in: strokeSelectorView.strokeSelectorPannableArea)
-        if strokeSelectorView.strokeSelectorPannableArea.bounds.contains(point) {
-            moveStrokeSelectorCircle(to: point)
-            setStrokeCircleSize(percent: 100.0 - point.y)
-        }
+        strokeSelectorView.transformStrokeCircle(CGAffineTransform(scaleX: scale, y: scale))
     }
 }

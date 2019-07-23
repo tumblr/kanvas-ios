@@ -22,13 +22,21 @@ final class StrokeSelectorViewTests: FBSnapshotTestCase {
     func newView() -> StrokeSelectorView {
         let view = StrokeSelectorView()
         view.frame = CGRect(x: 0, y: 0,
-                            width: StrokeSelectorView.verticalSelectorWidth,
-                            height: StrokeSelectorView.verticalSelectorHeight)
+                            width: StrokeSelectorView.selectorWidth,
+                            height: StrokeSelectorView.selectorHeight)
         return view
     }
     
     func testViewSetup() {
         let view = newView()
+        FBSnapshotVerifyView(view)
+    }
+    
+    func testSelectorOpened() {
+        let view = newView()
+        UIView.setAnimationsEnabled(false)
+        view.showSelectorBackground(true)
+        UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(view)
     }
 }

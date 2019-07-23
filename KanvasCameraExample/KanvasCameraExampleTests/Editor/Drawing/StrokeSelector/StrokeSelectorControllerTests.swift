@@ -21,8 +21,8 @@ final class StrokeSelecetorControllerTests: FBSnapshotTestCase {
     func newViewController() -> StrokeSelectorController {
         let controller = StrokeSelectorController()
         controller.view.frame = CGRect(x: 0, y: 0,
-                                       width: StrokeSelectorView.verticalSelectorWidth,
-                                       height: StrokeSelectorView.verticalSelectorHeight)
+                                       width: StrokeSelectorView.selectorWidth,
+                                       height: StrokeSelectorView.selectorHeight)
         controller.view.setNeedsDisplay()
         return controller
     }

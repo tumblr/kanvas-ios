@@ -457,7 +457,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             self.drawingView.alpha = show ? 1 : 0
         }, completion: { _ in
             if show && self.delegate?.editorShouldShowStrokeSelectorAnimation() == true {
-                self.strokeSelectorController.showStrokeSelectorAnimation()
+                self.strokeSelectorController.showAnimation()
                 self.delegate?.didEndStrokeSelectorAnimation()
             }
         })
