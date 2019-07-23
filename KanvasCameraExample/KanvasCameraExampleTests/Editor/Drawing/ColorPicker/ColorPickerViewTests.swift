@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class StrokeSelectorViewTests: FBSnapshotTestCase {
+final class ColorPickerViewTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
