@@ -79,7 +79,7 @@ final class TextureSelectorView: IgnoreTouchesView {
         setUpOptions()
     }
     
-    /// Sets up the texture button
+    /// Sets up the button that opens the selector
     private func setUpMainButton() {
         mainButton.contentMode = .center
         mainButton.image = KanvasCameraImages.pencilImage
@@ -108,7 +108,7 @@ final class TextureSelectorView: IgnoreTouchesView {
         selectorBackground.alpha = 0
     }
     
-    /// Sets up the stack view that holds the texture options
+    /// Sets up the stack view that holds the options
     private func setUpOptionContainer() {
         optionContainer.translatesAutoresizingMaskIntoConstraints = false
         optionContainer.axis = .vertical
@@ -124,7 +124,7 @@ final class TextureSelectorView: IgnoreTouchesView {
         ])
     }
     
-    /// Adds the texture options to the stack view
+    /// Adds the options to the stack view
     private func setUpOptions() {
         sharpieButton.setBackgroundImage(KanvasCameraImages.sharpieImage, for: .normal)
         pencilButton.setBackgroundImage(KanvasCameraImages.pencilImage, for: .normal)
@@ -165,7 +165,7 @@ final class TextureSelectorView: IgnoreTouchesView {
     
     // MARK: - Public interface
     
-    /// changes the image inside the texture button
+    /// changes the image inside the main button
     ///
     /// - Parameter image: the new image for the icon
     func changeMainButtonIcon(image: UIImage?) {
@@ -174,7 +174,7 @@ final class TextureSelectorView: IgnoreTouchesView {
         }
     }
     
-    /// shows or hides the texture selector
+    /// shows or hides the selector
     ///
     /// - Parameter show: true to show, false to hide
     func showSelectorBackground(_ show: Bool) {
