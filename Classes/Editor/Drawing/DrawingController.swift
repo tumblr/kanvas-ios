@@ -45,7 +45,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, TextureSelectorControllerDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -61,11 +61,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return controller
     }()
     
-    private lazy var textureSelectorController: TextureSelectorController = {
-        let controller = TextureSelectorController()
-        controller.delegate = self
-        return controller
-    }()
+    private lazy var textureSelectorController = TextureSelectorController()
     
     // Drawing
     var drawingLayer: CALayer?

@@ -7,18 +7,12 @@
 import Foundation
 import UIKit
 
-protocol TextureSelectorControllerDelegate: class {
-    
-}
-
 private struct TextureSelectorControllerConstants {
     static let animationDuration: TimeInterval = 0.25
 }
 
 final class TextureSelectorController: UIViewController, TextureSelectorViewDelegate {
-    
-    weak var delegate: TextureSelectorControllerDelegate?
-    
+        
     private lazy var textureSelectorView: TextureSelectorView = {
         let view = TextureSelectorView()
         view.delegate = self
