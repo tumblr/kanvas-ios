@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class StrokeSelecetorControllerTests: FBSnapshotTestCase {
+final class StrokeSelectorControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -27,7 +27,7 @@ final class StrokeSelecetorControllerTests: FBSnapshotTestCase {
         return controller
     }
     
-    func testStrokeSelectorControllerView() {
+    func testSelectorControllerView() {
         let controller = newViewController()
         FBSnapshotVerifyView(controller.view)
     }

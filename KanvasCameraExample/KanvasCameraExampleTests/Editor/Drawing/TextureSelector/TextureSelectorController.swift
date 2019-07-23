@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class TextureSelecetorControllerTests: FBSnapshotTestCase {
+final class TextureSelectorControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -27,7 +27,7 @@ final class TextureSelecetorControllerTests: FBSnapshotTestCase {
         return controller
     }
     
-    func testTextureSelectorControllerView() {
+    func testSelectorControllerView() {
         let controller = newViewController()
         FBSnapshotVerifyView(controller.view)
     }
