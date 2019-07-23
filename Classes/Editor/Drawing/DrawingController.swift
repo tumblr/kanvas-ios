@@ -45,7 +45,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -53,6 +53,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         let view = DrawingView()
         view.delegate = self
         return view
+    }()
+    
+    private lazy var strokeSelectorController: StrokeSelectorController = {
+        let controller = StrokeSelectorController()
+        controller.delegate = self
+        return controller
     }()
     
     // Drawing
@@ -94,6 +100,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
+        
+        load(childViewController: strokeSelectorController, into: drawingView.strokeSelectorContainer)
     }
     
     // MARK: - View
@@ -126,13 +134,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     /// - Parameter show: true to show, false to hide
     private func showBottomPanel(_ show: Bool) {
         drawingView.showBottomPanel(show)
-    }
-    
-    /// Shows or hides the stroke selector
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showStrokeSelectorBackground(_ show: Bool) {
-        drawingView.showStrokeSelectorBackground(show)
     }
     
     /// Changes the image inside the texture button
@@ -180,8 +181,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     /// Shows or hides the overlay of the color selecter
     ///
     /// - Parameter show: true to show, false to hide
-    private func showOverlay(_ show: Bool) {
-        drawingView.showOverlay(show)
+    /// - Parameter animate: whether the UI update is animated
+    private func showOverlay(_ show: Bool, animate: Bool = true) {
+        drawingView.showOverlay(show, animate: animate)
     }
     
     /// Shows or hides the tooltip above color selecter
@@ -196,6 +198,18 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     /// - Parameter enable: true to enable, false to disable
     private func enableDrawingCanvas(_ enable: Bool) {
         drawingView.enableDrawingCanvas(enable)
+    }
+    
+    // MARK: - StrokeSelectorControllerDelegate
+    
+    func didAnimationStart() {
+        enableDrawingCanvas(false)
+        showOverlay(true, animate: false)
+    }
+    
+    func didAnimationEnd() {
+        showOverlay(false, animate: false)
+        enableDrawingCanvas(true)
     }
     
     // MARK: - DrawingViewDelegate
@@ -221,21 +235,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         else {
             mode = .draw
             changeEraseIcon(selected: false)
-        }
-    }
-    
-    func didLongPressStrokeButton(recognizer: UILongPressGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            showStrokeSelectorBackground(true)
-        case .changed:
-            strokeSelectorPanned(recognizer: recognizer)
-        case .ended, .cancelled, .failed:
-            showStrokeSelectorBackground(false)
-        case .possible:
-            break
-        @unknown default:
-            break
         }
     }
     
@@ -355,31 +354,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         let x = DrawingView.verticalSelectorWidth / 2
         let y = recognizer.location(in: view).y
         return CGPoint(x: x, y: y)
-    }
-    
-    /// Changes the stroke circle location inside the stroke selector
-    ///
-    /// - Parameter location: the new position of the circle
-    private func moveStrokeSelectorCircle(to location: CGPoint) {
-        drawingView.moveStrokeSelectorCircle(to: location)
-    }
-    
-    /// Changes the stroke circle size according to a percent that goes from
-    /// the minimum size (0) to the maximum size (100)
-    ///
-    /// - Parameter percent: the new size of the circle
-    private func setStrokeCircleSize(percent: CGFloat) {
-        let maxIncrement = (DrawingView.strokeCircleMaxSize / DrawingView.strokeCircleMinSize) - 1
-        let scale = 1.0 + maxIncrement * percent / 100.0
-        drawingView.transformStrokeCircles(CGAffineTransform(scaleX: scale, y: scale))
-    }
-    
-    private func strokeSelectorPanned(recognizer: UILongPressGestureRecognizer) {
-        let point = getSelectedLocation(with: recognizer, in: drawingView.strokeSelectorPannableArea)
-        if drawingView.strokeSelectorPannableArea.bounds.contains(point) {
-            moveStrokeSelectorCircle(to: point)
-            setStrokeCircleSize(percent: 100.0 - point.y)
-        }
     }
     
     // MARK: - Color Picker
@@ -509,7 +483,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             self.drawingView.alpha = show ? 1 : 0
         }, completion: { _ in
             if show && self.delegate?.editorShouldShowStrokeSelectorAnimation() == true {
-                self.drawingView.showStrokeSelectorAnimation()
+                self.strokeSelectorController.showStrokeSelectorAnimation()
                 self.delegate?.didEndStrokeSelectorAnimation()
             }
         })
