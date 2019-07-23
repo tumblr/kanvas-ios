@@ -8,16 +8,16 @@ import Foundation
 import UIKit
 
 protocol TextureSelectorViewDelegate: class {
-    /// Called when the texture button is selected
+    /// Called when the main button is selected
     func didTapTextureButton()
     
-    /// Called when the pencil texture is selected
+    /// Called when the pencil option is selected
     func didTapPencilButton()
     
-    /// Called when the sharpie texture is selected
+    /// Called when the sharpie option is selected
     func didTapSharpieButton()
     
-    /// Called when the marker texture is selected
+    /// Called when the marker option is selected
     func didTapMarkerButton()
 }
 
