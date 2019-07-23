@@ -103,6 +103,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
 
+    private weak var overlayViewController: UIViewController?
+
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
     /// needed to attain the final output.
@@ -184,6 +186,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logDismiss()
     }
 
+    /// Hides the overlaying view controller
+    public func hideOverlay(completion: @escaping () -> ()) {
+        overlayViewController?.dismiss(animated: true, completion: completion)
+    }
+
     // MARK: - View Lifecycle
 
     override public func loadView() {
@@ -221,6 +228,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraInputController.stopSession()
         let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
+        overlayViewController = controller
     }
     
     private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
