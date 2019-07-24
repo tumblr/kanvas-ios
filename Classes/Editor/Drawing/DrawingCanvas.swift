@@ -12,7 +12,7 @@ protocol DrawingCanvasDelegate: class {
     func didEndTouches()
 }
 
-/// View that shows/hides the menus when touched
+/// View for the drawing tools that shows/hides the menus when touched
 final class DrawingCanvas: UIView {
     
     weak var delegate: DrawingCanvasDelegate?
