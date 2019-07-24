@@ -31,6 +31,7 @@ private struct StrokeSelectorViewConstants {
     static let strokeCircleMaxSize: CGFloat = 18
 }
 
+/// View for StrokeSelectorController
 final class StrokeSelectorView: IgnoreTouchesView {
     
     static let selectorHeight: CGFloat = StrokeSelectorViewConstants.selectorHeight

@@ -30,6 +30,7 @@ private struct TextureSelectorViewConstants {
     static let selectorPadding: CGFloat = 7
 }
 
+/// View for TextureSelectorController
 final class TextureSelectorView: IgnoreTouchesView {
     
     static let selectorHeight: CGFloat = TextureSelectorViewConstants.selectorHeight

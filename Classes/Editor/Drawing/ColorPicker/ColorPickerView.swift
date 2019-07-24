@@ -43,6 +43,7 @@ private struct ColorPickerViewConstants {
                          UIColor.tumblrBrightGreen,]
 }
 
+/// View for ColorPickerController
 final class ColorPickerView: IgnoreTouchesView {
     
     static let selectorPadding: CGFloat = ColorPickerViewConstants.selectorPadding

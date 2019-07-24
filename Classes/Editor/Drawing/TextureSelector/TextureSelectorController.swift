@@ -7,10 +7,12 @@
 import Foundation
 import UIKit
 
+/// Constants for the texture selector
 private struct TextureSelectorControllerConstants {
     static let animationDuration: TimeInterval = 0.25
 }
 
+/// Controller for handling the texture selector on the drawing menu.
 final class TextureSelectorController: UIViewController, TextureSelectorViewDelegate {
     
     private lazy var textureSelectorView: TextureSelectorView = {

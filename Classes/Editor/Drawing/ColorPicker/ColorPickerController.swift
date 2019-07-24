@@ -14,10 +14,12 @@ protocol ColorPickerControllerDelegate: class {
     func didSelectColor(_ color: UIColor)
 }
 
+/// Constants for the color picker
 private struct ColorPickerControllerConstants {
     static let animationDuration: TimeInterval = 0.25
 }
 
+/// Controller for handling the color picker gradient on the drawing menu.
 final class ColorPickerController: UIViewController, ColorPickerViewDelegate {
     
     weak var delegate: ColorPickerControllerDelegate?

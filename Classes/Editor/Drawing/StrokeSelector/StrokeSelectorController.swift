@@ -15,10 +15,12 @@ protocol StrokeSelectorControllerDelegate: class {
     func didAnimationEnd()
 }
 
+/// Constants for the stroke selector
 private struct StrokeSelectorControllerConstants {
     static let animationDuration: TimeInterval = 0.25
 }
 
+/// Controller for handling the stroke selector on the drawing menu.
 final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelegate {
     
     weak var delegate: StrokeSelectorControllerDelegate?
