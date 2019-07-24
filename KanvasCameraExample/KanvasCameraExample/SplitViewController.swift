@@ -27,16 +27,11 @@ import Photos
 
     private let kanvasSettings: CameraSettings
 
-    private lazy var kanvasNavigationController: UINavigationController = {
+    private lazy var kanvasController: CameraController = {
         let kanvasAnalyticsProvider = KanvasCameraAnalyticsStub()
         let kanvasViewController = CameraController(settings: kanvasSettings, analyticsProvider: kanvasAnalyticsProvider)
         kanvasViewController.delegate = self
-
-        let kanvasNavigationController = UINavigationController(navigationBarClass: nil, toolbarClass: nil)
-        kanvasNavigationController.viewControllers = [kanvasViewController]
-        kanvasNavigationController.delegate = self
-        kanvasNavigationController.isNavigationBarHidden = true
-        return kanvasNavigationController
+        return kanvasViewController
     }()
 
     /// The internal tab bar controller. On iPad, the tabs are hidden.
@@ -64,7 +59,7 @@ import Photos
 
         var orderedViewControllers: [UIViewController] = [tumblrTabBarController]
         if isKanvasHorizontalSwipingEnabled {
-            orderedViewControllers.insert(kanvasNavigationController, at: 0)
+            orderedViewControllers.insert(kanvasController, at: 0)
         }
         let pageViewController = TMPageViewController(orderedViewControllers: orderedViewControllers,
                                                       initialViewController: tumblrTabBarController,
@@ -114,7 +109,7 @@ extension SplitViewController: DashboardPagingController {
     }
 
     func navigateToKanvas() {
-        pageViewController?.moveToViewController(kanvasNavigationController, animated: true, direction: .reverse)
+        pageViewController?.moveToViewController(kanvasController, animated: true, direction: .reverse)
     }
 
     @objc func navigateFromKanvas() {
@@ -138,7 +133,6 @@ extension SplitViewController: CameraControllerDelegate {
         }
         else {
             assertionFailure("Failed to create media")
-            completion()
         }
     }
 
