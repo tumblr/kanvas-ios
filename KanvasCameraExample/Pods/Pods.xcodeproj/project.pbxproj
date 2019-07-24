@@ -90,6 +90,12 @@
 		6100371EEEA6A73757EFC6A025D351BC /* AVURLAsset+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 122BCF4854DE6F45EC662465306307B5 /* AVURLAsset+Thumbnail.swift */; };
 		615CB5118FDFB51D6940E5F09F6EE996 /* CameraInputOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BFA0D991BE6DCD00B92D1AEABAA367 /* CameraInputOutput.swift */; };
 		6288913944E5F5D90DE67F83B66F2345 /* UIFont+ComposeFonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 155D212975A8CC57A021341ED0A645E0 /* UIFont+ComposeFonts.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		654AE16822E8B92800C8C0E4 /* ColorPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16722E8B92800C8C0E4 /* ColorPickerController.swift */; };
+		654AE16A22E8B93100C8C0E4 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16922E8B93100C8C0E4 /* ColorPickerView.swift */; };
+		654AE16C22E8B93D00C8C0E4 /* StrokeSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16B22E8B93D00C8C0E4 /* StrokeSelectorController.swift */; };
+		654AE16E22E8B94900C8C0E4 /* StrokeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16D22E8B94900C8C0E4 /* StrokeSelectorView.swift */; };
+		654AE17022E8B95500C8C0E4 /* TextureSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16F22E8B95500C8C0E4 /* TextureSelectorController.swift */; };
+		654AE17222E8B96100C8C0E4 /* TextureSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE17122E8B96100C8C0E4 /* TextureSelectorView.swift */; };
 		65F770DF22E12C9F00F82A67 /* ColorThief.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770DD22E12C9F00F82A67 /* ColorThief.swift */; };
 		65F770E022E12C9F00F82A67 /* MMCQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770DE22E12C9F00F82A67 /* MMCQ.swift */; };
 		65F770E522E12CB800F82A67 /* CircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770E222E12CB800F82A67 /* CircularImageView.swift */; };
@@ -431,6 +437,12 @@
 		633E92BC1C8B31AFF0BAEA6A8F6F9068 /* CVPixelBuffer+sampleBuffer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+sampleBuffer.swift"; sourceTree = "<group>"; };
 		635B8EF611C5053183706BE4A6AD5DD0 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
 		64BFA0D991BE6DCD00B92D1AEABAA367 /* CameraInputOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputOutput.swift; sourceTree = "<group>"; };
+		654AE16722E8B92800C8C0E4 /* ColorPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerController.swift; sourceTree = "<group>"; };
+		654AE16922E8B93100C8C0E4 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
+		654AE16B22E8B93D00C8C0E4 /* StrokeSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeSelectorController.swift; sourceTree = "<group>"; };
+		654AE16D22E8B94900C8C0E4 /* StrokeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeSelectorView.swift; sourceTree = "<group>"; };
+		654AE16F22E8B95500C8C0E4 /* TextureSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorController.swift; sourceTree = "<group>"; };
+		654AE17122E8B96100C8C0E4 /* TextureSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorView.swift; sourceTree = "<group>"; };
 		65E0D4BFD967A8573CA678FD7CAC3771 /* VideoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VideoOutputHandler.swift; sourceTree = "<group>"; };
 		65F770DD22E12C9F00F82A67 /* ColorThief.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorThief.swift; sourceTree = "<group>"; };
 		65F770DE22E12C9F00F82A67 /* MMCQ.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMCQ.swift; sourceTree = "<group>"; };
@@ -908,6 +920,33 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
+		654AE15822E8B78000C8C0E4 /* StrokeSelector */ = {
+			isa = PBXGroup;
+			children = (
+				654AE16B22E8B93D00C8C0E4 /* StrokeSelectorController.swift */,
+				654AE16D22E8B94900C8C0E4 /* StrokeSelectorView.swift */,
+			);
+			path = StrokeSelector;
+			sourceTree = "<group>";
+		};
+		654AE15922E8B78000C8C0E4 /* TextureSelector */ = {
+			isa = PBXGroup;
+			children = (
+				654AE16F22E8B95500C8C0E4 /* TextureSelectorController.swift */,
+				654AE17122E8B96100C8C0E4 /* TextureSelectorView.swift */,
+			);
+			path = TextureSelector;
+			sourceTree = "<group>";
+		};
+		654AE15A22E8B78000C8C0E4 /* ColorPicker */ = {
+			isa = PBXGroup;
+			children = (
+				654AE16722E8B92800C8C0E4 /* ColorPickerController.swift */,
+				654AE16922E8B93100C8C0E4 /* ColorPickerView.swift */,
+			);
+			path = ColorPicker;
+			sourceTree = "<group>";
+		};
 		65F770DC22E12C9F00F82A67 /* ColorThief */ = {
 			isa = PBXGroup;
 			children = (
@@ -920,6 +959,9 @@
 		65F770E122E12CB800F82A67 /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
+				654AE15A22E8B78000C8C0E4 /* ColorPicker */,
+				654AE15822E8B78000C8C0E4 /* StrokeSelector */,
+				654AE15922E8B78000C8C0E4 /* TextureSelector */,
 				65F770E222E12CB800F82A67 /* CircularImageView.swift */,
 				65FF951D22E89F0000032989 /* DrawingCanvas.swift */,
 				65F770E322E12CB800F82A67 /* DrawingView.swift */,
@@ -1769,6 +1811,7 @@
 				39C454DD43713EFC5AE1B97655F8E0A6 /* GLPlayer.swift in Sources */,
 				7A43CA1398ABA5477560582D739ED064 /* GLRenderer.swift in Sources */,
 				4C554B74514EE9B0AD3378A166CC56D7 /* GLVideoCompositor.swift in Sources */,
+				654AE16A22E8B93100C8C0E4 /* ColorPickerView.swift in Sources */,
 				65F770EA22E12CEA00F82A67 /* CALayer+Color.swift in Sources */,
 				E13097DA0E2F108B7B62FD31C9416326 /* GrayscaleFilter.swift in Sources */,
 				67E0ED9109E6A2354B4D4B70221592D1 /* GroupFilter.swift in Sources */,
@@ -1780,6 +1823,7 @@
 				17738F2E3274761263DE279D93710E1F /* KanvasCamera-dummy.m in Sources */,
 				37B2AA837788386A5C16E363BBA30587 /* KanvasCameraAnalyticsProvider.swift in Sources */,
 				4E7A0CA18F00D3B2D84B0A45B3CDE8C0 /* KanvasCameraColors.swift in Sources */,
+				654AE17022E8B95500C8C0E4 /* TextureSelectorController.swift in Sources */,
 				DC0DB2C24FA194DDEA2B91F5152B55FD /* KanvasCameraImages.swift in Sources */,
 				C622891C37F635659AB3A19E98B6F923 /* KanvasCameraStrings.swift in Sources */,
 				E6AD55BFCE858BA7CC24D9AA56244C45 /* KanvasCameraTimes.swift in Sources */,
@@ -1796,6 +1840,8 @@
 				A8AA5EF13AB9AC1629CD9F16478461B0 /* MediaClipsEditorViewController.swift in Sources */,
 				8BAF22BF84058D1F8D6007B339ADC608 /* MediaInfo.swift in Sources */,
 				CE7F4EDF70F9434808D61BCFAAB6485F /* MediaMetadata.swift in Sources */,
+				654AE16C22E8B93D00C8C0E4 /* StrokeSelectorController.swift in Sources */,
+				654AE16822E8B92800C8C0E4 /* ColorPickerController.swift in Sources */,
 				B183CE8A84003383C722767F7B3E9FFB /* MediaPickerButtonView.swift in Sources */,
 				1AEC8F97B6F18E500B1D0F4415DEEDF7 /* MirrorFourFilter.swift in Sources */,
 				2DCF8BA571FEC56DA60300F537FC290F /* MirrorTwoFilter.swift in Sources */,
@@ -1816,6 +1862,7 @@
 				9CE8A1AF274BDA6B8B31E699D1A7BF46 /* RaveFilter.swift in Sources */,
 				D9A2647647642A63CA3F41ADE3906D1B /* RGBA.swift in Sources */,
 				78E8D461237CE13C05C3AC0F614F4C53 /* RGBFilter.swift in Sources */,
+				654AE17222E8B96100C8C0E4 /* TextureSelectorView.swift in Sources */,
 				E892A55D9F2AD9EEFE1F05A8F5FCE0D0 /* ScrollHandler.swift in Sources */,
 				283911AC5FCFF570AC0EC283272656EB /* Shader.swift in Sources */,
 				0934B0BA764B0D364586C588631D3F34 /* ShaderUtilities.swift in Sources */,
@@ -1835,6 +1882,7 @@
 				971B5747D39063A6D7EC07F5953CD168 /* VideoOutputHandler.swift in Sources */,
 				ABB4144A4F162CA5CD547E458DEFB333 /* WaveFilter.swift in Sources */,
 				97A5B723517083ED65D7A7B77418592B /* WavePoolFilter.swift in Sources */,
+				654AE16E22E8B94900C8C0E4 /* StrokeSelectorView.swift in Sources */,
 				65F770E022E12C9F00F82A67 /* MMCQ.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

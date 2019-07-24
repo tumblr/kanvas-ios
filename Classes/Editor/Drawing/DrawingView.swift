@@ -327,8 +327,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         NSLayoutConstraint.activate([
             textureSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
             textureSelectorContainer.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
-            textureSelectorContainer.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
-            textureSelectorContainer.widthAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorWidth),
+            textureSelectorContainer.heightAnchor.constraint(equalToConstant: TextureSelectorView.selectorHeight),
+            textureSelectorContainer.widthAnchor.constraint(equalToConstant: TextureSelectorView.selectorWidth),
         ])
     }
     

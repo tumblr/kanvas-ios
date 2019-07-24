@@ -45,7 +45,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, ColorPickerControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -53,6 +53,20 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         let view = DrawingView()
         view.delegate = self
         return view
+    }()
+    
+    private lazy var strokeSelectorController: StrokeSelectorController = {
+        let controller = StrokeSelectorController()
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var textureSelectorController = TextureSelectorController()
+    
+    private lazy var colorPickerController: ColorPickerController = {
+        let controller = ColorPickerController()
+        controller.delegate = self
+        return controller
     }()
     
     // Drawing
@@ -94,6 +108,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
+        
+        load(childViewController: strokeSelectorController, into: drawingView.strokeSelectorContainer)
+        load(childViewController: textureSelectorController, into: drawingView.textureSelectorContainer)
+        load(childViewController: colorPickerController, into: drawingView.colorPickerSelectorContainer)
     }
     
     // MARK: - View
@@ -185,6 +203,25 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
         drawingView.enableDrawingCanvas(enable)
     }
     
+    // MARK: - StrokeSelectorControllerDelegate
+    
+    func didAnimationStart() {
+        enableView(false)
+        showOverlay(true, animate: false)
+    }
+    
+    func didAnimationEnd() {
+        showOverlay(false, animate: true)
+        enableView(true)
+    }
+    
+    // MARK: - ColorPickerControllerDelegate
+    
+    func didSelectColor(_ color: UIColor) {
+        setEyeDropperColor(color)
+        setDrawingColor(color)
+    }
+    
     // MARK: - DrawingViewDelegate
     
     func didDismissColorSelecterTooltip() {
@@ -192,6 +229,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     }
     
     func didTapConfirmButton() {
+        textureSelectorController.showSelector(false)
         delegate?.didTapCloseButton()
     }
     
@@ -212,6 +250,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
     
     func didTapColorPickerButton() {
         showBottomMenu(false)
+        textureSelectorController.showSelector(false)
         showColorPickerContainer(true)
     }
     
@@ -334,9 +373,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate {
             self.drawingView.alpha = show ? 1 : 0
         }, completion: { _ in
             if show && self.delegate?.editorShouldShowStrokeSelectorAnimation() == true {
-                // Show animation
+                self.strokeSelectorController.showAnimation()
+                self.delegate?.didEndStrokeSelectorAnimation()
             }
         })
     }
-
+    
 }
