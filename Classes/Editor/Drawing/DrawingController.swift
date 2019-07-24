@@ -45,7 +45,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, ColorPickerControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -62,6 +62,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     }()
     
     private lazy var textureSelectorController = TextureSelectorController()
+    
+    private lazy var colorPickerController: ColorPickerController = {
+        let controller = ColorPickerController()
+        controller.delegate = self
+        return controller
+    }()
     
     // Drawing
     var drawingLayer: CALayer?
@@ -105,6 +111,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         
         load(childViewController: strokeSelectorController, into: drawingView.strokeSelectorContainer)
         load(childViewController: textureSelectorController, into: drawingView.textureSelectorContainer)
+        load(childViewController: colorPickerController, into: drawingView.colorPickerSelectorContainer)
     }
     
     // MARK: - View
@@ -201,6 +208,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         enableDrawingCanvas(true)
     }
     
+    // MARK: - ColorPickerControllerDelegate
+    
+    func didSelectColor(_ color: UIColor) {
+        setEyeDropperColor(color)
+        setDrawingColor(color)
+    }
+    
     // MARK: - DrawingViewDelegate
     
     func didDismissColorSelecterTooltip() {
@@ -252,38 +266,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         }
     }
     
-    func didTapColorPickerSelector(recognizer: UITapGestureRecognizer) {
-        selectColor(recognizer: recognizer)
-    }
-    
-    func didPanColorPickerSelector(recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case .changed, .ended:
-            selectColor(recognizer: recognizer)
-        case .possible, .began, .cancelled, .failed:
-            break
-        @unknown default:
-            break
-        }
-    }
-    
-    func didLongPressColorPickerSelector(recognizer: UILongPressGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            selectColor(recognizer: recognizer)
-            setColorPickerLightToDarkColors()
-        case .changed:
-            selectColor(recognizer: recognizer)
-        case .ended, .cancelled, .failed:
-            selectColor(recognizer: recognizer)
-            setColorPickerMainColors()
-        case .possible:
-            break
-        @unknown default:
-            break
-        }
-    }
-    
     func didPanColorSelecter(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
@@ -328,46 +310,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     // MARK: - Color Picker
     
-    private func setColorPickerMainColors() {
-        drawingView.setColorPickerMainColors()
-    }
-    
-    func setColorPickerLightToDarkColors() {
-        drawingView.setColorPickerLightToDarkColors(drawingColor)
-    }
-    
-    private func selectColor(recognizer: UIGestureRecognizer) {
-        guard let selectorView = recognizer.view else { return }
-        let point = getSelectedGradientLocation(with: recognizer, in: selectorView)
-        let color = getColor(at: point.x + DrawingView.horizontalSelectorPadding)
-        setEyeDropperColor(color)
-        setDrawingColor(color)
-    }
-    
-    /// Gets the position of the color picker gradient that the user is touching.
-    /// If the user goes beyond the limits of the view, the location is set to the limit of it.
-    ///
-    /// - Parameter recognizer: the gesture recognizer
-    /// - Parameter view: the color picker gradient
-    /// - Returns: point inside the color picker
-    private func getSelectedGradientLocation(with recognizer: UIGestureRecognizer, in view: UIView) -> CGPoint {
-        let dimensions = drawingView.getColorPickerDimensions()
-        let y = dimensions.height / 2
-        let x = recognizer.location(in: view).x
-        var point = CGPoint(x: x, y: y)
-        
-        if !view.bounds.contains(point) {
-            if point.x < 0  {
-                point.x = 0
-            }
-            else {
-                point.x = view.bounds.width
-            }
-        }
-        
-        return point
-    }
-    
     /// Sets a new color for the eye dropper button background
     ///
     /// - Parameter color: new color for the eye dropper button
@@ -380,30 +322,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     /// - Parameter color: new color for the color selecter
     private func setColorSelecterColor(_ color: UIColor) {
         drawingView.setColorSelecterColor(color)
-    }
-    
-    /// Gets the color that has been selected from the color picker gradient
-    ///
-    /// - Parameter x: the horizontal position inside the gradient
-    /// - Parameter defaultColor: a color to return in case of an error
-    /// - Returns: the selected color
-    private func getColor(at x: CGFloat, defaultColor: UIColor = .white) -> UIColor {
-        let colorPickerPercent = x / drawingView.getColorPickerDimensions().width
-        
-        let locations = drawingView.getColorPickerGradientLocations()
-        let colors = drawingView.getColorPickerGradientColors()
-        
-        guard let upperBound = locations.firstIndex(where: { CGFloat($0.floatValue) > colorPickerPercent }) else {
-            return defaultColor
-        }
-        
-        let lowerBound = upperBound - 1
-        
-        let firstColor = UIColor(cgColor: colors[lowerBound])
-        let secondColor = UIColor(cgColor: colors[upperBound])
-        let distanceBetweenColors = locations[upperBound].floatValue - locations[lowerBound].floatValue
-        let percentBetweenColors = (colorPickerPercent.f - locations[lowerBound].floatValue) / distanceBetweenColors
-        return UIColor.lerp(from: RGBA(color: firstColor), to: RGBA(color: secondColor), percent: CGFloat(percentBetweenColors))
     }
     
     /// Takes the color selecter back to its initial position (same position as the eye dropper's)

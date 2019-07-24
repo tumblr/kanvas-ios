@@ -94,6 +94,8 @@
 		65172A8F22E63548003D36F5 /* StrokeSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65172A8E22E63548003D36F5 /* StrokeSelectorController.swift */; };
 		659F37ED22E7547400DA5F6B /* TextureSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37EC22E7547400DA5F6B /* TextureSelectorController.swift */; };
 		659F37EF22E754A800DA5F6B /* TextureSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37EE22E754A800DA5F6B /* TextureSelectorView.swift */; };
+		659F37FC22E78AA400DA5F6B /* ColorPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37FB22E78AA400DA5F6B /* ColorPickerController.swift */; };
+		659F37FE22E78AAD00DA5F6B /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659F37FD22E78AAD00DA5F6B /* ColorPickerView.swift */; };
 		65F770DF22E12C9F00F82A67 /* ColorThief.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770DD22E12C9F00F82A67 /* ColorThief.swift */; };
 		65F770E022E12C9F00F82A67 /* MMCQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770DE22E12C9F00F82A67 /* MMCQ.swift */; };
 		65F770E522E12CB800F82A67 /* CircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770E222E12CB800F82A67 /* CircularImageView.swift */; };
@@ -438,6 +440,8 @@
 		65172A8E22E63548003D36F5 /* StrokeSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeSelectorController.swift; sourceTree = "<group>"; };
 		659F37EC22E7547400DA5F6B /* TextureSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorController.swift; sourceTree = "<group>"; };
 		659F37EE22E754A800DA5F6B /* TextureSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorView.swift; sourceTree = "<group>"; };
+		659F37FB22E78AA400DA5F6B /* ColorPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerController.swift; sourceTree = "<group>"; };
+		659F37FD22E78AAD00DA5F6B /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		65E0D4BFD967A8573CA678FD7CAC3771 /* VideoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VideoOutputHandler.swift; sourceTree = "<group>"; };
 		65F770DD22E12C9F00F82A67 /* ColorThief.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorThief.swift; sourceTree = "<group>"; };
 		65F770DE22E12C9F00F82A67 /* MMCQ.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMCQ.swift; sourceTree = "<group>"; };
@@ -932,6 +936,15 @@
 			path = TextureSelector;
 			sourceTree = "<group>";
 		};
+		659F37FA22E78A7800DA5F6B /* ColorPicker */ = {
+			isa = PBXGroup;
+			children = (
+				659F37FB22E78AA400DA5F6B /* ColorPickerController.swift */,
+				659F37FD22E78AAD00DA5F6B /* ColorPickerView.swift */,
+			);
+			path = ColorPicker;
+			sourceTree = "<group>";
+		};
 		65F770DC22E12C9F00F82A67 /* ColorThief */ = {
 			isa = PBXGroup;
 			children = (
@@ -944,6 +957,7 @@
 		65F770E122E12CB800F82A67 /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
+				659F37FA22E78A7800DA5F6B /* ColorPicker */,
 				65172A8B22E63527003D36F5 /* StrokeSelector */,
 				659F37EB22E7545200DA5F6B /* TextureSelector */,
 				65F770E222E12CB800F82A67 /* CircularImageView.swift */,
@@ -1760,6 +1774,7 @@
 				694F8E1D6E1F0894C9C50A7CE915A73E /* ChromaFilter.swift in Sources */,
 				E8A10FF94D2CD641E47D866F9061D411 /* ClosedRange+Clamp.swift in Sources */,
 				006921FE87D60DF20B735E03B4D4F4FF /* ConicalGradientLayer.swift in Sources */,
+				659F37FE22E78AAD00DA5F6B /* ColorPickerView.swift in Sources */,
 				6FA0EC71D0806A24118579FF5AA86A93 /* CVPixelBuffer+copy.swift in Sources */,
 				92647D458317A0AA3E2E2B1A4D950536 /* CVPixelBuffer+sampleBuffer.swift in Sources */,
 				508A309DB3236E48FE97AC6958DD6A9A /* Device.swift in Sources */,
@@ -1818,6 +1833,7 @@
 				354FDB7AD01204037531E13F23F6A701 /* MangaFilter.swift in Sources */,
 				297D462D1F915A05245EBD3E7BBB0FA9 /* MediaClip.swift in Sources */,
 				2025C7FD7580BE6ECF19881300077FAF /* MediaClipsCollectionCell.swift in Sources */,
+				659F37FC22E78AA400DA5F6B /* ColorPickerController.swift in Sources */,
 				89BF852718591707C617B76E8BA9974E /* MediaClipsCollectionController.swift in Sources */,
 				EF82A556A07B9AA6115ACD022D452069 /* MediaClipsCollectionView.swift in Sources */,
 				8C4E2AA5945529EC526978C9B58EB0E9 /* MediaClipsEditorView.swift in Sources */,

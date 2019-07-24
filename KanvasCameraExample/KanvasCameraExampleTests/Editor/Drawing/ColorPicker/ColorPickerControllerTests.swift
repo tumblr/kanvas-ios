@@ -18,4 +18,17 @@ final class ColorPickerControllerTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
+    func newViewController() -> ColorPickerController {
+        let controller = ColorPickerController()
+        controller.view.frame = CGRect(x: 0, y: 0,
+                                       width: 128,
+                                       height: 40)
+        controller.view.setNeedsDisplay()
+        return controller
+    }
+    
+    func testSelectorControllerView() {
+        let controller = newViewController()
+        FBSnapshotVerifyView(controller.view)
+    }
 }

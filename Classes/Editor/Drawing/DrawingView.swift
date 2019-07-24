@@ -31,21 +31,6 @@ protocol DrawingViewDelegate: class {
     /// Called when the eye dropper button is selected
     func didTapEyeDropper()
     
-    /// Called when the color picker gradient is tapped
-    ///
-    /// - Parameter recognizer: the tap gesture recognizer
-    func didTapColorPickerSelector(recognizer: UITapGestureRecognizer)
-    
-    /// Called when the color picker gradient is panned
-    ///
-    /// - Parameter recognizer: the pan gesture recognizer
-    func didPanColorPickerSelector(recognizer: UIPanGestureRecognizer)
-    
-    /// Called when the color picker gradient is long pressed
-    ///
-    /// - Parameter recognizer: the long press gesture recognizer
-    func didLongPressColorPickerSelector(recognizer: UILongPressGestureRecognizer)
-    
     /// Called when the color selecter is panned
     ///
     /// - Parameter recognizer: the pan gesture recognizer
@@ -77,25 +62,10 @@ private struct DrawingViewConstants {
     // Texture
     static let textureSelectorPadding: CGFloat = 7
     
-    // Color picker
-    static let colorPickerCircleSize: CGFloat = 18
-    
     // Color selecter
     static let colorSelecterSize: CGFloat = 80
     static let colorSelecterAlpha: CGFloat = 0.65
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
-    
-    // Color picker gradient
-    static let colorPickerColorLocations: [NSNumber] = [0.0, 0.05, 0.2, 0.4, 0.64, 0.82, 0.95, 1.0]
-    
-    static let colorPickerColors = [UIColor.tumblrBrightBlue,
-                                    UIColor.tumblrBrightBlue,
-                                    UIColor.tumblrBrightPurple,
-                                    UIColor.tumblrBrightPink,
-                                    UIColor.tumblrBrightRed,
-                                    UIColor.tumblrBrightYellow,
-                                    UIColor.tumblrBrightGreen,
-                                    UIColor.tumblrBrightGreen,]
     
     // Tooltip
     static let tooltipForegroundColor: UIColor = .white
@@ -137,23 +107,14 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     private let bottomMenuContainer: UIView
     private let colorPickerContainer: UIView
     
-    // Stroke
     let strokeSelectorContainer: UIView
-    
-    // Texture
     let textureSelectorContainer: UIView
     
     // Color picker
     private let colorPickerButton: CircularImageView
     private let closeColorPickerButton: CircularImageView
-    
-    // Color picker gradient
-    private let colorPickerSelectorBackground: CircularImageView
-    private let colorPickerSelectorPannableArea: UIView
-    private let colorPickerGradient: CAGradientLayer
-    
-    // Eye Dropper
     private let eyeDropperButton: CircularImageView
+    let colorPickerSelectorContainer: UIView
     
     // Color selecter
     private let colorSelecter: CircularImageView
@@ -178,9 +139,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         eyeDropperButton = CircularImageView()
         colorCollection = UIView()
         colorPickerButton = CircularImageView()
-        colorPickerSelectorBackground = CircularImageView()
-        colorPickerSelectorPannableArea = UIView()
-        colorPickerGradient = CAGradientLayer()
+        colorPickerSelectorContainer = UIView()
         colorSelecter = CircularImageView()
         overlay = UIView()
         super.init(frame: .zero)
@@ -220,8 +179,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         setUpColorPickerButton()
         setUpCloseColorPickerButton()
         setUpEyeDropper()
-        setUpColorPickerSelector()
-        setUpColorPickerSelectorPannableArea()
+        setUpColorPickerSelectorContainer()
         setUpColorSelecter()
         setUpTooltip()
     }
@@ -379,7 +337,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
-    // MARK: Layout: Color picker
+    // MARK: - Layout: Color picker
     
     /// Sets up the gradient button that opens the color picker menu
     private func setUpColorPickerButton() {
@@ -434,7 +392,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         eyeDropperButton.image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
         eyeDropperButton.tintColor = .white
         eyeDropperButton.contentMode = .center
-        eyeDropperButton.backgroundColor = DrawingViewConstants.colorPickerColors.first
+        eyeDropperButton.backgroundColor = .tumblrBrightBlue
         eyeDropperButton.accessibilityIdentifier = "Editor Eye Dropper Button"
         colorPickerContainer.addSubview(eyeDropperButton)
         
@@ -452,67 +410,22 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         eyeDropperButton.addGestureRecognizer(tapRecognizer)
     }
     
-    /// Sets up the horizontal gradient view in the color picker menu
-    private func setUpColorPickerSelector() {
-        colorPickerSelectorBackground.accessibilityIdentifier = "Editor Color Picker Selector Background"
-        colorPickerSelectorBackground.layer.borderWidth = 0
-        colorPickerSelectorBackground.backgroundColor = .clear
-        
-        colorPickerContainer.addSubview(colorPickerSelectorBackground)
+    /// Sets up the horizontal gradient that allows to pick a color
+    private func setUpColorPickerSelectorContainer() {
+        colorPickerSelectorContainer.backgroundColor = .clear
+        colorPickerSelectorContainer.accessibilityIdentifier = "Editor Color Picker Selector Container"
+        colorPickerSelectorContainer.clipsToBounds = false
+        colorPickerSelectorContainer.translatesAutoresizingMaskIntoConstraints = false
+        colorPickerContainer.addSubview(colorPickerSelectorContainer)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
         let margin = DrawingViewConstants.leftMargin + cellSpace * 2
         NSLayoutConstraint.activate([
-            colorPickerSelectorBackground.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
-            colorPickerSelectorBackground.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -DrawingViewConstants.rightMargin),
-            colorPickerSelectorBackground.bottomAnchor.constraint(equalTo: colorPickerContainer.bottomAnchor),
-            colorPickerSelectorBackground.heightAnchor.constraint(equalToConstant: CircularImageView.size),
+            colorPickerSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
+            colorPickerSelectorContainer.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -DrawingViewConstants.rightMargin),
+            colorPickerSelectorContainer.bottomAnchor.constraint(equalTo: colorPickerContainer.bottomAnchor),
+            colorPickerSelectorContainer.heightAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
-        
-        
-        setColorPickerGradient()
-        setColorPickerMainColors()
-    }
-    
-    /// Sets up the gradient inside the color picker selector
-    private func setColorPickerGradient() {
-        colorPickerGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
-        colorPickerGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        colorPickerGradient.frame = colorPickerSelectorBackground.bounds
-        colorPickerSelectorBackground.layer.insertSublayer(colorPickerGradient, at: 0)
-    }
-    
-    /// Sets the main colors in the color picker gradient
-    func setColorPickerMainColors() {
-        colorPickerGradient.colors = DrawingViewConstants.colorPickerColors.map { $0.cgColor }
-        colorPickerGradient.locations = DrawingViewConstants.colorPickerColorLocations
-    }
-    
-    /// Sets the light-to-dark colors in the color picker gradient
-    func setColorPickerLightToDarkColors(_ mainColor: UIColor) {
-        colorPickerGradient.colors = [UIColor.white.cgColor, mainColor.cgColor, UIColor.black.cgColor]
-        colorPickerGradient.locations = [0.0, 0.5, 1.0]
-    }
-    
-    /// Sets up the area of the color picker in which the user can pan
-    private func setUpColorPickerSelectorPannableArea() {
-        colorPickerSelectorPannableArea.accessibilityIdentifier = "Editor Color Picker Selector Pannable Area"
-        colorPickerSelectorPannableArea.translatesAutoresizingMaskIntoConstraints = false
-        colorPickerSelectorBackground.addSubview(colorPickerSelectorPannableArea)
-        
-        NSLayoutConstraint.activate([
-            colorPickerSelectorPannableArea.leadingAnchor.constraint(equalTo: colorPickerSelectorBackground.leadingAnchor, constant: DrawingViewConstants.horizontalSelectorPadding),
-            colorPickerSelectorPannableArea.trailingAnchor.constraint(equalTo: colorPickerSelectorBackground.trailingAnchor, constant: -DrawingViewConstants.horizontalSelectorPadding),
-            colorPickerSelectorPannableArea.bottomAnchor.constraint(equalTo: colorPickerSelectorBackground.bottomAnchor),
-            colorPickerSelectorPannableArea.topAnchor.constraint(equalTo: colorPickerSelectorBackground.topAnchor),
-        ])
-        
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(colorPickerSelectorTapped(recognizer:)))
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(colorPickerSelectorPanned(recognizer:)))
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(colorPickerSelectorLongPressed(recognizer:)))
-        colorPickerSelectorPannableArea.addGestureRecognizer(tapRecognizer)
-        colorPickerSelectorPannableArea.addGestureRecognizer(panRecognizer)
-        colorPickerSelectorPannableArea.addGestureRecognizer(longPressRecognizer)
     }
     
     /// Sets up the draggable circle that is shown when the eyedropper is pressed
@@ -597,31 +510,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         delegate?.didTapEyeDropper()
     }
     
-    @objc func colorPickerSelectorTapped(recognizer: UITapGestureRecognizer) {
-        delegate?.didTapColorPickerSelector(recognizer: recognizer)
-    }
-    
-    @objc func colorPickerSelectorPanned(recognizer: UIPanGestureRecognizer) {
-        delegate?.didPanColorPickerSelector(recognizer: recognizer)
-    }
-    
-    @objc func colorPickerSelectorLongPressed(recognizer: UILongPressGestureRecognizer) {
-        delegate?.didLongPressColorPickerSelector(recognizer: recognizer)
-    }
-    
     @objc func colorSelecterPanned(recognizer: UIPanGestureRecognizer) {
         delegate?.didPanColorSelecter(recognizer: recognizer)
-    }
-    
-    // MARK: - Gradients
-    
-    override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        updateGradients()
-    }
-    
-    private func updateGradients() {
-        colorPickerGradient.frame = colorPickerSelectorBackground.bounds
     }
     
     // MARK: - View animations
@@ -756,28 +646,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         return colorPickerContainer.convert(eyeDropperButton.center, to: self)
     }
     
-    /// Gets the color picker rect
-    ///
-    /// - Returns: frame of the color picker background
-    func getColorPickerDimensions() -> CGRect {
-        return colorPickerSelectorBackground.frame
-    }
-    
-    /// Gets the color picker gradient colors
-    ///
-    /// - Returns: collection of colors
-    func getColorPickerGradientColors() -> [CGColor] {
-        guard let colors = colorPickerGradient.colors as? [CGColor] else { return [] }
-        return colors
-    }
-    
-    /// Gets the color picker color locations
-    ///
-    /// - Returns: collection of locations
-    func getColorPickerGradientLocations() -> [NSNumber] {
-        guard let locations = colorPickerGradient.locations else { return [] }
-        return locations
-    }
     
     // MARK: - DrawingCanvasDelegate
     
