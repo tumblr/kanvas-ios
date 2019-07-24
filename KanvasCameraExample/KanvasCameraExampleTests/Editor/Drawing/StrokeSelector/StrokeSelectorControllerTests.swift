@@ -32,4 +32,3 @@ final class StrokeSelectorControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 }
-
