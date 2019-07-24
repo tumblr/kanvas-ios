@@ -604,6 +604,13 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     // MARK: - Public interface
     
+    /// enables or disables user interation on the view
+    ///
+    /// - Parameter enable: true to enable, false to disable
+    func enableView(_ enable: Bool) {
+        isUserInteractionEnabled = enable
+    }
+    
     /// enables or disables drawing on the drawing canvas
     ///
     /// - Parameter enable: true to enable, false to disable

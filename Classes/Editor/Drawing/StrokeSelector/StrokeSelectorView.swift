@@ -196,7 +196,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     /// Shows the animation for onboarding
     func showAnimation() {
         
-        let duration = 4.0
+        let duration = 3.5
         let maxScale = StrokeSelectorView.strokeCircleMaxSize / StrokeSelectorView.strokeCircleMinSize
         let maxHeight = (selectorPannableArea.bounds.height + selectorCircle.bounds.height) / 2
 
@@ -220,9 +220,8 @@ final class StrokeSelectorView: IgnoreTouchesView {
             UIView.addKeyframe(withRelativeStartTime: 3.0 / duration, relativeDuration: 0.5 / duration, animations: {
                 self.selectorBackground.alpha = 0
             })
-            UIView.addKeyframe(withRelativeStartTime: 3.5 / duration, relativeDuration: 0.5 / duration, animations: {
-                self.delegate?.didAnimationEnd()
-            })
-        }, completion: nil)
+        }, completion: { _ in
+            self.delegate?.didAnimationEnd()
+        })
     }
 }

@@ -189,6 +189,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingView.showTooltip(show)
     }
     
+    /// Enables or disables the user interaction on the view
+    ///
+    /// - Parameter enable: true to enable, false to disable
+    private func enableView(_ enable: Bool) {
+        drawingView.enableView(enable)
+    }
+    
     /// Enables or disables the user interaction on the drawing canvas
     ///
     /// - Parameter enable: true to enable, false to disable
@@ -199,13 +206,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     // MARK: - StrokeSelectorControllerDelegate
     
     func didAnimationStart() {
-        enableDrawingCanvas(false)
+        enableView(false)
         showOverlay(true, animate: false)
     }
     
     func didAnimationEnd() {
-        showOverlay(false, animate: false)
-        enableDrawingCanvas(true)
+        showOverlay(false, animate: true)
+        enableView(true)
     }
     
     // MARK: - ColorPickerControllerDelegate
