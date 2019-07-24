@@ -68,4 +68,5 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
         textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.markerImage)
         textureSelectorView.showSelectorBackground(false)
     }
+    
 }
