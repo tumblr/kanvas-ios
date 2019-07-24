@@ -12,6 +12,26 @@ protocol DrawingViewDelegate: class {
     
     /// Called after the color selecter tooltip is dismissed
     func didDismissColorSelecterTooltip()
+    
+    /// Called when the confirm button is selected
+    func didTapConfirmButton()
+    
+    /// Called when the undo button is selected
+    func didTapUndoButton()
+    
+    /// Called when the erase button is selected
+    func didTapEraseButton()
+    
+    /// Called when the gradient button (that opens the color picker) is selected
+    func didTapColorPickerButton()
+    
+    /// Called when the eye dropper button is selected
+    func didTapEyeDropper()
+    
+    /// Called when the color selecter is panned
+    ///
+    /// - Parameter recognizer: the pan gesture recognizer
+    func didPanColorSelecter(recognizer: UIPanGestureRecognizer)
 }
 
 private struct DrawingViewConstants {
@@ -36,34 +56,10 @@ private struct DrawingViewConstants {
     static let horizontalSelectorPadding: CGFloat = 14
     static let horizontalSelectorHeight: CGFloat = CircularImageView.size
     
-    // Stroke
-    static let strokeCircleMinSize: CGFloat = 11
-    static let strokeCircleMaxSize: CGFloat = 18
-    static let strokeSelectorPadding: CGFloat = 11
-    
-    // Texture
-    static let textureOptionSize = CircularImageView.size
-    static let textureSelectorPadding: CGFloat = 7
-    
-    // Color picker
-    static let colorPickerCircleSize: CGFloat = 18
-    
     // Color selecter
     static let colorSelecterSize: CGFloat = 80
     static let colorSelecterAlpha: CGFloat = 0.65
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
-    
-    // Color picker gradient
-    static let colorPickerColorLocations: [NSNumber] = [0.0, 0.05, 0.2, 0.4, 0.64, 0.82, 0.95, 1.0]
-    
-    static let colorPickerColors = [UIColor.tumblrBrightBlue,
-                                    UIColor.tumblrBrightBlue,
-                                    UIColor.tumblrBrightPurple,
-                                    UIColor.tumblrBrightPink,
-                                    UIColor.tumblrBrightRed,
-                                    UIColor.tumblrBrightYellow,
-                                    UIColor.tumblrBrightGreen,
-                                    UIColor.tumblrBrightGreen,]
     
     // Tooltip
     static let tooltipForegroundColor: UIColor = .white
@@ -84,59 +80,39 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     static let horizontalSelectorPadding = DrawingViewConstants.horizontalSelectorPadding
     static let verticalSelectorWidth = DrawingViewConstants.verticalSelectorWidth
-    static let colorSelecterAlpha = DrawingViewConstants.colorSelecterAlpha
-    static let strokeCircleMinSize = DrawingViewConstants.strokeCircleMinSize
-    static let strokeCircleMaxSize = DrawingViewConstants.strokeCircleMaxSize
     
     // Drawing views
     let drawingCanvas: DrawingCanvas
     let temporalImageView: UIImageView
     
     // Black traslucent overlay used for onboarding
-    let overlay: UIView
+    private let overlay: UIView
     
     // Main containers
     private let topButtonContainer: UIStackView
     private let bottomPanelContainer: UIView
     
     // Top buttons
-    let confirmButton: UIButton
-    let undoButton: UIButton
-    let eraseButton: UIButton
+    private let confirmButton: UIButton
+    private let undoButton: UIButton
+    private let eraseButton: UIButton
     
     // Bottom panel containers
     private let bottomMenuContainer: UIView
-    let colorPickerContainer: UIView
+    private let colorPickerContainer: UIView
     
-    // Stroke
-    let strokeButton: CircularImageView
-    let strokeButtonCircle: UIImageView
-    let strokeSelectorBackground: CircularImageView
-    let strokeSelectorPannableArea: UIView
-    let strokeSelectorCircle: UIImageView
-    
-    // Texture
-    let textureButton: CircularImageView
-    let textureSelectorBackground: CircularImageView
-    let textureOptionsContainer: UIStackView
-    let sharpieButton: UIButton
-    let pencilButton: UIButton
-    let markerButton: UIButton
+    // Stroke & Texture
+    let strokeSelectorContainer: UIView
+    let textureSelectorContainer: UIView
     
     // Color picker
-    let colorPickerButton: CircularImageView
-    let closeColorPickerButton: CircularImageView
-    
-    // Color picker gradient
-    let colorPickerSelectorBackground: CircularImageView
-    let colorPickerSelectorPannableArea: UIView
-    let colorPickerGradient: CAGradientLayer
-    
-    // Eye Dropper
-    let eyeDropperButton: CircularImageView
+    private let colorPickerButton: CircularImageView
+    private let closeColorPickerButton: CircularImageView
+    private let eyeDropperButton: CircularImageView
+    let colorPickerSelectorContainer: UIView
     
     // Color selecter
-    let colorSelecter: CircularImageView
+    private let colorSelecter: CircularImageView
     private var tooltip: EasyTipView?
     
     // Color collection
@@ -152,24 +128,13 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         confirmButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
         undoButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
         eraseButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        strokeButton = CircularImageView()
-        strokeSelectorBackground = CircularImageView()
-        strokeSelectorPannableArea = UIView()
-        strokeButtonCircle = UIImageView()
-        strokeSelectorCircle = UIImageView()
-        textureButton = CircularImageView()
-        textureSelectorBackground = CircularImageView()
+        strokeSelectorContainer = UIView()
+        textureSelectorContainer = UIView()
         closeColorPickerButton = CircularImageView()
         eyeDropperButton = CircularImageView()
         colorCollection = UIView()
         colorPickerButton = CircularImageView()
-        colorPickerSelectorBackground = CircularImageView()
-        textureOptionsContainer = ExtendedStackView(inset: DrawingViewConstants.stackViewInset)
-        sharpieButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        pencilButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        markerButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        colorPickerSelectorPannableArea = UIView()
-        colorPickerGradient = CAGradientLayer()
+        colorPickerSelectorContainer = UIView()
         colorSelecter = CircularImageView()
         overlay = UIView()
         super.init(frame: .zero)
@@ -209,8 +174,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         setUpColorPickerButton()
         setUpCloseColorPickerButton()
         setUpEyeDropper()
-        setUpColorPickerSelector()
-        setUpColorPickerSelectorPannableArea()
+        setUpColorPickerSelectorContainer()
         setUpColorSelecter()
         setUpTooltip()
     }
@@ -289,6 +253,14 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         undoButton.setBackgroundImage(KanvasCameraImages.undoImage, for: .normal)
         eraseButton.setBackgroundImage(KanvasCameraImages.eraserUnselectedImage, for: .normal)
         
+        let confirmButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
+        let undoButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(undoButtonTapped(recognizer:)))
+        let eraseButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(eraseButtonTapped(recognizer:)))
+        
+        confirmButton.addGestureRecognizer(confirmButtonRecognizer)
+        undoButton.addGestureRecognizer(undoButtonRecognizer)
+        eraseButton.addGestureRecognizer(eraseButtonRecognizer)
+        
         topButtonContainer.addArrangedSubview(confirmButton)
         topButtonContainer.addArrangedSubview(undoButton)
         topButtonContainer.addArrangedSubview(eraseButton)
@@ -321,171 +293,46 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     /// Sets up components of the main bottom menu
     private func setUpBottomMenu() {
-        setUpStrokeButton()
-        setUpStrokeButtonCircle()
-        setUpStrokeSelectorBackground()
-        setUpStrokeSelectorPannableArea()
-        setUpStrokeSelectorCircle()
-        
-        setUpTextureButton()
-        setUpTextureSelectorBackground()
-        setUpTextureOptionContainer()
-        setUpTextureOptions()
-        
+        setUpStrokeSelectorContainer()
+        setUpTextureSelectorContainer()
         setUpColorCollection()
     }
     
     // MARK: Layout: Stroke selector
     
-    /// Sets up the stroke button on the main menu
-    private func setUpStrokeButton() {
-        strokeButton.accessibilityIdentifier = "Editor Stroke Button"
-        strokeButton.backgroundColor = .white
-        strokeButton.contentMode = .center
-        bottomMenuContainer.addSubview(strokeButton)
+    private func setUpStrokeSelectorContainer() {
+        strokeSelectorContainer.accessibilityIdentifier = "Editor Stroke Selector Container"
+        strokeSelectorContainer.clipsToBounds = false
+        strokeSelectorContainer.translatesAutoresizingMaskIntoConstraints = false
+        bottomMenuContainer.addSubview(strokeSelectorContainer)
         
         NSLayoutConstraint.activate([
-            strokeButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: DrawingViewConstants.leftMargin),
-            strokeButton.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
-            strokeButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
-            strokeButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
-        ])
-    }
-    
-    /// Sets up the black circle inside the stroke button
-    private func setUpStrokeButtonCircle() {
-        strokeButtonCircle.accessibilityIdentifier = "Editor Stroke Button Circle"
-        strokeButtonCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
-        strokeButtonCircle.tintColor = .black
-        strokeButtonCircle.isUserInteractionEnabled = true
-        strokeButtonCircle.translatesAutoresizingMaskIntoConstraints = false
-        strokeButtonCircle.contentMode = .scaleAspectFill
-        strokeButtonCircle.clipsToBounds = true
-        strokeButton.addSubview(strokeButtonCircle)
-        
-        NSLayoutConstraint.activate([
-            strokeButtonCircle.heightAnchor.constraint(equalToConstant: DrawingViewConstants.strokeCircleMinSize),
-            strokeButtonCircle.widthAnchor.constraint(equalToConstant: DrawingViewConstants.strokeCircleMinSize),
-            strokeButtonCircle.centerXAnchor.constraint(equalTo: strokeButton.centerXAnchor),
-            strokeButtonCircle.centerYAnchor.constraint(equalTo: strokeButton.centerYAnchor),
-        ])
-    }
-    
-    /// Sets up the rounded white background for the stroke selector
-    private func setUpStrokeSelectorBackground() {
-        strokeSelectorBackground.accessibilityIdentifier = "Editor Stroke Selector Background"
-        strokeSelectorBackground.backgroundColor = .white
-        bottomMenuContainer.addSubview(strokeSelectorBackground)
-        
-        NSLayoutConstraint.activate([
-            strokeSelectorBackground.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: DrawingViewConstants.leftMargin),
-            strokeSelectorBackground.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
-            strokeSelectorBackground.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
-            strokeSelectorBackground.widthAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorWidth),
-        ])
-        
-        strokeSelectorBackground.alpha = 0
-    }
-    
-    /// Sets up the area of the stroke selector that can be panned
-    private func setUpStrokeSelectorPannableArea() {
-        strokeSelectorPannableArea.accessibilityIdentifier = "Editor Stroke Selector Pannable Area"
-        strokeSelectorPannableArea.translatesAutoresizingMaskIntoConstraints = false
-        strokeSelectorBackground.addSubview(strokeSelectorPannableArea)
-        
-        NSLayoutConstraint.activate([
-            strokeSelectorPannableArea.leadingAnchor.constraint(equalTo: strokeSelectorBackground.leadingAnchor),
-            strokeSelectorPannableArea.trailingAnchor.constraint(equalTo: strokeSelectorBackground.trailingAnchor),
-            strokeSelectorPannableArea.bottomAnchor.constraint(equalTo: strokeSelectorBackground.bottomAnchor, constant: -DrawingViewConstants.strokeSelectorPadding),
-            strokeSelectorPannableArea.topAnchor.constraint(equalTo: strokeSelectorBackground.topAnchor, constant: DrawingViewConstants.strokeSelectorPadding + (DrawingViewConstants.strokeCircleMaxSize - DrawingViewConstants.strokeCircleMinSize) / 2),
-        ])
-    }
-    
-    /// Sets up the moving circle inside the stroke selector
-    private func setUpStrokeSelectorCircle() {
-        strokeSelectorCircle.accessibilityIdentifier = "Editor Stroke Selector Circle"
-        strokeSelectorCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
-        strokeSelectorCircle.tintColor = .black
-        strokeSelectorCircle.isUserInteractionEnabled = true
-        strokeSelectorCircle.translatesAutoresizingMaskIntoConstraints = false
-        strokeSelectorCircle.contentMode = .scaleAspectFill
-        strokeSelectorCircle.clipsToBounds = true
-        strokeSelectorPannableArea.addSubview(strokeSelectorCircle)
-        
-        NSLayoutConstraint.activate([
-            strokeSelectorCircle.heightAnchor.constraint(equalToConstant: DrawingViewConstants.strokeCircleMinSize),
-            strokeSelectorCircle.widthAnchor.constraint(equalToConstant: DrawingViewConstants.strokeCircleMinSize),
-            strokeSelectorCircle.centerXAnchor.constraint(equalTo: strokeSelectorPannableArea.centerXAnchor),
-            strokeSelectorCircle.bottomAnchor.constraint(equalTo: strokeSelectorPannableArea.bottomAnchor),
+            strokeSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: DrawingViewConstants.leftMargin),
+            strokeSelectorContainer.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
+            strokeSelectorContainer.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
+            strokeSelectorContainer.widthAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorWidth),
         ])
     }
     
     // MARK: Layout: Texture selector
     
-    /// Sets up the texture button in the main menu
-    private func setUpTextureButton() {
-        textureButton.contentMode = .center
-        textureButton.image = KanvasCameraImages.pencilImage
-        textureButton.accessibilityIdentifier = "Editor Texture Button"
-        textureButton.backgroundColor = .white
-        bottomMenuContainer.addSubview(textureButton)
+    private func setUpTextureSelectorContainer() {
+        textureSelectorContainer.accessibilityIdentifier = "Editor Texture Selector Container"
+        textureSelectorContainer.clipsToBounds = false
+        textureSelectorContainer.translatesAutoresizingMaskIntoConstraints = false
+        bottomMenuContainer.addSubview(textureSelectorContainer)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
         let margin = DrawingViewConstants.leftMargin + cellSpace
         NSLayoutConstraint.activate([
-            textureButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
-            textureButton.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
-            textureButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
-            textureButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
+            textureSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
+            textureSelectorContainer.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
+            textureSelectorContainer.heightAnchor.constraint(equalToConstant: TextureSelectorView.selectorHeight),
+            textureSelectorContainer.widthAnchor.constraint(equalToConstant: TextureSelectorView.selectorWidth),
         ])
     }
     
-    /// Sets up the rounded white background for the texture selector
-    private func setUpTextureSelectorBackground() {
-        textureSelectorBackground.accessibilityIdentifier = "Editor Texture Selector Background"
-        textureSelectorBackground.backgroundColor = .white
-        bottomMenuContainer.addSubview(textureSelectorBackground)
-        
-        let cellSpace = CircularImageView.size + CircularImageView.padding * 2
-        let margin = DrawingViewConstants.leftMargin + cellSpace
-        NSLayoutConstraint.activate([
-            textureSelectorBackground.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
-            textureSelectorBackground.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
-            textureSelectorBackground.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
-            textureSelectorBackground.widthAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorWidth),
-        ])
-        
-        textureSelectorBackground.alpha = 0
-    }
-    
-    /// Sets up the stack view that holds the texture options
-    private func setUpTextureOptionContainer() {
-        textureOptionsContainer.translatesAutoresizingMaskIntoConstraints = false
-        textureOptionsContainer.axis = .vertical
-        textureOptionsContainer.distribution = .equalSpacing
-        textureOptionsContainer.alignment = .center
-        textureSelectorBackground.addSubview(textureOptionsContainer)
-        
-        NSLayoutConstraint.activate([
-            textureOptionsContainer.leadingAnchor.constraint(equalTo: textureSelectorBackground.leadingAnchor),
-            textureOptionsContainer.trailingAnchor.constraint(equalTo: textureSelectorBackground.trailingAnchor),
-            textureOptionsContainer.topAnchor.constraint(equalTo: textureSelectorBackground.topAnchor, constant: DrawingViewConstants.textureSelectorPadding),
-            textureOptionsContainer.bottomAnchor.constraint(equalTo: textureSelectorBackground.bottomAnchor, constant: -DrawingViewConstants.textureSelectorPadding),
-        ])
-    }
-    
-    /// Adds the texture options to the stack view
-    private func setUpTextureOptions() {
-        sharpieButton.setBackgroundImage(KanvasCameraImages.sharpieImage, for: .normal)
-        pencilButton.setBackgroundImage(KanvasCameraImages.pencilImage, for: .normal)
-        markerButton.setBackgroundImage(KanvasCameraImages.markerImage, for: .normal)
-        
-        textureOptionsContainer.addArrangedSubview(sharpieButton)
-        textureOptionsContainer.addArrangedSubview(pencilButton)
-        textureOptionsContainer.addArrangedSubview(markerButton)
-    }
-    
-    // MARK: Layout: Color picker
+    // MARK: - Layout: Color picker
     
     /// Sets up the gradient button that opens the color picker menu
     private func setUpColorPickerButton() {
@@ -500,6 +347,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             colorPickerButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             colorPickerButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
+        
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.addTarget(self, action: #selector(colorPickerButtonTapped(recognizer:)))
+        colorPickerButton.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the container that holds the close button, eyedropper, color picker gradient
@@ -525,6 +376,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             closeColorPickerButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             closeColorPickerButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
+        
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.addTarget(self, action: #selector(closeColorPickerButtonTapped(recognizer:)))
+        closeColorPickerButton.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the eye dropper button in the color picker menu
@@ -532,7 +387,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         eyeDropperButton.image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
         eyeDropperButton.tintColor = .white
         eyeDropperButton.contentMode = .center
-        eyeDropperButton.backgroundColor = DrawingViewConstants.colorPickerColors.first
+        eyeDropperButton.backgroundColor = .tumblrBrightBlue
         eyeDropperButton.accessibilityIdentifier = "Editor Eye Dropper Button"
         colorPickerContainer.addSubview(eyeDropperButton)
         
@@ -544,61 +399,27 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             eyeDropperButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             eyeDropperButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
+        
+        let tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer.addTarget(self, action: #selector(eyeDropperTapped(recognizer:)))
+        eyeDropperButton.addGestureRecognizer(tapRecognizer)
     }
     
-    /// Sets up the horizontal gradient view in the color picker menu
-    private func setUpColorPickerSelector() {
-        colorPickerSelectorBackground.accessibilityIdentifier = "Editor Color Picker Selector Background"
-        colorPickerSelectorBackground.layer.borderWidth = 0
-        colorPickerSelectorBackground.backgroundColor = .clear
-        
-        colorPickerContainer.addSubview(colorPickerSelectorBackground)
+    /// Sets up the horizontal gradient that allows to pick a color
+    private func setUpColorPickerSelectorContainer() {
+        colorPickerSelectorContainer.backgroundColor = .clear
+        colorPickerSelectorContainer.accessibilityIdentifier = "Editor Color Picker Selector Container"
+        colorPickerSelectorContainer.clipsToBounds = false
+        colorPickerSelectorContainer.translatesAutoresizingMaskIntoConstraints = false
+        colorPickerContainer.addSubview(colorPickerSelectorContainer)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
         let margin = DrawingViewConstants.leftMargin + cellSpace * 2
         NSLayoutConstraint.activate([
-            colorPickerSelectorBackground.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
-            colorPickerSelectorBackground.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -DrawingViewConstants.rightMargin),
-            colorPickerSelectorBackground.bottomAnchor.constraint(equalTo: colorPickerContainer.bottomAnchor),
-            colorPickerSelectorBackground.heightAnchor.constraint(equalToConstant: CircularImageView.size),
-        ])
-        
-        
-        setColorPickerGradient()
-        setColorPickerMainColors()
-    }
-    
-    /// Sets up the gradient inside the color picker selector
-    private func setColorPickerGradient() {
-        colorPickerGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
-        colorPickerGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        colorPickerGradient.frame = colorPickerSelectorBackground.bounds
-        colorPickerSelectorBackground.layer.insertSublayer(colorPickerGradient, at: 0)
-    }
-    
-    /// Sets the main colors in the color picker gradient
-    func setColorPickerMainColors() {
-        colorPickerGradient.colors = DrawingViewConstants.colorPickerColors.map { $0.cgColor }
-        colorPickerGradient.locations = DrawingViewConstants.colorPickerColorLocations
-    }
-    
-    /// Sets the light-to-dark colors in the color picker gradient
-    func setColorPickerLightToDarkColors(_ mainColor: UIColor) {
-        colorPickerGradient.colors = [UIColor.white.cgColor, mainColor.cgColor, UIColor.black.cgColor]
-        colorPickerGradient.locations = [0.0, 0.5, 1.0]
-    }
-    
-    /// Sets up the area of the color picker in which the user can pan
-    private func setUpColorPickerSelectorPannableArea() {
-        colorPickerSelectorPannableArea.accessibilityIdentifier = "Editor Color Picker Selector Pannable Area"
-        colorPickerSelectorPannableArea.translatesAutoresizingMaskIntoConstraints = false
-        colorPickerSelectorBackground.addSubview(colorPickerSelectorPannableArea)
-        
-        NSLayoutConstraint.activate([
-            colorPickerSelectorPannableArea.leadingAnchor.constraint(equalTo: colorPickerSelectorBackground.leadingAnchor, constant: DrawingViewConstants.horizontalSelectorPadding),
-            colorPickerSelectorPannableArea.trailingAnchor.constraint(equalTo: colorPickerSelectorBackground.trailingAnchor, constant: -DrawingViewConstants.horizontalSelectorPadding),
-            colorPickerSelectorPannableArea.bottomAnchor.constraint(equalTo: colorPickerSelectorBackground.bottomAnchor),
-            colorPickerSelectorPannableArea.topAnchor.constraint(equalTo: colorPickerSelectorBackground.topAnchor),
+            colorPickerSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
+            colorPickerSelectorContainer.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -DrawingViewConstants.rightMargin),
+            colorPickerSelectorContainer.bottomAnchor.constraint(equalTo: colorPickerContainer.bottomAnchor),
+            colorPickerSelectorContainer.heightAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
     }
     
@@ -617,6 +438,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
         
         colorSelecter.alpha = 0
+        
+        let panRecognizer = UIPanGestureRecognizer()
+        panRecognizer.addTarget(self, action: #selector(colorSelecterPanned(recognizer:)))
+        colorSelecter.addGestureRecognizer(panRecognizer)
     }
     
     /// Sets up the color collection that contains the dominant colors as well as the last colors selected
@@ -654,16 +479,35 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         tooltip = EasyTipView(text: text, preferences: preferences)
     }
     
+    // MARK: - Gesture recognizers
     
-    // MARK: - Gradients
-    
-    override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        updateGradients()
+    @objc func confirmButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapConfirmButton()
     }
     
-    private func updateGradients() {
-        colorPickerGradient.frame = colorPickerSelectorBackground.bounds
+    @objc func undoButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapUndoButton()
+    }
+    
+    @objc func eraseButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapEraseButton()
+    }
+    
+    @objc func colorPickerButtonTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapColorPickerButton()
+    }
+    
+    @objc func closeColorPickerButtonTapped(recognizer: UITapGestureRecognizer) {
+        showColorPickerContainer(false)
+        showBottomMenu(true)
+    }
+    
+    @objc func eyeDropperTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapEyeDropper()
+    }
+    
+    @objc func colorSelecterPanned(recognizer: UIPanGestureRecognizer) {
+        delegate?.didPanColorSelecter(recognizer: recognizer)
     }
     
     // MARK: - View animations
@@ -683,33 +527,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     func showBottomPanel(_ show: Bool) {
         UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
             self.bottomPanelContainer.alpha = show ? 1 : 0
-        }
-    }
-    
-    /// shows or hides the stroke selector
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showStrokeSelectorBackground(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
-            self.strokeSelectorBackground.alpha = show ? 1 : 0
-        }
-    }
-    
-    /// changes the image inside the texture button
-    ///
-    /// - Parameter image: the new image for the icon
-    func changeTextureIcon(image: UIImage?) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
-            self.textureButton.image = image
-        }
-    }
-    
-    /// shows or hides the texture selector
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTextureSelectorBackground(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
-            self.textureSelectorBackground.alpha = show ? 1 : 0
         }
     }
     
@@ -750,11 +567,25 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
     }
     
+    /// shows or hides all the menus
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showTools(show: Bool) {
+        showTopButtons(show)
+        showBottomPanel(show)
+    }
+    
     /// shows or hides the overlay of the color selecter
     ///
     /// - Parameter show: true to show, false to hide
-    func showOverlay(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+    /// - Parameter animate: whether the UI update is animated
+    func showOverlay(_ show: Bool, animate: Bool = true) {
+        if animate {
+            UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+                self.overlay.alpha = show ? 1 : 0
+            }
+        }
+        else {
             self.overlay.alpha = show ? 1 : 0
         }
     }
@@ -775,6 +606,15 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
     }
     
+    // MARK: - Public interface
+    
+    /// enables or disables user interation on the view
+    ///
+    /// - Parameter enable: true to enable, false to disable
+    func enableView(_ enable: Bool) {
+        isUserInteractionEnabled = enable
+    }
+    
     /// enables or disables drawing on the drawing canvas
     ///
     /// - Parameter enable: true to enable, false to disable
@@ -782,41 +622,49 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         drawingCanvas.isUserInteractionEnabled = enable
     }
     
+    /// Sets a new color for the eye dropper button background
+    ///
+    /// - Parameter color: new color for the eye dropper
+    func setEyeDropperColor(_ color: UIColor) {
+        eyeDropperButton.backgroundColor = color
+    }
+    
+    /// Sets a new color for the color selecter background
+    ///
+    /// - Parameter color: new color for the color selecter
+    func setColorSelecterColor(_ color: UIColor) {
+        eyeDropperButton.backgroundColor = color.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
+    }
+    
+    /// Changes color selector location on screen
+    ///
+    /// - Parameter point: the new location
+    func moveColorSelecter(to point: CGPoint) {
+        colorSelecter.center = point
+    }
+    
+    /// Applies a transformation to the color selecter
+    ///
+    /// - Parameter transform: the transformation to apply
+    func transformColorSelecter(_ transform: CGAffineTransform) {
+        colorSelecter.transform = transform
+    }
+    
+    /// Calculates the color selecter initial location expressed in screen coordinates
+    ///
+    /// - Returns: the initial location for the color selecter
+    func getColorSelecterInitialLocation() -> CGPoint {
+        return colorPickerContainer.convert(eyeDropperButton.center, to: self)
+    }
+    
+    
     // MARK: - DrawingCanvasDelegate
     
-    func onCanvasTouchesBegan() {
-        onDrawing(active: true)
+    func didBeginTouches() {
+        showTools(show: false)
     }
     
-    func onCanvasTouchesEnded() {
-        onDrawing(active: false)
-    }
-    
-    /// shows/hides the menus when drawing
-    ///
-    /// - Parameter active: whether the user is currently drawing or not
-    private func onDrawing(active: Bool) {
-        showTopButtons(!active)
-        showBottomPanel(!active)
-    }
-}
-
-
-protocol DrawingCanvasDelegate: class {
-    func onCanvasTouchesBegan()
-    func onCanvasTouchesEnded()
-}
-
-/// View that shows/hides the menus when touched
-final class DrawingCanvas: UIView {
-    
-    weak var delegate: DrawingCanvasDelegate?
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        delegate?.onCanvasTouchesBegan()
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        delegate?.onCanvasTouchesEnded()
+    func didEndTouches() {
+        showTools(show: true)
     }
 }
