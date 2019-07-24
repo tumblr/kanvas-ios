@@ -32,4 +32,3 @@ final class TextureSelectorControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 }
-
