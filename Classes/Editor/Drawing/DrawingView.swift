@@ -567,6 +567,14 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
     }
     
+    /// shows or hides all the menus
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showTools(show: Bool) {
+        showTopButtons(show)
+        showBottomPanel(show)
+    }
+    
     /// shows or hides the overlay of the color selecter
     ///
     /// - Parameter show: true to show, false to hide
@@ -652,19 +660,11 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     // MARK: - DrawingCanvasDelegate
     
-    func onCanvasTouchesBegan() {
-        onDrawing(active: true)
+    func didBeginTouches() {
+        showTools(show: false)
     }
     
-    func onCanvasTouchesEnded() {
-        onDrawing(active: false)
-    }
-    
-    /// shows/hides the menus when drawing
-    ///
-    /// - Parameter active: whether the user is currently drawing or not
-    private func onDrawing(active: Bool) {
-        showTopButtons(!active)
-        showBottomPanel(!active)
+    func didEndTouches() {
+        showTools(show: true)
     }
 }

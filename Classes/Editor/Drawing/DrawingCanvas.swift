@@ -8,8 +8,8 @@ import Foundation
 import UIKit
 
 protocol DrawingCanvasDelegate: class {
-    func onCanvasTouchesBegan()
-    func onCanvasTouchesEnded()
+    func didBeginTouches()
+    func didEndTouches()
 }
 
 /// View that shows/hides the menus when touched
@@ -18,10 +18,10 @@ final class DrawingCanvas: UIView {
     weak var delegate: DrawingCanvasDelegate?
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        delegate?.onCanvasTouchesBegan()
+        delegate?.didBeginTouches()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        delegate?.onCanvasTouchesEnded()
+        delegate?.didEndTouches()
     }
 }
