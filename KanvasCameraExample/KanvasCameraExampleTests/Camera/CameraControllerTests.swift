@@ -272,7 +272,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     var creationError = false
     var creationEmpty = false
 
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
+    func didCreateMedia(media: KanvasCameraMedia?, error: Error?, exportAction: KanvasExportAction) {
         switch (media, error) {
         case (.none, .none): creationEmpty = true
         case (_, .some): creationError = true

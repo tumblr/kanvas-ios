@@ -130,7 +130,7 @@ extension SplitViewController: MockDashboardViewControllerDelegate {
 }
 
 extension SplitViewController: CameraControllerDelegate {
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
+    func didCreateMedia(media: KanvasCameraMedia?, error: Error?, exportAction: KanvasExportAction) {
         if let media = media {
             save(media: media)
             self.kanvasController.hideOverlay { }
