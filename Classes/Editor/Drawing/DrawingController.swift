@@ -254,11 +254,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         showColorPickerContainer(true)
     }
     
-    func didTapCloseColorPickerButton() {
-        showColorPickerContainer(false)
-        showBottomMenu(true)
-    }
-    
     func didTapEyeDropper() {
         resetColorSelecterLocation()
         showColorPickerContainer(false)

@@ -103,6 +103,7 @@
 		65F770E722E12CB800F82A67 /* DrawingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770E422E12CB800F82A67 /* DrawingController.swift */; };
 		65F770EA22E12CEA00F82A67 /* CALayer+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770E822E12CEA00F82A67 /* CALayer+Color.swift */; };
 		65F770EB22E12CEA00F82A67 /* UIImage+DominantColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F770E922E12CEA00F82A67 /* UIImage+DominantColors.swift */; };
+		65FF951E22E89F0000032989 /* DrawingCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FF951D22E89F0000032989 /* DrawingCanvas.swift */; };
 		6723CF1481DBAF4E648E16C010B7B8B7 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0127E5AE83087823F333B82E383F477 /* CameraView.swift */; };
 		67E0ED9109E6A2354B4D4B70221592D1 /* GroupFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A93D9B73AD9FD8B7FD824C4B454572 /* GroupFilter.swift */; };
 		694F8E1D6E1F0894C9C50A7CE915A73E /* ChromaFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50917C19D23F026A306C0E3AD4D2D70 /* ChromaFilter.swift */; };
@@ -450,6 +451,7 @@
 		65F770E422E12CB800F82A67 /* DrawingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingController.swift; sourceTree = "<group>"; };
 		65F770E822E12CEA00F82A67 /* CALayer+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Color.swift"; sourceTree = "<group>"; };
 		65F770E922E12CEA00F82A67 /* UIImage+DominantColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+DominantColors.swift"; sourceTree = "<group>"; };
+		65FF951D22E89F0000032989 /* DrawingCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvas.swift; sourceTree = "<group>"; };
 		677A29D8AA4BC1FF6D7DF73E6C6C98EB /* ModeSelectorAndShootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootView.swift; sourceTree = "<group>"; };
 		69FA3B418327FD6E83864893C8286299 /* NSLayoutConstraint+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Utils.swift"; path = "Source/NSLayoutConstraint+Utils.swift"; sourceTree = "<group>"; };
 		6DFBDD64AC2DA38FE11C8F74D81CF748 /* FilterProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterProtocol.swift; sourceTree = "<group>"; };
@@ -961,6 +963,7 @@
 				65172A8B22E63527003D36F5 /* StrokeSelector */,
 				659F37EB22E7545200DA5F6B /* TextureSelector */,
 				65F770E222E12CB800F82A67 /* CircularImageView.swift */,
+				65FF951D22E89F0000032989 /* DrawingCanvas.swift */,
 				65F770E322E12CB800F82A67 /* DrawingView.swift */,
 				65F770E422E12CB800F82A67 /* DrawingController.swift */,
 			);
@@ -1796,6 +1799,7 @@
 				2E0EEFA3197F06AAC0210703FCE5D3F2 /* FilterCollectionInnerCell.swift in Sources */,
 				EC2E989D370ED4D69B8CDDA78B120182 /* FilterCollectionView.swift in Sources */,
 				FC6A4054C3B4DCC27D6136EC94DC874B /* FilteredInputViewController.swift in Sources */,
+				65FF951E22E89F0000032989 /* DrawingCanvas.swift in Sources */,
 				A41930F349D6646D1B0A594D841818FD /* FilterFactory.swift in Sources */,
 				441CE9AF09CA6B3BC71049D7CA302CF2 /* FilterItem.swift in Sources */,
 				097FC397187A78F545972995E1B28114 /* FilterProtocol.swift in Sources */,

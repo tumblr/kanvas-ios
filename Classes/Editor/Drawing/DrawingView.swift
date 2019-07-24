@@ -25,9 +25,6 @@ protocol DrawingViewDelegate: class {
     /// Called when the gradient button (that opens the color picker) is selected
     func didTapColorPickerButton()
     
-    /// Called when the cross button (that closes the color picker) is selected
-    func didTapCloseColorPickerButton()
-    
     /// Called when the eye dropper button is selected
     func didTapEyeDropper()
     
@@ -58,9 +55,6 @@ private struct DrawingViewConstants {
     static let verticalSelectorWidth: CGFloat = 34
     static let horizontalSelectorPadding: CGFloat = 14
     static let horizontalSelectorHeight: CGFloat = CircularImageView.size
-    
-    // Texture
-    static let textureSelectorPadding: CGFloat = 7
     
     // Color selecter
     static let colorSelecterSize: CGFloat = 80
@@ -107,6 +101,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     private let bottomMenuContainer: UIView
     private let colorPickerContainer: UIView
     
+    // Stroke & Texture
     let strokeSelectorContainer: UIView
     let textureSelectorContainer: UIView
     
@@ -503,7 +498,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     }
     
     @objc func closeColorPickerButtonTapped(recognizer: UITapGestureRecognizer) {
-        delegate?.didTapCloseColorPickerButton()
+        showColorPickerContainer(false)
+        showBottomMenu(true)
     }
     
     @objc func eyeDropperTapped(recognizer: UITapGestureRecognizer) {
@@ -670,25 +666,5 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     private func onDrawing(active: Bool) {
         showTopButtons(!active)
         showBottomPanel(!active)
-    }
-}
-
-
-protocol DrawingCanvasDelegate: class {
-    func onCanvasTouchesBegan()
-    func onCanvasTouchesEnded()
-}
-
-/// View that shows/hides the menus when touched
-final class DrawingCanvas: UIView {
-    
-    weak var delegate: DrawingCanvasDelegate?
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        delegate?.onCanvasTouchesBegan()
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        delegate?.onCanvasTouchesEnded()
     }
 }
