@@ -21,12 +21,11 @@ protocol EditorControllerDelegate: class {
     func dismissButtonPressed()
 }
 
-
 /// A view controller to edit the segments
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate {
     
     private lazy var editorView: EditorView = {
-        let editorView = EditorView()
+        let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm)
         editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
@@ -151,8 +150,16 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     // MARK: - CameraEditorViewDelegate
-    
+
+    func postButtonPressed() {
+        startExporting()
+    }
+
     func confirmButtonPressed() {
+        startExporting()
+    }
+
+    private func startExporting() {
         player.stop()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {

@@ -7,6 +7,7 @@
 import Foundation
 import KanvasCamera
 import TumblrTheme
+import Photos
 
 @objc protocol DashboardPagingController: class {
     func setPageSlideEnabled(_ pageSlideEnabled: Bool)
@@ -130,7 +131,15 @@ extension SplitViewController: MockDashboardViewControllerDelegate {
 
 extension SplitViewController: CameraControllerDelegate {
     func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
-        assertionFailure("didCreateMedia not implemented")
+        if let media = media {
+            save(media: media)
+            self.kanvasController.hideOverlay { }
+            self.navigateFromKanvas()
+        }
+        else {
+            assertionFailure("Failed to create media")
+            completion()
+        }
     }
 
     func dismissButtonPressed() {
@@ -147,5 +156,47 @@ extension SplitViewController: CameraControllerDelegate {
 
     func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
         completion(nil)
+    }
+
+    private func save(media: KanvasCameraMedia) {
+        PHPhotoLibrary.requestAuthorization { authorizationStatus in
+            switch authorizationStatus {
+            case .notDetermined:
+                print("Photo Library Authorization: Not Determined... not saving!!")
+                return
+            case .restricted:
+                print("Photo Library Authorization: Restricted... not saving!!")
+                return
+            case .denied:
+                print("Photo Library Authorization: Denied... not saving!!")
+                return
+            case .authorized:
+                print("Photo Library Authorization: Authorized")
+            }
+        }
+        switch media {
+        case let .image(url):
+            moveToLibrary(url: url, resourceType: .photo)
+        case let .video(url):
+            moveToLibrary(url: url, resourceType: .video)
+        }
+    }
+
+    private func moveToLibrary(url: URL, resourceType: PHAssetResourceType) {
+        PHPhotoLibrary.shared().performChanges({
+            let req = PHAssetCreationRequest.forAsset()
+            let options = PHAssetResourceCreationOptions()
+            options.shouldMoveFile = true
+            req.addResource(with: resourceType, fileURL: url, options: options)
+        }) { (success, error) in
+            guard success else {
+                guard let err = error else {
+                    assertionFailure("Neigher a success or failure!")
+                    return
+                }
+                assertionFailure("\(err)")
+                return
+            }
+        }
     }
 }
