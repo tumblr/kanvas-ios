@@ -322,6 +322,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Starts video recording using the CameraRecordingProtocol type
     ///
+    /// - Parameter mode: current camera mode
     /// - Returns: return true if successfully started recording
     func startRecording(on mode: CameraMode) -> Bool {
         guard let recorder = self.recorder else { return false }
