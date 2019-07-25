@@ -45,6 +45,7 @@ final class EditorView: UIView {
     private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
     let filterCollectionContainer = IgnoreTouchesView()
+    let drawingMenuContainer = IgnoreTouchesView()
     
     private var disposables: [NSKeyValueObservation] = []
     weak var delegate: EditorViewDelegate?
@@ -70,6 +71,7 @@ final class EditorView: UIView {
         setUpCollection()
         setUpFilterCollection()
         setUpFilterSelectionCircle()
+        setUpDrawingMenu()
     }
     
     // MARK: - views
@@ -93,7 +95,7 @@ final class EditorView: UIView {
     
     private func setUpCloseMenuButton() {
         closeMenuButton.accessibilityLabel = "Close Menu Button"
-        closeMenuButton.setImage(KanvasCameraImages.confirmImage, for: .normal)
+        closeMenuButton.setImage(KanvasCameraImages.editorConfirmImage, for: .normal)
         closeMenuButton.imageView?.contentMode = .scaleAspectFit
         closeMenuButton.alpha = 0
         
@@ -169,6 +171,21 @@ final class EditorView: UIView {
             filterSelectionCircle.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
             filterSelectionCircle.heightAnchor.constraint(equalToConstant: EditorViewConstants.circleSize),
             filterSelectionCircle.widthAnchor.constraint(equalToConstant: EditorViewConstants.circleSize)
+        ])
+    }
+    
+    private func setUpDrawingMenu() {
+        drawingMenuContainer.backgroundColor = .clear
+        drawingMenuContainer.accessibilityIdentifier = "Drawing Menu Container"
+        drawingMenuContainer.clipsToBounds = false
+        
+        addSubview(drawingMenuContainer)
+        drawingMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            drawingMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            drawingMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            drawingMenuContainer.topAnchor.constraint(equalTo: topAnchor),
+            drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     

@@ -265,6 +265,22 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return false
     }
+    
+    func didDismissColorSelecterTooltip() {
+        
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        return false
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        return false
+    }
 
     var dismissCalled = false
     var videoURL: URL? = nil
