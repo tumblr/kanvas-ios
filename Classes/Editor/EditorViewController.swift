@@ -19,10 +19,26 @@ protocol EditorControllerDelegate: class {
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
+    
+    /// Called after the color selecter tooltip is dismissed
+    func didDismissColorSelecterTooltip()
+    
+    /// Called to ask if color selecter tooltip should be shown
+    ///
+    /// - Returns: Bool for tooltip
+    func editorShouldShowColorSelecterTooltip() -> Bool
+    
+    /// Called after the stroke animation has ended
+    func didEndStrokeSelectorAnimation()
+    
+    /// Called to ask if stroke selector animation should be shown
+    ///
+    /// - Returns: Bool for animation
+    func editorShouldShowStrokeSelectorAnimation() -> Bool
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate, DrawingControllerDelegate {
     
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm)
@@ -43,12 +59,19 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         return controller
     }()
     
+    private lazy var drawingController: DrawingController = {
+        let controller = DrawingController()
+        controller.delegate = self
+        return controller
+    }()
+    
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
     
     private let settings: CameraSettings
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let cameraMode: CameraMode?
+    private var openedMenu: EditionOption?
 
     private let player: GLPlayer
     private var filterType: FilterType? {
@@ -126,6 +149,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         
         load(childViewController: collectionController, into: editorView.collectionContainer)
         load(childViewController: filterCollectionController, into: editorView.filterCollectionContainer)
+        load(childViewController: drawingController, into: editorView.drawingMenuContainer)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -228,9 +252,19 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func closeMenuButtonPressed() {
-        filterCollectionController.showView(false)
-        showSelectionCircle(false)
-        showCloseMenuButton(false)
+        guard let editionOption = openedMenu else { return }
+        
+        switch editionOption {
+        case .filter:
+            filterCollectionController.showView(false)
+            showSelectionCircle(false)
+            showCloseMenuButton(false)
+        case .drawing:
+            drawingController.showView(false)
+        case .media:
+            showCloseMenuButton(false)
+        }
+        
         collectionController.showView(true)
         showConfirmButton(true)
         showCloseButton(true)
@@ -239,16 +273,21 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
+        openedMenu = editionOption
+        collectionController.showView(false)
+        showConfirmButton(false)
+        showCloseButton(false)
+        
         switch editionOption {
         case .filter:
-            collectionController.showView(false)
-            showConfirmButton(false)
-            showCloseButton(false)
             filterCollectionController.showView(true)
-            showSelectionCircle(true)
             showCloseMenuButton(true)
+            showSelectionCircle(true)
+        case .drawing:
+            showCloseMenuButton(false)
+            drawingController.showView(true)
         case .media:
-            break
+            showCloseMenuButton(true)
         }
     }
     
@@ -256,6 +295,36 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didSelectFilter(_ filterItem: FilterItem) {
         self.filterType = filterItem.type
+    }
+    
+    // MARK: - DrawingControllerDelegate
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowColorSelecterTooltip()
+    }
+    
+    func didDismissColorSelecterTooltip() {
+        delegate?.didDismissColorSelecterTooltip()
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowStrokeSelectorAnimation()
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        delegate?.didEndStrokeSelectorAnimation()
+    }
+    
+    // MARK: - DrawingViewCollectionDelegate
+    
+    func didTapCloseButton() {
+        closeMenuButtonPressed()
+    }
+    
+    func getColor(from point: CGPoint) -> UIColor {
+        return .black // Return correct color from Player
     }
     
     // MARK: - Public interface

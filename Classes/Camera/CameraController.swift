@@ -44,7 +44,23 @@ public protocol CameraControllerDelegate: class {
     ///
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
-
+    
+    /// Called after the color selecter tooltip is dismissed
+    func didDismissColorSelecterTooltip()
+    
+    /// Called to ask if color selecter tooltip should be shown
+    ///
+    /// - Returns: Bool for tooltip
+    func editorShouldShowColorSelecterTooltip() -> Bool
+    
+    /// Called after the stroke animation has ended
+    func didEndStrokeSelectorAnimation()
+    
+    /// Called to ask if stroke selector animation should be shown
+    ///
+    /// - Returns: Bool for animation
+    func editorShouldShowStrokeSelectorAnimation() -> Bool
+    
     func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
 }
 
@@ -695,6 +711,24 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.dismiss(animated: true)
         }
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowColorSelecterTooltip()
+    }
+    
+    func didDismissColorSelecterTooltip() {
+        delegate?.didDismissColorSelecterTooltip()
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowStrokeSelectorAnimation()
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        delegate?.didEndStrokeSelectorAnimation()
     }
     
     // MARK: CameraZoomHandlerDelegate

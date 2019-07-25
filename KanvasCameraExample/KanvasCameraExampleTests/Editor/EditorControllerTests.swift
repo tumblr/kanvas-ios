@@ -23,6 +23,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         settings.features.editor = true
         settings.features.editorFilters = true
         settings.features.editorMedia = true
+        settings.features.editorDrawing = true
         return settings
     }
     
@@ -221,5 +222,21 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     
     func dismissButtonPressed() {
         closeCalled = true
+    }
+    
+    func didDismissColorSelecterTooltip() {
+        
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        return false
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        return false
     }
 }
