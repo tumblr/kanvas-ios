@@ -24,13 +24,21 @@ import Foundation
     case stitch
     case gif
     
-
+    /// Group
+    ///
+    /// - videoGroup: The mode creates a video from a sequence
+    /// - photoGroup: The mode creates a photo
+    /// - gifGroup: The creates a gif animation
     @objc enum Group: Int {
         case videoGroup = 0
         case photoGroup
         case gifGroup
     }
     
+    /// Quantity
+    ///
+    /// - singleMedia: The mode allows just one photo, video or gif
+    /// - multiple: The mode creates a sequence of photos and/or videos
     @objc enum Quantity: Int {
         case singleMedia = 0
         case multipleMedia
