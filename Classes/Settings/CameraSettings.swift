@@ -28,7 +28,7 @@ import Foundation
     ///
     /// - videoGroup: The mode creates a video from a sequence
     /// - photoGroup: The mode creates a photo
-    /// - gifGroup: The creates a gif animation
+    /// - gifGroup: The mode creates a gif animation
     @objc enum Group: Int {
         case videoGroup = 0
         case photoGroup
