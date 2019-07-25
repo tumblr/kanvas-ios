@@ -220,7 +220,7 @@ extension CameraRecorder: CameraRecordingProtocol {
                     strongSelf.recordingDelegate?.cameraWillFinishVideo()
                     strongSelf.removeVideoOutputHandler(videoOutputHandler)
                     if success, let url = videoOutputHandler.assetWriterURL() {
-                        if [.stopMotion, .stitch].contains(strongSelf.currentRecordingMode) {
+                        if strongSelf.currentRecordingMode.quantity == .multiple {
                             strongSelf.segmentsHandler.addNewVideoSegment(url: url)
                         }
                         completion(url)
