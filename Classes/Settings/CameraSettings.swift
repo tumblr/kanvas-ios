@@ -264,7 +264,7 @@ public extension CameraSettings {
     /**
      Enables/disables GIF mode.
      */
-    var enableGIFMode: Bool {
+    var enableGifMode: Bool {
         set {
             setMode(.gif, to: newValue)
         }
