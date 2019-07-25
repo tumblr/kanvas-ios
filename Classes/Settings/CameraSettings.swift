@@ -29,7 +29,7 @@ import Foundation
     /// - video: The mode creates a video from a sequence
     /// - photo: The mode creates a photo
     /// - gif: The mode creates a gif animation
-    @objc enum Group: Int {
+    @objc public enum Group: Int {
         case video = 0
         case photo
         case gif
@@ -39,12 +39,12 @@ import Foundation
     ///
     /// - single: The mode allows just one photo, video or gif
     /// - multiple: The mode creates a sequence of photos and/or videos
-    @objc enum Quantity: Int {
+    @objc public enum Quantity: Int {
         case single = 0
         case multiple
     }
     
-    var group: Group {
+    public var group: Group {
         switch self {
         case .stitch, .normal, .stopMotion:
             return .video
@@ -55,7 +55,7 @@ import Foundation
         }
     }
     
-    var quantity: Quantity {
+    public var quantity: Quantity {
         switch self {
         case .photo, .normal, .gif, .loop:
             return .single
