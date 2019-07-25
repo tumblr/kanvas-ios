@@ -279,9 +279,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// - throws:
     func configureMode(_ mode: CameraMode) throws {
         switch mode.group {
-        case .photoGroup:
+        case .photo:
             currentCameraOutput = .photo
-        case .videoGroup, .gifGroup:
+        case .video, .gif:
             currentCameraOutput = .video
         }
         do { try configureCurrentOutput() } catch {
