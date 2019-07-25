@@ -23,11 +23,42 @@ import Foundation
     case normal
     case stitch
     case gif
+    
 
+    @objc enum Group: Int {
+        case videoGroup = 0
+        case photoGroup
+        case gifGroup
+    }
+    
+    @objc enum Quantity: Int {
+        case singleMedia = 0
+        case multipleMedia
+    }
+    
+    var group: Group {
+        switch self {
+        case .stitch, .normal, .stopMotion:
+            return .videoGroup
+        case .photo:
+            return .photoGroup
+        case .loop, .gif:
+            return .gifGroup
+        }
+    }
+    
+    var quantity: Quantity {
+        switch self {
+        case .photo, .normal, .gif, .loop:
+            return .singleMedia
+        case .stitch, .stopMotion:
+            return .multipleMedia
+        }
+    }
+    
     private var order: Int {
         return self.rawValue
     }
-
 }
 
 /// Camera Features

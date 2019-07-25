@@ -18,10 +18,10 @@ struct KanvasCameraTimes {
     static let gifRecordingTime: TimeInterval = 1
 
     static func recordingTime(for mode: CameraMode) -> TimeInterval {
-        switch mode {
-        case .photo: return 0
-        case .loop, .gif: return gifRecordingTime
-        case .stopMotion, .normal, .stitch: return videoRecordingTime
+        switch mode.group {
+        case .photoGroup: return 0
+        case .gifGroup: return gifRecordingTime
+        case .videoGroup: return videoRecordingTime
         }
     }
     // MARK: - Stop motion

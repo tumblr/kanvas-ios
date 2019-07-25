@@ -131,12 +131,12 @@ final class CameraRecorder: NSObject {
 
     @objc private func appWillResignActive() {
         if isRecording() {
-            switch currentRecordingMode {
-            case .loop, .gif:
+            switch currentRecordingMode.group {
+            case .gifGroup:
                 cancelGif()
-            case .stopMotion, .normal, .stitch:
+            case .videoGroup:
                 stopRecordingVideo(completion: { _ in })
-            default:
+            case .photoGroup:
                 break
             }
         }
@@ -165,17 +165,17 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func isRecording() -> Bool {
-        switch currentRecordingMode {
-        case .stopMotion, .normal, .stitch:
+        switch currentRecordingMode.group {
+        case .videoGroup:
             if let handler = currentVideoOutputHandler {
                 return handler.recording
             }
             else {
                 return false
             }
-        case .photo:
+        case .photoGroup:
             return takingPhoto
-        case .loop, .gif:
+        case .gifGroup:
             return gifVideoOutputHandler.recording
         }
     }
@@ -260,7 +260,7 @@ extension CameraRecorder: CameraRecordingProtocol {
                 return
             }
             
-            if [.stopMotion, .stitch].contains(self.currentRecordingMode) {
+            if self.currentRecordingMode.quantity == .multipleMedia {
                 self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
                     completion(success ? filteredImage : nil)
                 })
@@ -303,30 +303,31 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        switch currentRecordingMode {
-        case .stopMotion, .normal, .stitch:
+        switch currentRecordingMode.group {
+        case .videoGroup:
             currentVideoOutputHandler?.processVideoSampleBuffer(sampleBuffer)
-        case .loop, .gif:
+        case .gifGroup:
             gifVideoOutputHandler.processVideoSampleBuffer(sampleBuffer)
-        default: break
+        case .photoGroup: break
         }
     }
 
     func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        switch currentRecordingMode {
-        case .stopMotion, .normal, .stitch:
+        switch currentRecordingMode.group {
+        case .videoGroup:
             currentVideoOutputHandler?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
-        case .loop, .gif:
+        case .gifGroup:
             gifVideoOutputHandler.processVideoPixelBuffer(pixelBuffer)
-        default: break
+        case .photoGroup: break
         }
     }
 
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        switch currentRecordingMode {
-        case .stopMotion, .normal, .stitch:
+        switch currentRecordingMode.group {
+        case .videoGroup:
             currentVideoOutputHandler?.processAudioSampleBuffer(sampleBuffer)
-        default: break
+        case .gifGroup, .photoGroup:
+            break
         }
     }
 
@@ -336,7 +337,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func currentClipDuration() -> TimeInterval? {
-        guard [.stopMotion, .normal, .stitch].contains(currentRecordingMode) else {
+        guard currentRecordingMode.group == .videoGroup else {
             return nil
         }
         return currentVideoOutputHandler?.currentClipDuration()

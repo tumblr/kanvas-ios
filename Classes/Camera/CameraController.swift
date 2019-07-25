@@ -352,7 +352,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                            filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
                 if let image = image {
-                    if [.photo, .normal].contains(strongSelf.currentMode) {
+                    if strongSelf.currentMode.quantity == .singleMedia {
                         strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil)])
                     }
                     else {
@@ -471,7 +471,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - ModeSelectorAndShootControllerDelegate
 
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
-        if  [.stopMotion, .normal, .stitch].contains(mode) {
+        if  mode.group == .videoGroup {
             cameraZoomHandler.setZoom(point: currentPoint, gesture: gesture)
         }
     }
@@ -481,31 +481,32 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didTapForMode(_ mode: CameraMode) {
-        switch mode {
-        case .loop, .gif:
+        switch mode.group {
+        case .gifGroup:
             takeGif()
-        case .photo, .stopMotion, .normal, .stitch:
+        case .photoGroup, .videoGroup:
             takePhoto()
         }
     }
 
     func didStartPressingForMode(_ mode: CameraMode) {
-        switch mode {
-        case .loop, .gif:
+        switch mode.group {
+        case .gifGroup:
             takeGif(useLongerDuration: true)
-        case .stopMotion, .normal, .stitch:
+        case .videoGroup:
             prepareHapticFeedback()
             let _ = cameraInputController.startRecording(on: mode)
             performUIUpdate { [weak self] in
                 self?.updateRecordState(event: .started)
             }
-        default: break
+        case .photoGroup:
+            break
         }
     }
 
     func didEndPressingForMode(_ mode: CameraMode) {
-        switch mode {
-        case .stopMotion, .normal, .stitch:
+        switch mode.group {
+        case .videoGroup:
             cameraInputController.endRecording(completion: { [weak self] url in
                 guard let strongSelf = self else { return }
                 if let videoURL = url {
@@ -518,7 +519,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 }
                 performUIUpdate {
                     if let url = url {
-                        if mode == .normal {
+                        if mode.quantity == .singleMedia {
                             strongSelf.showPreviewWithSegments([CameraSegment.video(url)])
                             strongSelf.updateRecordState(event: .ended)
                             strongSelf.updateUI(forClipsPresent: false)
@@ -539,10 +540,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     func didDropToDelete(_ mode: CameraMode) {
-        switch mode {
-        case .stopMotion, .stitch:
+        switch mode.quantity {
+        case .multipleMedia:
             clipsController.removeDraggingClip()
-        default: break
+        case .singleMedia:
+            break
         }
     }
     
@@ -753,7 +755,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func pick(image: UIImage) {
-        if [.photo, .normal].contains(currentMode) {
+        if currentMode.quantity == .singleMedia {
             performUIUpdate {
                 self.showPreviewWithSegments([CameraSegment.image(image, nil)])
             }
@@ -771,7 +773,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func pick(video url: URL) {
-        if currentMode == .normal {
+        if currentMode.quantity == .singleMedia {
             self.showPreviewWithSegments([CameraSegment.video(url)])
         }
         else {
