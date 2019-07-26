@@ -15,8 +15,6 @@ protocol EditorViewDelegate: class {
     func confirmButtonPressed()
     /// A function that is called when the close button is pressed
     func closeButtonPressed()
-    /// A function that is called when the button to close a menu is pressed
-    func closeMenuButtonPressed()
 }
 
 /// Constants for EditorView
@@ -40,7 +38,6 @@ final class EditorView: UIView {
     weak var playerView: GLPlayerView?
     
     private let confirmButton = UIButton()
-    private let closeMenuButton = UIButton()
     private let closeButton = UIButton()
     private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
@@ -68,7 +65,6 @@ final class EditorView: UIView {
         drawingCanvas.add(into: self)
 
         setUpCloseButton()
-        setUpCloseMenuButton()
         setUpConfirmButton()
         setUpCollection()
         setUpFilterCollection()
@@ -92,23 +88,6 @@ final class EditorView: UIView {
             closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
-        ])
-    }
-    
-    private func setUpCloseMenuButton() {
-        closeMenuButton.accessibilityLabel = "Close Menu Button"
-        closeMenuButton.setImage(KanvasCameraImages.editorConfirmImage, for: .normal)
-        closeMenuButton.imageView?.contentMode = .scaleAspectFit
-        closeMenuButton.alpha = 0
-        
-        addSubview(closeMenuButton)
-        closeMenuButton.addTarget(self, action: #selector(closeMenuButtonPressed), for: .touchUpInside)
-        closeMenuButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            closeMenuButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.closeMenuButtonHorizontalMargin),
-            closeMenuButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.closeMenuButtonSize),
-            closeMenuButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.closeMenuButtonSize),
-            closeMenuButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor)
         ])
     }
     
@@ -196,10 +175,6 @@ final class EditorView: UIView {
         delegate?.closeButtonPressed()
     }
     
-    @objc private func closeMenuButtonPressed() {
-        delegate?.closeMenuButtonPressed()
-    }
-    
     @objc private func confirmButtonPressed() {
         delegate?.confirmButtonPressed()
     }
@@ -212,15 +187,6 @@ final class EditorView: UIView {
     func showConfirmButton(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.confirmButton.alpha = show ? 1 : 0
-        }
-    }
-    
-    /// shows or hides the button to close a menu (checkmark)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showCloseMenuButton(_ show: Bool) {
-        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-            self.closeMenuButton.alpha = show ? 1 : 0
         }
     }
     

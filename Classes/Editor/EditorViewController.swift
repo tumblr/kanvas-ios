@@ -264,11 +264,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         case .filter:
             filterCollectionController.showView(false)
             showSelectionCircle(false)
-            showCloseMenuButton(false)
         case .drawing:
             drawingController.showView(false)
         case .media:
-            showCloseMenuButton(false)
+            break
         }
         
         collectionController.showView(true)
@@ -287,13 +286,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         switch editionOption {
         case .filter:
             filterCollectionController.showView(true)
-            showCloseMenuButton(true)
             showSelectionCircle(true)
         case .drawing:
-            showCloseMenuButton(false)
             drawingController.showView(true)
         case .media:
-            showCloseMenuButton(true)
+            break
         }
     }
     
@@ -340,13 +337,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
         editorView.showConfirmButton(show)
-    }
-    
-    /// shows or hides the button to close a menu (checkmark)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showCloseMenuButton(_ show: Bool) {
-        editorView.showCloseMenuButton(show)
     }
     
     /// shows or hides the close button (back caret)
