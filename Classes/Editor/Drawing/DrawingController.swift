@@ -24,8 +24,8 @@ protocol DrawingControllerDelegate: class {
     /// - Returns: Bool for animation
     func editorShouldShowStrokeSelectorAnimation() -> Bool
     
-    /// Called after the close button was tapped
-    func didTapCloseButton()
+    /// Called after the confirm button was tapped
+    func didConfirmDrawing()
     
     /// Called when the color selecter is panned
     ///
@@ -377,7 +377,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     func didTapConfirmButton() {
         textureSelectorController.showSelector(false)
-        delegate?.didTapCloseButton()
+        delegate?.didConfirmDrawing()
     }
     
     func didTapUndoButton() {

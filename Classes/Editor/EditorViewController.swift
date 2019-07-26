@@ -39,7 +39,7 @@ protocol EditorControllerDelegate: class {
 
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate, DrawingControllerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate {
     
     private lazy var editorView: EditorView = {
         let editorView = EditorView()
@@ -54,8 +54,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         return controller
     }()
     
-    private lazy var filterCollectionController: EditorFilterCollectionController = {
-        let controller = EditorFilterCollectionController(settings: self.settings)
+    private lazy var filterController: EditorFilterController = {
+        let controller = EditorFilterController(settings: self.settings)
         controller.delegate = self
         return controller
     }()
@@ -150,7 +150,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         drawingController.drawingLayer = editorView.drawingCanvas.layer
         
         load(childViewController: collectionController, into: editorView.collectionContainer)
-        load(childViewController: filterCollectionController, into: editorView.filterCollectionContainer)
+        load(childViewController: filterController, into: editorView.filterMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         
         setUpColorCarousel()
@@ -187,9 +187,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         loadingView.stopLoading()
     }
     
-    // MARK: - CameraEditorViewDelegate
+    // MARK: - EditorViewDelegate
     
-    func confirmButtonPressed() {
+    func didTapConfirmButton() {
         player.stop()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
@@ -252,7 +252,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.present(alertController, animated: true, completion: .none)
     }
     
-    func closeButtonPressed() {
+    func didTapCloseButton() {
         player.stop()
         delegate?.dismissButtonPressed()
     }
@@ -262,8 +262,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         
         switch editionOption {
         case .filter:
-            filterCollectionController.showView(false)
-            showSelectionCircle(false)
+            filterController.showView(false)
         case .drawing:
             drawingController.showView(false)
         case .media:
@@ -285,8 +284,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         
         switch editionOption {
         case .filter:
-            filterCollectionController.showView(true)
-            showSelectionCircle(true)
+            filterController.showView(true)
         case .drawing:
             drawingController.showView(true)
         case .media:
@@ -294,7 +292,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         }
     }
     
-    // MARK: - EditorFilterCollectionControllerDelegate
+    // MARK: - EditorFilterControllerDelegate
+    
+    func didConfirmFilters() {
+        closeMenuButtonPressed()
+    }
     
     func didSelectFilter(_ filterItem: FilterItem) {
         self.filterType = filterItem.type
@@ -322,7 +324,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - DrawingViewCollectionDelegate
     
-    func didTapCloseButton() {
+    func didConfirmDrawing() {
         closeMenuButtonPressed()
     }
     
@@ -344,12 +346,5 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
-    }
-    
-    /// shows or hides the filter selection circle
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showSelectionCircle(_ show: Bool) {
-        editorView.showSelectionCircle(show)
     }
 }

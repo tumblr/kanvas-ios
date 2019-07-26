@@ -12,9 +12,9 @@ import UIKit
 
 protocol EditorViewDelegate: class {
     /// A function that is called when the confirm button is pressed
-    func confirmButtonPressed()
+    func didTapConfirmButton()
     /// A function that is called when the close button is pressed
-    func closeButtonPressed()
+    func didTapCloseButton()
 }
 
 /// Constants for EditorView
@@ -23,12 +23,6 @@ private struct EditorViewConstants {
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
-    static let closeMenuButtonSize: CGFloat = 36
-    static let closeMenuButtonHorizontalMargin: CGFloat = 20
-    static let circleCornerRadius: CGFloat = 27.5
-    static let circleSize: CGFloat = 55
-    static let circleBorderWidth: CGFloat = 3
-    static let collectionViewHeight = CameraFilterCollectionCell.minimumHeight + 10
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -39,9 +33,8 @@ final class EditorView: UIView {
     
     private let confirmButton = UIButton()
     private let closeButton = UIButton()
-    private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
-    let filterCollectionContainer = IgnoreTouchesView()
+    let filterMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
     
@@ -67,8 +60,7 @@ final class EditorView: UIView {
         setUpCloseButton()
         setUpConfirmButton()
         setUpCollection()
-        setUpFilterCollection()
-        setUpFilterSelectionCircle()
+        setUpFilterMenu()
         setUpDrawingMenu()
     }
     
@@ -122,36 +114,18 @@ final class EditorView: UIView {
         ])
     }
     
-    func setUpFilterCollection() {
-        filterCollectionContainer.backgroundColor = .clear
-        filterCollectionContainer.accessibilityIdentifier = "Edition Filter Collection Container"
-        filterCollectionContainer.clipsToBounds = false
+    private func setUpFilterMenu() {
+        filterMenuContainer.backgroundColor = .clear
+        filterMenuContainer.accessibilityIdentifier = "Filter Menu Container"
+        filterMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        filterMenuContainer.clipsToBounds = false
         
-        addSubview(filterCollectionContainer)
-        filterCollectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(filterMenuContainer)
         NSLayoutConstraint.activate([
-            filterCollectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            filterCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            filterCollectionContainer.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
-            filterCollectionContainer.heightAnchor.constraint(equalToConstant: EditorViewConstants.collectionViewHeight)
-        ])
-    }
-    
-    func setUpFilterSelectionCircle() {
-        filterSelectionCircle.accessibilityIdentifier = "Edition Filter Selection Circle"
-        filterSelectionCircle.clipsToBounds = false
-        filterSelectionCircle.layer.cornerRadius = EditorViewConstants.circleCornerRadius
-        filterSelectionCircle.layer.borderWidth = EditorViewConstants.circleBorderWidth
-        filterSelectionCircle.layer.borderColor = UIColor.white.cgColor
-        filterSelectionCircle.alpha = 0
-        
-        addSubview(filterSelectionCircle)
-        filterSelectionCircle.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            filterSelectionCircle.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorFilterCollectionController.leftInset + EditorFilterCollectionCell.cellPadding),
-            filterSelectionCircle.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
-            filterSelectionCircle.heightAnchor.constraint(equalToConstant: EditorViewConstants.circleSize),
-            filterSelectionCircle.widthAnchor.constraint(equalToConstant: EditorViewConstants.circleSize)
+            filterMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            filterMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            filterMenuContainer.topAnchor.constraint(equalTo: topAnchor),
+            filterMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     
@@ -172,11 +146,11 @@ final class EditorView: UIView {
     
     // MARK: - buttons
     @objc private func closeButtonPressed() {
-        delegate?.closeButtonPressed()
+        delegate?.didTapCloseButton()
     }
     
     @objc private func confirmButtonPressed() {
-        delegate?.confirmButtonPressed()
+        delegate?.didTapConfirmButton()
     }
     
     // MARK: - Public interface
@@ -196,15 +170,6 @@ final class EditorView: UIView {
     func showCloseButton(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.closeButton.alpha = show ? 1 : 0
-        }
-    }
-    
-    /// shows or hides the filter selection circle
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showSelectionCircle(_ show: Bool) {
-        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-            self.filterSelectionCircle.alpha = show ? 1 : 0
         }
     }
 }

@@ -87,7 +87,6 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         filterCollectionView.collectionView.register(cell: EditorFilterCollectionCell.self)
         filterCollectionView.collectionView.delegate = self
         filterCollectionView.collectionView.dataSource = self
-        setUpView()
         setUpRecognizers()
     }
     
@@ -97,10 +96,6 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
         changeSize(IndexPath(item: EditorFilterCollectionControllerConstants.initialCell, section: EditorFilterCollectionControllerConstants.section))
-    }
-    
-    private func setUpView() {
-        filterCollectionView.alpha = 0
     }
     
     private func setUpRecognizers() {
