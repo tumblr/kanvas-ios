@@ -32,6 +32,22 @@ protocol DrawingViewDelegate: class {
     ///
     /// - Parameter recognizer: the pan gesture recognizer
     func didPanColorSelecter(recognizer: UIPanGestureRecognizer)
+    
+    /// Called when the drawing canvas is tapped
+    ///
+    /// - Parameter recognizer: the tap gesture recognizer
+    func didTapDrawingCanvas(recognizer: UITapGestureRecognizer)
+    
+    /// Called when the drawing canvas is panned
+    ///
+    /// - Parameter recognizer: the pan gesture recognizer
+    func didPanDrawingCanvas(recognizer: UIPanGestureRecognizer)
+    
+    /// Called when the drawing canvas is long pressed
+    ///
+    /// - Parameter recognizer: the long press gesture recognizer
+    func didLongPressDrawingCanvas(recognizer: UILongPressGestureRecognizer)
+    
 }
 
 private struct DrawingViewConstants {
@@ -128,8 +144,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         confirmButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
         undoButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
         eraseButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        strokeSelectorContainer = UIView()
-        textureSelectorContainer = UIView()
+        strokeSelectorContainer = IgnoreTouchesView()
+        textureSelectorContainer = IgnoreTouchesView()
         closeColorPickerButton = CircularImageView()
         eyeDropperButton = CircularImageView()
         colorCollection = UIView()
@@ -208,6 +224,22 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             drawingCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
             drawingCanvas.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
+        
+        let panRecognizer = UIPanGestureRecognizer()
+        let longPressRecognizer = UILongPressGestureRecognizer()
+        let tapRecognizer = UITapGestureRecognizer()
+        
+        longPressRecognizer.addTarget(self, action: #selector(drawingCanvasLongPressed(recognizer:)))
+        panRecognizer.addTarget(self, action: #selector(drawingCanvasPanned(recognizer:)))
+        tapRecognizer.addTarget(self, action: #selector(drawingCanvasTapped(recognizer:)))
+        
+        longPressRecognizer.cancelsTouchesInView = false
+        panRecognizer.cancelsTouchesInView = false
+        tapRecognizer.cancelsTouchesInView = false
+        
+        drawingCanvas.addGestureRecognizer(panRecognizer)
+        drawingCanvas.addGestureRecognizer(longPressRecognizer)
+        drawingCanvas.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the top buttons stack view
@@ -508,6 +540,18 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     @objc func colorSelecterPanned(recognizer: UIPanGestureRecognizer) {
         delegate?.didPanColorSelecter(recognizer: recognizer)
+    }
+    
+    @objc func drawingCanvasTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapDrawingCanvas(recognizer: recognizer)
+    }
+    
+    @objc func drawingCanvasPanned(recognizer: UIPanGestureRecognizer) {
+        delegate?.didPanDrawingCanvas(recognizer: recognizer)
+    }
+    
+    @objc func drawingCanvasLongPressed(recognizer: UILongPressGestureRecognizer) {
+        delegate?.didLongPressDrawingCanvas(recognizer: recognizer)
     }
     
     // MARK: - View animations

@@ -24,7 +24,8 @@ private struct StrokeSelectorControllerConstants {
 final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelegate {
     
     weak var delegate: StrokeSelectorControllerDelegate?
-    
+    var sizePercent: CGFloat = 0
+
     private lazy var strokeSelectorView: StrokeSelectorView = {
         let view = StrokeSelectorView()
         view.delegate = self
@@ -60,6 +61,18 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
         strokeSelectorView.showAnimation()
     }
     
+    /// Calculates the stroke size based on the size selected
+    /// on the selector and the min and max values of the texture
+    ///
+    /// - Parameter minimum: smallest stroke size of the texture
+    /// - Parameter maximum: biggest stroke size of the texture
+    /// - Returns: stroke size
+    func getStrokeSize(minimum: CGFloat, maximum: CGFloat) -> CGFloat {
+        let maxIncrement = (maximum / minimum) - 1
+        let scale = 1.0 + maxIncrement * sizePercent / 100.0
+        return minimum * scale
+    }
+
     
     // MARK: - StrokeSelectorViewDelegate
     
@@ -93,7 +106,9 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
         let point = getSelectedLocation(with: recognizer, in: strokeSelectorView.selectorPannableArea)
         if strokeSelectorView.selectorPannableArea.bounds.contains(point) {
             strokeSelectorView.moveSelectorCircle(to: point)
-            setCircleSize(percent: 100.0 - point.y)
+            let percent = 100.0 - point.y
+            setCircleSize(percent: percent)
+            setStrokeSize(percent: percent)
         }
     }
     
@@ -117,5 +132,9 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
         let maxIncrement = (StrokeSelectorView.strokeCircleMaxSize / StrokeSelectorView.strokeCircleMinSize) - 1
         let scale = 1.0 + maxIncrement * percent / 100.0
         strokeSelectorView.transformStrokeCircle(CGAffineTransform(scaleX: scale, y: scale))
+    }
+    
+    private func setStrokeSize(percent: CGFloat) {
+        sizePercent = percent
     }
 }

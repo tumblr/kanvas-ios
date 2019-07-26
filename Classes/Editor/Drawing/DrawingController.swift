@@ -42,10 +42,19 @@ private struct DrawingControllerConstants {
 private enum DrawingMode {
     case draw
     case erase
+    
+    var blendMode: CGBlendMode {
+        switch self {
+        case .draw:
+            return .normal
+        case .erase:
+            return .clear
+        }
+    }
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, ColorPickerControllerDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, ColorPickerControllerDelegate, ColorCollectionControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -69,10 +78,18 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return controller
     }()
     
+    private lazy var colorCollectionController: ColorCollectionController = {
+        let controller = ColorCollectionController()
+        controller.delegate = self
+        return controller
+    }()
+    
     // Drawing
     var drawingLayer: CALayer?
+    private var drawingCollection: [UIImage]
     private var drawingColor: UIColor
     private var mode: DrawingMode
+    private var lastDrawingPoint: CGPoint
     
     // Color picker and selecter
     private var colorSelecterOrigin: CGPoint
@@ -81,9 +98,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     // MARK: Initializers
     
     init() {
+        drawingCollection = []
         drawingColor = .tumblrBrightBlue
         colorSelecterOrigin = .zero
         mode = .draw
+        colorSelecterOrigin = .zero
+        lastDrawingPoint = .zero
         
         super.init(nibName: .none, bundle: .none)
     }
@@ -108,10 +128,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
-        
+
         load(childViewController: strokeSelectorController, into: drawingView.strokeSelectorContainer)
         load(childViewController: textureSelectorController, into: drawingView.textureSelectorContainer)
         load(childViewController: colorPickerController, into: drawingView.colorPickerSelectorContainer)
+        load(childViewController: colorCollectionController, into: drawingView.colorCollection)
     }
     
     // MARK: - View
@@ -120,13 +141,106 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingView.alpha = 0
     }
     
+    
+    // MARK: - Drawing
+    
+    /// Sets the initial point for a line
+    ///
+    /// - Parameter point: location from which the line will start
+    private func prepareLine(on point: CGPoint) {
+        lastDrawingPoint = point
+    }
+    
+    /// Draws a line to a specified point
+    ///
+    /// - Parameter point: location where the line ends
+    private func drawLine(to endPoint: CGPoint) {
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+        
+        
+        let startPoint = lastDrawingPoint
+        let texture = textureSelectorController.texture
+        let strokeSize = strokeSelectorController.getStrokeSize(minimum: texture.minimumStroke, maximum: texture.maximumStroke)
+        texture.drawLine(context: context, from: startPoint, to: endPoint, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
+        
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingView.temporalImageView.image = image
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
+    /// Saves the drawing state and copies it to the layer
+    private func endLineDrawing() {
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds, blendMode: .normal, alpha: 1.0)
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingCollection.append(image)
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
+    /// Draws a point on a specified point
+    private func drawPoint(on point: CGPoint) {
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+        
+        let texture = textureSelectorController.texture
+        let strokeSize = strokeSelectorController.getStrokeSize(minimum: texture.minimumStroke, maximum: texture.maximumStroke)
+        texture.drawPoint(context: context, on: point, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
+        
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingView.temporalImageView.image = image
+            drawingCollection.append(image)
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
+    /// Paints the complete background with a color
+    private func fillBackground() {
+        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+        
+        context.setBlendMode(mode.blendMode)
+        context.setFillColor(drawingColor.cgColor)
+        context.fill(drawingView.drawingCanvas.bounds)
+        
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            drawingView.temporalImageView.image = image
+            drawingCollection.append(image)
+            drawingLayer?.contents = image.cgImage
+        }
+        UIGraphicsEndImageContext()
+    }
+    
     /// Sets a new color for drawing
     ///
     /// - Parameter color: the new color for drawing
-    private func setDrawingColor(_ color: UIColor) {
+    private func setDrawingColor(_ color: UIColor, addToColorCollection: Bool = false) {
         drawingColor = color
         mode = .draw
         changeEraseIcon(selected: false)
+        
+        if addToColorCollection {
+            colorCollectionController.addColor(color)
+        }
+    }
+    
+    /// Takes the drawing back to a previous state
+    func undo() {
+        guard drawingCollection.count > 0 else { return }
+        drawingCollection.removeLast()
+        drawingView.temporalImageView.image = drawingCollection.last
+        drawingLayer?.contents = drawingCollection.last?.cgImage
     }
     
     
@@ -217,12 +331,45 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     // MARK: - ColorPickerControllerDelegate
     
-    func didSelectColor(_ color: UIColor) {
+    func didSelectColor(_ color: UIColor, definitive: Bool) {
         setEyeDropperColor(color)
-        setDrawingColor(color)
+        setDrawingColor(color, addToColorCollection: definitive)
     }
     
     // MARK: - DrawingViewDelegate
+    
+    func didTapDrawingCanvas(recognizer: UITapGestureRecognizer) {
+        let currentPoint = recognizer.location(in: view)
+        drawPoint(on: currentPoint)
+    }
+    
+    func didPanDrawingCanvas(recognizer: UIPanGestureRecognizer) {
+        let currentPoint = recognizer.location(in: view)
+        switch recognizer.state {
+        case .began:
+            prepareLine(on: currentPoint)
+        case .changed:
+            drawLine(to: currentPoint)
+            prepareLine(on: currentPoint)
+        case .ended:
+            endLineDrawing()
+        case .possible, .failed, .cancelled:
+            break
+        @unknown default:
+            break
+        }
+    }
+    
+    func didLongPressDrawingCanvas(recognizer: UILongPressGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            fillBackground()
+        case .changed, .ended, .cancelled, .failed, .possible:
+            break
+        @unknown default:
+            break
+        }
+    }
     
     func didDismissColorSelecterTooltip() {
         delegate?.didDismissColorSelecterTooltip()
@@ -234,7 +381,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     }
     
     func didTapUndoButton() {
-        
+        undo()
     }
     
     func didTapEraseButton() {
@@ -248,6 +395,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         }
     }
     
+
     func didTapColorPickerButton() {
         showBottomMenu(false)
         textureSelectorController.showSelector(false)
@@ -268,6 +416,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         }
     }
     
+
     func didPanColorSelecter(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
@@ -283,7 +432,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             let currentLocation = moveColorSelecter(recognizer: recognizer)
             let color = getColor(at: currentLocation)
             setEyeDropperColor(color)
-            setDrawingColor(color)
+            setDrawingColor(color, addToColorCollection: true)
             
             showColorSelecter(false)
             showColorPickerContainer(true)
@@ -363,7 +512,21 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     }
     
     
+    // MARK: - ColorCollectionControllerDelegate
+    
+    func didSelectColor(_ color: UIColor) {
+        setEyeDropperColor(color)
+        setDrawingColor(color)
+    }
+    
     // MARK: - Public interface
+    
+    /// Adds colors to the color carousel
+    ///
+    /// - Parameter colors: list of colors to be added
+    func addColorsForCarousel(colors: [UIColor]) {
+        colorCollectionController.addColors(colors)
+    }
     
     /// shows or hides the drawing menu
     ///
