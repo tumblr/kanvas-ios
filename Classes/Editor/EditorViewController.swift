@@ -146,10 +146,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
         view.backgroundColor = .black
         editorView.add(into: view)
+        drawingController.drawingLayer = editorView.drawingCanvas.layer
         
         load(childViewController: collectionController, into: editorView.collectionContainer)
         load(childViewController: filterCollectionController, into: editorView.filterCollectionContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
+        
+        setUpColorCarousel()
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -160,6 +163,16 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         return .portrait
     }
 
+    // MARK: - Views
+    
+    /// Sets up the carousel with the dominant colors from the image on the player
+    private func setUpColorCarousel() {
+        if let image = KanvasCameraImages.confirmImage {
+            drawingController.addColorsForCarousel(colors: image.getDominantColors(count: 3))
+        }
+    }
+    
+    
     // MARK: - Loading Indicator
     /// Shows the loading indicator on this view
     func showLoading() {

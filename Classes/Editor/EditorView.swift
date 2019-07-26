@@ -58,6 +58,7 @@ final class EditorView: UIView {
     let collectionContainer = IgnoreTouchesView()
     let filterCollectionContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
+    let drawingCanvas = IgnoreTouchesView()
     
     weak var delegate: EditorViewDelegate?
     
@@ -74,6 +75,7 @@ final class EditorView: UIView {
     
     private func setupViews() {
         setupPlayer()
+        drawingCanvas.add(into: self)
         setUpCloseButton()
         setUpCloseMenuButton()
         switch mainActionMode {

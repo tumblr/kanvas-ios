@@ -15,6 +15,8 @@ private struct TextureSelectorControllerConstants {
 /// Controller for handling the texture selector on the drawing menu.
 final class TextureSelectorController: UIViewController, TextureSelectorViewDelegate {
     
+    var texture: Texture = Sharpie()
+    
     private lazy var textureSelectorView: TextureSelectorView = {
         let view = TextureSelectorView()
         view.delegate = self
@@ -59,16 +61,19 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
     func didTapPencilButton() {
         textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.pencilImage)
         textureSelectorView.showSelectorBackground(false)
+        texture = Pencil()
     }
     
     func didTapSharpieButton() {
         textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.sharpieImage)
         textureSelectorView.showSelectorBackground(false)
+        texture = Sharpie()
     }
     
     func didTapMarkerButton() {
         textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.markerImage)
         textureSelectorView.showSelectorBackground(false)
+        texture = Marker()
     }
     
 }

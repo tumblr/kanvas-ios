@@ -11,7 +11,8 @@ protocol ColorPickerControllerDelegate: class {
     /// Called when a color is selected
     ///
     /// - Parameter color: the color just selected
-    func didSelectColor(_ color: UIColor)
+    /// - Parameter definitive: whether the gesture has ended
+    func didSelectColor(_ color: UIColor, definitive: Bool)
 }
 
 /// Constants for the color picker
@@ -57,13 +58,15 @@ final class ColorPickerController: UIViewController, ColorPickerViewDelegate {
     // MARK: - ColorPickerViewDelegate
     
     func didTapSelector(recognizer: UITapGestureRecognizer) {
-        selectColor(recognizer: recognizer)
+        selectColor(recognizer: recognizer, definitive: true)
     }
     
     func didPanSelector(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
-        case .changed, .ended:
+        case .changed:
             selectColor(recognizer: recognizer)
+        case .ended:
+            selectColor(recognizer: recognizer, definitive: true)
         case .possible, .began, .cancelled, .failed:
             break
         @unknown default:
@@ -79,7 +82,7 @@ final class ColorPickerController: UIViewController, ColorPickerViewDelegate {
         case .changed:
             selectColor(recognizer: recognizer)
         case .ended, .cancelled, .failed:
-            selectColor(recognizer: recognizer)
+            selectColor(recognizer: recognizer, definitive: true)
             colorPickerView.setMainColors()
         case .possible:
             break
@@ -90,11 +93,15 @@ final class ColorPickerController: UIViewController, ColorPickerViewDelegate {
     
     // MARK: - Private utilities
     
-    private func selectColor(recognizer: UIGestureRecognizer) {
+    /// Selects the color being touched
+    ///
+    /// - Parameter recognizer: the gesture recognizer
+    /// - Parameter definitive: whether the gesture has ended
+    private func selectColor(recognizer: UIGestureRecognizer, definitive: Bool = false) {
         guard let selectorView = recognizer.view else { return }
         let point = getSelectedGradientLocation(with: recognizer, in: selectorView)
         selectedColor = getColor(at: point.x + ColorPickerView.selectorPadding)
-        delegate?.didSelectColor(selectedColor)
+        delegate?.didSelectColor(selectedColor, definitive: definitive)
     }
     
     /// Gets the position of the color picker gradient that the user is touching.
