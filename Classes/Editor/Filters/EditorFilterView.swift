@@ -69,7 +69,7 @@ final class EditorFilterView: UIView {
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant:  -EditorFilterViewConstants.collectionViewBottomMargin),
+            collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -EditorFilterViewConstants.collectionViewBottomMargin),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditorFilterViewConstants.collectionViewHeight)
         ])
     }
