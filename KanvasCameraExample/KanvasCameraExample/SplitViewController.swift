@@ -141,7 +141,7 @@ extension SplitViewController: CameraControllerDelegate {
         return preferences["kanvasStrokeSelectorAnimationEnded"] != true
     }
     
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let media = media {
             save(media: media)
             self.kanvasController.hideOverlay { }
