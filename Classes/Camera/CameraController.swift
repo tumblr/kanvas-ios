@@ -292,6 +292,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - Media Content Creation
     class func saveImageToFile(_ image: UIImage?, info: MediaInfo) -> URL? {
+        // TODO: Use NSURL.createNewImageURL rather than duplicate logic here
+        // https://jira.tumblr.net/browse/KANVAS-575
         do {
             guard let image = image, let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return nil
