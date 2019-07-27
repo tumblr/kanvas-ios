@@ -19,7 +19,6 @@ public enum KanvasCameraMedia {
 public enum KanvasExportAction {
     case previewConfirm
     case confirm
-    case save
     case post
 }
 
