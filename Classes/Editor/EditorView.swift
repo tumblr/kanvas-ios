@@ -63,7 +63,9 @@ final class EditorView: UIView {
     private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
     let filterCollectionContainer = IgnoreTouchesView()
-
+    let drawingMenuContainer = IgnoreTouchesView()
+    let drawingCanvas = IgnoreTouchesView()
+    
     weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
@@ -80,6 +82,7 @@ final class EditorView: UIView {
     
     private func setupViews() {
         setupPlayer()
+        drawingCanvas.add(into: self)
         setUpCloseButton()
         setUpCloseMenuButton()
         switch mainActionMode {
@@ -94,6 +97,7 @@ final class EditorView: UIView {
         setUpCollection()
         setUpFilterCollection()
         setUpFilterSelectionCircle()
+        setUpDrawingMenu()
     }
     
     // MARK: - views
@@ -123,7 +127,7 @@ final class EditorView: UIView {
     
     private func setUpCloseMenuButton() {
         closeMenuButton.accessibilityLabel = "Close Menu Button"
-        closeMenuButton.setImage(KanvasCameraImages.confirmImage, for: .normal)
+        closeMenuButton.setImage(KanvasCameraImages.editorConfirmImage, for: .normal)
         closeMenuButton.imageView?.contentMode = .scaleAspectFit
         closeMenuButton.alpha = 0
         
@@ -247,6 +251,21 @@ final class EditorView: UIView {
         case .post:
             return postButton
         }
+    }
+    
+    private func setUpDrawingMenu() {
+        drawingMenuContainer.backgroundColor = .clear
+        drawingMenuContainer.accessibilityIdentifier = "Drawing Menu Container"
+        drawingMenuContainer.clipsToBounds = false
+        
+        addSubview(drawingMenuContainer)
+        drawingMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            drawingMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            drawingMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            drawingMenuContainer.topAnchor.constraint(equalTo: topAnchor),
+            drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
     
     // MARK: - buttons

@@ -22,10 +22,10 @@ final class ScrollHandlerTests: XCTestCase {
         return layout
     }
     
-    func newCollectionView() -> FilterCollection {
+    func newCollectionView() -> HorizontalCollectionView {
         let frame = CGRect(x: 0, y: 0, width: 320, height: CameraFilterCollectionCell.minimumHeight + 10)
         let layout = newLayout()
-        let collectionView = FilterCollection(frame: frame, collectionViewLayout: layout, ignoreTouches: false)
+        let collectionView = HorizontalCollectionView(frame: frame, collectionViewLayout: layout, ignoreTouches: false)
         return collectionView
     }
 

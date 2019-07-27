@@ -23,6 +23,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         settings.features.editor = true
         settings.features.editorFilters = true
         settings.features.editorMedia = true
+        settings.features.editorDrawing = true
         return settings
     }
     
@@ -209,17 +210,33 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
     
-    func didFinishExportingVideo(url: URL?, exportAction: KanvasExportAction) {
+    func didFinishExportingVideo(url: URL?, action: KanvasExportAction) {
         XCTAssertNotNil(url)
         videoExportCalled = true
     }
     
-    func didFinishExportingImage(image: UIImage?, exportAction: KanvasExportAction) {
+    func didFinishExportingImage(image: UIImage?, action: KanvasExportAction) {
         XCTAssertNotNil(image)
         imageExportCalled = true
     }
     
     func dismissButtonPressed() {
         closeCalled = true
+    }
+    
+    func didDismissColorSelecterTooltip() {
+        
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        return false
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        return false
     }
 }

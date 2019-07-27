@@ -265,6 +265,22 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return false
     }
+    
+    func didDismissColorSelecterTooltip() {
+        
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        return false
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        return false
+    }
 
     var dismissCalled = false
     var videoURL: URL? = nil
@@ -272,7 +288,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     var creationError = false
     var creationEmpty = false
 
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?, exportAction: KanvasExportAction) {
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         switch (media, error) {
         case (.none, .none): creationEmpty = true
         case (_, .some): creationError = true

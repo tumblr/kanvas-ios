@@ -125,7 +125,23 @@ extension SplitViewController: MockDashboardViewControllerDelegate {
 }
 
 extension SplitViewController: CameraControllerDelegate {
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?, exportAction: KanvasExportAction) {
+    func didDismissColorSelecterTooltip() {
+        preferences["kanvasColorSelectorTooltipDismissed"] = true
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        return preferences["kanvasColorSelectorTooltipDismissed"] != true
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        preferences["kanvasStrokeSelectorAnimationEnded"] = true
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        return preferences["kanvasStrokeSelectorAnimationEnded"] != true
+    }
+    
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let media = media {
             save(media: media)
             self.kanvasController.hideOverlay { }

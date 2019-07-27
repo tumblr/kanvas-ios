@@ -17,8 +17,10 @@ public enum KanvasCameraMedia {
 }
 
 public enum KanvasExportAction {
-    case save
+    case previewConfirm
+    case confirm
     case post
+    case save
 }
 
 // Error handling
@@ -35,7 +37,7 @@ public protocol CameraControllerDelegate: class {
      - parameter media: KanvasCameraMedia - this is the media created in the controller (can be image, video, etc)
      - seealso: enum KanvasCameraMedia
      */
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?, exportAction: KanvasExportAction)
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
 
     /**
      A function that is called when the main camera dismiss button is pressed
@@ -49,7 +51,23 @@ public protocol CameraControllerDelegate: class {
     ///
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
-
+    
+    /// Called after the color selecter tooltip is dismissed
+    func didDismissColorSelecterTooltip()
+    
+    /// Called to ask if color selecter tooltip should be shown
+    ///
+    /// - Returns: Bool for tooltip
+    func editorShouldShowColorSelecterTooltip() -> Bool
+    
+    /// Called after the stroke animation has ended
+    func didEndStrokeSelectorAnimation()
+    
+    /// Called to ask if stroke selector animation should be shown
+    ///
+    /// - Returns: Bool for animation
+    func editorShouldShowStrokeSelectorAnimation() -> Bool
+    
     func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
 }
 
@@ -275,6 +293,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - Media Content Creation
     class func saveImageToFile(_ image: UIImage?, info: MediaInfo) -> URL? {
+        // TODO: Use NSURL.createNewImageURL rather than duplicate logic here
+        // https://jira.tumblr.net/browse/KANVAS-575
         do {
             guard let image = image, let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return nil
@@ -671,34 +691,34 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
 
     func didFinishExportingVideo(url: URL?) {
-        didFinishExportingVideo(url: url, exportAction: .save)
+        didFinishExportingVideo(url: url, action: .previewConfirm)
     }
 
     func didFinishExportingImage(image: UIImage?) {
-        didFinishExportingImage(image: image, exportAction: .save)
+        didFinishExportingImage(image: image, action: .previewConfirm)
     }
 
-    func didFinishExportingVideo(url: URL?, exportAction: KanvasExportAction) {
+    func didFinishExportingVideo(url: URL?, action: KanvasExportAction) {
         if let videoURL = url {
             let asset = AVURLAsset(url: videoURL)
             analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
         }
         performUIUpdate { [weak self] in
             self?.cameraInputController.willCloseSoon = true
-            self?.delegate?.didCreateMedia(media: url.map { .video($0) }, error: url != nil ? nil : CameraControllerError.exportFailure, exportAction: exportAction)
+            self?.delegate?.didCreateMedia(media: url.map { .video($0) }, exportAction: action, error: url != nil ? nil : CameraControllerError.exportFailure)
         }
     }
 
-    func didFinishExportingImage(image: UIImage?, exportAction: KanvasExportAction) {
+    func didFinishExportingImage(image: UIImage?, action: KanvasExportAction) {
         analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: 1, length: 0)
         if let url = CameraController.saveImageToFile(image, info: .kanvas) {
             performUIUpdate { [weak self] in
-                self?.delegate?.didCreateMedia(media: .image(url), error: nil, exportAction: exportAction)
+                self?.delegate?.didCreateMedia(media: .image(url), exportAction: action, error: nil)
             }
         }
         else {
             performUIUpdate { [weak self] in
-                self?.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure, exportAction: exportAction)
+                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
             }
         }
     }
@@ -708,6 +728,24 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.dismiss(animated: true)
         }
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowColorSelecterTooltip()
+    }
+    
+    func didDismissColorSelecterTooltip() {
+        delegate?.didDismissColorSelecterTooltip()
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowStrokeSelectorAnimation()
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        delegate?.didEndStrokeSelectorAnimation()
     }
     
     // MARK: CameraZoomHandlerDelegate

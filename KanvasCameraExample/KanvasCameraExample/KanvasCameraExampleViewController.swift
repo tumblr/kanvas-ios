@@ -18,6 +18,8 @@ final class KanvasCameraExampleViewController: UIViewController {
     private let launchKanvasButton = UIButton(type: .custom)
     private let launchKanvasDashboardButton = UIButton(type: .system)
     private var shouldShowWelcomeTooltip = true
+    private var shouldShowColorSelecterTooltip = true
+    private var shouldShowStrokeSelectorAnimation = true
     private var firstLaunch = true
     private lazy var featuresTable: FeatureTableView = {
         let featureTableView = FeatureTableView(frame: .zero)
@@ -76,6 +78,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editor = true
         settings.features.editorFilters = true
         settings.features.editorMedia = false
+        settings.features.editorDrawing = true
         settings.features.mediaPicking = true
         settings.features.editorPosting = true
         settings.features.editorSaving = true
@@ -164,7 +167,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasButton.layer.masksToBounds = true
 
         launchKanvasButton.setTitle("Start", for: .normal)
-
+        
         launchKanvasDashboardButton.isUserInteractionEnabled = true
         launchKanvasDashboardButton.setTitle("Open Kanvas Dashboard", for: .normal)
         launchKanvasDashboardButton.sizeToFit()
@@ -233,8 +236,24 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     func didDismissWelcomeTooltip() {
         shouldShowWelcomeTooltip = false
     }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        return shouldShowColorSelecterTooltip
+    }
+    
+    func didDismissColorSelecterTooltip() {
+        shouldShowColorSelecterTooltip = false
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        shouldShowStrokeSelectorAnimation = false
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        return shouldShowStrokeSelectorAnimation
+    }
 
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?, exportAction: KanvasExportAction) {
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let media = media {
             save(media: media)
         }
