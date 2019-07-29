@@ -27,6 +27,7 @@ protocol FilterCollectionInnerCellDelegate: class {
 /// Constants for the cell view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.2
+    static let bounceDuration: TimeInterval = 0.4
     static let selectedScale: CGFloat = 0.75
     static let unselectedScale: CGFloat = 1
 }
@@ -82,7 +83,7 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         super.prepareForReuse()
         iconView.image = nil
         iconView.backgroundColor = nil
-        iconView.transform = CGAffineTransform(scaleX: 1, y: 1)
+        iconView.transform = .identity
     }
     
     // MARK: - Layout
@@ -148,12 +149,29 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         mainView?.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
-    /// Changes the scale of the filter icon with an animation
+    /// Changes the scale of the filter icon
     ///
     /// - Parameter scale: the new scale for the icon, 1.0 is the standard size
-    func setIconScale(_ scale: CGFloat) {
+    private func setIconScale(_ scale: CGFloat) {
+        iconView.transform = CGAffineTransform(scaleX: scale, y: scale)
+    }
+    
+    /// Reduces the icon size with a bouncing effect
+    private func setIconSelected() {
+        UIView.animateKeyframes(withDuration: Constants.bounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1 / Constants.bounceDuration, animations: {
+                self.setIconScale(Constants.selectedScale - 0.1)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.1 / Constants.bounceDuration, relativeDuration: 0.1 / Constants.bounceDuration, animations: {
+                self.setIconScale(Constants.selectedScale)
+            })
+        }, completion: nil)
+    }
+    
+    /// Animates the icon back to normal size
+    private func setIconUnselected() {
         UIView.animate(withDuration: Constants.animationDuration, animations: {
-            self.iconView.transform = CGAffineTransform(scaleX: scale, y: scale)
+            self.setIconScale(Constants.unselectedScale)
         })
     }
     
@@ -168,8 +186,12 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     ///
     /// - Parameter selected: whether the cell is selected or not
     func setSelected(_ selected: Bool) {
-        let scale: CGFloat = selected ? Constants.selectedScale : Constants.unselectedScale
-        setIconScale(scale)
+        if selected {
+            setIconSelected()
+        }
+        else {
+            setIconUnselected()
+        }
     }
     
     /// Changes the circle size according to a percentage.
