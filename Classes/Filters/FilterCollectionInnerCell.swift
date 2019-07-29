@@ -160,7 +160,7 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     private func setIconSelected() {
         UIView.animateKeyframes(withDuration: Constants.bounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3 / Constants.bounceDuration, animations: {
-                self.setIconScale(Constants.selectedScale - 0.05)
+                self.setIconScale(Constants.selectedScale - 0.08)
             })
             UIView.addKeyframe(withRelativeStartTime: 0.3 / Constants.bounceDuration, relativeDuration: 0.2 / Constants.bounceDuration, animations: {
                 self.setIconScale(Constants.selectedScale)
