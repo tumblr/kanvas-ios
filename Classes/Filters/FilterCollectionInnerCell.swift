@@ -182,7 +182,8 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         setMainScale(1)
     }
     
-    /// Reduces the size of the cell to mark it as selected
+    /// Changes the size of the filter icon, depending on whether the
+    /// icon is selected or not
     ///
     /// - Parameter selected: whether the cell is selected or not
     func setSelected(_ selected: Bool) {
