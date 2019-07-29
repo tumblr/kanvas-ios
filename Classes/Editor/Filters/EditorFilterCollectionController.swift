@@ -24,9 +24,7 @@ private struct EditorFilterCollectionControllerConstants {
 
 /// Controller for handling the filter item collection.
 final class EditorFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
-    
-    static let leftInset = EditorFilterCollectionControllerConstants.horizontalInset
-    
+        
     private lazy var filterCollectionView = FilterCollectionView(cellWidth: EditorFilterCollectionCell.width, cellHeight: EditorFilterCollectionCell.minimumHeight)
     private var filterItems: [FilterItem]
     private var selectedIndexPath: IndexPath
