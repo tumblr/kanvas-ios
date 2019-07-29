@@ -41,6 +41,7 @@ struct KanvasCameraImages {
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
     static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
     static let filterTypes: [FilterType: UIImage?] = [
+        .passthrough: UIImage.imageFromCameraBundle(named: "NoFilter"),
         .wavePool: UIImage.imageFromCameraBundle(named: "Water"),
         .plasma: UIImage.imageFromCameraBundle(named: "Plasma"),
         .emInterference: UIImage.imageFromCameraBundle(named: "EMInter"),
