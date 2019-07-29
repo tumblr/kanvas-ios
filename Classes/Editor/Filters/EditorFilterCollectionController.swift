@@ -153,14 +153,6 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     
     // MARK: - Cell selection
     
-    private func deselectPreviousCell() {
-        guard let selectedIndexPath = selectedIndexPath,
-            let cell = filterCollectionView.collectionView.cellForItem(at: selectedIndexPath),
-            let selectedCell = cell as? EditorFilterCollectionCell else { return }
-        
-        selectedCell.setSelected(false)
-    }
-    
     private func selectCell(_ cell: FilterCollectionCell) {
         guard let cell = cell as? EditorFilterCollectionCell,
             let indexPath = filterCollectionView.collectionView.indexPath(for: cell) else { return }
@@ -173,7 +165,14 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     // MARK: - FilterCollectionCellDelegate
     
     func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
-        deselectPreviousCell()
+        if let selectedIndexPath = selectedIndexPath,
+            let filterCell = filterCollectionView.collectionView.cellForItem(at: selectedIndexPath),
+            let selectedCell = filterCell as? EditorFilterCollectionCell,
+            selectedCell != cell {
+            
+            selectedCell.setSelected(false)
+        }
+        
         selectCell(cell)
     }
     
