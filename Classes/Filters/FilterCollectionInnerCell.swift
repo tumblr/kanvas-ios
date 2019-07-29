@@ -64,6 +64,7 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     ///
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
+        guard item.type != .passthrough else { return }
         iconView.image = KanvasCameraImages.filterTypes[item.type] ?? nil
         iconView.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
     }
