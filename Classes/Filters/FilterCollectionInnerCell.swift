@@ -27,8 +27,8 @@ protocol FilterCollectionInnerCellDelegate: class {
 /// Constants for the cell view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.2
-    static let bounceDuration: TimeInterval = 0.4
-    static let selectedScale: CGFloat = 0.8
+    static let bounceDuration: TimeInterval = 0.5
+    static let selectedScale: CGFloat = 0.78
     static let unselectedScale: CGFloat = 1
 }
 
@@ -159,10 +159,10 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     /// Reduces the icon size with a bouncing effect
     private func setIconSelected() {
         UIView.animateKeyframes(withDuration: Constants.bounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1 / Constants.bounceDuration, animations: {
-                self.setIconScale(Constants.selectedScale - 0.1)
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3 / Constants.bounceDuration, animations: {
+                self.setIconScale(Constants.selectedScale - 0.05)
             })
-            UIView.addKeyframe(withRelativeStartTime: 0.1 / Constants.bounceDuration, relativeDuration: 0.1 / Constants.bounceDuration, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.3 / Constants.bounceDuration, relativeDuration: 0.2 / Constants.bounceDuration, animations: {
                 self.setIconScale(Constants.selectedScale)
             })
         }, completion: nil)
