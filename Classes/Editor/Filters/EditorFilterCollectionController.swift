@@ -18,6 +18,8 @@ protocol EditorFilterCollectionControllerDelegate: class {
 private struct EditorFilterCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.25
     static let horizontalInset: CGFloat = 11
+    static let initialCell: Int = 0
+    static let section: Int = 0
 }
 
 /// Controller for handling the filter item collection.
@@ -27,7 +29,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     
     private lazy var filterCollectionView = FilterCollectionView(cellWidth: EditorFilterCollectionCell.width, cellHeight: EditorFilterCollectionCell.minimumHeight)
     private var filterItems: [FilterItem]
-    private var selectedIndexPath: IndexPath?
+    private var selectedIndexPath: IndexPath
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     
     weak var delegate: EditorFilterCollectionControllerDelegate?
@@ -56,6 +58,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
             ])
         }
         
+        selectedIndexPath = IndexPath(item: EditorFilterCollectionControllerConstants.initialCell, section: EditorFilterCollectionControllerConstants.section)
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -80,6 +83,12 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         filterCollectionView.collectionView.register(cell: EditorFilterCollectionCell.self)
         filterCollectionView.collectionView.delegate = self
         filterCollectionView.collectionView.dataSource = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
+        filterCollectionView.collectionView.layoutIfNeeded()
     }
     
     // MARK: - Public interface
@@ -165,8 +174,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     // MARK: - FilterCollectionCellDelegate
     
     func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
-        if let selectedIndexPath = selectedIndexPath,
-            let filterCell = filterCollectionView.collectionView.cellForItem(at: selectedIndexPath),
+        if let filterCell = filterCollectionView.collectionView.cellForItem(at: selectedIndexPath),
             let selectedCell = filterCell as? EditorFilterCollectionCell,
             selectedCell != cell {
             

@@ -28,7 +28,7 @@ protocol FilterCollectionInnerCellDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.2
     static let bounceDuration: TimeInterval = 0.4
-    static let selectedScale: CGFloat = 0.75
+    static let selectedScale: CGFloat = 0.8
     static let unselectedScale: CGFloat = 1
 }
 
