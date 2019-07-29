@@ -17,8 +17,6 @@ protocol EditorViewDelegate: class {
     func closeButtonPressed()
     /// A function that is called when the button to close a menu is pressed
     func closeMenuButtonPressed()
-    /// A function that is called when the post button is pressed
-    func postButtonPressed()
 }
 
 /// Constants for EditorView
@@ -33,33 +31,24 @@ private struct EditorViewConstants {
     static let circleSize: CGFloat = 55
     static let circleBorderWidth: CGFloat = 3
     static let collectionViewHeight = CameraFilterCollectionCell.minimumHeight + 10
-    static let postButtonSize: CGFloat = 49
-    static let postButtonHorizontalMargin: CGFloat = 20
-    static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
 }
 
 /// A UIView to preview the contents of segments without exporting
 
 final class EditorView: UIView {
-
-    enum MainActionMode {
-        case confirm
-        case post
-    }
     
     weak var playerView: GLPlayerView?
-
-    private let mainActionMode: MainActionMode
+    
     private let confirmButton = UIButton()
     private let closeMenuButton = UIButton()
     private let closeButton = UIButton()
-    private let postButton = UIButton()
     private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
     let filterCollectionContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
     
+    private var disposables: [NSKeyValueObservation] = []
     weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
@@ -67,23 +56,20 @@ final class EditorView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainActionMode: MainActionMode) {
-        self.mainActionMode = mainActionMode
+    init() {
         super.init(frame: .zero)
         setupViews()
     }
     
     private func setupViews() {
-        setupPlayer()
+        let playerView = GLPlayerView()
+        playerView.add(into: self)
+        self.playerView = playerView
         drawingCanvas.add(into: self)
+
         setUpCloseButton()
         setUpCloseMenuButton()
-        switch mainActionMode {
-        case .confirm:
-            setUpConfirmButton()
-        case .post:
-            setupPostButton()
-        }
+        setUpConfirmButton()
         setUpCollection()
         setUpFilterCollection()
         setUpFilterSelectionCircle()
@@ -91,12 +77,6 @@ final class EditorView: UIView {
     }
     
     // MARK: - views
-
-    private func setupPlayer() {
-        let playerView = GLPlayerView()
-        playerView.add(into: self)
-        self.playerView = playerView
-    }
     
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
@@ -155,11 +135,10 @@ final class EditorView: UIView {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin * 2 + EditorViewConstants.confirmButtonSize
-
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
-            collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
+            collectionContainer.centerYAnchor.constraint(equalTo: confirmButton.centerYAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
         ])
     }
@@ -196,35 +175,6 @@ final class EditorView: UIView {
             filterSelectionCircle.widthAnchor.constraint(equalToConstant: EditorViewConstants.circleSize)
         ])
     }
-
-    func setupPostButton() {
-        postButton.accessibilityLabel = "Post Button"
-        postButton.clipsToBounds = false
-        postButton.layer.cornerRadius = EditorViewConstants.postButtonSize / 2.0
-        postButton.layer.borderWidth = 3.0
-        postButton.layer.borderColor = UIColor.white.cgColor
-        postButton.applyShadows()
-        addSubview(postButton)
-        postButton.setImage(KanvasCameraImages.postImage, for: .normal)
-        postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
-        postButton.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            postButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
-            postButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
-            postButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
-            postButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.postButtonVerticalMargin)
-        ])
-    }
-
-    func confirmOrPostButton() -> UIButton {
-        switch mainActionMode {
-        case .confirm:
-            return confirmButton
-        case .post:
-            return postButton
-        }
-    }
     
     private func setUpDrawingMenu() {
         drawingMenuContainer.backgroundColor = .clear
@@ -253,10 +203,6 @@ final class EditorView: UIView {
     @objc private func confirmButtonPressed() {
         delegate?.confirmButtonPressed()
     }
-
-    @objc private func postButtonPressed() {
-        delegate?.postButtonPressed()
-    }
     
     // MARK: - Public interface
     
@@ -264,15 +210,8 @@ final class EditorView: UIView {
     ///
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
-        switch mainActionMode {
-        case .confirm:
-            UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-                self.confirmButton.alpha = show ? 1 : 0
-            }
-        case .post:
-            UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-                self.postButton.alpha = show ? 1 : 0
-            }
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.confirmButton.alpha = show ? 1 : 0
         }
     }
     

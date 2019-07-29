@@ -72,6 +72,17 @@ final class GLMediaExporter {
             completion(url, nil)
             return
         }
+        let filePath = NSTemporaryDirectory().appending("ExportedProject.mov")
+        let fileExists = FileManager.default.fileExists(atPath: filePath)
+        if fileExists {
+            do {
+                try FileManager.default.removeItem(atPath: filePath)
+            } catch {
+                completion(nil, GLMediaExporterError.failedDeleteExistingFile(error))
+                return
+            }
+        }
+        let outputURL = URL(fileURLWithPath: filePath)
 
         let asset = AVAsset(url: url)
         let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
@@ -84,7 +95,6 @@ final class GLMediaExporter {
             return
         }
 
-        let outputURL = NSURL.createNewVideoURL()
         let exportSession = AVAssetExportSession(asset: asset, presetName: presetName)
         exportSession?.outputFileType = .mov
         exportSession?.outputURL = outputURL

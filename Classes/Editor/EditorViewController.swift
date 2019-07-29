@@ -12,10 +12,10 @@ import UIKit
 
 protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
-    func didFinishExportingVideo(url: URL?, action: KanvasExportAction)
+    func didFinishExportingVideo(url: URL?)
     
     /// callback when finished exporting image
-    func didFinishExportingImage(image: UIImage?, action: KanvasExportAction)
+    func didFinishExportingImage(image: UIImage?)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -37,11 +37,12 @@ protocol EditorControllerDelegate: class {
     func editorShouldShowStrokeSelectorAnimation() -> Bool
 }
 
+
 /// A view controller to edit the segments
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate, DrawingControllerDelegate {
     
     private lazy var editorView: EditorView = {
-        let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm)
+        let editorView = EditorView()
         editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
@@ -187,26 +188,18 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     // MARK: - CameraEditorViewDelegate
-
-    func postButtonPressed() {
-        startExporting(action: .post)
-    }
-
+    
     func confirmButtonPressed() {
-        startExporting(action: .confirm)
-    }
-
-    private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
             // If the camera mode is .stopMotion and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
             if let cameraMode = cameraMode, cameraMode == .stopMotion && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
-                createFinalVideo(videoURL: videoURL, exportAction: action)
+                createFinalVideo(videoURL: videoURL)
             }
             else {
-                createFinalImage(image: image, exportAction: action)
+                createFinalImage(image: image)
             }
         }
         else {
@@ -215,12 +208,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                     self?.handleExportError()
                     return
                 }
-                self?.createFinalVideo(videoURL: url, exportAction: action)
+                self?.createFinalVideo(videoURL: url)
             }
         }
     }
 
-    private func createFinalVideo(videoURL: URL, exportAction: KanvasExportAction) {
+    private func createFinalVideo(videoURL: URL) {
         let exporter = GLMediaExporter(filterType: filterType)
         exporter.export(video: videoURL) { (exportedVideoURL, _) in
             performUIUpdate {
@@ -229,13 +222,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingVideo(url: url, action: exportAction)
+                self.delegate?.didFinishExportingVideo(url: url)
                 self.hideLoading()
             }
         }
     }
 
-    private func createFinalImage(image: UIImage, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: UIImage) {
         let exporter = GLMediaExporter(filterType: filterType)
         exporter.export(image: image) { (exportedImage, _) in
             performUIUpdate {
@@ -244,7 +237,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingImage(image: image, action: exportAction)
+                self.delegate?.didFinishExportingImage(image: image)
                 self.hideLoading()
             }
         }

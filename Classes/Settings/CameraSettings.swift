@@ -64,10 +64,6 @@ public struct CameraFeatures {
     /// The Media Picker feature
     /// This enables the UI to pick media instead of using the camera.
     public var mediaPicking: Bool = false
-
-    /// The Editor Posting feature
-    /// This enables the UI to post media from the editor.
-    public var editorPosting: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera
