@@ -77,6 +77,13 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.setSize(percent: percent)
     }
     
+    /// Reduces the size of the cell to mark it as selected
+    ///
+    /// - Parameter selected: whether the cell is selected or not
+    func setSelected(_ selected: Bool) {
+        innerCell.setSelected(selected)
+    }
+    
     // MARK: - FilterCollectionInnerCellDelegate
     
     func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {
