@@ -92,8 +92,16 @@ final class EditorFilterController: UIViewController, EditorFilterViewDelegate, 
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: EditorFilterControllerConstants.animationDuration) {
-            self.filterView.alpha = show ? 1 : 0
+        if show {
+            self.filterView.alpha = 1
+            self.filterCollectionController.showView(true)
+        }
+        else {
+            UIView.animate(withDuration: EditorFilterControllerConstants.animationDuration, animations:  {
+                self.filterView.alpha = 0
+            }, completion: { _ in
+                self.filterCollectionController.showView(false)
+            })
         }
     }
 

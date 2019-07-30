@@ -29,4 +29,6 @@ protocol FilterCollectionCell: UICollectionViewCell {
     func show(_ show: Bool)
     func bindTo(_ item: FilterItem)
     func setSelected(_ selected: Bool)
+    func shrink()
+    func pop()
 }

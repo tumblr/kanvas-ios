@@ -203,6 +203,18 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         setMainScale(scale)
     }
     
+    /// Shrinks the cell until it is hidden
+    func shrink() {
+        mainView?.transform = CGAffineTransform(scaleX: 0, y: 0)
+    }
+    
+    /// Increases the size of the cell until it reaches its regular size
+    func pop() {
+        UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
+            self?.mainView?.transform = .identity
+        }
+    }
+    
     // MARK: - Gesture recognizers
     
     private func setUpRecognizers() {
