@@ -27,8 +27,9 @@ private struct StrokeSelectorViewConstants {
     static let selectorWidth: CGFloat = 34
     
     static let selectorPadding: CGFloat = 11
-    static let strokeCircleMinSize: CGFloat = 11
-    static let strokeCircleMaxSize: CGFloat = 18
+    static let circleMinSize: CGFloat = 11
+    static let circleMaxSize: CGFloat = 18
+    static let circleDefaultColor: UIColor = .tumblrBrightBlue
 }
 
 /// View for StrokeSelectorController
@@ -36,8 +37,8 @@ final class StrokeSelectorView: IgnoreTouchesView {
     
     static let selectorHeight: CGFloat = StrokeSelectorViewConstants.selectorHeight
     static let selectorWidth: CGFloat = StrokeSelectorViewConstants.selectorWidth
-    static let strokeCircleMinSize: CGFloat = StrokeSelectorViewConstants.strokeCircleMinSize
-    static let strokeCircleMaxSize: CGFloat = StrokeSelectorViewConstants.strokeCircleMaxSize
+    static let circleMinSize: CGFloat = StrokeSelectorViewConstants.circleMinSize
+    static let circleMaxSize: CGFloat = StrokeSelectorViewConstants.circleMaxSize
     
     weak var delegate: StrokeSelectorViewDelegate?
     
@@ -105,7 +106,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     private func setUpMainButtonCircle() {
         mainButtonCircle.accessibilityIdentifier = "Stroke Main Button Circle"
         mainButtonCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
-        mainButtonCircle.tintColor = .tumblrBrightBlue
+        mainButtonCircle.tintColor = StrokeSelectorViewConstants.circleDefaultColor
         mainButtonCircle.isUserInteractionEnabled = true
         mainButtonCircle.translatesAutoresizingMaskIntoConstraints = false
         mainButtonCircle.contentMode = .scaleAspectFill
@@ -113,8 +114,8 @@ final class StrokeSelectorView: IgnoreTouchesView {
         mainButton.addSubview(mainButtonCircle)
         
         NSLayoutConstraint.activate([
-            mainButtonCircle.heightAnchor.constraint(equalToConstant: StrokeSelectorViewConstants.strokeCircleMinSize),
-            mainButtonCircle.widthAnchor.constraint(equalToConstant: StrokeSelectorViewConstants.strokeCircleMinSize),
+            mainButtonCircle.heightAnchor.constraint(equalToConstant: StrokeSelectorViewConstants.circleMinSize),
+            mainButtonCircle.widthAnchor.constraint(equalToConstant: StrokeSelectorViewConstants.circleMinSize),
             mainButtonCircle.centerXAnchor.constraint(equalTo: mainButton.centerXAnchor),
             mainButtonCircle.centerYAnchor.constraint(equalTo: mainButton.centerYAnchor),
         ])
@@ -139,7 +140,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
             selectorPannableArea.leadingAnchor.constraint(equalTo: selectorBackground.leadingAnchor),
             selectorPannableArea.trailingAnchor.constraint(equalTo: selectorBackground.trailingAnchor),
             selectorPannableArea.bottomAnchor.constraint(equalTo: selectorBackground.bottomAnchor, constant: -StrokeSelectorViewConstants.selectorPadding),
-            selectorPannableArea.topAnchor.constraint(equalTo: selectorBackground.topAnchor, constant: StrokeSelectorViewConstants.selectorPadding + (StrokeSelectorViewConstants.strokeCircleMaxSize - StrokeSelectorViewConstants.strokeCircleMinSize) / 2),
+            selectorPannableArea.topAnchor.constraint(equalTo: selectorBackground.topAnchor, constant: StrokeSelectorViewConstants.selectorPadding + (StrokeSelectorViewConstants.circleMaxSize - StrokeSelectorViewConstants.circleMinSize) / 2),
         ])
     }
     
@@ -147,7 +148,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     private func setUpSelectorCircle() {
         selectorCircle.accessibilityIdentifier = "Stroke Selector Circle"
         selectorCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
-        selectorCircle.tintColor = .tumblrBrightBlue
+        selectorCircle.tintColor = StrokeSelectorViewConstants.circleDefaultColor
         selectorCircle.isUserInteractionEnabled = true
         selectorCircle.translatesAutoresizingMaskIntoConstraints = false
         selectorCircle.contentMode = .scaleAspectFill
@@ -155,8 +156,8 @@ final class StrokeSelectorView: IgnoreTouchesView {
         selectorPannableArea.addSubview(selectorCircle)
         
         NSLayoutConstraint.activate([
-            selectorCircle.heightAnchor.constraint(equalToConstant: StrokeSelectorViewConstants.strokeCircleMinSize),
-            selectorCircle.widthAnchor.constraint(equalToConstant: StrokeSelectorViewConstants.strokeCircleMinSize),
+            selectorCircle.heightAnchor.constraint(equalToConstant: StrokeSelectorViewConstants.circleMinSize),
+            selectorCircle.widthAnchor.constraint(equalToConstant: StrokeSelectorViewConstants.circleMinSize),
             selectorCircle.centerXAnchor.constraint(equalTo: selectorPannableArea.centerXAnchor),
             selectorCircle.bottomAnchor.constraint(equalTo: selectorPannableArea.bottomAnchor),
         ])
@@ -189,7 +190,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     /// Applies a transformation to the circles inside main button and selector
     ///
     /// - Parameter transform: the transformation to apply
-    func transformStrokeCircle(_ transform: CGAffineTransform) {
+    func transformCircle(_ transform: CGAffineTransform) {
         mainButtonCircle.transform = transform
         selectorCircle.transform = transform
     }
@@ -206,7 +207,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     func showAnimation() {
         
         let duration = 3.5
-        let maxScale = StrokeSelectorView.strokeCircleMaxSize / StrokeSelectorView.strokeCircleMinSize
+        let maxScale = StrokeSelectorView.circleMaxSize / StrokeSelectorView.circleMinSize
         let maxHeight = (selectorPannableArea.bounds.height + selectorCircle.bounds.height) / 2
         
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
