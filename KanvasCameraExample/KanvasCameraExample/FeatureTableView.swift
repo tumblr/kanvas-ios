@@ -25,6 +25,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case editorMedia(Bool)
         case editorDrawing(Bool)
         case mediaPicking(Bool)
+        case editorPosting(Bool)
 
         var name: String {
             switch self {
@@ -48,6 +49,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor Drawing"
             case .mediaPicking(_):
                 return "Media Picking"
+            case .editorPosting(_):
+                return "Editor Posting"
             }
         }
 
@@ -72,6 +75,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .editorDrawing(let enabled):
                 return enabled
             case .mediaPicking(let enabled):
+                return enabled
+            case .editorPosting(let enabled):
                 return enabled
             }
         }
@@ -135,6 +140,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editorDrawing(value)
         case .mediaPicking(_):
             featuresData[indexPath.row] = .mediaPicking(value)
+        case .editorPosting(_):
+            featuresData[indexPath.row] = .editorPosting(value)
         }
         delegate?.featureTableView(didUpdateFeature: featuresData[indexPath.row], withValue: value)
     }
