@@ -208,11 +208,20 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         mainView?.transform = CGAffineTransform(scaleX: 0, y: 0)
     }
     
-    /// Increases the size of the cell until it reaches its regular size
+    /// Increases the size of the cell until it reaches its regular size, with a bouncing effect
     func pop() {
-        UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
-            self?.mainView?.transform = .identity
-        }
+        let regularSize: CGFloat = 1
+        let increment: CGFloat = 0.1
+        let duration = 0.6
+        
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.4 / duration, animations: {
+                self.mainView?.transform = CGAffineTransform(scaleX: regularSize + increment, y: regularSize + increment)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.4 / duration, relativeDuration: 0.2 / duration, animations: {
+                self.mainView?.transform = CGAffineTransform(scaleX: regularSize, y: regularSize)
+            })
+        }, completion: nil)
     }
     
     // MARK: - Gesture recognizers

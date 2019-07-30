@@ -41,13 +41,19 @@ final class FilterCollectionView: IgnoreTouchesView {
     
     /// Shrinks a collection of cells
     func shrink() {
-        guard let cells = collectionView.visibleCells as? [FilterCollectionCell] else { return }
+        let cells = getVisibleCells()
         cells.forEach { $0.shrink() }
     }
     
     /// Makes its cells pop
     func pop() {
-        guard let cells = collectionView.visibleCells as? [FilterCollectionCell] else { return }
+        let cells = getVisibleCells()
         cells.forEach { $0.pop() }
+    }
+    
+    /// Obtains the visible cells from the collection view
+    private func getVisibleCells() -> [FilterCollectionCell] {
+        guard let cells = collectionView.visibleCells as? [FilterCollectionCell] else { return [] }
+        return cells
     }
 }
