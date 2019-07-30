@@ -24,20 +24,20 @@ protocol FilterCollectionInnerCellDelegate: class {
     func didLongPress(cell: FilterCollectionInnerCell, recognizer: UILongPressGestureRecognizer)
 }
 
-/// Constants for the cell view
-private struct Constants {
-    static let animationDuration: TimeInterval = 0.2
-    static let bounceDuration: TimeInterval = 0.5
-    static let selectedScale: CGFloat = 0.78
-    static let unselectedScale: CGFloat = 1
-}
-
 protocol FilterCollectionCellDimensions {
     var circleDiameter: CGFloat { get }
     var circleMaxDiameter: CGFloat { get }
     var padding: CGFloat { get }
     var minimumHeight: CGFloat { get }
     var width: CGFloat { get }
+}
+
+/// Constants for the cell view
+private struct Constants {
+    static let animationDuration: TimeInterval = 0.2
+    static let bounceDuration: TimeInterval = 0.5
+    static let selectedScale: CGFloat = 0.78
+    static let unselectedScale: CGFloat = 1
 }
 
 final class FilterCollectionInnerCell: UICollectionViewCell {
@@ -212,13 +212,12 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     func pop() {
         let regularSize: CGFloat = 1
         let increment: CGFloat = 0.1
-        let duration = 0.6
         
-        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.4 / duration, animations: {
+        UIView.animateKeyframes(withDuration: Constants.bounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.35 / Constants.bounceDuration, animations: {
                 self.mainView?.transform = CGAffineTransform(scaleX: regularSize + increment, y: regularSize + increment)
             })
-            UIView.addKeyframe(withRelativeStartTime: 0.4 / duration, relativeDuration: 0.2 / duration, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.35 / Constants.bounceDuration, relativeDuration: 0.15 / Constants.bounceDuration, animations: {
                 self.mainView?.transform = CGAffineTransform(scaleX: regularSize, y: regularSize)
             })
         }, completion: nil)
