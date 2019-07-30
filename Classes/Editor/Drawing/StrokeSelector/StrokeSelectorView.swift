@@ -105,7 +105,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     private func setUpMainButtonCircle() {
         mainButtonCircle.accessibilityIdentifier = "Stroke Main Button Circle"
         mainButtonCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
-        mainButtonCircle.tintColor = .black
+        mainButtonCircle.tintColor = .tumblrBrightBlue
         mainButtonCircle.isUserInteractionEnabled = true
         mainButtonCircle.translatesAutoresizingMaskIntoConstraints = false
         mainButtonCircle.contentMode = .scaleAspectFill
@@ -147,7 +147,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     private func setUpSelectorCircle() {
         selectorCircle.accessibilityIdentifier = "Stroke Selector Circle"
         selectorCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
-        selectorCircle.tintColor = .black
+        selectorCircle.tintColor = .tumblrBrightBlue
         selectorCircle.isUserInteractionEnabled = true
         selectorCircle.translatesAutoresizingMaskIntoConstraints = false
         selectorCircle.contentMode = .scaleAspectFill
@@ -192,6 +192,14 @@ final class StrokeSelectorView: IgnoreTouchesView {
     func transformStrokeCircle(_ transform: CGAffineTransform) {
         mainButtonCircle.transform = transform
         selectorCircle.transform = transform
+    }
+    
+    /// Changes the color of the circle inside the main button and the selector
+    ///
+    /// - Parameter color: the color to be applied
+    func tintStrokeCircle(color: UIColor) {
+        mainButtonCircle.tintColor = color
+        selectorCircle.tintColor = color
     }
     
     /// Shows the animation for onboarding

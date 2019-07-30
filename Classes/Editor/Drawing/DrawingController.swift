@@ -333,6 +333,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     func didSelectColor(_ color: UIColor, definitive: Bool) {
         setEyeDropperColor(color)
+        setStrokeCircleColor(color)
         setDrawingColor(color, addToColorCollection: definitive)
     }
     
@@ -432,6 +433,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             let currentLocation = moveColorSelecter(recognizer: recognizer)
             let color = getColor(at: currentLocation)
             setEyeDropperColor(color)
+            setStrokeCircleColor(color)
             setDrawingColor(color, addToColorCollection: true)
             
             showColorSelecter(false)
@@ -466,6 +468,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     /// - Parameter color: new color for the eye dropper button
     private func setEyeDropperColor(_ color: UIColor) {
         drawingView.setEyeDropperColor(color)
+    }
+    
+    /// Sets a new color for the circle in the stroke selector
+    ///
+    /// - Parameter color: the new color to be applied
+    private func setStrokeCircleColor(_ color: UIColor) {
+        strokeSelectorController.tintStrokeCircle(color: color)
     }
     
     /// Sets a new color for the color selecter background
@@ -516,6 +525,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     func didSelectColor(_ color: UIColor) {
         setEyeDropperColor(color)
+        setStrokeCircleColor(color)
         setDrawingColor(color)
     }
     

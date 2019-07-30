@@ -61,6 +61,13 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
         strokeSelectorView.showAnimation()
     }
     
+    /// Changes the color of the circle inside the main button and the selector
+    ///
+    /// - Parameter color: the color to be applied
+    func tintStrokeCircle(color: UIColor) {
+        strokeSelectorView.tintStrokeCircle(color: color)
+    }
+    
     /// Calculates the stroke size based on the size selected
     /// on the selector and the min and max values of the texture
     ///
