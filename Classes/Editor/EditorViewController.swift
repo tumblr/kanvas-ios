@@ -41,7 +41,8 @@ protocol EditorControllerDelegate: class {
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate, DrawingControllerDelegate {
     
     private lazy var editorView: EditorView = {
-        let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm)
+        let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
+                                    showSaveButton: settings.features.editorSaving)
         editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
@@ -187,6 +188,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     // MARK: - CameraEditorViewDelegate
+
+    func saveButtonPressed() {
+        startExporting(action: .save)
+    }
 
     func postButtonPressed() {
         startExporting(action: .post)

@@ -20,6 +20,7 @@ public enum KanvasExportAction {
     case previewConfirm
     case confirm
     case post
+    case save
 }
 
 // Error handling

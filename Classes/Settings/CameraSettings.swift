@@ -68,6 +68,10 @@ public struct CameraFeatures {
     /// The Editor Posting feature
     /// This enables the UI to post media from the editor.
     public var editorPosting: Bool = false
+
+    /// The Editor Saving feature
+    /// This enables the UI to save media from the editor.
+    public var editorSaving: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera

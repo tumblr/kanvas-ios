@@ -44,6 +44,7 @@ struct KanvasCameraImages {
             return nil
         }
     }()
+    static let saveImage = UIImage.imageFromCameraBundle(named: "save")
 
     // MARK: - Filters
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
