@@ -15,6 +15,10 @@ protocol EditorViewDelegate: class {
     func didTapConfirmButton()
     /// A function that is called when the close button is pressed
     func didTapCloseButton()
+    /// A function that is called when the post button is pressed
+    func didTapPostButton()
+    /// A function that is called when the save button is pressed
+    func didTapSaveButton()
 }
 
 /// Constants for EditorView
@@ -23,22 +27,36 @@ private struct EditorViewConstants {
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
+    static let postButtonSize: CGFloat = 49
+    static let postButtonHorizontalMargin: CGFloat = 20
+    static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
+    static let saveButtonSize: CGFloat = 34
+    static let saveButtonHorizontalMargin: CGFloat = 20
 }
 
 /// A UIView to preview the contents of segments without exporting
 
 final class EditorView: UIView {
+
+    enum MainActionMode {
+        case confirm
+        case post
+    }
     
     weak var playerView: GLPlayerView?
-    
+
+    private let mainActionMode: MainActionMode
     private let confirmButton = UIButton()
     private let closeButton = UIButton()
+    private let saveButton = UIButton()
+    private let showSaveButton: Bool
+    private let postButton = UIButton()
+    private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
     let filterMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
     
-    private var disposables: [NSKeyValueObservation] = []
     weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
@@ -46,25 +64,39 @@ final class EditorView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init() {
+    init(mainActionMode: MainActionMode, showSaveButton: Bool) {
+        self.mainActionMode = mainActionMode
+        self.showSaveButton = showSaveButton
         super.init(frame: .zero)
         setupViews()
     }
     
     private func setupViews() {
-        let playerView = GLPlayerView()
-        playerView.add(into: self)
-        self.playerView = playerView
+        setupPlayer()
         drawingCanvas.add(into: self)
-
         setUpCloseButton()
         setUpConfirmButton()
+        switch mainActionMode {
+        case .confirm:
+            setUpConfirmButton()
+        case .post:
+            setupPostButton()
+        }
+        if showSaveButton {
+            setupSaveButton()
+        }
         setUpCollection()
         setUpFilterMenu()
         setUpDrawingMenu()
     }
     
     // MARK: - views
+
+    private func setupPlayer() {
+        let playerView = GLPlayerView()
+        playerView.add(into: self)
+        self.playerView = playerView
+    }
     
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
@@ -106,10 +138,11 @@ final class EditorView: UIView {
         addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin * 2 + EditorViewConstants.confirmButtonSize
+
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
-            collectionContainer.centerYAnchor.constraint(equalTo: confirmButton.centerYAnchor),
+            collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
         ])
     }
@@ -127,6 +160,52 @@ final class EditorView: UIView {
             filterMenuContainer.topAnchor.constraint(equalTo: topAnchor),
             filterMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+    }
+
+    func setupPostButton() {
+        postButton.accessibilityLabel = "Post Button"
+        postButton.clipsToBounds = false
+        postButton.layer.cornerRadius = EditorViewConstants.postButtonSize / 2.0
+        postButton.layer.borderWidth = 3.0
+        postButton.layer.borderColor = UIColor.white.cgColor
+        postButton.applyShadows()
+        addSubview(postButton)
+        postButton.setImage(KanvasCameraImages.postImage, for: .normal)
+        postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
+        postButton.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            postButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
+            postButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
+            postButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
+            postButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.postButtonVerticalMargin)
+        ])
+    }
+
+    func setupSaveButton() {
+        saveButton.accessibilityLabel = "Save Button"
+        addSubview(saveButton)
+        saveButton.applyShadows()
+        saveButton.setImage(KanvasCameraImages.saveImage, for: .normal)
+        saveButton.imageView?.tintColor = .white
+        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            saveButton.trailingAnchor.constraint(equalTo: confirmOrPostButton().leadingAnchor, constant: -EditorViewConstants.saveButtonHorizontalMargin),
+            saveButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.saveButtonSize),
+            saveButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.saveButtonSize),
+            saveButton.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor)
+        ])
+    }
+
+    func confirmOrPostButton() -> UIButton {
+        switch mainActionMode {
+        case .confirm:
+            return confirmButton
+        case .post:
+            return postButton
+        }
     }
     
     private func setUpDrawingMenu() {
@@ -152,6 +231,14 @@ final class EditorView: UIView {
     @objc private func confirmButtonPressed() {
         delegate?.didTapConfirmButton()
     }
+
+    @objc private func saveButtonPressed() {
+        delegate?.didTapSaveButton()
+    }
+
+    @objc private func postButtonPressed() {
+        delegate?.didTapPostButton()
+    }
     
     // MARK: - Public interface
     
@@ -159,8 +246,20 @@ final class EditorView: UIView {
     ///
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
-        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-            self.confirmButton.alpha = show ? 1 : 0
+        switch mainActionMode {
+        case .confirm:
+            UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+                self.confirmButton.alpha = show ? 1 : 0
+            }
+        case .post:
+            UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+                self.postButton.alpha = show ? 1 : 0
+            }
+        }
+        if showSaveButton {
+            UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+                self.saveButton.alpha = show ? 1 : 0
+            }
         }
     }
     

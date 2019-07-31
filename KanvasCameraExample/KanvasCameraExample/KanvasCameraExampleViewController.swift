@@ -80,6 +80,8 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorMedia = false
         settings.features.editorDrawing = true
         settings.features.mediaPicking = true
+        settings.features.editorPosting = true
+        settings.features.editorSaving = true
         return settings
     }
 
@@ -188,6 +190,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorMedia(settings.features.editorMedia),
             .editorDrawing(settings.features.editorDrawing),
             .mediaPicking(settings.features.mediaPicking),
+            .editorSaving(settings.features.editorSaving),
+            .editorPosting(settings.features.editorPosting),
         ]
     }
 
@@ -213,6 +217,10 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.editorDrawing = value
         case .mediaPicking(_):
             settings.features.mediaPicking = value
+        case .editorPosting(_):
+            settings.features.editorPosting = value
+        case .editorSaving(_):
+            settings.features.editorSaving = value
         }
     }
 }
@@ -245,7 +253,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         return shouldShowStrokeSelectorAnimation
     }
 
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let media = media {
             save(media: media)
         }
