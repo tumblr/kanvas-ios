@@ -16,6 +16,13 @@ public enum KanvasCameraMedia {
     case video(URL)
 }
 
+public enum KanvasExportAction {
+    case previewConfirm
+    case confirm
+    case post
+    case save
+}
+
 // Error handling
 enum CameraControllerError: Swift.Error {
     case exportFailure
@@ -30,7 +37,7 @@ public protocol CameraControllerDelegate: class {
      - parameter media: KanvasCameraMedia - this is the media created in the controller (can be image, video, etc)
      - seealso: enum KanvasCameraMedia
      */
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?)
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
 
     /**
      A function that is called when the main camera dismiss button is pressed
@@ -119,6 +126,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
 
+    private weak var overlayViewController: UIViewController?
+
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
     /// needed to attain the final output.
@@ -200,6 +209,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logDismiss()
     }
 
+    /// Hides the overlaying view controller
+    public func hideOverlay(completion: @escaping () -> ()) {
+        overlayViewController?.dismiss(animated: true, completion: completion)
+    }
+
     // MARK: - View Lifecycle
 
     override public func loadView() {
@@ -237,6 +251,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraInputController.stopSession()
         let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
+        overlayViewController = controller
     }
     
     private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
@@ -278,6 +293,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - Media Content Creation
     class func saveImageToFile(_ image: UIImage?, info: MediaInfo) -> URL? {
+        // TODO: Use NSURL.createNewImageURL rather than duplicate logic here
+        // https://jira.tumblr.net/browse/KANVAS-575
         do {
             guard let image = image, let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return nil
@@ -672,28 +689,36 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
-    
+
     func didFinishExportingVideo(url: URL?) {
+        didFinishExportingVideo(url: url, action: .previewConfirm)
+    }
+
+    func didFinishExportingImage(image: UIImage?) {
+        didFinishExportingImage(image: image, action: .previewConfirm)
+    }
+
+    func didFinishExportingVideo(url: URL?, action: KanvasExportAction) {
         if let videoURL = url {
             let asset = AVURLAsset(url: videoURL)
             analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
         }
         performUIUpdate { [weak self] in
             self?.cameraInputController.willCloseSoon = true
-            self?.delegate?.didCreateMedia(media: url.map { .video($0) }, error: url != nil ? nil : CameraControllerError.exportFailure)
+            self?.delegate?.didCreateMedia(media: url.map { .video($0) }, exportAction: action, error: url != nil ? nil : CameraControllerError.exportFailure)
         }
     }
 
-    func didFinishExportingImage(image: UIImage?) {
+    func didFinishExportingImage(image: UIImage?, action: KanvasExportAction) {
         analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: 1, length: 0)
         if let url = CameraController.saveImageToFile(image, info: .kanvas) {
             performUIUpdate { [weak self] in
-                self?.delegate?.didCreateMedia(media: .image(url), error: nil)
+                self?.delegate?.didCreateMedia(media: .image(url), exportAction: action, error: nil)
             }
         }
         else {
             performUIUpdate { [weak self] in
-                self?.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure)
+                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
             }
         }
     }

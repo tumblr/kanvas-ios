@@ -210,12 +210,12 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
     
-    func didFinishExportingVideo(url: URL?) {
+    func didFinishExportingVideo(url: URL?, action: KanvasExportAction) {
         XCTAssertNotNil(url)
         videoExportCalled = true
     }
     
-    func didFinishExportingImage(image: UIImage?) {
+    func didFinishExportingImage(image: UIImage?, action: KanvasExportAction) {
         XCTAssertNotNil(image)
         imageExportCalled = true
     }
