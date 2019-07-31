@@ -42,7 +42,16 @@ struct KanvasCameraImages {
     static let trashOpened = UIImage.imageFromCameraBundle(named: "trashOpened")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
     static let nextImage = UIImage.imageFromCameraBundle(named: "next")
-    
+    static let postImage: UIImage? = {
+        if let nextImageCGImage = nextImage?.cgImage {
+            return UIImage(cgImage: nextImageCGImage, scale: 1.0, orientation: .left)
+        }
+        else {
+            return nil
+        }
+    }()
+    static let saveImage = UIImage.imageFromCameraBundle(named: "save")
+
     // MARK: - Filters
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
     static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
@@ -64,8 +73,21 @@ struct KanvasCameraImages {
     ]
     
     // MARK: - Editor
+    static let editorConfirmImage = UIImage.imageFromCameraBundle(named: "editorConfirm")
     static let editionOptionTypes: [EditionOption: UIImage?] = [
         .filter: UIImage.imageFromCameraBundle(named: "editorFilters"),
         .media: UIImage.imageFromCameraBundle(named: "editorMedia"),
+        .drawing: UIImage.imageFromCameraBundle(named: "editorDraw"),
     ]
+    
+    // MARK: - Draw
+    static let undoImage = UIImage.imageFromCameraBundle(named: "undo")
+    static let eraserUnselectedImage = UIImage.imageFromCameraBundle(named: "eraserUnselected")
+    static let eraserSelectedImage = UIImage.imageFromCameraBundle(named: "eraserSelected")
+    static let markerImage = UIImage.imageFromCameraBundle(named: "marker")
+    static let sharpieImage = UIImage.imageFromCameraBundle(named: "sharpie")
+    static let pencilImage = UIImage.imageFromCameraBundle(named: "pencil")
+    static let gradientImage = UIImage.imageFromCameraBundle(named: "gradient")
+    static let closeGradientImage = UIImage.imageFromCameraBundle(named: "closeGradient")
+    static let eyeDropperImage = UIImage.imageFromCameraBundle(named: "eyeDropper")
 }

@@ -25,6 +25,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case editorMedia(Bool)
         case editorDrawing(Bool)
         case mediaPicking(Bool)
+        case editorSaving(Bool)
+        case editorPosting(Bool)
         case newCameraModes(Bool)
 
         var name: String {
@@ -49,6 +51,10 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor Drawing"
             case .mediaPicking(_):
                 return "Media Picking"
+            case .editorPosting(_):
+                return "Editor Posting"
+            case .editorSaving(_):
+                return "Editor Saving"
             case .newCameraModes(_):
                 return "New Camera Modes"
             }
@@ -75,6 +81,10 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .editorDrawing(let enabled):
                 return enabled
             case .mediaPicking(let enabled):
+                return enabled
+            case .editorSaving(let enabled):
+                return enabled
+            case .editorPosting(let enabled):
                 return enabled
             case .newCameraModes(let enabled):
                 return enabled
@@ -140,6 +150,10 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editorDrawing(value)
         case .mediaPicking(_):
             featuresData[indexPath.row] = .mediaPicking(value)
+        case .editorPosting(_):
+            featuresData[indexPath.row] = .editorPosting(value)
+        case .editorSaving(_):
+            featuresData[indexPath.row] = .editorSaving(value)
         case .newCameraModes(_):
             featuresData[indexPath.row] = .newCameraModes(value)
         }
