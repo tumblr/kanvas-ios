@@ -227,6 +227,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private func createFinalVideo(videoURL: URL, exportAction: KanvasExportAction) {
         let exporter = GLMediaExporter(filterType: filterType)
+        exporter.imageOverlays = getImageOverlays()
         exporter.export(video: videoURL) { (exportedVideoURL, _) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
@@ -242,6 +243,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private func createFinalImage(image: UIImage, exportAction: KanvasExportAction) {
         let exporter = GLMediaExporter(filterType: filterType)
+        exporter.imageOverlays = getImageOverlays()
         exporter.export(image: image) { (exportedImage, _) in
             performUIUpdate {
                 guard let image = exportedImage else {
@@ -253,6 +255,26 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.hideLoading()
             }
         }
+    }
+
+    private func getImageOverlays() -> [CGImage] {
+        var imageOverlays: [CGImage] = []
+        if let drawingLayer = drawingController.drawingLayer,
+            let drawingOverlayImage = self.drawingOverlay(layer: drawingLayer) {
+            imageOverlays.append(drawingOverlayImage)
+        }
+        return imageOverlays
+    }
+
+    private func drawingOverlay(layer: CALayer) -> CGImage? {
+        UIGraphicsBeginImageContextWithOptions(layer.bounds.size, false, UIScreen.main.scale)
+        defer { UIGraphicsEndImageContext() }
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+        layer.render(in: context)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        return image?.cgImage
     }
 
     private func handleExportError() {
