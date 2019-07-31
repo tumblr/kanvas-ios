@@ -48,6 +48,7 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     ///
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
+        guard item.type != .passthrough else { return }
         innerCell.bindTo(item)
     }
     
@@ -74,6 +75,13 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     /// - Parameter percent: 0.0 is the standard size, while 1.0 is the biggest size
     func setSize(percent: CGFloat) {
         innerCell.setSize(percent: percent)
+    }
+    
+    /// Selects/deselects the cell
+    ///
+    /// - Parameter selected: whether the cell is selected or not
+    func setSelected(_ selected: Bool) {
+        innerCell.setSelected(selected)
     }
     
     // MARK: - FilterCollectionInnerCellDelegate
