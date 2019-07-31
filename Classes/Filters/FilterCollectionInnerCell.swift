@@ -35,7 +35,8 @@ protocol FilterCollectionCellDimensions {
 /// Constants for the cell view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.2
-    static let bounceDuration: TimeInterval = 0.5
+    static let selectionBounceDuration: TimeInterval = 0.5
+    static let poppingBounceDuration: TimeInterval = 0.6
     static let selectedScale: CGFloat = 0.78
     static let unselectedScale: CGFloat = 1
 }
@@ -157,11 +158,11 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     
     /// Reduces the icon size with a bouncing effect
     private func setIconSelected() {
-        UIView.animateKeyframes(withDuration: Constants.bounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3 / Constants.bounceDuration, animations: {
+        UIView.animateKeyframes(withDuration: Constants.selectionBounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3 / Constants.selectionBounceDuration, animations: {
                 self.setIconScale(Constants.selectedScale - 0.08)
             })
-            UIView.addKeyframe(withRelativeStartTime: 0.3 / Constants.bounceDuration, relativeDuration: 0.2 / Constants.bounceDuration, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.3 / Constants.selectionBounceDuration, relativeDuration: 0.2 / Constants.selectionBounceDuration, animations: {
                 self.setIconScale(Constants.selectedScale)
             })
         }, completion: nil)
@@ -213,11 +214,11 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         let regularSize: CGFloat = 1
         let increment: CGFloat = 0.1
         
-        UIView.animateKeyframes(withDuration: Constants.bounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.35 / Constants.bounceDuration, animations: {
+        UIView.animateKeyframes(withDuration: Constants.poppingBounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.4 / Constants.poppingBounceDuration, animations: {
                 self.mainView?.transform = CGAffineTransform(scaleX: regularSize + increment, y: regularSize + increment)
             })
-            UIView.addKeyframe(withRelativeStartTime: 0.35 / Constants.bounceDuration, relativeDuration: 0.15 / Constants.bounceDuration, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.4 / Constants.poppingBounceDuration, relativeDuration: 0.2 / Constants.poppingBounceDuration, animations: {
                 self.mainView?.transform = CGAffineTransform(scaleX: regularSize, y: regularSize)
             })
         }, completion: nil)
