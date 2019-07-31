@@ -97,7 +97,7 @@ final class EditorFilterController: UIViewController, EditorFilterViewDelegate, 
             self.filterCollectionController.showView(true)
         }
         else {
-            UIView.animate(withDuration: EditorFilterControllerConstants.animationDuration, animations:  {
+            UIView.animate(withDuration: EditorFilterControllerConstants.animationDuration, animations: {
                 self.filterView.alpha = 0
             }, completion: { _ in
                 self.filterCollectionController.showView(false)
