@@ -46,8 +46,8 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     weak var delegate: FilterCollectionInnerCellDelegate?
     
     private weak var mainView: UIImageView?
-    private var circleView: UIImageView = UIImageView()
-    private var iconView: UIImageView = UIImageView()
+    private let circleView: UIImageView = UIImageView()
+    private let iconView: UIImageView = UIImageView()
     
     init(dimensions: FilterCollectionCellDimensions) {
         self.dimensions = dimensions
