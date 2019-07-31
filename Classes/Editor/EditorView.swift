@@ -75,7 +75,6 @@ final class EditorView: UIView {
         setupPlayer()
         drawingCanvas.add(into: self)
         setUpCloseButton()
-        setUpConfirmButton()
         switch mainActionMode {
         case .confirm:
             setUpConfirmButton()
@@ -155,10 +154,10 @@ final class EditorView: UIView {
         
         addSubview(filterMenuContainer)
         NSLayoutConstraint.activate([
-            filterMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            filterMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            filterMenuContainer.topAnchor.constraint(equalTo: topAnchor),
-            filterMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+            filterMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            filterMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            filterMenuContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            filterMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
