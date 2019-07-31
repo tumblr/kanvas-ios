@@ -471,7 +471,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - ModeSelectorAndShootControllerDelegate
 
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
-        if  mode.group == .video {
+        if mode.group == .video {
             cameraZoomHandler.setZoom(point: currentPoint, gesture: gesture)
         }
     }
