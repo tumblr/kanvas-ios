@@ -47,8 +47,8 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     weak var delegate: FilterCollectionInnerCellDelegate?
     
     private weak var mainView: UIImageView?
-    private var circleView: UIImageView = UIImageView()
-    private var iconView: UIImageView = UIImageView()
+    private let circleView: UIImageView = UIImageView()
+    private let iconView: UIImageView = UIImageView()
     
     init(dimensions: FilterCollectionCellDimensions) {
         self.dimensions = dimensions
@@ -66,7 +66,7 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
         iconView.image = KanvasCameraImages.filterTypes[item.type] ?? nil
-        iconView.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
+        iconView.backgroundColor = KanvasCameraColors.filterTypes[item.type]
     }
     
     /// shows or hides the cell

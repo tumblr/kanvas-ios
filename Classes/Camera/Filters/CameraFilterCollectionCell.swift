@@ -77,7 +77,7 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.setSize(percent: percent)
     }
     
-    /// Reduces the size of the cell to mark it as selected
+    /// Selects/deselects the cell
     ///
     /// - Parameter selected: whether the cell is selected or not
     func setSelected(_ selected: Bool) {
