@@ -75,7 +75,6 @@ final class EditorView: UIView {
         setupPlayer()
         drawingCanvas.add(into: self)
         setUpCloseButton()
-        setUpConfirmButton()
         switch mainActionMode {
         case .confirm:
             setUpConfirmButton()
