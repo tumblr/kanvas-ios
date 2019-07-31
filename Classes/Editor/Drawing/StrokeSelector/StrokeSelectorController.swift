@@ -61,6 +61,13 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
         strokeSelectorView.showAnimation()
     }
     
+    /// Changes the color of the circle inside the main button and the selector
+    ///
+    /// - Parameter color: the color to be applied
+    func tintStrokeCircle(color: UIColor) {
+        strokeSelectorView.tintStrokeCircle(color: color)
+    }
+    
     /// Calculates the stroke size based on the size selected
     /// on the selector and the min and max values of the texture
     ///
@@ -129,9 +136,9 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     ///
     /// - Parameter percent: the new size of the circle
     private func setCircleSize(percent: CGFloat) {
-        let maxIncrement = (StrokeSelectorView.strokeCircleMaxSize / StrokeSelectorView.strokeCircleMinSize) - 1
+        let maxIncrement = (StrokeSelectorView.circleMaxSize / StrokeSelectorView.circleMinSize) - 1
         let scale = 1.0 + maxIncrement * percent / 100.0
-        strokeSelectorView.transformStrokeCircle(CGAffineTransform(scaleX: scale, y: scale))
+        strokeSelectorView.transformCircle(CGAffineTransform(scaleX: scale, y: scale))
     }
     
     private func setStrokeSize(percent: CGFloat) {
