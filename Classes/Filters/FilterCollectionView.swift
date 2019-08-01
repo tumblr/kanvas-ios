@@ -37,4 +37,23 @@ final class FilterCollectionView: IgnoreTouchesView {
         collectionView.clipsToBounds = false
     }
     
+    // MARK: - Public interface
+    
+    /// Makes its cells shrink
+    func shrink() {
+        let cells = getVisibleCells()
+        cells.forEach { $0.shrink() }
+    }
+    
+    /// Makes its cells pop
+    func pop() {
+        let cells = getVisibleCells()
+        cells.forEach { $0.pop() }
+    }
+    
+    /// Obtains the visible cells from the collection view
+    private func getVisibleCells() -> [FilterCollectionCell] {
+        guard let cells = collectionView.visibleCells as? [FilterCollectionCell] else { return [] }
+        return cells
+    }
 }

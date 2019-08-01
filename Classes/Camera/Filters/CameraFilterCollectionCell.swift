@@ -83,6 +83,16 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     func setSelected(_ selected: Bool) {
         innerCell.setSelected(selected)
     }
+
+    /// Shrinks the cell until it is hidden
+    func shrink() {
+        innerCell.shrink()
+    }
+    
+    /// Increases the size of the cell until it reaches its regular size
+    func pop() {
+        innerCell.pop()
+    }
     
     // MARK: - FilterCollectionInnerCellDelegate
     

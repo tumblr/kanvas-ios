@@ -87,6 +87,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         super.viewDidLayoutSubviews()
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
+        filterCollectionView.shrink()
     }
     
     // MARK: - Public interface
@@ -102,8 +103,11 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: EditorFilterCollectionControllerConstants.animationDuration) {
-            self.filterCollectionView.alpha = show ? 1 : 0
+        if show {
+            self.filterCollectionView.pop()
+        }
+        else {
+            self.filterCollectionView.shrink()
         }
     }
     

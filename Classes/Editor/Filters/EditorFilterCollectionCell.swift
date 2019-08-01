@@ -84,6 +84,16 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.setSelected(selected)
     }
     
+    /// Shrinks the cell until it is hidden
+    func shrink() {
+        innerCell.shrink()
+    }
+    
+    /// Increases the size of the cell until it reaches its regular size
+    func pop() {
+        innerCell.pop()
+    }
+    
     // MARK: - FilterCollectionInnerCellDelegate
     
     func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {
