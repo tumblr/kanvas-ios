@@ -25,7 +25,7 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testConfigureMode() {
         let cameraInputController = newCameraInputController()
-        do { try? cameraInputController.configureMode(.gif) }
+        do { try? cameraInputController.configureMode(.loop) }
         XCTAssert(cameraInputController.currentCameraOutput == .video, "Gif mode should configure as video")
         do { try? cameraInputController.configureMode(.photo) }
         XCTAssert(cameraInputController.currentCameraOutput == .photo, "Photo mode not configured properly")
@@ -40,16 +40,16 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testTakePhoto() {
         let cameraInputController = newCameraInputController()
-        cameraInputController.takePhoto(completion: { image in
+        cameraInputController.takePhoto(on: .photo, completion: { image in
             XCTAssertNotNil(image, "Image should not be nil")
         })
     }
 
     func testTakeVideo() {
         let cameraInputController = newCameraInputController()
-        let started = cameraInputController.startRecording()
+        let started = cameraInputController.startRecording(on: .stopMotion)
         XCTAssert(started, "Recording should have started")
-        cameraInputController.endRecording { (url) in
+        cameraInputController.endRecording() { (url) in
             XCTAssertNotNil(url, "URL should not be nil")
         }
     }
@@ -64,7 +64,7 @@ final class CameraInputControllerTests: XCTestCase {
     func testDeleteSegment() {
         let cameraInputController = newCameraInputController()
         cameraInputController.deleteSegment(at: 0) // testing for graceful failure
-        cameraInputController.takePhoto(completion: { (image) in
+        cameraInputController.takePhoto(on: .photo, completion: { (image) in
             XCTAssertEqual(cameraInputController.segments().count, 1, "Photo should be taken")
             cameraInputController.deleteSegment(at: 0)
             XCTAssertEqual(cameraInputController.segments().count, 0, "Photo should be deleted")
@@ -73,8 +73,8 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testMoveSegment() {
         let cameraInputController = newCameraInputController()
-        cameraInputController.takePhoto(completion: { (image1) in
-            cameraInputController.takePhoto(completion: { (image2) in
+        cameraInputController.takePhoto(on: .photo, completion: { (image1) in
+            cameraInputController.takePhoto(on: .photo, completion: { (image2) in
                 XCTAssertEqual(cameraInputController.segments()[0].image, image1, "Photo should be taken in order")
                 cameraInputController.moveSegment(from: 0, to: 1)
                 XCTAssertEqual(cameraInputController.segments()[0].image, image2, "Photo order should have been altered")

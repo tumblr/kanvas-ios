@@ -10,14 +10,20 @@ import Foundation
 struct KanvasCameraImages {
     // MARK: - Mode Selection
     static let photoModeImage: UIImage? = .none
-    static let gifModeImage: UIImage? = .none
+    static let loopModeImage: UIImage? = .none
     static let stopMotionModeImage: UIImage? = .none
+    static let normalModeImage: UIImage? = .none
+    static let stitchModeImage: UIImage? = .none
+    static let gifModeImage: UIImage? = .none
 
     static func image(for mode: CameraMode) -> UIImage? {
         switch mode {
         case .photo: return photoModeImage
-        case .gif: return gifModeImage
+        case .loop: return loopModeImage
         case .stopMotion: return stopMotionModeImage
+        case .normal: return normalModeImage
+        case .stitch: return stitchModeImage
+        case .gif: return gifModeImage
         }
     }
     
@@ -50,6 +56,7 @@ struct KanvasCameraImages {
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
     static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
     static let filterTypes: [FilterType: UIImage?] = [
+        .passthrough: UIImage.imageFromCameraBundle(named: "NoFilter"),
         .wavePool: UIImage.imageFromCameraBundle(named: "Water"),
         .plasma: UIImage.imageFromCameraBundle(named: "Plasma"),
         .emInterference: UIImage.imageFromCameraBundle(named: "EMInter"),

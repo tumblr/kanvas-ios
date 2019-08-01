@@ -373,7 +373,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func takePhoto() {
         guard !isRecording else { return }
         updatePhotoCaptureState(event: .started)
-        cameraInputController.takePhoto(completion: { [weak self] image in
+        cameraInputController.takePhoto(on: currentMode, completion: { [weak self] image in
             defer {
                 self?.updatePhotoCaptureState(event: .ended)
             }
@@ -385,7 +385,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                            filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
                 if let image = image {
-                    if strongSelf.currentMode == .photo {
+                    if strongSelf.currentMode.quantity == .single {
                         strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil)])
                     }
                     else {
@@ -504,7 +504,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - ModeSelectorAndShootControllerDelegate
 
     func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
-        if mode == .stopMotion {
+        if mode.group == .video {
             cameraZoomHandler.setZoom(point: currentPoint, gesture: gesture)
         }
     }
@@ -514,33 +514,32 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didTapForMode(_ mode: CameraMode) {
-        switch mode {
+        switch mode.group {
         case .gif:
             takeGif()
-        case .photo:
-            takePhoto()
-        case .stopMotion:
+        case .photo, .video:
             takePhoto()
         }
     }
 
     func didStartPressingForMode(_ mode: CameraMode) {
-        switch mode {
+        switch mode.group {
         case .gif:
             takeGif(useLongerDuration: true)
-        case .stopMotion:
+        case .video:
             prepareHapticFeedback()
-            let _ = cameraInputController.startRecording()
+            let _ = cameraInputController.startRecording(on: mode)
             performUIUpdate { [weak self] in
                 self?.updateRecordState(event: .started)
             }
-        default: break
+        case .photo:
+            break
         }
     }
 
     func didEndPressingForMode(_ mode: CameraMode) {
-        switch mode {
-        case .stopMotion:
+        switch mode.group {
+        case .video:
             cameraInputController.endRecording(completion: { [weak self] url in
                 guard let strongSelf = self else { return }
                 if let videoURL = url {
@@ -552,12 +551,20 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                                    filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
                 }
                 performUIUpdate {
-                    if let url = url, let image = AVURLAsset(url: url).thumbnail() {
-                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
-                                                                        overlayText: strongSelf.durationStringForAssetAtURL(url),
-                                                                        lastFrame: strongSelf.getLastFrameFrom(url)))
+                    if let url = url {
+                        if mode.quantity == .single {
+                            strongSelf.showPreviewWithSegments([CameraSegment.video(url)])
+                            strongSelf.updateRecordState(event: .ended)
+                            strongSelf.updateUI(forClipsPresent: false)
+                        }
+                        else if let image = AVURLAsset(url: url).thumbnail() {
+                            strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                            overlayText: strongSelf.durationStringForAssetAtURL(url),
+                                                                            lastFrame: strongSelf.getLastFrameFrom(url)))
+                            strongSelf.updateRecordState(event: .ended)
+                        }
                     }
-                    strongSelf.updateRecordState(event: .ended)
+                    
                     strongSelf.generateHapticFeedback()
                 }
             })
@@ -566,10 +573,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     func didDropToDelete(_ mode: CameraMode) {
-        switch mode {
-        case .stopMotion:
+        switch mode.quantity {
+        case .multiple:
             clipsController.removeDraggingClip()
-        default: break
+        case .single:
+            break
         }
     }
     
@@ -806,7 +814,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func pick(image: UIImage) {
-        if self.currentMode == .photo {
+        if currentMode.quantity == .single {
             performUIUpdate {
                 self.showPreviewWithSegments([CameraSegment.image(image, nil)])
             }
@@ -824,14 +832,19 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func pick(video url: URL) {
-        if let recorder = self.cameraInputController.recorder as? CameraRecorder {
-            recorder.segmentsHandler.addNewVideoSegment(url: url)
+        if currentMode.quantity == .single {
+            self.showPreviewWithSegments([CameraSegment.video(url)])
         }
-        performUIUpdate {
-            if let image = AVURLAsset(url: url).thumbnail() {
-                self.clipsController.addNewClip(MediaClip(representativeFrame: image,
-                                                          overlayText: self.durationStringForAssetAtURL(url),
-                                                          lastFrame: self.getLastFrameFrom(url)))
+        else {
+            if let recorder = self.cameraInputController.recorder as? CameraRecorder {
+                recorder.segmentsHandler.addNewVideoSegment(url: url)
+            }
+            performUIUpdate {
+                if let image = AVURLAsset(url: url).thumbnail() {
+                    self.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                              overlayText: self.durationStringForAssetAtURL(url),
+                                                              lastFrame: self.getLastFrameFrom(url)))
+                }
             }
         }
     }

@@ -20,7 +20,7 @@ final class ModeSelectorAndShootControllerTests: FBSnapshotTestCase {
     
     func newViewController() -> ModeSelectorAndShootController {
         let settings = CameraSettings()
-        settings.enabledModes = [.stopMotion, .photo, .gif]
+        settings.enabledModes = [.stopMotion, .photo, .loop]
         let viewController = ModeSelectorAndShootController(settings: settings)
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
@@ -46,7 +46,7 @@ final class ModeSelectorAndShootControllerTests: FBSnapshotTestCase {
     func testSetMode() {
         let viewController = newViewController()
         UIView.setAnimationsEnabled(false)
-        viewController.setMode(.stopMotion, from: .gif)
+        viewController.setMode(.stopMotion, from: .loop)
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
     }

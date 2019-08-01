@@ -278,10 +278,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// - Parameter mode: The current camera mode
     /// - throws:
     func configureMode(_ mode: CameraMode) throws {
-        switch mode {
+        switch mode.group {
         case .photo:
             currentCameraOutput = .photo
-        case .gif, .stopMotion:
+        case .video, .gif:
             currentCameraOutput = .video
         }
         do { try configureCurrentOutput() } catch {
@@ -308,25 +308,27 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Takes a photo using the CameraRecordingProtocol type
     ///
+    /// - Parameter mode: current camera mode
     /// - Parameter completion: returns a UIImage if successful
-    func takePhoto(completion: @escaping (UIImage?) -> Void) {
+    func takePhoto(on mode: CameraMode, completion: @escaping (UIImage?) -> Void) {
         guard let recorder = recorder else {
             completion(nil)
             return
         }
-        recorder.takePhoto(cameraPosition: currentCameraPosition, completion: { (image) in
+        recorder.takePhoto(on: mode, cameraPosition: currentCameraPosition, completion: { (image) in
             completion(image)
         })
     }
 
     /// Starts video recording using the CameraRecordingProtocol type
     ///
+    /// - Parameter mode: current camera mode
     /// - Returns: return true if successfully started recording
-    func startRecording() -> Bool {
+    func startRecording(on mode: CameraMode) -> Bool {
         guard let recorder = self.recorder else { return false }
         startAudioSession()
         addArtificialFlashIfNecessary()
-        recorder.startRecordingVideo()
+        recorder.startRecordingVideo(on: mode)
         return true
     }
 

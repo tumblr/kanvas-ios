@@ -10,17 +10,63 @@ import Foundation
 /// Camera Modes available
 ///
 /// - photo: Capturing photos
-/// - gif: Capturing gifs, a sequence of photos
 /// - stopMotion: Capturing stop motions, a sequence of images and/or videos
+/// - loop: Capturing gifs, a sequence of photos
+/// - normal: Capturing single photo or single video
+/// - stitch: Capturing stop motions, a sequence of images and/or videos
+/// - gif: Capturing gifs, a sequence of photos
+
 @objc public enum CameraMode: Int {
     case stopMotion = 0
     case photo
+    case loop
+    case normal
+    case stitch
     case gif
-
+    
+    /// Group
+    ///
+    /// - video: The mode creates a video from a sequence
+    /// - photo: The mode creates a photo
+    /// - gif: The mode creates a gif animation
+    @objc public enum Group: Int {
+        case video = 0
+        case photo
+        case gif
+    }
+    
+    /// Quantity
+    ///
+    /// - single: The mode allows just one photo, video or gif
+    /// - multiple: The mode creates a sequence of photos and/or videos
+    @objc public enum Quantity: Int {
+        case single = 0
+        case multiple
+    }
+    
+    public var group: Group {
+        switch self {
+        case .stitch, .normal, .stopMotion:
+            return .video
+        case .photo:
+            return .photo
+        case .loop, .gif:
+            return .gif
+        }
+    }
+    
+    public var quantity: Quantity {
+        switch self {
+        case .photo, .normal, .gif, .loop:
+            return .single
+        case .stitch, .stopMotion:
+            return .multiple
+        }
+    }
+    
     private var order: Int {
         return self.rawValue
     }
-
 }
 
 /// Camera Features
@@ -72,6 +118,10 @@ public struct CameraFeatures {
     /// The Editor Saving feature
     /// This enables the UI to save media from the editor.
     public var editorSaving: Bool = false
+    
+    /// The New Camera Modes
+    /// This replaces Capture, Photo and Loop modes with Normal, Stitch and GIF modes
+    public var newCameraModes = false
 }
 
 // A class that defines the settings for the Kanvas Camera
@@ -151,7 +201,7 @@ public struct CameraFeatures {
     // MARK: - Landscape support
     public var cameraSupportsLandscape: Bool = DefaultCameraSettings.landscapeIsSupported
 
-    // MARK: - Stop motion mode export settings
+    // MARK: - Stop motion/stitch mode export settings
     public var exportStopMotionPhotoAsVideo: Bool = DefaultCameraSettings.exportStopMotionPhotoAsVideo
 
     /// MARK: - Camera features
@@ -176,14 +226,14 @@ public extension CameraSettings {
         }
     }
     /**
-     Enables/disables gif mode.
+     Enables/disables loop mode.
      */
-    var enableGifMode: Bool {
+    var enableLoopMode: Bool {
         set {
-            setMode(.gif, to: newValue)
+            setMode(.loop, to: newValue)
         }
         get {
-            return getMode(.gif)
+            return getMode(.loop)
         }
     }
     /**
@@ -195,6 +245,39 @@ public extension CameraSettings {
         }
         get {
             return getMode(.stopMotion)
+        }
+    }
+    /**
+     Enables/disables normal mode.
+     */
+    var enableNormalMode: Bool {
+        set {
+            setMode(.normal, to: newValue)
+        }
+        get {
+            return getMode(.normal)
+        }
+    }
+    /**
+     Enables/disables stitch mode.
+     */
+    var enableStitchMode: Bool {
+        set {
+            setMode(.stitch, to: newValue)
+        }
+        get {
+            return getMode(.stitch)
+        }
+    }
+    /**
+     Enables/disables GIF mode.
+     */
+    var enableGifMode: Bool {
+        set {
+            setMode(.gif, to: newValue)
+        }
+        get {
+            return getMode(.gif)
         }
     }
 
@@ -224,7 +307,7 @@ extension CameraSettings {
         // enabledModes will always have at least one value as its precondition.
         guard let firstMode = orderedEnabledModes.first else {
             assertionFailure("should have at least one enabled mode")
-            return CameraMode.stopMotion
+            return features.newCameraModes ? .normal : .stopMotion
         }
         return defaultMode ?? firstMode
     }
@@ -262,7 +345,7 @@ extension CameraSettings {
 // MARK: - Default settings
 private struct DefaultCameraSettings {
 
-    static let enabledModes: Set<CameraMode> = [.photo, .gif, .stopMotion]
+    static let enabledModes: Set<CameraMode> = [.photo, .loop, .stopMotion]
     static let defaultFlashOption: AVCaptureDevice.FlashMode = .off
     static let defaultCameraPositionOption: AVCaptureDevice.Position = .back
     static let defaultImagePreviewOption: ImagePreviewMode = .off

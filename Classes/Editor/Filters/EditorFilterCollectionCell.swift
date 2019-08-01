@@ -77,6 +77,23 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.setSize(percent: percent)
     }
     
+    /// Selects/deselects the cell
+    ///
+    /// - Parameter selected: whether the cell is selected or not
+    func setSelected(_ selected: Bool) {
+        innerCell.setSelected(selected)
+    }
+    
+    /// Shrinks the cell until it is hidden
+    func shrink() {
+        innerCell.shrink()
+    }
+    
+    /// Increases the size of the cell until it reaches its regular size
+    func pop() {
+        innerCell.pop()
+    }
+    
     // MARK: - FilterCollectionInnerCellDelegate
     
     func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {

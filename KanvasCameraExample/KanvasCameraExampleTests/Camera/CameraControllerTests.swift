@@ -69,7 +69,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func testSetUpWithGifDefaultModeShouldStartWithGifMode() {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
-        settings.defaultMode = .gif
+        settings.defaultMode = .loop
         settings.features.ghostFrame = true
         settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
@@ -128,7 +128,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
-        controller.didOpenMode(.gif, andClosed: .none)
+        controller.didOpenMode(.loop, andClosed: .none)
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }

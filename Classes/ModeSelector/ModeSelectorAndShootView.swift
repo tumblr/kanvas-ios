@@ -267,10 +267,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     // MARK: - Triggers by mode
     
     private func triggerFor(_ mode: CameraMode) -> CaptureTrigger {
-        switch mode {
+        switch mode.group {
             case .photo: return .tap
             case .gif: return .tapAndHold(animateCircle: true)
-            case .stopMotion: return .tapAndHold(animateCircle: false)
+            case .video: return .tapAndHold(animateCircle: false)
         }
     }
 }

@@ -38,7 +38,7 @@ protocol EditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterCollectionControllerDelegate, DrawingControllerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate {
     
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
@@ -54,8 +54,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         return controller
     }()
     
-    private lazy var filterCollectionController: EditorFilterCollectionController = {
-        let controller = EditorFilterCollectionController(settings: self.settings)
+    private lazy var filterController: EditorFilterController = {
+        let controller = EditorFilterController(settings: self.settings)
         controller.delegate = self
         return controller
     }()
@@ -150,7 +150,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         drawingController.drawingLayer = editorView.drawingCanvas.layer
         
         load(childViewController: collectionController, into: editorView.collectionContainer)
-        load(childViewController: filterCollectionController, into: editorView.filterCollectionContainer)
+        load(childViewController: filterController, into: editorView.filterMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         
         setUpColorCarousel()
@@ -187,17 +187,17 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         loadingView.stopLoading()
     }
     
-    // MARK: - CameraEditorViewDelegate
-
-    func saveButtonPressed() {
+    // MARK: - EditorViewDelegate
+    
+    func didTapSaveButton() {
         startExporting(action: .save)
     }
 
-    func postButtonPressed() {
+    func didTapPostButton() {
         startExporting(action: .post)
     }
 
-    func confirmButtonPressed() {
+    func didTapConfirmButton() {
         startExporting(action: .confirm)
     }
 
@@ -205,9 +205,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         player.stop()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
-            // If the camera mode is .stopMotion and the `exportStopMotionPhotoAsVideo` is true,
+            // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
-            if let cameraMode = cameraMode, cameraMode == .stopMotion && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
+            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
                 createFinalVideo(videoURL: videoURL, exportAction: action)
             }
             else {
@@ -286,7 +286,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.present(alertController, animated: true, completion: .none)
     }
     
-    func closeButtonPressed() {
+    func didTapCloseButton() {
         player.stop()
         delegate?.dismissButtonPressed()
     }
@@ -296,13 +296,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         
         switch editionOption {
         case .filter:
-            filterCollectionController.showView(false)
-            showSelectionCircle(false)
-            showCloseMenuButton(false)
+            filterController.showView(false)
         case .drawing:
             drawingController.showView(false)
         case .media:
-            showCloseMenuButton(false)
+            break
         }
         
         collectionController.showView(true)
@@ -320,18 +318,19 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         
         switch editionOption {
         case .filter:
-            filterCollectionController.showView(true)
-            showCloseMenuButton(true)
-            showSelectionCircle(true)
+            filterController.showView(true)
         case .drawing:
-            showCloseMenuButton(false)
             drawingController.showView(true)
         case .media:
-            showCloseMenuButton(true)
+            break
         }
     }
     
-    // MARK: - EditorFilterCollectionControllerDelegate
+    // MARK: - EditorFilterControllerDelegate
+    
+    func didConfirmFilters() {
+        closeMenuButtonPressed()
+    }
     
     func didSelectFilter(_ filterItem: FilterItem) {
         self.filterType = filterItem.type
@@ -359,7 +358,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - DrawingViewCollectionDelegate
     
-    func didTapCloseButton() {
+    func didConfirmDrawing() {
         closeMenuButtonPressed()
     }
     
@@ -376,24 +375,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         editorView.showConfirmButton(show)
     }
     
-    /// shows or hides the button to close a menu (checkmark)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showCloseMenuButton(_ show: Bool) {
-        editorView.showCloseMenuButton(show)
-    }
-    
     /// shows or hides the close button (back caret)
     ///
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
-    }
-    
-    /// shows or hides the filter selection circle
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showSelectionCircle(_ show: Bool) {
-        editorView.showSelectionCircle(show)
     }
 }

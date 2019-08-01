@@ -32,14 +32,23 @@ protocol FilterCollectionCellDimensions {
     var width: CGFloat { get }
 }
 
+/// Constants for the cell view
+private struct Constants {
+    static let animationDuration: TimeInterval = 0.2
+    static let selectionBounceDuration: TimeInterval = 0.5
+    static let poppingBounceDuration: TimeInterval = 0.6
+    static let selectedScale: CGFloat = 0.78
+    static let unselectedScale: CGFloat = 1
+}
+
 final class FilterCollectionInnerCell: UICollectionViewCell {
-    
-    private static var animationDuration: TimeInterval = 0.2
     
     private var dimensions: FilterCollectionCellDimensions
     weak var delegate: FilterCollectionInnerCellDelegate?
     
-    private weak var circleView: UIImageView?
+    private weak var mainView: UIImageView?
+    private let circleView: UIImageView = UIImageView()
+    private let iconView: UIImageView = UIImageView()
     
     init(dimensions: FilterCollectionCellDimensions) {
         self.dimensions = dimensions
@@ -56,16 +65,15 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     ///
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
-        guard item.type != .passthrough else { return }
-        circleView?.image = KanvasCameraImages.filterTypes[item.type] ?? nil
-        circleView?.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
+        iconView.image = KanvasCameraImages.filterTypes[item.type] ?? nil
+        iconView.backgroundColor = KanvasCameraColors.filterTypes[item.type]
     }
     
     /// shows or hides the cell
     ///
     /// - Parameter show: true to show, false to hide
     func show(_ show: Bool) {
-        UIView.animate(withDuration: FilterCollectionInnerCell.animationDuration) { [weak self] in
+        UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
             self?.contentView.alpha = show ? 1 : 0
         }
     }
@@ -73,23 +81,28 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        circleView?.image = nil
-        circleView?.backgroundColor = nil
+        iconView.image = nil
+        iconView.backgroundColor = nil
+        iconView.transform = .identity
     }
     
     // MARK: - Layout
     
     private func setUpView() {
+        setUpMainView()
+        setUpIconView()
+        setUpCircleBorder()
+    }
+    
+    /// Sets up a container for the white circle and the filter icon
+    private func setUpMainView() {
         let imageView = UIImageView()
         contentView.addSubview(imageView)
-        imageView.accessibilityIdentifier = "Filter Inner Cell View"
+        imageView.accessibilityIdentifier = "Filter Inner Cell Main View"
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = dimensions.circleDiameter / 2
-        imageView.layer.borderWidth = 3 * (dimensions.circleDiameter/dimensions.circleMaxDiameter)
-        imageView.layer.borderColor = UIColor.white.cgColor
         
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
@@ -98,21 +111,88 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
             imageView.widthAnchor.constraint(equalToConstant: dimensions.circleDiameter)
         ])
         
-        circleView = imageView
+        mainView = imageView
+    }
+    
+    /// Sets up the filter icon
+    private func setUpIconView() {
+        guard let mainView = mainView else { return }
+        iconView.add(into: mainView)
+        iconView.accessibilityIdentifier = "Filter Inner Cell Icon View"
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.contentMode = .scaleAspectFill
+        iconView.clipsToBounds = true
+        iconView.layer.masksToBounds = true
+        iconView.layer.cornerRadius = dimensions.circleDiameter / 2
+    }
+    
+    /// Sets up view that contains the circular border
+    private func setUpCircleBorder() {
+        guard let mainView = mainView else { return }
+        circleView.add(into: mainView)
+        circleView.accessibilityIdentifier = "Filter Inner Cell Circle Border"
+        circleView.translatesAutoresizingMaskIntoConstraints = false
+        circleView.contentMode = .scaleAspectFill
+        circleView.clipsToBounds = true
+        circleView.layer.masksToBounds = true
+        circleView.layer.cornerRadius = dimensions.circleDiameter / 2
+        circleView.layer.borderWidth = 3 * (dimensions.circleDiameter/dimensions.circleMaxDiameter)
+        circleView.layer.borderColor = UIColor.white.cgColor
     }
     
     // MARK: - Animations
     
-    /// Changes the circle scale
+    /// Changes the scale of the main view
     ///
     /// - Parameter scale: the new scale for the circle, 1.0 is the standard size
-    private func setScale(_ scale: CGFloat) {
-        circleView?.transform = CGAffineTransform(scaleX: scale, y: scale)
+    private func setMainScale(_ scale: CGFloat) {
+        mainView?.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
+    
+    /// Changes the scale of the filter icon
+    ///
+    /// - Parameter scale: the new scale for the icon, 1.0 is the standard size
+    private func setIconScale(_ scale: CGFloat) {
+        iconView.transform = CGAffineTransform(scaleX: scale, y: scale)
+    }
+    
+    /// Reduces the icon size with a bouncing effect
+    private func setIconSelected() {
+        UIView.animateKeyframes(withDuration: Constants.selectionBounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3 / Constants.selectionBounceDuration, animations: {
+                self.setIconScale(Constants.selectedScale - 0.08)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.3 / Constants.selectionBounceDuration, relativeDuration: 0.2 / Constants.selectionBounceDuration, animations: {
+                self.setIconScale(Constants.selectedScale)
+            })
+        }, completion: nil)
+    }
+    
+    /// Animates the icon back to normal size
+    private func setIconUnselected() {
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            self.setIconScale(Constants.unselectedScale)
+        })
+    }
+    
+    // MARK: - Public interface
     
     /// Sets the circle with standard size
     func setStandardSize() {
-        setScale(1)
+        setMainScale(1)
+    }
+    
+    /// Changes the size of the filter icon, depending on whether the
+    /// icon is selected or not
+    ///
+    /// - Parameter selected: whether the cell is selected or not
+    func setSelected(_ selected: Bool) {
+        if selected {
+            setIconSelected()
+        }
+        else {
+            setIconUnselected()
+        }
     }
     
     /// Changes the circle size according to a percentage.
@@ -121,7 +201,27 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     func setSize(percent: CGFloat) {
         let maxIncrement = (dimensions.circleMaxDiameter - dimensions.circleDiameter) / dimensions.circleMaxDiameter
         let scale = 1 + percent * maxIncrement
-        setScale(scale)
+        setMainScale(scale)
+    }
+    
+    /// Shrinks the cell until it is hidden
+    func shrink() {
+        mainView?.transform = CGAffineTransform(scaleX: 0, y: 0)
+    }
+    
+    /// Increases the size of the cell until it reaches its regular size, with a bouncing effect
+    func pop() {
+        let regularSize: CGFloat = 1
+        let increment: CGFloat = 0.1
+        
+        UIView.animateKeyframes(withDuration: Constants.poppingBounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.4 / Constants.poppingBounceDuration, animations: {
+                self.mainView?.transform = CGAffineTransform(scaleX: regularSize + increment, y: regularSize + increment)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.4 / Constants.poppingBounceDuration, relativeDuration: 0.2 / Constants.poppingBounceDuration, animations: {
+                self.mainView?.transform = CGAffineTransform(scaleX: regularSize, y: regularSize)
+            })
+        }, completion: nil)
     }
     
     // MARK: - Gesture recognizers

@@ -38,7 +38,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         return nil
     }
 
-    func startRecordingVideo() {
+    func startRecordingVideo(on mode: CameraMode) {
         if isRecording() {
             return
         }
@@ -68,7 +68,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         recording = false
     }
 
-    func takePhoto(cameraPosition: AVCaptureDevice.Position? = .back, completion: @escaping (UIImage?) -> Void) {
+    func takePhoto(on mode: CameraMode, cameraPosition: AVCaptureDevice.Position? = .back, completion: @escaping (UIImage?) -> Void) {
         if isRecording() {
             completion(nil)
             return

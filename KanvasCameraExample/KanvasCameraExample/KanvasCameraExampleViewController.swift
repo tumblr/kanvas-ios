@@ -15,6 +15,13 @@ import UIKit
 /// The camera can be customized with CameraSettings
 final class KanvasCameraExampleViewController: UIViewController {
 
+    private struct Constants {
+        static let standardModes: Set<CameraMode> = [.photo, .loop, .stopMotion]
+        static let newModes: Set<CameraMode> = [.gif, .normal, .stitch]
+        static let defaultStandardMode: CameraMode = .stopMotion
+        static let defaultNewMode: CameraMode = .normal
+    }
+
     private let launchKanvasButton = UIButton(type: .custom)
     private let launchKanvasDashboardButton = UIButton(type: .system)
     private var shouldShowWelcomeTooltip = true
@@ -68,9 +75,6 @@ final class KanvasCameraExampleViewController: UIViewController {
     /// - Returns: an instance of CameraSettings
     private static func customCameraSettings() -> CameraSettings {
         let settings = CameraSettings()
-        settings.enabledModes = [.photo, .gif, .stopMotion]
-        settings.defaultMode = .stopMotion
-        settings.exportStopMotionPhotoAsVideo = true
         settings.features.ghostFrame = true
         settings.features.openGLPreview = true
         settings.features.openGLCapture = true
@@ -82,6 +86,10 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.mediaPicking = true
         settings.features.editorPosting = true
         settings.features.editorSaving = true
+        settings.features.newCameraModes = true
+        settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
+        settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
+        settings.exportStopMotionPhotoAsVideo = true
         return settings
     }
 
@@ -192,6 +200,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .mediaPicking(settings.features.mediaPicking),
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
+            .newCameraModes(settings.features.newCameraModes),
         ]
     }
 
@@ -221,6 +230,10 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.editorPosting = value
         case .editorSaving(_):
             settings.features.editorSaving = value
+        case .newCameraModes(_):
+            settings.features.newCameraModes = value
+            settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
+            settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         }
     }
 }

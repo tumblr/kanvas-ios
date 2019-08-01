@@ -12,11 +12,12 @@ class MediaMetadataTests: XCTestCase {
 
     func testWriteAndReadMetadataWithVideo() {
         let expectation = XCTestExpectation(description: "testWriteAndReadMetadataWithVideo")
+        let mode = CameraMode.stopMotion
         let segmentsHandler = CameraSegmentHandler()
         let settings = CameraSettings()
         let recorder = CameraRecorderStub(size: CGSize(width: 300, height: 300), photoOutput: nil, videoOutput: nil, audioOutput: nil, recordingDelegate: nil, segmentsHandler: segmentsHandler, settings: settings)
-        recorder.startRecordingVideo()
-        recorder.stopRecordingVideo { _ in
+        recorder.startRecordingVideo(on: mode)
+        recorder.stopRecordingVideo() { _ in
             recorder.exportRecording(completion: { url in
                 guard let url = url else {
                     XCTFail()
@@ -35,7 +36,7 @@ class MediaMetadataTests: XCTestCase {
         let settings = CameraSettings()
         let segmentsHandler = CameraSegmentHandler()
         let recorder = CameraRecorderStub(size: CGSize(width: 300, height: 300), photoOutput: nil, videoOutput: nil, audioOutput: nil, recordingDelegate: nil, segmentsHandler: segmentsHandler, settings: settings)
-        recorder.takePhoto { image in
+        recorder.takePhoto(on: .photo) { image in
             guard let url = CameraController.saveImageToFile(image, info: .kanvas) else {
                 XCTFail()
                 return
