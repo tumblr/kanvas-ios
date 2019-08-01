@@ -39,7 +39,7 @@ final class FilterCollectionView: IgnoreTouchesView {
     
     // MARK: - Public interface
     
-    /// Makes its cells pop
+    /// Makes its cells shrink
     func shrink() {
         let cells = getVisibleCells()
         cells.forEach { $0.shrink() }
