@@ -16,7 +16,7 @@ class GLPlayerTests: XCTestCase {
         weak var delegate: GLRendererDelegate?
 
         private(set) var filterType: FilterType = .passthrough
-        private(set) var imageOverlays: [CGImage] = []
+        var imageOverlays: [CGImage] = []
 
         var processedSampleBufferCallCount: UInt = 0
         var processedSampleBuffer: CMSampleBuffer?
@@ -36,10 +36,6 @@ class GLPlayerTests: XCTestCase {
 
         func changeFilter(_ filterType: FilterType) {
             self.filterType = filterType
-        }
-
-        func setImageOverlays(_ overlays: [CGImage]) {
-            self.imageOverlays = overlays
         }
 
         func reset() {
