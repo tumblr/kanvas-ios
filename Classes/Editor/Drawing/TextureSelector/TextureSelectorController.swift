@@ -7,6 +7,10 @@
 import Foundation
 import UIKit
 
+protocol TextureSelectorControllerDelegate: class {
+    func didSelectTexture(textureType: KanvasBrushType)
+}
+
 /// Constants for the texture selector
 private struct TextureSelectorControllerConstants {
     static let animationDuration: TimeInterval = 0.25
@@ -22,6 +26,8 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
         view.delegate = self
         return view
     }()
+
+    weak var delegate: TextureSelectorControllerDelegate?
     
     init() {
         super.init(nibName: .none, bundle: .none)
@@ -62,18 +68,21 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
         textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.pencilImage)
         textureSelectorView.showSelectorBackground(false)
         texture = Pencil()
+        delegate?.didSelectTexture(textureType: .pencil)
     }
     
     func didTapSharpieButton() {
         textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.sharpieImage)
         textureSelectorView.showSelectorBackground(false)
         texture = Sharpie()
+        delegate?.didSelectTexture(textureType: .sharpie)
     }
     
     func didTapMarkerButton() {
         textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.markerImage)
         textureSelectorView.showSelectorBackground(false)
         texture = Marker()
+        delegate?.didSelectTexture(textureType: .marker)
     }
     
 }

@@ -61,13 +61,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }()
     
     private lazy var drawingController: DrawingController = {
-        let controller = DrawingController()
+        let controller = DrawingController(analyticsProvider: analyticsProvider)
         controller.delegate = self
         return controller
     }()
     
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
-    
+
+    private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
@@ -100,15 +101,17 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, cameraMode: CameraMode?) {
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
+        self.analyticsProvider = analyticsProvider
 
         self.player = GLPlayer(renderer: GLRenderer())
 
         super.init(nibName: .none, bundle: .none)
+
         setupNotifications()
     }
 
@@ -191,14 +194,17 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didTapSaveButton() {
         startExporting(action: .save)
+        analyticsProvider?.logSaveFromDashboard()
     }
 
     func didTapPostButton() {
         startExporting(action: .post)
+        analyticsProvider?.logPostFromDashboard()
     }
 
     func didTapConfirmButton() {
         startExporting(action: .confirm)
+        analyticsProvider?.logOpenComposeFromDashboard()
     }
 
     private func startExporting(action: KanvasExportAction) {
@@ -306,8 +312,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         
         switch editionOption {
         case .filter:
+            analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
         case .drawing:
+            analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
         case .media:
             break
@@ -321,6 +329,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didSelectFilter(_ filterItem: FilterItem) {
+        analyticsProvider?.logEditorFilterSelected(filterType: filterItem.type)
         self.filterType = filterItem.type
     }
     
@@ -347,6 +356,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - DrawingViewCollectionDelegate
     
     func didConfirmDrawing() {
+        analyticsProvider?.logEditorDrawingConfirm()
         closeMenuButtonPressed()
     }
     

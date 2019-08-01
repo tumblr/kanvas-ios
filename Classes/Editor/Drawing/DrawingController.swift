@@ -54,7 +54,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, ColorPickerControllerDelegate, ColorCollectionControllerDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, TextureSelectorControllerDelegate, ColorPickerControllerDelegate, ColorCollectionControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -93,11 +93,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     // Color picker and selecter
     private var colorSelecterOrigin: CGPoint
-    
+
+    private var analyticsProvider: KanvasCameraAnalyticsProvider?
     
     // MARK: Initializers
     
-    init() {
+    init(analyticsProvider: KanvasCameraAnalyticsProvider?) {
+        self.analyticsProvider = analyticsProvider
+
         drawingCollection = []
         drawingColor = .tumblrBrightBlue
         colorSelecterOrigin = .zero
@@ -117,7 +120,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
-    
     
     // MARK: - View Life Cycle
     
@@ -328,6 +330,16 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         showOverlay(false, animate: true)
         enableView(true)
     }
+
+    func didStrokeChange(percentage: Float) {
+        analyticsProvider?.logEditorDrawingChangeStrokeSize(strokeSize: percentage)
+    }
+
+    // MARK: - Texture SelectorControllerDelegate
+
+    func didSelectTexture(textureType: KanvasBrushType) {
+        analyticsProvider?.logEditorDrawingChangeBrush(brushType: textureType)
+    }
     
     // MARK: - ColorPickerControllerDelegate
     
@@ -335,6 +347,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         setEyeDropperColor(color)
         setStrokeCircleColor(color)
         setDrawingColor(color, addToColorCollection: definitive)
+        analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .gradient)
     }
     
     // MARK: - DrawingViewDelegate
@@ -342,6 +355,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     func didTapDrawingCanvas(recognizer: UITapGestureRecognizer) {
         let currentPoint = recognizer.location(in: view)
         drawPoint(on: currentPoint)
+        logDraw(.tap, brushType: .marker, strokeSize: 0)
     }
     
     func didPanDrawingCanvas(recognizer: UIPanGestureRecognizer) {
@@ -354,6 +368,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             prepareLine(on: currentPoint)
         case .ended:
             endLineDrawing()
+            logDraw(.stroke, brushType: .marker, strokeSize: 0)
         case .possible, .failed, .cancelled:
             break
         @unknown default:
@@ -365,6 +380,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         switch recognizer.state {
         case .began:
             fillBackground()
+            logDraw(.fill, brushType: .marker, strokeSize: 0)
         case .changed, .ended, .cancelled, .failed, .possible:
             break
         @unknown default:
@@ -383,6 +399,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     func didTapUndoButton() {
         undo()
+        analyticsProvider?.logEditorDrawingUndo()
     }
     
     func didTapEraseButton() {
@@ -395,7 +412,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             changeEraseIcon(selected: false)
         }
     }
-    
 
     func didTapColorPickerButton() {
         showBottomMenu(false)
@@ -416,7 +432,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             showTooltip(true)
         }
     }
-    
 
     func didPanColorSelecter(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
@@ -435,11 +450,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             setEyeDropperColor(color)
             setStrokeCircleColor(color)
             setDrawingColor(color, addToColorCollection: true)
-            
             showColorSelecter(false)
             showColorPickerContainer(true)
             showTopButtons(true)
             enableDrawingCanvas(true)
+            analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .eyedropper)
         case .possible:
             break
         @unknown default:
@@ -519,14 +534,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         guard let delegate = delegate else { return .black }
         return delegate.getColor(from: point)
     }
-    
-    
+
     // MARK: - ColorCollectionControllerDelegate
     
     func didSelectColor(_ color: UIColor) {
         setEyeDropperColor(color)
         setStrokeCircleColor(color)
         setDrawingColor(color)
+        analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .swatch)
     }
     
     // MARK: - Public interface
@@ -551,5 +566,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             }
         })
     }
-    
+
+    func logDraw(_ drawType: KanvasDrawingAction, brushType: KanvasBrushType, strokeSize: Float) {
+        switch mode {
+        case .draw:
+            analyticsProvider?.logEditorDrawStroke(brushType: brushType, strokeSize: strokeSize, drawType: drawType)
+        case .erase:
+            analyticsProvider?.logEditorDrawingEraser()
+        }
+    }
 }
