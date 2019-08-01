@@ -64,7 +64,7 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
             return renderer.imageOverlays
         }
         set {
-            renderer.setImageOverlays(newValue)
+            renderer.imageOverlays = newValue
         }
     }
 

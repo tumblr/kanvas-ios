@@ -55,7 +55,7 @@ final class GLMediaExporter {
         }
         let renderer = GLRenderer()
         renderer.changeFilter(filterType)
-        renderer.setImageOverlays(imageOverlays)
+        renderer.imageOverlays = imageOverlays
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
         renderer.processSampleBuffer(sampleBuffer)

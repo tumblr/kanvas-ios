@@ -32,12 +32,11 @@ protocol GLRendererDelegate: class {
 protocol GLRendering: class {
     var delegate: GLRendererDelegate? { get set }
     var filterType: FilterType { get }
-    var imageOverlays: [CGImage] { get }
+    var imageOverlays: [CGImage] { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer)
     func output(filteredPixelBuffer: CVPixelBuffer)
     func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer) -> CVPixelBuffer?
     func changeFilter(_ filterType: FilterType)
-    func setImageOverlays(_ overlays: [CGImage])
     func reset()
 }
 
@@ -50,12 +49,15 @@ final class GLRenderer: GLRendering {
     // OpenGL Context
     let glContext: EAGLContext?
 
+    // Image overlays
+    var imageOverlays: [CGImage] = []
+
+    // Current filter type
+    private(set) var filterType: FilterType = .passthrough
+
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
-    private(set) var filterType: FilterType = .passthrough
-    private(set) var imageOverlays: [CGImage] = []
     private var processingImage = false
-
     private var filteredPixelBuffer: CVPixelBuffer?
 
     /// Designated initializer
@@ -66,6 +68,9 @@ final class GLRenderer: GLRendering {
         filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
     }
 
+    /// Processes a sample buffer, but swallows the completion
+    ///
+    /// - Parameter sampleBuffer: the camera feed sample buffer
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         processSampleBuffer(sampleBuffer) { (_, _) in }
     }
@@ -168,6 +173,9 @@ final class GLRenderer: GLRendering {
         }
         let size = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
         UIGraphicsBeginImageContext(size)
+        defer {
+            UIGraphicsEndImageContext()
+        }
         let areaSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         let mediaImage = UIImage(pixelBuffer: pixelBuffer)
         mediaImage?.draw(in: areaSize)
@@ -176,7 +184,6 @@ final class GLRenderer: GLRendering {
             overlayImage.draw(in: areaSize, blendMode: .normal, alpha: 1.0)
         }
         let finalImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
         let finalPixelBuffer = finalImage?.pixelBuffer()
         return finalPixelBuffer ?? pixelBuffer
     }
@@ -191,14 +198,6 @@ final class GLRenderer: GLRendering {
         synchronized(self) {
             filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
         }
-    }
-
-    // MARK: - overlays
-
-    /// Set image overlays
-    /// - Parameter overlays: an array of CGImage to overlay rendering
-    func setImageOverlays(_ overlays: [CGImage]) {
-        imageOverlays = overlays
     }
 
     /// Method to call reset on the camera filter
