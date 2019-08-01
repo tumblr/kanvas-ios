@@ -764,15 +764,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         moveUpperDrop(to: upperDropLocation)
         moveLowerDrop(to: lowerDropLocation)
         
-        let upperDropVisible = frame.contains(upperDrop.frame)
-        if upperDropVisible {
-            upperDrop.alpha = 1
-            lowerDrop.alpha = 0
-        }
-        else {
-            upperDrop.alpha = 0
-            lowerDrop.alpha = 1
-        }
+        let topPoint = CGPoint(x: upperDrop.center.x, y: upperDrop.center.y - upperDrop.frame.height / 2)
+        let upperDropVisible = convert(topPoint, to: self).y > 0
+        upperDrop.alpha = upperDropVisible ? 1 : 0
+        lowerDrop.alpha = upperDropVisible ? 0 : 1
     }
     
     /// Applies a transformation to the color selecter
