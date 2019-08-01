@@ -765,7 +765,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         moveLowerDrop(to: lowerDropLocation)
         
         let topPoint = CGPoint(x: upperDrop.center.x, y: upperDrop.center.y - upperDrop.frame.height / 2)
-        let upperDropVisible = convert(topPoint, to: self).y > 0
+        let upperDropVisible = topPoint.y > 0
         upperDrop.alpha = upperDropVisible ? 1 : 0
         lowerDrop.alpha = upperDropVisible ? 0 : 1
     }
