@@ -133,7 +133,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     // Color selecter
     private let colorSelecter: CircularImageView
     private var tooltip: EasyTipView?
-    private let colorSelecterContainer: UIView
     private let upperDrop: UIImageView
     private let lowerDrop: UIImageView
     
@@ -158,7 +157,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorPickerButton = CircularImageView()
         colorPickerSelectorContainer = UIView()
         colorSelecter = CircularImageView()
-        colorSelecterContainer = IgnoreTouchesView()
         upperDrop = UIImageView()
         lowerDrop = UIImageView()
         overlay = UIView()
@@ -201,7 +199,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         setUpCloseColorPickerButton()
         setUpEyeDropper()
         setUpColorPickerSelectorContainer()
-        // setUpColorSelecterContainer()
         setUpColorSelecter()
         setUpColorSelecterDrop()
         setUpTooltip()
