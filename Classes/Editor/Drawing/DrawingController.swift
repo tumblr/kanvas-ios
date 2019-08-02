@@ -347,7 +347,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         setEyeDropperColor(color)
         setStrokeCircleColor(color)
         setDrawingColor(color, addToColorCollection: definitive)
-        analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .gradient)
+        if definitive {
+            analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .gradient)
+        }
     }
     
     // MARK: - DrawingViewDelegate
