@@ -71,10 +71,11 @@ final class EditorControllerTests: FBSnapshotTestCase {
         return []
     }
     
-    func newViewController(settings: CameraSettings? = nil, segments: [CameraSegment], delegate: EditorControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil) -> EditorViewController {
+    func newViewController(settings: CameraSettings? = nil, segments: [CameraSegment], delegate: EditorControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil, analyticsProvider: KanvasCameraAnalyticsProvider? = nil) -> EditorViewController {
         let cameraSettings = settings ?? getCameraSettings()
         let handler = assetsHandler ?? AssetsHandlerStub()
-        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, cameraMode: cameraMode)
+        let analytics = analyticsProvider ?? KanvasCameraAnalyticsStub()
+        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, cameraMode: cameraMode, analyticsProvider: analytics)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
