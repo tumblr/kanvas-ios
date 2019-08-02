@@ -70,7 +70,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return controller
     }()
     
-    private lazy var textureSelectorController = TextureSelectorController()
+    private lazy var textureSelectorController: TextureSelectorController = {
+        let controller = TextureSelectorController()
+        controller.delegate = self
+        return controller
+    }()
     
     private lazy var colorPickerController: ColorPickerController = {
         let controller = ColorPickerController()
