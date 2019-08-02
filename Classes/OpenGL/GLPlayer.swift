@@ -157,6 +157,12 @@ final class GLPlayer {
         renderer.reset()
         playCurrentMedia()
     }
+    
+    /// Obtains color from a pixel
+    /// - Parameter point: the point to take the color from
+    func getColor(from point: CGPoint) -> UIColor {
+        return .black
+    }
 
     // MARK: - Media loading
 

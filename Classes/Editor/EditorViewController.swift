@@ -341,7 +341,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func getColor(from point: CGPoint) -> UIColor {
-        return .black // Return correct color from Player
+        return player.getColor(from: point)
     }
     
     // MARK: - Public interface
