@@ -16,7 +16,7 @@ protocol StrokeSelectorControllerDelegate: class {
 
     /// Called when the stroke changed
     /// - Parameter percentage: the stroke percentage (between 0 and 1)
-    func didStrokeChange(percentage: Float)
+    func didStrokeChange(percentage: CGFloat)
 }
 
 /// Constants for the stroke selector
@@ -29,6 +29,9 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     
     weak var delegate: StrokeSelectorControllerDelegate?
     var sizePercent: CGFloat = 0
+    var strokeSize: CGFloat {
+        return sizePercent / 100.0
+    }
 
     private lazy var strokeSelectorView: StrokeSelectorView = {
         let view = StrokeSelectorView()
@@ -101,7 +104,7 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
             selectorPanned(recognizer: recognizer)
         case .ended, .cancelled, .failed:
             strokeSelectorView.showSelectorBackground(false)
-            delegate?.didStrokeChange(percentage: Float(sizePercent) / 100.0)
+            delegate?.didStrokeChange(percentage: strokeSize)
         case .possible:
             break
         @unknown default:

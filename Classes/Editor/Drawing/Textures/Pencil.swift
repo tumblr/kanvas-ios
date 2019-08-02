@@ -12,6 +12,7 @@ final class Pencil: Texture {
     private let roundedTexture: RoundedTexture
     let minimumStroke: CGFloat = 1
     let maximumStroke: CGFloat = 4
+    let textureType: KanvasBrushType = .pencil
     
     init() {
         self.roundedTexture = RoundedTexture(minimumStroke: minimumStroke, maximumStroke: maximumStroke)

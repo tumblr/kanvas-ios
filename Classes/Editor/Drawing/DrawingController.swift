@@ -99,6 +99,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private var colorSelecterOrigin: CGPoint
 
     private var analyticsProvider: KanvasCameraAnalyticsProvider?
+    private var currentStrokeSize: Float {
+        return Float(strokeSelectorController.strokeSize)
+    }
+    private var currentBrushType: KanvasBrushType {
+        return textureSelectorController.texture.textureType
+    }
     
     // MARK: Initializers
     
@@ -335,14 +341,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         enableView(true)
     }
 
-    func didStrokeChange(percentage: Float) {
-        analyticsProvider?.logEditorDrawingChangeStrokeSize(strokeSize: percentage)
+    func didStrokeChange(percentage: CGFloat) {
+        analyticsProvider?.logEditorDrawingChangeStrokeSize(strokeSize: currentStrokeSize)
     }
 
     // MARK: - Texture SelectorControllerDelegate
 
     func didSelectTexture(textureType: KanvasBrushType) {
-        analyticsProvider?.logEditorDrawingChangeBrush(brushType: textureType)
+        analyticsProvider?.logEditorDrawingChangeBrush(brushType: currentBrushType)
     }
     
     // MARK: - ColorPickerControllerDelegate
@@ -374,7 +380,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             prepareLine(on: currentPoint)
         case .ended:
             endLineDrawing()
-            logDraw(.stroke, brushType: .marker, strokeSize: 0)
+            logDraw(.stroke)
         case .possible, .failed, .cancelled:
             break
         @unknown default:
@@ -386,7 +392,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         switch recognizer.state {
         case .began:
             fillBackground()
-            logDraw(.fill, brushType: .marker, strokeSize: 0)
+            logDraw(.fill)
         case .changed, .ended, .cancelled, .failed, .possible:
             break
         @unknown default:
@@ -573,12 +579,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         })
     }
 
-    func logDraw(_ drawType: KanvasDrawingAction, brushType: KanvasBrushType, strokeSize: Float) {
+    func logDraw(_ drawType: KanvasDrawingAction) {
         switch mode {
         case .draw:
-            analyticsProvider?.logEditorDrawStroke(brushType: brushType, strokeSize: strokeSize, drawType: drawType)
+            analyticsProvider?.logEditorDrawStroke(brushType: currentBrushType, strokeSize: currentStrokeSize, drawType: drawType)
         case .erase:
-            analyticsProvider?.logEditorDrawingEraser()
+            analyticsProvider?.logEditorDrawingEraser(brushType: currentBrushType, strokeSize: currentStrokeSize, drawType: drawType)
         }
     }
 }

@@ -11,6 +11,7 @@ class RoundedTexture: Texture {
     
     let minimumStroke: CGFloat
     let maximumStroke: CGFloat
+    let textureType: KanvasBrushType = .marker // unused
     
     init(minimumStroke: CGFloat, maximumStroke: CGFloat) {
         self.minimumStroke = minimumStroke
