@@ -94,6 +94,14 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "logMediaPickerDismiss")
     }
 
+    public func logEditorOpen() {
+        logString(string: "logEditorOpen")
+    }
+
+    public func logEditorBack() {
+        logString(string: "logEditorBack")
+    }
+
     public func logMediaPickerPickedMedia(ofType mediaType: KanvasMediaType) {
         logString(string: "logMediaPickerPickedMedia mediaType:\(mediaType.string())")
     }

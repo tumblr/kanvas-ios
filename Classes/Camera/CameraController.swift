@@ -694,7 +694,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func nextButtonWasPressed() {
         showPreviewWithSegments(cameraInputController.segments())
-        analyticsProvider?.logNextTapped()
+        if settings.features.editor {
+            analyticsProvider?.logEditorOpen()
+        }
+        else {
+            analyticsProvider?.logNextTapped()
+        }
     }
 
     // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
@@ -733,7 +738,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func dismissButtonPressed() {
-        analyticsProvider?.logPreviewDismissed()
+        if settings.features.editor {
+            analyticsProvider?.logEditorBack()
+        }
+        else {
+            analyticsProvider?.logPreviewDismissed()
+        }
         performUIUpdate { [weak self] in
             self?.dismiss(animated: true)
         }

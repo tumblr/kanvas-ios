@@ -163,6 +163,10 @@ import Foundation
 
     func logMediaPickerPickedMedia(ofType mediaType: KanvasMediaType)
 
+    func logEditorOpen()
+
+    func logEditorBack()
+
     /// Logs an event when the filters button is tapped in the editor
     func logEditorFiltersOpen()
 
