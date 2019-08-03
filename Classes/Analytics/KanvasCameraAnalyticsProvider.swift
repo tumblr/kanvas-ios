@@ -171,11 +171,14 @@ import Foundation
     /// - Parameter drawType: the type of drawing action performed
     func logEditorDrawStroke(brushType: KanvasBrushType, strokeSize: Float, drawType: KanvasDrawingAction)
 
-    /// Logs an event when someone undoes drawing
+    /// Logs an event when someone undoes a drawing or erasing action
     func logEditorDrawingUndo()
 
     /// Logs an event when someone uses the eraser
-    func logEditorDrawingEraser()
+    /// - Parameter brushType: the brush that was selected
+    /// - Parameter strokeSize: the size of the stroke, between 0 and 1
+    /// - Parameter drawType: the type of erasing action performed
+    func logEditorDrawingEraser(brushType: KanvasBrushType, strokeSize: Float, drawType: KanvasDrawingAction)
 
     /// Logs an event when someone confirms drawing
     func logEditorDrawingConfirm()

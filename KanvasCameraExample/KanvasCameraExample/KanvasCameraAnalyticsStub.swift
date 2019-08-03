@@ -118,8 +118,8 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "logEditorDrawingUndo")
     }
 
-    public func logEditorDrawingEraser() {
-        logString(string: "logEditorDrawingEraser")
+    public func logEditorDrawingEraser(brushType: KanvasBrushType, strokeSize: Float, drawType: KanvasDrawingAction) {
+        logString(string: "logEditorDrawingEraser brushType:\(brushType.string()), strokeSize:\(strokeSize), drawType:\(drawType.string())")
     }
 
     public func logEditorDrawingConfirm() {
