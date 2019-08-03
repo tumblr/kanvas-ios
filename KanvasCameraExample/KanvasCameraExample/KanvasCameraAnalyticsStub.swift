@@ -86,6 +86,18 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "logFilterSelected filterType:\(filterType.key() ?? "null")")
     }
 
+    public func logMediaPickerOpen() {
+        logString(string: "logMediaPickerOpen")
+    }
+
+    public func logMediaPickerDismiss() {
+        logString(string: "logMediaPickerDismiss")
+    }
+
+    public func logMediaPickerPickedMedia(ofType mediaType: KanvasMediaType) {
+        logString(string: "logMediaPickerPickedMedia mediaType:\(mediaType.string())")
+    }
+
     public func logEditorFiltersOpen() {
         logString(string: "logEditorFiltersOpen")
     }
@@ -145,7 +157,7 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     public func logOpenComposeFromDashboard() {
         logString(string: "logOpenComposeFromDashboard")
     }
-    
+
     func logString(string: String) {
         NSLog("\(self): \(string)")
     }

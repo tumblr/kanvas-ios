@@ -592,6 +592,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePickerController.allowsEditing = false
         imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
         present(imagePickerController, animated: true, completion: nil)
+        analyticsProvider?.logMediaPickerOpen()
     }
 
     func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
@@ -803,14 +804,17 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
         if let image = imageMaybe {
             pick(image: image)
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
         }
         else if let mediaURL = mediaURLMaybe {
             pick(video: mediaURL)
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .video)
         }
     }
 
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+        analyticsProvider?.logMediaPickerDismiss()
     }
 
     private func pick(image: UIImage) {

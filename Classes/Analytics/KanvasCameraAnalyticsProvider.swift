@@ -78,6 +78,19 @@ import Foundation
     }
 }
 
+@objc public enum KanvasMediaType: Int {
+    case image, video
+
+    public func string() -> String {
+        switch self {
+        case .image:
+            return "image"
+        case .video:
+            return "video"
+        }
+    }
+}
+
 /// A protocol for injecting analytics into the KanvasCamera module
 @objc public protocol KanvasCameraAnalyticsProvider {
 
@@ -143,6 +156,12 @@ import Foundation
     /// Logs an event when a filter is selected
     /// - Parameter filterType: The selected filter
     func logFilterSelected(filterType: FilterType)
+
+    func logMediaPickerOpen()
+
+    func logMediaPickerDismiss()
+
+    func logMediaPickerPickedMedia(ofType mediaType: KanvasMediaType)
 
     /// Logs an event when the filters button is tapped in the editor
     func logEditorFiltersOpen()
