@@ -367,7 +367,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     func didTapDrawingCanvas(recognizer: UITapGestureRecognizer) {
         let currentPoint = recognizer.location(in: view)
         drawPoint(on: currentPoint)
-        logDraw(.tap, brushType: .marker, strokeSize: 0)
+        logDraw(.tap)
     }
     
     func didPanDrawingCanvas(recognizer: UIPanGestureRecognizer) {
