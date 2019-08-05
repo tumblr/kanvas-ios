@@ -175,11 +175,11 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     }
 
     private func format(_ double: Double) -> Double {
-        return round((100 * double) / 100.0)
+        return round(100 * double) / 100.0
     }
 
     private func format(_ float: Float) -> Float {
-        return round((100 * float) / 100.0)
+        return round(100 * float) / 100.0
     }
 
     private func modeStringValue(_ mode: CameraMode) -> String {
