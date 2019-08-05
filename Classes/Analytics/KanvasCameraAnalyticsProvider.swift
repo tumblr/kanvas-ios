@@ -206,6 +206,9 @@ import Foundation
     /// Logs an event when someone confirms drawing
     func logEditorDrawingConfirm()
 
+    /// Logs an event when media is created from the editor
+    func logEditorCreatedMedia(clipsCount: Int, length: TimeInterval)
+
     /// Logs an event when Kanvas is opened from the Dashboard
     /// - Parameter openAction: the way Kanvas was opened - either a swipe or a tap
     func logOpenFromDashboard(openAction: KanvasDashboardOpenAction)

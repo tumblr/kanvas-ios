@@ -715,7 +715,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didFinishExportingVideo(url: URL?, action: KanvasExportAction) {
         if let videoURL = url {
             let asset = AVURLAsset(url: videoURL)
-            analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
+            logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
         }
         performUIUpdate { [weak self] in
             self?.cameraInputController.willCloseSoon = true
@@ -724,16 +724,27 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didFinishExportingImage(image: UIImage?, action: KanvasExportAction) {
-        analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: 1, length: 0)
         if let url = CameraController.saveImageToFile(image, info: .kanvas) {
+            logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
+                self?.cameraInputController.willCloseSoon = true
                 self?.delegate?.didCreateMedia(media: .image(url), exportAction: action, error: nil)
             }
         }
         else {
             performUIUpdate { [weak self] in
+                self?.cameraInputController.willCloseSoon = true
                 self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
             }
+        }
+    }
+
+    func logMediaCreation(action: KanvasExportAction, clipsCount: Int, length: TimeInterval) {
+        switch action {
+        case .previewConfirm:
+            analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: clipsCount, length: length)
+        case .confirm, .post, .save:
+            analyticsProvider?.logEditorCreatedMedia(clipsCount: clipsCount, length: length)
         }
     }
 

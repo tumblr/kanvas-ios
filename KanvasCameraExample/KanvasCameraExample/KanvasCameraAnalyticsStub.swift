@@ -146,6 +146,10 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "logEditorDrawingConfirm")
     }
 
+    public func logEditorCreatedMedia(clipsCount: Int, length: TimeInterval) {
+        logString(string: "logEditorCreatedMedia clipsCount:\(clipsCount) length:\(format(length))")
+    }
+
     public func logOpenFromDashboard(openAction: KanvasDashboardOpenAction) {
         logString(string: "logOpenFromDashboard openAction:\(openAction.string())")
     }
