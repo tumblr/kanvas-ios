@@ -792,9 +792,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - FilterSettingsControllerDelegate
     
-    func didSelectFilter(_ filterItem: FilterItem) {
+    func didSelectFilter(_ filterItem: FilterItem, animated: Bool) {
         cameraInputController.applyFilter(filterType: filterItem.type)
-        analyticsProvider?.logFilterSelected(filterType: filterItem.type)
+        if animated {
+            analyticsProvider?.logFilterSelected(filterType: filterItem.type)
+        }
     }
     
     func didTapSelectedFilter(recognizer: UITapGestureRecognizer) {

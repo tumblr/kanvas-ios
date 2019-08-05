@@ -10,7 +10,7 @@ import UIKit
 protocol ScrollHandlerDelegate: class {
     func indexPathAtSelectionCircle() -> IndexPath?
     func calculateDistanceFromSelectionCircle(cell: FilterCollectionCell) -> CGFloat
-    func selectFilter(index: Int)
+    func selectFilter(index: Int, animated: Bool)
     func scrollToOptionAt(_ index: Int, animated: Bool)
 }
 
@@ -62,7 +62,7 @@ final class ScrollHandler {
             let newTargetOffset = roundedIndex * itemWidth
             targetContentOffset.pointee.x = newTargetOffset
             let itemIndex = Int(roundedIndex)
-            delegate.selectFilter(index: itemIndex)
+            delegate.selectFilter(index: itemIndex, animated: true)
         }
     }
     

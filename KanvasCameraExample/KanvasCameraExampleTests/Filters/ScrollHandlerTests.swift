@@ -57,7 +57,7 @@ final class ScrollHandlerDelegateStub: ScrollHandlerDelegate {
         return CGFloat(0)
     }
     
-    func selectFilter(index: Int) {
+    func selectFilter(index: Int, animated: Bool) {
         selectFilterCalled = true
     }
     
