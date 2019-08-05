@@ -252,6 +252,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
         overlayViewController = controller
+        if controller is EditorViewController {
+            analyticsProvider?.logEditorOpen()
+        }
     }
     
     private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
@@ -694,12 +697,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func nextButtonWasPressed() {
         showPreviewWithSegments(cameraInputController.segments())
-        if settings.features.editor {
-            analyticsProvider?.logEditorOpen()
-        }
-        else {
-            analyticsProvider?.logNextTapped()
-        }
+        analyticsProvider?.logNextTapped()
     }
 
     // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
