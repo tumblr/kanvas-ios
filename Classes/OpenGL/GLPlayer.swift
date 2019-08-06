@@ -75,6 +75,7 @@ final class GLPlayer {
     }
     private var timer: Timer?
     private var displayLink: CADisplayLink?
+    private var currentPixelBuffer: CVPixelBuffer?
 
     /// The GLRendering instance for the player.
     let renderer: GLRendering
@@ -161,27 +162,21 @@ final class GLPlayer {
     /// Obtains color from a pixel
     /// - Parameter point: the point to take the color from
     func getColor(from point: CGPoint) -> UIColor {
-        switch currentlyPlayingMedia! {
-        case .image(let image, let sampleBuffer):
-            let x = point.x * 1080 / 375
-            let y = point.y * 1920 / 667
-            return image.getPixelColor(pos: CGPoint(x: x, y: y))
-            
-            
-//            let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-//            CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-//            let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
-//            let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-//            // Get BGRA value for pixel (43, 17)
-//            let luma = int32Buffer[Int(point.y) * Int(int32PerRow) + Int(point.x)]
-//
-//            CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-//            let fakeColor = UIColor(hex: luma).rgbaComponents
-//
-//            return UIColor(red: fakeColor.blue, green: fakeColor.green, blue: fakeColor.red, alpha: fakeColor.alpha)
-        case .video(_, _, _):
-            return .blue
-        }
+        guard let pixelBuffer: CVPixelBuffer = currentPixelBuffer else { return .black }
+        
+        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+        let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
+        let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+        let bufferWidth = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
+        let bufferHeight = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
+        let heightFactor: CGFloat = 4.0
+        
+        let x = point.x * bufferWidth / CGFloat(Device.screenWidth)
+        let y = point.y * bufferHeight / (CGFloat(Device.screenHeight) * heightFactor)
+        let luma = int32Buffer[Int(y) * int32PerRow + Int(x)]
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+        
+        return UIColor(hex: luma)
     }
 
     // MARK: - Media loading
@@ -371,6 +366,7 @@ final class GLPlayer {
 extension GLPlayer: GLRendererDelegate {
 
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
+        self.currentPixelBuffer = pixelBuffer
         self.playerView?.pixelBufferView?.displayPixelBuffer(pixelBuffer)
     }
 
@@ -382,70 +378,4 @@ extension GLPlayer: GLRendererDelegate {
         self.playerView?.pixelBufferView?.flushPixelBufferCache()
     }
 
-}
-
-//extension UIImage {
-//    func getPixelColor(pos: CGPoint) -> UIColor {
-//        let cgImage = self.cgImage!
-//        let dataProvider = cgImage.dataProvider!
-//        let pixelData = dataProvider.data
-//        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-//
-//        print("X: \(pos.x) / \(self.size.width) - Y: \(pos.y) / \(self.size.height)")
-//
-//        let pixelInfo: Int = ((Int(self.size.width) * Int(pos.y)) + Int(pos.x)) * 4
-//
-//        let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
-//        let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
-//        let b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
-//        let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
-//
-//        return UIColor(red: r, green: g, blue: b, alpha: a)
-//    }
-//
-//
-//
-//}
-//
-//extension UIImage {
-//    func getPixelColor(pos: CGPoint) -> UIColor {
-//
-//        let pixelData = self.cgImage!.dataProvider!.data!
-//        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-//
-//        print("X: \(pos.x) / \(self.size.width) - Y: \(pos.y) / \(self.size.height)")
-//        let pixelInfo: Int = ((Int(self.size.width) * Int(pos.y)) + Int(pos.x)) * 4
-//
-//        let b = CGFloat(data[pixelInfo]) / CGFloat(255.0)
-//        let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
-//        let r = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
-//        let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
-//
-//        print("0: \(CGFloat(data[pixelInfo]) / CGFloat(255.0))")
-//        print("1: \(CGFloat(data[pixelInfo+1]) / CGFloat(255.0))")
-//        print("2: \(CGFloat(data[pixelInfo+2]) / CGFloat(255.0))")
-//        print("3: \(CGFloat(data[pixelInfo+3]) / CGFloat(255.0))")
-//
-//        return UIColor(red: r, green: g, blue: b, alpha: a)
-//    }
-//}
-
-extension UIImage {
-    /// Get the pixel color at a point in the image
-    func getPixelColor(pos: CGPoint) -> UIColor? {
-        guard let cgImage = cgImage, let pixelData = cgImage.dataProvider?.data else { return nil }
-        
-        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-        
-        let bytesPerPixel = cgImage.bitsPerPixel / 8
-        
-        let pixelInfo: Int = ((cgImage.bytesPerRow * Int(pos.y)) + (Int(pos.x) * bytesPerPixel))
-        
-        let b = CGFloat(data[pixelInfo]) / CGFloat(255.0)
-        let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
-        let r = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
-        let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
-        
-        return UIColor(red: r, green: g, blue: b, alpha: a)
-    }
 }

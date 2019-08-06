@@ -677,7 +677,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter color: new color for the color selecter
     func setColorSelecterColor(_ color: UIColor) {
-        colorSelecter.backgroundColor = color// .withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
+        colorSelecter.backgroundColor = color.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
     }
     
     /// Changes color selector location on screen
