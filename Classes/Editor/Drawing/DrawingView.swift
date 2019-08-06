@@ -74,6 +74,9 @@ private struct DrawingViewConstants {
     
     // Color selecter
     static let colorSelecterSize: CGFloat = 80
+    static let dropHeight: CGFloat = 55
+    static let dropWidth: CGFloat = 39
+    static let dropPadding: CGFloat = 18
     static let colorSelecterAlpha: CGFloat = 0.65
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
     
@@ -130,6 +133,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     // Color selecter
     private let colorSelecter: CircularImageView
     private var tooltip: EasyTipView?
+    private let upperDrop: UIImageView
+    private let lowerDrop: UIImageView
     
     // Color collection
     let colorCollection: UIView
@@ -152,7 +157,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorPickerButton = CircularImageView()
         colorPickerSelectorContainer = UIView()
         colorSelecter = CircularImageView()
+        upperDrop = UIImageView()
+        lowerDrop = UIImageView()
         overlay = UIView()
+        
         super.init(frame: .zero)
         
         clipsToBounds = false
@@ -192,6 +200,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         setUpEyeDropper()
         setUpColorPickerSelectorContainer()
         setUpColorSelecter()
+        setUpColorSelecterDrop()
         setUpTooltip()
     }
     
@@ -476,6 +485,48 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorSelecter.addGestureRecognizer(panRecognizer)
     }
     
+    private func setUpColorSelecterDrop() {
+        setUpColorSelecterUpperDrop()
+        setUpColorSelecterLowerDrop()
+    }
+    
+    private func setUpColorSelecterUpperDrop() {
+        upperDrop.accessibilityIdentifier = "Editor Color Selecter Upper Drop"
+        upperDrop.image = KanvasCameraImages.dropImage?.withRenderingMode(.alwaysTemplate)
+        upperDrop.translatesAutoresizingMaskIntoConstraints = false
+        upperDrop.clipsToBounds = true
+        addSubview(upperDrop)
+        
+        let verticalMargin = DrawingViewConstants.dropPadding
+        NSLayoutConstraint.activate([
+            upperDrop.bottomAnchor.constraint(equalTo: colorSelecter.topAnchor, constant: -verticalMargin),
+            upperDrop.centerXAnchor.constraint(equalTo: colorSelecter.centerXAnchor),
+            upperDrop.heightAnchor.constraint(equalToConstant: DrawingViewConstants.dropHeight),
+            upperDrop.widthAnchor.constraint(equalToConstant: DrawingViewConstants.dropWidth),
+        ])
+        
+        upperDrop.alpha = 0
+    }
+    
+    private func setUpColorSelecterLowerDrop() {
+        lowerDrop.accessibilityIdentifier = "Editor Color Selecter Lower Drop"
+        lowerDrop.image = KanvasCameraImages.dropImage?.withRenderingMode(.alwaysTemplate)
+        lowerDrop.transform = CGAffineTransform(rotationAngle: .pi)
+        lowerDrop.translatesAutoresizingMaskIntoConstraints = false
+        lowerDrop.clipsToBounds = true
+        addSubview(lowerDrop)
+        
+        let verticalMargin = DrawingViewConstants.dropPadding
+        NSLayoutConstraint.activate([
+            lowerDrop.topAnchor.constraint(equalTo: colorSelecter.bottomAnchor, constant: verticalMargin),
+            lowerDrop.centerXAnchor.constraint(equalTo: colorSelecter.centerXAnchor),
+            lowerDrop.heightAnchor.constraint(equalToConstant: DrawingViewConstants.dropHeight),
+            lowerDrop.widthAnchor.constraint(equalToConstant: DrawingViewConstants.dropWidth),
+        ])
+        
+        lowerDrop.alpha = 0
+    }
+    
     /// Sets up the color collection that contains the dominant colors as well as the last colors selected
     private func setUpColorCollection() {
         colorCollection.backgroundColor = .clear
@@ -554,6 +605,22 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         delegate?.didLongPressDrawingCanvas(recognizer: recognizer)
     }
     
+    // MARK: - Private utilities
+    
+    /// Changes upper drop location on screen
+    ///
+    /// - Parameter point: the new location
+    private func moveUpperDrop(to point: CGPoint) {
+        upperDrop.center = point
+    }
+    
+    /// Changes lower drop location on screen
+    ///
+    /// - Parameter point: the new location
+    private func moveLowerDrop(to point: CGPoint) {
+        lowerDrop.center = point
+    }
+    
     // MARK: - View animations
     
     /// toggles the erase icon (selected or unselected)
@@ -608,6 +675,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
             self.colorSelecter.alpha = show ? 1 : 0
             self.colorSelecter.transform = .identity
+            self.upperDrop.alpha = show ? 1 : 0
+            self.lowerDrop.alpha = show ? 1 : 0
         }
     }
     
@@ -677,7 +746,9 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter color: new color for the color selecter
     func setColorSelecterColor(_ color: UIColor) {
-        eyeDropperButton.backgroundColor = color.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
+        colorSelecter.backgroundColor = color.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
+        upperDrop.tintColor = color
+        lowerDrop.tintColor = color
     }
     
     /// Changes color selector location on screen
@@ -685,6 +756,18 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     /// - Parameter point: the new location
     func moveColorSelecter(to point: CGPoint) {
         colorSelecter.center = point
+        
+        let offset = DrawingViewConstants.dropPadding + (DrawingViewConstants.colorSelecterSize + DrawingViewConstants.dropHeight) / 2
+        
+        let upperDropLocation = CGPoint(x: point.x, y: point.y - offset)
+        let lowerDropLocation = CGPoint(x: point.x, y: point.y + offset)
+        moveUpperDrop(to: upperDropLocation)
+        moveLowerDrop(to: lowerDropLocation)
+        
+        let topPoint = upperDrop.center.y - upperDrop.frame.height / 2
+        let upperDropVisible = topPoint > 0
+        upperDrop.alpha = upperDropVisible ? 1 : 0
+        lowerDrop.alpha = upperDropVisible ? 0 : 1
     }
     
     /// Applies a transformation to the color selecter

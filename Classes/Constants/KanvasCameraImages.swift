@@ -91,4 +91,5 @@ struct KanvasCameraImages {
     static let gradientImage = UIImage.imageFromCameraBundle(named: "gradient")
     static let closeGradientImage = UIImage.imageFromCameraBundle(named: "closeGradient")
     static let eyeDropperImage = UIImage.imageFromCameraBundle(named: "eyeDropper")
+    static let dropImage = UIImage.imageFromCameraBundle(named: "drop")
 }
