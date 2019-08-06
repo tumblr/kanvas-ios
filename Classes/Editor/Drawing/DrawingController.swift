@@ -32,6 +32,12 @@ protocol DrawingControllerDelegate: class {
     /// - Parameter point: location to take the color from
     /// - Returns: Color from image
     func getColor(from point: CGPoint) -> UIColor
+    
+    /// Called when the color selector is pressed
+    func didStartColorSelection()
+    
+    /// Called when the color selector is released
+    func didEndColorSelection()
 }
 
 /// Constants for Drawing Controller
@@ -448,6 +454,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     func didPanColorSelecter(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
+            delegate?.didStartColorSelection()
             if delegate?.editorShouldShowColorSelecterTooltip() == true {
                 showTooltip(false)
                 showOverlay(false)
@@ -467,6 +474,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             showTopButtons(true)
             enableDrawingCanvas(true)
             analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .eyedropper)
+            delegate?.didEndColorSelection()
         case .possible:
             break
         @unknown default:

@@ -334,6 +334,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - DrawingControllerDelegate
     
+    func didConfirmDrawing() {
+        analyticsProvider?.logEditorDrawingConfirm()
+        closeMenuButtonPressed()
+    }
+    
     func editorShouldShowColorSelecterTooltip() -> Bool {
         guard let delegate = delegate else { return false }
         return delegate.editorShouldShowColorSelecterTooltip()
@@ -352,11 +357,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         delegate?.didEndStrokeSelectorAnimation()
     }
     
-    // MARK: - DrawingViewCollectionDelegate
+    func didStartColorSelection() {
+        player.pause()
+    }
     
-    func didConfirmDrawing() {
-        analyticsProvider?.logEditorDrawingConfirm()
-        closeMenuButtonPressed()
+    func didEndColorSelection() {
+        player.resume()
     }
     
     func getColor(from point: CGPoint) -> UIColor {
