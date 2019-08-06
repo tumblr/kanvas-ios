@@ -143,6 +143,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             }
         }
         player.play(media: media)
+        addCarouselDefaultColors()
     }
     
     override public func viewDidLoad() {
@@ -155,8 +156,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         load(childViewController: collectionController, into: editorView.collectionContainer)
         load(childViewController: filterController, into: editorView.filterMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
-        
-        setUpColorCarousel()
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -170,10 +169,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - Views
     
     /// Sets up the carousel with the dominant colors from the image on the player
-    private func setUpColorCarousel() {
-        if let image = KanvasCameraImages.confirmImage {
-            drawingController.addColorsForCarousel(colors: image.getDominantColors(count: 3))
-        }
+    private func addCarouselDefaultColors() {
+        let firstFrame = player.getFirstFrame()
+        let dominantColors = firstFrame.getDominantColors(count: 3)
+        drawingController.addColorsForCarousel(colors: dominantColors)
     }
     
     
