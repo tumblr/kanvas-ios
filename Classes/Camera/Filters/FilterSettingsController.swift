@@ -11,7 +11,7 @@ protocol FilterSettingsControllerDelegate: class {
     /// Callback for when a filter item is selected
     ///
     /// - Parameter filterItem: the selected filter
-    func didSelectFilter(_ filterItem: FilterItem)
+    func didSelectFilter(_ filterItem: FilterItem, animated: Bool)
     
     /// Callback for when the selected filter is tapped
     ///
@@ -102,8 +102,8 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     
     // MARK: - FilterCollectionControllerDelegate
     
-    func didSelectFilter(_ filterItem: FilterItem) {
-        delegate?.didSelectFilter(filterItem)
+    func didSelectFilter(_ filterItem: FilterItem, animated: Bool) {
+        delegate?.didSelectFilter(filterItem, animated: animated)
     }
     
     func didTapSelectedFilter(recognizer: UITapGestureRecognizer) {

@@ -26,6 +26,9 @@ final class GLMediaExporter {
     /// The FilterType to apply frame-by-frame processing with.
     var filterType: FilterType?
 
+    /// The image overlays to apply on top of each frame.
+    var imageOverlays: [CGImage] = []
+
     /// A timer you can hook into to get progress updates from an export.
     private(set) var progressTimer: Timer?
 
@@ -52,6 +55,7 @@ final class GLMediaExporter {
         }
         let renderer = GLRenderer()
         renderer.changeFilter(filterType)
+        renderer.imageOverlays = imageOverlays
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
         renderer.processSampleBuffer(sampleBuffer)
@@ -95,6 +99,7 @@ final class GLMediaExporter {
             return
         }
         glVideoCompositor.filterType = filterType
+        glVideoCompositor.imageOverlays = imageOverlays
         self.progressTimer = Timer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: exportSession, repeats: true)
         exportSession?.exportAsynchronously {
             self.progressTimer?.invalidate()

@@ -11,7 +11,7 @@ protocol CameraFilterCollectionControllerDelegate: class {
     /// Callback for when a filter item is selected
     ///
     /// - Parameter filterItem: the selected filter
-    func didSelectFilter(_ filterItem: FilterItem)
+    func didSelectFilter(_ filterItem: FilterItem, animated: Bool)
     
     /// Callback for when the selected filter is tapped
     ///
@@ -197,7 +197,7 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
         let indexPath = IndexPath(item: index, section: CameraFilterCollectionControllerConstants.section)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
-        selectFilter(index: indexPath.item)
+        selectFilter(index: indexPath.item, animated: animated)
     }
     
     func indexPathAtSelectionCircle() -> IndexPath? {
@@ -249,9 +249,9 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     /// Selects a filter
     ///
     /// - Parameter index: position of the filter in the collection
-    func selectFilter(index: Int) {
+    func selectFilter(index: Int, animated: Bool) {
         selectedIndexPath = IndexPath(item: index, section: CameraFilterCollectionControllerConstants.section)
-        delegate?.didSelectFilter(filterItems[index])
+        delegate?.didSelectFilter(filterItems[index], animated: animated)
     }
     
     func calculateDistanceFromSelectionCircle(cell: FilterCollectionCell) -> CGFloat {

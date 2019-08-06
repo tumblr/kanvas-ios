@@ -16,6 +16,7 @@ class GLPlayerTests: XCTestCase {
         weak var delegate: GLRendererDelegate?
 
         private(set) var filterType: FilterType = .passthrough
+        var imageOverlays: [CGImage] = []
 
         var processedSampleBufferCallCount: UInt = 0
         var processedSampleBuffer: CMSampleBuffer?

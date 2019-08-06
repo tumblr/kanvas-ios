@@ -13,6 +13,10 @@ protocol StrokeSelectorControllerDelegate: class {
     
     /// Called after the animation for onboarding ends
     func didAnimationEnd()
+
+    /// Called when the stroke changed
+    /// - Parameter percentage: the stroke percentage (between 0 and 1)
+    func didStrokeChange(percentage: CGFloat)
 }
 
 /// Constants for the stroke selector
@@ -25,6 +29,9 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     
     weak var delegate: StrokeSelectorControllerDelegate?
     var sizePercent: CGFloat = 0
+    var strokeSize: CGFloat {
+        return sizePercent / 100.0
+    }
 
     private lazy var strokeSelectorView: StrokeSelectorView = {
         let view = StrokeSelectorView()
@@ -45,15 +52,13 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
-    
-    
+
     // MARK: - View Life Cycle
     
     override func loadView() {
         view = strokeSelectorView
     }
-    
-    
+
     // MARK: - Public interface
     
     /// Shows the animation for onboarding
@@ -99,13 +104,13 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
             selectorPanned(recognizer: recognizer)
         case .ended, .cancelled, .failed:
             strokeSelectorView.showSelectorBackground(false)
+            delegate?.didStrokeChange(percentage: strokeSize)
         case .possible:
             break
         @unknown default:
             break
         }
     }
-    
     
     // MARK: - Private utilities
     

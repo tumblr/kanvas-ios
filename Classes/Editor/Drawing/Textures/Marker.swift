@@ -14,6 +14,7 @@ final class Marker: Texture {
     static let alpha: CGFloat = 0.6
     let minimumStroke: CGFloat = 18
     let maximumStroke: CGFloat = 40
+    let textureType: KanvasBrushType = .marker
     
     func drawPoint(context: CGContext, on point: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
         let startPoint = CGPoint(x: point.x - 2, y: point.y)

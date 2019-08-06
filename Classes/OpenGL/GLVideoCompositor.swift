@@ -58,6 +58,16 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
         }
     }
 
+    /// image overlays for each frame
+    var imageOverlays: [CGImage] {
+        get {
+            return renderer.imageOverlays
+        }
+        set {
+            renderer.imageOverlays = newValue
+        }
+    }
+
     /// Convenience initializer
     override convenience init() {
         self.init(

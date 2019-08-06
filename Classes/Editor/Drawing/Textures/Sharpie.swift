@@ -12,6 +12,7 @@ class Sharpie: Texture {
     let roundedTexture: RoundedTexture
     let minimumStroke: CGFloat = 7
     let maximumStroke: CGFloat = 18
+    let textureType: KanvasBrushType = .sharpie
     
     init() {
         self.roundedTexture = RoundedTexture(minimumStroke: minimumStroke, maximumStroke: maximumStroke)

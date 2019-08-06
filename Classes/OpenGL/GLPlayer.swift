@@ -178,6 +178,19 @@ final class GLPlayer {
         
         return UIColor(hex: luma)
     }
+    
+    /// Obtains the first frame from playable media
+    ///
+    /// - Returns: first frame
+    func getFirstFrame() -> UIImage {
+        guard let media = playableMedia.first else { return UIImage() }
+        switch media {
+        case .image(let image, _):
+            return image
+        case .video(let url, _, _):
+            return getFirstFrame(from: url)
+        }
+    }
 
     // MARK: - Media loading
 
@@ -359,6 +372,20 @@ final class GLPlayer {
             playCurrentMedia()
         default:
             break
+        }
+    }
+    
+    private func getFirstFrame(from url: URL) -> UIImage {
+        let asset = AVURLAsset(url: url)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        imageGenerator.appliesPreferredTrackTransform = true
+        let time = CMTimeMake(value: 0, timescale: 2)
+        do {
+            let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
+            return UIImage(cgImage: cgImage)
+        }
+        catch {
+            return UIImage()
         }
     }
 }
