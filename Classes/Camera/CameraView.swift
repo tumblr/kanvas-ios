@@ -159,9 +159,9 @@ final class CameraView: UIView {
         addLayoutGuide(optionsLayoutGuide)
         // The height is equal to all the rows of buttons plus the space between them
         let height = CameraConstants.optionButtonSize * numberOfOptionRows + CameraConstants.optionSpacing * (numberOfOptionRows - 1)
-        optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin).isActive = true
+        optionsLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin).isActive = true
         optionsLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin).isActive = true
-        optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.optionHorizontalMargin).isActive = true
+        optionsLayoutGuide.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -CameraConstants.optionHorizontalMargin).isActive = true
         optionsLayoutGuide.heightAnchor.constraint(equalToConstant: height).isActive = true
     }
     
@@ -191,13 +191,14 @@ final class CameraView: UIView {
         addSubview(closeButton)
         closeButton.accessibilityLabel = "Close Button"
         closeButton.applyShadows()
-        closeButton.setImage(KanvasCameraImages.closeImage, for: .normal)
+        closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
         closeButton.imageView?.contentMode = .scaleAspectFit
+        closeButton.transform = CGAffineTransform(rotationAngle: .pi)
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
+            closeButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
             closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)

@@ -95,10 +95,10 @@ final class OptionsStackView<Item>: UIView {
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor)
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor)
         ])
     }
 
