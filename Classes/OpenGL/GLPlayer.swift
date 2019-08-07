@@ -83,7 +83,7 @@ final class GLPlayer {
     }
     private var timer: Timer?
     private var displayLink: CADisplayLink?
-    private var currentPixelBuffer: CVPixelBuffer?
+    private var firstFrameSent = false
 
     /// The GLRendering instance for the player.
     let renderer: GLRendering
@@ -349,8 +349,6 @@ final class GLPlayer {
             break
         }
     }
-    
-    private var firstFrameSent = false
 }
 
 extension GLPlayer: GLRendererDelegate {
@@ -362,16 +360,7 @@ extension GLPlayer: GLRendererDelegate {
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
         if !firstFrameSent {
             firstFrameSent = true
-            DispatchQueue.main.async { [unowned self] in
-                print("Async")
-                let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-                
-                let temporaryContext = CIContext()
-                let videoImage = temporaryContext.createCGImage(ciImage, from: CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer)))!
-                let image = UIImage(cgImage: videoImage)
-                print("Async 1")
-                self.delegate?.didDisplayFirstFrame(image)
-            }
+            delegate?.didDisplayFirstFrame(pixelBuffer.getImage())
         }
     }
 
@@ -379,4 +368,16 @@ extension GLPlayer: GLRendererDelegate {
         self.playerView?.pixelBufferView?.flushPixelBufferCache()
     }
 
+}
+
+private extension CVPixelBuffer {
+    
+    func getImage() -> UIImage {
+        let ciImage = CIImage(cvPixelBuffer: self)
+        
+        let temporaryContext = CIContext()
+        let rect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(self), height: CVPixelBufferGetHeight(self))
+        guard let videoImage = temporaryContext.createCGImage(ciImage, from: rect) else { return UIImage() }
+        return UIImage(cgImage: videoImage)
+    }
 }
