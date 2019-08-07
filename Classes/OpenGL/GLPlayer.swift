@@ -9,6 +9,11 @@ import CoreMedia
 import AVFoundation
 import VideoToolbox
 
+/// Callbacks for opengl player
+protocol GLPlayerDelegate: class {
+    func didDisplayFirstFrame(_ image: UIImage)
+}
+
 /// Types of media the player can play.
 enum GLPlayerMedia {
     case image(UIImage)
@@ -66,6 +71,8 @@ final class GLPlayer {
         }
     }
 
+    weak var delegate: GLPlayerDelegate?
+    
     private var playableMedia: [GLPlayerMediaInternal] = []
     private var currentlyPlayingMediaIndex: Int = -1
     private var currentlyPlayingMedia: GLPlayerMediaInternal? {
@@ -158,17 +165,6 @@ final class GLPlayer {
 
         renderer.reset()
         playCurrentMedia()
-    }
-    
-    /// Obtains the first frame from playable media
-    ///
-    /// - Returns: first frame
-    func getFirstFrame() -> UIImage {
-        guard let pixelBuffer = currentPixelBuffer else { return UIImage() }
-        var cgImageMaybe: CGImage?
-        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImageMaybe)
-        guard let cgImage = cgImageMaybe else { return UIImage() }
-        return UIImage(cgImage: cgImage)
     }
 
     // MARK: - Media loading
@@ -354,19 +350,7 @@ final class GLPlayer {
         }
     }
     
-    private func getFirstFrame(from url: URL) -> UIImage {
-        let asset = AVURLAsset(url: url)
-        let imageGenerator = AVAssetImageGenerator(asset: asset)
-        imageGenerator.appliesPreferredTrackTransform = true
-        let time = CMTimeMake(value: 0, timescale: 2)
-        do {
-            let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
-            return UIImage(cgImage: cgImage)
-        }
-        catch {
-            return UIImage()
-        }
-    }
+    private var firstFrameSent = false
 }
 
 extension GLPlayer: GLRendererDelegate {
@@ -376,7 +360,19 @@ extension GLPlayer: GLRendererDelegate {
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        self.currentPixelBuffer = pixelBuffer
+        if !firstFrameSent {
+            firstFrameSent = true
+            DispatchQueue.main.async { [unowned self] in
+                print("Async")
+                let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+                
+                let temporaryContext = CIContext()
+                let videoImage = temporaryContext.createCGImage(ciImage, from: CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer)))!
+                let image = UIImage(cgImage: videoImage)
+                print("Async 1")
+                self.delegate?.didDisplayFirstFrame(image)
+            }
+        }
     }
 
     func rendererRanOutOfBuffers() {

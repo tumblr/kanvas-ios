@@ -38,7 +38,7 @@ protocol EditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, GLPlayerDelegate {
     
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
@@ -109,8 +109,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.analyticsProvider = analyticsProvider
 
         self.player = GLPlayer(renderer: GLRenderer())
-
         super.init(nibName: .none, bundle: .none)
+        
+        self.player.delegate = self
 
         setupNotifications()
     }
@@ -143,7 +144,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             }
         }
         player.play(media: media)
-        addCarouselDefaultColors()
     }
     
     override public func viewDidLoad() {
@@ -169,12 +169,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - Views
     
     /// Sets up the carousel with the dominant colors from the image on the player
-    private func addCarouselDefaultColors() {
-        let firstFrame = player.getFirstFrame()
-        let dominantColors = firstFrame.getDominantColors(count: 3)
+    private func addCarouselDefaultColors(_ image: UIImage) {
+        let dominantColors = image.getDominantColors(count: 3)
         drawingController.addColorsForCarousel(colors: dominantColors)
     }
-    
     
     // MARK: - Loading Indicator
     /// Shows the loading indicator on this view
@@ -361,6 +359,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func getColor(from point: CGPoint) -> UIColor {
         return .black // Return correct color from Player
+    }
+    
+    func didDisplayFirstFrame(_ image: UIImage) {
+        addCarouselDefaultColors(image)
     }
     
     // MARK: - Public interface
