@@ -380,7 +380,7 @@ private extension CVPixelBuffer {
         
         let temporaryContext = CIContext()
         let rect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(self), height: CVPixelBufferGetHeight(self))
-        guard let videoImage = temporaryContext.createCGImage(ciImage, from: rect) else { return UIImage() }
-        return UIImage(cgImage: videoImage)
+        guard let cgImage = temporaryContext.createCGImage(ciImage, from: rect) else { return UIImage() }
+        return UIImage(cgImage: cgImage)
     }
 }
