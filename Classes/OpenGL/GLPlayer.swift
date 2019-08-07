@@ -360,7 +360,8 @@ extension GLPlayer: GLRendererDelegate {
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
         if !firstFrameSent {
             firstFrameSent = true
-            delegate?.didDisplayFirstFrame(pixelBuffer.getImage())
+            let image = pixelBuffer.getImage()
+            delegate?.didDisplayFirstFrame(image)
         }
     }
 
