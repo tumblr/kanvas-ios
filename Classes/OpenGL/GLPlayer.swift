@@ -364,7 +364,7 @@ extension GLPlayer: GLRendererDelegate {
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        
+        // Empty since this method is for storage rather tha rendering
     }
 
     func rendererRanOutOfBuffers() {
