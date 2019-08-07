@@ -11,6 +11,8 @@ import VideoToolbox
 
 /// Callbacks for opengl player
 protocol GLPlayerDelegate: class {
+    /// Called then the first pixel buffer is shown
+    /// - Parameter image: the first frame shown
     func didDisplayFirstFrame(_ image: UIImage)
 }
 
@@ -355,14 +357,14 @@ extension GLPlayer: GLRendererDelegate {
 
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         self.playerView?.pixelBufferView?.displayPixelBuffer(pixelBuffer)
+        if !firstFrameSent {
+            firstFrameSent = true
+            delegate?.didDisplayFirstFrame(pixelBuffer.getImage())
+        }
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        if !firstFrameSent {
-            firstFrameSent = true
-            let image = pixelBuffer.getImage()
-            delegate?.didDisplayFirstFrame(image)
-        }
+        
     }
 
     func rendererRanOutOfBuffers() {
