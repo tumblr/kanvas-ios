@@ -7,6 +7,7 @@
 import UIKit
 import CoreMedia
 import AVFoundation
+import VideoToolbox
 
 /// Types of media the player can play.
 enum GLPlayerMedia {
@@ -75,6 +76,7 @@ final class GLPlayer {
     }
     private var timer: Timer?
     private var displayLink: CADisplayLink?
+    private var currentPixelBuffer: CVPixelBuffer?
 
     /// The GLRendering instance for the player.
     let renderer: GLRendering
@@ -162,13 +164,11 @@ final class GLPlayer {
     ///
     /// - Returns: first frame
     func getFirstFrame() -> UIImage {
-        guard let media = playableMedia.first else { return UIImage() }
-        switch media {
-        case .image(let image, _):
-            return image
-        case .video(let url, _, _):
-            return getFirstFrame(from: url)
-        }
+        guard let pixelBuffer = currentPixelBuffer else { return UIImage() }
+        var cgImageMaybe: CGImage?
+        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImageMaybe)
+        guard let cgImage = cgImageMaybe else { return UIImage() }
+        return UIImage(cgImage: cgImage)
     }
 
     // MARK: - Media loading
@@ -376,7 +376,7 @@ extension GLPlayer: GLRendererDelegate {
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        // Empty since this method is for storage rather tha rendering
+        self.currentPixelBuffer = pixelBuffer
     }
 
     func rendererRanOutOfBuffers() {
