@@ -171,7 +171,8 @@ final class GLPlayer {
         let bufferHeight = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
         let heightFactor: CGFloat = 4.0
         
-        let x = point.x * bufferWidth / CGFloat(Device.screenWidth)
+        let croppedSpace = bufferWidth - (CGFloat(Device.screenWidth) * bufferHeight / CGFloat(Device.screenHeight))
+        let x = (croppedSpace / 2) + (point.x * (bufferWidth - croppedSpace)) / CGFloat(Device.screenWidth)
         let y = point.y * bufferHeight / (CGFloat(Device.screenHeight) * heightFactor)
         let luma = int32Buffer[Int(y) * int32PerRow + Int(x)]
         CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
