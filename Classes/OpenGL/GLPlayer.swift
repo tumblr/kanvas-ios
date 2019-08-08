@@ -162,22 +162,41 @@ final class GLPlayer {
     /// Obtains color from a pixel
     /// - Parameter point: the point to take the color from
     func getColor(from point: CGPoint) -> UIColor {
-        guard let pixelBuffer: CVPixelBuffer = currentPixelBuffer else { return .black }
+        guard let pixelBuffer: CVPixelBuffer = currentPixelBuffer,
+        let playerView = playerView,
+        playerView.frame.contains(point) else { return .black }
         
         CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
         let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
         let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
         let bufferWidth = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
         let bufferHeight = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
-        let heightFactor: CGFloat = 4.0
+        let heightFactor = 4
         
-        let croppedSpace = bufferWidth - (CGFloat(Device.screenWidth) * bufferHeight / CGFloat(Device.screenHeight))
-        let x = (croppedSpace / 2) + (point.x * (bufferWidth - croppedSpace)) / CGFloat(Device.screenWidth)
-        let y = point.y * bufferHeight / (CGFloat(Device.screenHeight) * heightFactor)
-        let luma = int32Buffer[Int(y) * int32PerRow + Int(x)]
+        let bufferAspectRatio = bufferWidth.f / bufferHeight.f
+        let screenAspectRatio = Device.screenWidth.f / Device.screenHeight.f
+        
+        let x,y: CGFloat
+        
+        if bufferAspectRatio > screenAspectRatio {
+            let croppedSpace = bufferWidth - (CGFloat(Device.screenWidth) * bufferHeight / CGFloat(Device.screenHeight))
+            let visibleBufferWidth = bufferWidth - croppedSpace
+            x = croppedSpace / 2 + point.x * visibleBufferWidth / CGFloat(Device.screenWidth)
+            y = point.y * bufferHeight / (CGFloat(Device.screenHeight))
+        }
+        else {
+            let croppedSpace = bufferHeight - (CGFloat(Device.screenHeight) * bufferWidth / CGFloat(Device.screenWidth))
+            let visibleBufferHeight = bufferHeight - croppedSpace
+            y = croppedSpace / 2 + point.y * visibleBufferHeight / CGFloat(Device.screenHeight)
+            x = point.x * bufferWidth / CGFloat(Device.screenWidth)
+        }
+        
+        
+        let luma = int32Buffer[Int(y) * int32PerRow / heightFactor + Int(x)]
+        let color = UIColor(hex: luma)
         CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
         
-        return UIColor(hex: luma)
+        return color
     }
     
     /// Obtains the first frame from playable media
