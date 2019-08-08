@@ -26,7 +26,7 @@ final class OptionsStackViewTests: FBSnapshotTestCase {
     }
 
     func newStackView() -> OptionsStackView<CameraOption> {
-        let stackView = OptionsStackView<CameraOption>(section: 0, options: options(), interItemSpacing: 32)
+        let stackView = OptionsStackView<CameraOption>(section: 0, options: options(), interItemSpacing: 32, settings: CameraSettings())
         stackView.frame = CGRect(x: 0, y: 0, width: 320, height: 100)
         return stackView
     }
