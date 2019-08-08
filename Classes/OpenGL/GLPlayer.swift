@@ -7,6 +7,14 @@
 import UIKit
 import CoreMedia
 import AVFoundation
+import VideoToolbox
+
+/// Callbacks for opengl player
+protocol GLPlayerDelegate: class {
+    /// Called then the first pixel buffer is shown
+    /// - Parameter image: the first frame shown
+    func didDisplayFirstFrame(_ image: UIImage)
+}
 
 /// Types of media the player can play.
 enum GLPlayerMedia {
@@ -65,6 +73,8 @@ final class GLPlayer {
         }
     }
 
+    weak var delegate: GLPlayerDelegate?
+    
     private var playableMedia: [GLPlayerMediaInternal] = []
     private var currentlyPlayingMediaIndex: Int = -1
     private var currentlyPlayingMedia: GLPlayerMediaInternal? {
@@ -75,6 +85,7 @@ final class GLPlayer {
     }
     private var timer: Timer?
     private var displayLink: CADisplayLink?
+    private var firstFrameSent = false
 
     /// The GLRendering instance for the player.
     let renderer: GLRendering
@@ -156,19 +167,6 @@ final class GLPlayer {
 
         renderer.reset()
         playCurrentMedia()
-    }
-    
-    /// Obtains the first frame from playable media
-    ///
-    /// - Returns: first frame
-    func getFirstFrame() -> UIImage {
-        guard let media = playableMedia.first else { return UIImage() }
-        switch media {
-        case .image(let image, _):
-            return image
-        case .video(let url, _, _):
-            return getFirstFrame(from: url)
-        }
     }
 
     // MARK: - Media loading
@@ -353,26 +351,18 @@ final class GLPlayer {
             break
         }
     }
-    
-    private func getFirstFrame(from url: URL) -> UIImage {
-        let asset = AVURLAsset(url: url)
-        let imageGenerator = AVAssetImageGenerator(asset: asset)
-        imageGenerator.appliesPreferredTrackTransform = true
-        let time = CMTimeMake(value: 0, timescale: 2)
-        do {
-            let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
-            return UIImage(cgImage: cgImage)
-        }
-        catch {
-            return UIImage()
-        }
-    }
 }
 
 extension GLPlayer: GLRendererDelegate {
 
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         self.playerView?.pixelBufferView?.displayPixelBuffer(pixelBuffer)
+        if !firstFrameSent {
+            firstFrameSent = true
+            if let image = UIImage(pixelBuffer: pixelBuffer) {
+                delegate?.didDisplayFirstFrame(image)
+            }
+        }
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
