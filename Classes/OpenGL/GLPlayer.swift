@@ -215,9 +215,9 @@ final class GLPlayer {
     /// Checks if media is only one photo
     /// - Returns: whether media is one photo or not
     func isMediaOnePhoto() -> Bool {
-        guard let currentlyPlayingMedia = currentlyPlayingMedia, playableMedia.count == 1 else { return false }
+        guard playableMedia.count == 1, let onlyMedia = playableMedia.first else { return false }
         
-        switch currentlyPlayingMedia {
+        switch onlyMedia {
         case .image(_, _):
             return true
         case .video(_, _, _):
