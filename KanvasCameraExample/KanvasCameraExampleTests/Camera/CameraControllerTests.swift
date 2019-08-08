@@ -254,6 +254,15 @@ final class CameraControllerTests: FBSnapshotTestCase {
     }
 
     // Can't test `dismissButtonPressed` because it requires presenting and dismissing preview controller.
+    
+    func testCameraWithTopButtonsSwapped() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        settings.features.topButtonsSwapped = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
 }
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
