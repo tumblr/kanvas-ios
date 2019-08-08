@@ -359,7 +359,9 @@ extension GLPlayer: GLRendererDelegate {
         self.playerView?.pixelBufferView?.displayPixelBuffer(pixelBuffer)
         if !firstFrameSent {
             firstFrameSent = true
-            delegate?.didDisplayFirstFrame(pixelBuffer.getImage())
+            if let image = UIImage(pixelBuffer: pixelBuffer) {
+                delegate?.didDisplayFirstFrame(image)
+            }
         }
     }
 
@@ -371,16 +373,4 @@ extension GLPlayer: GLRendererDelegate {
         self.playerView?.pixelBufferView?.flushPixelBufferCache()
     }
 
-}
-
-private extension CVPixelBuffer {
-    
-    func getImage() -> UIImage {
-        let ciImage = CIImage(cvPixelBuffer: self)
-        
-        let temporaryContext = CIContext()
-        let rect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(self), height: CVPixelBufferGetHeight(self))
-        guard let cgImage = temporaryContext.createCGImage(ciImage, from: rect) else { return UIImage() }
-        return UIImage(cgImage: cgImage)
-    }
 }
