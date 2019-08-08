@@ -81,7 +81,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return getOptions(from: self.settings)
     }()
     private lazy var cameraView: CameraView = {
-        let view = CameraView(numberOfOptionRows: CGFloat(options.count))
+        let view = CameraView(settings: self.settings, numberOfOptionRows: CGFloat(options.count))
         view.delegate = self
         return view
     }()
@@ -91,7 +91,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return controller
     }()
     private lazy var topOptionsController: OptionsController<CameraController> = {
-        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.optionHorizontalMargin)
+        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.optionHorizontalMargin, settings: self.settings)
         controller.delegate = self
         return controller
     }()

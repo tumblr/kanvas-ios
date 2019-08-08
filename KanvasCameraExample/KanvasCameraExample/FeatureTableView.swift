@@ -28,6 +28,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case editorSaving(Bool)
         case editorPosting(Bool)
         case newCameraModes(Bool)
+        case topButtonsSwapped(Bool)
 
         var name: String {
             switch self {
@@ -57,6 +58,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor Saving"
             case .newCameraModes(_):
                 return "New Camera Modes"
+            case .topButtonsSwapped(_):
+                return "Top Buttons Swapped"
             }
         }
 
@@ -87,6 +90,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .editorPosting(let enabled):
                 return enabled
             case .newCameraModes(let enabled):
+                return enabled
+            case .topButtonsSwapped(let enabled):
                 return enabled
             }
         }
@@ -156,6 +161,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editorSaving(value)
         case .newCameraModes(_):
             featuresData[indexPath.row] = .newCameraModes(value)
+        case .topButtonsSwapped(_):
+            featuresData[indexPath.row] = .topButtonsSwapped(value)
         }
         delegate?.featureTableView(didUpdateFeature: featuresData[indexPath.row], withValue: value)
     }
