@@ -211,7 +211,20 @@ final class GLPlayer {
             return getFirstFrame(from: url)
         }
     }
-
+    
+    /// Checks if media is only one photo
+    /// - Returns: whether media is one photo or not
+    func isMediaOnePhoto() -> Bool {
+        guard let currentlyPlayingMedia = currentlyPlayingMedia, playableMedia.count == 1 else { return false }
+        
+        switch currentlyPlayingMedia {
+        case .image(_, _):
+            return true
+        case .video(_, _, _):
+            return false
+        }
+    }
+    
     // MARK: - Media loading
 
     private func loadAll(media: [GLPlayerMedia]) {

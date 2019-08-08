@@ -358,11 +358,15 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didStartColorSelection() {
-        player.pause()
+        if !player.isMediaOnePhoto() {
+            player.pause()
+        }
     }
     
     func didEndColorSelection() {
-        player.resume()
+        if !player.isMediaOnePhoto() {
+            player.resume()
+        }
     }
     
     func getColor(from point: CGPoint) -> UIColor {
