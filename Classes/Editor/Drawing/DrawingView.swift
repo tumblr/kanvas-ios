@@ -676,7 +676,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             self.colorSelecter.alpha = show ? 1 : 0
             self.colorSelecter.transform = .identity
             self.upperDrop.alpha = show ? 1 : 0
-            self.lowerDrop.alpha = show ? 1 : 0
+            self.lowerDrop.alpha = 0
         }
     }
     
