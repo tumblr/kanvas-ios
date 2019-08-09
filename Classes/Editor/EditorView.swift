@@ -174,7 +174,7 @@ final class EditorView: UIView {
         NSLayoutConstraint.activate([
             postButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
             postButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.postButtonVerticalMargin)
-            ])
+        ])
     }
 
     func setupSaveButton() {
