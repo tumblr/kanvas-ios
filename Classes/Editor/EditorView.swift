@@ -27,7 +27,6 @@ private struct EditorViewConstants {
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
-    static let postButtonSize: CGFloat = 49
     static let postButtonHorizontalMargin: CGFloat = 20
     static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let saveButtonSize: CGFloat = 34
@@ -164,21 +163,18 @@ final class EditorView: UIView {
     func setupPostButton() {
         postButton.accessibilityLabel = "Post Button"
         postButton.clipsToBounds = false
-        postButton.layer.cornerRadius = EditorViewConstants.postButtonSize / 2.0
-        postButton.layer.borderWidth = 3.0
-        postButton.layer.borderColor = UIColor.white.cgColor
+        postButton.setTitle(NSLocalizedString("Post", comment: "Message for the post button in the editor screen"), for: .normal)
+        postButton.titleLabel?.font = .eggplant85()
+        postButton.setTitleColor(.white, for: .normal)
         postButton.applyShadows()
         addSubview(postButton)
-        postButton.setImage(KanvasCameraImages.postImage, for: .normal)
         postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
         postButton.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             postButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
-            postButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
-            postButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
             postButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.postButtonVerticalMargin)
-        ])
+            ])
     }
 
     func setupSaveButton() {
