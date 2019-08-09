@@ -87,6 +87,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorPosting = true
         settings.features.editorSaving = true
         settings.features.newCameraModes = true
+        settings.features.topButtonsSwapped = false
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.exportStopMotionPhotoAsVideo = true
@@ -201,6 +202,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
             .newCameraModes(settings.features.newCameraModes),
+            .topButtonsSwapped(settings.features.topButtonsSwapped),
         ]
     }
 
@@ -234,6 +236,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.newCameraModes = value
             settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
+        case .topButtonsSwapped(_):
+            settings.features.topButtonsSwapped = value
         }
     }
 }

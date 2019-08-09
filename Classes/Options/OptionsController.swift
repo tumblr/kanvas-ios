@@ -59,7 +59,7 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     private lazy var optionsStackViews: [OptionsStackView<Item>] = {
         var optionViews: [OptionsStackView<Item>] = []
         for index in 0..<options.count {
-            let view = OptionsStackView(section: index, options: options[index], interItemSpacing: self.spacing)
+            let view = OptionsStackView(section: index, options: options[index], interItemSpacing: self.spacing, settings: self.settings)
             view.delegate = self
             optionViews.append(view)
         }
@@ -76,6 +76,7 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     
     private let options: [[Option<Item>]]
     private let spacing: CGFloat
+    private let settings: CameraSettings
 
     weak var delegate: Delegate?
 
@@ -84,9 +85,10 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     /// - Parameters:
     ///   - options: the Option items to display in the stack view
     ///   - spacing: the amount of spacing for the internal stack view
-    init(options: [[Option<Item>]], spacing: CGFloat) {
+    init(options: [[Option<Item>]], spacing: CGFloat, settings: CameraSettings) {
         self.options = options
         self.spacing = spacing
+        self.settings = settings
         super.init(nibName: .none, bundle: .none)
     }
 

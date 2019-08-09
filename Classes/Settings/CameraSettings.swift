@@ -122,6 +122,10 @@ public struct CameraFeatures {
     /// The New Camera Modes
     /// This replaces Capture, Photo and Loop modes with Normal, Stitch and GIF modes
     public var newCameraModes = false
+    
+    /// Buttons Swapped on the Camera View
+    /// This changes the position between the close icon and the rotate, flash, and ghost icons
+    public var topButtonsSwapped = false
 }
 
 // A class that defines the settings for the Kanvas Camera

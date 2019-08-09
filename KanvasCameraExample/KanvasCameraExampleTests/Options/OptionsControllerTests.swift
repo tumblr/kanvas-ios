@@ -33,7 +33,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
     }
 
     func newViewController(options: [[Option<String>]]) -> OptionsController<OptionsControllerDelegateStub> {
-        let viewController = OptionsController<OptionsControllerDelegateStub>(options: options, spacing: 0)
+        let viewController = OptionsController<OptionsControllerDelegateStub>(options: options, spacing: 0, settings: CameraSettings())
         viewController.delegate = newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 100)
         return viewController

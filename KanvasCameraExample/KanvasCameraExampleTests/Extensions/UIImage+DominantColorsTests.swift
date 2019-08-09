@@ -12,13 +12,11 @@ final class UIImageDominantColorsTests: XCTestCase {
     func testDominantColors() {
         guard let image = KanvasCameraImages.confirmImage else { return }
         let colors = image.getDominantColors(count: 3)
-        
-        print(colors.map { $0.hexString() })
-        
+                
         let expectedColors = [UIColor(hex: "#24bbfa"),
-                              UIColor(hex: "#040506"),
+                              UIColor(hex: "#040505"),
                               UIColor(hex: "#f4f9fc"),
-                              UIColor(hex: "#145c7c")]
+                              UIColor(hex: "#146c8c")]
         
         XCTAssertEqual(colors, expectedColors, "Expected different colors.")
     }
