@@ -9,7 +9,9 @@ import UIKit
 
 /// Constants for color drop
 private struct Constants {
-    static let borderWidth: CGFloat = 2
+    static let topBorderWidth: CGFloat = 2
+    static let bottomBorderWidth: CGFloat = 4
+    static let horizontalBorderWidth: CGFloat = 2.5
 }
 
 /// Color drop with white border
@@ -54,10 +56,10 @@ final class ColorDrop: UIImageView {
         addSubview(innerDrop)
         
         NSLayoutConstraint.activate([
-            innerDrop.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: Constants.borderWidth),
-            innerDrop.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -Constants.borderWidth),
-            innerDrop.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: Constants.borderWidth),
-            innerDrop.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -Constants.borderWidth),
+            innerDrop.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: Constants.topBorderWidth),
+            innerDrop.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -Constants.bottomBorderWidth),
+            innerDrop.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: Constants.horizontalBorderWidth),
+            innerDrop.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -Constants.horizontalBorderWidth),
         ])
     }
     
