@@ -74,8 +74,6 @@ private struct DrawingViewConstants {
     
     // Color selecter
     static let colorSelecterSize: CGFloat = 80
-    static let dropHeight: CGFloat = 55
-    static let dropWidth: CGFloat = 39
     static let dropPadding: CGFloat = 18
     static let colorSelecterAlpha: CGFloat = 0.65
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
@@ -133,8 +131,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     // Color selecter
     private let colorSelecter: CircularImageView
     private var tooltip: EasyTipView?
-    private let upperDrop: UIImageView
-    private let lowerDrop: UIImageView
+    private let upperDrop: ColorDrop
+    private let lowerDrop: ColorDrop
     
     // Color collection
     let colorCollection: UIView
@@ -157,8 +155,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorPickerButton = CircularImageView()
         colorPickerSelectorContainer = UIView()
         colorSelecter = CircularImageView()
-        upperDrop = UIImageView()
-        lowerDrop = UIImageView()
+        upperDrop = ColorDrop()
+        lowerDrop = ColorDrop()
         overlay = UIView()
         
         super.init(frame: .zero)
@@ -492,17 +490,14 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     private func setUpColorSelecterUpperDrop() {
         upperDrop.accessibilityIdentifier = "Editor Color Selecter Upper Drop"
-        upperDrop.image = KanvasCameraImages.dropImage?.withRenderingMode(.alwaysTemplate)
-        upperDrop.translatesAutoresizingMaskIntoConstraints = false
-        upperDrop.clipsToBounds = true
         addSubview(upperDrop)
         
         let verticalMargin = DrawingViewConstants.dropPadding
         NSLayoutConstraint.activate([
             upperDrop.bottomAnchor.constraint(equalTo: colorSelecter.topAnchor, constant: -verticalMargin),
             upperDrop.centerXAnchor.constraint(equalTo: colorSelecter.centerXAnchor),
-            upperDrop.heightAnchor.constraint(equalToConstant: DrawingViewConstants.dropHeight),
-            upperDrop.widthAnchor.constraint(equalToConstant: DrawingViewConstants.dropWidth),
+            upperDrop.heightAnchor.constraint(equalToConstant: ColorDrop.defaultHeight),
+            upperDrop.widthAnchor.constraint(equalToConstant: ColorDrop.defaultWidth),
         ])
         
         upperDrop.alpha = 0
@@ -510,18 +505,15 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     private func setUpColorSelecterLowerDrop() {
         lowerDrop.accessibilityIdentifier = "Editor Color Selecter Lower Drop"
-        lowerDrop.image = KanvasCameraImages.dropImage?.withRenderingMode(.alwaysTemplate)
         lowerDrop.transform = CGAffineTransform(rotationAngle: .pi)
-        lowerDrop.translatesAutoresizingMaskIntoConstraints = false
-        lowerDrop.clipsToBounds = true
         addSubview(lowerDrop)
         
         let verticalMargin = DrawingViewConstants.dropPadding
         NSLayoutConstraint.activate([
             lowerDrop.topAnchor.constraint(equalTo: colorSelecter.bottomAnchor, constant: verticalMargin),
             lowerDrop.centerXAnchor.constraint(equalTo: colorSelecter.centerXAnchor),
-            lowerDrop.heightAnchor.constraint(equalToConstant: DrawingViewConstants.dropHeight),
-            lowerDrop.widthAnchor.constraint(equalToConstant: DrawingViewConstants.dropWidth),
+            lowerDrop.heightAnchor.constraint(equalToConstant: ColorDrop.defaultHeight),
+            lowerDrop.widthAnchor.constraint(equalToConstant: ColorDrop.defaultWidth),
         ])
         
         lowerDrop.alpha = 0
@@ -747,8 +739,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     /// - Parameter color: new color for the color selecter
     func setColorSelecterColor(_ color: UIColor) {
         colorSelecter.backgroundColor = color.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
-        upperDrop.tintColor = color
-        lowerDrop.tintColor = color
+        upperDrop.setColor(color)
+        lowerDrop.setColor(color)
     }
     
     /// Changes color selector location on screen
@@ -757,7 +749,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     func moveColorSelecter(to point: CGPoint) {
         colorSelecter.center = point
         
-        let offset = DrawingViewConstants.dropPadding + (DrawingViewConstants.colorSelecterSize + DrawingViewConstants.dropHeight) / 2
+        let offset = DrawingViewConstants.dropPadding + (DrawingViewConstants.colorSelecterSize + ColorDrop.defaultHeight) / 2
         
         let upperDropLocation = CGPoint(x: point.x, y: point.y - offset)
         let lowerDropLocation = CGPoint(x: point.x, y: point.y + offset)
