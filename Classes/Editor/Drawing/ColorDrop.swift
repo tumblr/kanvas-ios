@@ -14,7 +14,8 @@ private struct Constants {
     static let horizontalBorderWidth: CGFloat = 2.5
 }
 
-/// Color drop with white border
+/// Drop-shape view which can change its color.
+/// It also has a white border.
 final class ColorDrop: UIImageView {
     
     static let defaultHeight: CGFloat = 55
@@ -23,7 +24,7 @@ final class ColorDrop: UIImageView {
     private let innerDrop = UIImageView()
     
     init() {
-        super.init(image: UIImage())
+        super.init(image: nil)
         setUpView()
     }
     
@@ -65,7 +66,7 @@ final class ColorDrop: UIImageView {
     
     // MARK: - Public interface
     
-    func setColor(_ color: UIColor) {
+    func setInnerColor(_ color: UIColor) {
         innerDrop.tintColor = color
     }
 }
