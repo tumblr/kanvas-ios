@@ -14,7 +14,7 @@ private struct Constants {
     static let horizontalBorderWidth: CGFloat = 2.5
 }
 
-/// Drop-shape view which can change its color.
+/// Drop-shaped view which can change its color.
 /// It also has a white border.
 final class ColorDrop: UIImageView {
     
@@ -22,6 +22,15 @@ final class ColorDrop: UIImageView {
     static let defaultWidth: CGFloat = 39
     
     private let innerDrop = UIImageView()
+    
+    var innerColor: UIColor {
+        get {
+            return innerDrop.tintColor
+        }
+        set {
+            innerDrop.tintColor = newValue
+        }
+    }
     
     init() {
         super.init(image: nil)
@@ -62,11 +71,5 @@ final class ColorDrop: UIImageView {
             innerDrop.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: Constants.horizontalBorderWidth),
             innerDrop.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -Constants.horizontalBorderWidth),
         ])
-    }
-    
-    // MARK: - Public interface
-    
-    func setInnerColor(_ color: UIColor) {
-        innerDrop.tintColor = color
     }
 }

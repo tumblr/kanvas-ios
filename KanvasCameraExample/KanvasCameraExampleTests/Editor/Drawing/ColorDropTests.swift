@@ -22,7 +22,7 @@ final class ColorDropTests: FBSnapshotTestCase {
     func newColorDrop() -> ColorDrop {
         let colorDrop = ColorDrop()
         colorDrop.frame = CGRect(x: 0, y: 0, width: ColorDrop.defaultWidth, height: ColorDrop.defaultHeight)
-        colorDrop.setInnerColor(.tumblrBrightBlue)
+        colorDrop.innerColor = .tumblrBrightBlue
         return colorDrop
     }
     
