@@ -234,6 +234,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             cameraView.addFiltersView(filterSettingsController.view)
         }
         bindMediaContentAvailable()
+        PHPhotoLibrary.shared().register(self)
     }
     
     override public func viewDidAppear(_ animated: Bool) {
@@ -619,7 +620,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             let fetchOptions = PHFetchOptions()
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             fetchOptions.fetchLimit = 1
-            PHPhotoLibrary.shared().register(self)
             let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
             self.lastMediaPickerFetchResult = fetchResult
             if fetchResult.count > 0 {
@@ -902,9 +902,8 @@ extension CameraController: PHPhotoLibraryChangeObserver {
         guard
             let lastMediaPickerFetchResult = lastMediaPickerFetchResult,
             let changeDetails = changeInstance.changeDetails(for: lastMediaPickerFetchResult),
-            changeDetails.hasMoves,
-            changeDetails.changedIndexes?.count == 1,
-            changeDetails.changedIndexes?.first == 0
+            changeDetails.insertedIndexes?.count == 1,
+            changeDetails.removedIndexes?.count == 1
         else {
             return
         }
