@@ -184,6 +184,8 @@ final class EditorView: UIView {
         postLabel.font = .favoritTumblrMedium(fontSize: EditorViewConstants.postButtonFontSize)
         postLabel.clipsToBounds = false
         postLabel.translatesAutoresizingMaskIntoConstraints = false
+        postLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(postButtonPressed)))
+        postLabel.isUserInteractionEnabled = true
         addSubview(postLabel)
         
         NSLayoutConstraint.activate([
