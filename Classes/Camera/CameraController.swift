@@ -127,7 +127,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let feedbackGenerator: UINotificationFeedbackGenerator
     private var mediaPickerThumbnailTargetSize: CGSize = CGSize(width: 0, height: 0)
     private var lastMediaPickerFetchResult: PHFetchResult<PHAsset>?
-    private var mediaPickerDispatchQueue = DispatchQueue(label: "com.kanvas.mediapickerqueue")
+    private var mediaPickerThumbnailQueue = DispatchQueue(label: "kanvas.mediaPickerThumbnailQueue")
 
     private weak var overlayViewController: UIViewController?
 
@@ -615,7 +615,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func fetchMostRecentPhotoLibraryImage(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-        mediaPickerDispatchQueue.async {
+        mediaPickerThumbnailQueue.async {
             let fetchOptions = PHFetchOptions()
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             fetchOptions.fetchLimit = 1
