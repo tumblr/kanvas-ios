@@ -52,6 +52,7 @@ final class EditorView: UIView {
     private let saveButton = UIButton()
     private let showSaveButton: Bool
     private let postButton = UIButton()
+    private let postLabel = UILabel()
     private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
     let filterMenuContainer = IgnoreTouchesView()
@@ -178,7 +179,6 @@ final class EditorView: UIView {
             postButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.postButtonVerticalMargin)
         ])
         
-        let postLabel = UILabel()
         postLabel.text = NSLocalizedString("Post", comment: "Message for the post button in the editor screen")
         postLabel.textColor = .white
         postLabel.font = .favoritTumblrMedium(fontSize: EditorViewConstants.postButtonFontSize)
@@ -264,6 +264,7 @@ final class EditorView: UIView {
         case .post:
             UIView.animate(withDuration: EditorViewConstants.animationDuration) {
                 self.postButton.alpha = show ? 1 : 0
+                self.postLabel.alpha = show ? 1 : 0
             }
         }
         if showSaveButton {
