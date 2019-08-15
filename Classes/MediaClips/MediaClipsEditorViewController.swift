@@ -88,7 +88,12 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         hasClips = true
         delegate?.mediaClipWasAdded(at: collectionController.getClips().count - 1)
     }
-    
+
+    func removeAllClips() {
+        hasClips = false
+        collectionController.removeAllClips()
+    }
+
     /// Deletes the clip on the current dragging session
     func removeDraggingClip() {
         if let index = collectionController.removeDraggingClip() {

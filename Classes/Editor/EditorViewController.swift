@@ -220,6 +220,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         else {
             assetsHandler.mergeAssets(segments: segments) { [weak self] url in
                 guard let url = url else {
+                    self?.hideLoading()
                     self?.handleExportError()
                     return
                 }
