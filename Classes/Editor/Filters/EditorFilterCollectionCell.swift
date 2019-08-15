@@ -16,7 +16,7 @@ private struct EditorFilterCollectionCellDimensions: FilterCollectionCellDimensi
 }
 
 /// The cell in FilterCollectionView to display an individual filter
-final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCell, FilterCollectionInnerCellDelegate {
+final class EditorFilterCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate, FilterCollectionCell, FilterCollectionInnerCellDelegate {
     
     private static let dimensions = EditorFilterCollectionCellDimensions()
     static let minimumHeight = dimensions.minimumHeight
@@ -26,21 +26,37 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     private let innerCell: FilterCollectionInnerCell
     weak var delegate: FilterCollectionCellDelegate?
     
+    private let longPressRecognizer: UILongPressGestureRecognizer = {
+        let recognizer = UILongPressGestureRecognizer()
+        recognizer.minimumPressDuration = 0.0
+        return recognizer
+    }()
+    
     override init(frame: CGRect) {
-        innerCell = FilterCollectionInnerCell(dimensions: EditorFilterCollectionCell.dimensions)
+        innerCell = FilterCollectionInnerCell(dimensions: EditorFilterCollectionCell.dimensions,
+                                              tapRecognizer: nil,
+                                              longPressRecognizer: longPressRecognizer)
         super.init(frame: frame)
         setUpView()
+        setUpRecognizers()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        innerCell = FilterCollectionInnerCell(dimensions: EditorFilterCollectionCell.dimensions)
+        innerCell = FilterCollectionInnerCell(dimensions: EditorFilterCollectionCell.dimensions,
+                                              tapRecognizer: nil,
+                                              longPressRecognizer: longPressRecognizer)
         super.init(coder: aDecoder)
         setUpView()
+        setUpRecognizers()
     }
     
     private func setUpView() {
         innerCell.delegate = self
         innerCell.add(into: self)
+    }
+    
+    private func setUpRecognizers() {
+        longPressRecognizer.delegate = self
     }
     
     // MARK: - FilterCollectionCell
@@ -94,6 +110,16 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.pop()
     }
     
+    /// Makes the cell smaller
+    func reduce() {
+        innerCell.reduce()
+    }
+    
+    /// Makes the cell bigger
+    func expand() {
+        innerCell.expand()
+    }
+    
     // MARK: - FilterCollectionInnerCellDelegate
     
     func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {
@@ -101,6 +127,10 @@ final class EditorFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     }
     
     func didLongPress(cell: FilterCollectionInnerCell, recognizer: UILongPressGestureRecognizer) {
-        // Necessary method to conform delegate protocol. Does nothing in this case.
+        delegate?.didLongPress(cell: self, recognizer: recognizer)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

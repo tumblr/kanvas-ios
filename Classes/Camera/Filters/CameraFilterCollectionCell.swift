@@ -94,6 +94,16 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.pop()
     }
     
+    /// Makes the cell smaller
+    func reduce() {
+        innerCell.reduce()
+    }
+    
+    /// Makes the cell bigger
+    func expand() {
+        innerCell.expand()
+    }
+    
     // MARK: - FilterCollectionInnerCellDelegate
     
     func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {

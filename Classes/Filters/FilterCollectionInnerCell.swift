@@ -50,8 +50,15 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     private let circleView: UIImageView = UIImageView()
     private let iconView: UIImageView = UIImageView()
     
-    init(dimensions: FilterCollectionCellDimensions) {
+    private let tapRecognizer: UITapGestureRecognizer?
+    private let longPressRecognizer: UILongPressGestureRecognizer?
+    
+    init(dimensions: FilterCollectionCellDimensions,
+         tapRecognizer: UITapGestureRecognizer? = UITapGestureRecognizer(),
+         longPressRecognizer: UILongPressGestureRecognizer? = UILongPressGestureRecognizer()) {
         self.dimensions = dimensions
+        self.tapRecognizer = tapRecognizer
+        self.longPressRecognizer = longPressRecognizer
         super.init(frame: .zero)
         setUpView()
         setUpRecognizers()
@@ -158,14 +165,7 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     
     /// Reduces the icon size with a bouncing effect
     private func setIconSelected() {
-        UIView.animateKeyframes(withDuration: Constants.selectionBounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3 / Constants.selectionBounceDuration, animations: {
-                self.setIconScale(Constants.selectedScale - 0.08)
-            })
-            UIView.addKeyframe(withRelativeStartTime: 0.3 / Constants.selectionBounceDuration, relativeDuration: 0.2 / Constants.selectionBounceDuration, animations: {
-                self.setIconScale(Constants.selectedScale)
-            })
-        }, completion: nil)
+        expand()
     }
     
     /// Animates the icon back to normal size
@@ -192,6 +192,20 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         }
         else {
             setIconUnselected()
+        }
+    }
+    
+    /// Makes the cell smaller
+    func reduce() {
+        UIView.animate(withDuration: 0.3) {
+            self.setIconScale(Constants.selectedScale - 0.08)
+        }
+    }
+    
+    /// Makes the cell bigger
+    func expand() {
+        UIView.animate(withDuration: 0.2) {
+            self.setIconScale(Constants.selectedScale)
         }
     }
     
@@ -227,12 +241,15 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     // MARK: - Gesture recognizers
     
     private func setUpRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer()
-        let longPressRecognizer = UILongPressGestureRecognizer()
-        contentView.addGestureRecognizer(tapRecognizer)
-        contentView.addGestureRecognizer(longPressRecognizer)
-        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
-        longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
+        if let tapRecognizer = tapRecognizer {
+            contentView.addGestureRecognizer(tapRecognizer)
+            tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+        }
+        
+        if let longPressRecognizer = longPressRecognizer {
+            contentView.addGestureRecognizer(longPressRecognizer)
+            longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
+        }
     }
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {

@@ -31,4 +31,6 @@ protocol FilterCollectionCell: UICollectionViewCell {
     func setSelected(_ selected: Bool)
     func shrink()
     func pop()
+    func reduce()
+    func expand()
 }
