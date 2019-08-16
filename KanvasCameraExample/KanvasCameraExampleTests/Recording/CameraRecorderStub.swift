@@ -98,6 +98,12 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         cameraSegmentHandler.deleteSegment(at: index, removeFromDisk: false)
     }
 
+    func deleteAllSegments(removeFromDisk: Bool) {
+        while cameraSegmentHandler.segments.count > 0 {
+            cameraSegmentHandler.deleteSegment(at: 0, removeFromDisk: removeFromDisk)
+        }
+    }
+
     func moveSegment(from originIndex: Int, to destinationIndex: Int) {
         cameraSegmentHandler.moveSegment(from: originIndex, to: destinationIndex)
     }
