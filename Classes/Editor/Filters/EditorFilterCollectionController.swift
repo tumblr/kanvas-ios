@@ -26,7 +26,8 @@ private struct EditorFilterCollectionControllerConstants {
 /// Controller for handling the filter item collection.
 final class EditorFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
         
-    private lazy var filterCollectionView = FilterCollectionView(cellWidth: EditorFilterCollectionCell.width, cellHeight: EditorFilterCollectionCell.minimumHeight)
+    private lazy var filterCollectionView = FilterCollectionView(cellWidth: EditorFilterCollectionCell.width,
+                                                                 cellHeight: EditorFilterCollectionCell.minimumHeight)
     private var filterItems: [FilterItem]
     private var selectedIndexPath: IndexPath
     private var scrollingStartPoint: CGPoint
@@ -205,12 +206,9 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
             selectCell(cell)
         case .cancelled:
             recognizer.isEnabled = true
-            if previousCell == cell {
-                cell.setSelected(true)
-            }
-            else {
-                cell.setSelected(false)
-            }
+            // Make cell go back to previous state
+            let selectedBefore = previousCell == cell
+            cell.setSelected(selectedBefore)
         case .failed, .possible:
             break
         @unknown default:
