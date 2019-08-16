@@ -94,7 +94,7 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.pop()
     }
     
-    /// Makes the cell smaller
+    /// Animates the cell for press gesture
     func press() {
         innerCell.press()
     }

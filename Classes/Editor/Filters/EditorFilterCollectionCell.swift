@@ -110,7 +110,7 @@ final class EditorFilterCollectionCell: UICollectionViewCell, UIGestureRecognize
         innerCell.pop()
     }
     
-    /// Makes the animate for press gesture
+    /// Animates the cell for press gesture
     func press() {
         innerCell.press()
     }
