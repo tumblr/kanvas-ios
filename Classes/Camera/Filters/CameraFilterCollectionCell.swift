@@ -95,13 +95,8 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     }
     
     /// Makes the cell smaller
-    func reduce() {
-        innerCell.reduce()
-    }
-    
-    /// Makes the cell bigger
-    func expand() {
-        innerCell.expand()
+    func press() {
+        innerCell.press()
     }
     
     // MARK: - FilterCollectionInnerCellDelegate

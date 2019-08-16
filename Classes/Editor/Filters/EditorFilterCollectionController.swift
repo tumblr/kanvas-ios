@@ -190,7 +190,7 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         switch recognizer.state {
         case .began:
             scrollingStartPoint = recognizer.location(in: recognizer.view)
-            cell.reduce()
+            cell.press()
         case .changed:
             let location = recognizer.location(in: recognizer.view)
             if abs(scrollingStartPoint.x - location.x) > EditorFilterCollectionControllerConstants.scrollingThreshold ||

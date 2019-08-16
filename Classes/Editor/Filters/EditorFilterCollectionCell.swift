@@ -110,14 +110,9 @@ final class EditorFilterCollectionCell: UICollectionViewCell, UIGestureRecognize
         innerCell.pop()
     }
     
-    /// Makes the cell smaller
-    func reduce() {
-        innerCell.reduce()
-    }
-    
-    /// Makes the cell bigger
-    func expand() {
-        innerCell.expand()
+    /// Makes the animate for press gesture
+    func press() {
+        innerCell.press()
     }
     
     // MARK: - FilterCollectionInnerCellDelegate

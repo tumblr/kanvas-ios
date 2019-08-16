@@ -34,11 +34,16 @@ protocol FilterCollectionCellDimensions {
 
 /// Constants for the cell view
 private struct Constants {
+    // Animation times
     static let animationDuration: TimeInterval = 0.2
-    static let selectionBounceDuration: TimeInterval = 0.5
+    static let pressAnimationDuration: TimeInterval = 0.3
+    static let releaseAnimationDuration: TimeInterval = 0.2
     static let poppingBounceDuration: TimeInterval = 0.6
+    
+    // Scales for each cell state
     static let selectedScale: CGFloat = 0.78
     static let unselectedScale: CGFloat = 1
+    static let pressedScale: CGFloat = 0.7
 }
 
 final class FilterCollectionInnerCell: UICollectionViewCell {
@@ -163,16 +168,25 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         iconView.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
-    /// Reduces the icon size with a bouncing effect
+    /// Animates the icon to 'selected' size
     private func setIconSelected() {
-        expand()
+        UIView.animate(withDuration: Constants.releaseAnimationDuration) {
+            self.setIconScale(Constants.selectedScale)
+        }
     }
     
-    /// Animates the icon back to normal size
+    /// Animates the icon back to 'unselected' size
     private func setIconUnselected() {
-        UIView.animate(withDuration: Constants.animationDuration, animations: {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.setIconScale(Constants.unselectedScale)
-        })
+        }
+    }
+    
+    /// Animates the icon to 'pressed' size
+    private func setIconPressed() {
+        UIView.animate(withDuration: Constants.pressAnimationDuration) {
+            self.setIconScale(Constants.pressedScale)
+        }
     }
     
     // MARK: - Public interface
@@ -195,18 +209,9 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         }
     }
     
-    /// Makes the cell smaller
-    func reduce() {
-        UIView.animate(withDuration: 0.3) {
-            self.setIconScale(Constants.selectedScale - 0.08)
-        }
-    }
-    
-    /// Makes the cell bigger
-    func expand() {
-        UIView.animate(withDuration: 0.2) {
-            self.setIconScale(Constants.selectedScale)
-        }
+    /// Changes the size of the filter icon to 'pressed' size
+    func press() {
+        setIconPressed()
     }
     
     /// Changes the circle size according to a percentage.
