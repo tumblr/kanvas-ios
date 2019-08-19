@@ -472,9 +472,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK : - Private utilities
     private func bindMediaContentAvailable() {
-        disposables.append(clipsController.observe(\.hasClips) { [unowned self] object, _ in
+        disposables.append(clipsController.observe(\.hasClips) { [weak self] object, _ in
             performUIUpdate {
-                self.updateUI(forClipsPresent: object.hasClips)
+                self?.updateUI(forClipsPresent: object.hasClips)
             }
         })
         updateUI(forClipsPresent: clipsController.hasClips)
