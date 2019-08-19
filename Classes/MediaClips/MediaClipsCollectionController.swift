@@ -34,7 +34,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     private var clips: [MediaClip]
     private var draggingClipIndex: IndexPath?
-    private var draggingCell: MediaClipsCollectionCell?
+    private weak var draggingCell: MediaClipsCollectionCell?
     private var draggingState: UICollectionViewCell.DragState = .none
 
     weak var delegate: MediaClipsCollectionControllerDelegate?

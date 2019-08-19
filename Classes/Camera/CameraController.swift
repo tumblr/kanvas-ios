@@ -125,6 +125,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var segmentsHandlerClass: SegmentsHandlerType.Type
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
+    private var mediaPickerThumbnailTargetSize: CGSize = CGSize(width: 0, height: 0)
+    private var lastMediaPickerFetchResult: PHFetchResult<PHAsset>?
+    private var mediaPickerThumbnailQueue = DispatchQueue(label: "kanvas.mediaPickerThumbnailQueue")
 
     private weak var overlayViewController: UIViewController?
 
@@ -231,6 +234,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             cameraView.addFiltersView(filterSettingsController.view)
         }
         bindMediaContentAvailable()
+        PHPhotoLibrary.shared().register(self)
     }
     
     override public func viewDidAppear(_ animated: Bool) {
@@ -468,9 +472,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK : - Private utilities
     private func bindMediaContentAvailable() {
-        disposables.append(clipsController.observe(\.hasClips) { [unowned self] object, _ in
+        disposables.append(clipsController.observe(\.hasClips) { [weak self] object, _ in
             performUIUpdate {
-                self.updateUI(forClipsPresent: object.hasClips)
+                self?.updateUI(forClipsPresent: object.hasClips)
             }
         })
         updateUI(forClipsPresent: clipsController.hasClips)
@@ -599,7 +603,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-        delegate?.provideMediaPickerThumbnail(targetSize: targetSize) { [weak self] image in
+        mediaPickerThumbnailTargetSize = targetSize
+        self.delegate?.provideMediaPickerThumbnail(targetSize: targetSize) { [weak self] image in
             if let image = image {
                 completion(image)
                 return
@@ -611,20 +616,28 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func fetchMostRecentPhotoLibraryImage(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchOptions.fetchLimit = 1
-        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
-        if fetchResult.count > 0 {
-            let requestOptions = PHImageRequestOptions()
-            requestOptions.deliveryMode = .opportunistic
-            requestOptions.resizeMode = .fast
-            PHImageManager.default().requestImage(for: fetchResult.object(at: 0) as PHAsset, targetSize: targetSize, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
-                completion(image)
-            })
-        }
-        else {
-            completion(nil)
+        mediaPickerThumbnailQueue.async {
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            fetchOptions.fetchLimit = 1
+            let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+            self.lastMediaPickerFetchResult = fetchResult
+            if fetchResult.count > 0 {
+                let requestOptions = PHImageRequestOptions()
+                requestOptions.deliveryMode = .opportunistic
+                requestOptions.resizeMode = .fast
+                let lastMediaPickerAsset = fetchResult.object(at: 0) as PHAsset
+                PHImageManager.default().requestImage(for: lastMediaPickerAsset, targetSize: targetSize, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+                    performUIUpdate {
+                        completion(image)
+                    }
+                })
+            }
+            else {
+                performUIUpdate {
+                    completion(nil)
+                }
+            }
         }
     }
 
@@ -879,5 +892,24 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// This function should be called to stop the camera session and properly breakdown the inputs
     public func cleanup() {
         cameraInputController.cleanup()
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    }
+
+}
+
+extension CameraController: PHPhotoLibraryChangeObserver {
+    public func photoLibraryDidChange(_ changeInstance: PHChange) {
+        guard
+            let lastMediaPickerFetchResult = lastMediaPickerFetchResult,
+            let changeDetails = changeInstance.changeDetails(for: lastMediaPickerFetchResult),
+            changeDetails.insertedIndexes?.count == 1,
+            changeDetails.removedIndexes?.count == 1
+        else {
+            return
+        }
+        fetchMostRecentPhotoLibraryImage(targetSize: mediaPickerThumbnailTargetSize) { image in
+            guard let image = image else { return }
+            self.modeAndShootController.setMediaPickerButtonThumbnail(image)
+        }
     }
 }
