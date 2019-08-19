@@ -258,7 +258,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func testCameraWithTopButtonsSwapped() {
         let settings = CameraSettings()
         settings.enabledModes = [.photo]
-        settings.features.topButtonsSwapped = true
+        settings.topButtonsSwapped = true
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate, settings: settings)
         FBSnapshotVerifyView(controller.view)
