@@ -490,6 +490,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func closeButtonPressed() {
         modeAndShootController.dismissTooltip()
         if clipsController.hasClips {
+            // TODO when opened from the dashboard, this won't actually erase data until immediatly...
             showDismissTooltip()
         }
         else {
@@ -717,6 +718,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraInputController.willCloseSoon = true
             self?.delegate?.didCreateMedia(media: url.map { .video($0) }, exportAction: action, error: url != nil ? nil : CameraControllerError.exportFailure)
+            if url != nil {
+                //
+            }
         }
     }
 
@@ -726,6 +730,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             performUIUpdate { [weak self] in
                 self?.cameraInputController.willCloseSoon = true
                 self?.delegate?.didCreateMedia(media: .image(url), exportAction: action, error: nil)
+                //
             }
         }
         else {

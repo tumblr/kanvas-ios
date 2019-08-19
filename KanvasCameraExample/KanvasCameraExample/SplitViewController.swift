@@ -8,6 +8,7 @@ import Foundation
 import KanvasCamera
 import TumblrTheme
 import Photos
+import SharedUI
 
 @objc protocol DashboardPagingController: class {
     func setPageSlideEnabled(_ pageSlideEnabled: Bool)
@@ -27,11 +28,10 @@ import Photos
 
     private let kanvasSettings: CameraSettings
 
-    private lazy var kanvasController: CameraController = {
-        let kanvasAnalyticsProvider = KanvasCameraAnalyticsStub()
-        let kanvasViewController = CameraController(settings: kanvasSettings, analyticsProvider: kanvasAnalyticsProvider)
-        kanvasViewController.delegate = self
-        return kanvasViewController
+    private lazy var kanvasController: KanvasDashboardController = {
+        let kanvasDashboardController = KanvasDashboardController(settings: kanvasSettings)
+        kanvasDashboardController.delegate = self
+        return kanvasDashboardController
     }()
 
     /// The internal tab bar controller. On iPad, the tabs are hidden.
@@ -63,7 +63,7 @@ import Photos
         }
         let pageViewController = TMPageViewController(orderedViewControllers: orderedViewControllers,
                                                       initialViewController: tumblrTabBarController,
-                                                      delegate: nil)
+                                                      delegate: self)
         pageViewController.pagingEnabled = true
         self.pageViewController = pageViewController
         self.viewControllers = [pageViewController]
@@ -124,89 +124,40 @@ extension SplitViewController: MockDashboardViewControllerDelegate {
     }
 }
 
-extension SplitViewController: CameraControllerDelegate {
-    func didDismissColorSelecterTooltip() {
-        preferences["kanvasColorSelectorTooltipDismissed"] = true
-    }
-    
-    func editorShouldShowColorSelecterTooltip() -> Bool {
-        return preferences["kanvasColorSelectorTooltipDismissed"] != true
-    }
-    
-    func didEndStrokeSelectorAnimation() {
-        preferences["kanvasStrokeSelectorAnimationEnded"] = true
-    }
-    
-    func editorShouldShowStrokeSelectorAnimation() -> Bool {
-        return preferences["kanvasStrokeSelectorAnimationEnded"] != true
-    }
-    
-    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
-        if let media = media {
-            save(media: media)
-            self.kanvasController.cleanup()
-            self.navigateFromKanvas()
-        }
-        else {
-            assertionFailure("Failed to create media")
-        }
-    }
-
-    func dismissButtonPressed() {
+extension SplitViewController: KanvasDashboardControllerDelegate {
+    func kanvasDashboardOpenComposeRequest() {
         navigateFromKanvas()
     }
 
-    func didDismissWelcomeTooltip() {
-        preferences["kanvasWelcomeTooltipDismissed"] = true
+    func kanvasDashboardCreatePostRequest() {
+        navigateFromKanvas()
     }
 
-    func cameraShouldShowWelcomeTooltip() -> Bool {
-        return preferences["kanvasWelcomeTooltipDismissed"] != true
+    func kanvasDashboardDismissRequest() {
+        navigateFromKanvas()
     }
 
-    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-        completion(nil)
-    }
+    func kanvasDashboardNeedsAccount() {
 
-    private func save(media: KanvasCameraMedia) {
-        PHPhotoLibrary.requestAuthorization { authorizationStatus in
-            switch authorizationStatus {
-            case .notDetermined:
-                print("Photo Library Authorization: Not Determined... not saving!!")
-                return
-            case .restricted:
-                print("Photo Library Authorization: Restricted... not saving!!")
-                return
-            case .denied:
-                print("Photo Library Authorization: Denied... not saving!!")
-                return
-            case .authorized:
-                print("Photo Library Authorization: Authorized")
-            }
-        }
-        switch media {
-        case let .image(url):
-            moveToLibrary(url: url, resourceType: .photo)
-        case let .video(url):
-            moveToLibrary(url: url, resourceType: .video)
+    }
+}
+
+extension SplitViewController: TMPageViewControllerDelegate {
+    func pageWillBecomeVisible(_ viewController: UIViewController) {
+        if viewController == kanvasController {
+            kanvasController.pageWillBecomeVisible()
         }
     }
 
-    private func moveToLibrary(url: URL, resourceType: PHAssetResourceType) {
-        PHPhotoLibrary.shared().performChanges({
-            let req = PHAssetCreationRequest.forAsset()
-            let options = PHAssetResourceCreationOptions()
-            options.shouldMoveFile = true
-            req.addResource(with: resourceType, fileURL: url, options: options)
-        }) { (success, error) in
-            guard success else {
-                guard let err = error else {
-                    assertionFailure("Neigher a success or failure!")
-                    return
-                }
-                assertionFailure("\(err)")
-                return
-            }
+    func pageDidBecomeHidden(_ viewController: UIViewController) {
+        if viewController == kanvasController {
+            kanvasController.pageDidBecomeHidden()
+        }
+    }
+
+    func pageGainedFocus(_ viewController: UIViewController) {
+        if viewController == kanvasController {
+            kanvasController.pageGainedFocus()
         }
     }
 }

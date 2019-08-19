@@ -14,6 +14,8 @@ private struct CameraInputConstants {
     static let videoQueue: String = "kanvas.camera.videoQueue"
     static let audioQueue: String = "kanvas.camera.audioQueue"
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
+    static let captureSessionStartDelay = 0.35
+    static let previewBlurAnimationDuration = 0.4
 }
 
 /// The class for controlling the device camera.
@@ -51,15 +53,20 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         return filteredInputViewController?.currentFilter
     }
 
-    private lazy var filteredInputViewController: FilteredInputViewController? = {
-        if settings.features.openGLPreview {
-            return FilteredInputViewController(delegate: self, settings: settings)
+    private var filteredInputViewControllerInstance: FilteredInputViewController?
+    private var filteredInputViewController: FilteredInputViewController? {
+        if filteredInputViewControllerInstance == nil {
+            if settings.features.openGLPreview {
+                filteredInputViewControllerInstance = FilteredInputViewController(delegate: self, settings: settings)
+            }
+            else {
+                filteredInputViewControllerInstance = nil
+            }
         }
-        else {
-            return nil
-        }
-    }()
+        return filteredInputViewControllerInstance
+    }
     private let previewLayer = AVCaptureVideoPreviewLayer()
+    private let previewBlurView = UIVisualEffectView(effect: CameraInputController.blurEffect())
     private let flashLayer = CALayer()
     private let sessionQueue = DispatchQueue(label: CameraInputConstants.sessionQueue, attributes: [])
     private let videoQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.videoQueue, attributes: [], target: DispatchQueue.global(qos: .userInteractive))
@@ -168,17 +175,31 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         setupFlash(defaultOption: settings.preferredFlashOption)
         setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
+
+        setupPreviewBlur()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
         guard !isSimulator else { return }
 
-        guard !willCloseSoon else { return }
-
-        sessionQueue.sync {
-            captureSession?.startRunning()
+        DispatchQueue.main.asyncAfter(deadline: .now() + CameraInputConstants.captureSessionStartDelay) {
+//            self.setupFilteredPreview()
+//            self.setupPreviewBlur()
+            self.sessionQueue.sync {
+                if self.captureSession == nil {
+                    self.createCaptureSession()
+                    self.configureSession()
+                }
+                self.captureSession?.startRunning()
+                performUIUpdate {
+                    UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
+                        self.previewBlurView.effect = nil
+                    }
+                }
+            }
+            self.setupRecorder(self.recorderType, segmentsHandlerType: self.segmentsHandlerType)
         }
     }
 
@@ -190,6 +211,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         sessionQueue.sync {
             captureSession?.stopRunning()
         }
+        filteredInputViewControllerInstance?.reset()
+        previewBlurView.effect = CameraInputController.blurEffect()
     }
 
     func cleanup() {
@@ -197,7 +220,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         captureSession?.stopRunning()
         removeSessionInputsAndOutputs()
+        teardownFilteredPreview()
         captureSession = nil
+    }
+
+    private static func blurEffect() -> UIBlurEffect {
+        return UIBlurEffect(style: .light)
     }
 
     private func configureSession() {
@@ -239,7 +267,27 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     private func setupFilteredPreview() {
         guard let filteredInputViewController = self.filteredInputViewController else { return }
 
-        load(childViewController: filteredInputViewController, into: view)
+        if !children.contains(filteredInputViewController) {
+            load(childViewController: filteredInputViewController, into: view)
+        }
+    }
+
+    func teardownFilteredPreview() {
+        guard filteredInputViewControllerInstance != nil else { return }
+        filteredInputViewControllerInstance?.reset()
+        filteredInputViewControllerInstance?.unloadFromParentViewController()
+        filteredInputViewControllerInstance = nil
+    }
+
+    private func setupPreviewBlur() {
+        guard !UIAccessibility.isReduceTransparencyEnabled else { return }
+
+        if !view.subviews.contains(previewBlurView) {
+            previewBlurView.backgroundColor = .clear
+            previewBlurView.frame = self.view.bounds
+            previewBlurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            view.addSubview(previewBlurView)
+        }
     }
 
     private func setupFlash(defaultOption: AVCaptureDevice.FlashMode) {

@@ -10,7 +10,7 @@ import TumblrTheme
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol MediaClipsCollectionCellDelegate: class {
+protocol MediaClipsCollectionCellDelegate: class {    
     /// Callback method for dragging the cell
     ///
     /// - Parameter newDragState: The new state of the drag event

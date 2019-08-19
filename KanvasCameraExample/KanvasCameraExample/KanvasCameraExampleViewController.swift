@@ -8,7 +8,6 @@ import KanvasCamera
 import Photos
 import UIKit
 
-//let applicationViewController = SplitViewController()
 
 /// This class contains a button that launches the camera module
 /// It is also the delegate for the camera, and handles saving the exported media
@@ -52,13 +51,13 @@ final class KanvasCameraExampleViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        firstLaunch = false
         showFeaturesTableAfterFirstTime()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        resetButton()
         launchCameraFirstTime()
     }
 
@@ -98,9 +97,6 @@ final class KanvasCameraExampleViewController: UIViewController {
         if firstLaunch {
             firstLaunch = false
             launchCamera(animated: false)
-
-            launchKanvasButton.addTarget(self, action: #selector(launchKanvasButtonTapped), for: .touchUpInside)
-            launchKanvasDashboardButton.addTarget(self, action: #selector(launchKanvasDashboardTapped), for: .touchUpInside)
         }
     }
 
@@ -132,6 +128,9 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasButton.setTitleColor(.black, for: .normal)
         launchKanvasButton.setTitleColor(.black, for: .highlighted)
         launchKanvasButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
+
+        // action
+        launchKanvasButton.addTarget(self, action: #selector(launchKanvasButtonTapped), for: .touchUpInside)
     }
 
     private func setupLaunchKanvasDashboardButton() {
@@ -149,6 +148,9 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasDashboardButton.titleLabel?.textAlignment = .center
         launchKanvasDashboardButton.setTitleColor(.black, for: .normal)
         launchKanvasDashboardButton.setTitleColor(.gray, for: .highlighted)
+
+        // actions
+        launchKanvasDashboardButton.addTarget(self, action: #selector(launchKanvasDashboardTapped), for: .touchUpInside)
     }
 
     private func setupFeaturesTable() {
