@@ -14,7 +14,6 @@ private struct CameraInputConstants {
     static let videoQueue: String = "kanvas.camera.videoQueue"
     static let audioQueue: String = "kanvas.camera.audioQueue"
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
-    static let captureSessionStartDelay = 0.35
     static let previewBlurAnimationDuration = 0.4
 }
 
