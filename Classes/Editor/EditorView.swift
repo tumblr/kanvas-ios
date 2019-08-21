@@ -183,6 +183,10 @@ final class EditorView: UIView {
         postLabel.textColor = .white
         postLabel.font = .favoritTumblrMedium(fontSize: EditorViewConstants.postButtonFontSize)
         postLabel.clipsToBounds = false
+        postLabel.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        postLabel.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        postLabel.layer.shadowOpacity = 1.0
+        postLabel.layer.shadowRadius = 0.0
         postLabel.translatesAutoresizingMaskIntoConstraints = false
         postLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(postButtonPressed)))
         postLabel.isUserInteractionEnabled = true
