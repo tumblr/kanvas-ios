@@ -493,8 +493,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func closeButtonPressed() {
         modeAndShootController.dismissTooltip()
-        if clipsController.hasClips {
-            // TODO when opened from the dashboard, this won't actually erase data until immediatly...
+        // Let's prompt for losing clips if they have clips and it's the "x" button, rather than the ">" button.
+        if clipsController.hasClips && !settings.features.topButtonsSwapped {
             showDismissTooltip()
         }
         else {
