@@ -182,7 +182,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        guard !isSimulator else { return }
+        guard !isSimulator else {
+            self.previewBlurView.effect = nil
+            return
+        }
 
         self.setupFilteredPreview()
         self.setupPreviewBlur()
@@ -284,6 +287,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             previewBlurView.backgroundColor = .clear
             previewBlurView.frame = self.view.bounds
             previewBlurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            if isSimulator {
+                previewBlurView.effect = nil
+            }
             view.addSubview(previewBlurView)
         }
     }
