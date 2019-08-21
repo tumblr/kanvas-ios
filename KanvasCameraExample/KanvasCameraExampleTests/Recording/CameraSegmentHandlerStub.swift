@@ -39,6 +39,12 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
         segments.remove(at: index)
     }
 
+    func deleteAllSegments(removeFromDisk: Bool) {
+        while segments.count > 0 {
+            deleteSegment(at: 0, removeFromDisk: removeFromDisk)
+        }
+    }
+
     func moveSegment(from originIndex: Int, to destinationIndex: Int) {
         segments.move(from: originIndex, to: destinationIndex)
     }

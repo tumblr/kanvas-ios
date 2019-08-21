@@ -179,6 +179,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 
+    deinit {
+        cleanup()
+    }
+
     override public var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -210,11 +214,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// logs closing the camera
     public func logDismiss() {
         analyticsProvider?.logDismiss()
-    }
-
-    /// Hides the overlaying view controller
-    public func hideOverlay(completion: @escaping () -> ()) {
-        overlayViewController?.dismiss(animated: true, completion: completion)
     }
 
     // MARK: - View Lifecycle
@@ -891,6 +890,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     /// This function should be called to stop the camera session and properly breakdown the inputs
     public func cleanup() {
+        resetState()
         cameraInputController.cleanup()
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
@@ -911,5 +911,12 @@ extension CameraController: PHPhotoLibraryChangeObserver {
             guard let image = image else { return }
             self.modeAndShootController.setMediaPickerButtonThumbnail(image)
         }
+    }
+
+    public func resetState() {
+        overlayViewController?.dismiss(animated: true, completion: nil)
+        clipsController.removeAllClips()
+        cameraInputController.deleteAllSegments()
+        imagePreviewController.setImagePreview(nil)
     }
 }

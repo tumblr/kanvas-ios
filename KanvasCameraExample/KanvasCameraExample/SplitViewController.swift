@@ -144,7 +144,7 @@ extension SplitViewController: CameraControllerDelegate {
     func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let media = media {
             save(media: media)
-            self.kanvasController.hideOverlay { }
+            self.kanvasController.cleanup()
             self.navigateFromKanvas()
         }
         else {

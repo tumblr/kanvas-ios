@@ -64,6 +64,14 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
             scrollToLast(animated: true)
         }
     }
+
+    func removeAllClips() {
+        while clips.count > 0 {
+            clips.remove(at: 0)
+            mediaClipsCollectionView.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
+        }
+        mediaClipsCollectionView.collectionView.reloadData()
+    }
     
     /// Deletes the current dragging clip and updates UI
     ///
