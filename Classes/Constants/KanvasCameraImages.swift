@@ -43,14 +43,6 @@ struct KanvasCameraImages {
     static let trashOpened = UIImage.imageFromCameraBundle(named: "trashOpened")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
     static let nextImage = UIImage.imageFromCameraBundle(named: "next")
-    static let postImage: UIImage? = {
-        if let nextImageCGImage = nextImage?.cgImage {
-            return UIImage(cgImage: nextImageCGImage, scale: 1.0, orientation: .left)
-        }
-        else {
-            return nil
-        }
-    }()
     static let saveImage = UIImage.imageFromCameraBundle(named: "save")
 
     // MARK: - Filters
