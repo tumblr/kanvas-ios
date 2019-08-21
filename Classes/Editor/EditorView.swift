@@ -27,9 +27,10 @@ private struct EditorViewConstants {
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
-    static let postButtonSize: CGFloat = 49
+    static let postButtonSize: CGFloat = 54
     static let postButtonHorizontalMargin: CGFloat = 20
     static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
+    static let postButtonFontSize: CGFloat = 14.0
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
 }
@@ -51,6 +52,7 @@ final class EditorView: UIView {
     private let saveButton = UIButton()
     private let showSaveButton: Bool
     private let postButton = UIButton()
+    private let postLabel = UILabel()
     private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
     let filterMenuContainer = IgnoreTouchesView()
@@ -164,20 +166,35 @@ final class EditorView: UIView {
     func setupPostButton() {
         postButton.accessibilityLabel = "Post Button"
         postButton.clipsToBounds = false
-        postButton.layer.cornerRadius = EditorViewConstants.postButtonSize / 2.0
-        postButton.layer.borderWidth = 3.0
-        postButton.layer.borderColor = UIColor.white.cgColor
         postButton.applyShadows()
         addSubview(postButton)
-        postButton.setImage(KanvasCameraImages.postImage, for: .normal)
+        postButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
         postButton.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             postButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
             postButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
             postButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
             postButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.postButtonVerticalMargin)
+        ])
+        
+        postLabel.text = NSLocalizedString("Post", comment: "Message for the post button in the editor screen")
+        postLabel.textColor = .white
+        postLabel.font = .favoritTumblrMedium(fontSize: EditorViewConstants.postButtonFontSize)
+        postLabel.clipsToBounds = false
+        postLabel.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        postLabel.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        postLabel.layer.shadowOpacity = 1.0
+        postLabel.layer.shadowRadius = 0.0
+        postLabel.translatesAutoresizingMaskIntoConstraints = false
+        postLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(postButtonPressed)))
+        postLabel.isUserInteractionEnabled = true
+        addSubview(postLabel)
+        
+        NSLayoutConstraint.activate([
+            postLabel.centerXAnchor.constraint(equalTo: postButton.centerXAnchor),
+            postLabel.topAnchor.constraint(equalTo: postButton.bottomAnchor),
         ])
     }
 
@@ -253,6 +270,7 @@ final class EditorView: UIView {
         case .post:
             UIView.animate(withDuration: EditorViewConstants.animationDuration) {
                 self.postButton.alpha = show ? 1 : 0
+                self.postLabel.alpha = show ? 1 : 0
             }
         }
         if showSaveButton {

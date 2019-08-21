@@ -49,6 +49,7 @@
 		654AE16222E8B8DD00C8C0E4 /* StrokeSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16122E8B8DD00C8C0E4 /* StrokeSelectorViewTests.swift */; };
 		654AE16422E8B8E900C8C0E4 /* TextureSelectorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16322E8B8E900C8C0E4 /* TextureSelectorControllerTests.swift */; };
 		654AE16622E8B8F700C8C0E4 /* TextureSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16522E8B8F700C8C0E4 /* TextureSelectorViewTests.swift */; };
+		65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65513E0C23019DBE0025C59D /* ColorDropTests.swift */; };
 		6578F83A22E12098002B952C /* MMCQTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83822E12098002B952C /* MMCQTests.swift */; };
 		6578F83B22E12098002B952C /* ColorThiefTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83922E12098002B952C /* ColorThiefTests.swift */; };
 		6578F83E22E120BD002B952C /* CALayer+ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83C22E120BD002B952C /* CALayer+ColorTests.swift */; };
@@ -185,6 +186,7 @@
 		654AE16122E8B8DD00C8C0E4 /* StrokeSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeSelectorViewTests.swift; sourceTree = "<group>"; };
 		654AE16322E8B8E900C8C0E4 /* TextureSelectorControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorControllerTests.swift; sourceTree = "<group>"; };
 		654AE16522E8B8F700C8C0E4 /* TextureSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorViewTests.swift; sourceTree = "<group>"; };
+		65513E0C23019DBE0025C59D /* ColorDropTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDropTests.swift; sourceTree = "<group>"; };
 		6578F83822E12098002B952C /* MMCQTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMCQTests.swift; sourceTree = "<group>"; };
 		6578F83922E12098002B952C /* ColorThiefTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorThiefTests.swift; sourceTree = "<group>"; };
 		6578F83C22E120BD002B952C /* CALayer+ColorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+ColorTests.swift"; sourceTree = "<group>"; };
@@ -352,6 +354,7 @@
 				654AE15522E8B77000C8C0E4 /* TextureSelector */,
 				6589D12B22E91C7900A7357B /* Textures */,
 				651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */,
+				65513E0C23019DBE0025C59D /* ColorDropTests.swift */,
 				651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */,
 				651D4B6022CE683B004AB75C /* DrawingViewTests.swift */,
 			);
@@ -943,6 +946,7 @@
 				654AE16022E8B8CD00C8C0E4 /* StrokeSelectorControllerTests.swift in Sources */,
 				ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */,
 				0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */,
+				65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */,
 				0EAE0CB22139B966004CD7FF /* CameraPreviewViewTests.swift in Sources */,
 				652DFA1A22281F00007B1EF5 /* FilterItemTests.swift in Sources */,
 				ABE4991F2137307500379F7F /* QueueTests.swift in Sources */,
