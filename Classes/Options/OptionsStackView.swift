@@ -98,7 +98,7 @@ final class OptionsStackView<Item>: UIView {
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        if settings.features.topButtonsSwapped {
+        if settings.topButtonsSwapped {
             NSLayoutConstraint.activate([
                 stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
                 stackView.topAnchor.constraint(equalTo: topAnchor),

@@ -164,7 +164,7 @@ final class CameraView: UIView {
         optionsLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin).isActive = true
         optionsLayoutGuide.heightAnchor.constraint(equalToConstant: height).isActive = true
         
-        if settings.features.topButtonsSwapped {
+        if settings.topButtonsSwapped {
             optionsLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin).isActive = true
             optionsLayoutGuide.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -CameraConstants.optionHorizontalMargin).isActive = true
         }
@@ -204,7 +204,7 @@ final class CameraView: UIView {
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if settings.features.topButtonsSwapped {
+        if settings.topButtonsSwapped {
             closeButton.setImage(KanvasCameraImages.forwardImage, for: .normal)
             NSLayoutConstraint.activate([
                 closeButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
