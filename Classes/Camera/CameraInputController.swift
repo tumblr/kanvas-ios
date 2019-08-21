@@ -68,7 +68,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     private let previewLayer = AVCaptureVideoPreviewLayer()
     private let previewBlurView = UIVisualEffectView(effect: CameraInputController.blurEffect())
     private let flashLayer = CALayer()
-    private let sessionQueue = DispatchQueue(label: CameraInputConstants.sessionQueue, attributes: [])
+    private let sessionQueue = DispatchQueue(label: CameraInputConstants.sessionQueue)
     private let videoQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.videoQueue, attributes: [], target: DispatchQueue.global(qos: .userInteractive))
     private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, attributes: [])
     private let isSimulator = TARGET_OS_SIMULATOR != 0
@@ -134,14 +134,14 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
     
     @objc private func appWillResignActive() {
-        sessionQueue.sync {
-            captureSession?.stopRunning()
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
         }
     }
 
     @objc private func appDidBecomeActive() {
-        sessionQueue.sync {
-            captureSession?.startRunning()
+        sessionQueue.async {
+            self.captureSession?.startRunning()
         }
     }
     
@@ -160,9 +160,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        sessionQueue.sync {
-            createCaptureSession()
-            configureSession()
+        sessionQueue.async {
+            self.createCaptureSession()
+            self.configureSession()
         }
         setupGestures()
 
@@ -184,23 +184,21 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         guard !isSimulator else { return }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + CameraInputConstants.captureSessionStartDelay) {
-//            self.setupFilteredPreview()
-//            self.setupPreviewBlur()
-            self.sessionQueue.sync {
-                if self.captureSession == nil {
-                    self.createCaptureSession()
-                    self.configureSession()
-                }
-                self.captureSession?.startRunning()
-                performUIUpdate {
-                    UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
-                        self.previewBlurView.effect = nil
-                    }
+        self.setupFilteredPreview()
+        self.setupPreviewBlur()
+        self.sessionQueue.async {
+            if self.captureSession == nil {
+                self.createCaptureSession()
+                self.configureSession()
+            }
+            self.captureSession?.startRunning()
+            performUIUpdate {
+                UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
+                    self.previewBlurView.effect = nil
                 }
             }
-            self.setupRecorder(self.recorderType, segmentsHandlerType: self.segmentsHandlerType)
         }
+        self.setupRecorder(self.recorderType, segmentsHandlerType: self.segmentsHandlerType)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -208,8 +206,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         guard !isSimulator else { return }
 
-        sessionQueue.sync {
-            captureSession?.stopRunning()
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
         }
         filteredInputViewControllerInstance?.reset()
         previewBlurView.effect = CameraInputController.blurEffect()
@@ -308,13 +306,13 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Switches between front and rear camera, if possible
     func switchCameras() {
-        sessionQueue.sync {
-            captureSession?.stopRunning()
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
             do {
-                try? toggleFrontRearCameras()
-                try? configureCurrentOutput()
+                try? self.toggleFrontRearCameras()
+                try? self.configureCurrentOutput()
             }
-            captureSession?.startRunning()
+            self.captureSession?.startRunning()
         }
 
         // have to rebuild the filtered input display setup
