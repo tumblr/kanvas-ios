@@ -151,8 +151,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     func stopSession() {
-        sessionQueue.sync {
-            captureSession?.stopRunning()
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
         }
     }
 
@@ -218,10 +218,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func cleanup() {
         guard !isSimulator else { return }
 
-        captureSession?.stopRunning()
-        removeSessionInputsAndOutputs()
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
+            self.removeSessionInputsAndOutputs()
+            self.captureSession = nil
+        }
         teardownFilteredPreview()
-        captureSession = nil
     }
 
     private static func blurEffect() -> UIBlurEffect {
