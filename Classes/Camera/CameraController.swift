@@ -494,7 +494,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func closeButtonPressed() {
         modeAndShootController.dismissTooltip()
         // Let's prompt for losing clips if they have clips and it's the "x" button, rather than the ">" button.
-        if clipsController.hasClips && !settings.features.topButtonsSwapped {
+        if clipsController.hasClips && !settings.topButtonsSwapped {
             showDismissTooltip()
         }
         else {
