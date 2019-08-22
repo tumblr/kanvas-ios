@@ -20,14 +20,17 @@ private struct EditorFilterCollectionControllerConstants {
     static let horizontalInset: CGFloat = 11
     static let initialCell: Int = 0
     static let section: Int = 0
+    static let scrollingThreshold: CGFloat = 9.0
 }
 
 /// Controller for handling the filter item collection.
 final class EditorFilterCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FilterCollectionCellDelegate {
         
-    private lazy var filterCollectionView = FilterCollectionView(cellWidth: EditorFilterCollectionCell.width, cellHeight: EditorFilterCollectionCell.minimumHeight)
+    private lazy var filterCollectionView = FilterCollectionView(cellWidth: EditorFilterCollectionCell.width,
+                                                                 cellHeight: EditorFilterCollectionCell.minimumHeight)
     private var filterItems: [FilterItem]
     private var selectedIndexPath: IndexPath
+    private var scrollingStartPoint: CGPoint
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     
     weak var delegate: EditorFilterCollectionControllerDelegate?
@@ -57,6 +60,8 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
         }
         
         selectedIndexPath = IndexPath(item: EditorFilterCollectionControllerConstants.initialCell, section: EditorFilterCollectionControllerConstants.section)
+        
+        scrollingStartPoint = .zero
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -176,17 +181,38 @@ final class EditorFilterCollectionController: UIViewController, UICollectionView
     // MARK: - FilterCollectionCellDelegate
     
     func didTap(cell: FilterCollectionCell, recognizer: UITapGestureRecognizer) {
-        if let filterCell = filterCollectionView.collectionView.cellForItem(at: selectedIndexPath),
-            let selectedCell = filterCell as? EditorFilterCollectionCell,
-            selectedCell != cell {
-            
-            selectedCell.setSelected(false)
-        }
-        
-        selectCell(cell)
+        // Delegate method. Does nothing in this case.
     }
     
     func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
-        // Delegate method. Does nothing in this case.
+        let previousCell = filterCollectionView.collectionView.cellForItem(at: selectedIndexPath) as? EditorFilterCollectionCell
+        
+        switch recognizer.state {
+        case .began:
+            scrollingStartPoint = recognizer.location(in: recognizer.view)
+            cell.press()
+        case .changed:
+            let location = recognizer.location(in: recognizer.view)
+            if abs(scrollingStartPoint.x - location.x) > EditorFilterCollectionControllerConstants.scrollingThreshold ||
+                abs(scrollingStartPoint.y - location.y) > EditorFilterCollectionControllerConstants.scrollingThreshold {
+                // Disabling the recognizer makes it cancel the gesture
+                recognizer.isEnabled = false
+            }
+        case .ended:
+            // Deselect previous cell
+            if previousCell != cell {
+                previousCell?.setSelected(false)
+            }
+            selectCell(cell)
+        case .cancelled:
+            recognizer.isEnabled = true
+            // Make cell go back to previous state
+            let selectedBefore = previousCell == cell
+            cell.setSelected(selectedBefore)
+        case .failed, .possible:
+            break
+        @unknown default:
+            break
+        }
     }
 }

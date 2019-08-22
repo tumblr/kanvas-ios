@@ -34,11 +34,16 @@ protocol FilterCollectionCellDimensions {
 
 /// Constants for the cell view
 private struct Constants {
+    // Animation times
     static let animationDuration: TimeInterval = 0.2
-    static let selectionBounceDuration: TimeInterval = 0.5
+    static let pressAnimationDuration: TimeInterval = 0.3
+    static let releaseAnimationDuration: TimeInterval = 0.2
     static let poppingBounceDuration: TimeInterval = 0.6
+    
+    // Scales for each cell state
     static let selectedScale: CGFloat = 0.78
     static let unselectedScale: CGFloat = 1
+    static let pressedScale: CGFloat = 0.7
 }
 
 final class FilterCollectionInnerCell: UICollectionViewCell {
@@ -50,8 +55,15 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     private let circleView: UIImageView = UIImageView()
     private let iconView: UIImageView = UIImageView()
     
-    init(dimensions: FilterCollectionCellDimensions) {
+    private let tapRecognizer: UITapGestureRecognizer?
+    private let longPressRecognizer: UILongPressGestureRecognizer?
+    
+    init(dimensions: FilterCollectionCellDimensions,
+         tapRecognizer: UITapGestureRecognizer? = UITapGestureRecognizer(),
+         longPressRecognizer: UILongPressGestureRecognizer? = UILongPressGestureRecognizer()) {
         self.dimensions = dimensions
+        self.tapRecognizer = tapRecognizer
+        self.longPressRecognizer = longPressRecognizer
         super.init(frame: .zero)
         setUpView()
         setUpRecognizers()
@@ -156,23 +168,25 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         iconView.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
-    /// Reduces the icon size with a bouncing effect
+    /// Animates the icon to 'selected' size
     private func setIconSelected() {
-        UIView.animateKeyframes(withDuration: Constants.selectionBounceDuration, delay: 0, options: [.calculationModeCubic], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3 / Constants.selectionBounceDuration, animations: {
-                self.setIconScale(Constants.selectedScale - 0.08)
-            })
-            UIView.addKeyframe(withRelativeStartTime: 0.3 / Constants.selectionBounceDuration, relativeDuration: 0.2 / Constants.selectionBounceDuration, animations: {
-                self.setIconScale(Constants.selectedScale)
-            })
-        }, completion: nil)
+        UIView.animate(withDuration: Constants.releaseAnimationDuration) {
+            self.setIconScale(Constants.selectedScale)
+        }
     }
     
-    /// Animates the icon back to normal size
+    /// Animates the icon back to 'unselected' size
     private func setIconUnselected() {
-        UIView.animate(withDuration: Constants.animationDuration, animations: {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.setIconScale(Constants.unselectedScale)
-        })
+        }
+    }
+    
+    /// Animates the icon to 'pressed' size
+    private func setIconPressed() {
+        UIView.animate(withDuration: Constants.pressAnimationDuration) {
+            self.setIconScale(Constants.pressedScale)
+        }
     }
     
     // MARK: - Public interface
@@ -193,6 +207,11 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         else {
             setIconUnselected()
         }
+    }
+    
+    /// Changes the size of the filter icon to 'pressed' size
+    func press() {
+        setIconPressed()
     }
     
     /// Changes the circle size according to a percentage.
@@ -227,12 +246,15 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     // MARK: - Gesture recognizers
     
     private func setUpRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer()
-        let longPressRecognizer = UILongPressGestureRecognizer()
-        contentView.addGestureRecognizer(tapRecognizer)
-        contentView.addGestureRecognizer(longPressRecognizer)
-        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
-        longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
+        if let tapRecognizer = tapRecognizer {
+            contentView.addGestureRecognizer(tapRecognizer)
+            tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+        }
+        
+        if let longPressRecognizer = longPressRecognizer {
+            contentView.addGestureRecognizer(longPressRecognizer)
+            longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
+        }
     }
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
