@@ -94,6 +94,11 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
         innerCell.pop()
     }
     
+    /// Animates the cell for press gesture
+    func press() {
+        innerCell.press()
+    }
+    
     // MARK: - FilterCollectionInnerCellDelegate
     
     func didTap(cell: FilterCollectionInnerCell, recognizer: UITapGestureRecognizer) {

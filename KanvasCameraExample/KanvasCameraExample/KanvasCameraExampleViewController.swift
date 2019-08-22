@@ -32,9 +32,17 @@ final class KanvasCameraExampleViewController: UIViewController {
         featureTableView.delegate = self
         return featureTableView
     }()
-    private lazy var settings: CameraSettings = {
-        return KanvasCameraExampleViewController.customCameraSettings()
-    }()
+    private var settings: CameraSettings = KanvasCameraExampleViewController.customCameraSettings()
+    private var cameraSettings: CameraSettings {
+        settings.exportStopMotionPhotoAsVideo = true
+        settings.topButtonsSwapped = false
+        return settings
+    }
+    private var dashboardSettings: CameraSettings {
+        settings.exportStopMotionPhotoAsVideo = false
+        settings.topButtonsSwapped = true
+        return settings
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +74,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     @objc private func launchKanvasDashboardTapped() {
-        present(SplitViewController(settings: settings), animated: true, completion: .none)
+        present(SplitViewController(settings: dashboardSettings), animated: true, completion: .none)
     }
 
     /// This returns the customized settings for the CameraController
@@ -86,10 +94,8 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorPosting = true
         settings.features.editorSaving = true
         settings.features.newCameraModes = true
-        settings.features.topButtonsSwapped = false
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
-        settings.exportStopMotionPhotoAsVideo = true
         return settings
     }
 
@@ -101,7 +107,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: settings, analyticsProvider: KanvasCameraAnalyticsStub())
+        let controller = CameraController(settings: cameraSettings, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = self
         controller.modalTransitionStyle = .crossDissolve
         self.present(controller, animated: animated, completion: nil)
@@ -204,7 +210,6 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
             .newCameraModes(settings.features.newCameraModes),
-            .topButtonsSwapped(settings.features.topButtonsSwapped),
         ]
     }
 
@@ -238,8 +243,6 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.newCameraModes = value
             settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
-        case .topButtonsSwapped(_):
-            settings.features.topButtonsSwapped = value
         }
     }
 }
