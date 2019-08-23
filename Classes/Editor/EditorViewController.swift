@@ -38,7 +38,7 @@ protocol EditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, TextControllerDelegate, GLPlayerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, GLPlayerDelegate {
     
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
@@ -60,8 +60,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         return controller
     }()
     
-    private lazy var textController: TextController = {
-        let controller = TextController()
+    private lazy var textController: EditorTextController = {
+        let controller = EditorTextController()
         controller.delegate = self
         return controller
     }()
@@ -391,7 +391,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         addCarouselDefaultColors(image)
     }
     
-    // MARK: - TextControllerDelegate
+    // MARK: - EditorTextControllerDelegate
     
     func didConfirmText() {
         closeMenuButtonPressed()

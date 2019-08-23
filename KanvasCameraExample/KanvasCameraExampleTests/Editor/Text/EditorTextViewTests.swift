@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class TextViewTests: FBSnapshotTestCase {
+final class EditorTextViewTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -19,8 +19,8 @@ final class TextViewTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newView() -> TextView {
-        let view = TextView()
+    func newView() -> EditorTextView {
+        let view = EditorTextView()
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return view
     }

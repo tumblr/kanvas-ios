@@ -9,24 +9,24 @@ import Foundation
 import UIKit
 
 /// Protocol for confirming the text tools
-protocol TextControllerDelegate: class {
+protocol EditorTextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
     func didConfirmText()
 }
 
-/// Constants for TextController
+/// Constants for EditorTextController
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
 }
 
 /// A view controller that contains the text tools menu
-final class TextController: UIViewController, TextViewDelegate {
+final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
-    weak var delegate: TextControllerDelegate?
+    weak var delegate: EditorTextControllerDelegate?
     
-    private lazy var textView: TextView = {
-        let textView = TextView()
+    private lazy var textView: EditorTextView = {
+        let textView = EditorTextView()
         textView.delegate = self
         return textView
     }()
@@ -58,7 +58,7 @@ final class TextController: UIViewController, TextViewDelegate {
         textView.alpha = 0
     }
     
-    // MARK: - TextViewDelegate
+    // MARK: - EditorTextViewDelegate
     
     func didTapConfirmButton() {
         delegate?.didConfirmText()

@@ -9,13 +9,13 @@ import Foundation
 import UIKit
 
 /// Protocol for closing the text tools
-protocol TextViewDelegate: class {
+protocol EditorTextViewDelegate: class {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()
 }
 
-/// Constants for TextView
+/// Constants for EditorTextView
 private struct Constants {
     
     // Confirm button
@@ -30,9 +30,9 @@ private struct Constants {
 }
 
 /// A UIView for the text tools view
-final class TextView: UIView {
+final class EditorTextView: UIView {
     
-    weak var delegate: TextViewDelegate?
+    weak var delegate: EditorTextViewDelegate?
     
     private let confirmButton: UIButton
     

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class TextControllerTests: FBSnapshotTestCase {
+final class EditorTextControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,14 +18,14 @@ final class TextControllerTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newViewController() -> TextController {
-        let controller = TextController()
+    func newViewController() -> EditorTextController {
+        let controller = EditorTextController()
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         controller.view.setNeedsDisplay()
         return controller
     }
     
-    func testTextControllerView() {
+    func testEditorTextControllerView() {
         let controller = newViewController()
         UIView.setAnimationsEnabled(false)
         controller.showView(true)

@@ -91,9 +91,9 @@
 		6211DC54E894C2909D17D5CF430C58B9 /* CameraInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0E2A0448B3A53FE906AD414914B29 /* CameraInputController.swift */; };
 		63B7CEC577303D59FF28866BEE660855 /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B35D7230DB14189DCAEA3BB00732F50 /* OptionView.swift */; };
 		64136C19EACF8F3C93CA31CBD1E4AECF /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14CCFE3DB3E3AC37160A6259945344E /* CGRect+Center.swift */; };
+		65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65584F302310557C008A1BC2 /* EditorTextView.swift */; };
 		65860CABCB5629C6024F4EF9AB76D32B /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AA7EBA426046FA90B36DE32A619EB8 /* UIColor+Hex.swift */; };
-		65AA995723103BD300D64232 /* TextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995623103BD300D64232 /* TextController.swift */; };
-		65AA995923103BDF00D64232 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995823103BDF00D64232 /* TextView.swift */; };
+		65AA995723103BD300D64232 /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995623103BD300D64232 /* EditorTextController.swift */; };
 		65F857D6230D741A004F36A2 /* ColorDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F857D5230D741A004F36A2 /* ColorDrop.swift */; };
 		6645914B4FC38E792C9D0576D47398C9 /* IgnoreTouchesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A34CF952C5A20C602495C17E7596163 /* IgnoreTouchesCollectionView.swift */; };
 		666FE703EF68C04A1E76599C113CF3B3 /* KanvasCamera-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AD26914810B51457EB3DDE44FDA42EFC /* KanvasCamera-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -453,8 +453,8 @@
 		621E2781A29215367C3E25FFED0CB0A0 /* ModeButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeButtonView.swift; sourceTree = "<group>"; };
 		635B8EF611C5053183706BE4A6AD5DD0 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
 		63740F510F37B51D3708457BA60E3016 /* FilterCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
-		65AA995623103BD300D64232 /* TextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextController.swift; sourceTree = "<group>"; };
-		65AA995823103BDF00D64232 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
+		65584F302310557C008A1BC2 /* EditorTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
+		65AA995623103BD300D64232 /* EditorTextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextController.swift; sourceTree = "<group>"; };
 		65D5FB840AEC33B524AE833E675F17B2 /* UIFont+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+Orangina.swift"; path = "Source/UIFont+Orangina.swift"; sourceTree = "<group>"; };
 		65F857D5230D741A004F36A2 /* ColorDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorDrop.swift; sourceTree = "<group>"; };
 		67F08CA61C77EEDC60519CAFC36B16D1 /* CALayer+Color.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CALayer+Color.swift"; sourceTree = "<group>"; };
@@ -1006,8 +1006,8 @@
 		65AA995523103B8000D64232 /* Text */ = {
 			isa = PBXGroup;
 			children = (
-				65AA995623103BD300D64232 /* TextController.swift */,
-				65AA995823103BDF00D64232 /* TextView.swift */,
+				65AA995623103BD300D64232 /* EditorTextController.swift */,
+				65584F302310557C008A1BC2 /* EditorTextView.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -1795,7 +1795,7 @@
 				959DCB3160C33D4BCFBF645BD783C7DD /* EditorFilterCollectionCell.swift in Sources */,
 				0EE1EFBBFAD1B361C71E32B60D7D5DC5 /* EditorFilterCollectionController.swift in Sources */,
 				1C474C6286864FE1A6BC7DF32972BCE3 /* EditorFilterController.swift in Sources */,
-				65AA995923103BDF00D64232 /* TextView.swift in Sources */,
+				65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */,
 				5D6517A0A3B48CAB4A4F0F1D4F5D6ED6 /* EditorFilterView.swift in Sources */,
 				1AFC413463F322A2BC348F0E46431F1F /* EditorView.swift in Sources */,
 				4973EC66537AE7893165B19DD7AC5FDE /* EditorViewController.swift in Sources */,
@@ -1843,7 +1843,7 @@
 				B60E4AD0F9A346F1ADEB2457879604FE /* MangaFilter.swift in Sources */,
 				918E04F617C81A13BDBC9A2D25FC9E3E /* Marker.swift in Sources */,
 				73B6DA2CA64C5FBDCB5B3C79E7937A6E /* MediaClip.swift in Sources */,
-				65AA995723103BD300D64232 /* TextController.swift in Sources */,
+				65AA995723103BD300D64232 /* EditorTextController.swift in Sources */,
 				15CDE86B2A1C65C8056381B78AC2A539 /* MediaClipsCollectionCell.swift in Sources */,
 				0F5456B7F08B3C5C1CA4E41CA699E16C /* MediaClipsCollectionController.swift in Sources */,
 				E5F69B625A22CA84913D2C44FF9527E3 /* MediaClipsCollectionView.swift in Sources */,
