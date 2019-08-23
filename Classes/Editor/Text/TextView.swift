@@ -78,4 +78,3 @@ final class TextView: UIView {
         delegate?.didTapConfirmButton()
     }
 }
-
