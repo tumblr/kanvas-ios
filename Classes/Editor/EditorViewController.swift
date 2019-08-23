@@ -391,7 +391,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         addCarouselDefaultColors(image)
     }
     
-    // MARK: - Text Controller Delegate
+    // MARK: - TextControllerDelegate
     
     func didConfirmText() {
         closeMenuButtonPressed()
