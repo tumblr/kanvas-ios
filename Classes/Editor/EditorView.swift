@@ -194,7 +194,7 @@ final class EditorView: UIView {
             drawingMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             drawingMenuContainer.topAnchor.constraint(equalTo: topAnchor),
             drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
-            ])
+        ])
     }
 
     func setupPostButton() {
