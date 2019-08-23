@@ -6,7 +6,7 @@
 
 enum EditionOption: Int {
     case filter
+    case text
     case media
     case drawing
-    case text
 }

@@ -38,16 +38,16 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
             editionOptions.append(.filter)
         }
         
+        if settings.features.editorText {
+            editionOptions.append(.text)
+        }
+        
         if settings.features.editorMedia {
             editionOptions.append(.media)
         }
         
         if settings.features.editorDrawing {
             editionOptions.append(.drawing)
-        }
-        
-        if settings.features.editorText {
-            editionOptions.append(.text)
         }
         
         super.init(nibName: .none, bundle: .none)

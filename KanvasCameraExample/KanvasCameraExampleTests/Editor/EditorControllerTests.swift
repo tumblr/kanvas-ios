@@ -22,9 +22,9 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let settings = CameraSettings()
         settings.features.editor = true
         settings.features.editorFilters = true
+        settings.features.editorText = true
         settings.features.editorMedia = true
         settings.features.editorDrawing = true
-        settings.features.editorText = true
         return settings
     }
     

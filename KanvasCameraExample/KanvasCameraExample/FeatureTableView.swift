@@ -22,9 +22,9 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case experimentalCameraFilters(Bool)
         case editor(Bool)
         case editorFilters(Bool)
+        case editorText(Bool)
         case editorMedia(Bool)
         case editorDrawing(Bool)
-        case editorText(Bool)
         case mediaPicking(Bool)
         case editorSaving(Bool)
         case editorPosting(Bool)
@@ -46,12 +46,12 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor"
             case .editorFilters(_):
                 return "Editor Filters"
+            case .editorText(_):
+                return "Editor Text"
             case .editorMedia(_):
                 return "Editor Media"
             case .editorDrawing(_):
                 return "Editor Drawing"
-            case .editorText(_):
-                return "Editor Text"
             case .mediaPicking(_):
                 return "Media Picking"
             case .editorPosting(_):
@@ -79,11 +79,11 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return enabled
             case .editorFilters(let enabled):
                 return enabled
+            case .editorText(let enabled):
+                return enabled
             case .editorMedia(let enabled):
                 return enabled
             case .editorDrawing(let enabled):
-                return enabled
-            case .editorText(let enabled):
                 return enabled
             case .mediaPicking(let enabled):
                 return enabled
@@ -149,12 +149,12 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editor(value)
         case .editorFilters(_):
             featuresData[indexPath.row] = .editorFilters(value)
+        case .editorText(_):
+            featuresData[indexPath.row] = .editorText(value)
         case .editorMedia(_):
             featuresData[indexPath.row] = .editorMedia(value)
         case .editorDrawing(_):
             featuresData[indexPath.row] = .editorDrawing(value)
-        case .editorText(_):
-            featuresData[indexPath.row] = .editorText(value)
         case .mediaPicking(_):
             featuresData[indexPath.row] = .mediaPicking(value)
         case .editorPosting(_):
