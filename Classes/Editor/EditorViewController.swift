@@ -38,7 +38,7 @@ protocol EditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, GLPlayerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, TextControllerDelegate, GLPlayerDelegate {
     
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
@@ -56,6 +56,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private lazy var filterController: EditorFilterController = {
         let controller = EditorFilterController(settings: self.settings)
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var textController: TextController = {
+        let controller = TextController()
         controller.delegate = self
         return controller
     }()
@@ -157,6 +163,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         
         load(childViewController: collectionController, into: editorView.collectionContainer)
         load(childViewController: filterController, into: editorView.filterMenuContainer)
+        load(childViewController: textController, into: editorView.textMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
     }
     
@@ -293,9 +300,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         switch editionOption {
         case .filter:
             filterController.showView(false)
+        case .text:
+            textController.showView(false)
         case .drawing:
             drawingController.showView(false)
-        case .media, .text:
+        case .media:
             break
         }
         
@@ -316,10 +325,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         case .filter:
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
+        case .text:
+            textController.showView(true)
         case .drawing:
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-        case .media, .text:
+        case .media:
             break
         }
     }
@@ -378,6 +389,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didDisplayFirstFrame(_ image: UIImage) {
         addCarouselDefaultColors(image)
+    }
+    
+    // MARK: - Text Controller Delegate
+    
+    func didConfirmText() {
+        closeMenuButtonPressed()
     }
     
     // MARK: - Public interface

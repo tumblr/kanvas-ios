@@ -438,6 +438,13 @@
 			path = Textures;
 			sourceTree = "<group>";
 		};
+		65AA995A2310443C00D64232 /* Text */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Text;
+			sourceTree = "<group>";
+		};
 		65E46B8D22BD22CA004FD226 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
@@ -455,6 +462,7 @@
 			children = (
 				651D4B5B22CE67A5004AB75C /* Drawing */,
 				65E46B9922BD22DE004FD226 /* Filters */,
+				65AA995A2310443C00D64232 /* Text */,
 				65E46B9D22BD22DE004FD226 /* EditionMenuCollectionControllerTests.swift */,
 				65E46B9E22BD22DE004FD226 /* EditorViewTests.swift */,
 				65E46B9F22BD22DE004FD226 /* EditionMenuCollectionCellTests.swift */,
