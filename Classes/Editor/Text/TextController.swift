@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 /// Protocol for confirming the text tools
-
 protocol TextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
