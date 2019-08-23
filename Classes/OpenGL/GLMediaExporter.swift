@@ -32,6 +32,15 @@ final class GLMediaExporter {
     /// A timer you can hook into to get progress updates from an export.
     private(set) var progressTimer: Timer?
 
+    /// Whether or not the exporter needs to process a photo or video
+    /// ie. are there any filters or overlays to apply?
+    private var needsProcessing: Bool {
+        // TODO it'd be nice to optimize this to not do anything if there's no overlay or filters,
+        // but right now there's *always* an overlay (a fully transparent image if there's not drawing),
+        // so there needs to be some refactoring to make this work well.
+        return true
+    }
+
     /// Default initializer
     init(filterType: FilterType?) {
         self.filterType = filterType
@@ -41,7 +50,7 @@ final class GLMediaExporter {
     /// - Parameter image: UIImage to export
     /// - Parameter completion: callback which is invoked with the processed UIImage
     func export(image: UIImage, completion: (UIImage?, Error?) -> Void) {
-        guard let filterType = filterType else {
+        guard needsProcessing else {
             completion(image, nil)
             return
         }
@@ -54,7 +63,9 @@ final class GLMediaExporter {
             return
         }
         let renderer = GLRenderer()
-        renderer.changeFilter(filterType)
+        if let filterType = filterType {
+            renderer.changeFilter(filterType)
+        }
         renderer.imageOverlays = imageOverlays
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
@@ -72,7 +83,7 @@ final class GLMediaExporter {
     /// - Parameter video: URL of a video to export
     /// - Parameter completion: callback which is invoked with the processed video URL
     func export(video url: URL, completion: @escaping (URL?, Error?) -> Void) {
-        guard let filterType = filterType else {
+        guard needsProcessing else {
             completion(url, nil)
             return
         }
@@ -98,7 +109,9 @@ final class GLMediaExporter {
             completion(nil, GLMediaExporterError.noCompositor)
             return
         }
-        glVideoCompositor.filterType = filterType
+        if let filterType = filterType {
+            glVideoCompositor.filterType = filterType
+        }
         glVideoCompositor.imageOverlays = imageOverlays
         self.progressTimer = Timer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: exportSession, repeats: true)
         exportSession?.exportAsynchronously {
