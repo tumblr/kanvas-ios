@@ -90,6 +90,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorFilters = true
         settings.features.editorMedia = false
         settings.features.editorDrawing = true
+        settings.features.editorText = true
         settings.features.mediaPicking = true
         settings.features.editorPosting = true
         settings.features.editorSaving = true
@@ -206,6 +207,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorFilters(settings.features.editorFilters),
             .editorMedia(settings.features.editorMedia),
             .editorDrawing(settings.features.editorDrawing),
+            .editorText(settings.features.editorText),
             .mediaPicking(settings.features.mediaPicking),
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
@@ -233,6 +235,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.editorMedia = value
         case .editorDrawing(_):
             settings.features.editorDrawing = value
+        case .editorText(_):
+            settings.features.editorText = value
         case .mediaPicking(_):
             settings.features.mediaPicking = value
         case .editorPosting(_):

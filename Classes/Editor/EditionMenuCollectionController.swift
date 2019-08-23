@@ -46,6 +46,10 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
             editionOptions.append(.drawing)
         }
         
+        if settings.features.editorText {
+            editionOptions.append(.text)
+        }
+        
         super.init(nibName: .none, bundle: .none)
     }
     

@@ -72,6 +72,7 @@ struct KanvasCameraImages {
         .filter: UIImage.imageFromCameraBundle(named: "editorFilters"),
         .media: UIImage.imageFromCameraBundle(named: "editorMedia"),
         .drawing: UIImage.imageFromCameraBundle(named: "editorDraw"),
+        .text: UIImage.imageFromCameraBundle(named: "editorText"),
     ]
     
     // MARK: - Draw

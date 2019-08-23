@@ -24,6 +24,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         settings.features.editorFilters = true
         settings.features.editorMedia = true
         settings.features.editorDrawing = true
+        settings.features.editorText = true
         return settings
     }
     

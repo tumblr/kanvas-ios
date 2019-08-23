@@ -291,7 +291,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             filterController.showView(false)
         case .drawing:
             drawingController.showView(false)
-        case .media:
+        case .media, .text:
             break
         }
         
@@ -315,7 +315,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         case .drawing:
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-        case .media:
+        case .media, .text:
             break
         }
     }
