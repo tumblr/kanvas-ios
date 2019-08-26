@@ -19,7 +19,7 @@ protocol EditionMenuCollectionCellDelegate: class {
 
 private struct EditionMenuCollectionCellConstants {
     static let circleDiameter: CGFloat = 50
-    static let padding: CGFloat = 8
+    static let padding: CGFloat = 6
     
     static var height: CGFloat {
         return circleDiameter
