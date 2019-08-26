@@ -18,7 +18,7 @@ protocol EditionMenuCollectionControllerDelegate: class {
 private struct EditionMenuCollectionControllerConstants {
     static let section: Int = 0
     static let animationDuration: TimeInterval = 0.25
-    static let collectionLeftInset: CGFloat = 10
+    static let collectionLeftInset: CGFloat = 12
     static let collectionRightInset: CGFloat = 20
 }
 

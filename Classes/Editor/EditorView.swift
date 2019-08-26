@@ -29,9 +29,9 @@ private struct EditorViewConstants {
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let postButtonSize: CGFloat = 54
     static let postButtonHorizontalMargin: CGFloat = 18
-    static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 17 : 19.5
+    static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 13 : 28
     static let postButtonFontSize: CGFloat = 14.0
-    static let postButtonLabelMargin: CGFloat = 1
+    static let postButtonLabelMargin: CGFloat = 3
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
 }
@@ -170,6 +170,8 @@ final class EditorView: UIView {
         postButton.applyShadows()
         addSubview(postButton)
         postButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        postButton.contentHorizontalAlignment = .fill
+        postButton.contentVerticalAlignment = .fill
         postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
         postButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -195,7 +197,7 @@ final class EditorView: UIView {
         
         NSLayoutConstraint.activate([
             postLabel.centerXAnchor.constraint(equalTo: postButton.centerXAnchor),
-            postLabel.topAnchor.constraint(equalTo: postButton.bottomAnchor),
+            postLabel.topAnchor.constraint(equalTo: postButton.bottomAnchor, constant: EditorViewConstants.postButtonLabelMargin),
         ])
     }
 
