@@ -167,7 +167,11 @@ final class EditorView: UIView {
     func setupPostButton() {
         postButton.accessibilityLabel = "Post Button"
         postButton.clipsToBounds = false
-        postButton.applyShadows()
+        postButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        postButton.layer.shadowOpacity = 1.0
+        postButton.layer.shadowRadius = 3.0
+        postButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+        postButton.layer.masksToBounds = false
         addSubview(postButton)
         postButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         postButton.contentHorizontalAlignment = .fill
