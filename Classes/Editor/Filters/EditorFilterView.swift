@@ -17,7 +17,7 @@ protocol EditorFilterViewDelegate: class {
 
 /// Constants for EditorFilterView
 private struct EditorFilterViewConstants {
-    static let collectionViewBottomMargin: CGFloat = Device.belongsToIPhoneXGroup ? 10 : 16
+    static let collectionViewBottomMargin: CGFloat = Device.belongsToIPhoneXGroup ? 15.5 : 16
     static let collectionViewHeight: CGFloat = EditorFilterCollectionCell.minimumHeight
 }
 
