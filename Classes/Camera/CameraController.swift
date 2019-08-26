@@ -270,7 +270,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
-        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode, analyticsProvider: analyticsProvider)
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), exporterClass: GLMediaExporter.self, cameraMode: currentMode, analyticsProvider: analyticsProvider)
         controller.delegate = self
         return controller
     }

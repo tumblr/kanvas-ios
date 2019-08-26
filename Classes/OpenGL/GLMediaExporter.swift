@@ -20,11 +20,19 @@ enum GLMediaExporterError: Error {
     case noProcessedImage
 }
 
+protocol MediaExporting: class {
+    var filterType: FilterType? { get set }
+    var imageOverlays: [CGImage] { get set }
+    init()
+    func export(image: UIImage, completion: (UIImage?, Error?) -> Void)
+    func export(video url: URL, completion: @escaping (URL?, Error?) -> Void)
+}
+
 /// Exports media with frame-by-frame OpenGL processing
-final class GLMediaExporter {
+final class GLMediaExporter: MediaExporting {
 
     /// The FilterType to apply frame-by-frame processing with.
-    var filterType: FilterType?
+    var filterType: FilterType? = nil
 
     /// The image overlays to apply on top of each frame.
     var imageOverlays: [CGImage] = []
@@ -39,11 +47,6 @@ final class GLMediaExporter {
         // but right now there's *always* an overlay (a fully transparent image if there's not drawing),
         // so there needs to be some refactoring to make this work well.
         return true
-    }
-
-    /// Default initializer
-    init(filterType: FilterType?) {
-        self.filterType = filterType
     }
 
     /// Exports an image
