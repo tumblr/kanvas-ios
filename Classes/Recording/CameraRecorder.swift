@@ -306,6 +306,14 @@ extension CameraRecorder: CameraRecordingProtocol {
         }
     }
 
+    func addImage(image: UIImage, completion: @escaping (Bool, CameraSegment?) -> Void) {
+        segmentsHandler.addNewImageSegment(image: image, size: image.size, completion: completion)
+    }
+
+    func addVideo(url: URL) {
+        segmentsHandler.addNewVideoSegment(url: url)
+    }
+
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         switch currentRecordingMode.group {
         case .video:

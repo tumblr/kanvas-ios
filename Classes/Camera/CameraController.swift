@@ -102,7 +102,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }()
 
     private lazy var cameraInputController: CameraInputController = {
-        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass, delegate: self)
+        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandler: self.segmentsHandler, delegate: self)
         addChild(controller)
         return controller
     }()
@@ -114,6 +114,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let controller = FilterSettingsController(settings: self.settings)
         controller.delegate = self
         return controller
+    }()
+
+    private lazy var segmentsHandler: SegmentsHandlerType = {
+        return segmentsHandlerClass.init()
     }()
     
     private let settings: CameraSettings
@@ -270,13 +274,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
-        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode, analyticsProvider: analyticsProvider)
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, cameraMode: currentMode, analyticsProvider: analyticsProvider)
         controller.delegate = self
         return controller
     }
     
     private func createPreviewViewController(_ segments: [CameraSegment]) -> CameraPreviewViewController {
-        let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init(), cameraMode: currentMode)
+        let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, cameraMode: currentMode)
         controller.delegate = self
         return controller
     }
@@ -858,13 +862,19 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             }
         }
         else {
-            if let recorder = self.cameraInputController.recorder as? CameraRecorder {
-                recorder.segmentsHandler.addNewImageSegment(image: image, size: image.size) { _,_ in }
-            }
-            performUIUpdate {
-                self.clipsController.addNewClip(MediaClip(representativeFrame: image,
-                                                          overlayText: nil,
-                                                          lastFrame: image))
+            self.cameraInputController.addImage(image: image) { [weak self] success, segment in
+                guard let strongSelf = self else {
+                    return
+                }
+                guard success else {
+                    // TODO handle error here?
+                    return
+                }
+                performUIUpdate {
+                    strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                    overlayText: nil,
+                                                                    lastFrame: image))
+                }
             }
         }
     }
@@ -874,9 +884,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             self.showPreviewWithSegments([CameraSegment.video(url)])
         }
         else {
-            if let recorder = self.cameraInputController.recorder as? CameraRecorder {
-                recorder.segmentsHandler.addNewVideoSegment(url: url)
-            }
+            self.cameraInputController.addVideo(url: url)
             performUIUpdate {
                 if let image = AVURLAsset(url: url).thumbnail() {
                     self.clipsController.addNewClip(MediaClip(representativeFrame: image,

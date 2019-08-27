@@ -74,7 +74,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     private var settings: CameraSettings
     private var recorderType: CameraRecordingProtocol.Type
-    private var segmentsHandlerType: SegmentsHandlerType.Type
+    private var segmentsHandler: SegmentsHandlerType
 
     private var captureSession: AVCaptureSession?
     private var frontCamera: AVCaptureDevice?
@@ -118,10 +118,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
     ///   - delegate: Delegate for input
-    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type, delegate: CameraInputControllerDelegate? = nil) {
+    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandler: SegmentsHandlerType, delegate: CameraInputControllerDelegate? = nil) {
         self.settings = settings
         recorderType = recorderClass
-        segmentsHandlerType = segmentsHandlerClass
+        self.segmentsHandler = segmentsHandler
         self.delegate = delegate
         super.init(nibName: .none, bundle: .none)
         setupNotifications()
@@ -173,7 +173,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         setupFlash(defaultOption: settings.preferredFlashOption)
-        setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
+        setupRecorder(recorderType, segmentsHandler: segmentsHandler)
 
         setupPreviewBlur()
     }
@@ -200,7 +200,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 }
             }
         }
-        self.setupRecorder(self.recorderType, segmentsHandlerType: self.segmentsHandlerType)
+        self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -304,9 +304,9 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         flashMode = defaultOption
     }
 
-    private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, segmentsHandlerType: SegmentsHandlerType.Type) {
+    private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, segmentsHandler: SegmentsHandlerType) {
         let size = currentResolution()
-        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandlerType.init(), settings: settings)
+        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandler, settings: settings)
     }
 
     // MARK: - Internal methods
@@ -398,6 +398,19 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             self?.stopAudioSession()
             completion(url)
         })
+    }
+
+    func addImage(image: UIImage, completion: @escaping (Bool, CameraSegment?) -> Void) {
+        guard let recorder = recorder else {
+            completion(false, nil)
+            return
+        }
+        recorder.addImage(image: image, completion: completion)
+    }
+
+    func addVideo(url: URL) {
+        guard let recorder = recorder else { return }
+        recorder.addVideo(url: url)
     }
 
     /// focus the camera on a location

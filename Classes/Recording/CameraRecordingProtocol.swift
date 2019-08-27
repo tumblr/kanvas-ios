@@ -107,6 +107,9 @@ protocol CameraRecordingProtocol {
     /// - Parameter removeFromDisk: whether to also delete the file from disk
     func deleteSegment(at index: Int, removeFromDisk: Bool)
 
+    /// deletes all segments
+    ///
+    /// - Parameter removeFromDisk: whether to also delete the file from disk
     func deleteAllSegments(removeFromDisk: Bool)
 
     /// moves a segment
@@ -124,6 +127,17 @@ protocol CameraRecordingProtocol {
     ///     completion: Returns the destination url
     /// - Returns: Void
     func takeGifMovie(useLongerDuration: Bool, completion: @escaping (URL?) -> Void)
+
+    /// Adds an already existing image like it was taken with the camera
+    ///
+    /// - Parameter image: image to add
+    /// - Parameter completion: block to invoke when done
+    func addImage(image: UIImage, completion: @escaping (Bool, CameraSegment?) -> Void)
+
+    /// Adds an already existing video like it was taken with the camera
+    ///
+    /// - Parameter url: URL of video to add
+    func addVideo(url: URL)
 
     /// cancels current recording and discards all properties
     func reset()
