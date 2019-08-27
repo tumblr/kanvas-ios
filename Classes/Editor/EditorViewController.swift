@@ -72,6 +72,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let settings: CameraSettings
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
+    private let exporterClass: MediaExporting.Type
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
 
@@ -101,12 +102,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.analyticsProvider = analyticsProvider
+        self.exporterClass = exporterClass
 
         self.player = GLPlayer(renderer: GLRenderer())
         super.init(nibName: .none, bundle: .none)
@@ -230,7 +232,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
 
     private func createFinalVideo(videoURL: URL, exportAction: KanvasExportAction) {
-        let exporter = GLMediaExporter(filterType: filterType)
+        let exporter = exporterClass.init()
+        exporter.filterType = filterType
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL) { (exportedVideoURL, _) in
             performUIUpdate {
@@ -246,7 +249,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
 
     private func createFinalImage(image: UIImage, exportAction: KanvasExportAction) {
-        let exporter = GLMediaExporter(filterType: filterType)
+        let exporter = exporterClass.init()
+        exporter.filterType = filterType
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image) { (exportedImage, _) in
             performUIUpdate {
