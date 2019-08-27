@@ -11,7 +11,7 @@ import UIKit
  This is an extension to apply a drop shadow to layers using the same styling
  */
 
-// values of the shadow properties
+// Values of the shadow properties
 private struct Constants {
     static let color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25)
     static let offset = CGSize(width: 0.0, height: 0.0)
