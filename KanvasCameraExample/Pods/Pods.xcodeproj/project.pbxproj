@@ -91,6 +91,7 @@
 		6211DC54E894C2909D17D5CF430C58B9 /* CameraInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0E2A0448B3A53FE906AD414914B29 /* CameraInputController.swift */; };
 		63B7CEC577303D59FF28866BEE660855 /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B35D7230DB14189DCAEA3BB00732F50 /* OptionView.swift */; };
 		64136C19EACF8F3C93CA31CBD1E4AECF /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14CCFE3DB3E3AC37160A6259945344E /* CGRect+Center.swift */; };
+		650BF0D32315A1AD002912EF /* TextCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650BF0D22315A1AD002912EF /* TextCanvas.swift */; };
 		65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65584F302310557C008A1BC2 /* EditorTextView.swift */; };
 		65860CABCB5629C6024F4EF9AB76D32B /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AA7EBA426046FA90B36DE32A619EB8 /* UIColor+Hex.swift */; };
 		65AA995723103BD300D64232 /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995623103BD300D64232 /* EditorTextController.swift */; };
@@ -453,6 +454,7 @@
 		621E2781A29215367C3E25FFED0CB0A0 /* ModeButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeButtonView.swift; sourceTree = "<group>"; };
 		635B8EF611C5053183706BE4A6AD5DD0 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
 		63740F510F37B51D3708457BA60E3016 /* FilterCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
+		650BF0D22315A1AD002912EF /* TextCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCanvas.swift; sourceTree = "<group>"; };
 		65584F302310557C008A1BC2 /* EditorTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
 		65AA995623103BD300D64232 /* EditorTextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextController.swift; sourceTree = "<group>"; };
 		65D5FB840AEC33B524AE833E675F17B2 /* UIFont+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+Orangina.swift"; path = "Source/UIFont+Orangina.swift"; sourceTree = "<group>"; };
@@ -1008,6 +1010,7 @@
 			children = (
 				65AA995623103BD300D64232 /* EditorTextController.swift */,
 				65584F302310557C008A1BC2 /* EditorTextView.swift */,
+				650BF0D22315A1AD002912EF /* TextCanvas.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -1878,6 +1881,7 @@
 				3ACCB1B8C95097CCFA6B34254249053F /* ShootButtonView.swift in Sources */,
 				A918AEF2CE66ED51DC19E32267FACABB /* StrokeSelectorController.swift in Sources */,
 				56A7387B9DFF74B19DE73FB391A14179 /* StrokeSelectorView.swift in Sources */,
+				650BF0D32315A1AD002912EF /* TextCanvas.swift in Sources */,
 				7BB23D8D3235DC7CE01BAF9F7D1F40D6 /* Synchronized.swift in Sources */,
 				BD439ABA67A30384288AE3977956B607 /* Texture.swift in Sources */,
 				8AAFB7F5E3DDC6AFD33949D017BFD7EC /* TextureSelectorController.swift in Sources */,

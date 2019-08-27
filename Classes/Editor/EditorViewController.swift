@@ -393,7 +393,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - EditorTextControllerDelegate
     
-    func didConfirmText() {
+    func didConfirmText(_ text: String) {
+        editorView.textCanvas.add(text: text)
         closeMenuButtonPressed()
     }
     

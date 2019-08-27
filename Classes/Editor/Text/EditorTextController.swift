@@ -12,7 +12,7 @@ import UIKit
 protocol EditorTextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
-    func didConfirmText()
+    func didConfirmText(_ text: String)
 }
 
 /// Constants for EditorTextController
@@ -61,7 +61,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     // MARK: - EditorTextViewDelegate
     
     func didTapConfirmButton() {
-        delegate?.didConfirmText()
+        delegate?.didConfirmText(textView.text)
     }
     
     // MARK: - Public interface
@@ -70,8 +70,18 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.textView.alpha = show ? 1 : 0
+        if show {
+            UIView.animate(withDuration: Constants.animationDuration, animations: {
+                self.textView.alpha = 1
+            }, completion: { _ in
+                self.textView.startWriting()
+            })
+        }
+        else {
+            textView.endWriting()
+            UIView.animate(withDuration: Constants.animationDuration) {
+                self.textView.alpha = 0
+            }
         }
     }
 }

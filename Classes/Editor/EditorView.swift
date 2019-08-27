@@ -59,6 +59,7 @@ final class EditorView: UIView {
     let textMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
+    let textCanvas = TextCanvas()
     
     weak var delegate: EditorViewDelegate?
     
@@ -77,6 +78,7 @@ final class EditorView: UIView {
     private func setupViews() {
         setupPlayer()
         drawingCanvas.add(into: self)
+        textCanvas.add(into: self)
         setUpCloseButton()
         
         switch mainActionMode {
