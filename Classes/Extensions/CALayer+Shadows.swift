@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /**
- This is an extension to apply a drop shadow to layers using the same styling
+ This is an extension to apply a blurred shadow to layers using the same styling
  */
 
 // Values of the shadow properties
