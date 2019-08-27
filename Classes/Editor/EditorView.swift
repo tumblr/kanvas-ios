@@ -29,7 +29,7 @@ private struct EditorViewConstants {
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let postButtonSize: CGFloat = 54
     static let postButtonHorizontalMargin: CGFloat = 18
-    static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 13 : 28
+    static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 13 : 29
     static let postButtonFontSize: CGFloat = 14.0
     static let postButtonLabelMargin: CGFloat = 3
     static let saveButtonSize: CGFloat = 34
