@@ -100,17 +100,9 @@ final class TextCanvas: IgnoreTouchesView {
         }
     }
     
+    // MARK: - Public interface
     
-    // MARK: - Private utilities
-    
-    private func asImage() -> UIImage {
-        let renderer = UIGraphicsImageRenderer(bounds: bounds)
-        return renderer.image { rendererContext in
-            layer.render(in: rendererContext.cgContext)
-        }
-    }
-    
-    private func updateLayer() {
+    func updateLayer() {
         layer.contents = asImage().cgImage
     }
 }

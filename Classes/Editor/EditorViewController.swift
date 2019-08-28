@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import SharedUI
 import Foundation
 import UIKit
 
@@ -276,6 +277,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         var imageOverlays: [CGImage] = []
         if let drawingLayer = drawingController.drawingLayer, let drawingOverlayImage = drawingLayer.cgImage() {
             imageOverlays.append(drawingOverlayImage)
+        }
+        
+        editorView.textCanvas.updateLayer()
+        if let textOverlayImage = editorView.textCanvas.layer.cgImage() {
+            imageOverlays.append(textOverlayImage)
         }
         return imageOverlays
     }
