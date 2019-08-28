@@ -12,7 +12,7 @@ final class CameraInputControllerTests: XCTestCase {
 
     /// Cameras require actual devices to function; some functions require camera or audio devices but will fail gracefully
     func newCameraInputController() -> CameraInputController {
-        let cameraInputController = CameraInputController(settings: CameraSettings(), recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self)
+        let cameraInputController = CameraInputController(settings: CameraSettings(), recorderClass: CameraRecorderStub.self, segmentsHandler: CameraSegmentHandlerStub())
         let _ = cameraInputController.view
         return cameraInputController
     }
