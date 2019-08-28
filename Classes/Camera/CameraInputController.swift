@@ -159,8 +159,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        sessionQueue.async {
+        sessionQueue.sync {
             self.createCaptureSession()
+        }
+        sessionQueue.async {
             self.configureSession()
         }
         setupGestures()
