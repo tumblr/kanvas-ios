@@ -402,19 +402,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         })
     }
 
-    func addImage(image: UIImage, completion: @escaping (Bool, CameraSegment?) -> Void) {
-        guard let recorder = recorder else {
-            completion(false, nil)
-            return
-        }
-        recorder.addImage(image: image, completion: completion)
-    }
-
-    func addVideo(url: URL) {
-        guard let recorder = recorder else { return }
-        recorder.addVideo(url: url)
-    }
-
     /// focus the camera on a location
     ///
     /// - Parameter point: should be a normalized point from (0, 0) to (1, 1)

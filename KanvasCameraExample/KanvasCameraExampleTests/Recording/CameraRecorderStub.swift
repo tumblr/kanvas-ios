@@ -123,14 +123,6 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         recording = false
     }
 
-    func addImage(image: UIImage, completion: @escaping (Bool, CameraSegment?) -> Void) {
-        cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, completion: completion)
-    }
-
-    func addVideo(url: URL) {
-        cameraSegmentHandler.addNewVideoSegment(url: url)
-    }
-
     func reset() {
         if !isRecording() {
             cameraSegmentHandler.reset(removeFromDisk: false)

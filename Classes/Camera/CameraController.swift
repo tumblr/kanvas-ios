@@ -862,7 +862,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             }
         }
         else {
-            self.cameraInputController.addImage(image: image) { [weak self] success, segment in
+            segmentsHandler.addNewImageSegment(image: image, size: image.size) { [weak self] success, segment in
                 guard let strongSelf = self else {
                     return
                 }
@@ -883,7 +883,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             self.showPreviewWithSegments([CameraSegment.video(url)])
         }
         else {
-            self.cameraInputController.addVideo(url: url)
+            segmentsHandler.addNewVideoSegment(url: url)
             performUIUpdate {
                 if let image = AVURLAsset(url: url).thumbnail() {
                     self.clipsController.addNewClip(MediaClip(representativeFrame: image,
