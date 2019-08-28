@@ -93,7 +93,7 @@
 		64136C19EACF8F3C93CA31CBD1E4AECF /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14CCFE3DB3E3AC37160A6259945344E /* CGRect+Center.swift */; };
 		650BF0D32315A1AD002912EF /* TextCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650BF0D22315A1AD002912EF /* TextCanvas.swift */; };
 		65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65584F302310557C008A1BC2 /* EditorTextView.swift */; };
-		655D80102316CFDF00D41AE2 /* MovableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655D800F2316CFDF00D41AE2 /* MovableLabel.swift */; };
+		655D80102316CFDF00D41AE2 /* MovableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655D800F2316CFDF00D41AE2 /* MovableTextView.swift */; };
 		65860CABCB5629C6024F4EF9AB76D32B /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AA7EBA426046FA90B36DE32A619EB8 /* UIColor+Hex.swift */; };
 		65AA995723103BD300D64232 /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995623103BD300D64232 /* EditorTextController.swift */; };
 		65F857D6230D741A004F36A2 /* ColorDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F857D5230D741A004F36A2 /* ColorDrop.swift */; };
@@ -457,7 +457,7 @@
 		63740F510F37B51D3708457BA60E3016 /* FilterCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
 		650BF0D22315A1AD002912EF /* TextCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCanvas.swift; sourceTree = "<group>"; };
 		65584F302310557C008A1BC2 /* EditorTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
-		655D800F2316CFDF00D41AE2 /* MovableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovableLabel.swift; sourceTree = "<group>"; };
+		655D800F2316CFDF00D41AE2 /* MovableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovableTextView.swift; sourceTree = "<group>"; };
 		65AA995623103BD300D64232 /* EditorTextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextController.swift; sourceTree = "<group>"; };
 		65D5FB840AEC33B524AE833E675F17B2 /* UIFont+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+Orangina.swift"; path = "Source/UIFont+Orangina.swift"; sourceTree = "<group>"; };
 		65F857D5230D741A004F36A2 /* ColorDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorDrop.swift; sourceTree = "<group>"; };
@@ -1012,7 +1012,7 @@
 			children = (
 				65AA995623103BD300D64232 /* EditorTextController.swift */,
 				65584F302310557C008A1BC2 /* EditorTextView.swift */,
-				655D800F2316CFDF00D41AE2 /* MovableLabel.swift */,
+				655D800F2316CFDF00D41AE2 /* MovableTextView.swift */,
 				650BF0D22315A1AD002912EF /* TextCanvas.swift */,
 			);
 			path = Text;
@@ -1840,7 +1840,7 @@
 				591C0E56618162C491402FF0BE375246 /* KanvasCameraAnalyticsProvider.swift in Sources */,
 				E42D94AE087D9FF0143CCEEE500E2136 /* KanvasCameraColors.swift in Sources */,
 				AD352D96E71C1CE3EFC4967F2F06969F /* KanvasCameraImages.swift in Sources */,
-				655D80102316CFDF00D41AE2 /* MovableLabel.swift in Sources */,
+				655D80102316CFDF00D41AE2 /* MovableTextView.swift in Sources */,
 				3B3C4C5C4579A25049307D27DA616CE1 /* KanvasCameraStrings.swift in Sources */,
 				F286CBB00C8A597EEAD36277C7843AA6 /* KanvasCameraTimes.swift in Sources */,
 				9671D7F6047AF8BCA1D1C6F15A7E6001 /* KanvasUIImagePickerViewController.swift in Sources */,

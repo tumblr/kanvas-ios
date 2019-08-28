@@ -7,11 +7,31 @@
 import Foundation
 import UIKit
 
-final class MovableLabel: UILabel {
+final class MovableTextView: UIView {
     
     private var rotation: CGFloat = 0.0
     private var position: CGPoint = .zero
     private var scale: CGFloat = 1.0
+    
+    init(text: String) {
+        super.init(frame: .zero)
+        setupTextView(text: text)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Layout
+    
+    private func setupTextView(text: String) {
+        let textView = UITextView()
+        textView.isUserInteractionEnabled = false
+        textView.text = text
+        textView.add(into: self)
+    }
+    
+    // MARK: - Properties
     
     func setRotation(_ newRotation: CGFloat) {
         rotation = newRotation
@@ -39,6 +59,8 @@ final class MovableLabel: UILabel {
     func getPosition() -> CGPoint {
         return position
     }
+    
+    // MARK: - Transforms
     
     private func updateTransform() {
         transform = CGAffineTransform(scaleX: scale, y: scale)

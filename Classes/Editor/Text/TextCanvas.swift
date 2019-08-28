@@ -14,18 +14,17 @@ final class TextCanvas: IgnoreTouchesView {
     private var originRotation: CGFloat = 0.0
     
     func add(text: String) {
-        let label = MovableLabel()
-        label.text = text
-        label.backgroundColor = .white
-        label.isUserInteractionEnabled = true
-        addSubview(label)
+        let textView = MovableTextView(text: text)
+        textView.backgroundColor = .white
+        textView.isUserInteractionEnabled = true
+        addSubview(textView)
         
-        label.translatesAutoresizingMaskIntoConstraints = false
+        textView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            label.heightAnchor.constraint(equalToConstant: 300),
-            label.widthAnchor.constraint(equalToConstant: 300),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.centerXAnchor.constraint(equalTo: centerXAnchor)
+            textView.heightAnchor.constraint(equalToConstant: 300),
+            textView.widthAnchor.constraint(equalToConstant: 300),
+            textView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            textView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(textTapped(recognizer:)))
@@ -33,10 +32,10 @@ final class TextCanvas: IgnoreTouchesView {
         let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(textRotated(recognizer:)))
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(textPinched(recognizer:)))
         
-        label.addGestureRecognizer(tapRecognizer)
-        label.addGestureRecognizer(panRecognizer)
-        label.addGestureRecognizer(rotationRecognizer)
-        label.addGestureRecognizer(pinchGestureRecognizer)
+        textView.addGestureRecognizer(tapRecognizer)
+        textView.addGestureRecognizer(panRecognizer)
+        textView.addGestureRecognizer(rotationRecognizer)
+        textView.addGestureRecognizer(pinchGestureRecognizer)
     }
     
     
@@ -47,7 +46,7 @@ final class TextCanvas: IgnoreTouchesView {
     }
     
     @objc func textRotated(recognizer: UIRotationGestureRecognizer) {
-        guard let view = recognizer.view as? MovableLabel else { return }
+        guard let view = recognizer.view as? MovableTextView else { return }
 
         switch recognizer.state {
         case .began:
@@ -63,7 +62,7 @@ final class TextCanvas: IgnoreTouchesView {
     }
     
     @objc func textPanned(recognizer: UIPanGestureRecognizer) {
-        guard let view = recognizer.view as? MovableLabel else { return }
+        guard let view = recognizer.view as? MovableTextView else { return }
         
         switch recognizer.state {
         case .began:
@@ -80,7 +79,7 @@ final class TextCanvas: IgnoreTouchesView {
     }
     
     @objc func textPinched(recognizer: UIPinchGestureRecognizer) {
-        guard let view = recognizer.view as? MovableLabel else { return }
+        guard let view = recognizer.view as? MovableTextView else { return }
         
         switch recognizer.state {
         case .began:
