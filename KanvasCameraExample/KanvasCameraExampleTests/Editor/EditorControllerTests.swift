@@ -10,6 +10,28 @@ import Foundation
 import UIKit
 import XCTest
 
+class MediaExporterStub: MediaExporting {
+    var filterType: FilterType? = nil
+    var imageOverlays: [CGImage] = []
+
+    var exportImageCalled: Bool = false
+    var exportVideoCalled: Bool = false
+
+    required init() {
+
+    }
+
+    func export(image: UIImage, completion: (UIImage?, Error?) -> Void) {
+        exportImageCalled = true
+        completion(image, nil)
+    }
+
+    func export(video url: URL, completion: @escaping (URL?, Error?) -> Void) {
+        exportVideoCalled = true
+        completion(url, nil)
+    }
+}
+
 final class EditorControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
@@ -22,6 +44,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let settings = CameraSettings()
         settings.features.editor = true
         settings.features.editorFilters = true
+        settings.features.editorText = true
         settings.features.editorMedia = true
         settings.features.editorDrawing = true
         return settings
@@ -75,7 +98,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let cameraSettings = settings ?? getCameraSettings()
         let handler = assetsHandler ?? AssetsHandlerStub()
         let analytics = analyticsProvider ?? KanvasCameraAnalyticsStub()
-        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, cameraMode: cameraMode, analyticsProvider: analytics)
+        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, exporterClass: MediaExporterStub.self, cameraMode: cameraMode, analyticsProvider: analytics)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController

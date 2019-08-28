@@ -20,7 +20,7 @@ class GLMediaExporterTests: XCTestCase {
     }
 
     func testInit() {
-        let _ = GLMediaExporter(filterType: .passthrough)
+        let _ = GLMediaExporter()
     }
 
 }
