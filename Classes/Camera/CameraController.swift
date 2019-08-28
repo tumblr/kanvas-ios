@@ -867,7 +867,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     return
                 }
                 guard success else {
-                    // TODO handle error here?
                     return
                 }
                 performUIUpdate {
