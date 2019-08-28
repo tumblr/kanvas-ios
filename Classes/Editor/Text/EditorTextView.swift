@@ -48,7 +48,7 @@ final class EditorTextView: UIView {
     
     init() {
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
-        textView = UITextView()
+        textView = VerticallyCenteredTextView()
         super.init(frame: .zero)
         setupViews()
     }
@@ -107,5 +107,15 @@ final class EditorTextView: UIView {
     func endWriting() {
         textView.endEditing(true)
         textView.text = nil
+    }
+}
+
+private class VerticallyCenteredTextView: UITextView {
+    override var contentSize: CGSize {
+        didSet {
+            var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2.0
+            topCorrection = max(0, topCorrection)
+            contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
+        }
     }
 }
