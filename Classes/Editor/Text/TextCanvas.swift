@@ -7,14 +7,21 @@
 import Foundation
 import UIKit
 
+private struct Constants {
+    static let defaultPosition: CGPoint = .zero
+    static let defaultScale: CGFloat = 1.0
+    static let defaultRotation: CGFloat = 0.0
+}
+
 final class TextCanvas: IgnoreTouchesView {
     
-    private var originPoint: CGPoint = .zero
-    private var originScale: CGFloat = 1.0
-    private var originRotation: CGFloat = 0.0
+    private var originPoint: CGPoint = Constants.defaultPosition
+    private var originScale: CGFloat = Constants.defaultScale
+    private var originRotation: CGFloat = Constants.defaultRotation
     
     func add(text: String, size: CGSize) {
-        let textView = MovableTextView(text: text)
+        let textView = MovableTextView(text: text, position: Constants.defaultPosition,
+                                       scale: Constants.defaultScale, rotation: Constants.defaultRotation)
         textView.isUserInteractionEnabled = true
         addSubview(textView)
         
@@ -49,10 +56,10 @@ final class TextCanvas: IgnoreTouchesView {
 
         switch recognizer.state {
         case .began:
-            originRotation = view.getRotation()
+            originRotation = view.rotation
         case .changed, .ended:
             let newRotation = originRotation + recognizer.rotation
-            view.setRotation(newRotation)
+            view.rotation = newRotation
         case .cancelled, .failed, .possible:
             break
         @unknown default:
@@ -65,11 +72,11 @@ final class TextCanvas: IgnoreTouchesView {
         
         switch recognizer.state {
         case .began:
-            originPoint = view.getPosition()
+            originPoint = view.position
         case .changed, .ended:
             let translation = recognizer.translation(in: self)
-            let position = CGPoint(x: originPoint.x + translation.x, y: originPoint.y + translation.y)
-            view.setPosition(position)
+            let newPosition = CGPoint(x: originPoint.x + translation.x, y: originPoint.y + translation.y)
+            view.position = newPosition
         case .cancelled, .failed, .possible:
             break
         @unknown default:
@@ -82,10 +89,10 @@ final class TextCanvas: IgnoreTouchesView {
         
         switch recognizer.state {
         case .began:
-            originScale = view.getScale()
+            originScale = view.scale
         case .changed, .ended:
-            let scale = originScale * recognizer.scale
-            view.setScale(scale)
+            let newScale = originScale * recognizer.scale
+            view.scale = newScale
         case .cancelled, .failed, .possible:
             break
         @unknown default:

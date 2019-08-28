@@ -9,12 +9,30 @@ import UIKit
 
 final class MovableTextView: UIView {
     
-    private var rotation: CGFloat = 0.0
-    private var position: CGPoint = .zero
-    private var scale: CGFloat = 1.0
+    var rotation: CGFloat {
+        didSet {
+            updateTransform()
+        }
+    }
     
-    init(text: String) {
+    var position: CGPoint {
+        didSet {
+            updateTransform()
+        }
+    }
+    
+    var scale: CGFloat {
+        didSet {
+            updateTransform()
+        }
+    }
+    
+    init(text: String, position: CGPoint, scale: CGFloat, rotation: CGFloat) {
+        self.position = position
+        self.scale = scale
+        self.rotation = rotation
         super.init(frame: .zero)
+        
         setupTextView(text: text)
     }
     
@@ -30,35 +48,6 @@ final class MovableTextView: UIView {
         textView.backgroundColor = .clear
         textView.text = text
         textView.add(into: self)
-    }
-    
-    // MARK: - Properties
-    
-    func setRotation(_ newRotation: CGFloat) {
-        rotation = newRotation
-        updateTransform()
-    }
-    
-    func getRotation() -> CGFloat {
-        return rotation
-    }
-    
-    func setScale(_ newScale: CGFloat) {
-        scale = newScale
-        updateTransform()
-    }
-    
-    func getScale() -> CGFloat {
-        return scale
-    }
-    
-    func setPosition(_ newPosition: CGPoint) {
-        position = newPosition
-        updateTransform()
-    }
-    
-    func getPosition() -> CGPoint {
-        return position
     }
     
     // MARK: - Transforms
