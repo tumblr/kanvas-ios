@@ -9,17 +9,18 @@ import UIKit
 
 final class TextCanvas: IgnoreTouchesView {
     
-    private var lastRotation: CGFloat = 0
     private var originPoint: CGPoint = .zero
     private var originScale: CGFloat = 1.0
+    private var originRotation: CGFloat = 0.0
     
     func add(text: String) {
-        let label = UILabel()
+        let label = MovableLabel()
         label.text = text
+        label.backgroundColor = .white
         label.isUserInteractionEnabled = true
         addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
         
+        label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             label.heightAnchor.constraint(equalToConstant: 300),
             label.widthAnchor.constraint(equalToConstant: 300),
@@ -46,17 +47,14 @@ final class TextCanvas: IgnoreTouchesView {
     }
     
     @objc func textRotated(recognizer: UIRotationGestureRecognizer) {
-        var originalRotation = CGFloat()
-        
+        guard let view = recognizer.view as? MovableLabel else { return }
+
         switch recognizer.state {
         case .began:
-            recognizer.rotation = lastRotation
-            originalRotation = recognizer.rotation
-        case .changed:
-            let newRotation = recognizer.rotation + originalRotation
-            recognizer.view?.transform = CGAffineTransform(rotationAngle: newRotation)
-        case .ended:
-            lastRotation = recognizer.rotation
+            originRotation = view.getRotation()
+        case .changed, .ended:
+            let newRotation = originRotation + recognizer.rotation
+            view.setRotation(newRotation)
         case .cancelled, .failed, .possible:
             break
         @unknown default:
@@ -65,14 +63,15 @@ final class TextCanvas: IgnoreTouchesView {
     }
     
     @objc func textPanned(recognizer: UIPanGestureRecognizer) {
-        guard let view = recognizer.view else { return }
+        guard let view = recognizer.view as? MovableLabel else { return }
+        
         switch recognizer.state {
         case .began:
-            originPoint = view.center
+            originPoint = view.getPosition()
         case .changed, .ended:
             let translation = recognizer.translation(in: self)
-            let point = CGPoint(x: originPoint.x + translation.x, y: originPoint.y + translation.y)
-            view.center = point
+            let position = CGPoint(x: originPoint.x + translation.x, y: originPoint.y + translation.y)
+            view.setPosition(position)
         case .cancelled, .failed, .possible:
             break
         @unknown default:
@@ -81,21 +80,19 @@ final class TextCanvas: IgnoreTouchesView {
     }
     
     @objc func textPinched(recognizer: UIPinchGestureRecognizer) {
-        guard let view = recognizer.view else { return }
+        guard let view = recognizer.view as? MovableLabel else { return }
+        
         switch recognizer.state {
         case .began:
-            originScale = view.contentScaleFactor
+            originScale = view.getScale()
         case .changed, .ended:
             let scale = originScale * recognizer.scale
-            view.transform = CGAffineTransform(scaleX: scale, y: scale)
+            view.setScale(scale)
         case .cancelled, .failed, .possible:
             break
         @unknown default:
             break
         }
-        
-        let scale = recognizer.scale
-        view.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
     
