@@ -199,7 +199,7 @@ final class CameraView: UIView {
     private func setUpCloseButton() {
         addSubview(closeButton)
         closeButton.accessibilityLabel = "Close Button"
-        closeButton.applyShadows()
+        closeButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
         closeButton.imageView?.contentMode = .scaleAspectFit
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false

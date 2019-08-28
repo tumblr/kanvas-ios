@@ -20,11 +20,14 @@ private struct Constants {
 }
 
 extension CALayer {
-    func applyShadows() {
-        shadowColor = Constants.color.cgColor
-        shadowOffset = Constants.offset
-        shadowOpacity = Constants.opacity
-        shadowRadius = Constants.radius
+    func applyShadows(color: UIColor = Constants.color,
+                      offset: CGSize = Constants.offset,
+                      opacity: Float = Constants.opacity,
+                      radius: CGFloat = Constants.radius) {
+        shadowColor = color.cgColor
+        shadowOffset = offset
+        shadowOpacity = opacity
+        shadowRadius = radius
         masksToBounds = false
     }
 }

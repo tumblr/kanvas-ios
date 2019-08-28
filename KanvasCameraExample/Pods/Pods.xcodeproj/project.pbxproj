@@ -160,7 +160,6 @@
 		A8F076E5A7A0C3509985416930A4DB2B /* Array+Safety.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3223213B7A02CC3A62C6AF5299150F0 /* Array+Safety.swift */; };
 		A918AEF2CE66ED51DC19E32267FACABB /* StrokeSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06C140119188F9B36CD10D84E44EF3C /* StrokeSelectorController.swift */; };
 		A9D34622AD786EE0232BAB0943365DBE /* Shaders in Resources */ = {isa = PBXBuildFile; fileRef = D335AC3642D5229F73459024F5DC7711 /* Shaders */; };
-		AA9AB23A02799B4EDF369FBA18990409 /* UIButton+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB630EE0397E536A869DFF3F8A4BE839 /* UIButton+Shadows.swift */; };
 		AC2E51AD521F05928C6654533A664053 /* FilterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B96F3B96F6015AF42F9661EA165270 /* FilterType.swift */; };
 		AC4DAF8CBDAA529926CF1B6ADD1605C5 /* TextureSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C647F46DB857EB0471D270EF742E8894 /* TextureSelectorView.swift */; };
 		AD352D96E71C1CE3EFC4967F2F06969F /* KanvasCameraImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F7B2BADFF8CEC32D0BBC0069EF3CA8 /* KanvasCameraImages.swift */; };
@@ -589,7 +588,6 @@
 		D9400BAED5BD542A33FBAEFFE6AB9444 /* CameraSettings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
 		DA14AAF89E87825D5C1E50BE2D7D4C5E /* FilmFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilmFilter.swift; sourceTree = "<group>"; };
 		DA6FBEF5C3FB48F7B60630DC1F9EDDD0 /* SuggestedTagView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SuggestedTagView.swift; sourceTree = "<group>"; };
-		DB630EE0397E536A869DFF3F8A4BE839 /* UIButton+Shadows.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIButton+Shadows.swift"; sourceTree = "<group>"; };
 		DC95A87B6D147710CDB68F6FB627C633 /* EditionMenuCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionView.swift; sourceTree = "<group>"; };
 		DE35F81C954881204729C569018D98C0 /* FBSnapshotTestController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSnapshotTestController.m; path = FBSnapshotTestCase/FBSnapshotTestController.m; sourceTree = "<group>"; };
 		DFD7E0D33A017ED2C9AD4C1E5EEBA0C8 /* UIImage+PixelBuffer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+PixelBuffer.swift"; sourceTree = "<group>"; };
@@ -1326,7 +1324,6 @@
 				A32C4E27D9EB97276577A85E3BB568F1 /* ClosedRange+Clamp.swift */,
 				3EC6DD3D7AB8D95F9B51498B75E1840A /* IndexPath+Order.swift */,
 				935DC91C7AF7FB450980C090A3F66563 /* NSURL+Media.swift */,
-				DB630EE0397E536A869DFF3F8A4BE839 /* UIButton+Shadows.swift */,
 				C9007D2A5055A841498D8F7AAF1EE7BC /* UICollectionView+Cells.swift */,
 				1D5BEFCFECF3216EAA6877CB84D11671 /* UIColor+Lerp.swift */,
 				FC3495B39A6825C567FEE6EDB164CDC2 /* UIFont+Utils.swift */,
@@ -1871,7 +1868,6 @@
 				8AAFB7F5E3DDC6AFD33949D017BFD7EC /* TextureSelectorController.swift in Sources */,
 				AC4DAF8CBDAA529926CF1B6ADD1605C5 /* TextureSelectorView.swift in Sources */,
 				37F60D4B0AF539630E53F42E5CB1709B /* ToonFilter.swift in Sources */,
-				AA9AB23A02799B4EDF369FBA18990409 /* UIButton+Shadows.swift in Sources */,
 				9405328E6B9C94283B19751C60FEA8A5 /* UICollectionView+Cells.swift in Sources */,
 				81C77958E6872790DD3B8CE5D9BDE3B7 /* UIColor+Lerp.swift in Sources */,
 				D38B0C17B5CEB73D97F4265AD862C22D /* UIFont+Utils.swift in Sources */,
