@@ -41,6 +41,13 @@ final class EditorTextView: UIView {
         return textView.text
     }
     
+    var textSize: CGSize {
+        let croppedView = UITextView(frame: textView.frame)
+        croppedView.text = textView.text
+        croppedView.sizeToFit()
+        return croppedView.contentSize
+    }
+
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

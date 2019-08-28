@@ -12,7 +12,7 @@ import UIKit
 protocol EditorTextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
-    func didConfirmText(_ text: String)
+    func didConfirmText(text: String, size: CGSize)
 }
 
 /// Constants for EditorTextController
@@ -61,7 +61,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     // MARK: - EditorTextViewDelegate
     
     func didTapConfirmButton() {
-        delegate?.didConfirmText(textView.text)
+        delegate?.didConfirmText(text: textView.text, size: textView.textSize)
     }
     
     // MARK: - Public interface

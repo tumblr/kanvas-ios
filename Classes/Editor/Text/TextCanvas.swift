@@ -13,16 +13,15 @@ final class TextCanvas: IgnoreTouchesView {
     private var originScale: CGFloat = 1.0
     private var originRotation: CGFloat = 0.0
     
-    func add(text: String) {
+    func add(text: String, size: CGSize) {
         let textView = MovableTextView(text: text)
-        textView.backgroundColor = .white
         textView.isUserInteractionEnabled = true
         addSubview(textView)
         
         textView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            textView.heightAnchor.constraint(equalToConstant: 300),
-            textView.widthAnchor.constraint(equalToConstant: 300),
+            textView.heightAnchor.constraint(equalToConstant: size.height),
+            textView.widthAnchor.constraint(equalToConstant: size.width),
             textView.centerYAnchor.constraint(equalTo: centerYAnchor),
             textView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])

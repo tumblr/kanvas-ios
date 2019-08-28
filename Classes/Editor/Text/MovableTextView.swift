@@ -27,6 +27,7 @@ final class MovableTextView: UIView {
     private func setupTextView(text: String) {
         let textView = UITextView()
         textView.isUserInteractionEnabled = false
+        textView.backgroundColor = .clear
         textView.text = text
         textView.add(into: self)
     }
