@@ -55,7 +55,7 @@ final class EditorTextView: UIView {
     
     init() {
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
-        textView = BottomAlignedTextView()
+        textView = VerticallyCenteredTextView()
         super.init(frame: .zero)
         setupViews()
     }
@@ -117,22 +117,18 @@ final class EditorTextView: UIView {
     }
     
     func moveToolsUp(distance: CGFloat) {
-        if textView.frame.origin.y == 0 {
-            textView.frame.origin.y -= distance
-        }
+        textView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height - distance)
     }
     
     func moveToolsDown() {
-        if textView.frame.origin.y != 0 {
-            textView.frame.origin.y = 0
-        }
+        textView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
     }
 }
 
-private class BottomAlignedTextView: UITextView {
+private class VerticallyCenteredTextView: UITextView {
     override var contentSize: CGSize {
         didSet {
-            var topCorrection = (bounds.size.height - contentSize.height * zoomScale)
+            var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2
             topCorrection = max(0, topCorrection)
             contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
         }
