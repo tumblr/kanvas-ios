@@ -17,6 +17,7 @@ protocol EditorTextViewDelegate: class {
 
 /// Constants for EditorTextView
 private struct Constants {
+    static let animationDuration: TimeInterval = 0.25
     
     // Confirm button
     static let confirmButtonSize: CGFloat = 36
@@ -87,6 +88,8 @@ final class EditorTextView: UIView {
             textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             textView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
+        
+        textView.alpha = 0
     }
     
     /// Sets up the confirmation button with a check mark
@@ -130,12 +133,28 @@ final class EditorTextView: UIView {
     ///
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
-        textView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height - distance)
+        UIView.animate(withDuration: 0.0, animations: {
+            self.textView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - distance)
+        }, completion: { _ in
+            self.showTextView(true)
+        })
     }
     
     /// Moves the main text view to its original position
     func moveToolsDown() {
+        showTextView(false)
         textView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+    }
+    
+    // MARK: - Private utilitites
+    
+    /// shows or hides the main text view
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showTextView(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.textView.alpha = show ? 1 : 0
+        }
     }
 }
 
