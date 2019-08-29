@@ -56,6 +56,7 @@ final class EditorView: UIView {
     private let filterSelectionCircle = UIImageView()
     let collectionContainer = IgnoreTouchesView()
     let filterMenuContainer = IgnoreTouchesView()
+    let textMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
     
@@ -77,6 +78,7 @@ final class EditorView: UIView {
         setupPlayer()
         drawingCanvas.add(into: self)
         setUpCloseButton()
+        
         switch mainActionMode {
         case .confirm:
             setUpConfirmButton()
@@ -86,8 +88,10 @@ final class EditorView: UIView {
         if showSaveButton {
             setupSaveButton()
         }
+        
         setUpCollection()
         setUpFilterMenu()
+        setUpTextMenu()
         setUpDrawingMenu()
     }
     
@@ -162,6 +166,36 @@ final class EditorView: UIView {
             filterMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+    
+    private func setUpTextMenu() {
+        textMenuContainer.backgroundColor = .clear
+        textMenuContainer.accessibilityIdentifier = "Text Menu Container"
+        textMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        textMenuContainer.clipsToBounds = false
+        
+        addSubview(textMenuContainer)
+        NSLayoutConstraint.activate([
+            textMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            textMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            textMenuContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            textMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    private func setUpDrawingMenu() {
+        drawingMenuContainer.backgroundColor = .clear
+        drawingMenuContainer.accessibilityIdentifier = "Drawing Menu Container"
+        drawingMenuContainer.clipsToBounds = false
+        
+        addSubview(drawingMenuContainer)
+        drawingMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            drawingMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            drawingMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            drawingMenuContainer.topAnchor.constraint(equalTo: topAnchor),
+            drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
 
     func setupPostButton() {
         postButton.accessibilityLabel = "Post Button"
@@ -222,21 +256,6 @@ final class EditorView: UIView {
         case .post:
             return postButton
         }
-    }
-    
-    private func setUpDrawingMenu() {
-        drawingMenuContainer.backgroundColor = .clear
-        drawingMenuContainer.accessibilityIdentifier = "Drawing Menu Container"
-        drawingMenuContainer.clipsToBounds = false
-        
-        addSubview(drawingMenuContainer)
-        drawingMenuContainer.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            drawingMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            drawingMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            drawingMenuContainer.topAnchor.constraint(equalTo: topAnchor),
-            drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
     }
     
     // MARK: - buttons

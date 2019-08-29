@@ -38,6 +38,10 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
             editionOptions.append(.filter)
         }
         
+        if settings.features.editorText {
+            editionOptions.append(.text)
+        }
+        
         if settings.features.editorMedia {
             editionOptions.append(.media)
         }
