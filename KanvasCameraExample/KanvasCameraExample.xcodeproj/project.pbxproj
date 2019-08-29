@@ -41,6 +41,7 @@
 		653B045622E9143C005AAFCA /* HorizontalCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B045422E9143C005AAFCA /* HorizontalCollectionViewTests.swift */; };
 		653D062C22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653D062B22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift */; };
 		653D062E22BD2C49007118C5 /* FilterCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653D062D22BD2C49007118C5 /* FilterCollectionTests.swift */; };
+		653EAB9923180ADC0004974E /* TextCanvasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653EAB9823180ADC0004974E /* TextCanvasTests.swift */; };
 		654910EC22EB565E006DE5A1 /* EditorFilterViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654910EB22EB565E006DE5A1 /* EditorFilterViewTests.swift */; };
 		654910EE22EB5675006DE5A1 /* EditorFilterControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654910ED22EB5675006DE5A1 /* EditorFilterControllerTests.swift */; };
 		654AE15C22E8B8B200C8C0E4 /* ColorPickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE15B22E8B8B200C8C0E4 /* ColorPickerViewTests.swift */; };
@@ -180,6 +181,7 @@
 		653B045422E9143C005AAFCA /* HorizontalCollectionViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalCollectionViewTests.swift; sourceTree = "<group>"; };
 		653D062B22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollectionInnerCellTests.swift; sourceTree = "<group>"; };
 		653D062D22BD2C49007118C5 /* FilterCollectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollectionTests.swift; sourceTree = "<group>"; };
+		653EAB9823180ADC0004974E /* TextCanvasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCanvasTests.swift; sourceTree = "<group>"; };
 		654910EB22EB565E006DE5A1 /* EditorFilterViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFilterViewTests.swift; sourceTree = "<group>"; };
 		654910ED22EB5675006DE5A1 /* EditorFilterControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFilterControllerTests.swift; sourceTree = "<group>"; };
 		654AE15B22E8B8B200C8C0E4 /* ColorPickerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewTests.swift; sourceTree = "<group>"; };
@@ -447,6 +449,7 @@
 			children = (
 				65AA995B2310494700D64232 /* EditorTextControllerTests.swift */,
 				65AA995D2310499100D64232 /* EditorTextViewTests.swift */,
+				653EAB9823180ADC0004974E /* TextCanvasTests.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -879,6 +882,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				65AA995C2310494700D64232 /* EditorTextControllerTests.swift in Sources */,
+				653EAB9923180ADC0004974E /* TextCanvasTests.swift in Sources */,
 				6589D13022E91C7900A7357B /* SharpieTests.swift in Sources */,
 				65E46BA522BD22DE004FD226 /* EditorFilterCollectionCellTests.swift in Sources */,
 				ABE4990C213722D300379F7F /* OptionTests.swift in Sources */,
