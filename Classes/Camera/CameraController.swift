@@ -183,10 +183,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 
-    deinit {
-        cleanup()
-    }
-
     override public var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
