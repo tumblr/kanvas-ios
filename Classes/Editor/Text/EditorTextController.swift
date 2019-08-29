@@ -83,6 +83,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     /// shows or hides the text tools menu
     ///
     /// - Parameter show: true to show, false to hide
+    /// - Parameter options: text style options
     func showView(_ show: Bool, with options: TextOptions = TextOptions()) {
         if show {
             UIView.animate(withDuration: Constants.animationDuration, animations: {

@@ -7,18 +7,26 @@
 import Foundation
 import UIKit
 
+/// Constants for TextCanvas
 private struct Constants {
     static let defaultPosition: CGPoint = .zero
     static let defaultScale: CGFloat = 1.0
     static let defaultRotation: CGFloat = 0.0
 }
 
+/// View that contains the collection of text views
 final class TextCanvas: IgnoreTouchesView {
     
+    // Values from which the different gestures start
     private var originPoint: CGPoint = Constants.defaultPosition
     private var originScale: CGFloat = Constants.defaultScale
     private var originRotation: CGFloat = Constants.defaultRotation
     
+    
+    /// Adds a new text view
+    ///
+    /// - Parameter option: text style options
+    /// - Parameter size: size of the text view
     func addText(options: TextOptions, size: CGSize) {
         let textView = MovableTextView(options: options, position: Constants.defaultPosition,
                                        scale: Constants.defaultScale, rotation: Constants.defaultRotation)
@@ -102,6 +110,7 @@ final class TextCanvas: IgnoreTouchesView {
     
     // MARK: - Public interface
     
+    /// Saves the current view into its layer
     func updateLayer() {
         layer.contents = asImage().cgImage
     }

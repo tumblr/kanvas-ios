@@ -29,6 +29,9 @@ final class TextOptions {
     
     // MARK: - Public interface
     
+    /// Checks if the text inside the options has lenght or is empty
+    ///
+    /// - Returns: whether the string is empty or not
     func haveText() -> Bool {
         return !text.isEmpty
     }

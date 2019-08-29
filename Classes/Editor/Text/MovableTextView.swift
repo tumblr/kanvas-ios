@@ -7,20 +7,24 @@
 import Foundation
 import UIKit
 
+/// A TextView wrapped in a UIView that can be rotated, moved and scaled
 final class MovableTextView: UIView {
     
+    /// Current rotation angle
     var rotation: CGFloat {
         didSet {
             updateTransform()
         }
     }
     
+    /// Current position from the origin point
     var position: CGPoint {
         didSet {
             updateTransform()
         }
     }
     
+    /// Current scale factor
     var scale: CGFloat {
         didSet {
             updateTransform()
@@ -42,6 +46,9 @@ final class MovableTextView: UIView {
     
     // MARK: - Layout
     
+    /// Sets up the inner text view
+    ///
+    /// - Parameter option: text style options
     private func setupTextView(options: TextOptions) {
         let textView = UITextView()
         textView.isUserInteractionEnabled = false
@@ -52,6 +59,7 @@ final class MovableTextView: UIView {
     
     // MARK: - Transforms
     
+    /// Updates the scaling, rotation and position transformations
     private func updateTransform() {
         transform = CGAffineTransform(scaleX: scale, y: scale)
             .concatenating(CGAffineTransform(rotationAngle: rotation))

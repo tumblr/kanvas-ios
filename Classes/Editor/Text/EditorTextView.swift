@@ -46,6 +46,7 @@ final class EditorTextView: UIView {
         }
     }
     
+    /// Size of the text view
     var textSize: CGSize {
         let croppedView = UITextView(frame: textView.frame)
         croppedView.options = textView.options
@@ -73,6 +74,7 @@ final class EditorTextView: UIView {
     
     // MARK: - Views
     
+    /// Sets up the main text view
     private func setUpTextView() {
         textView.accessibilityIdentifier = "Editor Text View"
         textView.backgroundColor = .clear
@@ -87,6 +89,7 @@ final class EditorTextView: UIView {
         ])
     }
     
+    /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
         confirmButton.accessibilityIdentifier = "Editor Text Confirm Button"
         confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
@@ -112,24 +115,31 @@ final class EditorTextView: UIView {
     
     // MARK: - Public interface
     
+    /// Focuses the main text view to show the keyboard
     func startWriting() {
         textView.becomeFirstResponder()
     }
     
+    /// Closes the keyboard and clears the main text view
     func endWriting() {
         textView.endEditing(true)
         textView.text = nil
     }
     
+    /// Moves the main text view up
+    ///
+    /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         textView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height - distance)
     }
     
+    /// Moves the main text view to its original position
     func moveToolsDown() {
         textView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
     }
 }
 
+/// Text view that vertically aligns the text on its center
 private class VerticallyCenteredTextView: UITextView {
     override var contentSize: CGSize {
         didSet {
