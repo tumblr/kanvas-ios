@@ -12,7 +12,7 @@ import UIKit
 protocol EditorTextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
-    func didConfirmText(text: String, size: CGSize)
+    func didConfirmText(options: TextOptions, size: CGSize)
 }
 
 /// Constants for EditorTextController
@@ -63,7 +63,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     // MARK: - EditorTextViewDelegate
     
     func didTapConfirmButton() {
-        delegate?.didConfirmText(text: textView.text, size: textView.textSize)
+        delegate?.didConfirmText(options: textView.textOptions, size: textView.textSize)
     }
     
     // MARK: - Keyboard
@@ -83,11 +83,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     /// shows or hides the text tools menu
     ///
     /// - Parameter show: true to show, false to hide
-    func showView(_ show: Bool) {
+    func showView(_ show: Bool, with options: TextOptions = TextOptions()) {
         if show {
             UIView.animate(withDuration: Constants.animationDuration, animations: {
                 self.textView.alpha = 1
             }, completion: { _ in
+                self.textView.textOptions = options
                 self.textView.startWriting()
             })
         }

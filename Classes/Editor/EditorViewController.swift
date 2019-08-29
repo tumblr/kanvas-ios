@@ -399,9 +399,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - EditorTextControllerDelegate
     
-    func didConfirmText(text: String, size: CGSize) {
-        if !text.isEmpty {
-            editorView.textCanvas.add(text: text, size: size)
+    func didConfirmText(options: TextOptions, size: CGSize) {
+        if options.haveText() {
+            editorView.textCanvas.addText(options: options, size: size)
         }
         closeMenuButtonPressed()
     }

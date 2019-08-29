@@ -19,8 +19,8 @@ final class TextCanvas: IgnoreTouchesView {
     private var originScale: CGFloat = Constants.defaultScale
     private var originRotation: CGFloat = Constants.defaultRotation
     
-    func add(text: String, size: CGSize) {
-        let textView = MovableTextView(text: text, position: Constants.defaultPosition,
+    func addText(options: TextOptions, size: CGSize) {
+        let textView = MovableTextView(options: options, position: Constants.defaultPosition,
                                        scale: Constants.defaultScale, rotation: Constants.defaultRotation)
         textView.isUserInteractionEnabled = true
         addSubview(textView)

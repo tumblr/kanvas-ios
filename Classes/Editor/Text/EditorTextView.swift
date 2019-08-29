@@ -37,17 +37,22 @@ final class EditorTextView: UIView {
     private let confirmButton: UIButton
     private let textView: UITextView
     
-    var text: String {
-        return textView.text
+    var textOptions: TextOptions {
+        get {
+            return textView.options
+        }
+        set {
+            textView.options = newValue
+        }
     }
     
     var textSize: CGSize {
         let croppedView = UITextView(frame: textView.frame)
-        croppedView.text = textView.text
+        croppedView.options = textView.options
         croppedView.sizeToFit()
         return croppedView.contentSize
     }
-
+    
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -27,13 +27,13 @@ final class MovableTextView: UIView {
         }
     }
     
-    init(text: String, position: CGPoint, scale: CGFloat, rotation: CGFloat) {
+    init(options: TextOptions, position: CGPoint, scale: CGFloat, rotation: CGFloat) {
         self.position = position
         self.scale = scale
         self.rotation = rotation
         super.init(frame: .zero)
         
-        setupTextView(text: text)
+        setupTextView(options: options)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -42,11 +42,11 @@ final class MovableTextView: UIView {
     
     // MARK: - Layout
     
-    private func setupTextView(text: String) {
+    private func setupTextView(options: TextOptions) {
         let textView = UITextView()
         textView.isUserInteractionEnabled = false
         textView.backgroundColor = .clear
-        textView.text = text
+        textView.options = options
         textView.add(into: self)
     }
     
