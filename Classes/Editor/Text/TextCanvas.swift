@@ -15,7 +15,7 @@ private struct Constants {
 }
 
 /// View that contains the collection of text views
-final class TextCanvas: IgnoreTouchesView {
+final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
     // Values from which the different gestures start
     private var originPoint: CGPoint = Constants.defaultPosition
@@ -44,12 +44,16 @@ final class TextCanvas: IgnoreTouchesView {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(textTapped(recognizer:)))
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(textPanned(recognizer:)))
         let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(textRotated(recognizer:)))
-        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(textPinched(recognizer:)))
+        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(textPinched(recognizer:)))
+        
+        panRecognizer.delegate = self
+        rotationRecognizer.delegate = self
+        pinchRecognizer.delegate = self
         
         textView.addGestureRecognizer(tapRecognizer)
         textView.addGestureRecognizer(panRecognizer)
         textView.addGestureRecognizer(rotationRecognizer)
-        textView.addGestureRecognizer(pinchGestureRecognizer)
+        textView.addGestureRecognizer(pinchRecognizer)
     }
     
     
@@ -113,5 +117,11 @@ final class TextCanvas: IgnoreTouchesView {
     /// Saves the current view into its layer
     func updateLayer() {
         layer.contents = asImage().cgImage
+    }
+    
+    // MARK: - UIGestureRecognizerDelegate
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
