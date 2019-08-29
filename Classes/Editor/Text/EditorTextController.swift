@@ -15,7 +15,7 @@ protocol EditorTextControllerDelegate: class {
     ///
     /// - Parameter options: text style options
     /// - Parameter size: text view size
-    func didConfirmText(options: TextOptions, size: CGSize)
+    func didConfirmText(options: TextOptions, size: CGSize)    
 }
 
 /// Constants for EditorTextController

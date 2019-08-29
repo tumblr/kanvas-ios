@@ -307,6 +307,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             filterController.showView(false)
         case .text:
             textController.showView(false)
+            
         case .drawing:
             drawingController.showView(false)
         case .media:
