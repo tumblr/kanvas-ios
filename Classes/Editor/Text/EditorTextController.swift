@@ -51,6 +51,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         setUpView()
     }
     
@@ -62,6 +64,18 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     func didTapConfirmButton() {
         delegate?.didConfirmText(text: textView.text, size: textView.textSize)
+    }
+    
+    // MARK: - Keyboard
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            textView.moveToolsUp(distance: keyboardSize.height)
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        textView.moveToolsDown()
     }
     
     // MARK: - Public interface

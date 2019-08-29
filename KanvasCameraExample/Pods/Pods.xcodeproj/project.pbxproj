@@ -91,6 +91,7 @@
 		6211DC54E894C2909D17D5CF430C58B9 /* CameraInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0E2A0448B3A53FE906AD414914B29 /* CameraInputController.swift */; };
 		63B7CEC577303D59FF28866BEE660855 /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B35D7230DB14189DCAEA3BB00732F50 /* OptionView.swift */; };
 		64136C19EACF8F3C93CA31CBD1E4AECF /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14CCFE3DB3E3AC37160A6259945344E /* CGRect+Center.swift */; };
+		6505FCF02317653B00261131 /* UIView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6505FCEF2317653B00261131 /* UIView+Image.swift */; };
 		650BF0D32315A1AD002912EF /* TextCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650BF0D22315A1AD002912EF /* TextCanvas.swift */; };
 		65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65584F302310557C008A1BC2 /* EditorTextView.swift */; };
 		655D80102316CFDF00D41AE2 /* MovableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655D800F2316CFDF00D41AE2 /* MovableTextView.swift */; };
@@ -455,6 +456,7 @@
 		621E2781A29215367C3E25FFED0CB0A0 /* ModeButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeButtonView.swift; sourceTree = "<group>"; };
 		635B8EF611C5053183706BE4A6AD5DD0 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
 		63740F510F37B51D3708457BA60E3016 /* FilterCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
+		6505FCEF2317653B00261131 /* UIView+Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Image.swift"; sourceTree = "<group>"; };
 		650BF0D22315A1AD002912EF /* TextCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCanvas.swift; sourceTree = "<group>"; };
 		65584F302310557C008A1BC2 /* EditorTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
 		655D800F2316CFDF00D41AE2 /* MovableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovableTextView.swift; sourceTree = "<group>"; };
@@ -1350,6 +1352,7 @@
 				5C0C0B74950551057D0CF3D5711393C6 /* UIImage+Camera.swift */,
 				C9E7CD4E77B7B4FE823D91C69218E91B /* UIImage+DominantColors.swift */,
 				F7BFD9015D0C0B85496C56328F93EFB9 /* UIImage+FlipLeftMirrored.swift */,
+				6505FCEF2317653B00261131 /* UIView+Image.swift */,
 				3849C0F400119C230A41197711D2AC8F /* UIView+Layout.swift */,
 				BAA9E2D7108E0B04E5C4FDEE3A6D39D3 /* UIViewController+Load.swift */,
 			);
@@ -1862,6 +1865,7 @@
 				46728277AB68D32E2E49184AA71003BF /* MirrorFourFilter.swift in Sources */,
 				DD91E1F07BB1A8E32B726C9D6B7605C6 /* MirrorTwoFilter.swift in Sources */,
 				E925ACBAD38E3C15D8750397C6E4061B /* MMCQ.swift in Sources */,
+				6505FCF02317653B00261131 /* UIView+Image.swift in Sources */,
 				1C1C812C841931D777C6A5DC3632FA0D /* ModeButtonView.swift in Sources */,
 				2202BFF1C4DF2CD7781D380C3184CDCC /* ModeSelectorAndShootController.swift in Sources */,
 				C149D8927A7B0C2D2957F403CCAE0571 /* ModeSelectorAndShootView.swift in Sources */,
