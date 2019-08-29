@@ -183,6 +183,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        guard !willCloseSoon else {
+            return
+        }
+
         guard !isSimulator else {
             self.previewBlurView.effect = nil
             return
@@ -220,7 +224,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func cleanup() {
         guard !isSimulator else { return }
 
-        sessionQueue.async {
+        sessionQueue.sync {
             self.captureSession?.stopRunning()
             self.removeSessionInputsAndOutputs()
             self.captureSession = nil
