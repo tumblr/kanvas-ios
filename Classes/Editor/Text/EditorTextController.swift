@@ -12,6 +12,9 @@ import UIKit
 protocol EditorTextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
+    ///
+    /// - Parameter options: text style options
+    /// - Parameter size: text view size
     func didConfirmText(options: TextOptions, size: CGSize)
 }
 
