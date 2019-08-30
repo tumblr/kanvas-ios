@@ -67,7 +67,7 @@ final class EditorTextView: UIView {
     init() {
         overlay = UIView()
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
-        textView = VerticallyCenteredTextView()
+        textView = StylableTextView()
         super.init(frame: .zero)
         setupViews()
     }
@@ -100,14 +100,13 @@ final class EditorTextView: UIView {
     /// Sets up the main text view
     private func setUpTextView() {
         textView.accessibilityIdentifier = "Editor Text View"
-        textView.backgroundColor = .clear
         textView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textView)
         
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
+            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
             textView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
         
@@ -157,7 +156,8 @@ final class EditorTextView: UIView {
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.animate(withDuration: 0.0, animations: {
-            self.textView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - distance)
+            self.textView.frame = CGRect(x: self.textView.frame.origin.x, y: self.textView.frame.origin.y,
+                                         width: self.textView.frame.width, height: self.frame.height - distance)
         }, completion: { _ in
             self.showTextView(true)
         })
@@ -166,7 +166,8 @@ final class EditorTextView: UIView {
     /// Moves the main text view to its original position
     func moveToolsDown() {
         showTextView(false)
-        textView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        textView.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y,
+                                width: textView.frame.width, height: frame.height)
     }
     
     // MARK: - Private utilitites
@@ -181,13 +182,41 @@ final class EditorTextView: UIView {
     }
 }
 
-/// Text view that vertically aligns the text on its center
-private class VerticallyCenteredTextView: UITextView {
+/// Special text view for editing
+private class StylableTextView: UITextView {
+    
     override var contentSize: CGSize {
         didSet {
-            var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2
-            topCorrection = max(0, topCorrection)
-            contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
+            updateContentSize()
         }
+    }
+    
+    override var frame: CGRect {
+        didSet {
+            updateContentSize()
+        }
+    }
+    
+    init() {
+        super.init(frame: .zero, textContainer: nil)
+        setUpView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    private func setUpView() {
+        backgroundColor = .clear
+        tintColor = .white
+        showsVerticalScrollIndicator = false
+    }
+    
+    // MARK: - Private utilities
+    
+    private func updateContentSize() {
+        var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2
+        topCorrection = max(0, topCorrection)
+        contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
     }
 }

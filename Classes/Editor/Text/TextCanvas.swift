@@ -31,9 +31,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         let textView = MovableTextView(options: options, position: Constants.defaultPosition,
                                        scale: Constants.defaultScale, rotation: Constants.defaultRotation)
         textView.isUserInteractionEnabled = true
+        textView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textView)
         
-        textView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textView.heightAnchor.constraint(equalToConstant: size.height),
             textView.widthAnchor.constraint(equalToConstant: size.width),
