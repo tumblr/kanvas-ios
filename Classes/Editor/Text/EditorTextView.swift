@@ -85,7 +85,6 @@ final class EditorTextView: UIView {
     private func setUpOverlay() {
         overlay.accessibilityIdentifier = "Editor Text Overlay"
         overlay.translatesAutoresizingMaskIntoConstraints = false
-        overlay.clipsToBounds = true
         overlay.backgroundColor = Constants.overlayColor
         addSubview(overlay)
         
@@ -104,10 +103,10 @@ final class EditorTextView: UIView {
         addSubview(textView)
         
         NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            textView.topAnchor.constraint(equalTo: topAnchor),
             textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
-            textView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            textView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
         textView.alpha = 0
@@ -187,13 +186,13 @@ private class StylableTextView: UITextView {
     
     override var contentSize: CGSize {
         didSet {
-            updateContentSize()
+            centerContentVertically()
         }
     }
     
     override var frame: CGRect {
         didSet {
-            updateContentSize()
+            centerContentVertically()
         }
     }
     
@@ -206,15 +205,20 @@ private class StylableTextView: UITextView {
         super.init(coder: aDecoder)
     }
     
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return false
+    }
+    
     private func setUpView() {
         backgroundColor = .clear
         tintColor = .white
         showsVerticalScrollIndicator = false
+        autocorrectionType = .no
     }
     
     // MARK: - Private utilities
     
-    private func updateContentSize() {
+    private func centerContentVertically() {
         var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2
         topCorrection = max(0, topCorrection)
         contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
