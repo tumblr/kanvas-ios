@@ -47,6 +47,7 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
     
     override func loadView() {
         view = textureSelectorView
+        setCurrentTexture(texture.textureType)
     }
     
     // MARK: - Public interface
@@ -65,24 +66,33 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
     }
     
     func didTapPencilButton() {
-        textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.pencilImage)
-        textureSelectorView.showSelectorBackground(false)
-        texture = Pencil()
+        setCurrentTexture(.pencil)
         delegate?.didSelectTexture(textureType: .pencil)
     }
     
     func didTapSharpieButton() {
-        textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.sharpieImage)
-        textureSelectorView.showSelectorBackground(false)
-        texture = Sharpie()
+        setCurrentTexture(.sharpie)
         delegate?.didSelectTexture(textureType: .sharpie)
     }
     
     func didTapMarkerButton() {
-        textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.markerImage)
-        textureSelectorView.showSelectorBackground(false)
-        texture = Marker()
+        setCurrentTexture(.marker)
         delegate?.didSelectTexture(textureType: .marker)
+    }
+
+    func setCurrentTexture(_ textureType: KanvasBrushType) {
+        switch textureType {
+        case .pencil:
+            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.pencilImage)
+            texture = Pencil()
+        case .marker:
+            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.markerImage)
+            texture = Marker()
+        case .sharpie:
+            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.sharpieImage)
+            texture = Sharpie()
+        }
+        textureSelectorView.showSelectorBackground(false)
     }
     
 }
