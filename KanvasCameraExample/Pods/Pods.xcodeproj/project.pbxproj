@@ -1021,6 +1021,7 @@
 		65AA995523103B8000D64232 /* Text */ = {
 			isa = PBXGroup;
 			children = (
+				658B481D231D6B6200F3D471 /* ViewTransformations.swift */,
 				65AA995623103BD300D64232 /* EditorTextController.swift */,
 				65584F302310557C008A1BC2 /* EditorTextView.swift */,
 				655D800F2316CFDF00D41AE2 /* MovableTextView.swift */,
