@@ -29,9 +29,7 @@ final class TextCanvasTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         let options = TextOptions(text: "Example")
-        let transformations =  ViewTransformations(position: ViewTransformations.defaultPosition,
-                                                   scale: ViewTransformations.defaultScale,
-                                                   rotation: ViewTransformations.defaultRotation)
+        let transformations =  ViewTransformations()
         view.addText(options: options, transformations: transformations, size: view.frame.size)
         FBSnapshotVerifyView(view)
     }
