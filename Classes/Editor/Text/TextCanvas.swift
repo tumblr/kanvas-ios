@@ -7,29 +7,31 @@
 import Foundation
 import UIKit
 
-/// Constants for TextCanvas
-private struct Constants {
-    static let defaultPosition: CGPoint = .zero
-    static let defaultScale: CGFloat = 1.0
-    static let defaultRotation: CGFloat = 0.0
+/// Protocol for text canvas methods
+
+protocol TextCanvasDelegate: class {
+    /// Called when a text is tapped
+    ///
+    /// - Parameter option: text style options
+    /// - Parameter transformations: transformations for the view
+    func didTapText(options: TextOptions, transformations: ViewTransformations)
 }
 
 /// View that contains the collection of text views
 final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
-    // Values from which the different gestures start
-    private var originPoint: CGPoint = Constants.defaultPosition
-    private var originScale: CGFloat = Constants.defaultScale
-    private var originRotation: CGFloat = Constants.defaultRotation
+    weak var delegate: TextCanvasDelegate?
     
+    // Values from which the different gestures start
+    private var originTransformations: ViewTransformations = ViewTransformations()
     
     /// Adds a new text view
     ///
     /// - Parameter option: text style options
+    /// - Parameter transformations: transformations for the view
     /// - Parameter size: size of the text view
-    func addText(options: TextOptions, size: CGSize) {
-        let textView = MovableTextView(options: options, position: Constants.defaultPosition,
-                                       scale: Constants.defaultScale, rotation: Constants.defaultRotation)
+    func addText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
+        let textView = MovableTextView(options: options, transformations: transformations)
         textView.isUserInteractionEnabled = true
         textView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textView)
@@ -46,6 +48,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(textRotated(recognizer:)))
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(textPinched(recognizer:)))
         
+        tapRecognizer.delegate = self
         panRecognizer.delegate = self
         rotationRecognizer.delegate = self
         pinchRecognizer.delegate = self
@@ -60,7 +63,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     // MARK: - Gesture recognizers
     
     @objc func textTapped(recognizer: UITapGestureRecognizer) {
-        // TO DO: Open editor
+        guard let view = recognizer.view as? MovableTextView else { return }
+        delegate?.didTapText(options: view.options, transformations: view.transformations)
+        view.removeFromSuperview()
     }
     
     @objc func textRotated(recognizer: UIRotationGestureRecognizer) {
@@ -68,9 +73,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
 
         switch recognizer.state {
         case .began:
-            originRotation = view.rotation
+            originTransformations.rotation = view.rotation
         case .changed, .ended:
-            let newRotation = originRotation + recognizer.rotation
+            let newRotation = originTransformations.rotation + recognizer.rotation
             view.rotation = newRotation
         case .cancelled, .failed, .possible:
             break
@@ -84,10 +89,10 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         
         switch recognizer.state {
         case .began:
-            originPoint = view.position
+            originTransformations.position = view.position
         case .changed, .ended:
             let translation = recognizer.translation(in: self)
-            let newPosition = CGPoint(x: originPoint.x + translation.x, y: originPoint.y + translation.y)
+            let newPosition = CGPoint(x: originTransformations.position.x + translation.x, y: originTransformations.position.y + translation.y)
             view.position = newPosition
         case .cancelled, .failed, .possible:
             break
@@ -101,9 +106,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         
         switch recognizer.state {
         case .began:
-            originScale = view.scale
+            originTransformations.scale = view.scale
         case .changed, .ended:
-            let newScale = originScale * recognizer.scale
+            let newScale = originTransformations.scale * recognizer.scale
             view.scale = newScale
         case .cancelled, .failed, .possible:
             break

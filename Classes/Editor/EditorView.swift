@@ -19,6 +19,8 @@ protocol EditorViewDelegate: class {
     func didTapPostButton()
     /// A function that is called when the save button is pressed
     func didTapSaveButton()
+    /// A function that is called when a movable text is pressed
+    func didTapText(options: TextOptions, transformations: ViewTransformations)
 }
 
 /// Constants for EditorView
@@ -38,7 +40,7 @@ private struct EditorViewConstants {
 
 /// A UIView to preview the contents of segments without exporting
 
-final class EditorView: UIView {
+final class EditorView: UIView, TextCanvasDelegate {
 
     enum MainActionMode {
         case confirm
@@ -60,7 +62,12 @@ final class EditorView: UIView {
     let textMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
-    let textCanvas = TextCanvas()
+    
+    lazy var textCanvas: TextCanvas = {
+        let textCanvas = TextCanvas()
+        textCanvas.delegate = self
+        return textCanvas
+    }()
     
     weak var delegate: EditorViewDelegate?
     
@@ -308,5 +315,11 @@ final class EditorView: UIView {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.closeButton.alpha = show ? 1 : 0
         }
+    }
+    
+    // MARK: - TextCanvasDelegate
+    
+    func didTapText(options: TextOptions, transformations: ViewTransformations) {
+        delegate?.didTapText(options: options, transformations: transformations)
     }
 }

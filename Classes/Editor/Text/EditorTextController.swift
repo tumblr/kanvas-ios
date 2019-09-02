@@ -14,8 +14,9 @@ protocol EditorTextControllerDelegate: class {
     /// Called after the confirm button is tapped
     ///
     /// - Parameter options: text style options
+    /// - Parameter transformations: position, scaling and rotation angle for the view
     /// - Parameter size: text view size
-    func didConfirmText(options: TextOptions, size: CGSize)    
+    func didConfirmText(options: TextOptions, transformations: ViewTransformations, size: CGSize)
 }
 
 /// Constants for EditorTextController
@@ -27,6 +28,8 @@ private struct Constants {
 final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     weak var delegate: EditorTextControllerDelegate?
+    
+    private var textTransformations: ViewTransformations = ViewTransformations()
     
     private lazy var textView: EditorTextView = {
         let textView = EditorTextView()
@@ -66,7 +69,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     // MARK: - EditorTextViewDelegate
     
     func didTapConfirmButton() {
-        delegate?.didConfirmText(options: textView.textOptions, size: textView.textSize)
+        delegate?.didConfirmText(options: textView.textOptions, transformations: textTransformations, size: textView.textSize)
     }
     
     // MARK: - Keyboard
@@ -85,22 +88,41 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     /// shows or hides the text tools menu
     ///
-    /// - Parameter show: true to show, false to hide
+    /// - Parameter visible: true to show, false to hide
+    /// - Parameter transformations: transformations for the view
     /// - Parameter options: text style options
-    func showView(_ show: Bool, with options: TextOptions = TextOptions()) {
-        if show {
-            UIView.animate(withDuration: Constants.animationDuration, animations: {
-                self.textView.alpha = 1
-            }, completion: { _ in
-                self.textView.textOptions = options
-                self.textView.startWriting()
-            })
+    func showView(_ visible: Bool,
+                  options: TextOptions = TextOptions(),
+                  transformations: ViewTransformations = ViewTransformations()) {
+        if visible {
+            show(options: options, transformations: transformations)
         }
         else {
-            textView.endWriting()
-            UIView.animate(withDuration: Constants.animationDuration) {
-                self.textView.alpha = 0
-            }
+            hide()
+        }
+    }
+    
+    /// Makes the view appear
+    ///
+    /// - Parameter transformations: transformations for the view
+    /// - Parameter options: text style options
+    private func show(options: TextOptions = TextOptions(),
+                      transformations: ViewTransformations = ViewTransformations()) {
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            self.textView.alpha = 1
+        }, completion: { _ in
+            self.textTransformations = transformations
+            self.textView.textOptions = options
+            self.textView.startWriting()
+        })
+    }
+    
+    
+    /// Hides the view
+    private func hide() {
+        textView.endWriting()
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.textView.alpha = 0
         }
     }
 }
