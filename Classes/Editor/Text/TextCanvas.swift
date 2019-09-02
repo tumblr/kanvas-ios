@@ -92,7 +92,8 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
             originTransformations.position = view.position
         case .changed, .ended:
             let translation = recognizer.translation(in: self)
-            let newPosition = CGPoint(x: originTransformations.position.x + translation.x, y: originTransformations.position.y + translation.y)
+            let newPosition = CGPoint(x: originTransformations.position.x + translation.x,
+                                      y: originTransformations.position.y + translation.y)
             view.position = newPosition
         case .cancelled, .failed, .possible:
             break
@@ -117,16 +118,18 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         }
     }
     
-    // MARK: - Public interface
-    
-    /// Saves the current view into its layer
-    func updateLayer() {
-        layer.contents = asImage().cgImage
-    }
     
     // MARK: - UIGestureRecognizerDelegate
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
+    }
+    
+    
+    // MARK: - Public interface
+    
+    /// Saves the current view into its layer
+    func updateLayer() {
+        layer.contents = asImage().cgImage
     }
 }

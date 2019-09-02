@@ -1021,12 +1021,12 @@
 		65AA995523103B8000D64232 /* Text */ = {
 			isa = PBXGroup;
 			children = (
-				658B481D231D6B6200F3D471 /* ViewTransformations.swift */,
 				65AA995623103BD300D64232 /* EditorTextController.swift */,
 				65584F302310557C008A1BC2 /* EditorTextView.swift */,
 				655D800F2316CFDF00D41AE2 /* MovableTextView.swift */,
 				650BF0D22315A1AD002912EF /* TextCanvas.swift */,
 				659E52292317F38C00A62828 /* TextOptions.swift */,
+				658B481D231D6B6200F3D471 /* ViewTransformations.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";

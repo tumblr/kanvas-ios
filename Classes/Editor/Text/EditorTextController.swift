@@ -102,6 +102,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
         }
     }
     
+    // MARK: - Show & Hide
+    
     /// Makes the view appear
     ///
     /// - Parameter transformations: transformations for the view
@@ -118,7 +120,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     }
     
     
-    /// Hides the view
+    /// Makes the view disappear
     private func hide() {
         textView.endWriting()
         UIView.animate(withDuration: Constants.animationDuration) {
