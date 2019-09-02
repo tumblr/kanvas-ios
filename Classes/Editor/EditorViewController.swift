@@ -408,7 +408,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - EditorTextControllerDelegate
     
     func didConfirmText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
-        if options.haveText() {
+        if options.haveText {
             editorView.textCanvas.addText(options: options, transformations: transformations, size: size)
         }
         closeMenuButtonPressed()
