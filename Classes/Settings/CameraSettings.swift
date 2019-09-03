@@ -99,6 +99,10 @@ public struct CameraFeatures {
     /// This enables the UI to select filters in the editor.
     public var editorFilters: Bool = false
     
+    /// The Editor Text feature
+    /// This enables the UI to write text in the editor.
+    public var editorText: Bool = false
+    
     /// The Editor Media feature
     /// This enables the UI to select media in the editor.
     public var editorMedia: Bool = false
@@ -106,7 +110,7 @@ public struct CameraFeatures {
     /// The Editor Drawing feature
     /// This enables the UI to draw in the editor.
     public var editorDrawing: Bool = false
-
+    
     /// The Media Picker feature
     /// This enables the UI to pick media instead of using the camera.
     public var mediaPicking: Bool = false

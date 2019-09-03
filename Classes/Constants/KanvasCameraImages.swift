@@ -70,6 +70,7 @@ struct KanvasCameraImages {
     static let editorConfirmImage = UIImage.imageFromCameraBundle(named: "editorConfirm")
     static let editionOptionTypes: [EditionOption: UIImage?] = [
         .filter: UIImage.imageFromCameraBundle(named: "editorFilters"),
+        .text: UIImage.imageFromCameraBundle(named: "editorText"),
         .media: UIImage.imageFromCameraBundle(named: "editorMedia"),
         .drawing: UIImage.imageFromCameraBundle(named: "editorDraw"),
     ]

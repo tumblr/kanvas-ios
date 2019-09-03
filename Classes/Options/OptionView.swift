@@ -24,7 +24,7 @@ final class OptionView: UIView {
         button.contentMode = .scaleAspectFit
         button.setImage(image, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
-        button.applyShadows()
+        button.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
         super.init(frame: .zero)
         setUpButton()
     }

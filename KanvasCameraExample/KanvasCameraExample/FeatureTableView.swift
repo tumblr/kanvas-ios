@@ -22,6 +22,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case experimentalCameraFilters(Bool)
         case editor(Bool)
         case editorFilters(Bool)
+        case editorText(Bool)
         case editorMedia(Bool)
         case editorDrawing(Bool)
         case mediaPicking(Bool)
@@ -45,6 +46,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor"
             case .editorFilters(_):
                 return "Editor Filters"
+            case .editorText(_):
+                return "Editor Text"
             case .editorMedia(_):
                 return "Editor Media"
             case .editorDrawing(_):
@@ -75,6 +78,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .editor(let enabled):
                 return enabled
             case .editorFilters(let enabled):
+                return enabled
+            case .editorText(let enabled):
                 return enabled
             case .editorMedia(let enabled):
                 return enabled
@@ -144,6 +149,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editor(value)
         case .editorFilters(_):
             featuresData[indexPath.row] = .editorFilters(value)
+        case .editorText(_):
+            featuresData[indexPath.row] = .editorText(value)
         case .editorMedia(_):
             featuresData[indexPath.row] = .editorMedia(value)
         case .editorDrawing(_):
