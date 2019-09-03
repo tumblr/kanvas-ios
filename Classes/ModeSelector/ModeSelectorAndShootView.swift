@@ -157,14 +157,19 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.showBorderView(show: show)
     }
     
-    /// shows the trash icon closed
-    func showTrashClosed(_ show: Bool) {
-        shootButton.showTrashClosed(show)
+    /// shows the trash icon opened
+    func openTrash() {
+        shootButton.openTrash()
     }
     
-    /// shows the trash icon opened
-    func showTrashOpened(_ show: Bool) {
-        shootButton.showTrashOpened(show)
+    /// shows the trash icon closed
+    func closeTrash() {
+        shootButton.closeTrash()
+    }
+    
+    /// hides the trash icon
+    func hideTrash() {
+        shootButton.hideTrash()
     }
 
     func toggleMediaPickerButton(_ visible: Bool) {

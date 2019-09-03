@@ -94,6 +94,7 @@
 		65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65584F302310557C008A1BC2 /* EditorTextView.swift */; };
 		65860CABCB5629C6024F4EF9AB76D32B /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AA7EBA426046FA90B36DE32A619EB8 /* UIColor+Hex.swift */; };
 		65AA995723103BD300D64232 /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995623103BD300D64232 /* EditorTextController.swift */; };
+		65D5AD51231EA7E8009289F6 /* TrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D5AD50231EA7E8009289F6 /* TrashView.swift */; };
 		65F857D6230D741A004F36A2 /* ColorDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F857D5230D741A004F36A2 /* ColorDrop.swift */; };
 		65FB9BB12316BF8D00FFDEC8 /* CALayer+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FB9BB02316BF8D00FFDEC8 /* CALayer+Shadows.swift */; };
 		6645914B4FC38E792C9D0576D47398C9 /* IgnoreTouchesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A34CF952C5A20C602495C17E7596163 /* IgnoreTouchesCollectionView.swift */; };
@@ -455,6 +456,7 @@
 		63740F510F37B51D3708457BA60E3016 /* FilterCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
 		65584F302310557C008A1BC2 /* EditorTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
 		65AA995623103BD300D64232 /* EditorTextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextController.swift; sourceTree = "<group>"; };
+		65D5AD50231EA7E8009289F6 /* TrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 		65D5FB840AEC33B524AE833E675F17B2 /* UIFont+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+Orangina.swift"; path = "Source/UIFont+Orangina.swift"; sourceTree = "<group>"; };
 		65F857D5230D741A004F36A2 /* ColorDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorDrop.swift; sourceTree = "<group>"; };
 		65FB9BB02316BF8D00FFDEC8 /* CALayer+Shadows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Shadows.swift"; sourceTree = "<group>"; };
@@ -754,6 +756,7 @@
 				7498B60748FFFD7CF8E03857AA5AE616 /* RGBA.swift */,
 				913F389A2167980848457B525ADC7EB9 /* Synchronized.swift */,
 				270D6D0FC536C785A4DACC013FBE1CB5 /* UIUpdate.swift */,
+				65D5AD50231EA7E8009289F6 /* TrashView.swift */,
 				4C9FC5F3599A5516E0715C77614F5651 /* ColorThief */,
 				45AB50803808FFC4BAB54D1801F35F58 /* HorizontalCollectionView */,
 			);
@@ -1893,6 +1896,7 @@
 				C179FA878AD8A7BB03325D9A135E2259 /* UIUpdate.swift in Sources */,
 				3A1F7CF64E431D54E3B3528F04941E76 /* UIView+Layout.swift in Sources */,
 				49FB4E9B2BE8B567C796B095F7E921CC /* UIViewController+Load.swift in Sources */,
+				65D5AD51231EA7E8009289F6 /* TrashView.swift in Sources */,
 				42225388514DC49828EAA6258B6A9D7E /* VideoOutputHandler.swift in Sources */,
 				C74916631C0C8F5FD4DFFCB52795660A /* WaveFilter.swift in Sources */,
 				F3412C3F7E3A0086CBCB065AE846A19B /* WavePoolFilter.swift in Sources */,

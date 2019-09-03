@@ -178,14 +178,19 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.showBorderView(false)
     }
 
-    /// shows the trash icon closed
-    func showTrashClosed(_ show: Bool) {
-        modeView.showTrashClosed(show)
-    }
-
     /// shows the trash icon opened
-    func showTrashOpened(_ show: Bool) {
-        modeView.showTrashOpened(show)
+    func openTrash() {
+        modeView.openTrash()
+    }
+    
+    /// shows the trash icon closed
+    func closeTrash() {
+        modeView.closeTrash()
+    }
+    
+    /// hides the trash icon
+    func hideTrash() {
+        modeView.hideTrash()
     }
 
     func toggleMediaPickerButton(_ visible: Bool) {
