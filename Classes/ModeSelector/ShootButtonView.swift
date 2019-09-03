@@ -162,10 +162,9 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         addSubview(imageView)
         imageView.image = KanvasCameraImages.circleImage
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        let distanceToCenter = ShootButtonViewConstants.outerCircleImageWidth
         NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: distanceToCenter),
-            imageView.widthAnchor.constraint(equalToConstant: distanceToCenter),
+            imageView.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.outerCircleImageWidth),
+            imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.outerCircleImageWidth),
             imageView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
         ])
@@ -240,10 +239,9 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         trashView.contentMode = .scaleAspectFit
         trashView.clipsToBounds = true
         
-        let distanceToCenter = ShootButtonViewConstants.trashViewSize
         NSLayoutConstraint.activate([
-            trashView.heightAnchor.constraint(equalToConstant: distanceToCenter),
-            trashView.widthAnchor.constraint(equalToConstant: distanceToCenter),
+            trashView.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashViewSize),
+            trashView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.trashViewSize),
             trashView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             trashView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
         ])
@@ -532,7 +530,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         }
     }
     
-    /// shows trash icon opened with its red background
+    /// shows the trash icon opened with its red background
     func openTrash() {
         trashView.open()
     }
