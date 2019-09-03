@@ -161,15 +161,18 @@ final class GifVideoOutputHandler: NSObject {
 
         if shouldUsePixelBuffers {
             gifPixelBuffers = buffersWithReverse(array: gifPixelBuffers)
-            self.pixelBufferAdaptor?.assetWriterInput.requestMediaDataWhenReady(on: self.gifQueue, using: { [unowned self] in
-                let pixelBuffer = self.gifPixelBuffers[index]
+            self.pixelBufferAdaptor?.assetWriterInput.requestMediaDataWhenReady(on: self.gifQueue, using: { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                let pixelBuffer = strongSelf.gifPixelBuffers[index]
                 let appendTime = nextTime
                 nextTime = CMTimeAdd(nextTime, KanvasCameraTimes.gifFrameTime)
-                self.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
-                if index == self.gifPixelBuffers.count - 1 {
-                    self.videoInput?.markAsFinished()
-                    self.audioInput?.markAsFinished()
-                    self.exportGif(endTime: nextTime)
+                strongSelf.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
+                if index == strongSelf.gifPixelBuffers.count - 1 {
+                    strongSelf.videoInput?.markAsFinished()
+                    strongSelf.audioInput?.markAsFinished()
+                    strongSelf.exportGif(endTime: nextTime)
                 }
                 else {
                     index += 1
@@ -178,17 +181,20 @@ final class GifVideoOutputHandler: NSObject {
         }
         else {
             gifBuffers = buffersWithReverse(array: gifBuffers)
-            self.pixelBufferAdaptor?.assetWriterInput.requestMediaDataWhenReady(on: self.gifQueue, using: { [unowned self] in
-                guard let pixelBuffer = CMSampleBufferGetImageBuffer(self.gifBuffers[index]) else {
+            self.pixelBufferAdaptor?.assetWriterInput.requestMediaDataWhenReady(on: self.gifQueue, using: { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                guard let pixelBuffer = CMSampleBufferGetImageBuffer(strongSelf.gifBuffers[index]) else {
                     return
                 }
                 let appendTime = nextTime
                 nextTime = CMTimeAdd(nextTime, KanvasCameraTimes.gifFrameTime)
-                self.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
-                if index == self.gifBuffers.count - 1 {
-                    self.videoInput?.markAsFinished()
-                    self.audioInput?.markAsFinished()
-                    self.exportGif(endTime: nextTime)
+                strongSelf.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
+                if index == strongSelf.gifBuffers.count - 1 {
+                    strongSelf.videoInput?.markAsFinished()
+                    strongSelf.audioInput?.markAsFinished()
+                    strongSelf.exportGif(endTime: nextTime)
                 }
                 else {
                     index += 1
@@ -209,13 +215,16 @@ final class GifVideoOutputHandler: NSObject {
 
     private func exportGif(endTime: CMTime) {
         assetWriter?.endSession(atSourceTime: endTime)
-        gifQueue.async { [unowned self] in
-            self.assetWriter?.finishWriting(completionHandler: {
-                self.recording = false
-                self.gifCompletion?(self.assetWriter?.status == .completed)
-                self.gifCompletion = nil
-                self.gifBuffers.removeAll()
-                self.gifPixelBuffers.removeAll()
+        gifQueue.async { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.assetWriter?.finishWriting(completionHandler: {
+                strongSelf.recording = false
+                strongSelf.gifCompletion?(strongSelf.assetWriter?.status == .completed)
+                strongSelf.gifCompletion = nil
+                strongSelf.gifBuffers.removeAll()
+                strongSelf.gifPixelBuffers.removeAll()
             })
         }
     }

@@ -369,7 +369,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     /// Starts the gradient animation based on the maximum time previously set
     private func startCircleAnimation() {
         if let timeLimit = maximumTime {
-            animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
+            animateCircle(for: timeLimit, completion: { [weak self] in self?.circleAnimationCallback() })
         }
     }
     
@@ -385,7 +385,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         if started {
             buttonState = .animating
             if let timeLimit = maximumTime {
-                animateCircle(for: timeLimit, completion: { [unowned self] in self.circleAnimationCallback() })
+                animateCircle(for: timeLimit, completion: { [weak self] in self?.circleAnimationCallback() })
             }
             delegate?.shootButtonViewDidStartLongPress()
         }
@@ -512,9 +512,9 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     private func animateTapEffect() {
         showBorderView(show: false, animated: false)
         showShutterButtonPressed(show: true, animated: false)
-        performUIUpdateAfter(deadline: .now() + 0.1) { [unowned self] in
-            self.showBorderView(show: true, animated: false)
-            self.showShutterButtonPressed(show: false, animated: true)
+        performUIUpdateAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.showBorderView(show: true, animated: false)
+            self?.showShutterButtonPressed(show: false, animated: true)
         }
     }
     

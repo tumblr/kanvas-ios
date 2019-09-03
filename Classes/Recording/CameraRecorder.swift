@@ -246,8 +246,11 @@ extension CameraRecorder: CameraRecordingProtocol {
 
         let settings = recordingDelegate?.photoSettings(for: photoOutput)
         takingPhoto = true
-        photoOutputHandler.takePhoto(settings: settings ?? AVCapturePhotoSettings()) { [unowned self] image in
-            self.takingPhoto = false
+        photoOutputHandler.takePhoto(settings: settings ?? AVCapturePhotoSettings()) { [weak self] image in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.takingPhoto = false
             guard var image = image else {
                 completion(nil)
                 return
@@ -255,13 +258,13 @@ extension CameraRecorder: CameraRecordingProtocol {
             if cameraPosition == .front, let flippedImage = image.flipLeftMirrored() {
                 image = flippedImage
             }
-            guard let filteredImage = self.recordingDelegate?.cameraDidTakePhoto(image: image) else {
+            guard let filteredImage = strongSelf.recordingDelegate?.cameraDidTakePhoto(image: image) else {
                 completion(nil)
                 return
             }
             
-            if self.currentRecordingMode.quantity == .multiple {
-                self.segmentsHandler.addNewImageSegment(image: filteredImage, size: self.size, completion: { (success, _) in
+            if strongSelf.currentRecordingMode.quantity == .multiple {
+                strongSelf.segmentsHandler.addNewImageSegment(image: filteredImage, size: strongSelf.size, completion: { (success, _) in
                     completion(success ? filteredImage : nil)
                 })
             }
@@ -300,9 +303,10 @@ extension CameraRecorder: CameraRecordingProtocol {
 
         setupAssetWriter(url: NSURL.createNewVideoURL())
 
-        gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput, longerDuration: useLongerDuration) { [unowned self] success in
-            self.recordingDelegate?.cameraWillFinishVideo()
-            completion(success ? self.url : nil)
+        gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput, longerDuration: useLongerDuration) { [weak self] success in
+            guard let strongSelf = self else { return }
+            strongSelf.recordingDelegate?.cameraWillFinishVideo()
+            completion(success ? strongSelf.url : nil)
         }
     }
 
