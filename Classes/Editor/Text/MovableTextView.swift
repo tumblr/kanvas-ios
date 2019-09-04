@@ -7,6 +7,10 @@
 import Foundation
 import UIKit
 
+private struct Constants {
+    static let animationDuration: TimeInterval = 0.25
+}
+
 /// A TextView wrapped in a UIView that can be rotated, moved and scaled
 final class MovableTextView: UIView {
     
@@ -79,6 +83,17 @@ final class MovableTextView: UIView {
     private func applyTransform() {
         transform = CGAffineTransform(scaleX: scale, y: scale)
             .concatenating(CGAffineTransform(rotationAngle: rotation))
-            .concatenating(CGAffineTransform(translationX: position.x, y: position.y))
+        
+        center = position
+    }
+    
+    /// MARK: - Animations
+    
+    func remove() {
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            self.alpha = 0
+        }, completion: { _ in
+            self.removeFromSuperview()
+        })
     }
 }

@@ -100,6 +100,7 @@
 		659E522A2317F38C00A62828 /* TextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E52292317F38C00A62828 /* TextOptions.swift */; };
 		659E522C2318007B00A62828 /* UITextView+TextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E522B2318007B00A62828 /* UITextView+TextOptions.swift */; };
 		65AA995723103BD300D64232 /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995623103BD300D64232 /* EditorTextController.swift */; };
+		65B9F8B02327042C00FD71F0 /* CGPoint+Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B9F8AF2327042C00FD71F0 /* CGPoint+Addition.swift */; };
 		65D5AD51231EA7E8009289F6 /* TrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D5AD50231EA7E8009289F6 /* TrashView.swift */; };
 		65F857D6230D741A004F36A2 /* ColorDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F857D5230D741A004F36A2 /* ColorDrop.swift */; };
 		65FB9BB12316BF8D00FFDEC8 /* CALayer+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FB9BB02316BF8D00FFDEC8 /* CALayer+Shadows.swift */; };
@@ -468,6 +469,7 @@
 		659E52292317F38C00A62828 /* TextOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOptions.swift; sourceTree = "<group>"; };
 		659E522B2318007B00A62828 /* UITextView+TextOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+TextOptions.swift"; sourceTree = "<group>"; };
 		65AA995623103BD300D64232 /* EditorTextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextController.swift; sourceTree = "<group>"; };
+		65B9F8AF2327042C00FD71F0 /* CGPoint+Addition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Addition.swift"; sourceTree = "<group>"; };
 		65D5AD50231EA7E8009289F6 /* TrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 		65D5FB840AEC33B524AE833E675F17B2 /* UIFont+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+Orangina.swift"; path = "Source/UIFont+Orangina.swift"; sourceTree = "<group>"; };
 		65F857D5230D741A004F36A2 /* ColorDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorDrop.swift; sourceTree = "<group>"; };
@@ -1353,6 +1355,7 @@
 				D503F1EFBAA152EF0C8803AA3015DC79 /* CALayer+CGImage.swift */,
 				67F08CA61C77EEDC60519CAFC36B16D1 /* CALayer+Color.swift */,
 				65FB9BB02316BF8D00FFDEC8 /* CALayer+Shadows.swift */,
+				65B9F8AF2327042C00FD71F0 /* CGPoint+Addition.swift */,
 				A14CCFE3DB3E3AC37160A6259945344E /* CGRect+Center.swift */,
 				A32C4E27D9EB97276577A85E3BB568F1 /* ClosedRange+Clamp.swift */,
 				3EC6DD3D7AB8D95F9B51498B75E1840A /* IndexPath+Order.swift */,
@@ -1793,6 +1796,7 @@
 				3771F9E96D88B4D1DAE23FF1B25DBF93 /* CameraView.swift in Sources */,
 				6F754D34C2AAE8EA448B0821CF0833AB /* CameraZoomHandler.swift in Sources */,
 				64136C19EACF8F3C93CA31CBD1E4AECF /* CGRect+Center.swift in Sources */,
+				65B9F8B02327042C00FD71F0 /* CGPoint+Addition.swift in Sources */,
 				9CA5AE3DDEB5A80F2FAD6CBEB985BCAF /* ChromaFilter.swift in Sources */,
 				26B238B265E70545D962AB34CCF4F667 /* CircularImageView.swift in Sources */,
 				9975570D1D2BE432C6B69415E91A84B5 /* ClosedRange+Clamp.swift in Sources */,
