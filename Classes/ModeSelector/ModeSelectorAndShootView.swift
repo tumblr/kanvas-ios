@@ -203,7 +203,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
         preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
-        let text = NSLocalizedString("Tap to switch modes", comment: "Welcome tooltip for the camera")
+        let text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
         return EasyTipView(text: text, preferences: preferences, delegate: self)
     }
     
