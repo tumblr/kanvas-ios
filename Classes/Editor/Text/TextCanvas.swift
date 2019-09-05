@@ -80,8 +80,6 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
             textView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
         ])
         
-        textView.position = center
-        
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(textTapped(recognizer:)))
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(textPanned(recognizer:)))
         let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(textRotated(recognizer:)))
@@ -127,18 +125,24 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         }
     }
     
+    var touchPosition: [CGPoint] = []
+    
     @objc func textPanned(recognizer: UIPanGestureRecognizer) {
         guard let movableView = recognizer.view as? MovableTextView else { return }
-
+        
         switch recognizer.state {
         case .began:
             originTransformations.position = movableView.position
         case .changed:
             let newPosition = originTransformations.position + recognizer.translation(in: self)
             movableView.position = newPosition
-            trashView.changeStatus(newPosition)
+            touchPosition = []
+            for touch in 0..<recognizer.numberOfTouches {
+                touchPosition.append(recognizer.location(ofTouch: touch, in: self))
+            }
+            trashView.changeStatus(touchPosition)
         case .ended:
-            if trashView.contains(movableView) {
+            if trashView.contains(touchPosition) {
                 movableView.remove()
             }
             trashView.hide()
@@ -176,12 +180,18 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
 // TO DO: Change to TrashView
 private extension UIView {
     
-    func contains(_ view: UIView) -> Bool {
-        return frame.contains(view.center)
+    func contains(_ points: [CGPoint]) -> Bool {
+        return points.contains { point in
+            frame.contains(point)
+        }
     }
     
-    func changeStatus(_ point: CGPoint) {
-        if frame.contains(point) {
+    func changeStatus(_ points: [CGPoint]) {
+        let fingerOnView = points.contains { point in
+            frame.contains(point)
+        }
+        
+        if fingerOnView {
             open()
         }
         else {

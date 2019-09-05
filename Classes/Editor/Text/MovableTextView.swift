@@ -8,7 +8,8 @@ import Foundation
 import UIKit
 
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
+    static let animationDuration: TimeInterval = 0.35
+    static let deletionScale: CGFloat = 0.1
 }
 
 /// A TextView wrapped in a UIView that can be rotated, moved and scaled
@@ -50,6 +51,10 @@ final class MovableTextView: UIView {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
     }
     
+    var positionFromCenter: CGPoint {
+        return center + position
+    }
+    
     init(options: TextOptions, transformations: ViewTransformations) {
         self.innerTextView = UITextView()
         self.position = transformations.position
@@ -83,14 +88,14 @@ final class MovableTextView: UIView {
     private func applyTransform() {
         transform = CGAffineTransform(scaleX: scale, y: scale)
             .concatenating(CGAffineTransform(rotationAngle: rotation))
-        
-        center = position
+            .concatenating(CGAffineTransform(translationX: position.x, y: position.y))
     }
     
-    /// MARK: - Animations
+    /// MARK: - Public interface
     
     func remove() {
         UIView.animate(withDuration: Constants.animationDuration, animations: {
+            self.innerTextView.transform = CGAffineTransform(scaleX: Constants.deletionScale, y: Constants.deletionScale)
             self.alpha = 0
         }, completion: { _ in
             self.removeFromSuperview()
