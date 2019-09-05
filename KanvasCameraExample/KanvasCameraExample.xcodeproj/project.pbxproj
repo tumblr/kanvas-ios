@@ -61,6 +61,7 @@
 		6589D13322E91C7900A7357B /* RoundedTextureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6589D12F22E91C7900A7357B /* RoundedTextureTests.swift */; };
 		65AA995C2310494700D64232 /* EditorTextControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995B2310494700D64232 /* EditorTextControllerTests.swift */; };
 		65AA995E2310499100D64232 /* EditorTextViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995D2310499100D64232 /* EditorTextViewTests.swift */; };
+		65B980D8231EB6AF00D3E9F0 /* TrashViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B980D7231EB6AF00D3E9F0 /* TrashViewTests.swift */; };
 		65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */; };
 		65E46B9322BD22CA004FD226 /* FilterSettingsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */; };
 		65E46B9422BD22CA004FD226 /* FilterSettingsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */; };
@@ -201,6 +202,7 @@
 		6589D12F22E91C7900A7357B /* RoundedTextureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedTextureTests.swift; sourceTree = "<group>"; };
 		65AA995B2310494700D64232 /* EditorTextControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextControllerTests.swift; sourceTree = "<group>"; };
 		65AA995D2310499100D64232 /* EditorTextViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextViewTests.swift; sourceTree = "<group>"; };
+		65B980D7231EB6AF00D3E9F0 /* TrashViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashViewTests.swift; sourceTree = "<group>"; };
 		65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsViewTests.swift; sourceTree = "<group>"; };
@@ -659,6 +661,7 @@
 				651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */,
 				651DEBA82209FC4300476F22 /* RGBATests.swift */,
 				76E4D0842277976500CF3B35 /* MediaMetadataTests.swift */,
+				65B980D7231EB6AF00D3E9F0 /* TrashViewTests.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -973,6 +976,7 @@
 				65E46BA622BD22DE004FD226 /* EditionMenuCollectionControllerTests.swift in Sources */,
 				65AA995E2310499100D64232 /* EditorTextViewTests.swift in Sources */,
 				65E46BA722BD22DE004FD226 /* EditorViewTests.swift in Sources */,
+				65B980D8231EB6AF00D3E9F0 /* TrashViewTests.swift in Sources */,
 				653D062E22BD2C49007118C5 /* FilterCollectionTests.swift in Sources */,
 				651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */,
 				764AC467221D8485005C82EC /* FilteredInputViewControllerTests.swift in Sources */,

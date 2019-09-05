@@ -17,7 +17,7 @@ protocol EditorFilterCollectionControllerDelegate: class {
 /// Constants for Collection Controller
 private struct EditorFilterCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.25
-    static let horizontalInset: CGFloat = 11
+    static let horizontalInset: CGFloat = 10
     static let initialCell: Int = 0
     static let section: Int = 0
     static let scrollingThreshold: CGFloat = 9.0

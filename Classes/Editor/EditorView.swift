@@ -28,9 +28,10 @@ private struct EditorViewConstants {
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let postButtonSize: CGFloat = 54
-    static let postButtonHorizontalMargin: CGFloat = 20
-    static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
+    static let postButtonHorizontalMargin: CGFloat = 18
+    static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 13 : 29
     static let postButtonFontSize: CGFloat = 14.0
+    static let postButtonLabelMargin: CGFloat = 3
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
 }
@@ -107,7 +108,7 @@ final class EditorView: UIView {
     
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
-        closeButton.applyShadows()
+        closeButton.layer.applyShadows()
         closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
         closeButton.imageView?.contentMode = .scaleAspectFit
         
@@ -202,9 +203,11 @@ final class EditorView: UIView {
     func setupPostButton() {
         postButton.accessibilityLabel = "Post Button"
         postButton.clipsToBounds = false
-        postButton.applyShadows()
+        postButton.layer.applyShadows()
         addSubview(postButton)
         postButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        postButton.contentHorizontalAlignment = .fill
+        postButton.contentVerticalAlignment = .fill
         postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
         postButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -219,10 +222,7 @@ final class EditorView: UIView {
         postLabel.textColor = .white
         postLabel.font = .favoritTumblrMedium(fontSize: EditorViewConstants.postButtonFontSize)
         postLabel.clipsToBounds = false
-        postLabel.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
-        postLabel.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        postLabel.layer.shadowOpacity = 1.0
-        postLabel.layer.shadowRadius = 0.0
+        postLabel.layer.applyShadows()
         postLabel.translatesAutoresizingMaskIntoConstraints = false
         postLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(postButtonPressed)))
         postLabel.isUserInteractionEnabled = true
@@ -230,14 +230,14 @@ final class EditorView: UIView {
         
         NSLayoutConstraint.activate([
             postLabel.centerXAnchor.constraint(equalTo: postButton.centerXAnchor),
-            postLabel.topAnchor.constraint(equalTo: postButton.bottomAnchor),
+            postLabel.topAnchor.constraint(equalTo: postButton.bottomAnchor, constant: EditorViewConstants.postButtonLabelMargin),
         ])
     }
 
     func setupSaveButton() {
         saveButton.accessibilityLabel = "Save Button"
         addSubview(saveButton)
-        saveButton.applyShadows()
+        saveButton.layer.applyShadows()
         saveButton.setImage(KanvasCameraImages.saveImage, for: .normal)
         saveButton.imageView?.tintColor = .white
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
