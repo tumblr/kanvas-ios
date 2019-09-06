@@ -180,16 +180,8 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
 // TO DO: Change to TrashView
 private extension UIView {
     
-    func contains(_ points: [CGPoint]) -> Bool {
-        return points.contains { point in
-            frame.contains(point)
-        }
-    }
-    
     func changeStatus(_ points: [CGPoint]) {
-        let fingerOnView = points.contains { point in
-            frame.contains(point)
-        }
+        let fingerOnView = self.contains(points)
         
         if fingerOnView {
             open()
