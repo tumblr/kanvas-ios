@@ -177,4 +177,16 @@ final class TrashView: IgnoreTouchesView {
             frame.contains(point)
         }
     }
+    
+    /// Opens/closes if a point is inside/outside the view
+    func changeStatus(_ points: [CGPoint]) {
+        let fingerOnView = self.contains(points)
+        
+        if fingerOnView {
+            open()
+        }
+        else {
+            close()
+        }
+    }
 }

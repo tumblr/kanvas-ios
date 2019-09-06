@@ -27,14 +27,15 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
     weak var delegate: TextCanvasDelegate?
     
-    private let trashView: UIView
+    var touchPosition: [CGPoint] = []
+    private let trashView: TrashView
     
     // Values from which the different gestures start
     private var originTransformations: ViewTransformations
     
     
     init() {
-        trashView = UIView()
+        trashView = TrashView()
         originTransformations = ViewTransformations()
         super.init(frame: .zero)
         setUpTrashView()
@@ -49,7 +50,6 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     private func setUpTrashView() {
         trashView.accessibilityIdentifier = "Editor Text Trash View"
         trashView.translatesAutoresizingMaskIntoConstraints = false
-        trashView.backgroundColor = .blue
         addSubview(trashView)
         
         NSLayoutConstraint.activate([
@@ -81,19 +81,19 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(textTapped(recognizer:)))
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(textPanned(recognizer:)))
         let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(textRotated(recognizer:)))
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(textPinched(recognizer:)))
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(textPanned(recognizer:)))
         
         tapRecognizer.delegate = self
-        panRecognizer.delegate = self
         rotationRecognizer.delegate = self
         pinchRecognizer.delegate = self
+        panRecognizer.delegate = self
         
         textView.addGestureRecognizer(tapRecognizer)
-        textView.addGestureRecognizer(panRecognizer)
         textView.addGestureRecognizer(rotationRecognizer)
         textView.addGestureRecognizer(pinchRecognizer)
+        textView.addGestureRecognizer(panRecognizer)
     }
     
     /// Saves the current view into its layer
@@ -125,34 +125,6 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         }
     }
     
-    var touchPosition: [CGPoint] = []
-    
-    @objc func textPanned(recognizer: UIPanGestureRecognizer) {
-        guard let movableView = recognizer.view as? MovableTextView else { return }
-        
-        switch recognizer.state {
-        case .began:
-            originTransformations.position = movableView.position
-        case .changed:
-            let newPosition = originTransformations.position + recognizer.translation(in: self)
-            movableView.position = newPosition
-            touchPosition = []
-            for touch in 0..<recognizer.numberOfTouches {
-                touchPosition.append(recognizer.location(ofTouch: touch, in: self))
-            }
-            trashView.changeStatus(touchPosition)
-        case .ended:
-            if trashView.contains(touchPosition) {
-                movableView.remove()
-            }
-            trashView.hide()
-        case .cancelled, .failed, .possible:
-            break
-        @unknown default:
-            break
-        }
-    }
-    
     @objc func textPinched(recognizer: UIPinchGestureRecognizer) {
         guard let movableView = recognizer.view as? MovableTextView else { return }
         
@@ -169,6 +141,29 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         }
     }
     
+    @objc func textPanned(recognizer: UIPanGestureRecognizer) {
+        guard let movableView = recognizer.view as? MovableTextView else { return }
+        
+        switch recognizer.state {
+        case .began:
+            originTransformations.position = movableView.position
+        case .changed:
+            let newPosition = originTransformations.position + recognizer.translation(in: self)
+            movableView.position = newPosition
+            
+            touchPosition = recognizer.touchLocations
+            trashView.changeStatus(touchPosition)
+        case .ended:
+            if trashView.contains(touchPosition) {
+                movableView.remove()
+            }
+            trashView.hide()
+        case .cancelled, .failed, .possible:
+            break
+        @unknown default:
+            break
+        }
+    }
     
     // MARK: - UIGestureRecognizerDelegate
     
@@ -177,31 +172,14 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     }
 }
 
-// TO DO: Change to TrashView
-private extension UIView {
-    
-    func changeStatus(_ points: [CGPoint]) {
-        let fingerOnView = self.contains(points)
+private extension UIPanGestureRecognizer {
+
+    var touchLocations: [CGPoint] {
+        var locations: [CGPoint] = []
+        for touch in 0..<numberOfTouches {
+            locations.append(location(ofTouch: touch, in: view?.superview))
+        }
         
-        if fingerOnView {
-            open()
-        }
-        else {
-            close()
-        }
-    }
-    
-    func open() {
-        alpha = 1
-        backgroundColor = .blue
-    }
-    
-    func close() {
-        alpha = 1
-        backgroundColor = .red
-    }
-    
-    func hide() {
-        alpha = 0
+        return locations
     }
 }
