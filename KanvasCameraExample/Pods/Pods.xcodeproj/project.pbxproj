@@ -93,6 +93,7 @@
 		64136C19EACF8F3C93CA31CBD1E4AECF /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14CCFE3DB3E3AC37160A6259945344E /* CGRect+Center.swift */; };
 		6505FCF02317653B00261131 /* UIView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6505FCEF2317653B00261131 /* UIView+Image.swift */; };
 		650BF0D32315A1AD002912EF /* TextCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650BF0D22315A1AD002912EF /* TextCanvas.swift */; };
+		653772232322D651001CE299 /* StylableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653772222322D651001CE299 /* StylableTextView.swift */; };
 		65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65584F302310557C008A1BC2 /* EditorTextView.swift */; };
 		655D80102316CFDF00D41AE2 /* MovableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655D800F2316CFDF00D41AE2 /* MovableTextView.swift */; };
 		65860CABCB5629C6024F4EF9AB76D32B /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AA7EBA426046FA90B36DE32A619EB8 /* UIColor+Hex.swift */; };
@@ -100,6 +101,7 @@
 		659E522A2317F38C00A62828 /* TextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E52292317F38C00A62828 /* TextOptions.swift */; };
 		659E522C2318007B00A62828 /* UITextView+TextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E522B2318007B00A62828 /* UITextView+TextOptions.swift */; };
 		65AA995723103BD300D64232 /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995623103BD300D64232 /* EditorTextController.swift */; };
+		65D0DFBC2324202600B1C35F /* Array+Rotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0DFBB2324202600B1C35F /* Array+Rotate.swift */; };
 		65D5AD51231EA7E8009289F6 /* TrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D5AD50231EA7E8009289F6 /* TrashView.swift */; };
 		65F857D6230D741A004F36A2 /* ColorDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F857D5230D741A004F36A2 /* ColorDrop.swift */; };
 		65FB9BB12316BF8D00FFDEC8 /* CALayer+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FB9BB02316BF8D00FFDEC8 /* CALayer+Shadows.swift */; };
@@ -462,12 +464,14 @@
 		63740F510F37B51D3708457BA60E3016 /* FilterCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
 		6505FCEF2317653B00261131 /* UIView+Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Image.swift"; sourceTree = "<group>"; };
 		650BF0D22315A1AD002912EF /* TextCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCanvas.swift; sourceTree = "<group>"; };
+		653772222322D651001CE299 /* StylableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylableTextView.swift; sourceTree = "<group>"; };
 		65584F302310557C008A1BC2 /* EditorTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
 		655D800F2316CFDF00D41AE2 /* MovableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovableTextView.swift; sourceTree = "<group>"; };
 		658B481D231D6B6200F3D471 /* ViewTransformations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewTransformations.swift; sourceTree = "<group>"; };
 		659E52292317F38C00A62828 /* TextOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOptions.swift; sourceTree = "<group>"; };
 		659E522B2318007B00A62828 /* UITextView+TextOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+TextOptions.swift"; sourceTree = "<group>"; };
 		65AA995623103BD300D64232 /* EditorTextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextController.swift; sourceTree = "<group>"; };
+		65D0DFBB2324202600B1C35F /* Array+Rotate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Rotate.swift"; sourceTree = "<group>"; };
 		65D5AD50231EA7E8009289F6 /* TrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 		65D5FB840AEC33B524AE833E675F17B2 /* UIFont+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+Orangina.swift"; path = "Source/UIFont+Orangina.swift"; sourceTree = "<group>"; };
 		65F857D5230D741A004F36A2 /* ColorDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorDrop.swift; sourceTree = "<group>"; };
@@ -1024,6 +1028,7 @@
 				65AA995623103BD300D64232 /* EditorTextController.swift */,
 				65584F302310557C008A1BC2 /* EditorTextView.swift */,
 				655D800F2316CFDF00D41AE2 /* MovableTextView.swift */,
+				653772222322D651001CE299 /* StylableTextView.swift */,
 				650BF0D22315A1AD002912EF /* TextCanvas.swift */,
 				659E52292317F38C00A62828 /* TextOptions.swift */,
 				658B481D231D6B6200F3D471 /* ViewTransformations.swift */,
@@ -1349,6 +1354,7 @@
 			children = (
 				13C45041F0E256A222C4EDF8E07DFBC7 /* Array+Move.swift */,
 				EEC679C76A947F626798960E4C3C2C5B /* Array+Object.swift */,
+				65D0DFBB2324202600B1C35F /* Array+Rotate.swift */,
 				90F1B1227794838F5CF49687A08E74E2 /* AVURLAsset+Thumbnail.swift */,
 				D503F1EFBAA152EF0C8803AA3015DC79 /* CALayer+CGImage.swift */,
 				67F08CA61C77EEDC60519CAFC36B16D1 /* CALayer+Color.swift */,
@@ -1806,6 +1812,7 @@
 				C78D0FECDA5D9AAC65C5393796A38F21 /* CVPixelBuffer+copy.swift in Sources */,
 				CE8E9B2A36C821A927C76834701B5639 /* CVPixelBuffer+sampleBuffer.swift in Sources */,
 				B76BB13CF106C7459F99F7313A90D11C /* Device.swift in Sources */,
+				653772232322D651001CE299 /* StylableTextView.swift in Sources */,
 				7653D27A1515454131EFC775281048C1 /* DrawingCanvas.swift in Sources */,
 				8C354BA2455DBE6BD74C4CB8646CAC3A /* DrawingController.swift in Sources */,
 				715DB5E21F9C0F5A66AB6782E8B0CF38 /* DrawingView.swift in Sources */,
@@ -1856,6 +1863,7 @@
 				591C0E56618162C491402FF0BE375246 /* KanvasCameraAnalyticsProvider.swift in Sources */,
 				E42D94AE087D9FF0143CCEEE500E2136 /* KanvasCameraColors.swift in Sources */,
 				AD352D96E71C1CE3EFC4967F2F06969F /* KanvasCameraImages.swift in Sources */,
+				65D0DFBC2324202600B1C35F /* Array+Rotate.swift in Sources */,
 				655D80102316CFDF00D41AE2 /* MovableTextView.swift in Sources */,
 				3B3C4C5C4579A25049307D27DA616CE1 /* KanvasCameraStrings.swift in Sources */,
 				F286CBB00C8A597EEAD36277C7843AA6 /* KanvasCameraTimes.swift in Sources */,

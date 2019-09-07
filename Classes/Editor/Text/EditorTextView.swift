@@ -13,6 +13,8 @@ protocol EditorTextViewDelegate: class {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()
+    /// Called when the font selector is tapped
+    func didTapFontSelector()
 }
 
 /// Constants for EditorTextView
@@ -28,9 +30,12 @@ private struct Constants {
     
     // Icon margins
     static let topMargin: CGFloat = 19.5
-    static let bottomMargin: CGFloat = 25
+    static let bottomMargin: CGFloat = 16
     static let leftMargin: CGFloat = 20
     static let rightMargin: CGFloat = 20
+    
+    // General
+    static let menuIconSize: CGFloat = 36
 }
 
 /// A UIView for the text tools view
@@ -42,13 +47,22 @@ final class EditorTextView: UIView {
     private let confirmButton: UIButton
     private let textView: UITextView
     
-    var textOptions: TextOptions {
-        get {
-            return textView.options
-        }
-        set {
-            textView.options = newValue
-        }
+    // Containers
+    private let toolsContainer: UIView
+    private let mainMenuContainer: UIView
+    private let colorPickerContainer: UIView
+    
+    // Main menu
+    private let fontSelector: UIButton
+    
+    var options: TextOptions {
+        get { return textView.options }
+        set { textView.options = newValue }
+    }
+    
+    var font: UIFont? {
+        get { return textView.font }
+        set { textView.font = newValue }
     }
     
     /// Size of the text view
@@ -68,6 +82,10 @@ final class EditorTextView: UIView {
         overlay = UIView()
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
         textView = StylableTextView()
+        toolsContainer = UIView()
+        mainMenuContainer = UIView()
+        colorPickerContainer = UIView()
+        fontSelector = UIButton()
         super.init(frame: .zero)
         setupViews()
     }
@@ -76,6 +94,10 @@ final class EditorTextView: UIView {
         setUpOverlay()
         setUpTextView()
         setUpConfirmButton()
+        setUpToolsContainer()
+        setUpMainMenuContainer()
+        setUpColorPickerContainer()
+        setUpFontSelector()
     }
     
     
@@ -126,8 +148,55 @@ final class EditorTextView: UIView {
             confirmButton.widthAnchor.constraint(equalToConstant: Constants.confirmButtonSize)
         ])
         
-        let confirmButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
-        confirmButton.addGestureRecognizer(confirmButtonRecognizer)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
+        confirmButton.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the container that holds the main menu and the color picker menu
+    private func setUpToolsContainer() {
+        toolsContainer.accessibilityIdentifier = "Editor Text Tools Container"
+        toolsContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(toolsContainer)
+        
+        NSLayoutConstraint.activate([
+            toolsContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
+            toolsContainer.heightAnchor.constraint(equalToConstant: Constants.menuIconSize),
+            toolsContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            toolsContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+        ])
+        
+        toolsContainer.alpha = 0
+    }
+    
+    /// Sets up the menu that contains font selector, text alignment, colors, etc.
+    private func setUpMainMenuContainer() {
+        mainMenuContainer.accessibilityIdentifier = "Editor Text Main Menu Container"
+        mainMenuContainer.add(into: toolsContainer)
+    }
+    
+    /// Sets up the menu that contains eye dropper, color gradient, etc.
+    private func setUpColorPickerContainer() {
+        colorPickerContainer.accessibilityIdentifier = "Editor Text Color Picker Container"
+        colorPickerContainer.add(into: toolsContainer)
+        colorPickerContainer.alpha = 0
+    }
+    
+    /// Sets up the font selector button
+    private func setUpFontSelector() {
+        fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
+        fontSelector.setImage(KanvasCameraImages.fontImage, for: .normal)
+        fontSelector.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(fontSelector)
+        
+        NSLayoutConstraint.activate([
+            fontSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
+            fontSelector.leadingAnchor.constraint(equalTo: mainMenuContainer.leadingAnchor, constant: Constants.leftMargin),
+            fontSelector.heightAnchor.constraint(equalToConstant: Constants.menuIconSize),
+            fontSelector.widthAnchor.constraint(equalToConstant: Constants.menuIconSize)
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(fontSelectorTapped(recognizer:)))
+        fontSelector.addGestureRecognizer(tapRecognizer)
     }
     
     // MARK: - Gesture recognizers
@@ -136,6 +205,9 @@ final class EditorTextView: UIView {
         delegate?.didTapConfirmButton()
     }
     
+    @objc private func fontSelectorTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapFontSelector()
+    }
     
     // MARK: - Public interface
     
@@ -155,9 +227,17 @@ final class EditorTextView: UIView {
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.animate(withDuration: 0.0, animations: {
-            self.textView.frame = CGRect(x: self.textView.frame.origin.x, y: self.textView.frame.origin.y,
-                                         width: self.textView.frame.width, height: self.frame.height - distance)
+            self.textView.frame = CGRect(x: self.textView.frame.origin.x,
+                                         y: self.textView.frame.origin.y,
+                                         width: self.textView.frame.width,
+                                         height: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin - distance)
+            self.toolsContainer.frame = CGRect(x: self.toolsContainer.frame.origin.x,
+                                               y: self.toolsContainer.frame.origin.y - distance,
+                                               width: self.toolsContainer.frame.width,
+                                               height: self.toolsContainer.frame.height)
+            
         }, completion: { _ in
+            self.showTools(true)
             self.showTextView(true)
         })
     }
@@ -165,8 +245,16 @@ final class EditorTextView: UIView {
     /// Moves the main text view to its original position
     func moveToolsDown() {
         showTextView(false)
-        textView.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y,
-                                width: textView.frame.width, height: frame.height)
+        showTools(false)
+
+        textView.frame = CGRect(x: textView.frame.origin.x,
+                                y: textView.frame.origin.y,
+                                width: textView.frame.width,
+                                height: frame.height - self.toolsContainer.frame.height - Constants.bottomMargin)
+        toolsContainer.frame = CGRect(x: self.toolsContainer.frame.origin.x,
+                                           y: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin,
+                                           width: self.toolsContainer.frame.width,
+                                           height: self.toolsContainer.frame.height)
     }
     
     // MARK: - Private utilitites
@@ -179,48 +267,31 @@ final class EditorTextView: UIView {
             self.textView.alpha = show ? 1 : 0
         }
     }
-}
-
-/// Special text view for editing
-private class StylableTextView: UITextView {
     
-    override var contentSize: CGSize {
-        didSet {
-            centerContentVertically()
+    /// shows or hides the tools container
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showTools(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.toolsContainer.alpha = show ? 1 : 0
         }
     }
     
-    override var frame: CGRect {
-        didSet {
-            centerContentVertically()
+    /// shows or hides the color picker menu
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showColorPickerMenu(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.colorPickerContainer.alpha = show ? 1 : 0
         }
     }
     
-    init() {
-        super.init(frame: .zero, textContainer: nil)
-        setUpView()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        return false
-    }
-    
-    private func setUpView() {
-        backgroundColor = .clear
-        tintColor = .white
-        showsVerticalScrollIndicator = false
-        autocorrectionType = .no
-    }
-    
-    // MARK: - Private utilities
-    
-    private func centerContentVertically() {
-        var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2
-        topCorrection = max(0, topCorrection)
-        contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
+    /// shows or hides the main menu
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showMainMenu(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.mainMenuContainer.alpha = show ? 1 : 0
+        }
     }
 }
