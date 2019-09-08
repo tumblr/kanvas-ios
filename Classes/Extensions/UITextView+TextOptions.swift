@@ -13,12 +13,14 @@ extension UITextView {
         get {
             return TextOptions(text: text,
                                font: font,
-                               color: textColor)
+                               color: textColor,
+                               alignment: textAlignment)
         }
         set {
             text = newValue.text
             font = newValue.font
             textColor = newValue.color
+            textAlignment = newValue.alignment
         }
     }
 }

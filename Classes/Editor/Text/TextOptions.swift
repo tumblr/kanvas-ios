@@ -11,6 +11,7 @@ private struct Constants {
     static let defaultText: String = ""
     static let defaultFont: UIFont? = .fairwater(fontSize: 48)
     static let defaultColor: UIColor = .white
+    static let defaultAlignment: NSTextAlignment = .left
 }
 
 final class TextOptions {
@@ -18,6 +19,7 @@ final class TextOptions {
     let text: String
     let font: UIFont?
     let color: UIColor?
+    let alignment: NSTextAlignment
     
     /// Checks if the text inside the options has text or is empty
     var haveText: Bool {
@@ -26,10 +28,12 @@ final class TextOptions {
     
     init(text: String = Constants.defaultText,
          font: UIFont? = Constants.defaultFont,
-         color: UIColor? = Constants.defaultColor) {
+         color: UIColor? = Constants.defaultColor,
+         alignment: NSTextAlignment = Constants.defaultAlignment) {
         
         self.text = text
         self.font = font
         self.color = color
+        self.alignment = alignment
     }
 }

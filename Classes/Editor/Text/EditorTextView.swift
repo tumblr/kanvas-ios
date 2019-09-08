@@ -15,6 +15,8 @@ protocol EditorTextViewDelegate: class {
     func didTapConfirmButton()
     /// Called when the font selector is tapped
     func didTapFontSelector()
+    /// Called when the alignment selector is tapped
+    func didTapAlignmentSelector()
 }
 
 /// Constants for EditorTextView
@@ -28,7 +30,7 @@ private struct Constants {
     static let confirmButtonSize: CGFloat = 36
     static let confirmButtonInset: CGFloat = -10
     
-    // Icon margins
+    // General margins
     static let topMargin: CGFloat = 19.5
     static let bottomMargin: CGFloat = 16
     static let leftMargin: CGFloat = 20
@@ -36,6 +38,7 @@ private struct Constants {
     
     // General
     static let menuIconSize: CGFloat = 36
+    static let menuIconMargin: CGFloat = 36
 }
 
 /// A UIView for the text tools view
@@ -54,15 +57,40 @@ final class EditorTextView: UIView {
     
     // Main menu
     private let fontSelector: UIButton
+    private let alignmentSelector: UIButton
     
     var options: TextOptions {
         get { return textView.options }
-        set { textView.options = newValue }
+        set {
+            text = newValue.text
+            textColor = newValue.color
+            font = newValue.font
+            alignment = newValue.alignment
+        }
+    }
+    
+    var text: String {
+        get { return textView.text }
+        set { textView.text = newValue }
     }
     
     var font: UIFont? {
         get { return textView.font }
         set { textView.font = newValue }
+    }
+    
+    var textColor: UIColor? {
+        get { return textView.textColor }
+        set { textView.textColor = newValue }
+    }
+    
+    var alignment: NSTextAlignment {
+        get { return textView.textAlignment }
+        set {
+            guard let image = KanvasCameraImages.aligmentImages[newValue] else { return }
+            alignmentSelector.setImage(image, for: .normal)
+            textView.textAlignment = newValue
+        }
     }
     
     /// Size of the text view
@@ -86,6 +114,7 @@ final class EditorTextView: UIView {
         mainMenuContainer = UIView()
         colorPickerContainer = UIView()
         fontSelector = UIButton()
+        alignmentSelector = UIButton()
         super.init(frame: .zero)
         setupViews()
     }
@@ -97,6 +126,7 @@ final class EditorTextView: UIView {
         setUpToolsContainer()
         setUpMainMenuContainer()
         setUpColorPickerContainer()
+        setUpAlignmentSelector()
         setUpFontSelector()
     }
     
@@ -181,6 +211,23 @@ final class EditorTextView: UIView {
         colorPickerContainer.alpha = 0
     }
     
+    /// Sets up the alignment selector button
+    private func setUpAlignmentSelector() {
+        alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
+        alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(alignmentSelector)
+        
+        NSLayoutConstraint.activate([
+            alignmentSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
+            alignmentSelector.leadingAnchor.constraint(equalTo: mainMenuContainer.leadingAnchor, constant: Constants.leftMargin),
+            alignmentSelector.heightAnchor.constraint(equalToConstant: Constants.menuIconSize),
+            alignmentSelector.widthAnchor.constraint(equalToConstant: Constants.menuIconSize)
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(alignmentSelectorTapped(recognizer:)))
+        alignmentSelector.addGestureRecognizer(tapRecognizer)
+    }
+    
     /// Sets up the font selector button
     private func setUpFontSelector() {
         fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
@@ -190,7 +237,7 @@ final class EditorTextView: UIView {
         
         NSLayoutConstraint.activate([
             fontSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
-            fontSelector.leadingAnchor.constraint(equalTo: mainMenuContainer.leadingAnchor, constant: Constants.leftMargin),
+            fontSelector.leadingAnchor.constraint(equalTo: alignmentSelector.trailingAnchor, constant: Constants.menuIconMargin),
             fontSelector.heightAnchor.constraint(equalToConstant: Constants.menuIconSize),
             fontSelector.widthAnchor.constraint(equalToConstant: Constants.menuIconSize)
         ])
@@ -209,6 +256,10 @@ final class EditorTextView: UIView {
         delegate?.didTapFontSelector()
     }
     
+    @objc private func alignmentSelectorTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapAlignmentSelector()
+    }
+    
     // MARK: - Public interface
     
     /// Focuses the main text view to show the keyboard
@@ -222,7 +273,7 @@ final class EditorTextView: UIView {
         textView.text = nil
     }
     
-    /// Moves the main text view up
+    /// Moves up the text view and the tools menu
     ///
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
@@ -238,7 +289,7 @@ final class EditorTextView: UIView {
         })
     }
     
-    /// Moves the main text view to its original position
+    /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
         showTextView(false)
         showTools(false)

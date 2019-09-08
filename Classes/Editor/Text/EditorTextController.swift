@@ -4,7 +4,6 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import AVFoundation
 import Foundation
 import UIKit
 
@@ -23,6 +22,7 @@ protocol EditorTextControllerDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let fonts: [UIFont?] = [.fairwater(fontSize: 48), .favoritTumblr85(fontSize: 48)]
+    static let alignments: [NSTextAlignment] = [.left, .center, .right]
 }
 
 /// A view controller that contains the text tools menu
@@ -33,6 +33,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     private var textTransformations: ViewTransformations
 
     private var fonts: [UIFont?]
+    private var alignments: [NSTextAlignment]
     
     private lazy var textView: EditorTextView = {
         let textView = EditorTextView()
@@ -45,6 +46,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     init() {
         textTransformations = ViewTransformations()
         fonts = Constants.fonts
+        alignments = Constants.alignments
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -80,6 +82,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
         textView.options = options
         
         fonts.rotate(to: options.font)
+        alignments.rotate(to: options.alignment)
     }
     
     // MARK: - EditorTextViewDelegate
@@ -92,6 +95,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
         fonts.rotateLeft()
         guard let newFont = fonts.first else { return }
         textView.font = newFont
+    }
+    
+    func didTapAlignmentSelector() {
+        alignments.rotateLeft()
+        guard let newAlignment = alignments.first else { return }
+        textView.alignment = newAlignment
     }
     
     // MARK: - Keyboard

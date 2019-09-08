@@ -89,4 +89,9 @@ struct KanvasCameraImages {
     
     // MARK: - Text
     static let fontImage = UIImage.imageFromCameraBundle(named: "font")
+    static let aligmentImages: [NSTextAlignment: UIImage?] = [
+        .left: UIImage.imageFromCameraBundle(named: "leftAlignment"),
+        .center: UIImage.imageFromCameraBundle(named: "centerAlignment"),
+        .right: UIImage.imageFromCameraBundle(named: "rightAlignment"),
+    ]
 }
