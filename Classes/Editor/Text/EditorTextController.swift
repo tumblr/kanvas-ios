@@ -105,6 +105,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
         }
     }
     
+    func didTapAlignmentSelector() {
+        alignments.rotateLeft()
+        guard let newAlignment = alignments.first else { return }
+        textView.alignment = newAlignment
+    }
+    
     // MARK: - Keyboard
     
     @objc func keyboardWillShow(notification: NSNotification) {
