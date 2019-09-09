@@ -14,20 +14,30 @@ protocol TextCanvasDelegate: class {
     /// - Parameter option: text style options
     /// - Parameter transformations: transformations for the view
     func didTapText(options: TextOptions, transformations: ViewTransformations)
+    
+    /// Called when a long press on a text begins
+    func didBeginLongPressOnText()
+
+    /// Called when a long press on a text ends
+    func didEndLongPressOnText()
 }
 
 /// Constants for the text canvas
 private struct Constants {
+    static let animationDuration: TimeInterval = 0.25
     static let trashViewSize: CGFloat = 98
     static let trashViewBottomMargin: CGFloat = 93
+    static let overlayColor = UIColor.black.withAlphaComponent(0.7)
 }
 
 /// View that contains the collection of text views
 final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
     weak var delegate: TextCanvasDelegate?
+    private var touchPosition: [CGPoint] = []
     
-    var touchPosition: [CGPoint] = []
+    // Layout
+    private let overlay: UIView
     private let trashView: TrashView
     
     // Values from which the different gestures start
@@ -35,10 +45,11 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
     
     init() {
+        overlay = UIView()
         trashView = TrashView()
         originTransformations = ViewTransformations()
         super.init(frame: .zero)
-        setUpTrashView()
+        setUpViews()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -46,6 +57,11 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     }
     
     // MARK: - Layout
+    
+    private func setUpViews() {
+        setUpOverlay()
+        setUpTrashView()
+    }
     
     private func setUpTrashView() {
         trashView.accessibilityIdentifier = "Editor Text Trash View"
@@ -58,6 +74,23 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
             trashView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             trashView.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -Constants.trashViewBottomMargin),
         ])
+    }
+    
+    /// Sets up the translucent black view used during text deletion
+    private func setUpOverlay() {
+        overlay.accessibilityIdentifier = "Editor Text Canvas Overlay"
+        overlay.translatesAutoresizingMaskIntoConstraints = false
+        overlay.backgroundColor = Constants.overlayColor
+        addSubview(overlay)
+        
+        NSLayoutConstraint.activate([
+            overlay.topAnchor.constraint(equalTo: topAnchor),
+            overlay.bottomAnchor.constraint(equalTo: bottomAnchor),
+            overlay.leadingAnchor.constraint(equalTo: leadingAnchor),
+            overlay.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+        
+        overlay.alpha = 0
     }
     
     // MARK: - Public interface
@@ -84,16 +117,19 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(textRotated(recognizer:)))
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(textPinched(recognizer:)))
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(textPanned(recognizer:)))
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(textLongPressed(recognizer:)))
         
         tapRecognizer.delegate = self
         rotationRecognizer.delegate = self
         pinchRecognizer.delegate = self
         panRecognizer.delegate = self
+        longPressRecognizer.delegate = self
         
         textView.addGestureRecognizer(tapRecognizer)
         textView.addGestureRecognizer(rotationRecognizer)
         textView.addGestureRecognizer(pinchRecognizer)
         textView.addGestureRecognizer(panRecognizer)
+        textView.addGestureRecognizer(longPressRecognizer)
     }
     
     /// Saves the current view into its layer
@@ -147,17 +183,39 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         switch recognizer.state {
         case .began:
             originTransformations.position = movableView.position
-        case .changed:
+        case .changed, .ended:
             let newPosition = originTransformations.position + recognizer.translation(in: self)
             movableView.position = newPosition
-            
+        case .cancelled, .failed, .possible:
+            break
+        @unknown default:
+            break
+        }
+    }
+    
+    @objc func textLongPressed(recognizer: UILongPressGestureRecognizer) {
+        guard let movableView = recognizer.view as? MovableTextView else { return }
+        
+        switch recognizer.state {
+        case .began:
+            delegate?.didBeginLongPressOnText()
+            showOverlay(true)
+            movableView.fadeOut()
+            touchPosition = recognizer.touchLocations
+            trashView.changeStatus(touchPosition)
+        case .changed:
             touchPosition = recognizer.touchLocations
             trashView.changeStatus(touchPosition)
         case .ended:
             if trashView.contains(touchPosition) {
                 movableView.remove()
             }
+            else {
+                movableView.fadeIn()
+            }
+            showOverlay(false)
             trashView.hide()
+            delegate?.didEndLongPressOnText()
         case .cancelled, .failed, .possible:
             break
         @unknown default:
@@ -170,10 +228,21 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
+    
+    // MARK: - Private utilities
+    
+    /// shows or hides the overlay
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showOverlay(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.overlay.alpha = show ? 1 : 0
+        }
+    }
 }
 
-private extension UIPanGestureRecognizer {
-
+private extension UILongPressGestureRecognizer {
+    
     var touchLocations: [CGPoint] {
         var locations: [CGPoint] = []
         for touch in 0..<numberOfTouches {

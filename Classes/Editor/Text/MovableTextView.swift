@@ -7,9 +7,12 @@
 import Foundation
 import UIKit
 
+/// Constants for MovableTextView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.35
     static let deletionScale: CGFloat = 0.9
+    static let opaqueAlpha: CGFloat = 1
+    static let translucentAlpha: CGFloat = 0.8
 }
 
 /// A TextView wrapped in a UIView that can be rotated, moved and scaled
@@ -88,6 +91,21 @@ final class MovableTextView: UIView {
     }
     
     /// MARK: - Public interface
+    
+    /// Makes the view opaque
+    func fadeIn() {
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.alpha = Constants.opaqueAlpha
+        }
+    }
+    
+    /// Makes the view translucent
+    func fadeOut() {
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.alpha = Constants.translucentAlpha
+        }
+    }
+    
     
     /// Removes the view from its superview with an animation
     func remove() {

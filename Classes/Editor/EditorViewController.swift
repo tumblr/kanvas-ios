@@ -218,6 +218,18 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         textController.showView(true, options: options, transformations: transformations)
     }
     
+    func didBeginLongPressOnText() {
+        collectionController.showView(false)
+        editorView.showCloseButton(false)
+        editorView.showConfirmButton(false)
+    }
+    
+    func didEndLongPressOnText() {
+        collectionController.showView(true)
+        editorView.showCloseButton(true)
+        editorView.showConfirmButton(true)
+    }
+    
     private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()

@@ -21,6 +21,10 @@ protocol EditorViewDelegate: class {
     func didTapSaveButton()
     /// A function that is called when a movable text is pressed
     func didTapText(options: TextOptions, transformations: ViewTransformations)
+    /// A function that is called when a long press on a text begins
+    func didBeginLongPressOnText()
+    /// A function that is called when a long press on a text ends
+    func didEndLongPressOnText()
 }
 
 /// Constants for EditorView
@@ -321,5 +325,13 @@ final class EditorView: UIView, TextCanvasDelegate {
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         delegate?.didTapText(options: options, transformations: transformations)
+    }
+    
+    func didBeginLongPressOnText() {
+        delegate?.didBeginLongPressOnText()
+    }
+    
+    func didEndLongPressOnText() {
+        delegate?.didEndLongPressOnText()
     }
 }
