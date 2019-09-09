@@ -50,4 +50,3 @@ final class StylableTextView: UITextView {
         contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
     }
 }
-
