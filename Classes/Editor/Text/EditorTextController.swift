@@ -22,7 +22,8 @@ protocol EditorTextControllerDelegate: class {
 /// Constants for EditorTextController
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let fonts: [UIFont] = [.blueberryMedium(), .blueberry85(), .guavaMedium()]
+    static let fonts: [UIFont?] = [.fairwater(fontSize: 48),
+                                   .favoritTumblr85(fontSize: 48)]
 }
 
 /// A view controller that contains the text tools menu
@@ -32,7 +33,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     private var textTransformations: ViewTransformations
 
-    var fonts: [UIFont]
+    var fonts: [UIFont?]
     
     private lazy var textView: EditorTextView = {
         let textView = EditorTextView()
@@ -90,7 +91,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     func didTapFontSelector() {
         fonts.rotateLeft()
-        textView.font = fonts.first
+        guard let newFont = fonts.first else { return }
+        textView.font = newFont
     }
     
     // MARK: - Keyboard

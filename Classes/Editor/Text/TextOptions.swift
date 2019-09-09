@@ -9,7 +9,7 @@ import UIKit
 
 private struct Constants {
     static let defaultText: String = ""
-    static let defaultFont: UIFont = .blueberryMedium()
+    static let defaultFont: UIFont? = .fairwater(fontSize: 48)
     static let defaultColor: UIColor = .white
 }
 

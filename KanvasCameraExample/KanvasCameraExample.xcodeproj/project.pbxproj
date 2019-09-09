@@ -27,6 +27,7 @@
 		0EDE7A3B216425BD009DB00F /* ExtendedStackViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3A216425BD009DB00F /* ExtendedStackViewTests.swift */; };
 		0EDE7A3D216425C5009DB00F /* ExtendedButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */; };
 		1A82DCEC21E83A81E483CA0A /* Pods_KanvasCameraExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCEE38E678D0A1C310541517 /* Pods_KanvasCameraExample.framework */; };
+		650B2A1E2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf in Resources */ = {isa = PBXBuildFile; fileRef = 650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */; };
 		651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */; };
 		651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */; };
 		651D4B6122CE683B004AB75C /* DrawingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B6022CE683B004AB75C /* DrawingViewTests.swift */; };
@@ -168,6 +169,7 @@
 		0EDE7A3A216425BD009DB00F /* ExtendedStackViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedStackViewTests.swift; sourceTree = "<group>"; };
 		0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedButtonTests.swift; sourceTree = "<group>"; };
 		304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
+		650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Fairwater Script Regular_Tumblr.otf"; path = "../../../../../Assets/Fonts/Fairwater/Fairwater Script Regular_Tumblr.otf"; sourceTree = "<group>"; };
 		651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularImageViewTests.swift; sourceTree = "<group>"; };
 		651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingControllerTests.swift; sourceTree = "<group>"; };
 		651D4B6022CE683B004AB75C /* DrawingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingViewTests.swift; sourceTree = "<group>"; };
@@ -351,6 +353,14 @@
 				304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		650B2A1C2326CFB800F3DAD4 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		651D4B5B22CE67A5004AB75C /* Drawing */ = {
@@ -597,6 +607,7 @@
 				768548D822D17E6000BC39D2 /* MockDashboardViewController.swift */,
 				76FFF24722DCD991000A0D04 /* FeatureTableView.swift */,
 				76A50BEB22FCB65D00D314AF /* ExampleKanvasDashboardController.swift */,
+				650B2A1C2326CFB800F3DAD4 /* Fonts */,
 			);
 			path = KanvasCameraExample;
 			sourceTree = "<group>";
@@ -775,6 +786,7 @@
 			files = (
 				AB7F29512121F02C00B8D599 /* LaunchScreen.storyboard in Resources */,
 				AB7F294E2121F02C00B8D599 /* Assets.xcassets in Resources */,
+				650B2A1E2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf in Resources */,
 				ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */,
 				ABFBDE28212CCDE500E1044C /* sample.png in Resources */,
 			);
