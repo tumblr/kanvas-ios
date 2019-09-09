@@ -84,12 +84,13 @@ final class TrashView: IgnoreTouchesView {
         
         backgroundCircle.contentMode = .scaleAspectFit
         backgroundCircle.clipsToBounds = true
+
         
         NSLayoutConstraint.activate([
-            backgroundCircle.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            backgroundCircle.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
-            backgroundCircle.heightAnchor.constraint(equalToConstant: Constants.size),
-            backgroundCircle.widthAnchor.constraint(equalToConstant: Constants.size)
+            backgroundCircle.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor),
+            backgroundCircle.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor),
+            backgroundCircle.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
+            backgroundCircle.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor)
         ])
         
         backgroundCircle.alpha = 0
