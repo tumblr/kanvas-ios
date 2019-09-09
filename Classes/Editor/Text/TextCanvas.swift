@@ -34,6 +34,8 @@ private struct Constants {
 final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
     weak var delegate: TextCanvasDelegate?
+    
+    // Touch locations during a long press
     private var touchPosition: [CGPoint] = []
     
     // Layout
@@ -63,6 +65,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         setUpTrashView()
     }
     
+    /// Sets up the trash bin used during text deletion
     private func setUpTrashView() {
         trashView.accessibilityIdentifier = "Editor Text Trash View"
         trashView.translatesAutoresizingMaskIntoConstraints = false
@@ -241,6 +244,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     }
 }
 
+// Extension for obtaining touch locations easily
 private extension UILongPressGestureRecognizer {
     
     var touchLocations: [CGPoint] {

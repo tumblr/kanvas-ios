@@ -219,15 +219,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didBeginLongPressOnText() {
-        collectionController.showView(false)
-        editorView.showCloseButton(false)
-        editorView.showConfirmButton(false)
+        showNavigationViews(false)
     }
     
     func didEndLongPressOnText() {
-        collectionController.showView(true)
-        editorView.showCloseButton(true)
-        editorView.showConfirmButton(true)
+        showNavigationViews(true)
     }
     
     private func startExporting(action: KanvasExportAction) {
@@ -440,5 +436,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
+    }
+    
+    /// shows or hides the editor menu and the back button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showNavigationViews(_ show: Bool) {
+        collectionController.showView(show)
+        editorView.showCloseButton(show)
+        editorView.showConfirmButton(show)
     }
 }
