@@ -51,10 +51,6 @@ final class MovableTextView: UIView {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
     }
     
-    var positionFromCenter: CGPoint {
-        return center + position
-    }
-    
     init(options: TextOptions, transformations: ViewTransformations) {
         self.innerTextView = UITextView()
         self.position = transformations.position
@@ -93,6 +89,7 @@ final class MovableTextView: UIView {
     
     /// MARK: - Public interface
     
+    /// Removes the view from its superview with an animation
     func remove() {
         UIView.animate(withDuration: Constants.animationDuration, animations: {
             self.innerTextView.transform = CGAffineTransform(scaleX: Constants.deletionScale, y: Constants.deletionScale)
