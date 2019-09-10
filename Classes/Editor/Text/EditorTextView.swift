@@ -254,7 +254,7 @@ final class EditorTextView: UIView {
         fontSelector.addGestureRecognizer(tapRecognizer)
     }
     
-    /// Sets up the color collection that contains the dominant colors as well as the last colors selected
+    /// Sets up the color carousel shown at the right of the main menu
     private func setUpColorCollection() {
         colorCollection.backgroundColor = .clear
         colorCollection.accessibilityIdentifier = "Editor Text Color Collection Container"
