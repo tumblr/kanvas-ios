@@ -33,7 +33,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     private var textTransformations: ViewTransformations
 
-    var fonts: [UIFont?]
+    private var fonts: [UIFont?]
     
     private lazy var textView: EditorTextView = {
         let textView = EditorTextView()
