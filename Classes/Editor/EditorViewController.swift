@@ -177,7 +177,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - Views
     
-    /// Sets up the color carousels for both the drawing and text tools
+    /// Sets up the color carousels of both drawing and text tools
     private func addCarouselDefaultColors(_ image: UIImage) {
         let dominantColors = image.getDominantColors(count: 3)
         drawingController.addColorsForCarousel(colors: dominantColors)
