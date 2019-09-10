@@ -99,9 +99,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     // MARK: - Keyboard
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            textView.moveToolsUp(distance: Constants.keyboardHeight)
-        }
+        textView.moveToolsUp(distance: Constants.keyboardHeight)
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
