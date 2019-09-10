@@ -231,11 +231,7 @@ final class EditorTextView: UIView {
                                          y: self.textView.frame.origin.y,
                                          width: self.textView.frame.width,
                                          height: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin - distance)
-            self.toolsContainer.frame = CGRect(x: self.toolsContainer.frame.origin.x,
-                                               y: self.toolsContainer.frame.origin.y - distance,
-                                               width: self.toolsContainer.frame.width,
-                                               height: self.toolsContainer.frame.height)
-            
+            self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
         }, completion: { _ in
             self.showTools(true)
             self.showTextView(true)
@@ -251,10 +247,7 @@ final class EditorTextView: UIView {
                                 y: textView.frame.origin.y,
                                 width: textView.frame.width,
                                 height: frame.height - self.toolsContainer.frame.height - Constants.bottomMargin)
-        toolsContainer.frame = CGRect(x: self.toolsContainer.frame.origin.x,
-                                           y: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin,
-                                           width: self.toolsContainer.frame.width,
-                                           height: self.toolsContainer.frame.height)
+        toolsContainer.transform = .identity
     }
     
     // MARK: - Private utilitites

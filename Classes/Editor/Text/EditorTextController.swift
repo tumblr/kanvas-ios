@@ -24,6 +24,7 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let fonts: [UIFont?] = [.fairwater(fontSize: 48),
                                    .favoritTumblr85(fontSize: 48)]
+    static let keyboardHeight: CGFloat = Device.belongsToIPhoneXGroup ? 257 : 216
 }
 
 /// A view controller that contains the text tools menu
@@ -99,7 +100,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            textView.moveToolsUp(distance: keyboardSize.height)
+            textView.moveToolsUp(distance: Constants.keyboardHeight)
         }
     }
     
