@@ -264,7 +264,7 @@ final class EditorTextView: UIView {
         
         NSLayoutConstraint.activate([
             colorCollection.widthAnchor.constraint(equalToConstant: Constants.colorCollectionWidth),
-            colorCollection.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            colorCollection.trailingAnchor.constraint(equalTo: mainMenuContainer.trailingAnchor),
             colorCollection.centerYAnchor.constraint(equalTo: mainMenuContainer.centerYAnchor),
             colorCollection.heightAnchor.constraint(equalToConstant: CircularImageView.size)
         ])
