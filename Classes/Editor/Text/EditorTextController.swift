@@ -26,8 +26,8 @@ private struct Constants {
 }
 
 /// A view controller that contains the text tools menu
-final class EditorTextController: UIViewController, EditorTextViewDelegate, ColorCollectionControllerDelegate {
-    
+final class EditorTextController: UIViewController, EditorTextViewDelegate, ColorCollectionControllerDelegate, ColorPickerControllerDelegate {
+
     weak var delegate: EditorTextControllerDelegate?
     
     private var textTransformations: ViewTransformations
@@ -43,6 +43,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     
     private lazy var colorCollectionController: ColorCollectionController = {
         let controller = ColorCollectionController()
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var colorPickerController: ColorPickerController = {
+        let controller = ColorPickerController()
         controller.delegate = self
         return controller
     }()
@@ -81,6 +87,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         
         setUpView()
         load(childViewController: colorCollectionController, into: textView.colorCollection)
+        load(childViewController: colorPickerController, into: textView.colorGradient)
     }
     
     private func setUpView() {
@@ -115,10 +122,20 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         }
     }
     
-    // MARK: - ColorCollectionDelegate
+    // MARK: - ColorCollectionControllerDelegate
     
     func didSelectColor(_ color: UIColor) {
         textView.textColor = color
+    }
+    
+    // MARK: - ColorPickerControllerDelegate
+    
+    func didSelectColor(_ color: UIColor, definitive: Bool) {
+        textView.textColor = color
+        
+        if definitive {
+            addColorsForCarousel(colors: [color])
+        }
     }
     
     // MARK: - Keyboard
