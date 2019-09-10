@@ -229,7 +229,8 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     // MARK: - UIGestureRecognizerDelegate
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+        // Tap recognizer should not be combined with other gestures
+        return !(gestureRecognizer is UITapGestureRecognizer) && !(otherGestureRecognizer is UITapGestureRecognizer)
     }
     
     // MARK: - Private utilities
