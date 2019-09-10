@@ -23,8 +23,11 @@ protocol EditorTextViewDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     
-    //Overlay
+    // Overlay
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
+    
+    // Color collection width
+    static let colorCollectionWidth: CGFloat = CircularImageView.size * 3 + CircularImageView.padding * 6
     
     // Confirm button
     static let confirmButtonSize: CGFloat = 36
@@ -58,6 +61,9 @@ final class EditorTextView: UIView {
     // Main menu
     private let fontSelector: UIButton
     private let alignmentSelector: UIButton
+    
+    // Internal properties
+    let colorCollection: UIView
     
     var options: TextOptions {
         get { return textView.options }
@@ -115,6 +121,7 @@ final class EditorTextView: UIView {
         colorPickerContainer = UIView()
         fontSelector = UIButton()
         alignmentSelector = UIButton()
+        colorCollection = UIView()
         super.init(frame: .zero)
         setupViews()
     }
@@ -128,6 +135,7 @@ final class EditorTextView: UIView {
         setUpColorPickerContainer()
         setUpAlignmentSelector()
         setUpFontSelector()
+        setUpColorCollection()
     }
     
     
@@ -244,6 +252,22 @@ final class EditorTextView: UIView {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(fontSelectorTapped(recognizer:)))
         fontSelector.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the color collection that contains the dominant colors as well as the last colors selected
+    private func setUpColorCollection() {
+        colorCollection.backgroundColor = .clear
+        colorCollection.accessibilityIdentifier = "Editor Text Color Collection Container"
+        colorCollection.clipsToBounds = false
+        colorCollection.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(colorCollection)
+        
+        NSLayoutConstraint.activate([
+            colorCollection.widthAnchor.constraint(equalToConstant: Constants.colorCollectionWidth),
+            colorCollection.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            colorCollection.centerYAnchor.constraint(equalTo: mainMenuContainer.centerYAnchor),
+            colorCollection.heightAnchor.constraint(equalToConstant: CircularImageView.size)
+        ])
     }
     
     // MARK: - Gesture recognizers

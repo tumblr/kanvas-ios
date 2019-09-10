@@ -177,10 +177,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - Views
     
-    /// Sets up the carousel with the dominant colors from the image on the player
+    /// Sets up the color carousels for both the drawing and text tools
     private func addCarouselDefaultColors(_ image: UIImage) {
         let dominantColors = image.getDominantColors(count: 3)
         drawingController.addColorsForCarousel(colors: dominantColors)
+        
+        if let mostDominantColor = dominantColors.first {
+            textController.addColorsForCarousel(colors: [mostDominantColor, .white, .black])
+        }
     }
     
     // MARK: - Loading Indicator

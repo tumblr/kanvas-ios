@@ -26,7 +26,7 @@ private struct Constants {
 }
 
 /// A view controller that contains the text tools menu
-final class EditorTextController: UIViewController, EditorTextViewDelegate {
+final class EditorTextController: UIViewController, EditorTextViewDelegate, ColorCollectionControllerDelegate {
     
     weak var delegate: EditorTextControllerDelegate?
     
@@ -39,6 +39,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
         let textView = EditorTextView()
         textView.delegate = self
         return textView
+    }()
+    
+    private lazy var colorCollectionController: ColorCollectionController = {
+        let controller = ColorCollectionController()
+        controller.delegate = self
+        return controller
     }()
     
     // MARK: - Initializers
@@ -68,9 +74,13 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         setUpView()
+        load(childViewController: colorCollectionController, into: textView.colorCollection)
     }
     
     private func setUpView() {
@@ -111,6 +121,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
         textView.alignment = newAlignment
     }
     
+    // MARK: - ColorCollectionDelegate
+    
+    func didSelectColor(_ color: UIColor) {
+        textView.textColor = color
+    }
+    
     // MARK: - Keyboard
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -125,6 +141,14 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     }
     
     // MARK: - Public interface
+    
+    
+    /// Adds colors to the color carousel
+    ///
+    /// - Parameter colors: list of colors to be added
+    func addColorsForCarousel(colors: [UIColor]) {
+        colorCollectionController.addColors(colors)
+    }
     
     /// shows or hides the text tools menu
     ///
