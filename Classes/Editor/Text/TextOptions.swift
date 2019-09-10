@@ -14,9 +14,15 @@ private struct Constants {
 }
 
 final class TextOptions {
+    
     let text: String
     let font: UIFont?
     let color: UIColor?
+    
+    /// Checks if the text inside the options has text or is empty
+    var haveText: Bool {
+        return !text.isEmpty
+    }
     
     init(text: String = Constants.defaultText,
          font: UIFont? = Constants.defaultFont,
@@ -25,14 +31,5 @@ final class TextOptions {
         self.text = text
         self.font = font
         self.color = color
-    }
-    
-    // MARK: - Public interface
-    
-    /// Checks if the text inside the options has lenght or is empty
-    ///
-    /// - Returns: whether the string is empty or not
-    func haveText() -> Bool {
-        return !text.isEmpty
     }
 }

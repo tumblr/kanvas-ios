@@ -104,13 +104,27 @@
 		5BEF1BB52A40F7E0D81DFBDA7EE3C017 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26847C6EBA8288F0AC82ABD4D3160CEA /* UIKit.framework */; };
 		5BFC810B4002185E716FF9523FC39D08 /* GLPixelBufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8F5888B52640A131871B4B2D44A6E2 /* GLPixelBufferView.swift */; };
 		5ECE4D2B9FDF11E0184AB626EDDE521A /* Pods-KanvasCameraExample-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 578A9D6BEBE07F91B943DA86A4527049 /* Pods-KanvasCameraExample-dummy.m */; };
-		5F98B53E4A42CA7EF66A41A79212090D /* SuggestedTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5987FDF9544F42F60BB6902B5A7AF6F /* SuggestedTagsView.swift */; };
-		631D729A5BA4258880CDC3FA578DD7C1 /* KanvasCameraAnalyticsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F43DE4F89D4705A72FA1FEF0B695957 /* KanvasCameraAnalyticsProvider.swift */; };
-		637F1080E1EA11E05D1AB1AA6BFBAFC9 /* NSURL+Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6568749E0988A2D6FE6A08F6F6819E51 /* NSURL+Media.swift */; };
-		6402472348811ADCB4928920B4194923 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C67E661AC26B7CC914AAF2B372A18E65 /* Texture.swift */; };
-		653ACEE8AB914DCF394EFE798B5D55CE /* MediaPickerButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF538FC79C776285336015D927C9CF6 /* MediaPickerButtonView.swift */; };
-		6647C0F2B39BBDFB578D2E97F1F460A7 /* UIFont+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C383F91E8FF3A6537809CF5071CCF /* UIFont+Utils.swift */; };
-		66FAFF5914D05DEC16EB564E2091E8E6 /* GLMediaExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495F0767C10203C0434A3BB1211BB44E /* GLMediaExporter.swift */; };
+		6211DC54E894C2909D17D5CF430C58B9 /* CameraInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0E2A0448B3A53FE906AD414914B29 /* CameraInputController.swift */; };
+		63B7CEC577303D59FF28866BEE660855 /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B35D7230DB14189DCAEA3BB00732F50 /* OptionView.swift */; };
+		64136C19EACF8F3C93CA31CBD1E4AECF /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14CCFE3DB3E3AC37160A6259945344E /* CGRect+Center.swift */; };
+		6505FCF02317653B00261131 /* UIView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6505FCEF2317653B00261131 /* UIView+Image.swift */; };
+		650BF0D32315A1AD002912EF /* TextCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650BF0D22315A1AD002912EF /* TextCanvas.swift */; };
+		65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65584F302310557C008A1BC2 /* EditorTextView.swift */; };
+		655D80102316CFDF00D41AE2 /* MovableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655D800F2316CFDF00D41AE2 /* MovableTextView.swift */; };
+		65860CABCB5629C6024F4EF9AB76D32B /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AA7EBA426046FA90B36DE32A619EB8 /* UIColor+Hex.swift */; };
+		658B481E231D6B6200F3D471 /* ViewTransformations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658B481D231D6B6200F3D471 /* ViewTransformations.swift */; };
+		659E522A2317F38C00A62828 /* TextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E52292317F38C00A62828 /* TextOptions.swift */; };
+		659E522C2318007B00A62828 /* UITextView+TextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E522B2318007B00A62828 /* UITextView+TextOptions.swift */; };
+		65AA995723103BD300D64232 /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA995623103BD300D64232 /* EditorTextController.swift */; };
+		65D5AD51231EA7E8009289F6 /* TrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D5AD50231EA7E8009289F6 /* TrashView.swift */; };
+		65F857D6230D741A004F36A2 /* ColorDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F857D5230D741A004F36A2 /* ColorDrop.swift */; };
+		65FB9BB12316BF8D00FFDEC8 /* CALayer+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FB9BB02316BF8D00FFDEC8 /* CALayer+Shadows.swift */; };
+		6645914B4FC38E792C9D0576D47398C9 /* IgnoreTouchesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A34CF952C5A20C602495C17E7596163 /* IgnoreTouchesCollectionView.swift */; };
+		666FE703EF68C04A1E76599C113CF3B3 /* KanvasCamera-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AD26914810B51457EB3DDE44FDA42EFC /* KanvasCamera-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		67119FA358DD421CA60B61A0F2923F9C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A87DA8FE73E5A2BA114EEA3B8385D1F /* Foundation.framework */; };
+		68AF6F6195EB68976B7DEEEADE5F9698 /* UIFont+ComposeFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02D81F4D0BC8E02D6617C596129DB70 /* UIFont+ComposeFonts.swift */; };
+		68B32AA5F12417C004A3D38B1B28CABF /* ContentTypeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAECE9C26E9781C34E3D77D021DEA9D /* ContentTypeDetector.swift */; };
+		6ADDA7C2102FBBF7836CFCB36434684B /* TagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E232FE43C1A5FCC3E0F2D12728FECDB3 /* TagsView.swift */; };
 		6AE239C5D116E1C06F5705699FB9EAF0 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF0CCD093AD8EE84FBAAAF873F9865C /* XCTest.framework */; };
 		6C2506E8F09826A27B6E06D8FBCC6059 /* TextureSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92523DB363530C995A6D05041CDB3FF0 /* TextureSelectorView.swift */; };
 		6C300EAAF2E1B01E2640EA8AD4BF640D /* AppColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20573D6E21B72A38E4E218C5BAB22420 /* AppColorPalette.swift */; };
@@ -464,7 +478,16 @@
 		6052198EE561EE401151D7FC60E8E4B7 /* UIView+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIView+Utils.swift"; path = "Source/UIView+Utils.swift"; sourceTree = "<group>"; };
 		615BCEEB5BE71932B6D812D0FB122FD9 /* CameraController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		635B8EF611C5053183706BE4A6AD5DD0 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
-		6568749E0988A2D6FE6A08F6F6819E51 /* NSURL+Media.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSURL+Media.swift"; sourceTree = "<group>"; };
+		63740F510F37B51D3708457BA60E3016 /* FilterCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
+		6505FCEF2317653B00261131 /* UIView+Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Image.swift"; sourceTree = "<group>"; };
+		650BF0D22315A1AD002912EF /* TextCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCanvas.swift; sourceTree = "<group>"; };
+		65584F302310557C008A1BC2 /* EditorTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
+		655D800F2316CFDF00D41AE2 /* MovableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovableTextView.swift; sourceTree = "<group>"; };
+		658B481D231D6B6200F3D471 /* ViewTransformations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewTransformations.swift; sourceTree = "<group>"; };
+		659E52292317F38C00A62828 /* TextOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOptions.swift; sourceTree = "<group>"; };
+		659E522B2318007B00A62828 /* UITextView+TextOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+TextOptions.swift"; sourceTree = "<group>"; };
+		65AA995623103BD300D64232 /* EditorTextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextController.swift; sourceTree = "<group>"; };
+		65D5AD50231EA7E8009289F6 /* TrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 		65D5FB840AEC33B524AE833E675F17B2 /* UIFont+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+Orangina.swift"; path = "Source/UIFont+Orangina.swift"; sourceTree = "<group>"; };
 		6AF538FC79C776285336015D927C9CF6 /* MediaPickerButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaPickerButtonView.swift; sourceTree = "<group>"; };
 		6AFEF2171F904860991A0FDB0B99C416 /* ColorPickerController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorPickerController.swift; sourceTree = "<group>"; };
@@ -1025,11 +1048,12 @@
 		66FADA4BD660ABB033C4F162B71DDFFB /* Text */ = {
 			isa = PBXGroup;
 			children = (
-				10F7A1F92C6530A8939589166195A351 /* EditorTextController.swift */,
-				7BB505D1295782B77FCEFD6986698CDA /* EditorTextView.swift */,
-				50481F4933F222D5B4CCAB92F1D9F6E7 /* MovableTextView.swift */,
-				0FCC47ACAA6D739AB682310F1956AD08 /* TextCanvas.swift */,
-				F1E52BDA2ABD0D772DDD7E87C8AE4158 /* TextOptions.swift */,
+				65AA995623103BD300D64232 /* EditorTextController.swift */,
+				65584F302310557C008A1BC2 /* EditorTextView.swift */,
+				655D800F2316CFDF00D41AE2 /* MovableTextView.swift */,
+				650BF0D22315A1AD002912EF /* TextCanvas.swift */,
+				659E52292317F38C00A62828 /* TextOptions.swift */,
+				658B481D231D6B6200F3D471 /* ViewTransformations.swift */,
 			);
 			name = Text;
 			path = Text;
@@ -1782,35 +1806,160 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3C1854C2706E957E17F27DE9E1F8E81 /* ColorPickerViewController.swift in Sources */,
-				A5E8A0A4EAAB6A166E7B3C23E26C51BC /* ComposeNavigationBar.swift in Sources */,
-				71853CC895E44A018E4616236DC97162 /* EasyTipView.swift in Sources */,
-				C4D893004902C7EDDC74BB73B45E7B90 /* EditTagsView.swift in Sources */,
-				25FFBBD993AE32709450744ABD884353 /* HapticFeedbackGenerating.swift in Sources */,
-				206C3AE3203EB80F9E38730A7977125A /* HapticFeedbackGenerator.swift in Sources */,
-				F1D97B2FB18DA98E314B8DDDBBDF8999 /* NSLayoutConstraint+Utils.swift in Sources */,
-				82CFE15E50D4D6D21E5C3802DDC9C222 /* PostFormKeyboardTracker.swift in Sources */,
-				99239656EC54E67066986342BE546685 /* PostOptionsConstants.swift in Sources */,
-				E5B123C8B7A2D451D68C50B486D4B9A8 /* PostOptionsTagsDelegate.swift in Sources */,
-				D170D765C068915DCB9E308A30FB1D33 /* SharedUI-dummy.m in Sources */,
-				52110551D35EC46C8A149F8D0466F364 /* ShowModalFromTopAnimator.swift in Sources */,
-				1799FE09FEA9DB7178B49EEEC2B230EF /* SuggestedTagsDataSource.swift in Sources */,
-				5F98B53E4A42CA7EF66A41A79212090D /* SuggestedTagsView.swift in Sources */,
-				DF2F12DB90B171E0115C8C7161BDD530 /* SuggestedTagView.swift in Sources */,
-				CF63B6DE1C2DACB62D82EED28D108976 /* TagsOptionsModel.swift in Sources */,
-				45CAB310DEB91C0AE1611F1126E01647 /* TagsView.swift in Sources */,
-				40A89AC6DA10416112351DB98E2DC1D0 /* TagsViewAnimationCoordinator.swift in Sources */,
-				905A6AEE1A84B16231FFC68617630FAD /* TagsViewCollectionViewLayout.swift in Sources */,
-				D342D26560F0D33CC6D57D417E14AFC0 /* TagsViewController.swift in Sources */,
-				F04C808827F46874392F032699965979 /* TagsViewEditCell.swift in Sources */,
-				CDE9DFCEFECCDA597AC29F8A2C44FB59 /* TagsViewTagCell.swift in Sources */,
-				4984AE32D9B816766641B1E5DAB2173B /* TimelineContaining.swift in Sources */,
-				E91BCDBFC4314874EA9B80A465978F04 /* TMPageViewController.swift in Sources */,
-				FD9841EB9A1D29B5869D5EADE51580C7 /* ToastPresentationStyle.swift in Sources */,
-				D78BFE02A69AE92D077F2C09235F24A0 /* UIView+AutoLayout.swift in Sources */,
-				4C693CC1E9FC692627E2087ADDBE3673 /* UIView+Shadows.swift in Sources */,
-				A2DC9A3C7B09071E9EBC54135EB79DF1 /* UIView+Snaphot.swift in Sources */,
-				99ACACD77077143D1A99901B431D8084 /* UIView+Utils.swift in Sources */,
+				3A4EB8493C48C3DF5AE3DD11223F365B /* Array+Move.swift in Sources */,
+				A6AB42E66C18D55F785B2289FEB7D0F8 /* Array+Object.swift in Sources */,
+				2B7CB8EFDD63A4171DA354FF04102BB2 /* AVURLAsset+Thumbnail.swift in Sources */,
+				CC0911174937DCBC4751FF20CE1D76D7 /* CALayer+CGImage.swift in Sources */,
+				E488538C7E222D6C0B8F08F232D05F6E /* CALayer+Color.swift in Sources */,
+				97FAD9368B8D0E6C5BD8907E5BB67AF3 /* CameraController.swift in Sources */,
+				41C29D58514CDBF414CDEB4351CD6971 /* CameraFilterCollectionCell.swift in Sources */,
+				97C2BBDDA96A6C47C8BA0BCAFB630F73 /* CameraFilterCollectionController.swift in Sources */,
+				6211DC54E894C2909D17D5CF430C58B9 /* CameraInputController.swift in Sources */,
+				49A5876CE0EB83FC821778AA7C7DAB7A /* CameraInputControllerDelegate.swift in Sources */,
+				D61B649B34AF7315A845E203D0AE5270 /* CameraInputOutput.swift in Sources */,
+				A006A6BB049583E28DF5D2545BC9E9C8 /* CameraOption.swift in Sources */,
+				6FB9BADE941DA4EB8C9B40ECBEE0EA56 /* CameraPreviewView.swift in Sources */,
+				BADF04B769F9DB6E4192CB0E4D5CCC93 /* CameraPreviewViewController.swift in Sources */,
+				E4D6B1DE7CCB3694FDD309FF5D66605D /* CameraRecorder.swift in Sources */,
+				6BC12FFAF575C3A90BB3D7500CBD5E00 /* CameraRecordingProtocol.swift in Sources */,
+				2BBAD31F21C08F4998303512C69E7B23 /* CameraSegmentHandler.swift in Sources */,
+				65F857D6230D741A004F36A2 /* ColorDrop.swift in Sources */,
+				07C1EB6373CE421CEF0707FDC85331AA /* CameraSettings.swift in Sources */,
+				3771F9E96D88B4D1DAE23FF1B25DBF93 /* CameraView.swift in Sources */,
+				6F754D34C2AAE8EA448B0821CF0833AB /* CameraZoomHandler.swift in Sources */,
+				64136C19EACF8F3C93CA31CBD1E4AECF /* CGRect+Center.swift in Sources */,
+				9CA5AE3DDEB5A80F2FAD6CBEB985BCAF /* ChromaFilter.swift in Sources */,
+				26B238B265E70545D962AB34CCF4F667 /* CircularImageView.swift in Sources */,
+				9975570D1D2BE432C6B69415E91A84B5 /* ClosedRange+Clamp.swift in Sources */,
+				BB4ED64CB137C414D5CF458FDE5BA7D5 /* ColorCollectionCell.swift in Sources */,
+				8C0CCD9CA204E4E201994FE312B2F5A7 /* ColorCollectionController.swift in Sources */,
+				E661EC9DEF9BEFD474457EA6775CB59A /* ColorCollectionView.swift in Sources */,
+				4BC7AB339A8AE330E844E20A1D789F2D /* ColorPickerController.swift in Sources */,
+				A601B55389F30FE224A6C3A29A6B8CF1 /* ColorPickerView.swift in Sources */,
+				9BF376F600DF14979948C8B9849F13E9 /* ColorThief.swift in Sources */,
+				8AE8950033CA5668F80340CBC7EC6531 /* ConicalGradientLayer.swift in Sources */,
+				C78D0FECDA5D9AAC65C5393796A38F21 /* CVPixelBuffer+copy.swift in Sources */,
+				CE8E9B2A36C821A927C76834701B5639 /* CVPixelBuffer+sampleBuffer.swift in Sources */,
+				B76BB13CF106C7459F99F7313A90D11C /* Device.swift in Sources */,
+				7653D27A1515454131EFC775281048C1 /* DrawingCanvas.swift in Sources */,
+				8C354BA2455DBE6BD74C4CB8646CAC3A /* DrawingController.swift in Sources */,
+				715DB5E21F9C0F5A66AB6782E8B0CF38 /* DrawingView.swift in Sources */,
+				FBDB2BD6BD4075DBE14C2D917F91642D /* EditionMenuCollectionCell.swift in Sources */,
+				7D49115AF0B38E47B6CDBCBA227A92E9 /* EditionMenuCollectionController.swift in Sources */,
+				50784047010F408524E044FF75711CF1 /* EditionMenuCollectionView.swift in Sources */,
+				49B0A186626973A9EACE1C5832B7DC5C /* EditionOption.swift in Sources */,
+				959DCB3160C33D4BCFBF645BD783C7DD /* EditorFilterCollectionCell.swift in Sources */,
+				0EE1EFBBFAD1B361C71E32B60D7D5DC5 /* EditorFilterCollectionController.swift in Sources */,
+				1C474C6286864FE1A6BC7DF32972BCE3 /* EditorFilterController.swift in Sources */,
+				65584F312310557C008A1BC2 /* EditorTextView.swift in Sources */,
+				5D6517A0A3B48CAB4A4F0F1D4F5D6ED6 /* EditorFilterView.swift in Sources */,
+				1AFC413463F322A2BC348F0E46431F1F /* EditorView.swift in Sources */,
+				4973EC66537AE7893165B19DD7AC5FDE /* EditorViewController.swift in Sources */,
+				C83CAFEE9DD0656C81C958E580DB5DBC /* EMInterferenceFilter.swift in Sources */,
+				321E92B6894AA2EBA5C3EB0B2802F552 /* ExtendedButton.swift in Sources */,
+				B45C34624847DF620C83D9E658107B03 /* ExtendedStackView.swift in Sources */,
+				36B03F20A2A82B284EF258D1DDDB9843 /* FilmFilter.swift in Sources */,
+				14FDEBEB13E51868D3D20AEE1E9A4C66 /* Filter.swift in Sources */,
+				FF9C1B9A54477FE9C7524C052D98AA59 /* FilterCollectionCell.swift in Sources */,
+				432E127DE74346D5ADA8097CA443D9C4 /* FilterCollectionInnerCell.swift in Sources */,
+				95D93C21EEAC0E229BDE79B9A451B5BB /* FilterCollectionView.swift in Sources */,
+				166FCB2A8B0991F32D8EFB8597D346E3 /* FilteredInputViewController.swift in Sources */,
+				C5A2148BF86E32308B98CB2640E53897 /* FilterFactory.swift in Sources */,
+				459C2BAB490386D443DB5C22C2632CFA /* FilterItem.swift in Sources */,
+				F609DAE84388D0F05C926D49B91A1B90 /* FilterProtocol.swift in Sources */,
+				FD483196375B9EE37EA214109FDCB867 /* FilterSettingsController.swift in Sources */,
+				F613F8D3861CE859730E759101B83A76 /* FilterSettingsView.swift in Sources */,
+				AC2E51AD521F05928C6654533A664053 /* FilterType.swift in Sources */,
+				0DA36449F1916BF289080AEE35E6D862 /* GifVideoOutputHandler.swift in Sources */,
+				8C5C86A51A6CB4AB769356648D5547EB /* GLError.swift in Sources */,
+				E2D592008E8F596E853335BFFA0DBF42 /* GLMediaExporter.swift in Sources */,
+				7D7EE7866F56E12D52F1315E606215F7 /* GLPixelBufferView.swift in Sources */,
+				F07CC1BE28B63141796106EF237DFCDD /* GLPlayer.swift in Sources */,
+				1BCEEC3F9B6BFE3DD185753C9E70D69C /* GLRenderer.swift in Sources */,
+				D483FA7CF17DA5859637D36A5C0EC15E /* GLVideoCompositor.swift in Sources */,
+				4CCCF04C86565B9CA9A125C40763A8D1 /* GrayscaleFilter.swift in Sources */,
+				C592F0DDA3FFB7B32BDD212361D746A7 /* GroupFilter.swift in Sources */,
+				659E522C2318007B00A62828 /* UITextView+TextOptions.swift in Sources */,
+				CA38061793B7254529CE1669A7CD5168 /* HorizontalCollectionLayout.swift in Sources */,
+				37E8E891BBBFC98E3816A20FF8DC4919 /* HorizontalCollectionView.swift in Sources */,
+				6645914B4FC38E792C9D0576D47398C9 /* IgnoreTouchesCollectionView.swift in Sources */,
+				51930255494C9B64F224E707E7EB3D73 /* IgnoreTouchesView.swift in Sources */,
+				C163DAF013404FA631E5A78D6A10B457 /* ImagePoolFilter.swift in Sources */,
+				233AEBD43939D670142A2637D650FEC5 /* ImagePreviewController.swift in Sources */,
+				176C6523A9A0E9490D06A11F9270FCFA /* IndexPath+Order.swift in Sources */,
+				E3979C35AA153741D28BAE39E297CB93 /* KanvasCamera-dummy.m in Sources */,
+				591C0E56618162C491402FF0BE375246 /* KanvasCameraAnalyticsProvider.swift in Sources */,
+				E42D94AE087D9FF0143CCEEE500E2136 /* KanvasCameraColors.swift in Sources */,
+				AD352D96E71C1CE3EFC4967F2F06969F /* KanvasCameraImages.swift in Sources */,
+				655D80102316CFDF00D41AE2 /* MovableTextView.swift in Sources */,
+				3B3C4C5C4579A25049307D27DA616CE1 /* KanvasCameraStrings.swift in Sources */,
+				F286CBB00C8A597EEAD36277C7843AA6 /* KanvasCameraTimes.swift in Sources */,
+				9671D7F6047AF8BCA1D1C6F15A7E6001 /* KanvasUIImagePickerViewController.swift in Sources */,
+				945388F541EF77EA733C01DBFA4C6A9D /* LegoFilter.swift in Sources */,
+				8B093F84B049E5981176CAE563EE1D99 /* LightLeaksFilter.swift in Sources */,
+				77CFF1463BC5B141A825F34FB373885B /* LoadingIndicatorView.swift in Sources */,
+				B60E4AD0F9A346F1ADEB2457879604FE /* MangaFilter.swift in Sources */,
+				918E04F617C81A13BDBC9A2D25FC9E3E /* Marker.swift in Sources */,
+				73B6DA2CA64C5FBDCB5B3C79E7937A6E /* MediaClip.swift in Sources */,
+				65AA995723103BD300D64232 /* EditorTextController.swift in Sources */,
+				15CDE86B2A1C65C8056381B78AC2A539 /* MediaClipsCollectionCell.swift in Sources */,
+				0F5456B7F08B3C5C1CA4E41CA699E16C /* MediaClipsCollectionController.swift in Sources */,
+				E5F69B625A22CA84913D2C44FF9527E3 /* MediaClipsCollectionView.swift in Sources */,
+				E5203EAE60442F17B4E5F9800FC0692B /* MediaClipsEditorView.swift in Sources */,
+				5C3E53550F80B09701B0130815AE20F2 /* MediaClipsEditorViewController.swift in Sources */,
+				00212A6ECF0CC35C0608994487B1D9E9 /* MediaInfo.swift in Sources */,
+				7A20BD6A3BA2BC948EE6BA149EF6A703 /* MediaMetadata.swift in Sources */,
+				FF9DBA2CD59AF9F6878F7CD2C239C589 /* MediaPickerButtonView.swift in Sources */,
+				659E522A2317F38C00A62828 /* TextOptions.swift in Sources */,
+				46728277AB68D32E2E49184AA71003BF /* MirrorFourFilter.swift in Sources */,
+				DD91E1F07BB1A8E32B726C9D6B7605C6 /* MirrorTwoFilter.swift in Sources */,
+				E925ACBAD38E3C15D8750397C6E4061B /* MMCQ.swift in Sources */,
+				6505FCF02317653B00261131 /* UIView+Image.swift in Sources */,
+				1C1C812C841931D777C6A5DC3632FA0D /* ModeButtonView.swift in Sources */,
+				2202BFF1C4DF2CD7781D380C3184CDCC /* ModeSelectorAndShootController.swift in Sources */,
+				C149D8927A7B0C2D2957F403CCAE0571 /* ModeSelectorAndShootView.swift in Sources */,
+				D7010AC838363077F382C6B89191DBDB /* NSURL+Media.swift in Sources */,
+				D013D01081FB0C587DBB43491F594DFA /* NumTypes+Conversion.swift in Sources */,
+				DCF97C023B2B37F73CAC7573795C35EC /* OptionsController.swift in Sources */,
+				C90ECA7096518362FA2A3BAB1F95A197 /* OptionsStackView.swift in Sources */,
+				63B7CEC577303D59FF28866BEE660855 /* OptionView.swift in Sources */,
+				FDA952F399208FD83B838F44F68CBA10 /* Pencil.swift in Sources */,
+				4009B8AE2FD3F968682A36E74C42149A /* PhotoOutputHandler.swift in Sources */,
+				A26C492CD248AE1345EF3FF5C1F4E467 /* PlasmaFilter.swift in Sources */,
+				51611D4F24EC81D6F2785578C53938C9 /* Queue.swift in Sources */,
+				658B481E231D6B6200F3D471 /* ViewTransformations.swift in Sources */,
+				B64BEFF3EA418EF14AEA6F516334300E /* RaveFilter.swift in Sources */,
+				2005C310680F98B38CCCAEE38B138CB7 /* RGBA.swift in Sources */,
+				10AD34C410308C27A0F5FE1CBE6AF3BB /* RGBFilter.swift in Sources */,
+				C4E21150F01A7451325AC626DA9DDA4F /* RoundedTexture.swift in Sources */,
+				7F05337B8D1F4CAE4E549B4927455F2F /* ScrollHandler.swift in Sources */,
+				B0414EC248B64805E0D20666A8923E97 /* Shader.swift in Sources */,
+				99B5F2A8C73EAFBFECBC08F9ECEB726C /* ShaderUtilities.swift in Sources */,
+				1DC7777BC6561F45A8519D8926DB4E5F /* Sharpie.swift in Sources */,
+				3ACCB1B8C95097CCFA6B34254249053F /* ShootButtonView.swift in Sources */,
+				A918AEF2CE66ED51DC19E32267FACABB /* StrokeSelectorController.swift in Sources */,
+				56A7387B9DFF74B19DE73FB391A14179 /* StrokeSelectorView.swift in Sources */,
+				650BF0D32315A1AD002912EF /* TextCanvas.swift in Sources */,
+				7BB23D8D3235DC7CE01BAF9F7D1F40D6 /* Synchronized.swift in Sources */,
+				BD439ABA67A30384288AE3977956B607 /* Texture.swift in Sources */,
+				8AAFB7F5E3DDC6AFD33949D017BFD7EC /* TextureSelectorController.swift in Sources */,
+				AC4DAF8CBDAA529926CF1B6ADD1605C5 /* TextureSelectorView.swift in Sources */,
+				37F60D4B0AF539630E53F42E5CB1709B /* ToonFilter.swift in Sources */,
+				9405328E6B9C94283B19751C60FEA8A5 /* UICollectionView+Cells.swift in Sources */,
+				81C77958E6872790DD3B8CE5D9BDE3B7 /* UIColor+Lerp.swift in Sources */,
+				D38B0C17B5CEB73D97F4265AD862C22D /* UIFont+Utils.swift in Sources */,
+				D75727C3340F9A70DBA27C2F2F6B0505 /* UIImage+Camera.swift in Sources */,
+				47048A5100425E5A2586D09A4B524AE6 /* UIImage+DominantColors.swift in Sources */,
+				BD5340128C8980F2635034AF396BC18B /* UIImage+FlipLeftMirrored.swift in Sources */,
+				4954A47C2F7B0E24A1B850ECFE6B131E /* UIImage+PixelBuffer.swift in Sources */,
+				C179FA878AD8A7BB03325D9A135E2259 /* UIUpdate.swift in Sources */,
+				3A1F7CF64E431D54E3B3528F04941E76 /* UIView+Layout.swift in Sources */,
+				49FB4E9B2BE8B567C796B095F7E921CC /* UIViewController+Load.swift in Sources */,
+				65D5AD51231EA7E8009289F6 /* TrashView.swift in Sources */,
+				42225388514DC49828EAA6258B6A9D7E /* VideoOutputHandler.swift in Sources */,
+				C74916631C0C8F5FD4DFFCB52795660A /* WaveFilter.swift in Sources */,
+				F3412C3F7E3A0086CBCB065AE846A19B /* WavePoolFilter.swift in Sources */,
+				65FB9BB12316BF8D00FFDEC8 /* CALayer+Shadows.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
