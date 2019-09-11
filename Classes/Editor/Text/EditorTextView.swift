@@ -23,6 +23,7 @@ protocol EditorTextViewDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let noDuration: TimeInterval = 0.0
+    static let brightnessThreshold: Double = 0.8
     
     // General margins
     static let topMargin: CGFloat = 19.5
@@ -101,8 +102,10 @@ final class EditorTextView: UIView {
     var textColor: UIColor? {
         get { return textView.textColor }
         set {
-            eyeDropper.backgroundColor = newValue
-            textView.textColor = newValue
+            guard let color = newValue else { return }
+            eyeDropper.backgroundColor = color
+            eyeDropper.tintColor = color.isAlmostWhite() ? .black : .white
+            textView.textColor = color
         }
     }
     
@@ -338,7 +341,6 @@ final class EditorTextView: UIView {
         eyeDropper.accessibilityIdentifier = "Editor Text Eye Dropper"
         let image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
         eyeDropper.setImage(image, for: .normal)
-        eyeDropper.tintColor = .white
         eyeDropper.layer.borderColor = Constants.circularIconBorderColor.cgColor
         eyeDropper.layer.borderWidth = Constants.circularIconBorderWidth
         eyeDropper.layer.cornerRadius = Constants.circularIconCornerRadius
@@ -474,5 +476,12 @@ final class EditorTextView: UIView {
         UIView.animate(withDuration: animationDuration) {
             self.mainMenuContainer.alpha = show ? 1 : 0
         }
+    }
+}
+
+private extension UIColor {
+    
+    func isAlmostWhite() -> Bool {
+        return brightness > Constants.brightnessThreshold
     }
 }
