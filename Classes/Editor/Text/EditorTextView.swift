@@ -22,6 +22,7 @@ protocol EditorTextViewDelegate: class {
 /// Constants for EditorTextView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
+    static let noDuration: TimeInterval = 0.0
     
     // General margins
     static let topMargin: CGFloat = 19.5
@@ -416,6 +417,8 @@ final class EditorTextView: UIView {
                                          height: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin - distance)
             self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
         }, completion: { _ in
+            self.showColorPickerMenu(false, animated: false)
+            self.showMainMenu(true, animated: false)
             self.showTools(true)
             self.showTextView(true)
         })
@@ -456,8 +459,9 @@ final class EditorTextView: UIView {
     /// shows or hides the color picker menu
     ///
     /// - Parameter show: true to show, false to hide
-    private func showColorPickerMenu(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
+    private func showColorPickerMenu(_ show: Bool, animated: Bool = true) {
+        let animationDuration = animated ? Constants.animationDuration : Constants.noDuration
+        UIView.animate(withDuration: animationDuration) {
             self.colorPickerContainer.alpha = show ? 1 : 0
         }
     }
@@ -465,8 +469,9 @@ final class EditorTextView: UIView {
     /// shows or hides the main menu
     ///
     /// - Parameter show: true to show, false to hide
-    private func showMainMenu(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
+    private func showMainMenu(_ show: Bool, animated: Bool = true) {
+        let animationDuration = animated ? Constants.animationDuration : Constants.noDuration
+        UIView.animate(withDuration: animationDuration) {
             self.mainMenuContainer.alpha = show ? 1 : 0
         }
     }
