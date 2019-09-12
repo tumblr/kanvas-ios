@@ -183,10 +183,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 
-    deinit {
-        cleanup()
-    }
-
     override public var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -674,7 +670,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         modeAndShootController.enableShootButtonUserInteraction(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
-            self?.modeAndShootController.showTrashClosed(true)
+            self?.modeAndShootController.closeTrash()
             self?.clipsController.hidePreviewButton()
         }
     }
@@ -685,7 +681,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
-            self?.modeAndShootController.showTrashClosed(false)
+            self?.modeAndShootController.hideTrash()
             self?.clipsController.showPreviewButton()
         }
     }
@@ -696,7 +692,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
-            self?.modeAndShootController.showTrashOpened(false)
+            self?.modeAndShootController.hideTrash()
             self?.clipsController.showPreviewButton()
             self?.updateLastClipPreview()
         }

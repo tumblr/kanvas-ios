@@ -12,7 +12,11 @@ import UIKit
 protocol EditorTextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
-    func didConfirmText()
+    ///
+    /// - Parameter options: text style options
+    /// - Parameter transformations: position, scaling and rotation angle for the view
+    /// - Parameter size: text view size
+    func didConfirmText(options: TextOptions, transformations: ViewTransformations, size: CGSize)
 }
 
 /// Constants for EditorTextController
@@ -24,6 +28,8 @@ private struct Constants {
 final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     weak var delegate: EditorTextControllerDelegate?
+    
+    private var textTransformations: ViewTransformations = ViewTransformations()
     
     private lazy var textView: EditorTextView = {
         let textView = EditorTextView()
@@ -51,6 +57,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         setUpView()
     }
     
@@ -61,17 +69,62 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     // MARK: - EditorTextViewDelegate
     
     func didTapConfirmButton() {
-        delegate?.didConfirmText()
+        delegate?.didConfirmText(options: textView.textOptions, transformations: textTransformations, size: textView.textSize)
+    }
+    
+    // MARK: - Keyboard
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            textView.moveToolsUp(distance: keyboardSize.height)
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        textView.moveToolsDown()
     }
     
     // MARK: - Public interface
     
     /// shows or hides the text tools menu
     ///
-    /// - Parameter show: true to show, false to hide
-    func showView(_ show: Bool) {
+    /// - Parameter visible: true to show, false to hide
+    /// - Parameter transformations: transformations for the view
+    /// - Parameter options: text style options
+    func showView(_ visible: Bool,
+                  options: TextOptions = TextOptions(),
+                  transformations: ViewTransformations = ViewTransformations()) {
+        if visible {
+            show(options: options, transformations: transformations)
+        }
+        else {
+            hide()
+        }
+    }
+    
+    // MARK: - Show & Hide
+    
+    /// Makes the view appear
+    ///
+    /// - Parameter transformations: transformations for the view
+    /// - Parameter options: text style options
+    private func show(options: TextOptions = TextOptions(),
+                      transformations: ViewTransformations = ViewTransformations()) {
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            self.textView.alpha = 1
+        }, completion: { _ in
+            self.textTransformations = transformations
+            self.textView.textOptions = options
+            self.textView.startWriting()
+        })
+    }
+    
+    
+    /// Makes the view disappear
+    private func hide() {
+        textView.endWriting()
         UIView.animate(withDuration: Constants.animationDuration) {
-            self.textView.alpha = show ? 1 : 0
+            self.textView.alpha = 0
         }
     }
 }

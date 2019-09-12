@@ -212,7 +212,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         startExporting(action: .confirm)
         analyticsProvider?.logOpenComposeFromDashboard()
     }
-
+    
+    func didTapText(options: TextOptions, transformations: ViewTransformations) {
+        onBeforeSelectingEditionOption(.text)
+        textController.showView(true, options: options, transformations: transformations)
+    }
+    
     private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()
@@ -277,6 +282,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         if let drawingLayer = drawingController.drawingLayer, let drawingOverlayImage = drawingLayer.cgImage() {
             imageOverlays.append(drawingOverlayImage)
         }
+        
+        editorView.textCanvas.updateLayer()
+        if let textOverlayImage = editorView.textCanvas.layer.cgImage() {
+            imageOverlays.append(textOverlayImage)
+        }
         return imageOverlays
     }
 
@@ -316,10 +326,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption) {
-        openedMenu = editionOption
-        collectionController.showView(false)
-        showConfirmButton(false)
-        showCloseButton(false)
+        onBeforeSelectingEditionOption(editionOption)
         
         switch editionOption {
         case .filter:
@@ -333,6 +340,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         case .media:
             break
         }
+    }
+    
+    private func onBeforeSelectingEditionOption(_ editionOption: EditionOption) {
+        openedMenu = editionOption
+        collectionController.showView(false)
+        showConfirmButton(false)
+        showCloseButton(false)
     }
     
     // MARK: - EditorFilterControllerDelegate
@@ -393,7 +407,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - EditorTextControllerDelegate
     
-    func didConfirmText() {
+    func didConfirmText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
+        if options.haveText {
+            editorView.textCanvas.addText(options: options, transformations: transformations, size: size)
+        }
         closeMenuButtonPressed()
     }
     

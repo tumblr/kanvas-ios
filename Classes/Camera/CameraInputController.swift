@@ -146,8 +146,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-
-        cleanup()
     }
 
     func stopSession() {
@@ -182,6 +180,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        guard !willCloseSoon else {
+            return
+        }
 
         guard !isSimulator else {
             self.previewBlurView.effect = nil
@@ -220,12 +222,13 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func cleanup() {
         guard !isSimulator else { return }
 
+        teardownFilteredPreview()
+
         sessionQueue.async {
             self.captureSession?.stopRunning()
             self.removeSessionInputsAndOutputs()
             self.captureSession = nil
         }
-        teardownFilteredPreview()
     }
 
     private static func blurEffect() -> UIBlurEffect {
