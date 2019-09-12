@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import func AVFoundation.AVMakeRect
 import Foundation
 import OpenGLES
 
@@ -168,24 +169,22 @@ final class GLRenderer: GLRendering {
     }
 
     private func processOverlays(pixelBuffer: CVPixelBuffer) -> CVPixelBuffer {
-        guard imageOverlays.count > 0 else {
+        guard imageOverlays.count > 0, let firstOverlay = imageOverlays.first else {
             return pixelBuffer
         }
-        let size = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
-        UIGraphicsBeginImageContext(size)
-        defer {
-            UIGraphicsEndImageContext()
-        }
-        let areaSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        let mediaImage = UIImage(pixelBuffer: pixelBuffer)
-        mediaImage?.draw(in: areaSize)
-        for overlay in imageOverlays {
-            let overlayImage = UIImage(cgImage: overlay)
-            overlayImage.draw(in: areaSize, blendMode: .normal, alpha: 1.0)
-        }
-        let finalImage = UIGraphicsGetImageFromCurrentImageContext()
-        let finalPixelBuffer = finalImage?.pixelBuffer()
-        return finalPixelBuffer ?? pixelBuffer
+
+        let originalSize = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
+        let screenRect = CGRect(x: 0, y: 0, width: firstOverlay.width, height: firstOverlay.height)
+        let scaledRect = AVMakeRect(aspectRatio: screenRect.size, insideRect: CGRect(origin: .zero, size: originalSize))
+        let renderer = UIGraphicsImageRenderer(size: screenRect.size)
+        return renderer.image { context in
+            let mediaImage = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer).cropped(to: scaledRect))
+            mediaImage.draw(in: screenRect)
+            for overlay in imageOverlays {
+                let overlayImage = UIImage(cgImage: overlay)
+                overlayImage.draw(in: screenRect, blendMode: .normal, alpha: 1.0)
+            }
+        }.pixelBuffer() ?? pixelBuffer
     }
 
     // MARK: - changing filters
