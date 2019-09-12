@@ -14,7 +14,7 @@ protocol FilterProtocol: class {
     func setupFormatDescription(from sampleBuffer: CMSampleBuffer)
 
     /// Uses the provided pixelBuffer to render the filter to a new pixel buffer, and returns the new pixel buffer.
-    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?) -> CVPixelBuffer?
+    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?, time: TimeInterval) -> CVPixelBuffer?
 
     /// Cleans up all resources allocated by the filter.
     func cleanup()

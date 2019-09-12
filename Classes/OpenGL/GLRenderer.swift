@@ -33,9 +33,9 @@ protocol GLRendering: class {
     var delegate: GLRendererDelegate? { get set }
     var filterType: FilterType { get }
     var imageOverlays: [CGImage] { get set }
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer)
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func output(filteredPixelBuffer: CVPixelBuffer)
-    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer) -> CVPixelBuffer?
+    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
     func changeFilter(_ filterType: FilterType)
     func reset()
 }
@@ -71,17 +71,18 @@ final class GLRenderer: GLRendering {
     /// Processes a sample buffer, but swallows the completion
     ///
     /// - Parameter sampleBuffer: the camera feed sample buffer
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        processSampleBuffer(sampleBuffer) { (_, _) in }
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval) {
+        processSampleBuffer(sampleBuffer, time: time) { (_, _) in }
     }
     
     /// Call this method to process the sample buffer
     ///
     /// - Parameter sampleBuffer: the camera feed sample buffer
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, completion: (CVPixelBuffer, CMTime) -> Void) {
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, completion: (CVPixelBuffer, CMTime) -> Void) {
         if processingImage {
             return
         }
+        let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         let filterAlreadyInitialized: Bool = synchronized(self) {
             if filter.outputFormatDescription == nil {
                 filter.setupFormatDescription(from: sampleBuffer)
@@ -90,17 +91,16 @@ final class GLRenderer: GLRendering {
             return true
         }
         if filterAlreadyInitialized {
-            let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
             let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             let filteredPixelBufferMaybe: CVPixelBuffer? = synchronized(self) {
-                return filter.processPixelBuffer(sourcePixelBuffer)
+                return filter.processPixelBuffer(sourcePixelBuffer, time: time)
             }
             if let filteredPixelBuffer = filteredPixelBufferMaybe {
                 synchronized(self) {
                     output(filteredPixelBuffer: filteredPixelBuffer)
                     let finalPixelBuffer = processOverlays(pixelBuffer: filteredPixelBuffer)
-                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: finalPixelBuffer, presentationTime: time)
-                    completion(finalPixelBuffer, time)
+                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: finalPixelBuffer, presentationTime: presentationTime)
+                    completion(finalPixelBuffer, presentationTime)
                 }
             }
             else {
@@ -136,7 +136,7 @@ final class GLRenderer: GLRendering {
     ///
     /// - Parameter pixelBuffer: the input pixel buffer
     /// - Returns: the filtered pixel buffer
-    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
+    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer? {
         processingImage = true
         defer {
             processingImage = false
