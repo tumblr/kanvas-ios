@@ -159,7 +159,7 @@ final class EditorTextView: UIView {
         addSubview(toolsContainer)
         
         NSLayoutConstraint.activate([
-            toolsContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
+            toolsContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.bottomMargin),
             toolsContainer.heightAnchor.constraint(equalToConstant: Constants.menuIconSize),
             toolsContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             toolsContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),

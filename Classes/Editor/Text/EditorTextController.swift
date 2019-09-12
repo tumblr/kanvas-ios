@@ -22,9 +22,7 @@ protocol EditorTextControllerDelegate: class {
 /// Constants for EditorTextController
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let fonts: [UIFont?] = [.fairwater(fontSize: 48),
-                                   .favoritTumblr85(fontSize: 48)]
-    static let keyboardHeight: CGFloat = Device.belongsToIPhoneXGroup ? 257 : 216
+    static let fonts: [UIFont?] = [.fairwater(fontSize: 48), .favoritTumblr85(fontSize: 48)]
 }
 
 /// A view controller that contains the text tools menu
@@ -99,7 +97,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     // MARK: - Keyboard
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        textView.moveToolsUp(distance: Constants.keyboardHeight)
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            textView.moveToolsUp(distance: keyboardRectangle.height)
+        }
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
