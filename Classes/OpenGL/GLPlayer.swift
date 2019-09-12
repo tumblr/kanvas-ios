@@ -87,6 +87,8 @@ final class GLPlayer {
     private var displayLink: CADisplayLink?
     private var currentPixelBuffer: CVPixelBuffer?
     private var firstFrameSent = false
+    private var firstLoop = false
+    private var queuedSampleBuffer: CMSampleBuffer?
 
     /// The GLRendering instance for the player.
     let renderer: GLRendering
@@ -124,9 +126,9 @@ final class GLPlayer {
         guard media.count > 0 else {
             return
         }
-        currentlyPlayingMediaIndex = 0
+        currentlyPlayingMediaIndex = -1
         loadAll(media: media)
-        playCurrentMedia()
+        playNextMedia()
     }
 
     /// Stops the playback of media
@@ -293,12 +295,13 @@ final class GLPlayer {
     private func playNextMedia() {
         if currentlyPlayingMediaIndex + 1 < playableMedia.count {
             currentlyPlayingMediaIndex += 1
-        }
-        else if currentlyPlayingMediaIndex < 0 {
-            currentlyPlayingMediaIndex = 0
+            if currentlyPlayingMediaIndex == 0 {
+                firstLoop = true
+            }
         }
         else {
             currentlyPlayingMediaIndex = 0
+            firstLoop = false
         }
         playCurrentMedia()
     }
@@ -332,8 +335,13 @@ final class GLPlayer {
             return
         }
         let (readerMaybe, outputMaybe) = currentlyPlayingMedia.assetReaderOutput()
-        guard let _ = readerMaybe, let output = outputMaybe else {
+        guard let reader = readerMaybe, let output = outputMaybe else {
             return
+        }
+
+        queuedSampleBuffer = output.copyNextSampleBuffer()
+        if let sampleBuffer = queuedSampleBuffer {
+            renderer.processSampleBuffer(sampleBuffer)
         }
 
         if displayLink == nil {
@@ -368,9 +376,26 @@ final class GLPlayer {
             return
         }
         let (_, output) = currentlyPlayingMedia.assetReaderOutput()
-        if let sampleBuffer = output?.copyNextSampleBuffer() {
-            renderer.processSampleBuffer(sampleBuffer)
+
+        // For whatever reason, the first time all frames are read with copyNextSampleBuffer, the last frame is an
+        // entirely black frame, followed by nil. This creates a black flash the first time a video is played.
+        // To address this, we'll always render a queued frame, and never render that frame if it's the last frame
+        // during the first loop.
+
+        // First step is to grab the potential last frame.
+        var potentialQueuedSampleBuffer: CMSampleBuffer? = nil
+        if let nextSampleBuffer = output?.copyNextSampleBuffer() {
+            potentialQueuedSampleBuffer = nextSampleBuffer
         }
+
+        // If we have a queued frame AND it's not the last frame from the first loop, render it and queue the frame
+        // we got from above.
+        if let sampleBuffer = queuedSampleBuffer, !(firstLoop && potentialQueuedSampleBuffer == nil) {
+            renderer.processSampleBuffer(sampleBuffer)
+            queuedSampleBuffer = potentialQueuedSampleBuffer
+        }
+
+        // No more frames, so let's move on...
         else {
             displayLink.remove(from: .main, forMode: .common)
             if let timeRange = output?.track.timeRange {
