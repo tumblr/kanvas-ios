@@ -161,7 +161,7 @@ final class GLRenderer: GLRendering {
             imageFilter.setupFormatDescription(from: sampleBuffer)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer)
+        let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer, time: time)
         imageFilter.cleanup()
         let finalPixelBuffer = processOverlays(pixelBuffer: filteredPixelBuffer ?? pixelBuffer)
         return finalPixelBuffer
