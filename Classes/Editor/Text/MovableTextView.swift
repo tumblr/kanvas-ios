@@ -139,7 +139,7 @@ final class MovableTextView: UIView {
         super.touchesEnded(touches, with: event)
         
         guard let gestureRecognizers = gestureRecognizers else { return }
-        let allRecognizersEnded = gestureRecognizers.allSatisfy { $0.state == .ended }
+        let allRecognizersEnded = gestureRecognizers.allSatisfy { $0.numberOfTouches == 0 }
         if allRecognizersEnded {
             delegate?.didEndTouches()
         }
