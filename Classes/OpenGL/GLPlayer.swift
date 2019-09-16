@@ -335,7 +335,7 @@ final class GLPlayer {
             return
         }
         let (readerMaybe, outputMaybe) = currentlyPlayingMedia.assetReaderOutput()
-        guard let reader = readerMaybe, let output = outputMaybe else {
+        guard let _ = readerMaybe, let output = outputMaybe else {
             return
         }
 
