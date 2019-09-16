@@ -340,9 +340,6 @@ final class GLPlayer {
         }
 
         queuedSampleBuffer = output.copyNextSampleBuffer()
-        if let sampleBuffer = queuedSampleBuffer {
-            renderer.processSampleBuffer(sampleBuffer)
-        }
 
         if displayLink == nil {
             let link = CADisplayLink(target: self, selector: #selector(step))
@@ -383,10 +380,7 @@ final class GLPlayer {
         // during the first loop.
 
         // First step is to grab the potential last frame.
-        var potentialQueuedSampleBuffer: CMSampleBuffer? = nil
-        if let nextSampleBuffer = output?.copyNextSampleBuffer() {
-            potentialQueuedSampleBuffer = nextSampleBuffer
-        }
+        let potentialQueuedSampleBuffer = output?.copyNextSampleBuffer()
 
         // If we have a queued frame AND it's not the last frame from the first loop, render it and queue the frame
         // we got from above.
@@ -397,6 +391,7 @@ final class GLPlayer {
 
         // No more frames, so let's move on...
         else {
+            queuedSampleBuffer = nil
             displayLink.remove(from: .main, forMode: .common)
             if let timeRange = output?.track.timeRange {
                 output?.reset(forReadingTimeRanges: [timeRange as NSValue])
