@@ -61,6 +61,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     private let postButton = UIButton()
     private let postLabel = UILabel()
     private let filterSelectionCircle = UIImageView()
+    private let navigationContainer = IgnoreTouchesView()
     let collectionContainer = IgnoreTouchesView()
     let filterMenuContainer = IgnoreTouchesView()
     let textMenuContainer = IgnoreTouchesView()
@@ -91,6 +92,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         setupPlayer()
         drawingCanvas.add(into: self)
         textCanvas.add(into: self)
+        setUpNavigationContainer()
         setUpCloseButton()
         
         switch mainActionMode {
@@ -117,13 +119,27 @@ final class EditorView: UIView, TextCanvasDelegate {
         self.playerView = playerView
     }
     
+    /// Container that holds the back button and the bottom menu
+    private func setUpNavigationContainer() {
+        navigationContainer.accessibilityIdentifier = "Navigation Container"
+        navigationContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(navigationContainer)
+        NSLayoutConstraint.activate([
+            navigationContainer.topAnchor.constraint(equalTo: topAnchor),
+            navigationContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
+            navigationContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            navigationContainer.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+    }
+    
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
         closeButton.layer.applyShadows()
         closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
         closeButton.imageView?.contentMode = .scaleAspectFit
         
-        addSubview(closeButton)
+        navigationContainer.addSubview(closeButton)
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -136,7 +152,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     
     private func setUpConfirmButton() {
         confirmButton.accessibilityLabel = "Confirm Button"
-        addSubview(confirmButton)
+        navigationContainer.addSubview(confirmButton)
         confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
@@ -154,7 +170,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         collectionContainer.accessibilityIdentifier = "Edition Menu Collection Container"
         collectionContainer.clipsToBounds = false
         
-        addSubview(collectionContainer)
+        navigationContainer.addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin * 2 + EditorViewConstants.confirmButtonSize
 
@@ -215,7 +231,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         postButton.accessibilityLabel = "Post Button"
         postButton.clipsToBounds = false
         postButton.layer.applyShadows()
-        addSubview(postButton)
+        navigationContainer.addSubview(postButton)
         postButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         postButton.contentHorizontalAlignment = .fill
         postButton.contentVerticalAlignment = .fill
@@ -237,7 +253,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         postLabel.translatesAutoresizingMaskIntoConstraints = false
         postLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(postButtonPressed)))
         postLabel.isUserInteractionEnabled = true
-        addSubview(postLabel)
+        navigationContainer.addSubview(postLabel)
         
         NSLayoutConstraint.activate([
             postLabel.centerXAnchor.constraint(equalTo: postButton.centerXAnchor),
@@ -247,7 +263,7 @@ final class EditorView: UIView, TextCanvasDelegate {
 
     func setupSaveButton() {
         saveButton.accessibilityLabel = "Save Button"
-        addSubview(saveButton)
+        navigationContainer.addSubview(saveButton)
         saveButton.layer.applyShadows()
         saveButton.setImage(KanvasCameraImages.saveImage, for: .normal)
         saveButton.imageView?.tintColor = .white
@@ -289,6 +305,15 @@ final class EditorView: UIView, TextCanvasDelegate {
     }
     
     // MARK: - Public interface
+    
+    /// shows or hides the navigation container
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showNavigationContainer(_ show: Bool) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.navigationContainer.alpha = show ? 1 : 0
+        }
+    }
     
     /// shows or hides the confirm button
     ///

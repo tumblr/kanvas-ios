@@ -219,11 +219,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didBeginTouchesOnText() {
-        showNavigationViews(false)
+        showNavigationContainer(false)
     }
     
     func didEndTouchesOnText() {
-        showNavigationViews(true)
+        showNavigationContainer(true)
     }
     
     private func startExporting(action: KanvasExportAction) {
@@ -441,9 +441,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// shows or hides the editor menu and the back button
     ///
     /// - Parameter show: true to show, false to hide
-    func showNavigationViews(_ show: Bool) {
-        collectionController.showView(show)
-        editorView.showCloseButton(show)
-        editorView.showConfirmButton(show)
+    func showNavigationContainer(_ show: Bool) {
+        editorView.showNavigationContainer(show)
     }
 }
