@@ -218,11 +218,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         textController.showView(true, options: options, transformations: transformations)
     }
     
-    func didBeginLongPressOnText() {
+    func didBeginTouchesOnText() {
         showNavigationViews(false)
     }
     
-    func didEndLongPressOnText() {
+    func didEndTouchesOnText() {
         showNavigationViews(true)
     }
     

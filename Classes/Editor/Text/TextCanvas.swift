@@ -15,11 +15,11 @@ protocol TextCanvasDelegate: class {
     /// - Parameter transformations: transformations for the view
     func didTapText(options: TextOptions, transformations: ViewTransformations)
     
-    /// Called when a long press on a text begins
-    func didBeginLongPressOnText()
-
-    /// Called when a long press on a text ends
-    func didEndLongPressOnText()
+    /// Called when a touch event on a movable view begins
+    func didBeginTouchesOnText()
+    
+    /// Called when the touch events on a movable view end
+    func didEndTouchesOnText()
 }
 
 /// Constants for the text canvas
@@ -31,9 +31,12 @@ private struct Constants {
 }
 
 /// View that contains the collection of text views
-final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
+final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRecognizerDelegate {
     
     weak var delegate: TextCanvasDelegate?
+    
+    // View being touched at the moment
+    private var currentMovableView: MovableTextView?
     
     // Touch locations during a long press
     private var touchPosition: [CGPoint] = []
@@ -106,6 +109,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     func addText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
         let textView = MovableTextView(options: options, transformations: transformations)
         textView.isUserInteractionEnabled = true
+        textView.isExclusiveTouch = true
+        textView.isMultipleTouchEnabled = true
+        textView.delegate = self
         textView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textView)
         
@@ -128,6 +134,12 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         panRecognizer.delegate = self
         longPressRecognizer.delegate = self
         
+        tapRecognizer.cancelsTouchesInView = false
+        rotationRecognizer.cancelsTouchesInView = false
+        pinchRecognizer.cancelsTouchesInView = false
+        panRecognizer.cancelsTouchesInView = false
+        longPressRecognizer.cancelsTouchesInView = false
+
         textView.addGestureRecognizer(tapRecognizer)
         textView.addGestureRecognizer(rotationRecognizer)
         textView.addGestureRecognizer(pinchRecognizer)
@@ -201,7 +213,6 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         
         switch recognizer.state {
         case .began:
-            delegate?.didBeginLongPressOnText()
             showOverlay(true)
             movableView.fadeOut()
             touchPosition = recognizer.touchLocations
@@ -218,7 +229,6 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
             }
             showOverlay(false)
             trashView.hide()
-            delegate?.didEndLongPressOnText()
         case .cancelled, .failed, .possible:
             break
         @unknown default:
@@ -229,8 +239,8 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     // MARK: - UIGestureRecognizerDelegate
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        // Tap recognizer should not be combined with other gestures
-        return !(gestureRecognizer is UITapGestureRecognizer) && !(otherGestureRecognizer is UITapGestureRecognizer)
+        let oneIsTapGesture = gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer
+        return !oneIsTapGesture
     }
     
     // MARK: - Private utilities
@@ -241,6 +251,27 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     func showOverlay(_ show: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.overlay.alpha = show ? 1 : 0
+        }
+    }
+    
+    // MARK: - MovableTextViewDelegate
+    
+    func didBeginTouches(view: MovableTextView) {
+        currentMovableView = view
+        delegate?.didBeginTouchesOnText()
+    }
+    
+    func didEndTouches() {
+        currentMovableView = nil
+        delegate?.didEndTouchesOnText()
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if let currentMovableView = currentMovableView {
+            return currentMovableView
+        }
+        else {
+            return super.hitTest(point, with: event)
         }
     }
 }
