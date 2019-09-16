@@ -134,7 +134,7 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
         panRecognizer.delegate = self
         longPressRecognizer.delegate = self
         
-        tapRecognizer.delaysTouchesBegan = true
+        tapRecognizer.cancelsTouchesInView = false
         rotationRecognizer.cancelsTouchesInView = false
         pinchRecognizer.cancelsTouchesInView = false
         panRecognizer.cancelsTouchesInView = false
