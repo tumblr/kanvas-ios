@@ -24,7 +24,7 @@ protocol MediaExporting: class {
     var filterType: FilterType? { get set }
     var imageOverlays: [CGImage] { get set }
     init()
-    func export(image: UIImage, completion: (UIImage?, Error?) -> Void)
+    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
     func export(video url: URL, completion: @escaping (URL?, Error?) -> Void)
 }
 
@@ -52,7 +52,7 @@ final class GLMediaExporter: MediaExporting {
     /// Exports an image
     /// - Parameter image: UIImage to export
     /// - Parameter completion: callback which is invoked with the processed UIImage
-    func export(image: UIImage, completion: (UIImage?, Error?) -> Void) {
+    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
         guard needsProcessing else {
             completion(image, nil)
             return
@@ -72,8 +72,8 @@ final class GLMediaExporter: MediaExporting {
         renderer.imageOverlays = imageOverlays
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
-        renderer.processSampleBuffer(sampleBuffer)
-        renderer.processSampleBuffer(sampleBuffer) { (filteredPixelBuffer, time) in
+        renderer.processSampleBuffer(sampleBuffer, time: time)
+        renderer.processSampleBuffer(sampleBuffer, time: time) { (filteredPixelBuffer, time) in
             guard let processedImage = UIImage(pixelBuffer: filteredPixelBuffer) else {
                 completion(nil, GLMediaExporterError.noProcessedImage)
                 return

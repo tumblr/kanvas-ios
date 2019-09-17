@@ -96,6 +96,9 @@ final class GLPlayer {
     /// The GLPlayerView that this controls.
     weak var playerView: GLPlayerView?
 
+    var startTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+    var lastStillFilterTime: TimeInterval = 0
+
     /// Default initializer
     /// - Parameter renderer: GLRendering instance for this player to use.
     init(renderer: GLRendering?) {
@@ -313,8 +316,9 @@ final class GLPlayer {
 
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
-        renderer.processSampleBuffer(sampleBuffer)
-        renderer.processSampleBuffer(sampleBuffer)
+        renderer.processSampleBuffer(sampleBuffer, time: startTime)
+        lastStillFilterTime = Date.timeIntervalSinceReferenceDate - startTime
+        renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime)
 
         // If we're only playing one image, don't do anything else!
         guard playableMedia.count > 1 else {
@@ -385,7 +389,7 @@ final class GLPlayer {
         // If we have a queued frame AND it's not the last frame from the first loop, render it and queue the frame
         // we got from above.
         if let sampleBuffer = queuedSampleBuffer, !(firstLoop && potentialQueuedSampleBuffer == nil) {
-            renderer.processSampleBuffer(sampleBuffer)
+            renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime)
             queuedSampleBuffer = potentialQueuedSampleBuffer
         }
 

@@ -13,6 +13,8 @@ import AVFoundation
 class GLPlayerTests: XCTestCase {
 
     class GLRendererMock: GLRendering {
+        var startTime: TimeInterval?
+
         weak var delegate: GLRendererDelegate?
 
         private(set) var filterType: FilterType = .passthrough
@@ -21,7 +23,7 @@ class GLPlayerTests: XCTestCase {
         var processedSampleBufferCallCount: UInt = 0
         var processedSampleBuffer: CMSampleBuffer?
 
-        func processSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
+        func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval) {
             processedSampleBufferCallCount += 1
             processedSampleBuffer = sampleBuffer
         }
@@ -30,7 +32,7 @@ class GLPlayerTests: XCTestCase {
 
         }
 
-        func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
+        func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer? {
             return pixelBuffer
         }
 

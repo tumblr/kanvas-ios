@@ -34,11 +34,11 @@ class GroupFilter: FilterProtocol {
         }
     }
 
-    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?) -> CVPixelBuffer? {
+    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?, time: TimeInterval) -> CVPixelBuffer? {
         var inputPixelBuffer: CVPixelBuffer? = pixelBuffer
         for filter in filters {
             if let current = inputPixelBuffer {
-                inputPixelBuffer = filter.processPixelBuffer(current)
+                inputPixelBuffer = filter.processPixelBuffer(current, time: time)
             }
         }
         return inputPixelBuffer
