@@ -9,9 +9,6 @@ import Foundation
 /// Light Leaks Filter
 final class LightLeaksFilter: Filter {
 
-    /// The time to pass
-    private var startTime = Date.timeIntervalSinceReferenceDate
-
     override func setupShader() {
         let fragment = Filter.loadShader("light_leaks", type: .fragment)
         let vertex = Filter.loadShader("Base", type: .vertex)
@@ -23,7 +20,6 @@ final class LightLeaksFilter: Filter {
     }
     
     override func updateUniforms() {
-        let time = Float(Date.timeIntervalSinceReferenceDate - startTime)
-        shader?.setFloatUniform(key: "time", value: time)
+        shader?.setFloatUniform(key: "time", value: Float(time))
     }
 }

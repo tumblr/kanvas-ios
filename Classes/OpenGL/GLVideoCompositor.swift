@@ -68,6 +68,8 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
         }
     }
 
+    var startTime: CMTime?
+
     /// Convenience initializer
     override convenience init() {
         self.init(
@@ -119,10 +121,11 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
                 self.asyncVideoCompositionRequests.insert(asyncVideoCompositionRequest, at: 0)
 
                 if self.firstFrame {
-                    self.renderer.processSampleBuffer(sampleBuffer)
+                    self.startTime = asyncVideoCompositionRequest.compositionTime
+                    self.renderer.processSampleBuffer(sampleBuffer, time: 0)
                     self.firstFrame = false
                 }
-                self.renderer.processSampleBuffer(sampleBuffer)
+                self.renderer.processSampleBuffer(sampleBuffer, time: asyncVideoCompositionRequest.compositionTime.seconds - (self.startTime?.seconds ?? 0))
             }
         }
     }

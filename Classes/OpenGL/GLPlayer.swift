@@ -87,12 +87,17 @@ final class GLPlayer {
     private var displayLink: CADisplayLink?
     private var currentPixelBuffer: CVPixelBuffer?
     private var firstFrameSent = false
+    private var firstLoop = false
+    private var queuedSampleBuffer: CMSampleBuffer?
 
     /// The GLRendering instance for the player.
     let renderer: GLRendering
 
     /// The GLPlayerView that this controls.
     weak var playerView: GLPlayerView?
+
+    var startTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+    var lastStillFilterTime: TimeInterval = 0
 
     /// Default initializer
     /// - Parameter renderer: GLRendering instance for this player to use.
@@ -124,9 +129,9 @@ final class GLPlayer {
         guard media.count > 0 else {
             return
         }
-        currentlyPlayingMediaIndex = 0
+        currentlyPlayingMediaIndex = -1
         loadAll(media: media)
-        playCurrentMedia()
+        playNextMedia()
     }
 
     /// Stops the playback of media
@@ -293,12 +298,13 @@ final class GLPlayer {
     private func playNextMedia() {
         if currentlyPlayingMediaIndex + 1 < playableMedia.count {
             currentlyPlayingMediaIndex += 1
-        }
-        else if currentlyPlayingMediaIndex < 0 {
-            currentlyPlayingMediaIndex = 0
+            if currentlyPlayingMediaIndex == 0 {
+                firstLoop = true
+            }
         }
         else {
             currentlyPlayingMediaIndex = 0
+            firstLoop = false
         }
         playCurrentMedia()
     }
@@ -310,8 +316,9 @@ final class GLPlayer {
 
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
-        renderer.processSampleBuffer(sampleBuffer)
-        renderer.processSampleBuffer(sampleBuffer)
+        renderer.processSampleBuffer(sampleBuffer, time: startTime)
+        lastStillFilterTime = Date.timeIntervalSinceReferenceDate - startTime
+        renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime)
 
         // If we're only playing one image, don't do anything else!
         guard playableMedia.count > 1 else {
@@ -335,6 +342,8 @@ final class GLPlayer {
         guard let _ = readerMaybe, let output = outputMaybe else {
             return
         }
+
+        queuedSampleBuffer = output.copyNextSampleBuffer()
 
         if displayLink == nil {
             let link = CADisplayLink(target: self, selector: #selector(step))
@@ -368,10 +377,25 @@ final class GLPlayer {
             return
         }
         let (_, output) = currentlyPlayingMedia.assetReaderOutput()
-        if let sampleBuffer = output?.copyNextSampleBuffer() {
-            renderer.processSampleBuffer(sampleBuffer)
+
+        // For whatever reason, the first time all frames are read with copyNextSampleBuffer, the last frame is an
+        // entirely black frame, followed by nil. This creates a black flash the first time a video is played.
+        // To address this, we'll always render a queued frame, and never render that frame if it's the last frame
+        // during the first loop.
+
+        // First step is to grab the potential last frame.
+        let potentialQueuedSampleBuffer = output?.copyNextSampleBuffer()
+
+        // If we have a queued frame AND it's not the last frame from the first loop, render it and queue the frame
+        // we got from above.
+        if let sampleBuffer = queuedSampleBuffer, !(firstLoop && potentialQueuedSampleBuffer == nil) {
+            renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime)
+            queuedSampleBuffer = potentialQueuedSampleBuffer
         }
+
+        // No more frames, so let's move on...
         else {
+            queuedSampleBuffer = nil
             displayLink.remove(from: .main, forMode: .common)
             if let timeRange = output?.track.timeRange {
                 output?.reset(forReadingTimeRanges: [timeRange as NSValue])
