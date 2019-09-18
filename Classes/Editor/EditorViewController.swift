@@ -272,7 +272,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         let exporter = exporterClass.init()
         exporter.filterType = filterType
         exporter.imageOverlays = imageOverlays()
-        exporter.export(image: image) { (exportedImage, _) in
+        exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
                 guard let image = exportedImage else {
                     self.hideLoading()

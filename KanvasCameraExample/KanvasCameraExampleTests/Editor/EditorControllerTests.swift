@@ -21,7 +21,7 @@ class MediaExporterStub: MediaExporting {
 
     }
 
-    func export(image: UIImage, completion: (UIImage?, Error?) -> Void) {
+    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
         exportImageCalled = true
         completion(image, nil)
     }

@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import func AVFoundation.AVMakeRect
 import Foundation
 import OpenGLES
 
@@ -33,9 +34,9 @@ protocol GLRendering: class {
     var delegate: GLRendererDelegate? { get set }
     var filterType: FilterType { get }
     var imageOverlays: [CGImage] { get set }
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer)
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func output(filteredPixelBuffer: CVPixelBuffer)
-    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer) -> CVPixelBuffer?
+    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
     func changeFilter(_ filterType: FilterType)
     func reset()
 }
@@ -71,17 +72,18 @@ final class GLRenderer: GLRendering {
     /// Processes a sample buffer, but swallows the completion
     ///
     /// - Parameter sampleBuffer: the camera feed sample buffer
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        processSampleBuffer(sampleBuffer) { (_, _) in }
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval) {
+        processSampleBuffer(sampleBuffer, time: time) { (_, _) in }
     }
     
     /// Call this method to process the sample buffer
     ///
     /// - Parameter sampleBuffer: the camera feed sample buffer
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, completion: (CVPixelBuffer, CMTime) -> Void) {
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, completion: (CVPixelBuffer, CMTime) -> Void) {
         if processingImage {
             return
         }
+        let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         let filterAlreadyInitialized: Bool = synchronized(self) {
             if filter.outputFormatDescription == nil {
                 filter.setupFormatDescription(from: sampleBuffer)
@@ -90,17 +92,16 @@ final class GLRenderer: GLRendering {
             return true
         }
         if filterAlreadyInitialized {
-            let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
             let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             let filteredPixelBufferMaybe: CVPixelBuffer? = synchronized(self) {
-                return filter.processPixelBuffer(sourcePixelBuffer)
+                return filter.processPixelBuffer(sourcePixelBuffer, time: time)
             }
             if let filteredPixelBuffer = filteredPixelBufferMaybe {
                 synchronized(self) {
                     output(filteredPixelBuffer: filteredPixelBuffer)
                     let finalPixelBuffer = processOverlays(pixelBuffer: filteredPixelBuffer)
-                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: finalPixelBuffer, presentationTime: time)
-                    completion(finalPixelBuffer, time)
+                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: finalPixelBuffer, presentationTime: presentationTime)
+                    completion(finalPixelBuffer, presentationTime)
                 }
             }
             else {
@@ -136,7 +137,7 @@ final class GLRenderer: GLRendering {
     ///
     /// - Parameter pixelBuffer: the input pixel buffer
     /// - Returns: the filtered pixel buffer
-    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
+    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer? {
         processingImage = true
         defer {
             processingImage = false
@@ -161,31 +162,29 @@ final class GLRenderer: GLRendering {
             imageFilter.setupFormatDescription(from: sampleBuffer)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer)
+        let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer, time: time)
         imageFilter.cleanup()
         let finalPixelBuffer = processOverlays(pixelBuffer: filteredPixelBuffer ?? pixelBuffer)
         return finalPixelBuffer
     }
 
     private func processOverlays(pixelBuffer: CVPixelBuffer) -> CVPixelBuffer {
-        guard imageOverlays.count > 0 else {
+        guard imageOverlays.count > 0, let firstOverlay = imageOverlays.first else {
             return pixelBuffer
         }
-        let size = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
-        UIGraphicsBeginImageContext(size)
-        defer {
-            UIGraphicsEndImageContext()
-        }
-        let areaSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        let mediaImage = UIImage(pixelBuffer: pixelBuffer)
-        mediaImage?.draw(in: areaSize)
-        for overlay in imageOverlays {
-            let overlayImage = UIImage(cgImage: overlay)
-            overlayImage.draw(in: areaSize, blendMode: .normal, alpha: 1.0)
-        }
-        let finalImage = UIGraphicsGetImageFromCurrentImageContext()
-        let finalPixelBuffer = finalImage?.pixelBuffer()
-        return finalPixelBuffer ?? pixelBuffer
+
+        let originalSize = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
+        let screenRect = CGRect(x: 0, y: 0, width: firstOverlay.width, height: firstOverlay.height)
+        let scaledRect = AVMakeRect(aspectRatio: screenRect.size, insideRect: CGRect(origin: .zero, size: originalSize))
+        let renderer = UIGraphicsImageRenderer(size: screenRect.size)
+        return renderer.image { context in
+            let mediaImage = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer).cropped(to: scaledRect))
+            mediaImage.draw(in: screenRect)
+            for overlay in imageOverlays {
+                let overlayImage = UIImage(cgImage: overlay)
+                overlayImage.draw(in: screenRect, blendMode: .normal, alpha: 1.0)
+            }
+        }.pixelBuffer() ?? pixelBuffer
     }
 
     // MARK: - changing filters

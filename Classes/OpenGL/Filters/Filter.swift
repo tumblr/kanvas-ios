@@ -10,7 +10,7 @@ import OpenGLES
 
 /// A basic filter implementation to render CVPixelBuffer
 class Filter: FilterProtocol {
-    
+
     private let glContext: EAGLContext?
     private var textureCache: CVOpenGLESTextureCache?
     private var renderTextureCache: CVOpenGLESTextureCache?
@@ -30,6 +30,9 @@ class Filter: FilterProtocol {
     
     /// Output height for texture
     var outputHeight: Int?
+
+    /// Time interval that the filter is running for
+    var time: TimeInterval = 0
     
     /// Initializer with glContext
     ///
@@ -217,7 +220,7 @@ class Filter: FilterProtocol {
     }
     
     // MARK: - filters get rendered to a backing CVPixelBuffer
-    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?) -> CVPixelBuffer? {
+    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?, time: TimeInterval) -> CVPixelBuffer? {
         guard let shader = shader, let pixelBuffer = pixelBuffer, let textureCache = textureCache, let outputFormatDescription = outputFormatDescription, let bufferPool = bufferPool, let renderTextureCache = renderTextureCache else {
             return nil
         }
@@ -303,6 +306,7 @@ class Filter: FilterProtocol {
             glBindFramebuffer(GL_FRAMEBUFFER.ui, offscreenBufferHandle)
             glViewport(0, 0, srcDimensions.width, srcDimensions.height)
             shader.useProgram()
+            self.time = time
             updateUniforms()
             
             // Set up our destination pixel buffer as the framebuffer's render target.
