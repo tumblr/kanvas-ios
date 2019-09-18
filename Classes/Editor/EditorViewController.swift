@@ -218,6 +218,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         textController.showView(true, options: options, transformations: transformations)
     }
     
+    func didBeginTouchesOnText() {
+        showNavigationContainer(false)
+    }
+    
+    func didEndTouchesOnText() {
+        showNavigationContainer(true)
+    }
+    
     private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()
@@ -428,5 +436,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
+    }
+    
+    /// shows or hides the editor menu and the back button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showNavigationContainer(_ show: Bool) {
+        editorView.showNavigationContainer(show)
     }
 }
