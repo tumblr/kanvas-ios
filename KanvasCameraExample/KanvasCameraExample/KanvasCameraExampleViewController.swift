@@ -279,11 +279,11 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         return shouldShowStrokeSelectorAnimation
     }
 
-    func mediaClipStartedMoving() {
+    func didBeginDragInteraction() {
         
     }
     
-    func mediaClipFinishedMoving() {
+    func didEndDragInteraction() {
         
     }
     

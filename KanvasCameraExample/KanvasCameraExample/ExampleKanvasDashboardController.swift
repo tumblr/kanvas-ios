@@ -162,11 +162,11 @@ extension KanvasDashboardController: CameraControllerDelegate {
         return false
     }
     
-    public func mediaClipStartedMoving() {
+    public func didBeginDragInteraction() {
         
     }
     
-    public func mediaClipFinishedMoving() {
+    public func didEndDragInteraction() {
         
     }
 
