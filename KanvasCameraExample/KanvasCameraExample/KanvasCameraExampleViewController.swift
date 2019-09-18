@@ -279,6 +279,14 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         return shouldShowStrokeSelectorAnimation
     }
 
+    func mediaClipStartedMoving() {
+        
+    }
+    
+    func mediaClipFinishedMoving() {
+        
+    }
+    
     func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let media = media {
             save(media: media)
