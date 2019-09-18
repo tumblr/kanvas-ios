@@ -220,7 +220,7 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
         case .changed:
             touchPosition = recognizer.touchLocations
             trashView.changeStatus(touchPosition)
-        case .ended:
+        case .ended, .cancelled, .failed:
             if trashView.contains(touchPosition) {
                 movableView.remove()
             }
@@ -229,7 +229,7 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
             }
             showOverlay(false)
             trashView.hide()
-        case .cancelled, .failed, .possible:
+        case .possible:
             break
         @unknown default:
             break
