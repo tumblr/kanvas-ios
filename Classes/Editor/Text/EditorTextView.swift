@@ -299,7 +299,7 @@ final class EditorTextView: UIView {
     
     /// Sets up the gradient button that opens the color picker menu
     private func setUpOpenColorPicker() {
-        openColorPicker.accessibilityIdentifier = "Editor Text Font Selector"
+        openColorPicker.accessibilityIdentifier = "Editor Text Open Color Picker"
         openColorPicker.setImage(KanvasCameraImages.gradientImage, for: .normal)
         openColorPicker.layer.borderColor = Constants.circularIconBorderColor.cgColor
         openColorPicker.layer.borderWidth = Constants.circularIconBorderWidth
