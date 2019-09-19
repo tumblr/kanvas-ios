@@ -93,14 +93,16 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate {
     
     func didTapFontSelector() {
         fonts.rotateLeft()
-        guard let newFont = fonts.first else { return }
-        textView.font = newFont
+        if let newFont = fonts.first {
+            textView.font = newFont
+        }
     }
     
     func didTapAlignmentSelector() {
         alignments.rotateLeft()
-        guard let newAlignment = alignments.first else { return }
-        textView.alignment = newAlignment
+        if let newAlignment = alignments.first {
+            textView.alignment = newAlignment
+        }
     }
     
     // MARK: - Keyboard
