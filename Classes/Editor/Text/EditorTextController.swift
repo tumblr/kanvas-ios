@@ -115,12 +115,6 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         }
     }
     
-    func didTapAlignmentSelector() {
-        alignments.rotateLeft()
-        guard let newAlignment = alignments.first else { return }
-        textView.alignment = newAlignment
-    }
-    
     // MARK: - ColorCollectionDelegate
     
     func didSelectColor(_ color: UIColor) {
