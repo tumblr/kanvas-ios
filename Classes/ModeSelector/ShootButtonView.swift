@@ -45,7 +45,7 @@ private struct ShootButtonViewConstants {
     static let borderWidth: CGFloat = 3
     static let innerCircleImageWidth: CGFloat = 64
     static let outerCircleImageWidth: CGFloat = 95 + borderWidth
-    static let trashViewSize: CGFloat = 98
+    static let trashViewSize: CGFloat = TrashView.size
     static let longPressMinimumDuration: CFTimeInterval = 0.5
     static let buttonWidth: CGFloat = (imageWidth + 15) * 2
     static let buttonSizeAnimationDuration: TimeInterval = 0.2
