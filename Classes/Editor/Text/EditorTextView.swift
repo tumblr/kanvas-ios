@@ -28,8 +28,8 @@ private struct Constants {
     // General margins
     static let topMargin: CGFloat = 19.5
     static let bottomMargin: CGFloat = 16
-    static let leftMargin: CGFloat = 20
-    static let rightMargin: CGFloat = 20
+    static let leftMargin: CGFloat = 14
+    static let rightMargin: CGFloat = 14
     
     // Menu buttons
     static let customIconSize: CGFloat = 36
@@ -86,6 +86,7 @@ final class EditorTextView: UIView {
             textColor = newValue.color
             font = newValue.font
             alignment = newValue.alignment
+            textContainerInset = newValue.textContainerInset
         }
     }
     
@@ -116,6 +117,11 @@ final class EditorTextView: UIView {
             alignmentSelector.setImage(image, for: .normal)
             textView.textAlignment = newValue
         }
+    }
+    
+    var textContainerInset: UIEdgeInsets {
+        get { return textView.textContainerInset }
+        set { textView.textContainerInset = newValue }
     }
     
     /// Size of the text view
