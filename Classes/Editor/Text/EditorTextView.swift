@@ -28,8 +28,12 @@ private struct Constants {
     // General margins
     static let topMargin: CGFloat = 19.5
     static let bottomMargin: CGFloat = 16
-    static let leftMargin: CGFloat = 14
-    static let rightMargin: CGFloat = 14
+    static let leftMargin: CGFloat = 20
+    static let rightMargin: CGFloat = 20
+    
+    // Text view
+    static let textViewLeftMargin: CGFloat = 14
+    static let textViewRightMargin: CGFloat = 14
     
     // Menu buttons
     static let customIconSize: CGFloat = 36
@@ -197,8 +201,8 @@ final class EditorTextView: UIView {
         
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: topAnchor),
-            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
-            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
+            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
             textView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
