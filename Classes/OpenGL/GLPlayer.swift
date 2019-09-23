@@ -115,7 +115,12 @@ final class GLPlayer {
     private var currentPixelBuffer: CVPixelBuffer?
     private var firstFrameSent = false
     private var startTime: TimeInterval = Date.timeIntervalSinceReferenceDate
-    private var avPlayer: AVPlayer?
+    private lazy var avPlayer: AVPlayer = {
+        let player = AVPlayer(playerItem: nil)
+        player.actionAtItemEnd = .none
+        NotificationCenter.default.addObserver(self, selector: #selector(videoDidPlayToEndTime), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        return player
+    }()
 
     /// Default initializer
     /// - Parameter renderer: GLRendering instance for this player to use.
@@ -165,7 +170,7 @@ final class GLPlayer {
         displayLink = nil
         nextImageTimer?.invalidate()
         nextImageTimer = nil
-        avPlayer?.pause()
+        avPlayer.pause()
         renderer.reset()
     }
 
@@ -317,24 +322,16 @@ final class GLPlayer {
         guard let playerItem = currentlyPlayingMedia.playerItem else {
             return
         }
-        if avPlayer == nil {
-            avPlayer = AVPlayer(playerItem: playerItem)
-            avPlayer?.actionAtItemEnd = .none
-            NotificationCenter.default.addObserver(self, selector: #selector(videoDidPlayToEndTime), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        }
-        else {
-            avPlayer?.replaceCurrentItem(with: playerItem)
-        }
 
-        avPlayer?.play()
+        avPlayer.replaceCurrentItem(with: playerItem)
+        avPlayer.play()
 
         if displayLink == nil {
-            let link = CADisplayLink(target: self, selector: #selector(step))
-            self.displayLink = link
+            displayLink = CADisplayLink(target: self, selector: #selector(step))
         }
-        self.displayLink?.add(to: .main, forMode: .common)
+        displayLink?.add(to: .main, forMode: .common)
         let frameRate = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first?.nominalFrameRate ?? 10.0
-        self.displayLink?.preferredFramesPerSecond = Int(ceil(frameRate))
+        displayLink?.preferredFramesPerSecond = Int(ceil(frameRate))
     }
 
     @objc private func step() {
@@ -354,11 +351,8 @@ final class GLPlayer {
     }
 
     @objc func videoDidPlayToEndTime(notification: Notification) {
-        guard let displayLink = displayLink else {
-            return
-        }
-        displayLink.remove(from: .main, forMode: .common)
-        avPlayer?.currentItem?.seek(to: .zero, completionHandler: { success in
+        displayLink?.remove(from: .main, forMode: .common)
+        avPlayer.currentItem?.seek(to: .zero, completionHandler: { success in
             self.playNextMedia()
         })
     }
