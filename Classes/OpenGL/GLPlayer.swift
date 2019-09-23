@@ -118,7 +118,8 @@ final class GLPlayer {
             return renderer.filterType
         }
         set {
-            renderer.changeFilter(newValue ?? .off)
+            renderer.filterType = newValue ?? .passthrough
+            renderer.refreshFilter()
             refreshMediaAfterFilterChange()
         }
     }

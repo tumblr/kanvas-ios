@@ -53,8 +53,11 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
 
     /// The FilterType used to process each frame
     var filterType: FilterType {
-        didSet {
-            renderer.changeFilter(filterType)
+        get {
+            return renderer.filterType
+        }
+        set {
+            renderer.filterType = filterType
         }
     }
 
@@ -84,7 +87,6 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
         self.renderingQueue = renderingQueue
         self.renderContextQueue = renderContextQueue
         self.renderer = renderer
-        filterType = .passthrough
         super.init()
         renderer.delegate = self
     }
@@ -137,6 +139,10 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
         renderingQueue.async {
             self.shouldCancelAllRequests = false
         }
+    }
+
+    func refreshFilter() {
+        renderer.refreshFilter()
     }
 
 }

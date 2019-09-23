@@ -12,13 +12,14 @@ import OpenGLES
 class Filter: FilterProtocol {
 
     private let glContext: EAGLContext?
-    private var textureCache: CVOpenGLESTextureCache?
     private var renderTextureCache: CVOpenGLESTextureCache?
     private var bufferPool: CVPixelBufferPool?
     private var bufferPoolAuxAttributes: CFDictionary?
     private var frame: GLint = 0
     private var offscreenBufferHandle: GLuint = 0
-    
+
+    var textureCache: CVOpenGLESTextureCache?
+
     /// The shader program to render the texture
     var shader: Shader?
     

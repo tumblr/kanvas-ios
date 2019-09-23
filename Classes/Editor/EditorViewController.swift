@@ -257,7 +257,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private func createFinalVideo(videoURL: URL, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
-        exporter.filterType = filterType
+        exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL) { (exportedVideoURL, _) in
             performUIUpdate {
@@ -274,7 +274,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private func createFinalImage(image: UIImage, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
-        exporter.filterType = filterType
+        exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {

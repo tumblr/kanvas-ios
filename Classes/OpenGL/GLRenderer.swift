@@ -32,12 +32,12 @@ protocol GLRendererDelegate: class {
 
 protocol GLRendering: class {
     var delegate: GLRendererDelegate? { get set }
-    var filterType: FilterType { get }
+    var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func output(filteredPixelBuffer: CVPixelBuffer)
     func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
-    func changeFilter(_ filterType: FilterType)
+    func refreshFilter()
     func reset()
 }
 
@@ -54,7 +54,7 @@ final class GLRenderer: GLRendering {
     var imageOverlays: [CGImage] = []
 
     // Current filter type
-    private(set) var filterType: FilterType = .passthrough
+    var filterType: FilterType = .passthrough
 
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
@@ -99,9 +99,8 @@ final class GLRenderer: GLRendering {
             if let filteredPixelBuffer = filteredPixelBufferMaybe {
                 synchronized(self) {
                     output(filteredPixelBuffer: filteredPixelBuffer)
-                    let finalPixelBuffer = processOverlays(pixelBuffer: filteredPixelBuffer)
-                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: finalPixelBuffer, presentationTime: presentationTime)
-                    completion(finalPixelBuffer, presentationTime)
+                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: filteredPixelBuffer, presentationTime: presentationTime)
+                    completion(filteredPixelBuffer, presentationTime)
                 }
             }
             else {
@@ -164,38 +163,13 @@ final class GLRenderer: GLRendering {
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer, time: time)
         imageFilter.cleanup()
-        let finalPixelBuffer = processOverlays(pixelBuffer: filteredPixelBuffer ?? pixelBuffer)
-        return finalPixelBuffer
-    }
-
-    private func processOverlays(pixelBuffer: CVPixelBuffer) -> CVPixelBuffer {
-        guard imageOverlays.count > 0, let firstOverlay = imageOverlays.first else {
-            return pixelBuffer
-        }
-
-        let originalSize = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
-        let screenRect = CGRect(x: 0, y: 0, width: firstOverlay.width, height: firstOverlay.height)
-        let scaledRect = AVMakeRect(aspectRatio: screenRect.size, insideRect: CGRect(origin: .zero, size: originalSize))
-        let renderer = UIGraphicsImageRenderer(size: screenRect.size)
-        return renderer.image { context in
-            let mediaImage = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer).cropped(to: scaledRect))
-            mediaImage.draw(in: screenRect)
-            for overlay in imageOverlays {
-                let overlayImage = UIImage(cgImage: overlay)
-                overlayImage.draw(in: screenRect, blendMode: .normal, alpha: 1.0)
-            }
-        }.pixelBuffer() ?? pixelBuffer
+        return filteredPixelBuffer
     }
 
     // MARK: - changing filters
-    func changeFilter(_ filterType: FilterType) {
-        guard self.filterType != filterType else {
-            return
-        }
-
-        self.filterType = filterType
+    func refreshFilter() {
         synchronized(self) {
-            filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
+            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
         }
     }
 

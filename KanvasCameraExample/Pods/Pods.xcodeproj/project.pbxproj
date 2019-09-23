@@ -133,6 +133,7 @@
 		74A42DDD8C6F4D94AB35265C3D7109A2 /* GLError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A802F4745C4FA95ECA18C238E87A239 /* GLError.swift */; };
 		7575C08F0DC00BEA5C5764683A62E964 /* KanvasUIImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BC86204CA5D3DFAD5FF0B83D5F8809 /* KanvasUIImagePickerViewController.swift */; };
 		75D6F564710036F2AE1148D3B58175BF /* UIColor+SharedColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A586EFAD0A7C6DB2B256E660275A97 /* UIColor+SharedColors.swift */; };
+		761BD1EF23394B8A0030A419 /* AlphaBlendFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761BD1EE23394B8A0030A419 /* AlphaBlendFilter.swift */; };
 		789A3805BB1BF46AEFA54E6F04B96674 /* Shaders in Resources */ = {isa = PBXBuildFile; fileRef = EF462F45CF371B052E0E91E92595E4F8 /* Shaders */; };
 		7910B8814625D5C4F34D27640136BBC0 /* MediaPickerButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CFC85F8AD7C792881492177D697148 /* MediaPickerButtonView.swift */; };
 		7A1F3CDA0315425312439AD8D5BCD669 /* UIColor+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41D1B4A4F9922C080DCF44A0A67F5E8 /* UIColor+Util.swift */; };
@@ -500,6 +501,7 @@
 		73FDE610656F287739F6E539E58691D1 /* FilterItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
 		746CC9C9E1B0E104CD1BA120C69A2526 /* FBSnapshotTestCase-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FBSnapshotTestCase-prefix.pch"; sourceTree = "<group>"; };
 		747008D08148BF11271658C553C6A165 /* SharedUI-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SharedUI-dummy.m"; sourceTree = "<group>"; };
+		761BD1EE23394B8A0030A419 /* AlphaBlendFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphaBlendFilter.swift; sourceTree = "<group>"; };
 		7895A83387EA1135EDB894297AC6BB35 /* KanvasCamera.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = KanvasCamera.modulemap; sourceTree = "<group>"; };
 		78D13AA77AAB424A100AF9A7B66CF14F /* ColorThief.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorThief.swift; sourceTree = "<group>"; };
 		791DDB72BC3A25EEB6E84B4AC719062D /* KanvasCamera-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "KanvasCamera-dummy.m"; sourceTree = "<group>"; };
@@ -1177,6 +1179,7 @@
 				E76064ADF25C7EBE27569C2676600E1D /* ToonFilter.swift */,
 				F85B0CCF16C3D3E7A9847D8406FEF099 /* WaveFilter.swift */,
 				7F39FB75A80651CD8E363932056D4158 /* WavePoolFilter.swift */,
+				761BD1EE23394B8A0030A419 /* AlphaBlendFilter.swift */,
 			);
 			path = "Filter instances";
 			sourceTree = "<group>";
@@ -1955,6 +1958,7 @@
 				AC897FFD2889E0822770F08B7153CD99 /* ScrollHandler.swift in Sources */,
 				6505F51D2333B9CA001952E8 /* UIFont+Fonts.swift in Sources */,
 				F2A9D64C59550D16F839C84DCFF06DC9 /* Shader.swift in Sources */,
+				761BD1EF23394B8A0030A419 /* AlphaBlendFilter.swift in Sources */,
 				59C37CD633BCD1E061162F6A551B64F7 /* ShaderUtilities.swift in Sources */,
 				380C661C46BA84ED42D324FCD048B9B2 /* Sharpie.swift in Sources */,
 				E5F9AF492B9863E214908141E3C11A9D /* ShootButtonView.swift in Sources */,
