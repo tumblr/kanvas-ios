@@ -13,24 +13,47 @@ protocol EditorTextViewDelegate: class {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()
+    /// Called when the font selector is tapped
+    func didTapFontSelector()
+    /// Called when the alignment selector is tapped
+    func didTapAlignmentSelector()
 }
 
 /// Constants for EditorTextView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
+    static let noDuration: TimeInterval = 0.0
+    static let brightnessThreshold: Double = 0.8
     
-    //Overlay
+    // General margins
+    static let topMargin: CGFloat = 19.5
+    static let bottomMargin: CGFloat = 16
+    static let leftMargin: CGFloat = 20
+    static let rightMargin: CGFloat = 20
+    
+    // Text view
+    static let textViewLeftMargin: CGFloat = 14
+    static let textViewRightMargin: CGFloat = 14
+    
+    // Menu buttons
+    static let customIconSize: CGFloat = 36
+    static let customIconMargin: CGFloat = 36
+    static let circularIconSize: CGFloat = CircularImageView.size
+    static let circularIconPadding: CGFloat = CircularImageView.padding
+    static let circularIconBorderWidth: CGFloat = 2
+    static let circularIconBorderColor: UIColor = .white
+    static let circularIconCornerRadius: CGFloat = circularIconSize / 2
+
+    
+    // Overlay
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
+    
+    // Color collection width
+    static let colorCollectionWidth: CGFloat = circularIconSize * 3 + circularIconPadding * 6
     
     // Confirm button
     static let confirmButtonSize: CGFloat = 36
     static let confirmButtonInset: CGFloat = -10
-    
-    // Icon margins
-    static let topMargin: CGFloat = 19.5
-    static let bottomMargin: CGFloat = 25
-    static let leftMargin: CGFloat = 20
-    static let rightMargin: CGFloat = 20
 }
 
 /// A UIView for the text tools view
@@ -42,13 +65,67 @@ final class EditorTextView: UIView {
     private let confirmButton: UIButton
     private let textView: UITextView
     
-    var textOptions: TextOptions {
-        get {
-            return textView.options
-        }
+    // Containers
+    private let toolsContainer: UIView
+    private let mainMenuContainer: UIView
+    private let colorPickerContainer: UIView
+    
+    // Main menu
+    private let fontSelector: UIButton
+    private let alignmentSelector: UIButton
+    private let openColorPicker: UIButton
+    
+    // Color picker menu
+    private let closeColorPicker: UIButton
+    private let eyeDropper: UIButton
+    
+    // Internal properties
+    let colorCollection: UIView
+    let colorGradient: UIView
+    
+    var options: TextOptions {
+        get { return textView.options }
         set {
-            textView.options = newValue
+            text = newValue.text
+            textColor = newValue.color
+            font = newValue.font
+            alignment = newValue.alignment
+            textContainerInset = newValue.textContainerInset
         }
+    }
+    
+    var text: String {
+        get { return textView.text }
+        set { textView.text = newValue }
+    }
+    
+    var font: UIFont? {
+        get { return textView.font }
+        set { textView.font = newValue }
+    }
+    
+    var textColor: UIColor? {
+        get { return textView.textColor }
+        set {
+            guard let color = newValue else { return }
+            eyeDropper.backgroundColor = color
+            eyeDropper.tintColor = color.isAlmostWhite() ? .black : .white
+            textView.textColor = color
+        }
+    }
+    
+    var alignment: NSTextAlignment {
+        get { return textView.textAlignment }
+        set {
+            guard let image = KanvasCameraImages.aligmentImages[newValue] else { return }
+            alignmentSelector.setImage(image, for: .normal)
+            textView.textAlignment = newValue
+        }
+    }
+    
+    var textContainerInset: UIEdgeInsets {
+        get { return textView.textContainerInset }
+        set { textView.textContainerInset = newValue }
     }
     
     /// Size of the text view
@@ -68,6 +145,16 @@ final class EditorTextView: UIView {
         overlay = UIView()
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
         textView = StylableTextView()
+        toolsContainer = UIView()
+        mainMenuContainer = UIView()
+        colorPickerContainer = UIView()
+        alignmentSelector = UIButton()
+        fontSelector = UIButton()
+        colorCollection = UIView()
+        openColorPicker = UIButton()
+        closeColorPicker = UIButton()
+        eyeDropper = UIButton()
+        colorGradient = UIView()
         super.init(frame: .zero)
         setupViews()
     }
@@ -76,6 +163,16 @@ final class EditorTextView: UIView {
         setUpOverlay()
         setUpTextView()
         setUpConfirmButton()
+        setUpToolsContainer()
+        setUpMainMenuContainer()
+        setUpColorPickerContainer()
+        setUpAlignmentSelector()
+        setUpFontSelector()
+        setUpColorCollection()
+        setUpOpenColorPicker()
+        setUpCloseColorPicker()
+        setUpEyeDropper()
+        setUpColorGradient()
     }
     
     
@@ -104,8 +201,8 @@ final class EditorTextView: UIView {
         
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: topAnchor),
-            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
-            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
+            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
             textView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
@@ -126,8 +223,162 @@ final class EditorTextView: UIView {
             confirmButton.widthAnchor.constraint(equalToConstant: Constants.confirmButtonSize)
         ])
         
-        let confirmButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
-        confirmButton.addGestureRecognizer(confirmButtonRecognizer)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
+        confirmButton.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the container that holds the main menu and the color picker menu
+    private func setUpToolsContainer() {
+        toolsContainer.accessibilityIdentifier = "Editor Text Tools Container"
+        toolsContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(toolsContainer)
+        
+        NSLayoutConstraint.activate([
+            toolsContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.bottomMargin),
+            toolsContainer.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
+            toolsContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            toolsContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+        ])
+        
+        toolsContainer.alpha = 0
+    }
+    
+    /// Sets up the menu that contains font selector, text alignment, colors, etc.
+    private func setUpMainMenuContainer() {
+        mainMenuContainer.accessibilityIdentifier = "Editor Text Main Menu Container"
+        mainMenuContainer.add(into: toolsContainer)
+    }
+    
+    /// Sets up the menu that contains eye dropper, color gradient, etc.
+    private func setUpColorPickerContainer() {
+        colorPickerContainer.accessibilityIdentifier = "Editor Text Color Picker Container"
+        colorPickerContainer.add(into: toolsContainer)
+        colorPickerContainer.alpha = 0
+    }
+    
+    /// Sets up the alignment selector button
+    private func setUpAlignmentSelector() {
+        alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
+        alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(alignmentSelector)
+        
+        NSLayoutConstraint.activate([
+            alignmentSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
+            alignmentSelector.leadingAnchor.constraint(equalTo: mainMenuContainer.leadingAnchor, constant: Constants.leftMargin),
+            alignmentSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
+            alignmentSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(alignmentSelectorTapped(recognizer:)))
+        alignmentSelector.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the font selector button
+    private func setUpFontSelector() {
+        fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
+        fontSelector.setImage(KanvasCameraImages.fontImage, for: .normal)
+        fontSelector.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(fontSelector)
+        
+        NSLayoutConstraint.activate([
+            fontSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
+            fontSelector.leadingAnchor.constraint(equalTo: alignmentSelector.trailingAnchor, constant: Constants.customIconMargin),
+            fontSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
+            fontSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(fontSelectorTapped(recognizer:)))
+        fontSelector.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the color carousel shown at the right of the main menu
+    private func setUpColorCollection() {
+        colorCollection.accessibilityIdentifier = "Editor Text Color Collection"
+        colorCollection.clipsToBounds = false
+        colorCollection.backgroundColor = .clear
+        colorCollection.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(colorCollection)
+        
+        NSLayoutConstraint.activate([
+            colorCollection.widthAnchor.constraint(equalToConstant: Constants.colorCollectionWidth),
+            colorCollection.trailingAnchor.constraint(equalTo: mainMenuContainer.trailingAnchor),
+            colorCollection.centerYAnchor.constraint(equalTo: mainMenuContainer.centerYAnchor),
+            colorCollection.heightAnchor.constraint(equalToConstant: Constants.circularIconSize)
+        ])
+    }
+    
+    /// Sets up the gradient button that opens the color picker menu
+    private func setUpOpenColorPicker() {
+        openColorPicker.accessibilityIdentifier = "Editor Text Open Color Picker"
+        openColorPicker.setImage(KanvasCameraImages.gradientImage, for: .normal)
+        openColorPicker.layer.borderColor = Constants.circularIconBorderColor.cgColor
+        openColorPicker.layer.borderWidth = Constants.circularIconBorderWidth
+        openColorPicker.layer.cornerRadius = Constants.circularIconCornerRadius
+        openColorPicker.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(openColorPicker)
+        
+        NSLayoutConstraint.activate([
+            openColorPicker.trailingAnchor.constraint(equalTo: colorCollection.leadingAnchor, constant: -Constants.circularIconPadding),
+            openColorPicker.centerYAnchor.constraint(equalTo: mainMenuContainer.centerYAnchor),
+            openColorPicker.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
+            openColorPicker.widthAnchor.constraint(equalToConstant: Constants.circularIconSize),
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(openColorPickerTapped(recognizer:)))
+        openColorPicker.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the cross button to close the color picker menu
+    private func setUpCloseColorPicker() {
+        closeColorPicker.accessibilityIdentifier = "Editor Text Close Color Picker"
+        closeColorPicker.setImage(KanvasCameraImages.closeGradientImage, for: .normal)
+        closeColorPicker.translatesAutoresizingMaskIntoConstraints = false
+        colorPickerContainer.addSubview(closeColorPicker)
+        
+        NSLayoutConstraint.activate([
+            closeColorPicker.leadingAnchor.constraint(equalTo: colorPickerContainer.leadingAnchor, constant: Constants.leftMargin),
+            closeColorPicker.centerYAnchor.constraint(equalTo: colorPickerContainer.centerYAnchor),
+            closeColorPicker.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
+            closeColorPicker.widthAnchor.constraint(equalToConstant: Constants.circularIconSize),
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(closeColorPickerTapped(recognizer:)))
+        closeColorPicker.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the eye dropper button in the color picker menu
+    private func setUpEyeDropper() {
+        eyeDropper.accessibilityIdentifier = "Editor Text Eye Dropper"
+        let image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
+        eyeDropper.setImage(image, for: .normal)
+        eyeDropper.layer.borderColor = Constants.circularIconBorderColor.cgColor
+        eyeDropper.layer.borderWidth = Constants.circularIconBorderWidth
+        eyeDropper.layer.cornerRadius = Constants.circularIconCornerRadius
+        eyeDropper.translatesAutoresizingMaskIntoConstraints = false
+        colorPickerContainer.addSubview(eyeDropper)
+        
+        NSLayoutConstraint.activate([
+            eyeDropper.leadingAnchor.constraint(equalTo: closeColorPicker.trailingAnchor, constant: Constants.circularIconPadding * 2),
+            eyeDropper.centerYAnchor.constraint(equalTo: colorPickerContainer.centerYAnchor),
+            eyeDropper.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
+            eyeDropper.widthAnchor.constraint(equalToConstant: Constants.circularIconSize),
+        ])
+    }
+    
+    /// Sets up the horizontal gradient in the color picker menu
+    private func setUpColorGradient() {
+        colorGradient.accessibilityIdentifier = "Editor Text Color Gradient"
+        colorGradient.backgroundColor = .clear
+        colorGradient.clipsToBounds = false
+        colorGradient.translatesAutoresizingMaskIntoConstraints = false
+        colorPickerContainer.addSubview(colorGradient)
+        
+        NSLayoutConstraint.activate([
+            colorGradient.leadingAnchor.constraint(equalTo: eyeDropper.trailingAnchor, constant: Constants.circularIconPadding * 2),
+            colorGradient.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -Constants.rightMargin),
+            colorGradient.centerYAnchor.constraint(equalTo: colorPickerContainer.centerYAnchor),
+            colorGradient.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
+        ])
     }
     
     // MARK: - Gesture recognizers
@@ -136,6 +387,23 @@ final class EditorTextView: UIView {
         delegate?.didTapConfirmButton()
     }
     
+    @objc private func fontSelectorTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapFontSelector()
+    }
+    
+    @objc private func alignmentSelectorTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapAlignmentSelector()
+    }
+    
+    @objc private func openColorPickerTapped(recognizer: UITapGestureRecognizer) {
+        showMainMenu(false)
+        showColorPickerMenu(true)
+    }
+    
+    @objc private func closeColorPickerTapped(recognizer: UITapGestureRecognizer) {
+        showColorPickerMenu(false)
+        showMainMenu(true)
+    }
     
     // MARK: - Public interface
     
@@ -150,23 +418,34 @@ final class EditorTextView: UIView {
         textView.text = nil
     }
     
-    /// Moves the main text view up
+    /// Moves up the text view and the tools menu
     ///
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.animate(withDuration: 0.0, animations: {
-            self.textView.frame = CGRect(x: self.textView.frame.origin.x, y: self.textView.frame.origin.y,
-                                         width: self.textView.frame.width, height: self.frame.height - distance)
+            self.textView.frame = CGRect(x: self.textView.frame.origin.x,
+                                         y: self.textView.frame.origin.y,
+                                         width: self.textView.frame.width,
+                                         height: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin - distance)
+            self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
         }, completion: { _ in
+            self.showColorPickerMenu(false, animated: false)
+            self.showMainMenu(true, animated: false)
+            self.showTools(true)
             self.showTextView(true)
         })
     }
     
-    /// Moves the main text view to its original position
+    /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
         showTextView(false)
-        textView.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y,
-                                width: textView.frame.width, height: frame.height)
+        showTools(false)
+
+        textView.frame = CGRect(x: textView.frame.origin.x,
+                                y: textView.frame.origin.y,
+                                width: textView.frame.width,
+                                height: frame.height - self.toolsContainer.frame.height - Constants.bottomMargin)
+        toolsContainer.transform = .identity
     }
     
     // MARK: - Private utilitites
@@ -179,48 +458,40 @@ final class EditorTextView: UIView {
             self.textView.alpha = show ? 1 : 0
         }
     }
+    
+    /// shows or hides the tools container
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showTools(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.toolsContainer.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the color picker menu
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showColorPickerMenu(_ show: Bool, animated: Bool = true) {
+        let animationDuration = animated ? Constants.animationDuration : Constants.noDuration
+        UIView.animate(withDuration: animationDuration) {
+            self.colorPickerContainer.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the main menu
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showMainMenu(_ show: Bool, animated: Bool = true) {
+        let animationDuration = animated ? Constants.animationDuration : Constants.noDuration
+        UIView.animate(withDuration: animationDuration) {
+            self.mainMenuContainer.alpha = show ? 1 : 0
+        }
+    }
 }
 
-/// Special text view for editing
-private class StylableTextView: UITextView {
+private extension UIColor {
     
-    override var contentSize: CGSize {
-        didSet {
-            centerContentVertically()
-        }
-    }
-    
-    override var frame: CGRect {
-        didSet {
-            centerContentVertically()
-        }
-    }
-    
-    init() {
-        super.init(frame: .zero, textContainer: nil)
-        setUpView()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        return false
-    }
-    
-    private func setUpView() {
-        backgroundColor = .clear
-        tintColor = .white
-        showsVerticalScrollIndicator = false
-        autocorrectionType = .no
-    }
-    
-    // MARK: - Private utilities
-    
-    private func centerContentVertically() {
-        var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2
-        topCorrection = max(0, topCorrection)
-        contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
+    func isAlmostWhite() -> Bool {
+        return brightness > Constants.brightnessThreshold
     }
 }
