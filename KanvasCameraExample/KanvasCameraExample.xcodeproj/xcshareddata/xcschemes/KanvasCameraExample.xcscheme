@@ -62,6 +62,9 @@
                <Test
                   Identifier = "GLPixelBufferViewTests">
                </Test>
+               <Test
+                  Identifier = "GLPlayerTests">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
