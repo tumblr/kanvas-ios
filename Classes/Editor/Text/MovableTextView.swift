@@ -99,14 +99,14 @@ final class MovableTextView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        innerTextView.textInputView.contentScaleFactor = scale
+        innerTextView.setScaleFactor(scale)
     }
 
     // MARK: - Transforms
     
     /// Updates the scaling, rotation and position transformations
     private func applyTransform() {
-        innerTextView.textInputView.contentScaleFactor = scale
+        innerTextView.setScaleFactor(scale)
         
         transform = CGAffineTransform(scaleX: scale, y: scale)
             .concatenating(CGAffineTransform(rotationAngle: rotation))
@@ -152,6 +152,18 @@ final class MovableTextView: UIView {
         let allRecognizersEnded = gestureRecognizers.allSatisfy { $0.numberOfTouches == 0 }
         if allRecognizersEnded {
             delegate?.didEndTouches()
+        }
+    }
+}
+
+private extension UITextView {
+    
+    func setScaleFactor(_ scaleFactor: CGFloat) {
+        if scaleFactor > UIScreen.main.nativeScale {
+            textInputView.contentScaleFactor = scaleFactor * UIScreen.main.nativeScale
+        }
+        else {
+            textInputView.contentScaleFactor = UIScreen.main.nativeScale
         }
     }
 }
