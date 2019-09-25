@@ -94,10 +94,20 @@ final class MovableTextView: UIView {
         innerTextView.add(into: self)
     }
     
+    
+    // MARK: - View life cycle
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        innerTextView.textInputView.contentScaleFactor = scale
+    }
+
     // MARK: - Transforms
     
     /// Updates the scaling, rotation and position transformations
     private func applyTransform() {
+        innerTextView.textInputView.contentScaleFactor = scale
+        
         transform = CGAffineTransform(scaleX: scale, y: scale)
             .concatenating(CGAffineTransform(rotationAngle: rotation))
             .concatenating(CGAffineTransform(translationX: position.x, y: position.y))
