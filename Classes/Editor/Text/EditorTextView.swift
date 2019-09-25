@@ -31,6 +31,10 @@ private struct Constants {
     static let leftMargin: CGFloat = 20
     static let rightMargin: CGFloat = 20
     
+    // Text view
+    static let textViewLeftMargin: CGFloat = 14
+    static let textViewRightMargin: CGFloat = 14
+    
     // Menu buttons
     static let customIconSize: CGFloat = 36
     static let customIconMargin: CGFloat = 36
@@ -86,6 +90,7 @@ final class EditorTextView: UIView {
             textColor = newValue.color
             font = newValue.font
             alignment = newValue.alignment
+            textContainerInset = newValue.textContainerInset
         }
     }
     
@@ -116,6 +121,11 @@ final class EditorTextView: UIView {
             alignmentSelector.setImage(image, for: .normal)
             textView.textAlignment = newValue
         }
+    }
+    
+    var textContainerInset: UIEdgeInsets {
+        get { return textView.textContainerInset }
+        set { textView.textContainerInset = newValue }
     }
     
     /// Size of the text view
@@ -191,8 +201,8 @@ final class EditorTextView: UIView {
         
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: topAnchor),
-            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
-            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
+            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
             textView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
