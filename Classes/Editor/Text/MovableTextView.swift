@@ -159,7 +159,7 @@ final class MovableTextView: UIView {
 private extension UITextView {
     
     func setScaleFactor(_ scaleFactor: CGFloat) {
-        if scaleFactor > UIScreen.main.nativeScale {
+        if scaleFactor > 1.0 {
             textInputView.contentScaleFactor = scaleFactor * UIScreen.main.nativeScale
         }
         else {
