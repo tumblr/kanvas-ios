@@ -57,7 +57,7 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
             return renderer.filterType
         }
         set {
-            renderer.filterType = filterType
+            renderer.filterType = newValue
         }
     }
 
