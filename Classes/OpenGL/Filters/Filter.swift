@@ -15,8 +15,8 @@ class Filter: FilterProtocol {
     private var renderTextureCache: CVOpenGLESTextureCache?
     private var bufferPool: CVPixelBufferPool?
     private var bufferPoolAuxAttributes: CFDictionary?
-    private var frame: GLint = 0
     private var offscreenBufferHandle: GLuint = 0
+    private var uniformInputImageTexture: GLint = 0
 
     var textureCache: CVOpenGLESTextureCache?
 
@@ -93,7 +93,7 @@ class Filter: FilterProtocol {
             guard let shader = shader else {
                 throw GLError.setupError("Problem initializing shader.")
             }
-            frame = GLU.getUniformLocation(shader.program, "inputImageTexture")
+            uniformInputImageTexture = GLU.getUniformLocation(shader.program, "inputImageTexture")
             
             let maxRetainedBufferCount = ShaderConstants.retainedBufferCount
             bufferPool = createPixelBufferPool(outputDimensions.width, outputDimensions.height, FourCharCode(kCVPixelFormatType_32BGRA), Int32(maxRetainedBufferCount))
@@ -309,7 +309,7 @@ class Filter: FilterProtocol {
             shader.useProgram()
             self.time = time
             updateUniforms()
-            
+
             // Set up our destination pixel buffer as the framebuffer's render target.
             glActiveTexture(GL_TEXTURE0.ui)
             glBindTexture(CVOpenGLESTextureGetTarget(destinationTexture), CVOpenGLESTextureGetName(destinationTexture))
@@ -322,7 +322,7 @@ class Filter: FilterProtocol {
             // Render our source pixel buffer.
             glActiveTexture(GL_TEXTURE1.ui)
             glBindTexture(CVOpenGLESTextureGetTarget(sourceTexture), CVOpenGLESTextureGetName(sourceTexture))
-            glUniform1i(frame, 1)
+            glUniform1i(uniformInputImageTexture, 1)
             
             glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MIN_FILTER.ui, GL_LINEAR)
             glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MAG_FILTER.ui, GL_LINEAR)

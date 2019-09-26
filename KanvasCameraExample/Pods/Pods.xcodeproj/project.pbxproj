@@ -1163,6 +1163,7 @@
 		A9F92584F79DF0D6E7AF057DFE8D8305 /* Filter instances */ = {
 			isa = PBXGroup;
 			children = (
+				761BD1EE23394B8A0030A419 /* AlphaBlendFilter.swift */,
 				F23626029B1D9BAE67C2F154EA1DAE05 /* ChromaFilter.swift */,
 				F849E481EFEB0A3629B4B6CBD9E1FD07 /* EMInterferenceFilter.swift */,
 				1338E448A2501D0CC58D667D4F80D37A /* FilmFilter.swift */,
@@ -1179,7 +1180,6 @@
 				E76064ADF25C7EBE27569C2676600E1D /* ToonFilter.swift */,
 				F85B0CCF16C3D3E7A9847D8406FEF099 /* WaveFilter.swift */,
 				7F39FB75A80651CD8E363932056D4158 /* WavePoolFilter.swift */,
-				761BD1EE23394B8A0030A419 /* AlphaBlendFilter.swift */,
 			);
 			path = "Filter instances";
 			sourceTree = "<group>";

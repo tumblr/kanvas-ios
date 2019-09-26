@@ -7,13 +7,16 @@
 import Foundation
 import AVFoundation
 import OpenGLES
+import GLKit
 
 /// Alpha Blend Filter
 final class AlphaBlendFilter: Filter {
 
-    let pixelBuffer: CVPixelBuffer
-    let dimensions: CMVideoDimensions
-    var frame: GLint = 0
+    private let pixelBuffer: CVPixelBuffer
+    private let dimensions: CMVideoDimensions
+    private var uniformTexture: GLint = 0
+    private var uniformModelView: GLint = 0
+    private var uniformOverlayScale: GLint = 0
 
     init(glContext: EAGLContext?, pixelBuffer: CVPixelBuffer) {
         self.pixelBuffer = pixelBuffer
@@ -23,11 +26,13 @@ final class AlphaBlendFilter: Filter {
 
     override func setupShader() {
         let fragment = Filter.loadShader("alpha_blend", type: .fragment)
-        let vertex = Filter.loadShader("Base", type: .vertex)
+        let vertex = Filter.loadShader("alpha_blend", type: .vertex)
         if let fragment = fragment, let vertex = vertex {
             let shader = Shader()
             shader.setProgram(vertexShader: vertex, fragmentShader: fragment)
-            frame = GLU.getUniformLocation(shader.program, "texture2")
+            uniformTexture = GLU.getUniformLocation(shader.program, "textureOverlay")
+            uniformModelView = GLU.getUniformLocation(shader.program, "modelView")
+            uniformOverlayScale = GLU.getUniformLocation(shader.program, "overlayScale")
             self.shader = shader
         }
     }
@@ -61,6 +66,27 @@ final class AlphaBlendFilter: Filter {
 
         glActiveTexture(GL_TEXTURE2.ui)
         glBindTexture(CVOpenGLESTextureGetTarget(sourceTexture), CVOpenGLESTextureGetName(sourceTexture))
-        glUniform1i(frame, 2)
+        glUniform1i(uniformTexture, 2)
+
+        if let overlayScale = getOverlayScale() {
+            glUniform2f(uniformOverlayScale, overlayScale.width.f, overlayScale.height.f)
+        }
+    }
+
+    private func getOverlayScale() -> CGSize? {
+        guard let outputWidth = outputWidth, let outputHeight = outputHeight else {
+            return nil
+        }
+        var overlayScale = CGSize()
+        let cropScaleAmount = CGSize(width: dimensions.width.g / outputWidth.g, height: dimensions.height.g / outputHeight.g)
+        if cropScaleAmount.height > cropScaleAmount.width {
+            overlayScale.width = dimensions.width.g / (outputWidth.g * cropScaleAmount.height)
+            overlayScale.height = 1.0
+        }
+        else {
+            overlayScale.width = 1.0
+            overlayScale.height = dimensions.height.g / (outputHeight.g * cropScaleAmount.width)
+        }
+        return overlayScale
     }
 }
