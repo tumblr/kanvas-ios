@@ -161,6 +161,14 @@ extension KanvasDashboardController: CameraControllerDelegate {
     public func editorShouldShowStrokeSelectorAnimation() -> Bool {
         return false
     }
+    
+    public func didBeginDragInteraction() {
+        
+    }
+    
+    public func didEndDragInteraction() {
+        
+    }
 
     func save(media: KanvasCameraMedia, moveFile: Bool = true) {
         PHPhotoLibrary.requestAuthorization { authorizationStatus in

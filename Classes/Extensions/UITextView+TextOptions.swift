@@ -14,13 +14,15 @@ extension UITextView {
             return TextOptions(text: text,
                                font: font,
                                color: textColor,
-                               alignment: textAlignment)
+                               alignment: textAlignment,
+                               textContainerInset: textContainerInset)
         }
         set {
             text = newValue.text
             font = newValue.font
             textColor = newValue.color
             textAlignment = newValue.alignment
+            textContainerInset = newValue.textContainerInset
         }
     }
 }
