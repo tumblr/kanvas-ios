@@ -10,7 +10,7 @@
     "Tony Cheng": "tony@getkanvas.com"
   },
   "platforms": {
-    "ios": "11.0"
+    "ios": "12.0"
   },
   "requires_arc": true,
   "frameworks": [
