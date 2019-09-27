@@ -162,6 +162,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         sessionQueue.async {
             self.configureSession()
+            self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
         }
         setupGestures()
 
@@ -173,7 +174,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         setupFlash(defaultOption: settings.preferredFlashOption)
-        setupRecorder(recorderType, segmentsHandler: segmentsHandler)
 
         setupPreviewBlur()
     }
