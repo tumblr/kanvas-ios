@@ -162,6 +162,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         sessionQueue.async {
             self.configureSession()
+            self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
         }
         setupGestures()
 
@@ -173,7 +174,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         setupFlash(defaultOption: settings.preferredFlashOption)
-        setupRecorder(recorderType, segmentsHandler: segmentsHandler)
 
         setupPreviewBlur()
     }
@@ -196,6 +196,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             if self.captureSession == nil {
                 self.createCaptureSession()
                 self.configureSession()
+                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
             }
             self.captureSession?.startRunning()
             performUIUpdate {
@@ -204,7 +205,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 }
             }
         }
-        self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
