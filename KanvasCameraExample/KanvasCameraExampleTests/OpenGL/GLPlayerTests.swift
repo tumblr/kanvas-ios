@@ -91,9 +91,9 @@ class GLPlayerTests: XCTestCase {
         // After a second, processedSampleBuffer should have been called for each frame of video.
         // Using greater-than since we'll most likely be called faster than the framerate.
         // Also, always checking processedSampleBufferCallCount - 1 since the first call is initialization.
-        // AAAlso, compare against frameRate - 5, since the tests could be slow...
+        // AAAlso, compare against frameRate - 10, since the tests could be slow...
         print(renderer.processedSampleBufferCallCount - 1, UInt(frameRate))
-        XCTAssertGreaterThan(renderer.processedSampleBufferCallCount - 1, UInt(frameRate - 5), "Expected processSampleBuffer to be called for approximately each frame of video")
+        XCTAssertGreaterThan(renderer.processedSampleBufferCallCount - 1, UInt(frameRate - 10), "Expected processSampleBuffer to be called for approximately each frame of video")
         XCTAssertNotNil(renderer.processedSampleBuffer, "Expected processSampleBuffer to be called")
     }
 
