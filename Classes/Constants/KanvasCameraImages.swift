@@ -86,4 +86,12 @@ struct KanvasCameraImages {
     static let closeGradientImage = UIImage.imageFromCameraBundle(named: "closeGradient")
     static let eyeDropperImage = UIImage.imageFromCameraBundle(named: "eyeDropper")
     static let dropImage = UIImage.imageFromCameraBundle(named: "drop")
+    
+    // MARK: - Text
+    static let fontImage = UIImage.imageFromCameraBundle(named: "font")
+    static let aligmentImages: [NSTextAlignment: UIImage?] = [
+        .left: UIImage.imageFromCameraBundle(named: "leftAlignment"),
+        .center: UIImage.imageFromCameraBundle(named: "centerAlignment"),
+        .right: UIImage.imageFromCameraBundle(named: "rightAlignment"),
+    ]
 }

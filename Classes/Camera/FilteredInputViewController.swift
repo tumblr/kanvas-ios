@@ -30,6 +30,8 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     /// Filters
     private weak var delegate: FilteredInputViewControllerDelegate?
     private(set) var currentFilter: FilterType = .passthrough
+
+    private let startTime = Date.timeIntervalSinceReferenceDate
     
     init(delegate: FilteredInputViewControllerDelegate? = nil, settings: CameraSettings) {
         self.delegate = delegate
@@ -47,7 +49,8 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         view.backgroundColor = .black
         setupPreview()
 
-        renderer.changeFilter(currentFilter)
+        renderer.filterType = currentFilter
+        renderer.refreshFilter()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -63,7 +66,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     }
 
     func filterSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        renderer.processSampleBuffer(sampleBuffer)
+        renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime)
     }
     
     // MARK: - GLRendererDelegate
@@ -88,7 +91,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     // MARK: - filtering image
     func filterImageWithCurrentPipeline(image: UIImage?) -> UIImage? {
         if let uImage = image, let pixelBuffer = uImage.pixelBuffer() {
-            if let filteredPixelBuffer = renderer.processSingleImagePixelBuffer(pixelBuffer) {
+            if let filteredPixelBuffer = renderer.processSingleImagePixelBuffer(pixelBuffer, time: Date.timeIntervalSinceReferenceDate - startTime) {
                 return UIImage(pixelBuffer: filteredPixelBuffer)
             }
         }
@@ -99,6 +102,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     // MARK: - changing filters
     func applyFilter(type: FilterType) {
         currentFilter = type
-        renderer.changeFilter(currentFilter)
+        renderer.filterType = type
+        renderer.refreshFilter()
     }
 }

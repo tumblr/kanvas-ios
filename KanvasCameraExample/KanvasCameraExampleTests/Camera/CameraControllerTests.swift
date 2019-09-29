@@ -290,7 +290,15 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
         return false
     }
-
+    
+    func didBeginDragInteraction() {
+        
+    }
+    
+    func didEndDragInteraction() {
+        
+    }
+    
     var dismissCalled = false
     var videoURL: URL? = nil
     var imageCreatedCalled = false

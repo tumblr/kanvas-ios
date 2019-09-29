@@ -53,8 +53,11 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
 
     /// The FilterType used to process each frame
     var filterType: FilterType {
-        didSet {
-            renderer.changeFilter(filterType)
+        get {
+            return renderer.filterType
+        }
+        set {
+            renderer.filterType = newValue
         }
     }
 
@@ -67,6 +70,8 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
             renderer.imageOverlays = newValue
         }
     }
+
+    var startTime: CMTime?
 
     /// Convenience initializer
     override convenience init() {
@@ -82,7 +87,6 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
         self.renderingQueue = renderingQueue
         self.renderContextQueue = renderContextQueue
         self.renderer = renderer
-        filterType = .passthrough
         super.init()
         renderer.delegate = self
     }
@@ -119,10 +123,11 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
                 self.asyncVideoCompositionRequests.insert(asyncVideoCompositionRequest, at: 0)
 
                 if self.firstFrame {
-                    self.renderer.processSampleBuffer(sampleBuffer)
+                    self.startTime = asyncVideoCompositionRequest.compositionTime
+                    self.renderer.processSampleBuffer(sampleBuffer, time: 0)
                     self.firstFrame = false
                 }
-                self.renderer.processSampleBuffer(sampleBuffer)
+                self.renderer.processSampleBuffer(sampleBuffer, time: asyncVideoCompositionRequest.compositionTime.seconds - (self.startTime?.seconds ?? 0))
             }
         }
     }
@@ -134,6 +139,10 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
         renderingQueue.async {
             self.shouldCancelAllRequests = false
         }
+    }
+
+    func refreshFilter() {
+        renderer.refreshFilter()
     }
 
 }

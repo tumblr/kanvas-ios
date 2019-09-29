@@ -21,10 +21,10 @@ enum GLMediaExporterError: Error {
 }
 
 protocol MediaExporting: class {
-    var filterType: FilterType? { get set }
+    var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     init()
-    func export(image: UIImage, completion: (UIImage?, Error?) -> Void)
+    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
     func export(video url: URL, completion: @escaping (URL?, Error?) -> Void)
 }
 
@@ -32,7 +32,7 @@ protocol MediaExporting: class {
 final class GLMediaExporter: MediaExporting {
 
     /// The FilterType to apply frame-by-frame processing with.
-    var filterType: FilterType? = nil
+    var filterType: FilterType = .passthrough
 
     /// The image overlays to apply on top of each frame.
     var imageOverlays: [CGImage] = []
@@ -52,7 +52,7 @@ final class GLMediaExporter: MediaExporting {
     /// Exports an image
     /// - Parameter image: UIImage to export
     /// - Parameter completion: callback which is invoked with the processed UIImage
-    func export(image: UIImage, completion: (UIImage?, Error?) -> Void) {
+    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
         guard needsProcessing else {
             completion(image, nil)
             return
@@ -66,14 +66,13 @@ final class GLMediaExporter: MediaExporting {
             return
         }
         let renderer = GLRenderer()
-        if let filterType = filterType {
-            renderer.changeFilter(filterType)
-        }
         renderer.imageOverlays = imageOverlays
+        renderer.filterType = filterType
+        renderer.refreshFilter()
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
-        renderer.processSampleBuffer(sampleBuffer)
-        renderer.processSampleBuffer(sampleBuffer) { (filteredPixelBuffer, time) in
+        renderer.processSampleBuffer(sampleBuffer, time: time)
+        renderer.processSampleBuffer(sampleBuffer, time: time) { (filteredPixelBuffer, time) in
             guard let processedImage = UIImage(pixelBuffer: filteredPixelBuffer) else {
                 completion(nil, GLMediaExporterError.noProcessedImage)
                 return
@@ -116,10 +115,9 @@ final class GLMediaExporter: MediaExporting {
             completion(nil, GLMediaExporterError.noCompositor)
             return
         }
-        if let filterType = filterType {
-            glVideoCompositor.filterType = filterType
-        }
         glVideoCompositor.imageOverlays = imageOverlays
+        glVideoCompositor.filterType = filterType
+        glVideoCompositor.refreshFilter()
         self.progressTimer = Timer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: exportSession, repeats: true)
         exportSession?.exportAsynchronously {
             self.progressTimer?.invalidate()

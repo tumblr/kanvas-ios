@@ -69,6 +69,12 @@ public protocol CameraControllerDelegate: class {
     func editorShouldShowStrokeSelectorAnimation() -> Bool
     
     func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
+    
+    /// Called when a drag interaction starts
+    func didBeginDragInteraction()
+    
+    /// Called when a drag interaction ends
+    func didEndDragInteraction()
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -667,6 +673,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - MediaClipsEditorDelegate
 
     func mediaClipStartedMoving() {
+        delegate?.didBeginDragInteraction()
         modeAndShootController.enableShootButtonUserInteraction(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
@@ -677,6 +684,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipFinishedMoving() {
         analyticsProvider?.logMovedClip()
+        delegate?.didEndDragInteraction()
         let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
         performUIUpdate { [weak self] in
@@ -688,6 +696,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func mediaClipWasDeleted(at index: Int) {
         cameraInputController.deleteSegment(at: index)
+        delegate?.didEndDragInteraction()
         let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
         performUIUpdate { [weak self] in

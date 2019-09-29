@@ -177,10 +177,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - Views
     
-    /// Sets up the carousel with the dominant colors from the image on the player
+    /// Sets up the color carousels of both drawing and text tools
     private func addCarouselDefaultColors(_ image: UIImage) {
         let dominantColors = image.getDominantColors(count: 3)
         drawingController.addColorsForCarousel(colors: dominantColors)
+        
+        if let mostDominantColor = dominantColors.first {
+            textController.addColorsForCarousel(colors: [mostDominantColor, .white, .black])
+        }
     }
     
     // MARK: - Loading Indicator
@@ -218,6 +222,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         textController.showView(true, options: options, transformations: transformations)
     }
     
+    func didBeginTouchesOnText() {
+        showNavigationContainer(false)
+    }
+    
+    func didEndTouchesOnText() {
+        showNavigationContainer(true)
+    }
+    
     private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()
@@ -245,7 +257,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private func createFinalVideo(videoURL: URL, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
-        exporter.filterType = filterType
+        exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL) { (exportedVideoURL, _) in
             performUIUpdate {
@@ -262,9 +274,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private func createFinalImage(image: UIImage, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
-        exporter.filterType = filterType
+        exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(image: image) { (exportedImage, _) in
+        exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
                 guard let image = exportedImage else {
                     self.hideLoading()
@@ -428,5 +440,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
+    }
+    
+    /// shows or hides the editor menu and the back button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showNavigationContainer(_ show: Bool) {
+        editorView.showNavigationContainer(show)
     }
 }
