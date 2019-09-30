@@ -130,15 +130,14 @@ final class MovableTextView: UIView {
 
 private extension UITextView {
     
-    /// Sets a new scale factor to update the quality of the text.
+    /// Sets a new scale factor to update the quality of the text. This value represents how content in the view is mapped
+    /// from the logical coordinate space (measured in points) to the device coordinate space (measured in pixels).
+    /// For example, if the scale factor is 2.0, 2 pixels will be used to draw each point of the frame.
     ///
-    /// - Parameter scaleFactor: the new scale factor. Values lower than 1.0 will be changed to the native scale of the device.
+    /// - Parameter scaleFactor: the new scale factor. The value will be internally multiplied by the native scale of the device.
+    /// Values must be higher than 1.0.
     func setScaleFactor(_ scaleFactor: CGFloat) {
-        if scaleFactor > 1.0 {
-            textInputView.contentScaleFactor = scaleFactor * UIScreen.main.nativeScale
-        }
-        else {
-            textInputView.contentScaleFactor = UIScreen.main.nativeScale
-        }
+        guard scaleFactor >= 1.0 else { return }
+        textInputView.contentScaleFactor = scaleFactor * UIScreen.main.nativeScale
     }
 }
