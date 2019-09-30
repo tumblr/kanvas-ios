@@ -158,7 +158,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
 
         switch recognizer.state {
         case .began:
-            startTouches(view: movableView)
+            onRecognizerBegan(view: movableView)
             originTransformations.rotation = movableView.rotation
         case .changed:
             let newRotation = originTransformations.rotation + recognizer.rotation
@@ -177,7 +177,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         
         switch recognizer.state {
         case .began:
-            startTouches(view: movableView)
+            onRecognizerBegan(view: movableView)
             originTransformations.scale = movableView.scale
         case .changed:
             let newScale = originTransformations.scale * recognizer.scale
@@ -196,7 +196,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         
         switch recognizer.state {
         case .began:
-            startTouches(view: movableView)
+            onRecognizerBegan(view: movableView)
             originTransformations.position = movableView.position
         case .changed:
             let newPosition = originTransformations.position + recognizer.translation(in: self)
@@ -215,7 +215,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         
         switch recognizer.state {
         case .began:
-            startTouches(view: movableView)
+            onRecognizerBegan(view: movableView)
             showOverlay(true)
             movableView.fadeOut()
             touchPosition = recognizer.touchLocations
