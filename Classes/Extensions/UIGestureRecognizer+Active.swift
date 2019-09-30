@@ -13,7 +13,7 @@ extension UIGestureRecognizer {
     private static let inactiveStates: [UIGestureRecognizer.State] = [.ended, .possible, .failed, .cancelled]
     
     var isActive: Bool {
-        return UIGestureRecognizer.inactiveStates.contains(state)
+        return UIGestureRecognizer.activeStates.contains(state)
     }
     
     var isInactive: Bool {
