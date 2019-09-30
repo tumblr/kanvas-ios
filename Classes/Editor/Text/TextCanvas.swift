@@ -31,7 +31,7 @@ private struct Constants {
 }
 
 /// View that contains the collection of text views
-final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRecognizerDelegate {
+final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
     weak var delegate: TextCanvasDelegate?
     
@@ -111,7 +111,6 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
         textView.isUserInteractionEnabled = true
         textView.isExclusiveTouch = true
         textView.isMultipleTouchEnabled = true
-        textView.delegate = self
         textView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textView)
         
@@ -133,12 +132,6 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
         pinchRecognizer.delegate = self
         panRecognizer.delegate = self
         longPressRecognizer.delegate = self
-        
-        tapRecognizer.cancelsTouchesInView = false
-        rotationRecognizer.cancelsTouchesInView = false
-        pinchRecognizer.cancelsTouchesInView = false
-        panRecognizer.cancelsTouchesInView = false
-        longPressRecognizer.cancelsTouchesInView = false
 
         textView.addGestureRecognizer(tapRecognizer)
         textView.addGestureRecognizer(rotationRecognizer)
@@ -165,11 +158,14 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
 
         switch recognizer.state {
         case .began:
+            startTouches(view: movableView)
             originTransformations.rotation = movableView.rotation
-        case .changed, .ended:
+        case .changed:
             let newRotation = originTransformations.rotation + recognizer.rotation
             movableView.rotation = newRotation
-        case .cancelled, .failed, .possible:
+        case .ended, .cancelled, .failed:
+            onRecognizerEnded()
+        case .possible:
             break
         @unknown default:
             break
@@ -181,11 +177,14 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
         
         switch recognizer.state {
         case .began:
+            startTouches(view: movableView)
             originTransformations.scale = movableView.scale
-        case .changed, .ended:
+        case .changed:
             let newScale = originTransformations.scale * recognizer.scale
             movableView.scale = newScale
-        case .cancelled, .failed, .possible:
+        case .ended, .cancelled, .failed:
+            onRecognizerEnded()
+        case .possible:
             break
         @unknown default:
             break
@@ -197,11 +196,14 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
         
         switch recognizer.state {
         case .began:
+            startTouches(view: movableView)
             originTransformations.position = movableView.position
-        case .changed, .ended:
+        case .changed:
             let newPosition = originTransformations.position + recognizer.translation(in: self)
             movableView.position = newPosition
-        case .cancelled, .failed, .possible:
+        case .ended, .cancelled, .failed:
+            onRecognizerEnded()
+        case .possible:
             break
         @unknown default:
             break
@@ -213,6 +215,7 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
         
         switch recognizer.state {
         case .began:
+            startTouches(view: movableView)
             showOverlay(true)
             movableView.fadeOut()
             touchPosition = recognizer.touchLocations
@@ -229,6 +232,7 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
             }
             showOverlay(false)
             trashView.hide()
+            onRecognizerEnded()
         case .possible:
             break
         @unknown default:
@@ -254,9 +258,25 @@ final class TextCanvas: IgnoreTouchesView, MovableTextViewDelegate, UIGestureRec
         }
     }
     
-    // MARK: - MovableTextViewDelegate
+    // MARK: - Extended touch area
     
-    func didBeginTouches(view: MovableTextView) {
+    private func onRecognizerBegan(view: MovableTextView) {
+        if currentMovableView == nil {
+            didBeginTouches(on: view)
+        }
+    }
+    
+    private func onRecognizerEnded() {
+        guard let currentMovableView = currentMovableView,
+            let recognizers = currentMovableView.gestureRecognizers else { return }
+        
+        let allRecognizersAreInactive = recognizers.allSatisfy { $0.isInactive }
+        if allRecognizersAreInactive {
+            didEndTouches()
+        }
+    }
+    
+    func didBeginTouches(on view: MovableTextView) {
         currentMovableView = view
         delegate?.didBeginTouchesOnText()
     }

@@ -7,17 +7,6 @@
 import Foundation
 import UIKit
 
-/// Protocol for movable text view methods
-protocol MovableTextViewDelegate: class {
-    /// Called when a touch event on the view begins
-    ///
-    /// - Parameter view: movable view where the touch occurred
-    func didBeginTouches(view: MovableTextView)
-    
-    /// Called when the touch events on the view end
-    func didEndTouches()
-}
-
 /// Constants for MovableTextView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.35
@@ -28,8 +17,6 @@ private struct Constants {
 
 /// A TextView wrapped in a UIView that can be rotated, moved and scaled
 final class MovableTextView: UIView {
-    
-    weak var delegate: MovableTextViewDelegate?
     
     private let innerTextView: UITextView
     
@@ -139,25 +126,13 @@ final class MovableTextView: UIView {
             self.removeFromSuperview()
         })
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        delegate?.didBeginTouches(view: self)
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        
-        guard let gestureRecognizers = gestureRecognizers else { return }
-        let allRecognizersEnded = gestureRecognizers.allSatisfy { $0.numberOfTouches == 0 }
-        if allRecognizersEnded {
-            delegate?.didEndTouches()
-        }
-    }
 }
 
 private extension UITextView {
     
+    /// Sets a new scale factor to update the quality of the text.
+    ///
+    /// - Parameter scaleFactor: the new scale factor. Values lower than 1.0 will be changed to the native scale of the device.
     func setScaleFactor(_ scaleFactor: CGFloat) {
         if scaleFactor > 1.0 {
             textInputView.contentScaleFactor = scaleFactor * UIScreen.main.nativeScale
