@@ -49,7 +49,8 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
         view.backgroundColor = .black
         setupPreview()
 
-        renderer.changeFilter(currentFilter)
+        renderer.filterType = currentFilter
+        renderer.refreshFilter()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -101,6 +102,7 @@ final class FilteredInputViewController: UIViewController, GLRendererDelegate {
     // MARK: - changing filters
     func applyFilter(type: FilterType) {
         currentFilter = type
-        renderer.changeFilter(currentFilter)
+        renderer.filterType = type
+        renderer.refreshFilter()
     }
 }

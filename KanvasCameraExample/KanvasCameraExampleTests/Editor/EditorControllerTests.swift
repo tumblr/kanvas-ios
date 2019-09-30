@@ -11,7 +11,7 @@ import UIKit
 import XCTest
 
 class MediaExporterStub: MediaExporting {
-    var filterType: FilterType? = nil
+    var filterType: FilterType = .passthrough
     var imageOverlays: [CGImage] = []
 
     var exportImageCalled: Bool = false
