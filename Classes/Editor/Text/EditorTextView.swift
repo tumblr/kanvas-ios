@@ -422,24 +422,25 @@ final class EditorTextView: UIView {
     ///
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
-        UIView.animate(withDuration: 0.0, animations: {
+        UIView.performWithoutAnimation {
             self.textView.frame = CGRect(x: self.textView.frame.origin.x,
                                          y: self.textView.frame.origin.y,
                                          width: self.textView.frame.width,
                                          height: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin - distance)
-            self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
-        }, completion: { _ in
-            self.showColorPickerMenu(false, animated: false)
-            self.showMainMenu(true, animated: false)
-            self.showTools(true)
-            self.showTextView(true)
-        })
+            
+            self.colorPickerContainer.alpha = 0
+            self.mainMenuContainer.alpha = 1
+        }
+        
+        self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
+        self.toolsContainer.alpha = 1
+        self.textView.alpha = 1
     }
     
     /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
-        showTextView(false)
-        showTools(false)
+        self.textView.alpha = 0
+        self.toolsContainer.alpha = 0
 
         textView.frame = CGRect(x: textView.frame.origin.x,
                                 y: textView.frame.origin.y,
@@ -471,9 +472,8 @@ final class EditorTextView: UIView {
     /// shows or hides the color picker menu
     ///
     /// - Parameter show: true to show, false to hide
-    private func showColorPickerMenu(_ show: Bool, animated: Bool = true) {
-        let animationDuration = animated ? Constants.animationDuration : Constants.noDuration
-        UIView.animate(withDuration: animationDuration) {
+    private func showColorPickerMenu(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.colorPickerContainer.alpha = show ? 1 : 0
         }
     }
@@ -481,9 +481,8 @@ final class EditorTextView: UIView {
     /// shows or hides the main menu
     ///
     /// - Parameter show: true to show, false to hide
-    private func showMainMenu(_ show: Bool, animated: Bool = true) {
-        let animationDuration = animated ? Constants.animationDuration : Constants.noDuration
-        UIView.animate(withDuration: animationDuration) {
+    private func showMainMenu(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.mainMenuContainer.alpha = show ? 1 : 0
         }
     }
