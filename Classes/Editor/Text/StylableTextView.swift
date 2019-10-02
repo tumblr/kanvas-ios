@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// Protocol for closing the text tools
+/// Protocol for the text view inside text tools
 protocol StylableTextViewDelegate: class {
     
     /// Called when the background was touched

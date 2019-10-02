@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// Protocol for closing the text tools
+/// Protocol for the text tools editor
 protocol EditorTextViewDelegate: class {
     
     /// Called when the confirm button is selected
