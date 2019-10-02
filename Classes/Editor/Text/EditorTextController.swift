@@ -105,7 +105,11 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     // MARK: - EditorTextViewDelegate
     
     func didTapConfirmButton() {
-        delegate?.didConfirmText(options: textView.options, transformations: textTransformations, size: textView.textSize)
+        didConfirmText()
+    }
+    
+    func didTapTextViewBackground() {
+        didConfirmText()
     }
     
     func didTapFontSelector() {
@@ -120,6 +124,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         if let newAlignment = alignments.first {
             textView.alignment = newAlignment
         }
+    }
+    
+    private func didConfirmText() {
+        delegate?.didConfirmText(options: textView.options, transformations: textTransformations, size: textView.textSize)
     }
     
     // MARK: - ColorCollectionControllerDelegate

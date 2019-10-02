@@ -7,8 +7,17 @@
 import Foundation
 import UIKit
 
+/// Protocol for closing the text tools
+protocol StylableTextViewDelegate: class {
+    
+    /// Called when the background was touched
+    func didTapBackground()
+}
+
 /// Special text view for editing
 final class StylableTextView: UITextView {
+    
+    weak var textViewDelegate: StylableTextViewDelegate?
     
     override var contentSize: CGSize {
         didSet {
@@ -25,6 +34,7 @@ final class StylableTextView: UITextView {
     init() {
         super.init(frame: .zero, textContainer: nil)
         setUpView()
+        setUpGestureRecognizers()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -42,11 +52,25 @@ final class StylableTextView: UITextView {
         autocorrectionType = .no
     }
     
+    private func setUpGestureRecognizers() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action:  #selector(textViewTapped(recognizer:)))
+        addGestureRecognizer(tapRecognizer)
+    }
+    
     // MARK: - Private utilities
     
     private func centerContentVertically() {
         var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2
         topCorrection = max(0, topCorrection)
         contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
+    }
+    
+    // MARK: - Gesture recognizers
+    
+    @objc private func textViewTapped(recognizer: UITapGestureRecognizer) {
+        let point = recognizer.location(in: recognizer.view)
+        if !textInputView.frame.contains(point) {
+            textViewDelegate?.didTapBackground()
+        }
     }
 }
