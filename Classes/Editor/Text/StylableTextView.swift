@@ -53,7 +53,7 @@ final class StylableTextView: UITextView {
     }
     
     private func setUpGestureRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action:  #selector(textViewTapped(recognizer:)))
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(textViewTapped(recognizer:)))
         addGestureRecognizer(tapRecognizer)
     }
     
