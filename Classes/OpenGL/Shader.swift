@@ -59,10 +59,10 @@ class Shader {
     func setProgram(vertexShader: String, fragmentShader: String) {
         // Load vertex and fragment shaders
         let attribLocation: [GLuint] = [
-            UInt32(0), UInt32(1)
+            UInt32(0), UInt32(1), UInt32(2)
             ]
         let attribName: [String] = [
-            "position", "texturecoordinate"
+            "position", "texturecoordinate", "transform"
             ]
         var uniformLocations: [GLint] = []
         

@@ -34,6 +34,7 @@ protocol GLRendering: class {
     var delegate: GLRendererDelegate? { get set }
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
+    var mediaTransform: Transformation? { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func output(filteredPixelBuffer: CVPixelBuffer)
     func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
@@ -53,6 +54,14 @@ final class GLRenderer: GLRendering {
     // Image overlays
     var imageOverlays: [CGImage] = []
 
+    var mediaTransform: Transformation? {
+        didSet {
+            synchronized(self) {
+                self.filter.transform = self.mediaTransform
+            }
+        }
+    }
+
     // Current filter type
     var filterType: FilterType = .passthrough
 
@@ -66,7 +75,7 @@ final class GLRenderer: GLRendering {
     /// - Parameter delegate: the callback
     init() {
         glContext = EAGLContext(api: .openGLES3)
-        filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
+        filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext, transform: mediaTransform)
     }
 
     /// Processes a sample buffer, but swallows the completion
@@ -142,7 +151,7 @@ final class GLRenderer: GLRendering {
             processingImage = false
         }
 
-        let imageFilter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
+        let imageFilter = FilterFactory.createFilter(type: self.filterType, glContext: glContext, transform: nil)
         var sampleTime = CMSampleTimingInfo()
         var videoInfo: CMVideoFormatDescription?
         CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &videoInfo)
@@ -169,7 +178,7 @@ final class GLRenderer: GLRendering {
     // MARK: - changing filters
     func refreshFilter() {
         synchronized(self) {
-            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
+            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() }, transform: mediaTransform)
         }
     }
 

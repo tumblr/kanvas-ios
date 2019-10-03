@@ -12,40 +12,40 @@ struct FilterFactory {
     /// Creates a filter for the provided type and glContext
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
-    static func createFilter(type: FilterType, glContext: EAGLContext?) -> FilterProtocol {
+    static func createFilter(type: FilterType, glContext: EAGLContext?, transform: Transformation?) -> FilterProtocol {
         var newFilter: FilterProtocol
         switch type {
         case .passthrough: fallthrough
         case .off:
-            newFilter = Filter(glContext: glContext)
+            newFilter = Filter(glContext: glContext, transform: transform)
         case .emInterference:
-            newFilter = EMInterferenceFilter(glContext: glContext)
+            newFilter = EMInterferenceFilter(glContext: glContext, transform: transform)
         case .film:
-            newFilter = FilmFilter(glContext: glContext)
+            newFilter = FilmFilter(glContext: glContext, transform: transform)
         case .lego:
-            newFilter = LegoFilter(glContext: glContext)
+            newFilter = LegoFilter(glContext: glContext, transform: transform)
         case .mirrorTwo:
-            newFilter = MirrorTwoFilter(glContext: glContext)
+            newFilter = MirrorTwoFilter(glContext: glContext, transform: transform)
         case .mirrorFour:
-            newFilter = MirrorFourFilter(glContext: glContext)
+            newFilter = MirrorFourFilter(glContext: glContext, transform: transform)
         case .plasma:
-            newFilter = PlasmaFilter(glContext: glContext)
+            newFilter = PlasmaFilter(glContext: glContext, transform: transform)
         case .rave:
-            newFilter = RaveFilter(glContext: glContext)
+            newFilter = RaveFilter(glContext: glContext, transform: transform)
         case .rgb:
-            newFilter = RGBFilter(glContext: glContext)
+            newFilter = RGBFilter(glContext: glContext, transform: transform)
         case .chroma:
-            newFilter = ChromaFilter(glContext: glContext)
+            newFilter = ChromaFilter(glContext: glContext, transform: transform)
         case .grayscale:
-            newFilter = GrayscaleFilter(glContext: glContext)
+            newFilter = GrayscaleFilter(glContext: glContext, transform: transform)
         case .lightLeaks:
-            newFilter = LightLeaksFilter(glContext: glContext)
+            newFilter = LightLeaksFilter(glContext: glContext, transform: transform)
         case .wavePool:
-            newFilter = WavePoolFilter(glContext: glContext)
+            newFilter = WavePoolFilter(glContext: glContext, transform: transform)
         case .manga:
-            newFilter = MangaFilter(glContext: glContext)
+            newFilter = MangaFilter(glContext: glContext, transform: transform)
         case .toon:
-            newFilter = ToonFilter(glContext: glContext)
+            newFilter = ToonFilter(glContext: glContext, transform: transform)
         }
         return newFilter
     }
@@ -54,9 +54,9 @@ struct FilterFactory {
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
     /// - Parameter overlays: Array of CVPixelBuffer instances to overlay.
-    static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer]) -> FilterProtocol {
+    static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer], transform: Transformation?) -> FilterProtocol {
         guard overlays.count > 0 else {
-            return FilterFactory.createFilter(type: type, glContext: glContext)
+            return FilterFactory.createFilter(type: type, glContext: glContext, transform: transform)
         }
         if type == .passthrough || type == .off {
             if overlays.count == 1, let overlay = overlays.first {
@@ -67,7 +67,7 @@ struct FilterFactory {
             }
         }
         else {
-            return GroupFilter(filters: [FilterFactory.createFilter(type: type, glContext: glContext)] + overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
+            return GroupFilter(filters: [FilterFactory.createFilter(type: type, glContext: glContext, transform: transform)] + overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
         }
     }
 }

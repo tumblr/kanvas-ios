@@ -17,6 +17,7 @@ final class GLPixelBufferView: UIView {
     private var frameBufferHandle: GLuint = 0
     private var colorBufferHandle: GLuint = 0
     private var inputImageTexture: GLint = 0
+    private var uniformTransform: GLint = 0
     
     override class var layerClass: AnyClass {
         return CAEAGLLayer.self
@@ -80,6 +81,7 @@ final class GLPixelBufferView: UIView {
             renderShader = Shader()
             if let renderShader = renderShader {
                 inputImageTexture = renderShader.getParameterLocation(name: "inputImageTexture")
+                uniformTransform = renderShader.getParameterLocation(name: "transform")
             }
         } while false
         if !success {
@@ -194,6 +196,9 @@ final class GLPixelBufferView: UIView {
         glActiveTexture(GL_TEXTURE0.ui)
         glBindTexture(CVOpenGLESTextureGetTarget(texture), CVOpenGLESTextureGetName(texture))
         glUniform1i(inputImageTexture, 0)
+
+        var identity = Transformation.identity
+        GL_glUniformMatrix4fv(uniformTransform, 1, 0, &identity)
         
         // Set texture parameters
         glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MIN_FILTER.ui, GL_LINEAR)
@@ -215,7 +220,9 @@ final class GLPixelBufferView: UIView {
             textureSamplingSize.width = 1.0
             textureSamplingSize.height = self.bounds.size.height / (frameHeight.g * cropScaleAmount.width)
         }
-        
+        textureSamplingSize.width = 1.0
+        textureSamplingSize.height = 1.0
+
         // Perform a vertical flip by swapping the top left and the bottom left coordinate.
         // CVPixelBuffers have a top left origin and OpenGL has a bottom left origin.
         let passThroughTextureVertices: [GLfloat] = [
@@ -224,8 +231,13 @@ final class GLPixelBufferView: UIView {
             (1.0 - textureSamplingSize.width.f) / 2.0, (1.0 - textureSamplingSize.height.f) / 2.0, // bottom left
             (1.0 + textureSamplingSize.width.f) / 2.0, (1.0 - textureSamplingSize.height.f) / 2.0, // bottom right
         ]
-        
-        glVertexAttribPointer(ShaderConstants.attribTexturePosition, 2, GL_FLOAT.ui, 0, 0, passThroughTextureVertices)
+        let textureVertices: [GLfloat] = [
+            0.0, 1.0,
+            1.0, 1.0,
+            0.0, 0.0,
+            1.0, 0.0,
+        ]
+        glVertexAttribPointer(ShaderConstants.attribTexturePosition, 2, GL_FLOAT.ui, 0, 0, textureVertices)
         glEnableVertexAttribArray(ShaderConstants.attribTexturePosition)
         
         glDrawArrays(GL_TRIANGLE_STRIP.ui, 0, 4)

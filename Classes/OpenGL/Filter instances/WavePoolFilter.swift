@@ -9,10 +9,10 @@ import Foundation
 /// Wave Pool Filter
 final class WavePoolFilter: GroupFilter {
 
-    init(glContext: EAGLContext?) {
+    init(glContext: EAGLContext?, transform: Transformation?) {
         super.init(filters: [
-            ImagePoolFilter(glContext: glContext),
-            WaveFilter(glContext: glContext),
+            ImagePoolFilter(glContext: glContext, transform: transform),
+            WaveFilter(glContext: glContext, transform: nil),
         ])
     }
 

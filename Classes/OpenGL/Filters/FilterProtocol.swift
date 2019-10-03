@@ -21,4 +21,6 @@ protocol FilterProtocol: class {
 
     /// Output format set by setupFormatDescription
     var outputFormatDescription: CMFormatDescription? { get set }
+
+    var transform: Transformation? { get set }
 }

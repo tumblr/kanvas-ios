@@ -3,7 +3,6 @@ varying lowp vec2 textureCoordinate;
 uniform sampler2D inputImageTexture;
 uniform sampler2D textureOverlay;
 
-uniform lowp mat4 modelView;
 uniform lowp vec2 overlayScale;
 
 void main()

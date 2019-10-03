@@ -13,6 +13,8 @@ class GroupFilter: FilterProtocol {
     /// Output format
     var outputFormatDescription: CMFormatDescription?
 
+    var transform: Transformation?
+
     private var filters: [FilterProtocol] = []
     
     init(filters: [FilterProtocol]) {

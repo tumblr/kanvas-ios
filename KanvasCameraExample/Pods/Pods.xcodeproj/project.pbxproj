@@ -114,6 +114,9 @@
 		75698654F67D92A314576CC1AE0D4C64 /* MediaMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47366310E9F00A151078EE7B9B5C9D68 /* MediaMetadata.swift */; };
 		75B67B402D2D2E72B0C6CAC24CB546DB /* ModeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013B760EC29DAA35E33D9900C8E52949 /* ModeButtonView.swift */; };
 		766FDAC374340D00FAEBC6CA4C3F60F5 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E757D5294C558F213B5FFF6C2071E57 /* EditorView.swift */; };
+		76A9B9B42342812000BBDA86 /* Transformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A9B9B32342812000BBDA86 /* Transformation.swift */; };
+		76A9B9B62342A7B800BBDA86 /* PointersNothingToSeeHere.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A9B9B52342A7B800BBDA86 /* PointersNothingToSeeHere.m */; };
+		76A9B9B82342A7CA00BBDA86 /* PointersNothingToSeeHere.h in Headers */ = {isa = PBXBuildFile; fileRef = 76A9B9B72342A7CA00BBDA86 /* PointersNothingToSeeHere.h */; };
 		77BCE94EAD151C8C866607061A8166B4 /* MangaFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69487A15F20098F3B82C34AF3077402F /* MangaFilter.swift */; };
 		785807E73F15FD4A3C0A72428FAFB7E7 /* GifVideoOutputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA54BC59E3C11B8244FF084C6E200E1A /* GifVideoOutputHandler.swift */; };
 		7A1638FD7ACF6F1CE784BE96B28C669D /* TumblrTheme.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B233284383AF6968406119FF5CFB712 /* TumblrTheme.framework */; };
@@ -499,6 +502,9 @@
 		747008D08148BF11271658C553C6A165 /* SharedUI-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SharedUI-dummy.m"; sourceTree = "<group>"; };
 		7619E7FC0B8A102DDFD73BA3B5170EF4 /* TextOptions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextOptions.swift; sourceTree = "<group>"; };
 		76330555C121C46F6A4DCB986095B830 /* KanvasCameraTimes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraTimes.swift; sourceTree = "<group>"; };
+		76A9B9B32342812000BBDA86 /* Transformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transformation.swift; sourceTree = "<group>"; };
+		76A9B9B52342A7B800BBDA86 /* PointersNothingToSeeHere.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PointersNothingToSeeHere.m; sourceTree = "<group>"; };
+		76A9B9B72342A7CA00BBDA86 /* PointersNothingToSeeHere.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PointersNothingToSeeHere.h; sourceTree = "<group>"; };
 		7AD6F529F766F65DB944F9CDE2EA5112 /* UIView+AutoLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIView+AutoLayout.swift"; path = "Source/UIView+AutoLayout.swift"; sourceTree = "<group>"; };
 		7B250AC506770743B2453A774E19DD98 /* Shaders */ = {isa = PBXFileReference; includeInIndex = 1; name = Shaders; path = Resources/Shaders; sourceTree = "<group>"; };
 		7B8F626A5B2D628DBE337922C6382DD2 /* Array+Object.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Array+Object.swift"; sourceTree = "<group>"; };
@@ -870,9 +876,12 @@
 				950459AA746BE972F9115CD0D80FD1EA /* NumTypes+Conversion.swift */,
 				0F18C92A7F6A12287FD7E4785609B8D5 /* Shader.swift */,
 				F161723D0865093AB87D73908F00D205 /* ShaderUtilities.swift */,
+				76A9B9B32342812000BBDA86 /* Transformation.swift */,
 				B36A9F0A4893315BFD614C35BE5EA89C /* UIImage+PixelBuffer.swift */,
 				732C526D1BECA403CB96EE1F506688DC /* Filter instances */,
 				C9C7E80E79724FF30437AA4418764A17 /* Filters */,
+				76A9B9B52342A7B800BBDA86 /* PointersNothingToSeeHere.m */,
+				76A9B9B72342A7CA00BBDA86 /* PointersNothingToSeeHere.h */,
 			);
 			name = OpenGL;
 			path = Classes/OpenGL;
@@ -1536,6 +1545,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92BC1DBF16144627CC58224609F2F143 /* KanvasCamera-umbrella.h in Headers */,
+				76A9B9B82342A7CA00BBDA86 /* PointersNothingToSeeHere.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1979,6 +1989,7 @@
 				35C20153F8F359027635AB9842A2B540 /* GLRenderer.swift in Sources */,
 				D4CFF2E87E1270ECCB7A76307BD21F6A /* GLVideoCompositor.swift in Sources */,
 				ABEBA2A12FEDDE27ADCD6D8CA273DB64 /* GrayscaleFilter.swift in Sources */,
+				76A9B9B42342812000BBDA86 /* Transformation.swift in Sources */,
 				67E6BCF6638C386E6E93AB4D1B6E662B /* GroupFilter.swift in Sources */,
 				5237E6D986CE42993787A2C21B20AFBD /* HorizontalCollectionLayout.swift in Sources */,
 				F70B3B9BCF32749BAA68CFC0AD10A817 /* HorizontalCollectionView.swift in Sources */,
@@ -1987,6 +1998,7 @@
 				E1C7499CB5EB4D00A3C291F5CECEE49A /* ImagePoolFilter.swift in Sources */,
 				CAD0FFD8F932F1ADFACFA2F9A0AA3A1A /* ImagePreviewController.swift in Sources */,
 				7DAC1CCFEEA1DACC3B19CB4DD4E4B970 /* IndexPath+Order.swift in Sources */,
+				76A9B9B62342A7B800BBDA86 /* PointersNothingToSeeHere.m in Sources */,
 				26049EDE1C66CD5ACC477F18CF9AAD58 /* KanvasCamera-dummy.m in Sources */,
 				85E4A95B98BC6EB9A12087C854E4B03F /* KanvasCameraAnalyticsProvider.swift in Sources */,
 				8B3EB4A4F70FE1642B7AC3AD2E6FEAF0 /* KanvasCameraColors.swift in Sources */,

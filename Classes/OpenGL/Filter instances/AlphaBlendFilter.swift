@@ -15,13 +15,12 @@ final class AlphaBlendFilter: Filter {
     private let pixelBuffer: CVPixelBuffer
     private let dimensions: CMVideoDimensions
     private var uniformTexture: GLint = 0
-    private var uniformModelView: GLint = 0
     private var uniformOverlayScale: GLint = 0
 
     init(glContext: EAGLContext?, pixelBuffer: CVPixelBuffer) {
         self.pixelBuffer = pixelBuffer
         self.dimensions = CMVideoDimensions(width: Int32(CVPixelBufferGetWidth(pixelBuffer)), height: Int32(CVPixelBufferGetHeight(pixelBuffer)))
-        super.init(glContext: glContext)
+        super.init(glContext: glContext, transform: nil)
     }
 
     override func setupShader() {
@@ -31,7 +30,6 @@ final class AlphaBlendFilter: Filter {
             let shader = Shader()
             shader.setProgram(vertexShader: vertex, fragmentShader: fragment)
             uniformTexture = GLU.getUniformLocation(shader.program, "textureOverlay")
-            uniformModelView = GLU.getUniformLocation(shader.program, "modelView")
             uniformOverlayScale = GLU.getUniformLocation(shader.program, "overlayScale")
             self.shader = shader
         }

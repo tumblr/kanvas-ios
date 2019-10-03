@@ -333,6 +333,18 @@ final class GLPlayer {
         displayLink?.add(to: .main, forMode: .common)
         let frameRate = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first?.nominalFrameRate ?? 10.0
         displayLink?.preferredFramesPerSecond = Int(ceil(frameRate))
+
+        let transform = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first?.preferredTransform
+        let size = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first?.naturalSize
+        if let t = transform, let s = size {
+            let matrix = GLKMatrix4Make(
+                t.a.f, t.c.f, 0.0, t.tx.f / s.width.f,
+                t.b.f, t.d.f, 0.0, t.ty.f / s.height.f,
+                0.0, 0.0, 1.0, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            )
+            renderer.mediaTransform = Transformation(matrix: matrix)
+        }
     }
 
     @objc private func step() {

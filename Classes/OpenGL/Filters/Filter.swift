@@ -17,6 +17,7 @@ class Filter: FilterProtocol {
     private var bufferPoolAuxAttributes: CFDictionary?
     private var offscreenBufferHandle: GLuint = 0
     private var uniformInputImageTexture: GLint = 0
+    private var uniformTransform: GLint = 0
 
     var textureCache: CVOpenGLESTextureCache?
 
@@ -34,12 +35,15 @@ class Filter: FilterProtocol {
 
     /// Time interval that the filter is running for
     var time: TimeInterval = 0
+
+    var transform: Transformation?
     
     /// Initializer with glContext
     ///
     /// - Parameter glContext: The current EAGLContext. Should be the same for the whole program
-    init(glContext: EAGLContext?) {
+    init(glContext: EAGLContext?, transform: Transformation?) {
         self.glContext = glContext
+        self.transform = transform
     }
     
     /// Method to initialize the filter with the right output
@@ -94,6 +98,7 @@ class Filter: FilterProtocol {
                 throw GLError.setupError("Problem initializing shader.")
             }
             uniformInputImageTexture = GLU.getUniformLocation(shader.program, "inputImageTexture")
+            uniformTransform = GLU.getUniformLocation(shader.program, "transform")
             
             let maxRetainedBufferCount = ShaderConstants.retainedBufferCount
             bufferPool = createPixelBufferPool(outputDimensions.width, outputDimensions.height, FourCharCode(kCVPixelFormatType_32BGRA), Int32(maxRetainedBufferCount))
@@ -309,6 +314,9 @@ class Filter: FilterProtocol {
             shader.useProgram()
             self.time = time
             updateUniforms()
+
+            var transform = self.transform?.transformationMatrix ?? Transformation.identity
+            GL_glUniformMatrix4fv(uniformTransform, 1, 0, &transform)
 
             // Set up our destination pixel buffer as the framebuffer's render target.
             glActiveTexture(GL_TEXTURE0.ui)
