@@ -8,11 +8,13 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// Protocol for closing the text tools
+/// Protocol for the text tools editor
 protocol EditorTextViewDelegate: class {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()
+    /// Called when the text view background is tapped
+    func didTapTextViewBackground()
     /// Called when the font selector is tapped
     func didTapFontSelector()
     /// Called when the alignment selector is tapped
@@ -53,12 +55,12 @@ private struct Constants {
 }
 
 /// A UIView for the text tools view
-final class EditorTextView: UIView {
+final class EditorTextView: UIView, StylableTextViewDelegate {
     
     weak var delegate: EditorTextViewDelegate?
     
     private let confirmButton: UIButton
-    private let textView: UITextView
+    private let textView: StylableTextView
     
     // Containers
     private let toolsContainer: UIView
@@ -150,6 +152,7 @@ final class EditorTextView: UIView {
         eyeDropper = UIButton()
         colorGradient = UIView()
         super.init(frame: .zero)
+        textView.textViewDelegate = self
         setupViews()
     }
     
@@ -381,6 +384,12 @@ final class EditorTextView: UIView {
     @objc private func closeColorPickerTapped(recognizer: UITapGestureRecognizer) {
         showColorPickerMenu(false)
         showMainMenu(true)
+    }
+    
+    // MARK: - StylableViewDelegate
+    
+    func didTapBackground() {
+        delegate?.didTapTextViewBackground()
     }
     
     // MARK: - Public interface
