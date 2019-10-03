@@ -267,17 +267,19 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
+        let controller: UIViewController
         if settings.features.editor {
-            return createEditorViewController(segments)
+            controller = createEditorViewController(segments)
         }
         else {
-            return createPreviewViewController(segments)
+            controller = createPreviewViewController(segments)
         }
+        controller.modalTransitionStyle = .crossDissolve
+        return controller
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
         let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: GLMediaExporter.self, cameraMode: currentMode, analyticsProvider: analyticsProvider)
-        controller.modalTransitionStyle = .crossDissolve
         controller.delegate = self
         return controller
     }
