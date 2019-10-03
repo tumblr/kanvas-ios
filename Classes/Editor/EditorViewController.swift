@@ -167,8 +167,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
     }
     
-    override public var prefersStatusBarHidden: Bool {
-        return true
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

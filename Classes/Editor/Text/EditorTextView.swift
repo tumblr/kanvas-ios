@@ -44,10 +44,6 @@ private struct Constants {
     static let circularIconBorderColor: UIColor = .white
     static let circularIconCornerRadius: CGFloat = circularIconSize / 2
 
-    
-    // Overlay
-    static let overlayColor = UIColor.black.withAlphaComponent(0.7)
-    
     // Color collection width
     static let colorCollectionWidth: CGFloat = circularIconSize * 3 + circularIconPadding * 6
     
@@ -61,7 +57,6 @@ final class EditorTextView: UIView {
     
     weak var delegate: EditorTextViewDelegate?
     
-    private let overlay: UIView
     private let confirmButton: UIButton
     private let textView: UITextView
     
@@ -142,7 +137,6 @@ final class EditorTextView: UIView {
     }
     
     init() {
-        overlay = UIView()
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
         textView = StylableTextView()
         toolsContainer = UIView()
@@ -160,7 +154,6 @@ final class EditorTextView: UIView {
     }
     
     private func setupViews() {
-        setUpOverlay()
         setUpTextView()
         setUpConfirmButton()
         setUpToolsContainer()
@@ -177,21 +170,6 @@ final class EditorTextView: UIView {
     
     
     // MARK: - Views
-    
-    /// Sets up the translucent black view used during text edition
-    private func setUpOverlay() {
-        overlay.accessibilityIdentifier = "Editor Text Overlay"
-        overlay.translatesAutoresizingMaskIntoConstraints = false
-        overlay.backgroundColor = Constants.overlayColor
-        addSubview(overlay)
-        
-        NSLayoutConstraint.activate([
-            overlay.topAnchor.constraint(equalTo: topAnchor),
-            overlay.bottomAnchor.constraint(equalTo: bottomAnchor),
-            overlay.leadingAnchor.constraint(equalTo: leadingAnchor),
-            overlay.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-    }
     
     /// Sets up the main text view
     private func setUpTextView() {
