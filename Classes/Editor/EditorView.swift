@@ -92,12 +92,12 @@ final class EditorView: UIView, TextCanvasDelegate {
         setupPlayer()
         drawingCanvas.add(into: self)
         textCanvas.add(into: self)
-        setUpNavigationContainer()
-        setUpCloseButton()
+        setupNavigationContainer()
+        setupCloseButton()
         
         switch mainActionMode {
         case .confirm:
-            setUpConfirmButton()
+            setupConfirmButton()
         case .post:
             setupPostButton()
         }
@@ -105,10 +105,10 @@ final class EditorView: UIView, TextCanvasDelegate {
             setupSaveButton()
         }
         
-        setUpCollection()
-        setUpFilterMenu()
-        setUpTextMenu()
-        setUpDrawingMenu()
+        setupCollection()
+        setupFilterMenu()
+        setupTextMenu()
+        setupDrawingMenu()
     }
     
     // MARK: - views
@@ -120,7 +120,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     }
     
     /// Container that holds the back button and the bottom menu
-    private func setUpNavigationContainer() {
+    private func setupNavigationContainer() {
         navigationContainer.accessibilityIdentifier = "Navigation Container"
         navigationContainer.translatesAutoresizingMaskIntoConstraints = false
         
@@ -133,7 +133,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpCloseButton() {
+    private func setupCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
         closeButton.layer.applyShadows()
         closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
@@ -150,7 +150,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpConfirmButton() {
+    private func setupConfirmButton() {
         confirmButton.accessibilityLabel = "Confirm Button"
         navigationContainer.addSubview(confirmButton)
         confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
@@ -165,7 +165,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpCollection() {
+    private func setupCollection() {
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Edition Menu Collection Container"
         collectionContainer.clipsToBounds = false
@@ -182,7 +182,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpFilterMenu() {
+    private func setupFilterMenu() {
         filterMenuContainer.backgroundColor = .clear
         filterMenuContainer.accessibilityIdentifier = "Filter Menu Container"
         filterMenuContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -197,7 +197,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpTextMenu() {
+    private func setupTextMenu() {
         textMenuContainer.backgroundColor = .clear
         textMenuContainer.accessibilityIdentifier = "Text Menu Container"
         textMenuContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -212,7 +212,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpDrawingMenu() {
+    private func setupDrawingMenu() {
         drawingMenuContainer.backgroundColor = .clear
         drawingMenuContainer.accessibilityIdentifier = "Drawing Menu Container"
         drawingMenuContainer.clipsToBounds = false
