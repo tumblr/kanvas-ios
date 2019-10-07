@@ -45,6 +45,8 @@ public protocol CameraControllerDelegate: class {
     func dismissButtonPressed()
 
     func tagButtonPressed()
+
+    func editorDismissed()
     
     /// Called after the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
@@ -277,6 +279,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             controller = createPreviewViewController(segments)
         }
         controller.modalTransitionStyle = .crossDissolve
+        controller.modalPresentationStyle = .fullScreen
         return controller
     }
     
@@ -783,6 +786,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.dismiss(animated: true)
         }
+        delegate?.editorDismissed()
     }
 
     func tagButtonPressed() {
