@@ -228,6 +228,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     func didTapTagButton() {
         delegate?.tagButtonPressed()
+        analyticsProvider?.logEditorTagTapped()
     }
     
     func didBeginTouchesOnText() {
