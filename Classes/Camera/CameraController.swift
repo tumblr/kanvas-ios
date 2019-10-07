@@ -43,6 +43,8 @@ public protocol CameraControllerDelegate: class {
      A function that is called when the main camera dismiss button is pressed
      */
     func dismissButtonPressed()
+
+    func tagButtonPressed()
     
     /// Called after the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
@@ -781,6 +783,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.dismiss(animated: true)
         }
+    }
+
+    func tagButtonPressed() {
+        delegate?.tagButtonPressed()
     }
     
     func editorShouldShowColorSelecterTooltip() -> Bool {

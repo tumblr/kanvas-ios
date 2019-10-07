@@ -35,14 +35,18 @@ protocol EditorControllerDelegate: class {
     ///
     /// - Returns: Bool for animation
     func editorShouldShowStrokeSelectorAnimation() -> Bool
+
+    /// Called when the tag button is pressed
+    func tagButtonPressed()
 }
 
 /// A view controller to edit the segments
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, GLPlayerDelegate {
-    
+
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
-                                    showSaveButton: settings.features.editorSaving)
+                                    showSaveButton: settings.features.editorSaving,
+                                    showTagButton: true)
         editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
@@ -220,6 +224,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         onBeforeSelectingEditionOption(.text)
         textController.showView(true, options: options, transformations: transformations)
+    }
+
+    func didTapTagButton() {
+        delegate?.tagButtonPressed()
     }
     
     func didBeginTouchesOnText() {

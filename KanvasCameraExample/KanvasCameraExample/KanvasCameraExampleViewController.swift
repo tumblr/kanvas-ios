@@ -255,6 +255,10 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
+    func tagButtonPressed() {
+        // Only supported in Orangina
+    }
+
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeTooltip
     }
