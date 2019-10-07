@@ -121,7 +121,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingColor = .tumblrBrightBlue
         colorSelecterOrigin = .zero
         mode = .draw
-        colorSelecterOrigin = .zero
         lastDrawingPoint = .zero
         
         super.init(nibName: .none, bundle: .none)

@@ -129,6 +129,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     let colorPickerSelectorContainer: UIView
     
     // Color selecter
+    private let colorSelecterContainer: UIView
     private let colorSelecter: CircularImageView
     private var tooltip: EasyTipView?
     private let upperDrop: ColorDrop
@@ -154,6 +155,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorCollection = UIView()
         colorPickerButton = CircularImageView()
         colorPickerSelectorContainer = UIView()
+        colorSelecterContainer = UIView()
         colorSelecter = CircularImageView()
         upperDrop = ColorDrop()
         lowerDrop = ColorDrop()
@@ -197,6 +199,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         setUpCloseColorPickerButton()
         setUpEyeDropper()
         setUpColorPickerSelectorContainer()
+        setUpColorSelecterContainer()
         setUpColorSelecter()
         setUpColorSelecterDrop()
         setUpTooltip()
@@ -462,12 +465,29 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
+    private func setUpColorSelecterContainer() {
+        colorSelecterContainer.backgroundColor = .clear
+        colorSelecterContainer.accessibilityIdentifier = "Editor Color Selector Container"
+        colorSelecterContainer.clipsToBounds = false
+        colorSelecterContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(colorSelecterContainer)
+        
+        NSLayoutConstraint.activate([
+            colorSelecterContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            colorSelecterContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            colorSelecterContainer.topAnchor.constraint(equalTo: topAnchor),
+            colorSelecterContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+        
+        colorSelecterContainer.alpha = 0
+    }
+    
     /// Sets up the draggable circle that is shown when the eyedropper is pressed
     private func setUpColorSelecter() {
         colorSelecter.backgroundColor = UIColor.black.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
         colorSelecter.layer.cornerRadius = DrawingViewConstants.colorSelecterSize / 2
         colorSelecter.accessibilityIdentifier = "Editor Color Selecter"
-        addSubview(colorSelecter)
+        colorSelecterContainer.addSubview(colorSelecter)
         
         NSLayoutConstraint.activate([
             colorSelecter.centerXAnchor.constraint(equalTo: eyeDropperButton.centerXAnchor),
@@ -490,7 +510,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     private func setUpColorSelecterUpperDrop() {
         upperDrop.accessibilityIdentifier = "Editor Color Selecter Upper Drop"
-        addSubview(upperDrop)
+        colorSelecterContainer.addSubview(upperDrop)
         
         let verticalMargin = DrawingViewConstants.dropPadding
         NSLayoutConstraint.activate([
@@ -506,7 +526,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     private func setUpColorSelecterLowerDrop() {
         lowerDrop.accessibilityIdentifier = "Editor Color Selecter Lower Drop"
         lowerDrop.transform = CGAffineTransform(rotationAngle: .pi)
-        addSubview(lowerDrop)
+        colorSelecterContainer.addSubview(lowerDrop)
         
         let verticalMargin = DrawingViewConstants.dropPadding
         NSLayoutConstraint.activate([
@@ -664,6 +684,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showColorSelecter(_ show: Bool) {
+        self.colorSelecterContainer.alpha = show ? 1 : 0
+        
         UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
             self.colorSelecter.alpha = show ? 1 : 0
             self.colorSelecter.transform = .identity
@@ -700,7 +722,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     /// - Parameter show: true to show, false to hide
     func showTooltip(_ show: Bool) {
         if show {
-            tooltip?.show(animated: true, forView: colorSelecter, withinSuperview: self)
+            tooltip?.show(animated: true, forView: colorSelecter, withinSuperview: colorSelecterContainer)
         }
         else {
             UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
