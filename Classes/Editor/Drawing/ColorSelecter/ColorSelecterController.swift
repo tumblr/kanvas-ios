@@ -21,7 +21,7 @@ protocol ColorSelecterControllerDelegate: class {
     ///
     /// - Parameter point: location to take the color from
     /// - Returns: Color from image
-    func getColor(from point: CGPoint) -> UIColor
+    func getColor(at point: CGPoint) -> UIColor
     
     /// Called when the color selector is pressed
     func didStartColorSelection()
@@ -42,7 +42,14 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
     
     weak var delegate: ColorSelecterControllerDelegate?
     
-    private var colorSelecterOrigin: CGPoint
+    var colorSelecterOrigin: CGPoint {
+        get {
+            return colorSelecterView.colorSelecterOrigin
+        }
+        set {
+            colorSelecterView.colorSelecterOrigin = newValue
+        }
+    }
     
     private lazy var colorSelecterView: ColorSelecterView = {
         let view = ColorSelecterView()
@@ -51,7 +58,6 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
     }()
     
     init() {
-        colorSelecterOrigin = .zero
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -84,24 +90,41 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
         colorSelecterView.showTooltip(show)
     }
 
+    /// Shows or hides the color selecter
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showColorSelecter(_ show: Bool) {
+        colorSelecterView.showColorSelecter(show)
+        
+        if delegate?.editorShouldShowColorSelecterTooltip() == true {
+            showOverlay(true)
+            showTooltip(true)
+        }
+    }
     
-    // MARK: - Private utilities
+    /// Sets a new color for the color selecter background
+    ///
+    /// - Parameter color: new color for the color selecter
+    func setColorSelecterColor(_ color: UIColor) {
+        colorSelecterView.setColorSelecterColor(color)
+    }
     
     /// Takes the color selecter back to its initial position (same position as the eye dropper's)
-    private func resetColorSelecterLocation() {
-        let initialPoint = colorSelecterView.getColorSelecterInitialLocation()
+    func resetColorSelecterLocation() {
+        let initialPoint = colorSelecterView.colorSelecterOrigin
         colorSelecterView.moveColorSelecter(to: initialPoint)
         colorSelecterView.transformColorSelecter(CGAffineTransform(scaleX: 0, y: 0))
         
-        colorSelecterOrigin = initialPoint
+        //colorSelecterOrigin = initialPoint
     }
     
     /// Changes the background color of the color selecter to the one from its initial position
-    private func resetColorSelecterColor() {
+    func resetColorSelecterColor() {
         let color = getColor(at: colorSelecterOrigin)
         setColorSelecterColor(color)
-        //setDrawingColor(color)
     }
+    
+    // MARK: - Private utilities
     
     /// Changes the location of the color selecter to the location of the user's finger
     ///
@@ -120,21 +143,7 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
     /// - Returns: the color of the pixel
     private func getColor(at point: CGPoint) -> UIColor {
         guard let delegate = delegate else { return .black }
-        return delegate.getColor(from: point)
-    }
-    
-    /// Shows or hides the color selecter
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showColorSelecter(_ show: Bool) {
-        colorSelecterView.showColorSelecter(show)
-    }
-    
-    /// Sets a new color for the color selecter background
-    ///
-    /// - Parameter color: new color for the color selecter
-    private func setColorSelecterColor(_ color: UIColor) {
-        colorSelecterView.setColorSelecterColor(color)
+        return delegate.getColor(at: point)
     }
     
     /// Shows or hides the overlay of the color selecter
@@ -161,14 +170,6 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
             let currentLocation = moveColorSelecter(recognizer: recognizer)
             let color = getColor(at: currentLocation)
             showColorSelecter(false)
-            //setEyeDropperColor(color)
-            //setStrokeCircleColor(color)
-            //setDrawingColor(color, addToColorCollection: true)
-            
-            //showColorPickerContainer(true)
-            //showTopButtons(true)
-            //enableDrawingCanvas(true)
-            //analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .eyedropper)
             delegate?.didEndColorSelection(color: color)
         case .possible:
             break

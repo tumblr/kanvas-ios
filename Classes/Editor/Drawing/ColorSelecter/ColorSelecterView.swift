@@ -49,6 +49,8 @@ final class ColorSelecterView: UIView {
 
     weak var delegate: ColorSelecterViewDelegate?
     
+    var colorSelecterOrigin: CGPoint
+    
     // Color selecter
     private let colorSelecterContainer: UIView
     private let colorSelecter: CircularImageView
@@ -65,9 +67,11 @@ final class ColorSelecterView: UIView {
         upperDrop = ColorDrop()
         lowerDrop = ColorDrop()
         overlay = UIView()
+        colorSelecterOrigin = .zero
         super.init(frame: .zero)
         
         setUpViews()
+        alpha = 0
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -134,8 +138,8 @@ final class ColorSelecterView: UIView {
         colorSelecterContainer.addSubview(colorSelecter)
         
         NSLayoutConstraint.activate([
-            colorSelecter.centerXAnchor.constraint(equalTo: centerXAnchor),
-            colorSelecter.centerYAnchor.constraint(equalTo: centerYAnchor),
+            colorSelecter.topAnchor.constraint(equalTo: topAnchor, constant: colorSelecterOrigin.y),
+            colorSelecter.leadingAnchor.constraint(equalTo: leadingAnchor, constant: colorSelecterOrigin.x),
             colorSelecter.heightAnchor.constraint(equalToConstant: Constants.colorSelecterSize),
             colorSelecter.widthAnchor.constraint(equalToConstant: Constants.colorSelecterSize),
         ])
@@ -230,7 +234,7 @@ final class ColorSelecterView: UIView {
     /// - Parameter show: true to show, false to hide
     func showTooltip(_ show: Bool) {
         if show {
-            tooltip?.show(animated: true, forView: colorSelecter, withinSuperview: colorSelecterContainer)
+            tooltip?.show(animated: true, forView: colorSelecter, withinSuperview: self)
         }
         else {
             UIView.animate(withDuration: Constants.animationDuration) {
@@ -241,17 +245,11 @@ final class ColorSelecterView: UIView {
         }
     }
     
-    /// Calculates the color selecter initial location expressed in screen coordinates
-    ///
-    /// - Returns: the initial location for the color selecter
-    func getColorSelecterInitialLocation() -> CGPoint {
-        return center
-    }
-    
     /// Changes color selector location on screen
     ///
     /// - Parameter point: the new location
     func moveColorSelecter(to point: CGPoint) {
+        print("L - move \(point)")
         colorSelecter.center = point
         
         let offset = Constants.dropPadding + (Constants.colorSelecterSize + ColorDrop.defaultHeight) / 2
@@ -278,6 +276,7 @@ final class ColorSelecterView: UIView {
     ///
     /// - Parameter show: true to show, false to hide
     func showColorSelecter(_ show: Bool) {
+        self.alpha = show ? 1 : 0
         self.colorSelecterContainer.alpha = show ? 1 : 0
         
         UIView.animate(withDuration: Constants.animationDuration) {
