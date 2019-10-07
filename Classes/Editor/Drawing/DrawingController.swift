@@ -394,7 +394,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         }
     }
     
-    func didDismissColorSelecterTooltip() {
+    func didDismissTooltip() {
         delegate?.didDismissColorSelecterTooltip()
     }
     
@@ -426,28 +426,16 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     }
     
     func didTapEyeDropper() {
-        colorSelecterController.colorSelecterOrigin = drawingView.colorSelecterOrigin
-        colorSelecterController.resetColorSelecterLocation()
+        colorSelecterController.circleInitialLocation = drawingView.colorSelecterOrigin
+        colorSelecterController.resetLocation()
         showColorPickerContainer(false)
         showTopButtons(false)
         resetColorSelecterColor()
-        colorSelecterController.showColorSelecter(true)
+        colorSelecterController.show(true)
         enableDrawingCanvas(false)
     }
     
     // MARK: - Private utilities
-    
-    /// Gets the position of the user's finger on screen,
-    /// but adjusts it to fit the horizontal center of the selector.
-    ///
-    /// - Parameter recognizer: the gesture recognizer
-    /// - Parameter view: the view that contains the circle
-    /// - Returns: location of the user's finger
-    private func getSelectedLocation(with recognizer: UILongPressGestureRecognizer, in view: UIView) -> CGPoint {
-        let x = DrawingView.verticalSelectorWidth / 2
-        let y = recognizer.location(in: view).y
-        return CGPoint(x: x, y: y)
-    }
     
     // MARK: - Color Picker
     
@@ -467,8 +455,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     /// Changes the background color of the color selecter to the one from its initial position
     private func resetColorSelecterColor() {
-        let color = getColor(at: colorSelecterController.colorSelecterOrigin)
-        colorSelecterController.setColorSelecterColor(color)
+        let color = getColor(at: colorSelecterController.circleInitialLocation)
+        colorSelecterController.setColor(color)
         setDrawingColor(color)
     }
 
@@ -492,7 +480,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return delegate.getColor(from: point)
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
+    func shouldShowTooltip() -> Bool {
         guard let delegate = delegate else { return false }
         return delegate.editorShouldShowColorSelecterTooltip()
     }

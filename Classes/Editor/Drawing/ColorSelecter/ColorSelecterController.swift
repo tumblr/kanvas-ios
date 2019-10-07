@@ -12,10 +12,10 @@ protocol ColorSelecterControllerDelegate: class {
     /// Called to ask if color selecter tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
-    func editorShouldShowColorSelecterTooltip() -> Bool
+    func shouldShowTooltip() -> Bool
     
     /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
+    func didDismissTooltip()
     
     /// Called when the color selecter is panned
     ///
@@ -32,22 +32,17 @@ protocol ColorSelecterControllerDelegate: class {
     func didEndColorSelection(color: UIColor)
 }
 
-/// Constants for the color selecter controller
-private struct ColorSelecterControllerConstants {
-    
-}
-
 /// Controller for handling the color selecter on the drawing menu.
 final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate {
     
     weak var delegate: ColorSelecterControllerDelegate?
     
-    var colorSelecterOrigin: CGPoint {
+    var circleInitialLocation: CGPoint {
         get {
-            return colorSelecterView.colorSelecterOrigin
+            return colorSelecterView.circleInitialLocation
         }
         set {
-            colorSelecterView.colorSelecterOrigin = newValue
+            colorSelecterView.circleInitialLocation = newValue
         }
     }
     
@@ -79,49 +74,39 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
     
     // MARK: - Public interface
     
-    func didDismissColorSelecterTooltip() {
-        delegate?.didDismissColorSelecterTooltip()
+    func didDismissTooltip() {
+        delegate?.didDismissTooltip()
     }
     
-    /// Shows or hides the tooltip above color selecter
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTooltip(_ show: Bool) {
-        colorSelecterView.showTooltip(show)
-    }
-
     /// Shows or hides the color selecter
     ///
     /// - Parameter show: true to show, false to hide
-    func showColorSelecter(_ show: Bool) {
-        colorSelecterView.showColorSelecter(show)
+    func show(_ show: Bool) {
+        colorSelecterView.show(show)
         
-        if delegate?.editorShouldShowColorSelecterTooltip() == true {
-            showOverlay(true)
-            showTooltip(true)
+        if delegate?.shouldShowTooltip() == true {
+            colorSelecterView.showOverlay(true)
+            colorSelecterView.showTooltip(true)
         }
     }
     
     /// Sets a new color for the color selecter background
     ///
     /// - Parameter color: new color for the color selecter
-    func setColorSelecterColor(_ color: UIColor) {
-        colorSelecterView.setColorSelecterColor(color)
+    func setColor(_ color: UIColor) {
+        colorSelecterView.setColor(color)
     }
     
-    /// Takes the color selecter back to its initial position (same position as the eye dropper's)
-    func resetColorSelecterLocation() {
-        let initialPoint = colorSelecterView.colorSelecterOrigin
-        colorSelecterView.moveColorSelecter(to: initialPoint)
-        colorSelecterView.transformColorSelecter(CGAffineTransform(scaleX: 0, y: 0))
-        
-        //colorSelecterOrigin = initialPoint
+    /// Takes the color selecter back to its initial position
+    func resetLocation() {
+        colorSelecterView.moveCircle(to: colorSelecterView.circleInitialLocation)
+        colorSelecterView.transformCircle(CGAffineTransform(scaleX: 0, y: 0))
     }
     
     /// Changes the background color of the color selecter to the one from its initial position
     func resetColorSelecterColor() {
-        let color = getColor(at: colorSelecterOrigin)
-        setColorSelecterColor(color)
+        let color = getColor(at: circleInitialLocation)
+        colorSelecterView.setColor(color)
     }
     
     // MARK: - Private utilities
@@ -130,10 +115,10 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
     ///
     /// - Parameter recognizer: the gesture recognizer
     /// - Returns: the new location of the color selecter
-    private func moveColorSelecter(recognizer: UIPanGestureRecognizer) -> CGPoint {
+    private func moveCircle(recognizer: UIPanGestureRecognizer) -> CGPoint {
         let translation = recognizer.translation(in: colorSelecterView)
-        let point = CGPoint(x: colorSelecterOrigin.x + translation.x, y: colorSelecterOrigin.y + translation.y)
-        colorSelecterView.moveColorSelecter(to: point)
+        let point = CGPoint(x: circleInitialLocation.x + translation.x, y: circleInitialLocation.y + translation.y)
+        colorSelecterView.moveCircle(to: point)
         return point
     }
     
@@ -146,30 +131,24 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
         return delegate.getColor(at: point)
     }
     
-    /// Shows or hides the overlay of the color selecter
-    ///
-    /// - Parameter show: true to show, false to hide
-    /// - Parameter animate: whether the UI update is animated
-    private func showOverlay(_ show: Bool, animate: Bool = true) {
-        colorSelecterView.showOverlay(show, animate: animate)
-    }
+    // MARK: - Circle movement
     
-    func didPanColorSelecter(recognizer: UIPanGestureRecognizer) {
+    func didPanCircle(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
             delegate?.didStartColorSelection()
-            if delegate?.editorShouldShowColorSelecterTooltip() == true {
-                showTooltip(false)
-                showOverlay(false)
+            if delegate?.shouldShowTooltip() == true {
+                colorSelecterView.showTooltip(false)
+                colorSelecterView.showOverlay(false)
             }
         case .changed:
-            let currentLocation = moveColorSelecter(recognizer: recognizer)
+            let currentLocation = moveCircle(recognizer: recognizer)
             let color = getColor(at: currentLocation)
-            setColorSelecterColor(color)
+            colorSelecterView.setColor(color)
         case .ended, .failed, .cancelled:
-            let currentLocation = moveColorSelecter(recognizer: recognizer)
+            let currentLocation = moveCircle(recognizer: recognizer)
             let color = getColor(at: currentLocation)
-            showColorSelecter(false)
+            show(false)
             delegate?.didEndColorSelection(color: color)
         case .possible:
             break

@@ -14,10 +14,10 @@ protocol ColorSelecterViewDelegate: class {
     /// Called when the color selecter is panned
     ///
     /// - Parameter recognizer: the pan gesture recognizer
-    func didPanColorSelecter(recognizer: UIPanGestureRecognizer)
+    func didPanCircle(recognizer: UIPanGestureRecognizer)
     
     /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
+    func didDismissTooltip()
 }
 
 /// Constants for ColorSelecterView
@@ -29,8 +29,8 @@ private struct Constants {
     
     // Selector circle
     static let dropPadding: CGFloat = 18
-    static let colorSelecterSize: CGFloat = 80
-    static let colorSelecterAlpha: CGFloat = 0.65
+    static let circleSize: CGFloat = 80
+    static let circleAlpha: CGFloat = 0.65
     
     // Tooltip
     static let tooltipForegroundColor: UIColor = .white
@@ -49,11 +49,11 @@ final class ColorSelecterView: UIView {
 
     weak var delegate: ColorSelecterViewDelegate?
     
-    var colorSelecterOrigin: CGPoint
+    var circleInitialLocation: CGPoint
     
     // Color selecter
-    private let colorSelecterContainer: UIView
-    private let colorSelecter: CircularImageView
+    private let container: UIView
+    private let selectorCircle: CircularImageView
     private let upperDrop: ColorDrop
     private let lowerDrop: ColorDrop
     
@@ -62,12 +62,12 @@ final class ColorSelecterView: UIView {
     private let overlay: UIView
     
     init() {
-        colorSelecterContainer = UIView()
-        colorSelecter = CircularImageView()
+        container = UIView()
+        selectorCircle = CircularImageView()
         upperDrop = ColorDrop()
         lowerDrop = ColorDrop()
         overlay = UIView()
-        colorSelecterOrigin = .zero
+        circleInitialLocation = .zero
         super.init(frame: .zero)
         
         setUpViews()
@@ -89,15 +89,15 @@ final class ColorSelecterView: UIView {
     
     private func setUpViews() {
         setUpOverlay()
-        setUpColorSelecterContainer()
-        setUpColorSelecter()
-        setUpColorSelecterDrop()
+        setUpContainer()
+        setUpSelectorCircle()
+        setUpDrop()
         setUpTooltip()
     }
     
     /// Sets up the translucent black view used for onboarding
     private func setUpOverlay() {
-        overlay.accessibilityIdentifier = "Editor Overlay"
+        overlay.accessibilityIdentifier = "Overlay"
         overlay.translatesAutoresizingMaskIntoConstraints = false
         overlay.clipsToBounds = true
         overlay.backgroundColor = Constants.overlayColor
@@ -113,57 +113,57 @@ final class ColorSelecterView: UIView {
         overlay.alpha = 0
     }
     
-    private func setUpColorSelecterContainer() {
-        colorSelecterContainer.backgroundColor = .clear
-        colorSelecterContainer.accessibilityIdentifier = "Editor Color Selector Container"
-        colorSelecterContainer.clipsToBounds = false
-        colorSelecterContainer.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(colorSelecterContainer)
+    private func setUpContainer() {
+        container.backgroundColor = .clear
+        container.accessibilityIdentifier = "Container"
+        container.clipsToBounds = false
+        container.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(container)
         
         NSLayoutConstraint.activate([
-            colorSelecterContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            colorSelecterContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            colorSelecterContainer.topAnchor.constraint(equalTo: topAnchor),
-            colorSelecterContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
+            container.leadingAnchor.constraint(equalTo: leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: trailingAnchor),
+            container.topAnchor.constraint(equalTo: topAnchor),
+            container.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
         
-        colorSelecterContainer.alpha = 0
+        container.alpha = 0
     }
     
-    /// Sets up the draggable circle that is shown when the eyedropper is pressed
-    private func setUpColorSelecter() {
-        colorSelecter.backgroundColor = UIColor.black.withAlphaComponent(Constants.colorSelecterAlpha)
-        colorSelecter.layer.cornerRadius = Constants.colorSelecterSize / 2
-        colorSelecter.accessibilityIdentifier = "Editor Color Selecter"
-        colorSelecterContainer.addSubview(colorSelecter)
+    /// Sets up the draggable circle
+    private func setUpSelectorCircle() {
+        selectorCircle.backgroundColor = UIColor.black.withAlphaComponent(Constants.circleAlpha)
+        selectorCircle.layer.cornerRadius = Constants.circleSize / 2
+        selectorCircle.accessibilityIdentifier = "Selector Circle"
+        container.addSubview(selectorCircle)
         
         NSLayoutConstraint.activate([
-            colorSelecter.topAnchor.constraint(equalTo: topAnchor, constant: colorSelecterOrigin.y),
-            colorSelecter.leadingAnchor.constraint(equalTo: leadingAnchor, constant: colorSelecterOrigin.x),
-            colorSelecter.heightAnchor.constraint(equalToConstant: Constants.colorSelecterSize),
-            colorSelecter.widthAnchor.constraint(equalToConstant: Constants.colorSelecterSize),
+            selectorCircle.topAnchor.constraint(equalTo: topAnchor, constant: circleInitialLocation.y),
+            selectorCircle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: circleInitialLocation.x),
+            selectorCircle.heightAnchor.constraint(equalToConstant: Constants.circleSize),
+            selectorCircle.widthAnchor.constraint(equalToConstant: Constants.circleSize),
         ])
         
-        colorSelecter.alpha = 0
+        selectorCircle.alpha = 0
         
         let panRecognizer = UIPanGestureRecognizer()
         panRecognizer.addTarget(self, action: #selector(colorSelecterPanned(recognizer:)))
-        colorSelecter.addGestureRecognizer(panRecognizer)
+        selectorCircle.addGestureRecognizer(panRecognizer)
     }
     
-    private func setUpColorSelecterDrop() {
-        setUpColorSelecterUpperDrop()
-        setUpColorSelecterLowerDrop()
+    private func setUpDrop() {
+        setUpUpperDrop()
+        setUpLowerDrop()
     }
     
-    private func setUpColorSelecterUpperDrop() {
-        upperDrop.accessibilityIdentifier = "Editor Color Selecter Upper Drop"
-        colorSelecterContainer.addSubview(upperDrop)
+    private func setUpUpperDrop() {
+        upperDrop.accessibilityIdentifier = "Upper Drop"
+        container.addSubview(upperDrop)
         
         let verticalMargin = Constants.dropPadding
         NSLayoutConstraint.activate([
-            upperDrop.bottomAnchor.constraint(equalTo: colorSelecter.topAnchor, constant: -verticalMargin),
-            upperDrop.centerXAnchor.constraint(equalTo: colorSelecter.centerXAnchor),
+            upperDrop.bottomAnchor.constraint(equalTo: selectorCircle.topAnchor, constant: -verticalMargin),
+            upperDrop.centerXAnchor.constraint(equalTo: selectorCircle.centerXAnchor),
             upperDrop.heightAnchor.constraint(equalToConstant: ColorDrop.defaultHeight),
             upperDrop.widthAnchor.constraint(equalToConstant: ColorDrop.defaultWidth),
         ])
@@ -171,15 +171,15 @@ final class ColorSelecterView: UIView {
         upperDrop.alpha = 0
     }
     
-    private func setUpColorSelecterLowerDrop() {
-        lowerDrop.accessibilityIdentifier = "Editor Color Selecter Lower Drop"
+    private func setUpLowerDrop() {
+        lowerDrop.accessibilityIdentifier = "Lower Drop"
         lowerDrop.transform = CGAffineTransform(rotationAngle: .pi)
-        colorSelecterContainer.addSubview(lowerDrop)
+        container.addSubview(lowerDrop)
         
         let verticalMargin = Constants.dropPadding
         NSLayoutConstraint.activate([
-            lowerDrop.topAnchor.constraint(equalTo: colorSelecter.bottomAnchor, constant: verticalMargin),
-            lowerDrop.centerXAnchor.constraint(equalTo: colorSelecter.centerXAnchor),
+            lowerDrop.topAnchor.constraint(equalTo: selectorCircle.bottomAnchor, constant: verticalMargin),
+            lowerDrop.centerXAnchor.constraint(equalTo: selectorCircle.centerXAnchor),
             lowerDrop.heightAnchor.constraint(equalToConstant: ColorDrop.defaultHeight),
             lowerDrop.widthAnchor.constraint(equalToConstant: ColorDrop.defaultWidth),
         ])
@@ -207,7 +207,7 @@ final class ColorSelecterView: UIView {
     // MARK: - Gesture recognizers
     
     @objc func colorSelecterPanned(recognizer: UIPanGestureRecognizer) {
-        delegate?.didPanColorSelecter(recognizer: recognizer)
+        delegate?.didPanCircle(recognizer: recognizer)
     }
     
     // MARK: - Private utilitites
@@ -234,25 +234,24 @@ final class ColorSelecterView: UIView {
     /// - Parameter show: true to show, false to hide
     func showTooltip(_ show: Bool) {
         if show {
-            tooltip?.show(animated: true, forView: colorSelecter, withinSuperview: self)
+            tooltip?.show(animated: true, forView: selectorCircle, withinSuperview: self)
         }
         else {
             UIView.animate(withDuration: Constants.animationDuration) {
                 self.tooltip?.removeFromSuperview()
                 self.tooltip?.dismiss()
             }
-            delegate?.didDismissColorSelecterTooltip()
+            delegate?.didDismissTooltip()
         }
     }
     
     /// Changes color selector location on screen
     ///
     /// - Parameter point: the new location
-    func moveColorSelecter(to point: CGPoint) {
-        print("L - move \(point)")
-        colorSelecter.center = point
+    func moveCircle(to point: CGPoint) {
+        selectorCircle.center = point
         
-        let offset = Constants.dropPadding + (Constants.colorSelecterSize + ColorDrop.defaultHeight) / 2
+        let offset = Constants.dropPadding + (Constants.circleSize + ColorDrop.defaultHeight) / 2
         
         let upperDropLocation = CGPoint(x: point.x, y: point.y - offset)
         let lowerDropLocation = CGPoint(x: point.x, y: point.y + offset)
@@ -268,20 +267,20 @@ final class ColorSelecterView: UIView {
     /// Applies a transformation to the color selecter
     ///
     /// - Parameter transform: the transformation to apply
-    func transformColorSelecter(_ transform: CGAffineTransform) {
-        colorSelecter.transform = transform
+    func transformCircle(_ transform: CGAffineTransform) {
+        selectorCircle.transform = transform
     }
     
     /// shows or hides the color selecter
     ///
     /// - Parameter show: true to show, false to hide
-    func showColorSelecter(_ show: Bool) {
+    func show(_ show: Bool) {
         self.alpha = show ? 1 : 0
-        self.colorSelecterContainer.alpha = show ? 1 : 0
+        self.container.alpha = show ? 1 : 0
         
         UIView.animate(withDuration: Constants.animationDuration) {
-            self.colorSelecter.alpha = show ? 1 : 0
-            self.colorSelecter.transform = .identity
+            self.selectorCircle.alpha = show ? 1 : 0
+            self.selectorCircle.transform = .identity
             self.upperDrop.alpha = show ? 1 : 0
             self.lowerDrop.alpha = 0
         }
@@ -290,8 +289,8 @@ final class ColorSelecterView: UIView {
     /// Sets a new color for the color selecter background
     ///
     /// - Parameter color: new color for the color selecter
-    func setColorSelecterColor(_ color: UIColor) {
-        colorSelecter.backgroundColor = color.withAlphaComponent(Constants.colorSelecterAlpha)
+    func setColor(_ color: UIColor) {
+        selectorCircle.backgroundColor = color.withAlphaComponent(Constants.circleAlpha)
         upperDrop.innerColor = color
         lowerDrop.innerColor = color
     }
@@ -300,13 +299,8 @@ final class ColorSelecterView: UIView {
     ///
     /// - Parameter show: true to show, false to hide
     /// - Parameter animate: whether the UI update is animated
-    func showOverlay(_ show: Bool, animate: Bool = true) {
-        if animate {
-            UIView.animate(withDuration: Constants.animationDuration) {
-                self.overlay.alpha = show ? 1 : 0
-            }
-        }
-        else {
+    func showOverlay(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.overlay.alpha = show ? 1 : 0
         }
     }
