@@ -27,7 +27,7 @@ private struct Constants {
     // Overlay
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
     
-    // Selector circle
+    // Selection circle
     static let dropPadding: CGFloat = 18
     static let circleSize: CGFloat = 80
     static let circleAlpha: CGFloat = 0.65

@@ -453,7 +453,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         strokeSelectorController.tintStrokeCircle(color: color)
     }
     
-    /// Changes the background color of the color selector to the one from its initial position
+    /// Changes the color of the color selector to the one from its initial position
     private func resetColorSelectorColor() {
         let color = getColor(at: colorSelectorController.circleInitialLocation)
         colorSelectorController.setColor(color)

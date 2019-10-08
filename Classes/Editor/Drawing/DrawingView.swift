@@ -561,7 +561,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         showBottomPanel(show)
     }
     
-    /// shows or hides the overlay of the color selector
+    /// shows or hides the overlay of the stroke selector
     ///
     /// - Parameter show: true to show, false to hide
     /// - Parameter animate: whether the UI update is animated
