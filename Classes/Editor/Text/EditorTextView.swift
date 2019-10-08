@@ -19,6 +19,8 @@ protocol EditorTextViewDelegate: class {
     func didTapFontSelector()
     /// Called when the alignment selector is tapped
     func didTapAlignmentSelector()
+    /// Called when the eye dropper is tapped
+    func didTapEyeDropper()
 }
 
 /// Constants for EditorTextView
@@ -77,9 +79,15 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     private let closeColorPicker: UIButton
     private let eyeDropper: UIButton
     
+    // Color selector
+    var colorSelectorOrigin: CGPoint {
+        return center
+    }
+    
     // Internal properties
     let colorCollection: UIView
     let colorGradient: UIView
+    let colorSelector: UIView
     
     var options: TextOptions {
         get { return textView.options }
@@ -174,6 +182,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         closeColorPicker = UIButton()
         eyeDropper = UIButton()
         colorGradient = UIView()
+        colorSelector = IgnoreTouchesView()
         super.init(frame: .zero)
         textView.textViewDelegate = self
         setupViews()
@@ -192,6 +201,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         setUpCloseColorPicker()
         setUpEyeDropper()
         setUpColorGradient()
+        setUpColorSelector()
     }
     
     
@@ -368,6 +378,10 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
             eyeDropper.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
             eyeDropper.widthAnchor.constraint(equalToConstant: Constants.circularIconSize),
         ])
+        
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(eyeDropperTapped(recognizer:)))
+        eyeDropper.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the horizontal gradient in the color picker menu
@@ -383,6 +397,22 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
             colorGradient.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -Constants.rightMargin),
             colorGradient.centerYAnchor.constraint(equalTo: colorPickerContainer.centerYAnchor),
             colorGradient.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
+        ])
+    }
+    
+    /// Sets up the color circle that is shown when tapping the eye dropper
+    private func setUpColorSelector() {
+        colorSelector.accessibilityIdentifier = "Editor Text Color Selector"
+        colorSelector.backgroundColor = .clear
+        colorSelector.clipsToBounds = false
+        colorSelector.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(colorSelector)
+        
+        NSLayoutConstraint.activate([
+            colorSelector.topAnchor.constraint(equalTo: topAnchor),
+            colorSelector.bottomAnchor.constraint(equalTo: bottomAnchor),
+            colorSelector.leadingAnchor.constraint(equalTo: leadingAnchor),
+            colorSelector.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
     
@@ -408,6 +438,10 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     @objc private func closeColorPickerTapped(recognizer: UITapGestureRecognizer) {
         showColorPickerMenu(false)
         showMainMenu(true)
+    }
+    
+    @objc private func eyeDropperTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapEyeDropper()
     }
     
     // MARK: - StylableViewDelegate
