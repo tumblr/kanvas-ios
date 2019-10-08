@@ -267,6 +267,14 @@ final class CameraControllerTests: FBSnapshotTestCase {
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
 
+    func tagButtonPressed() {
+
+    }
+
+    func editorDismissed() {
+
+    }
+
     func didDismissWelcomeTooltip() {
         
     }
