@@ -81,7 +81,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     
     // Color selector
     var colorSelectorOrigin: CGPoint {
-        return center
+        return colorPickerContainer.convert(eyeDropper.center, to: self)
     }
     
     // Internal properties
@@ -454,13 +454,25 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     
     /// Focuses the main text view to show the keyboard
     func startWriting() {
-        textView.becomeFirstResponder()
+        colorPickerContainer.alpha = 0
+        mainMenuContainer.alpha = 1
+        openKeyboard()
     }
     
     /// Closes the keyboard and clears the main text view
     func endWriting() {
-        textView.endEditing(true)
+        closeKeyboard()
         textView.text = nil
+    }
+    
+    /// Opens the keyboard
+    func openKeyboard() {
+        textView.becomeFirstResponder()
+    }
+    
+    /// Closes the keyboard
+    func closeKeyboard() {
+        textView.endEditing(true)
     }
     
     /// Moves up the text view and the tools menu
@@ -471,24 +483,26 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
             textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin + distance)
             textView.setNeedsLayout()
             textView.layoutIfNeeded()
-            colorPickerContainer.alpha = 0
-            mainMenuContainer.alpha = 1
         }
         
         toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
         toolsContainer.alpha = 1
         textView.alpha = 1
+        confirmButton.alpha = 1
     }
     
     /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
-        textView.alpha = 0
+        confirmButton.alpha = 0
         toolsContainer.alpha = 0
-
-        textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
-        textView.setNeedsLayout()
-        textView.layoutIfNeeded()
         toolsContainer.transform = .identity
+        
+        UIView.performWithoutAnimation {
+            textView.alpha = 0
+            textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
+            textView.setNeedsLayout()
+            textView.layoutIfNeeded()
+        }
     }
     
     // MARK: - Private utilitites
@@ -496,7 +510,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     /// shows or hides the main text view
     ///
     /// - Parameter show: true to show, false to hide
-    private func showTextView(_ show: Bool) {
+    func showTextView(_ show: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.textView.alpha = show ? 1 : 0
         }

@@ -100,7 +100,7 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
     }
     
     /// Changes the color of the selection circle to the one from the initial position
-    func resetColorSelectorColor() {
+    func resetColor() {
         let color = getColor(at: circleInitialLocation)
         colorSelectorView.setColor(color)
     }

@@ -161,6 +161,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     
     func didTapEyeDropper() {
         colorSelectorController.circleInitialLocation = textView.colorSelectorOrigin
+        colorSelectorController.resetLocation()
+        colorSelectorController.resetColor()
+        
+        textView.closeKeyboard()
         colorSelectorController.show(true)
     }
     
@@ -205,6 +209,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     }
     
     func didEndColorSelection(color: UIColor) {
+        textView.textColor = color
+        addColorsForCarousel(colors: [color])
+        
+        textView.openKeyboard()
         delegate?.didEndColorSelection()
     }
     
@@ -230,7 +238,6 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     }
     
     // MARK: - Public interface
-    
     
     /// Adds colors to the color carousel
     ///
