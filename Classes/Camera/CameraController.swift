@@ -44,8 +44,10 @@ public protocol CameraControllerDelegate: class {
      */
     func dismissButtonPressed()
 
+    /// Called when the tag button is pressed in the editor
     func tagButtonPressed()
 
+    /// Called when the editor is dismissed
     func editorDismissed()
     
     /// Called after the welcome tooltip is dismissed
