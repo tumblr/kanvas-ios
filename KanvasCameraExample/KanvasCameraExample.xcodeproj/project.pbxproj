@@ -375,7 +375,6 @@
 				654AE15622E8B77000C8C0E4 /* StrokeSelector */,
 				654AE15522E8B77000C8C0E4 /* TextureSelector */,
 				6589D12B22E91C7900A7357B /* Textures */,
-				651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */,
 				651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */,
 				651D4B6022CE683B004AB75C /* DrawingViewTests.swift */,
 			);
@@ -452,6 +451,7 @@
 		655C934C234CC9A1008F26AF /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */,
 				653B044622E911DB005AAFCA /* ColorCollection */,
 				655C934B234CC989008F26AF /* ColorSelector */,
 				654AE15722E8B77000C8C0E4 /* ColorPicker */,
@@ -505,9 +505,9 @@
 		65E46B9822BD22DE004FD226 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				655C934C234CC9A1008F26AF /* Shared */,
 				651D4B5B22CE67A5004AB75C /* Drawing */,
 				65E46B9922BD22DE004FD226 /* Filters */,
+				655C934C234CC9A1008F26AF /* Shared */,
 				65AA995A2310443C00D64232 /* Text */,
 				65E46B9D22BD22DE004FD226 /* EditionMenuCollectionControllerTests.swift */,
 				65E46B9E22BD22DE004FD226 /* EditorViewTests.swift */,
