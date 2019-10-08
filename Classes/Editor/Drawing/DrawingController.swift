@@ -301,7 +301,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingView.showTopButtons(show)
     }
     
-    /// Shows or hides the overlay of the color selector
+    /// Shows or hides the overlay for the stroke selector
     ///
     /// - Parameter show: true to show, false to hide
     /// - Parameter animate: whether the UI update is animated
