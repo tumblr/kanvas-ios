@@ -52,13 +52,13 @@ public protocol CameraControllerDelegate: class {
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
     
-    /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
+    /// Called after the color selector tooltip is dismissed
+    func didDismissColorSelectorTooltip()
     
-    /// Called to ask if color selecter tooltip should be shown
+    /// Called to ask if color selector tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
-    func editorShouldShowColorSelecterTooltip() -> Bool
+    func editorShouldShowColorSelectorTooltip() -> Bool
     
     /// Called after the stroke animation has ended
     func didEndStrokeSelectorAnimation()
@@ -783,13 +783,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
+    func editorShouldShowColorSelectorTooltip() -> Bool {
         guard let delegate = delegate else { return false }
-        return delegate.editorShouldShowColorSelecterTooltip()
+        return delegate.editorShouldShowColorSelectorTooltip()
     }
     
-    func didDismissColorSelecterTooltip() {
-        delegate?.didDismissColorSelecterTooltip()
+    func didDismissColorSelectorTooltip() {
+        delegate?.didDismissColorSelectorTooltip()
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {

@@ -8,13 +8,13 @@ import Foundation
 import UIKit
 
 protocol DrawingControllerDelegate: class {
-    /// Called to ask if color selecter tooltip should be shown
+    /// Called to ask if color selector tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
-    func editorShouldShowColorSelecterTooltip() -> Bool
+    func editorShouldShowColorSelectorTooltip() -> Bool
     
-    /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
+    /// Called after the color selector tooltip is dismissed
+    func didDismissColorSelectorTooltip()
     
     /// Called after the stroke animation has ended
     func didEndStrokeSelectorAnimation()
@@ -27,7 +27,7 @@ protocol DrawingControllerDelegate: class {
     /// Called after the confirm button was tapped
     func didConfirmDrawing()
     
-    /// Called when the color selecter is panned
+    /// Called when the color selector is panned
     ///
     /// - Parameter point: location to take the color from
     /// - Returns: Color from image
@@ -60,7 +60,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, TextureSelectorControllerDelegate, ColorPickerControllerDelegate, ColorCollectionControllerDelegate, ColorSelecterControllerDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, TextureSelectorControllerDelegate, ColorPickerControllerDelegate, ColorCollectionControllerDelegate, ColorSelectorControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -94,8 +94,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return controller
     }()
     
-    private lazy var colorSelecterController: ColorSelecterController = {
-        let controller = ColorSelecterController()
+    private lazy var colorSelectorController: ColorSelectorController = {
+        let controller = ColorSelectorController()
         controller.delegate = self
         return controller
     }()
@@ -152,7 +152,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         load(childViewController: textureSelectorController, into: drawingView.textureSelectorContainer)
         load(childViewController: colorPickerController, into: drawingView.colorPickerSelectorContainer)
         load(childViewController: colorCollectionController, into: drawingView.colorCollection)
-        load(childViewController: colorSelecterController, into: drawingView.colorSelecterContainer)
+        load(childViewController: colorSelectorController, into: drawingView.colorSelectorContainer)
     }
     
     // MARK: - View
@@ -301,7 +301,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingView.showTopButtons(show)
     }
     
-    /// Shows or hides the overlay of the color selecter
+    /// Shows or hides the overlay of the color selector
     ///
     /// - Parameter show: true to show, false to hide
     /// - Parameter animate: whether the UI update is animated
@@ -395,7 +395,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     }
     
     func didDismissTooltip() {
-        delegate?.didDismissColorSelecterTooltip()
+        delegate?.didDismissColorSelectorTooltip()
     }
     
     func didTapConfirmButton() {
@@ -426,12 +426,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     }
     
     func didTapEyeDropper() {
-        colorSelecterController.circleInitialLocation = drawingView.colorSelecterOrigin
-        colorSelecterController.resetLocation()
+        colorSelectorController.circleInitialLocation = drawingView.colorSelectorOrigin
+        colorSelectorController.resetLocation()
         showColorPickerContainer(false)
         showTopButtons(false)
-        resetColorSelecterColor()
-        colorSelecterController.show(true)
+        resetColorSelectorColor()
+        colorSelectorController.show(true)
         enableDrawingCanvas(false)
     }
     
@@ -453,10 +453,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         strokeSelectorController.tintStrokeCircle(color: color)
     }
     
-    /// Changes the background color of the color selecter to the one from its initial position
-    private func resetColorSelecterColor() {
-        let color = getColor(at: colorSelecterController.circleInitialLocation)
-        colorSelecterController.setColor(color)
+    /// Changes the background color of the color selector to the one from its initial position
+    private func resetColorSelectorColor() {
+        let color = getColor(at: colorSelectorController.circleInitialLocation)
+        colorSelectorController.setColor(color)
         setDrawingColor(color)
     }
 
@@ -469,7 +469,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .swatch)
     }
     
-    // MARK: - ColorSelecterControllerDelegate
+    // MARK: - ColorSelectorControllerDelegate
     
     /// Gets the color of a certain point of the media playing on the background
     ///
@@ -482,7 +482,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     func shouldShowTooltip() -> Bool {
         guard let delegate = delegate else { return false }
-        return delegate.editorShouldShowColorSelecterTooltip()
+        return delegate.editorShouldShowColorSelectorTooltip()
     }
     
     func didStartColorSelection() {

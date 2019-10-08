@@ -146,11 +146,11 @@ extension KanvasDashboardController: CameraControllerDelegate {
         completion(nil)
     }
 
-    public func didDismissColorSelecterTooltip() {
+    public func didDismissColorSelectorTooltip() {
 
     }
 
-    public func editorShouldShowColorSelecterTooltip() -> Bool {
+    public func editorShouldShowColorSelectorTooltip() -> Bool {
         return false
     }
 

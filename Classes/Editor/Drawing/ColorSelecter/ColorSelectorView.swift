@@ -8,19 +8,19 @@ import Foundation
 import UIKit
 import SharedUI
 
-/// Protocol for ColorSelecterView
-protocol ColorSelecterViewDelegate: class {
+/// Protocol for the color selector view
+protocol ColorSelectorViewDelegate: class {
     
-    /// Called when the color selecter is panned
+    /// Called when the selection circle is panned
     ///
     /// - Parameter recognizer: the pan gesture recognizer
     func didPanCircle(recognizer: UIPanGestureRecognizer)
     
-    /// Called after the color selecter tooltip is dismissed
+    /// Called after the tooltip is dismissed
     func didDismissTooltip()
 }
 
-/// Constants for ColorSelecterView
+/// Constants for the color selector view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     
@@ -44,16 +44,17 @@ private struct Constants {
     static let tooltipHorizontalTextInset: CGFloat = 16
 }
 
-/// View for ColorSelecterView
-final class ColorSelecterView: UIView {
+/// View for ColorSelectorView
+final class ColorSelectorView: UIView {
 
-    weak var delegate: ColorSelecterViewDelegate?
+    weak var delegate: ColorSelectorViewDelegate?
     
-    var circleInitialLocation: CGPoint
-    
-    // Color selecter
+    // General
     private let container: UIView
-    private let selectorCircle: CircularImageView
+    
+    // Selection circle
+    var circleInitialLocation: CGPoint
+    private let selectionCircle: CircularImageView
     private let upperDrop: ColorDrop
     private let lowerDrop: ColorDrop
     
@@ -63,15 +64,15 @@ final class ColorSelecterView: UIView {
     
     init() {
         container = UIView()
-        selectorCircle = CircularImageView()
+        selectionCircle = CircularImageView()
         upperDrop = ColorDrop()
         lowerDrop = ColorDrop()
         overlay = UIView()
         circleInitialLocation = .zero
         super.init(frame: .zero)
+        alpha = 0
         
         setUpViews()
-        alpha = 0
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -113,6 +114,7 @@ final class ColorSelecterView: UIView {
         overlay.alpha = 0
     }
     
+    /// Sets up a container for all the views
     private func setUpContainer() {
         container.backgroundColor = .clear
         container.accessibilityIdentifier = "Container"
@@ -132,23 +134,23 @@ final class ColorSelecterView: UIView {
     
     /// Sets up the draggable circle
     private func setUpSelectorCircle() {
-        selectorCircle.backgroundColor = UIColor.black.withAlphaComponent(Constants.circleAlpha)
-        selectorCircle.layer.cornerRadius = Constants.circleSize / 2
-        selectorCircle.accessibilityIdentifier = "Selector Circle"
-        container.addSubview(selectorCircle)
+        selectionCircle.backgroundColor = UIColor.black.withAlphaComponent(Constants.circleAlpha)
+        selectionCircle.layer.cornerRadius = Constants.circleSize / 2
+        selectionCircle.accessibilityIdentifier = "Selection Circle"
+        container.addSubview(selectionCircle)
         
         NSLayoutConstraint.activate([
-            selectorCircle.topAnchor.constraint(equalTo: topAnchor, constant: circleInitialLocation.y),
-            selectorCircle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: circleInitialLocation.x),
-            selectorCircle.heightAnchor.constraint(equalToConstant: Constants.circleSize),
-            selectorCircle.widthAnchor.constraint(equalToConstant: Constants.circleSize),
+            selectionCircle.topAnchor.constraint(equalTo: topAnchor, constant: circleInitialLocation.y),
+            selectionCircle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: circleInitialLocation.x),
+            selectionCircle.heightAnchor.constraint(equalToConstant: Constants.circleSize),
+            selectionCircle.widthAnchor.constraint(equalToConstant: Constants.circleSize),
         ])
         
-        selectorCircle.alpha = 0
+        selectionCircle.alpha = 0
         
         let panRecognizer = UIPanGestureRecognizer()
-        panRecognizer.addTarget(self, action: #selector(colorSelecterPanned(recognizer:)))
-        selectorCircle.addGestureRecognizer(panRecognizer)
+        panRecognizer.addTarget(self, action: #selector(colorSelectorPanned(recognizer:)))
+        selectionCircle.addGestureRecognizer(panRecognizer)
     }
     
     private func setUpDrop() {
@@ -162,8 +164,8 @@ final class ColorSelecterView: UIView {
         
         let verticalMargin = Constants.dropPadding
         NSLayoutConstraint.activate([
-            upperDrop.bottomAnchor.constraint(equalTo: selectorCircle.topAnchor, constant: -verticalMargin),
-            upperDrop.centerXAnchor.constraint(equalTo: selectorCircle.centerXAnchor),
+            upperDrop.bottomAnchor.constraint(equalTo: selectionCircle.topAnchor, constant: -verticalMargin),
+            upperDrop.centerXAnchor.constraint(equalTo: selectionCircle.centerXAnchor),
             upperDrop.heightAnchor.constraint(equalToConstant: ColorDrop.defaultHeight),
             upperDrop.widthAnchor.constraint(equalToConstant: ColorDrop.defaultWidth),
         ])
@@ -178,8 +180,8 @@ final class ColorSelecterView: UIView {
         
         let verticalMargin = Constants.dropPadding
         NSLayoutConstraint.activate([
-            lowerDrop.topAnchor.constraint(equalTo: selectorCircle.bottomAnchor, constant: verticalMargin),
-            lowerDrop.centerXAnchor.constraint(equalTo: selectorCircle.centerXAnchor),
+            lowerDrop.topAnchor.constraint(equalTo: selectionCircle.bottomAnchor, constant: verticalMargin),
+            lowerDrop.centerXAnchor.constraint(equalTo: selectionCircle.centerXAnchor),
             lowerDrop.heightAnchor.constraint(equalToConstant: ColorDrop.defaultHeight),
             lowerDrop.widthAnchor.constraint(equalToConstant: ColorDrop.defaultWidth),
         ])
@@ -187,7 +189,7 @@ final class ColorSelecterView: UIView {
         lowerDrop.alpha = 0
     }
     
-    /// Sets up the tooltip that is shown on top of the color selecter
+    /// Sets up the tooltip that is shown on top of the selection circle
     private func setUpTooltip() {
         var preferences = EasyTipView.Preferences()
         preferences.drawing.foregroundColor = Constants.tooltipForegroundColor
@@ -200,13 +202,13 @@ final class ColorSelecterView: UIView {
         preferences.positioning.textVInset = Constants.tooltipVerticalTextInset
         preferences.positioning.textHInset = Constants.tooltipHorizontalTextInset
         
-        let text = NSLocalizedString("Drag to select color", comment: "Color selecter tooltip for the Camera")
+        let text = NSLocalizedString("Drag to select color", comment: "Color selector tooltip for the Camera")
         tooltip = EasyTipView(text: text, preferences: preferences)
     }
     
     // MARK: - Gesture recognizers
     
-    @objc func colorSelecterPanned(recognizer: UIPanGestureRecognizer) {
+    @objc func colorSelectorPanned(recognizer: UIPanGestureRecognizer) {
         delegate?.didPanCircle(recognizer: recognizer)
     }
     
@@ -225,16 +227,41 @@ final class ColorSelecterView: UIView {
     private func moveLowerDrop(to point: CGPoint) {
         lowerDrop.center = point
     }
+    
+    /// shows the selection circle and drop
+    private func showView() {
+        self.alpha = 1
+        self.container.alpha = 1
+        
+        UIView.animate(withDuration: Constants.animationDuration) {
+            self.selectionCircle.alpha = 1
+            self.selectionCircle.transform = .identity
+            self.upperDrop.alpha = 1
+            self.lowerDrop.alpha = 0
+        }
+    }
+    
+    /// hides the selection circle and drop
+    private func hideView() {
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            self.selectionCircle.alpha = 0
+            self.upperDrop.alpha = 0
+            self.lowerDrop.alpha = 0
+        }, completion: { _ in
+            self.alpha = 0
+            self.container.alpha = 0
+        })
+    }
 
     
     // MARK: - Public interface
     
-    /// shows or hides the tooltip above color selecter
+    /// shows or hides the tooltip
     ///
     /// - Parameter show: true to show, false to hide
     func showTooltip(_ show: Bool) {
         if show {
-            tooltip?.show(animated: true, forView: selectorCircle, withinSuperview: self)
+            tooltip?.show(animated: true, forView: selectionCircle, withinSuperview: self)
         }
         else {
             UIView.animate(withDuration: Constants.animationDuration) {
@@ -245,11 +272,11 @@ final class ColorSelecterView: UIView {
         }
     }
     
-    /// Changes color selector location on screen
+    /// Changes the location of the selection circle
     ///
     /// - Parameter point: the new location
     func moveCircle(to point: CGPoint) {
-        selectorCircle.center = point
+        selectionCircle.center = point
         
         let offset = Constants.dropPadding + (Constants.circleSize + ColorDrop.defaultHeight) / 2
         
@@ -264,41 +291,37 @@ final class ColorSelecterView: UIView {
         lowerDrop.alpha = upperDropVisible ? 0 : 1
     }
     
-    /// Applies a transformation to the color selecter
+    /// Applies a transformation to the selection circle
     ///
     /// - Parameter transform: the transformation to apply
     func transformCircle(_ transform: CGAffineTransform) {
-        selectorCircle.transform = transform
+        selectionCircle.transform = transform
     }
     
-    /// shows or hides the color selecter
+    /// shows or hides the selection circle
     ///
     /// - Parameter show: true to show, false to hide
     func show(_ show: Bool) {
-        self.alpha = show ? 1 : 0
-        self.container.alpha = show ? 1 : 0
-        
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.selectorCircle.alpha = show ? 1 : 0
-            self.selectorCircle.transform = .identity
-            self.upperDrop.alpha = show ? 1 : 0
-            self.lowerDrop.alpha = 0
+        if show {
+            showView()
+        }
+        else {
+            hideView()
         }
     }
     
-    /// Sets a new color for the color selecter background
+    /// Sets a new color for the selection circle and drops
     ///
-    /// - Parameter color: new color for the color selecter
+    /// - Parameter color: new color for the views
     func setColor(_ color: UIColor) {
-        selectorCircle.backgroundColor = color.withAlphaComponent(Constants.circleAlpha)
+        selectionCircle.backgroundColor = color.withAlphaComponent(Constants.circleAlpha)
         upperDrop.innerColor = color
         lowerDrop.innerColor = color
     }
     
-    /// shows or hides the overlay of the color selecter
+    /// shows or hides the overlay
     ///
     /// - Parameter show: true to show, false to hide
-    /// - Parameter animate: whether the UI update is animated
     func showOverlay(_ show: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.overlay.alpha = show ? 1 : 0

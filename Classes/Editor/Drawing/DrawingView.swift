@@ -104,9 +104,9 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     private let eyeDropperButton: CircularImageView
     let colorPickerSelectorContainer: UIView
     
-    // Color selecter
-    let colorSelecterContainer: UIView
-    var colorSelecterOrigin: CGPoint {
+    // Color selector
+    let colorSelectorContainer: UIView
+    var colorSelectorOrigin: CGPoint {
         return colorPickerContainer.convert(eyeDropperButton.center, to: self)
     }
     
@@ -130,7 +130,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorCollection = UIView()
         colorPickerButton = CircularImageView()
         colorPickerSelectorContainer = UIView()
-        colorSelecterContainer = IgnoreTouchesView()
+        colorSelectorContainer = IgnoreTouchesView()
         overlay = UIView()
         
         super.init(frame: .zero)
@@ -171,7 +171,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         setUpCloseColorPickerButton()
         setUpEyeDropper()
         setUpColorPickerSelectorContainer()
-        setUpColorSelecterContainer()
+        setUpColorSelectorContainer()
     }
     
     /// Sets up a view where the drawing will be saved temporarily
@@ -434,18 +434,18 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
-    private func setUpColorSelecterContainer() {
-        colorSelecterContainer.backgroundColor = .clear
-        colorSelecterContainer.accessibilityIdentifier = "Editor Color Selector Container"
-        colorSelecterContainer.clipsToBounds = false
-        colorSelecterContainer.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(colorSelecterContainer)
+    private func setUpColorSelectorContainer() {
+        colorSelectorContainer.backgroundColor = .clear
+        colorSelectorContainer.accessibilityIdentifier = "Editor Color Selector Container"
+        colorSelectorContainer.clipsToBounds = false
+        colorSelectorContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(colorSelectorContainer)
         
         NSLayoutConstraint.activate([
-            colorSelecterContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            colorSelecterContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            colorSelecterContainer.topAnchor.constraint(equalTo: topAnchor),
-            colorSelecterContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
+            colorSelectorContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            colorSelectorContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            colorSelectorContainer.topAnchor.constraint(equalTo: topAnchor),
+            colorSelectorContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
     
@@ -561,7 +561,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         showBottomPanel(show)
     }
     
-    /// shows or hides the overlay of the color selecter
+    /// shows or hides the overlay of the color selector
     ///
     /// - Parameter show: true to show, false to hide
     /// - Parameter animate: whether the UI update is animated

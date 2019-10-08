@@ -7,47 +7,47 @@
 import Foundation
 import UIKit
 
-protocol ColorSelecterControllerDelegate: class {
+protocol ColorSelectorControllerDelegate: class {
     
-    /// Called to ask if color selecter tooltip should be shown
+    /// Called to ask if tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
     func shouldShowTooltip() -> Bool
     
-    /// Called after the color selecter tooltip is dismissed
+    /// Called after the tooltip is dismissed
     func didDismissTooltip()
     
-    /// Called when the color selecter is panned
+    /// Called when the selection circle is panned
     ///
     /// - Parameter point: location to take the color from
     /// - Returns: Color from image
     func getColor(at point: CGPoint) -> UIColor
     
-    /// Called when the color selector is pressed
+    /// Called when the selection circle is pressed
     func didStartColorSelection()
 
-    /// Called when the color selector is released
+    /// Called when the selection circle is released
     ///
     /// - Parameter color: selected color
     func didEndColorSelection(color: UIColor)
 }
 
-/// Controller for handling the color selecter on the drawing menu.
-final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate {
+/// Controller for handling the color selector in the drawing menu.
+final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate {
     
-    weak var delegate: ColorSelecterControllerDelegate?
+    weak var delegate: ColorSelectorControllerDelegate?
     
     var circleInitialLocation: CGPoint {
         get {
-            return colorSelecterView.circleInitialLocation
+            return colorSelectorView.circleInitialLocation
         }
         set {
-            colorSelecterView.circleInitialLocation = newValue
+            colorSelectorView.circleInitialLocation = newValue
         }
     }
     
-    private lazy var colorSelecterView: ColorSelecterView = {
-        let view = ColorSelecterView()
+    private lazy var colorSelectorView: ColorSelectorView = {
+        let view = ColorSelectorView()
         view.delegate = self
         return view
     }()
@@ -69,60 +69,56 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
     // MARK: - View Life Cycle
     
     override func loadView() {
-        view = colorSelecterView
+        view = colorSelectorView
     }
     
     // MARK: - Public interface
     
-    func didDismissTooltip() {
-        delegate?.didDismissTooltip()
-    }
-    
-    /// Shows or hides the color selecter
+    /// Shows or hides the color Selector
     ///
     /// - Parameter show: true to show, false to hide
     func show(_ show: Bool) {
-        colorSelecterView.show(show)
+        colorSelectorView.show(show)
         
         if delegate?.shouldShowTooltip() == true {
-            colorSelecterView.showOverlay(true)
-            colorSelecterView.showTooltip(true)
+            colorSelectorView.showOverlay(true)
+            colorSelectorView.showTooltip(true)
         }
     }
     
-    /// Sets a new color for the color selecter background
+    /// Sets a new color for the color circle and drops
     ///
-    /// - Parameter color: new color for the color selecter
+    /// - Parameter color: new color for the color Selector
     func setColor(_ color: UIColor) {
-        colorSelecterView.setColor(color)
+        colorSelectorView.setColor(color)
     }
     
-    /// Takes the color selecter back to its initial position
+    /// Takes the selection circle back to its initial position
     func resetLocation() {
-        colorSelecterView.moveCircle(to: colorSelecterView.circleInitialLocation)
-        colorSelecterView.transformCircle(CGAffineTransform(scaleX: 0, y: 0))
+        colorSelectorView.moveCircle(to: colorSelectorView.circleInitialLocation)
+        colorSelectorView.transformCircle(CGAffineTransform(scaleX: 0, y: 0))
     }
     
-    /// Changes the background color of the color selecter to the one from its initial position
-    func resetColorSelecterColor() {
+    /// Changes the color of the selection circle to the one from the initial position
+    func resetColorSelectorColor() {
         let color = getColor(at: circleInitialLocation)
-        colorSelecterView.setColor(color)
+        colorSelectorView.setColor(color)
     }
     
     // MARK: - Private utilities
     
-    /// Changes the location of the color selecter to the location of the user's finger
+    /// Changes the location of the color Selector to the location of the user's finger
     ///
     /// - Parameter recognizer: the gesture recognizer
-    /// - Returns: the new location of the color selecter
+    /// - Returns: the new location of the color Selector
     private func moveCircle(recognizer: UIPanGestureRecognizer) -> CGPoint {
-        let translation = recognizer.translation(in: colorSelecterView)
+        let translation = recognizer.translation(in: colorSelectorView)
         let point = CGPoint(x: circleInitialLocation.x + translation.x, y: circleInitialLocation.y + translation.y)
-        colorSelecterView.moveCircle(to: point)
+        colorSelectorView.moveCircle(to: point)
         return point
     }
     
-    /// Gets the color of a certain point of the media playing on the background
+    /// Gets the color of a certain point of the background
     ///
     /// - Parameter point: the location to take the color from
     /// - Returns: the color of the pixel
@@ -131,20 +127,20 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
         return delegate.getColor(at: point)
     }
     
-    // MARK: - Circle movement
+    // MARK: - ColorSelectorViewDelegate
     
     func didPanCircle(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
             delegate?.didStartColorSelection()
             if delegate?.shouldShowTooltip() == true {
-                colorSelecterView.showTooltip(false)
-                colorSelecterView.showOverlay(false)
+                colorSelectorView.showTooltip(false)
+                colorSelectorView.showOverlay(false)
             }
         case .changed:
             let currentLocation = moveCircle(recognizer: recognizer)
             let color = getColor(at: currentLocation)
-            colorSelecterView.setColor(color)
+            colorSelectorView.setColor(color)
         case .ended, .failed, .cancelled:
             let currentLocation = moveCircle(recognizer: recognizer)
             let color = getColor(at: currentLocation)
@@ -155,5 +151,9 @@ final class ColorSelecterController: UIViewController, ColorSelecterViewDelegate
         @unknown default:
             break
         }
+    }
+    
+    func didDismissTooltip() {
+        delegate?.didDismissTooltip()
     }
 }

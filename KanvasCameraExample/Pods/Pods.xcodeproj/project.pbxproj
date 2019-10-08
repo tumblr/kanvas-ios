@@ -105,6 +105,8 @@
 		60B7648A8A05CE3A027CF33F9796EF09 /* UIView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8C444A6F2F2B23BF2F673101550822 /* UIView+Utils.swift */; };
 		6352398BB6254A59AD2542D86979FCEE /* UIFont+TumblrTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E713C0AB71FEF2B0A2B36A1C4C7A9E /* UIFont+TumblrTheme.swift */; };
 		6543B12460E69FF552F50AAB3C5B9BC0 /* EasyTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D43E49B8DDEFB2C12CE566839958204 /* EasyTipView.swift */; };
+		65ECBAE3234F84890095DA7B /* ColorSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ECBADF234F843A0095DA7B /* ColorSelectorController.swift */; };
+		65ECBAE4234F84890095DA7B /* ColorSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ECBAE0234F843A0095DA7B /* ColorSelectorView.swift */; };
 		65FCEEEC10037101AD70CFCACC436376 /* UIFont+Orangina.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D30F2F9C979F6B11A5134934B1BB25 /* UIFont+Orangina.swift */; };
 		667B6D53B698B6B822173002C2F7668C /* AVURLAsset+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1250515E8E049D0A2148A94498A3F /* AVURLAsset+Thumbnail.swift */; };
 		67256E5D8ECBC074654E3FBC4291E3F3 /* CameraInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1739C7CB9ACB7604EA4818007A678BFC /* CameraInputController.swift */; };
@@ -487,6 +489,8 @@
 		635B8EF611C5053183706BE4A6AD5DD0 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
 		63B820F6CCF7E367071447BE48A1E7DF /* ComposeNavigationBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ComposeNavigationBar.swift; path = Source/ComposeNavigationBar.swift; sourceTree = "<group>"; };
 		64457138DDB7B1AE99A1F334D6C685CB /* Utils.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Utils.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		65ECBADF234F843A0095DA7B /* ColorSelectorController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelectorController.swift; sourceTree = "<group>"; };
+		65ECBAE0234F843A0095DA7B /* ColorSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelectorView.swift; sourceTree = "<group>"; };
 		6680C214F110595FF4C681DD8DC27AE3 /* UIGestureRecognizer+Active.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIGestureRecognizer+Active.swift"; sourceTree = "<group>"; };
 		673E0A193683E3AA258C086BF0B5A648 /* SuggestedTagsDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SuggestedTagsDataSource.swift; sourceTree = "<group>"; };
 		675852952BBEB8F4BC4EBCC0B5CC4AAD /* GLPixelBufferView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GLPixelBufferView.swift; sourceTree = "<group>"; };
@@ -821,6 +825,7 @@
 				3DD68B547A12A54D2145245AE4789BFA /* DrawingView.swift */,
 				10CFBAEC8A547DA24FC9C352412BB325 /* ColorCollection */,
 				8932267F597A729CDE3C9642236D3811 /* ColorPicker */,
+				65ECBADE234F843A0095DA7B /* ColorSelecter */,
 				1F3F7AEF4AD9F6B405BE583F397A46D2 /* StrokeSelector */,
 				25F787F31A34233367CD405C757814CA /* Textures */,
 				E9E51F1C57249CC4A68A9F24660A80EA /* TextureSelector */,
@@ -1033,6 +1038,15 @@
 				9AB1CE40138872966372E40451B81D5D /* Pods-KanvasCameraExampleTests */,
 			);
 			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		65ECBADE234F843A0095DA7B /* ColorSelecter */ = {
+			isa = PBXGroup;
+			children = (
+				65ECBADF234F843A0095DA7B /* ColorSelectorController.swift */,
+				65ECBAE0234F843A0095DA7B /* ColorSelectorView.swift */,
+			);
+			path = ColorSelecter;
 			sourceTree = "<group>";
 		};
 		7067115CCD88BBE87A39FA8412F45D72 /* Pod */ = {
@@ -1891,6 +1905,7 @@
 				BF11E0C7CFE61820CDF8B93C71A949B2 /* LightLeaksFilter.swift in Sources */,
 				7FC3778426F7C2A22CDED97DD903A17D /* LoadingIndicatorView.swift in Sources */,
 				CCB043EC5BE9C1F9FF58520136BE44F6 /* MangaFilter.swift in Sources */,
+				65ECBAE4234F84890095DA7B /* ColorSelectorView.swift in Sources */,
 				87643E0FAA657598CE2FABA4F8907FB3 /* Marker.swift in Sources */,
 				07924565F3E81B718BD02BE348596BD6 /* MediaClip.swift in Sources */,
 				FBF1F4E3E2008893760D3BB36B448650 /* MediaClipsCollectionCell.swift in Sources */,
@@ -1943,6 +1958,7 @@
 				C64090361C5FD44E0A26B8060CD133D6 /* UIFont+Fonts.swift in Sources */,
 				DE16269B3EFAE4444E30D13C9847FE7E /* UIFont+Utils.swift in Sources */,
 				0C33E69E5209EF94CF9948D459040DB9 /* UIGestureRecognizer+Active.swift in Sources */,
+				65ECBAE3234F84890095DA7B /* ColorSelectorController.swift in Sources */,
 				C27E44A2F00FFFCC22A06D31D9B9F05B /* UIImage+Camera.swift in Sources */,
 				32022E45BE5AE0419884FE091A29FD4F /* UIImage+DominantColors.swift in Sources */,
 				4A5ED8C729AB65100DFF1FA8C7376046 /* UIImage+FlipLeftMirrored.swift in Sources */,

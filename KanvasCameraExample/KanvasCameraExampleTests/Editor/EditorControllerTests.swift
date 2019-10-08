@@ -248,11 +248,11 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
         closeCalled = true
     }
     
-    func didDismissColorSelecterTooltip() {
+    func didDismissColorSelectorTooltip() {
         
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
+    func editorShouldShowColorSelectorTooltip() -> Bool {
         return false
     }
     
