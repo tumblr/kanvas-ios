@@ -38,7 +38,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tap, image: KanvasCameraImages.gifModeImage, timeLimit: KanvasCameraTimes.gifRecordingTime)
+        shootButton.configureFor(trigger: .tap, image: KanvasCameraImages.loopModeImage, timeLimit: KanvasCameraTimes.gifRecordingTime)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
@@ -53,14 +53,45 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(true)
     }
     
-    func testShowTrash() {
+    func testShowOpenTrash() {
         let shootButton = newShootButtonView()
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tapAndHold(animateCircle: true), image: KanvasCameraImages.stopMotionModeImage, timeLimit: KanvasCameraTimes.videoRecordingTime)
-        shootButton.showTrashClosed(true)
-        FBSnapshotVerifyView(shootButton)
+        shootButton.openTrash()
         UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(shootButton)
+    }
+    
+    func testShowClosedTrash() {
+        let shootButton = newShootButtonView()
+        let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        shootButton.add(into: uiView)
+        UIView.setAnimationsEnabled(false)
+        shootButton.closeTrash()
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(shootButton)
+    }
+    
+    func testOpenAndHideTrash() {
+        let shootButton = newShootButtonView()
+        let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        shootButton.add(into: uiView)
+        UIView.setAnimationsEnabled(false)
+        shootButton.openTrash()
+        shootButton.hideTrash()
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(shootButton)
+    }
+    
+    func testCloseAndHideTrash() {
+        let shootButton = newShootButtonView()
+        let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        shootButton.add(into: uiView)
+        UIView.setAnimationsEnabled(false)
+        shootButton.openTrash()
+        shootButton.hideTrash()
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(shootButton)
     }
 }

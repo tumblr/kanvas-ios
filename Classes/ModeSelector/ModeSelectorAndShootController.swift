@@ -39,6 +39,10 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     
     /// Function called when the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
+
+    func didTapMediaPickerButton()
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
 }
 
 /// Controller that handles interaction between the mode selector and the capture button
@@ -97,6 +101,7 @@ final class ModeSelectorAndShootController: UIViewController {
         if modesQueue.count == 1 {
             hideModeButton()
         }
+        loadMediaPickerThumbnail()
     }
     
     // MARK: - Public interface
@@ -130,6 +135,7 @@ final class ModeSelectorAndShootController: UIViewController {
     /// hides the camera mode button
     func hideModeButton() {
         modeView.showModeButton(false)
+        dismissTooltip()
     }
     
     /// shows the tooltip below the mode selector
@@ -172,14 +178,40 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.showBorderView(false)
     }
 
+    /// shows the trash icon opened
+    func openTrash() {
+        modeView.openTrash()
+    }
+    
     /// shows the trash icon closed
-    func showTrashClosed(_ show: Bool) {
-        modeView.showTrashClosed(show)
+    func closeTrash() {
+        modeView.closeTrash()
+    }
+    
+    /// hides the trash icon
+    func hideTrash() {
+        modeView.hideTrash()
     }
 
-    /// shows the trash icon opened
-    func showTrashOpened(_ show: Bool) {
-        modeView.showTrashOpened(show)
+    func toggleMediaPickerButton(_ visible: Bool) {
+        modeView.toggleMediaPickerButton(visible)
+    }
+
+    func loadMediaPickerThumbnail() {
+        delegate?.provideMediaPickerThumbnail(targetSize: modeView.thumbnailSize) { image in
+            guard let image = image else {
+                return
+            }
+            self.setMediaPickerButtonThumbnail(image)
+        }
+    }
+
+    func setMediaPickerButtonThumbnail(_ image: UIImage) {
+        modeView.setMediaPickerButtonThumbnail(image)
+    }
+
+    func resetMediaPickerButton() {
+        modeView.resetMediaPickerButton()
     }
 }
 
@@ -241,5 +273,9 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
         if let mode = currentMode {
             delegate?.didPanForZoom(mode, currentPoint, gesture)
         }
+    }
+
+    func mediaPickerButtonDidPress() {
+        delegate?.didTapMediaPickerButton()
     }
 }

@@ -10,15 +10,16 @@ import OpenGLES
 
 /// A basic filter implementation to render CVPixelBuffer
 class Filter: FilterProtocol {
-    
+
     private let glContext: EAGLContext?
-    private var textureCache: CVOpenGLESTextureCache?
     private var renderTextureCache: CVOpenGLESTextureCache?
     private var bufferPool: CVPixelBufferPool?
     private var bufferPoolAuxAttributes: CFDictionary?
-    private var frame: GLint = 0
     private var offscreenBufferHandle: GLuint = 0
-    
+    private var uniformInputImageTexture: GLint = 0
+
+    var textureCache: CVOpenGLESTextureCache?
+
     /// The shader program to render the texture
     var shader: Shader?
     
@@ -30,6 +31,9 @@ class Filter: FilterProtocol {
     
     /// Output height for texture
     var outputHeight: Int?
+
+    /// Time interval that the filter is running for
+    var time: TimeInterval = 0
     
     /// Initializer with glContext
     ///
@@ -89,7 +93,7 @@ class Filter: FilterProtocol {
             guard let shader = shader else {
                 throw GLError.setupError("Problem initializing shader.")
             }
-            frame = GLU.getUniformLocation(shader.program, "inputImageTexture")
+            uniformInputImageTexture = GLU.getUniformLocation(shader.program, "inputImageTexture")
             
             let maxRetainedBufferCount = ShaderConstants.retainedBufferCount
             bufferPool = createPixelBufferPool(outputDimensions.width, outputDimensions.height, FourCharCode(kCVPixelFormatType_32BGRA), Int32(maxRetainedBufferCount))
@@ -217,7 +221,7 @@ class Filter: FilterProtocol {
     }
     
     // MARK: - filters get rendered to a backing CVPixelBuffer
-    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?) -> CVPixelBuffer? {
+    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?, time: TimeInterval) -> CVPixelBuffer? {
         guard let shader = shader, let pixelBuffer = pixelBuffer, let textureCache = textureCache, let outputFormatDescription = outputFormatDescription, let bufferPool = bufferPool, let renderTextureCache = renderTextureCache else {
             return nil
         }
@@ -269,6 +273,7 @@ class Filter: FilterProtocol {
             if err == kCVReturnWouldExceedAllocationThreshold {
                 // Flush the texture cache to potentially release the retained buffers and try again to create a pixel buffer
                 CVOpenGLESTextureCacheFlush(renderTextureCache, 0)
+                CVOpenGLESTextureCacheFlush(textureCache, 0)
                 err = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(kCFAllocatorDefault, bufferPool, bufferPoolAuxAttributes, &dstPixelBuffer)
             }
             if err != 0 {
@@ -302,8 +307,9 @@ class Filter: FilterProtocol {
             glBindFramebuffer(GL_FRAMEBUFFER.ui, offscreenBufferHandle)
             glViewport(0, 0, srcDimensions.width, srcDimensions.height)
             shader.useProgram()
+            self.time = time
             updateUniforms()
-            
+
             // Set up our destination pixel buffer as the framebuffer's render target.
             glActiveTexture(GL_TEXTURE0.ui)
             glBindTexture(CVOpenGLESTextureGetTarget(destinationTexture), CVOpenGLESTextureGetName(destinationTexture))
@@ -316,7 +322,7 @@ class Filter: FilterProtocol {
             // Render our source pixel buffer.
             glActiveTexture(GL_TEXTURE1.ui)
             glBindTexture(CVOpenGLESTextureGetTarget(sourceTexture), CVOpenGLESTextureGetName(sourceTexture))
-            glUniform1i(frame, 1)
+            glUniform1i(uniformInputImageTexture, 1)
             
             glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MIN_FILTER.ui, GL_LINEAR)
             glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MAG_FILTER.ui, GL_LINEAR)

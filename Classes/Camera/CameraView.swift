@@ -17,7 +17,7 @@ struct CameraConstants {
     static let optionHorizontalMargin: CGFloat = 24
     static let optionButtonSize: CGFloat = 26.5
     static let optionSpacing: CGFloat = 33
-    fileprivate static let hidingAnimationDuration: CGFloat = 0.2
+    private static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
 }
 
@@ -66,14 +66,16 @@ final class CameraView: UIView {
     weak var delegate: CameraViewDelegate?
 
     private let numberOfOptionRows: CGFloat
+    private let settings: CameraSettings
 
     convenience init() {
-        self.init(numberOfOptionRows: CameraConstants.defaultOptionRows)
+        self.init(settings: CameraSettings(), numberOfOptionRows: CameraConstants.defaultOptionRows)
     }
 
-    init(numberOfOptionRows: CGFloat) {
+    init(settings: CameraSettings, numberOfOptionRows: CGFloat) {
         self.numberOfOptionRows = numberOfOptionRows
-
+        self.settings = settings
+        
         // Main views
         closeButton = UIButton()
 
@@ -159,10 +161,17 @@ final class CameraView: UIView {
         addLayoutGuide(optionsLayoutGuide)
         // The height is equal to all the rows of buttons plus the space between them
         let height = CameraConstants.optionButtonSize * numberOfOptionRows + CameraConstants.optionSpacing * (numberOfOptionRows - 1)
-        optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin).isActive = true
         optionsLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin).isActive = true
-        optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.optionHorizontalMargin).isActive = true
         optionsLayoutGuide.heightAnchor.constraint(equalToConstant: height).isActive = true
+        
+        if settings.topButtonsSwapped {
+            optionsLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin).isActive = true
+            optionsLayoutGuide.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -CameraConstants.optionHorizontalMargin).isActive = true
+        }
+        else {
+            optionsLayoutGuide.leadingAnchor.constraint(equalTo: closeButton.trailingAnchor, constant: CameraConstants.optionHorizontalMargin).isActive = true
+            optionsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin).isActive = true
+        }
     }
     
     private func setupImagePreviewGuide() {
@@ -174,7 +183,7 @@ final class CameraView: UIView {
     }
     
     private func setupFilterSettingsGuide() {
-        let bottomMargin = MediaClipsEditorView.height + ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterCollectionView.height) / 2)
+        let bottomMargin = MediaClipsEditorView.height + ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterSettingsView.collectionViewHeight) / 2)
         addLayoutGuide(filterSettingsLayoutGuide)
         filterSettingsLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         filterSettingsLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
@@ -190,18 +199,30 @@ final class CameraView: UIView {
     private func setUpCloseButton() {
         addSubview(closeButton)
         closeButton.accessibilityLabel = "Close Button"
-        closeButton.applyShadows()
-        closeButton.setImage(KanvasCameraImages.closeImage, for: .normal)
+        closeButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
         closeButton.imageView?.contentMode = .scaleAspectFit
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
-            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
-        ])
+        
+        if settings.topButtonsSwapped {
+            closeButton.setImage(KanvasCameraImages.forwardImage, for: .normal)
+            NSLayoutConstraint.activate([
+                closeButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
+                closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+                closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
+                closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+            ])
+        }
+        else {
+            closeButton.setImage(KanvasCameraImages.closeImage, for: .normal)
+            
+            NSLayoutConstraint.activate([
+                closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
+                closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+                closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
+                closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+            ])
+        }
     }
 
     // MARK: - UIButton

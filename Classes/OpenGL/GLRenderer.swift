@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import func AVFoundation.AVMakeRect
 import Foundation
 import OpenGLES
 
@@ -29,8 +30,19 @@ protocol GLRendererDelegate: class {
     func rendererRanOutOfBuffers()
 }
 
+protocol GLRendering: class {
+    var delegate: GLRendererDelegate? { get set }
+    var filterType: FilterType { get set }
+    var imageOverlays: [CGImage] { get set }
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
+    func output(filteredPixelBuffer: CVPixelBuffer)
+    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
+    func refreshFilter()
+    func reset()
+}
+
 /// Renders pixel buffers with open gl
-final class GLRenderer {
+final class GLRenderer: GLRendering {
 
     /// Optional delegate
     weak var delegate: GLRendererDelegate?
@@ -38,30 +50,40 @@ final class GLRenderer {
     // OpenGL Context
     let glContext: EAGLContext?
 
-    private let callbackQueue: DispatchQueue
-    private var filter: FilterProtocol
-    private var filterType: FilterType = .passthrough
-    private var processingImage = false
+    // Image overlays
+    var imageOverlays: [CGImage] = []
 
+    // Current filter type
+    var filterType: FilterType = .passthrough
+
+    private let callbackQueue: DispatchQueue = DispatchQueue.main
+    private var filter: FilterProtocol
+    private var processingImage = false
     private var filteredPixelBuffer: CVPixelBuffer?
 
     /// Designated initializer
     ///
     /// - Parameter delegate: the callback
-    init(delegate: GLRendererDelegate?, callbackQueue: DispatchQueue = DispatchQueue.main) {
-        self.delegate = delegate
-        self.callbackQueue = callbackQueue
+    init() {
         glContext = EAGLContext(api: .openGLES3)
         filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
+    }
+
+    /// Processes a sample buffer, but swallows the completion
+    ///
+    /// - Parameter sampleBuffer: the camera feed sample buffer
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval) {
+        processSampleBuffer(sampleBuffer, time: time) { (_, _) in }
     }
     
     /// Call this method to process the sample buffer
     ///
     /// - Parameter sampleBuffer: the camera feed sample buffer
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, completion: (CVPixelBuffer, CMTime) -> Void) {
         if processingImage {
             return
         }
+        let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         let filterAlreadyInitialized: Bool = synchronized(self) {
             if filter.outputFormatDescription == nil {
                 filter.setupFormatDescription(from: sampleBuffer)
@@ -70,15 +92,15 @@ final class GLRenderer {
             return true
         }
         if filterAlreadyInitialized {
-            let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
             let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             let filteredPixelBufferMaybe: CVPixelBuffer? = synchronized(self) {
-                return filter.processPixelBuffer(sourcePixelBuffer)
+                return filter.processPixelBuffer(sourcePixelBuffer, time: time)
             }
             if let filteredPixelBuffer = filteredPixelBufferMaybe {
                 synchronized(self) {
                     output(filteredPixelBuffer: filteredPixelBuffer)
-                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: filteredPixelBuffer, presentationTime: time)
+                    self.delegate?.rendererFilteredPixelBufferReady(pixelBuffer: filteredPixelBuffer, presentationTime: presentationTime)
+                    completion(filteredPixelBuffer, presentationTime)
                 }
             }
             else {
@@ -114,7 +136,7 @@ final class GLRenderer {
     ///
     /// - Parameter pixelBuffer: the input pixel buffer
     /// - Returns: the filtered pixel buffer
-    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
+    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer? {
         processingImage = true
         defer {
             processingImage = false
@@ -139,20 +161,15 @@ final class GLRenderer {
             imageFilter.setupFormatDescription(from: sampleBuffer)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer)
+        let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer, time: time)
         imageFilter.cleanup()
         return filteredPixelBuffer
     }
 
     // MARK: - changing filters
-    func changeFilter(_ filterType: FilterType) {
-        guard self.filterType != filterType else {
-            return
-        }
-
-        self.filterType = filterType
+    func refreshFilter() {
         synchronized(self) {
-            filter = FilterFactory.createFilter(type: filterType, glContext: glContext)
+            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
         }
     }
 

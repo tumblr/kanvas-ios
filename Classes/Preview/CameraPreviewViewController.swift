@@ -108,8 +108,8 @@ final class CameraPreviewViewController: UIViewController {
         cameraPreviewView.setSecondPlayer(player: secondPlayer)
     }
 
-    override public var prefersStatusBarHidden: Bool {
-        return true
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -236,9 +236,9 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
         stopPlayback()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
-            // If the camera mode is .stopMotion and the `exportStopMotionPhotoAsVideo` is true,
+            // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
-            if let cameraMode = cameraMode, cameraMode == .stopMotion && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
+            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
                 performUIUpdate {
                     self.delegate?.didFinishExportingVideo(url: videoURL)
                     self.hideLoading()
@@ -265,18 +265,21 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                 }
                 else {
                     self.hideLoading()
-                    // TODO: Localize strings
-                    let viewModel = ModalViewModel(text: "There was an issue loading your post...",
-                                                   confirmTitle: "Try again",
-                                                   confirmCallback: {
-                                                       self.showLoading()
-                                                       self.createFinalContent()
-                                                   },
-                                                   cancelTitle: "Cancel",
-                                                   cancelCallback: { [unowned self] in self.delegate?.didFinishExportingVideo(url: url) },
-                                                   buttonsLayout: .oneBelowTheOther)
-                    let controller = ModalController(viewModel: viewModel)
-                    self.present(controller, animated: true, completion: .none)
+                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"), preferredStyle: .alert)
+                    
+                    let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel) { [weak self] _ in
+                        self?.delegate?.didFinishExportingVideo(url: url)
+                    }
+                    
+                    let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { [weak self] _ in
+                        self?.showLoading()
+                        self?.createFinalContent()
+                    }
+                    
+                    alertController.addAction(tryAgainButton)
+                    alertController.addAction(cancelButton)
+                    
+                    self.present(alertController, animated: true, completion: .none)
                 }
             }
         })

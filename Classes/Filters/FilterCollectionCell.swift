@@ -5,10 +5,9 @@
 //
 
 import Foundation
-import UIKit
 
 /// Delegate for touch events on this cell
-protocol FilterCollectionCellDelegate {
+protocol FilterCollectionCellDelegate: class {
     /// Callback method when tapping a cell
     ///
     /// - Parameters:
@@ -24,130 +23,13 @@ protocol FilterCollectionCellDelegate {
     func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer)
 }
 
-private struct FilterCollectionCellConstants {
-    static let animationDuration: TimeInterval = 0.2
-    static let circleDiameter: CGFloat = 72
-    static let circleMaxDiameter: CGFloat = 96.1
-    
-    static var minimumHeight: CGFloat {
-        return circleMaxDiameter
-    }
-    
-    static var width: CGFloat {
-        return circleMaxDiameter
-    }
-}
-
-/// The cell in FilterCollectionView to display an individual filter
-final class FilterCollectionCell: UICollectionViewCell {
-    
-    static let minimumHeight = FilterCollectionCellConstants.minimumHeight
-    static let width = FilterCollectionCellConstants.width
-    
-    private weak var circleView: UIImageView?
-    
-    var delegate: FilterCollectionCellDelegate?
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setUpView()
-        setUpRecognizers()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setUpView()
-        setUpRecognizers()
-    }
-    
-    /// Updates the cell to the FilterItem properties
-    ///
-    /// - Parameter item: The FilterItem to display
-    func bindTo(_ item: FilterItem) {
-        guard item.type != .passthrough else { return }
-        circleView?.image = KanvasCameraImages.filterTypes[item.type] ?? nil
-        circleView?.backgroundColor = KanvasCameraColors.filterTypes[item.type] ?? nil
-    }
-    
-    /// shows or hides the cell
-    ///
-    /// - Parameter show: true to show, false to hide
-    func show(_ show: Bool) {
-        UIView.animate(withDuration: FilterCollectionCellConstants.animationDuration) { [weak self] in
-            self?.contentView.alpha = show ? 1 : 0
-        }
-    }
-    
-    /// Updates the cell to be reused
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        circleView?.image = nil
-        circleView?.backgroundColor = nil
-    }
-    
-    // MARK: - Layout
-    
-    private func setUpView() {
-        let imageView = UIImageView()
-        contentView.addSubview(imageView)
-        imageView.accessibilityIdentifier = "Filter Cell View"
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = FilterCollectionCellConstants.circleDiameter / 2
-        imageView.layer.borderWidth = 3 * (FilterCollectionCellConstants.circleDiameter/FilterCollectionCellConstants.circleMaxDiameter)
-        imageView.layer.borderColor = UIColor.white.cgColor
-
-        NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter),
-            imageView.widthAnchor.constraint(equalToConstant: FilterCollectionCellConstants.circleDiameter)
-        ])
-        
-        circleView = imageView
-    }
-    
-    // MARK: - Animations
-    
-    /// Changes the circle scale
-    ///
-    /// - Parameter scale: the new scale for the circle, 1.0 is the standard size
-    private func setScale(_ scale: CGFloat) {
-        circleView?.transform = CGAffineTransform(scaleX: scale, y: scale)
-    }
-    
-    /// Sets the circle with standard size
-    func setStandardSize() {
-        setScale(1)
-    }
-    
-    /// Changes the circle size according to a percentage.
-    ///
-    /// - Parameter percent: 0.0 is the standard size, while 1.0 is the biggest size
-    func setSize(percent: CGFloat) {
-        let maxIncrement = (FilterCollectionCellConstants.circleMaxDiameter - FilterCollectionCellConstants.circleDiameter) / FilterCollectionCellConstants.circleMaxDiameter
-        let scale = 1 + percent * maxIncrement
-        setScale(scale)
-    }
-    
-    // MARK: - Gesture recognizers
-    
-    private func setUpRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer()
-        let longPressRecognizer = UILongPressGestureRecognizer()
-        contentView.addGestureRecognizer(tapRecognizer)
-        contentView.addGestureRecognizer(longPressRecognizer)
-        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
-        longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
-    }
-    
-    @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(cell: self, recognizer: recognizer)
-    }
-    
-    @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        delegate?.didLongPress(cell: self, recognizer: recognizer)
-    }
+protocol FilterCollectionCell: UICollectionViewCell {
+    func setStandardSize()
+    func setSize(percent: CGFloat)
+    func show(_ show: Bool)
+    func bindTo(_ item: FilterItem)
+    func setSelected(_ selected: Bool)
+    func press()
+    func shrink()
+    func pop()
 }

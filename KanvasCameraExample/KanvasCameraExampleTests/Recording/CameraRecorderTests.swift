@@ -28,7 +28,7 @@ final class CameraRecorderTests: XCTestCase {
     func testPhoto() {
         let cameraRecorder = setupCameraRecorder()
         let expectation = XCTestExpectation(description: "photo")
-        cameraRecorder.takePhoto(completion: { image in
+        cameraRecorder.takePhoto(on: .photo, completion: { image in
             expectation.fulfill()
         })
         wait(for: [expectation], timeout: 5)
@@ -46,11 +46,12 @@ final class CameraRecorderTests: XCTestCase {
 
     /// This test should fail to return a url since it is testing on simulator, but it should always hit the completion block
     func testStopMotion() {
+        let mode = CameraMode.stopMotion
         let cameraRecorder = setupCameraRecorder()
         let delegate = CameraRecorderDelegateStub()
         cameraRecorder.recordingDelegate = delegate
 
-        cameraRecorder.startRecordingVideo()
+        cameraRecorder.startRecordingVideo(on: mode)
         let blockExpectation = XCTestExpectation(description: "block expectation")
         XCTAssert(cameraRecorder.isRecording(), "CameraRecorder failed to start recording")
 

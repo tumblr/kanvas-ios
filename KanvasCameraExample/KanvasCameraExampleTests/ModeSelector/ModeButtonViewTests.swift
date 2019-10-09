@@ -38,7 +38,7 @@ final class ModeButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         modeButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        modeButton.setTitle(KanvasCameraStrings.name(for: .gif))
+        modeButton.setTitle(KanvasCameraStrings.name(for: .loop))
         FBSnapshotVerifyView(modeButton)
         UIView.setAnimationsEnabled(true)
     }

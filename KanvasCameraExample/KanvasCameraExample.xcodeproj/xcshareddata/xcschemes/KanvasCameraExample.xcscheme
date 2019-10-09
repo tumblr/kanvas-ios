@@ -37,6 +37,20 @@
                BlueprintName = "KanvasCameraExampleTests"
                ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "CameraInputControllerTests/testSwitchCameras()">
+               </Test>
+               <Test
+                  Identifier = "CameraRecorderTests/testPhoto()">
+               </Test>
+               <Test
+                  Identifier = "CameraRecorderTests/testStopMotion()">
+               </Test>
+               <Test
+                  Identifier = "CameraSegmentHandlerTests/testMerge()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

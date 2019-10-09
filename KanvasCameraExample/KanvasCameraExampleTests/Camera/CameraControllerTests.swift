@@ -9,6 +9,7 @@ import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
+import Photos
 
 final class CameraControllerTests: FBSnapshotTestCase {
 
@@ -68,7 +69,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func testSetUpWithGifDefaultModeShouldStartWithGifMode() {
         let delegate = newDelegateStub()
         let settings = CameraSettings()
-        settings.defaultMode = .gif
+        settings.defaultMode = .loop
         settings.features.ghostFrame = true
         settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
@@ -127,7 +128,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         UIView.setAnimationsEnabled(false)
-        controller.didOpenMode(.gif, andClosed: .none)
+        controller.didOpenMode(.loop, andClosed: .none)
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }
@@ -229,7 +230,39 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
+    func testCameraWithMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
+
+    func testCameraWithFiltersOpenHidesMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        UIView.setAnimationsEnabled(false)
+        controller.didTapVisibilityButton(visible: true)
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(controller.view)
+    }
+
     // Can't test `dismissButtonPressed` because it requires presenting and dismissing preview controller.
+    
+    func testCameraWithTopButtonsSwapped() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.photo]
+        settings.topButtonsSwapped = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
 }
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
@@ -241,14 +274,38 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return false
     }
-
+    
+    func didDismissColorSelecterTooltip() {
+        
+    }
+    
+    func editorShouldShowColorSelecterTooltip() -> Bool {
+        return false
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        return false
+    }
+    
+    func didBeginDragInteraction() {
+        
+    }
+    
+    func didEndDragInteraction() {
+        
+    }
+    
     var dismissCalled = false
     var videoURL: URL? = nil
     var imageCreatedCalled = false
     var creationError = false
     var creationEmpty = false
 
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?) {
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         switch (media, error) {
         case (.none, .none): creationEmpty = true
         case (_, .some): creationError = true
@@ -259,5 +316,10 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
 
     func dismissButtonPressed() {
         dismissCalled = true
+    }
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) })
+        completion(image)
     }
 }

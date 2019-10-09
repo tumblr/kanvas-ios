@@ -9,9 +9,6 @@ import Foundation
 /// Rave Filter
 final class RaveFilter: Filter {
     
-    /// The time to pass
-    private var startTime = Date.timeIntervalSinceReferenceDate
-    
     override func setupShader() {
         let fragment = Filter.loadShader("rave", type: .fragment)
         let vertex = Filter.loadShader("Base", type: .vertex)
@@ -23,7 +20,6 @@ final class RaveFilter: Filter {
     }
     
     override func updateUniforms() {
-        let time = Float(Date.timeIntervalSinceReferenceDate - startTime)
-        shader?.setFloatUniform(key: "time", value: time)
+        shader?.setFloatUniform(key: "time", value: Float(time))
     }
 }

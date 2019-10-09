@@ -74,6 +74,8 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
     func deleteSegment(at index: Int, removeFromDisk: Bool)
 
+    func deleteAllSegments(removeFromDisk: Bool)
+
     /// Moves one segment to a new position
     ///
     /// - Parameters:
@@ -182,6 +184,12 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             }
         }
         segments.remove(at: index)
+    }
+
+    func deleteAllSegments(removeFromDisk: Bool = true) {
+        while segments.count > 0 {
+            deleteSegment(at: 0, removeFromDisk: removeFromDisk)
+        }
     }
     
     /// Moves a segment to a new index

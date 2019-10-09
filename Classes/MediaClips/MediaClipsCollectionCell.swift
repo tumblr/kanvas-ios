@@ -10,7 +10,7 @@ import TumblrTheme
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol MediaClipsCollectionCellDelegate {    
+protocol MediaClipsCollectionCellDelegate: class {    
     /// Callback method for dragging the cell
     ///
     /// - Parameter newDragState: The new state of the drag event
@@ -68,7 +68,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         return label
     }()
     /// The touch delegate to be injected
-    var touchDelegate: MediaClipsCollectionCellDelegate?
+    weak var touchDelegate: MediaClipsCollectionCellDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)

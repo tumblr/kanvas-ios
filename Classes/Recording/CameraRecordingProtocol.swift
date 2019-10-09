@@ -74,8 +74,9 @@ protocol CameraRecordingProtocol {
 
     /// starts recording video
     ///
+    /// - Parameter mode: Current camera mode
     /// - Returns: returns whether it has successfully started
-    func startRecordingVideo()
+    func startRecordingVideo(on mode: CameraMode)
 
     /// stops recording video, and exports the recording to a local file
     ///
@@ -88,10 +89,11 @@ protocol CameraRecordingProtocol {
 
     /// takes a photo and appends to the segments.
     ///
+    /// - Parameter mode: current camera mode
     /// - Parameter cameraPosition: camera used when taking the photo (back or front camera). This is an optional value
     /// - Parameter completion: returns a UIImage if successful
     /// - Returns: Void
-    func takePhoto(cameraPosition: AVCaptureDevice.Position?, completion: @escaping (UIImage?) -> Void)
+    func takePhoto(on mode: CameraMode, cameraPosition: AVCaptureDevice.Position?, completion: @escaping (UIImage?) -> Void)
 
     /// composites a video and exports the resulting file to mp4
     ///
@@ -104,6 +106,11 @@ protocol CameraRecordingProtocol {
     /// - Parameter index: location of the segment from `segments`
     /// - Parameter removeFromDisk: whether to also delete the file from disk
     func deleteSegment(at index: Int, removeFromDisk: Bool)
+
+    /// deletes all segments
+    ///
+    /// - Parameter removeFromDisk: whether to also delete the file from disk
+    func deleteAllSegments(removeFromDisk: Bool)
 
     /// moves a segment
     ///

@@ -9,7 +9,11 @@ import XCTest
 
 /// Tests the Device struct
 final class DeviceTests: XCTestCase {
-    
+
+    func testKanvasDevice() {
+        XCTAssertEqual(Int(UIScreen.main.bounds.size.height), KanvasDevice.screenHeight, "typealias KanvasDevice isn't working as expected")
+    }
+
     func testDeviceIsIPhone() {
         let isIPhone = UIDevice.current.userInterfaceIdiom == .phone
         XCTAssertEqual(isIPhone, Device.isIPhone, "isIPhone property is not working as expected")
@@ -19,24 +23,7 @@ final class DeviceTests: XCTestCase {
         let isIPad = UIDevice.current.userInterfaceIdiom == .pad
         XCTAssertEqual(isIPad, Device.isIPad, "isIPad property is not working as expected")
     }
-    
-    func testDeviceIsRetina() {
-        let isRetina = UIScreen.main.scale >= Device.retinaScreenMinScale
-        XCTAssertEqual(isRetina, Device.isRetina, "isRetina property is not working as expected")
-    }
-    
-    func testDeviceIsIPhone4OrLess() {
-        func testDeviceIsIPhoneX() {
-            let isIPhone = UIDevice.current.userInterfaceIdiom == .phone
-            let screenWidth = Int(UIScreen.main.bounds.size.width)
-            let screenHeight = Int(UIScreen.main.bounds.size.height)
-            let screenMaxLength = Int(max(screenWidth, screenHeight))
-            let isIPhone4OrLess = isIPhone && screenMaxLength < Device.iPhone4OrLessScreenMaxHeight
-            
-            XCTAssertEqual(isIPhone4OrLess, Device.isIPhone4OrLess, "isIPhone4OrLess property is not working as expected")
-        }
-    }
-    
+        
     func testDeviceIsIPhone5() {
         func testDeviceIsIPhoneX() {
             let isIPhone = UIDevice.current.userInterfaceIdiom == .phone

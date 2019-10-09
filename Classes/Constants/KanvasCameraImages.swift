@@ -10,14 +10,20 @@ import Foundation
 struct KanvasCameraImages {
     // MARK: - Mode Selection
     static let photoModeImage: UIImage? = .none
-    static let gifModeImage: UIImage? = .none
+    static let loopModeImage: UIImage? = .none
     static let stopMotionModeImage: UIImage? = .none
+    static let normalModeImage: UIImage? = .none
+    static let stitchModeImage: UIImage? = .none
+    static let gifModeImage: UIImage? = .none
 
     static func image(for mode: CameraMode) -> UIImage? {
         switch mode {
         case .photo: return photoModeImage
-        case .gif: return gifModeImage
+        case .loop: return loopModeImage
         case .stopMotion: return stopMotionModeImage
+        case .normal: return normalModeImage
+        case .stitch: return stitchModeImage
+        case .gif: return gifModeImage
         }
     }
     
@@ -27,18 +33,23 @@ struct KanvasCameraImages {
     static let cameraPositionImage = UIImage.imageFromCameraBundle(named: "cameraPosition")
     static let imagePreviewOnImage = UIImage.imageFromCameraBundle(named: "imagePreviewOn")
     static let imagePreviewOffImage = UIImage.imageFromCameraBundle(named: "imagePreviewOff")
+    
     // MARK: - General
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
     static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
+    static let forwardImage = UIImage.imageFromCameraBundle(named: "forwardArrow")
     static let trashClosed = UIImage.imageFromCameraBundle(named: "trashClosed")
     static let trashOpened = UIImage.imageFromCameraBundle(named: "trashOpened")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
     static let nextImage = UIImage.imageFromCameraBundle(named: "next")
+    static let saveImage = UIImage.imageFromCameraBundle(named: "save")
+
     // MARK: - Filters
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
     static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
     static let filterTypes: [FilterType: UIImage?] = [
+        .passthrough: UIImage.imageFromCameraBundle(named: "NoFilter"),
         .wavePool: UIImage.imageFromCameraBundle(named: "Water"),
         .plasma: UIImage.imageFromCameraBundle(named: "Plasma"),
         .emInterference: UIImage.imageFromCameraBundle(named: "EMInter"),
@@ -53,5 +64,34 @@ struct KanvasCameraImages {
         .grayscale: UIImage.imageFromCameraBundle(named: "BW"),
         .manga: nil,
         .toon: nil,
+    ]
+    
+    // MARK: - Editor
+    static let editorConfirmImage = UIImage.imageFromCameraBundle(named: "editorConfirm")
+    static let editionOptionTypes: [EditionOption: UIImage?] = [
+        .filter: UIImage.imageFromCameraBundle(named: "editorFilters"),
+        .text: UIImage.imageFromCameraBundle(named: "editorText"),
+        .media: UIImage.imageFromCameraBundle(named: "editorMedia"),
+        .drawing: UIImage.imageFromCameraBundle(named: "editorDraw"),
+    ]
+    
+    // MARK: - Draw
+    static let undoImage = UIImage.imageFromCameraBundle(named: "undo")
+    static let eraserUnselectedImage = UIImage.imageFromCameraBundle(named: "eraserUnselected")
+    static let eraserSelectedImage = UIImage.imageFromCameraBundle(named: "eraserSelected")
+    static let markerImage = UIImage.imageFromCameraBundle(named: "marker")
+    static let sharpieImage = UIImage.imageFromCameraBundle(named: "sharpie")
+    static let pencilImage = UIImage.imageFromCameraBundle(named: "pencil")
+    static let gradientImage = UIImage.imageFromCameraBundle(named: "gradient")
+    static let closeGradientImage = UIImage.imageFromCameraBundle(named: "closeGradient")
+    static let eyeDropperImage = UIImage.imageFromCameraBundle(named: "eyeDropper")
+    static let dropImage = UIImage.imageFromCameraBundle(named: "drop")
+    
+    // MARK: - Text
+    static let fontImage = UIImage.imageFromCameraBundle(named: "font")
+    static let aligmentImages: [NSTextAlignment: UIImage?] = [
+        .left: UIImage.imageFromCameraBundle(named: "leftAlignment"),
+        .center: UIImage.imageFromCameraBundle(named: "centerAlignment"),
+        .right: UIImage.imageFromCameraBundle(named: "rightAlignment"),
     ]
 }

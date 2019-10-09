@@ -21,10 +21,11 @@ private struct ModeSelectorAndShootViewConstants {
     static var shootButtonTopMargin: CGFloat {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
+    static let mediaPickerButtonSize: CGFloat = 35
 }
 
 /// Protocol to handle mode selector container and capture button user actions
-protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate {
+protocol ModeSelectorAndShootViewDelegate: ShootButtonViewDelegate, ModeButtonViewDelegate, MediaPickerButtonViewDelegate {
     /// Function called when the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
 }
@@ -42,12 +43,14 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         didSet {
             shootButton.delegate = delegate
             modeSelectorButton.delegate = delegate
+            mediaPickerButton.delegate = delegate
         }
     }
 
     private let settings: CameraSettings
     private let shootButton: ShootButtonView
     private let modeSelectorButton: ModeButtonView
+    private let mediaPickerButton: MediaPickerButtonView
     private var tooltip: EasyTipView?
 
     /// Initializer for the mode selector view
@@ -56,6 +59,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
         shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonBaseColor)
+        mediaPickerButton = MediaPickerButtonView(settings: settings)
         self.settings = settings
 
         super.init(frame: .zero)
@@ -153,14 +157,35 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.showBorderView(show: show)
     }
     
-    /// shows the trash icon closed
-    func showTrashClosed(_ show: Bool) {
-        shootButton.showTrashClosed(show)
+    /// shows the trash icon opened
+    func openTrash() {
+        shootButton.openTrash()
     }
     
-    /// shows the trash icon opened
-    func showTrashOpened(_ show: Bool) {
-        shootButton.showTrashOpened(show)
+    /// shows the trash icon closed
+    func closeTrash() {
+        shootButton.closeTrash()
+    }
+    
+    /// hides the trash icon
+    func hideTrash() {
+        shootButton.hideTrash()
+    }
+
+    func toggleMediaPickerButton(_ visible: Bool) {
+        mediaPickerButton.showButton(visible)
+    }
+
+    func setMediaPickerButtonThumbnail(_ image: UIImage) {
+        mediaPickerButton.setThumbnail(image)
+    }
+
+    func resetMediaPickerButton() {
+        mediaPickerButton.reset()
+    }
+
+    var thumbnailSize: CGSize {
+        return CGSize(width: ModeSelectorAndShootViewConstants.mediaPickerButtonSize, height: ModeSelectorAndShootViewConstants.mediaPickerButtonSize)
     }
 
     // MARK: - UI Layout
@@ -168,7 +193,13 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private func createTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
         preferences.drawing.foregroundColor = .white
-        preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue, .tumblrBrightPurple, .tumblrBrightPink]
+        preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue,
+                                                         .tumblrBrightPurple,
+                                                         .tumblrBrightPink,
+                                                         .tumblrBrightRed,
+                                                         .tumblrBrightOrange,
+                                                         .tumblrBrightYellow,
+                                                         .tumblrBrightGreen,]
         preferences.drawing.arrowPosition = .top
         preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
         preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight
@@ -177,19 +208,23 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
         preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
-        let text = NSLocalizedString("Tap to switch modes", comment: "Welcome tooltip for the camera")
+        let text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
         return EasyTipView(text: text, preferences: preferences, delegate: self)
     }
     
     private func setUpButtons() {
+        addSubview(modeSelectorButton)
+        addSubview(mediaPickerButton)
+        addSubview(shootButton)
+
         setUpModeSelector()
         setUpShootButton()
+        setUpMediaPickerButton()
     }
 
     private func setUpModeSelector() {
         modeSelectorButton.accessibilityIdentifier = "Mode Options Selector Button"
-        
-        addSubview(modeSelectorButton)
+
         modeSelectorButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             modeSelectorButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor,
@@ -201,13 +236,30 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private func setUpShootButton() {
         shootButton.accessibilityIdentifier = "Shoot Button"
 
-        addSubview(shootButton)
         shootButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.shootButtonBottomMargin),
             shootButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             shootButton.heightAnchor.constraint(equalTo: shootButton.widthAnchor),
             shootButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.shootButtonSize)
+        ])
+    }
+
+    private func setUpMediaPickerButton() {
+        mediaPickerButton.translatesAutoresizingMaskIntoConstraints = false
+        let guide = UILayoutGuide()
+        addLayoutGuide(guide)
+        NSLayoutConstraint.activate([
+            guide.topAnchor.constraint(equalTo: shootButton.topAnchor),
+            guide.bottomAnchor.constraint(equalTo: shootButton.bottomAnchor),
+            guide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            guide.trailingAnchor.constraint(equalTo: shootButton.leadingAnchor),
+        ])
+        NSLayoutConstraint.activate([
+            mediaPickerButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+            mediaPickerButton.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
+            mediaPickerButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.mediaPickerButtonSize),
+            mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
         ])
     }
 
@@ -220,10 +272,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     // MARK: - Triggers by mode
     
     private func triggerFor(_ mode: CameraMode) -> CaptureTrigger {
-        switch mode {
+        switch mode.group {
             case .photo: return .tap
             case .gif: return .tapAndHold(animateCircle: true)
-            case .stopMotion: return .tapAndHold(animateCircle: false)
+            case .video: return .tapAndHold(animateCircle: false)
         }
     }
 }

@@ -1,4 +1,3 @@
-
 precision mediump float;
 
 varying mediump vec2 textureCoordinate;

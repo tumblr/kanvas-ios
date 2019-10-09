@@ -34,7 +34,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     private var clips: [MediaClip]
     private var draggingClipIndex: IndexPath?
-    private var draggingCell: MediaClipsCollectionCell?
+    private weak var draggingCell: MediaClipsCollectionCell?
     private var draggingState: UICollectionViewCell.DragState = .none
 
     weak var delegate: MediaClipsCollectionControllerDelegate?
@@ -63,6 +63,14 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
             scrollToLast(animated: true)
         }
+    }
+
+    func removeAllClips() {
+        while clips.count > 0 {
+            clips.remove(at: 0)
+            mediaClipsCollectionView.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
+        }
+        mediaClipsCollectionView.collectionView.reloadData()
     }
     
     /// Deletes the current dragging clip and updates UI
@@ -247,6 +255,8 @@ extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
             delegate?.mediaClipStartedMoving()
         case .none:
             delegate?.mediaClipFinishedMoving()
+        @unknown default:
+            break
         }
     }
 }

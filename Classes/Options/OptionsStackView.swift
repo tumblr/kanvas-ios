@@ -27,6 +27,7 @@ final class OptionsStackView<Item>: UIView {
 
     private let section: Int
     private let interItemSpacing: CGFloat
+    private let settings: CameraSettings
 
     /// Creates a view containing a horizontal StackView with options
     ///
@@ -35,10 +36,12 @@ final class OptionsStackView<Item>: UIView {
     ///     calling methods on the same delegate.
     ///   - options: settings that will be displayed horizontally in the StackView
     ///   - interItemSpacing: horizontal spacing between the StackView buttons
-    init(section: Int, options: [Option<Item>], interItemSpacing: CGFloat) {
+    ///   - settings: camera settings
+    init(section: Int, options: [Option<Item>], interItemSpacing: CGFloat, settings: CameraSettings) {
         stackView = ExtendedStackView(inset: OptionsStackViewConstants.inset)
         self.section = section
         self.interItemSpacing = interItemSpacing
+        self.settings = settings
         super.init(frame: .zero)
 
         setUpStackView(options)
@@ -94,12 +97,23 @@ final class OptionsStackView<Item>: UIView {
     private func addStackView(_ stackView: UIStackView) {
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor)
-        ])
+        
+        if settings.topButtonsSwapped {
+            NSLayoutConstraint.activate([
+                stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                stackView.topAnchor.constraint(equalTo: topAnchor),
+                stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                stackView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor)
+            ])
+        }
+        else {
+            NSLayoutConstraint.activate([
+                stackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),
+                stackView.topAnchor.constraint(equalTo: topAnchor),
+                stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                stackView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            ])
+        }
     }
 
     private func setUpStackView(_ options: [Option<Item>]) {
