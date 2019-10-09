@@ -23,8 +23,11 @@ protocol ColorSelectorControllerDelegate: class {
     /// - Returns: Color from image
     func getColor(at point: CGPoint) -> UIColor
     
-    /// Called when the selection circle is pressed
+    /// Called when the selection circle appears
     func didStartColorSelection()
+    
+    /// Called when the selection circle is starts its movement
+    func didStartMovingColorSelector()
 
     /// Called when the selection circle is released
     ///
@@ -84,6 +87,10 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
             colorSelectorView.showOverlay(true)
             colorSelectorView.showTooltip(true)
         }
+        
+        if show {
+            delegate?.didStartColorSelection()
+        }
     }
     
     /// Sets a new color for the color circle and drops
@@ -132,7 +139,7 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
     func didPanCircle(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
-            delegate?.didStartColorSelection()
+            delegate?.didStartMovingColorSelector()
             if delegate?.shouldShowTooltip() == true {
                 colorSelectorView.showTooltip(false)
                 colorSelectorView.showOverlay(false)

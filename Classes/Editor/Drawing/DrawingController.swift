@@ -33,8 +33,11 @@ protocol DrawingControllerDelegate: class {
     /// - Returns: Color from image
     func getColor(from point: CGPoint) -> UIColor
     
-    /// Called when the color selector is pressed
+    /// Called when the color selector appears
     func didStartColorSelection()
+    
+    /// Called when the color selector starts its movement
+    func didStartMovingColorSelector()
     
     /// Called when the color selector is released
     func didEndColorSelection()
@@ -309,6 +312,15 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingView.showOverlay(show, animate: animate)
     }
     
+    /// shows or hides the drawing layer
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showDrawingLayer(_ show: Bool) {
+        UIView.animate(withDuration: DrawingControllerConstants.animationDuration) {
+            self.drawingLayer?.opacity = show ? 1 : 0
+        }
+    }
+    
     /// Enables or disables the user interaction on the view
     ///
     /// - Parameter enable: true to enable, false to disable
@@ -489,6 +501,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         delegate?.didStartColorSelection()
     }
     
+    func didStartMovingColorSelector() {
+        delegate?.didStartMovingColorSelector()
+    }
+    
     func didEndColorSelection(color: UIColor) {
         setEyeDropperColor(color)
         setStrokeCircleColor(color)
@@ -522,6 +538,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
                 self.delegate?.didEndStrokeSelectorAnimation()
             }
         })
+    }
+    
+    /// shows or hides the drawing canvas
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCanvas(_ show: Bool) {
+        drawingView.showCanvas(show)
+        showDrawingLayer(show)
     }
 
     func logDraw(_ drawType: KanvasDrawingAction) {

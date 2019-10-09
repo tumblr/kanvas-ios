@@ -396,6 +396,15 @@ final class EditorView: UIView, TextCanvasDelegate {
         }
     }
     
+    /// shows or hides the text canvas
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTextCanvas(_ show: Bool) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.textCanvas.alpha = show ? 1 : 0
+        }
+    }
+    
     // MARK: - TextCanvasDelegate
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {

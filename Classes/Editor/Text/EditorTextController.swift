@@ -35,8 +35,11 @@ protocol EditorTextControllerDelegate: class {
     /// - Returns: Color from image
     func getColor(from point: CGPoint) -> UIColor
     
-    /// Called when the color selector is pressed
+    /// Called when the color selector appears
     func didStartColorSelection()
+    
+    /// Called when the color selector starts its movement
+    func didStartMovingColorSelector()
     
     /// Called when the color selector is released
     func didEndColorSelection()
@@ -51,7 +54,7 @@ private struct Constants {
 
 /// A view controller that contains the text tools menu
 final class EditorTextController: UIViewController, EditorTextViewDelegate, ColorCollectionControllerDelegate, ColorPickerControllerDelegate, ColorSelectorControllerDelegate {
-
+    
     weak var delegate: EditorTextControllerDelegate?
     
     private var textTransformations: ViewTransformations
@@ -206,6 +209,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     
     func didStartColorSelection() {
         delegate?.didStartColorSelection()
+    }
+    
+    func didStartMovingColorSelector() {
+        delegate?.didStartMovingColorSelector()
     }
     
     func didEndColorSelection(color: UIColor) {
