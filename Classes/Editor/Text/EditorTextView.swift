@@ -510,7 +510,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     /// shows or hides the main text view
     ///
     /// - Parameter show: true to show, false to hide
-    func showTextView(_ show: Bool) {
+    private func showTextView(_ show: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.textView.alpha = show ? 1 : 0
         }
