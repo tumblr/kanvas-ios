@@ -13,7 +13,6 @@ public struct KanvasMediaInfoSimple {
     public enum Source {
         case kanvas_camera
         case media_library
-        case media_library_kanvas_camera
     }
 
     public let source: Source
@@ -27,9 +26,12 @@ extension KanvasMediaInfoSimple: Codable {
 
 extension KanvasMediaInfoSimple.Source: Codable {
     private enum CodingKeys: String, CodingKey {
-        case kanvas_camera
-        case media_library_kanvas_camera
-        case media_library
+        case kanvas_camera = "camera"
+        case media_library = "library"
+    }
+
+    enum LegacyValue: String {
+        case kanvas
     }
 
     enum CodingError: Error {
@@ -43,8 +45,6 @@ extension KanvasMediaInfoSimple.Source: Codable {
             self = .kanvas_camera
         case CodingKeys.media_library.rawValue:
             self = .media_library
-        case CodingKeys.media_library_kanvas_camera.rawValue:
-            self = .media_library_kanvas_camera
         default:
             throw CodingError.decoding("Invalid Source: \(value)")
         }
@@ -57,8 +57,6 @@ extension KanvasMediaInfoSimple.Source: Codable {
             try container.encode(CodingKeys.kanvas_camera.rawValue)
         case .media_library:
             try container.encode(CodingKeys.media_library.rawValue)
-        case .media_library_kanvas_camera:
-            try container.encode(CodingKeys.media_library_kanvas_camera.rawValue)
         }
     }
 
@@ -68,8 +66,6 @@ extension KanvasMediaInfoSimple.Source: Codable {
             return CodingKeys.kanvas_camera.rawValue
         case .media_library:
             return CodingKeys.media_library.rawValue
-        case .media_library_kanvas_camera:
-            return CodingKeys.media_library_kanvas_camera.rawValue
         }
     }
 }

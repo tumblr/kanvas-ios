@@ -98,6 +98,9 @@ public class KanvasMediaMetadata {
         guard let value = exif[kCGImagePropertyExifUserComment as String] as? String else {
             return nil
         }
+        guard value != KanvasMediaInfo.Source.LegacyValue.kanvas.rawValue else {
+            return KanvasMediaInfo(source: .kanvas_camera)
+        }
         guard let jsonData = value.data(using: .utf8) else {
             return nil
         }
