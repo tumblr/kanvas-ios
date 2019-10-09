@@ -516,14 +516,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         }
     }
     
-    /// shows or hides the tools container
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showTools(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.toolsContainer.alpha = show ? 1 : 0
-        }
-    }
+    // MARK: - Private utilitites
     
     /// shows or hides the color picker menu
     ///
