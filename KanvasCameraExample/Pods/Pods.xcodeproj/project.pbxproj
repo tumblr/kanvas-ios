@@ -1031,7 +1031,7 @@
 				65B37056234F880E0087EA79 /* CircularImageView.swift */,
 				65B37057234F880E0087EA79 /* ColorCollection */,
 				65B3705B234F880E0087EA79 /* ColorPicker */,
-				65B3705E234F880E0087EA79 /* ColorSelecter */,
+				65B3705E234F880E0087EA79 /* ColorSelector */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1055,14 +1055,14 @@
 			path = ColorPicker;
 			sourceTree = "<group>";
 		};
-		65B3705E234F880E0087EA79 /* ColorSelecter */ = {
+		65B3705E234F880E0087EA79 /* ColorSelector */ = {
 			isa = PBXGroup;
 			children = (
 				65B3705F234F880E0087EA79 /* ColorSelectorController.swift */,
 				65B37060234F880E0087EA79 /* ColorDrop.swift */,
 				65B37061234F880E0087EA79 /* ColorSelectorView.swift */,
 			);
-			path = ColorSelecter;
+			path = ColorSelector;
 			sourceTree = "<group>";
 		};
 		7067115CCD88BBE87A39FA8412F45D72 /* Pod */ = {
