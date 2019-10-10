@@ -678,6 +678,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipStartedMoving() {
         delegate?.didBeginDragInteraction()
         modeAndShootController.enableShootButtonUserInteraction(true)
+        modeAndShootController.enableShootButtonGestureRecognizers(false)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
             self?.modeAndShootController.closeTrash()
@@ -690,6 +691,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndDragInteraction()
         let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
+        modeAndShootController.enableShootButtonGestureRecognizers(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
@@ -702,6 +704,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndDragInteraction()
         let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
+        modeAndShootController.enableShootButtonGestureRecognizers(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
