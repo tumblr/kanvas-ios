@@ -23,7 +23,7 @@ class MediaMetadataTests: XCTestCase {
                     XCTFail()
                     return
                 }
-                let mediaInfo = KanvasMediaMetadata.readMediaInfo(fromVideo: url as NSURL)
+                let mediaInfo = KanvasMediaMetadata.readMediaInfo(fromVideo: url)
                 XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
                 expectation.fulfill()
             })

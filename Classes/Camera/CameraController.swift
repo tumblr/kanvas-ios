@@ -323,7 +323,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             }
             if let jpgImageData = image.jpegData(compressionQuality: 1.0) {
                 try jpgImageData.write(to: fileURL, options: .atomic)
-                KanvasMediaMetadata.write(mediaInfo: info, toImage: fileURL as NSURL)
+                KanvasMediaMetadata.write(mediaInfo: info, toImage: fileURL)
             }
             return fileURL
         } catch {

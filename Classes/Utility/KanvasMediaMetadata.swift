@@ -32,8 +32,8 @@ public class KanvasMediaMetadata {
     /// Reads media info from a video url
     /// - Parameter fromVideo: the video URL to read metadata from
     /// - Returns: KanvasMediaInfo
-    public class func readMediaInfo(fromVideo url: NSURL) -> KanvasMediaInfo? {
-        let asset = AVAsset(url: url as URL)
+    public class func readMediaInfo(fromVideo url: URL) -> KanvasMediaInfo? {
+        let asset = AVAsset(url: url)
         let metadataItems = asset.metadata
         guard let metadataItem = metadataItems.first else {
             return nil
@@ -50,8 +50,8 @@ public class KanvasMediaMetadata {
     /// Writes media info to an image URL
     /// - Parameter mediaInfo: MediaInfo to write
     /// - Parameter toImage: the image URL to write metadata to
-    public class func write(mediaInfo: KanvasMediaInfo, toImage url: NSURL) {
-        guard let imageRef = CGImageSourceCreateWithURL(url, nil) else {
+    public class func write(mediaInfo: KanvasMediaInfo, toImage url: URL) {
+        guard let imageRef = CGImageSourceCreateWithURL(url as CFURL, nil) else {
             assertionFailure()
             return
         }
@@ -59,7 +59,7 @@ public class KanvasMediaMetadata {
             assertionFailure()
             return
         }
-        guard let destination = CGImageDestinationCreateWithURL(url, type, 1, nil) else {
+        guard let destination = CGImageDestinationCreateWithURL(url as CFURL, type, 1, nil) else {
             assertionFailure()
             return
         }
@@ -90,6 +90,14 @@ public class KanvasMediaMetadata {
     /// - Throws: when data cannot be read from url
     public class func readMediaInfo(fromImage url: URL) throws -> KanvasMediaInfo? {
         let data = try Data(contentsOf: url)
+        return try readMediaInfo(fromImageData: data)
+    }
+
+    /// Reads media info from image data
+    /// - Parameter fromImageData: The Data representation of an image
+    /// - Returns: KanvasMediaInfo?
+    /// - Throws: when data cannot be read from url
+    public class func readMediaInfo(fromImageData data: Data) throws -> KanvasMediaInfo? {
         guard let source: CGImageSource = CGImageSourceCreateWithData(data as CFData, nil) else {
             return nil
         }
