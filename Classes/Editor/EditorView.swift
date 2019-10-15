@@ -199,11 +199,21 @@ final class EditorView: UIView, TextCanvasDelegate {
         
         navigationContainer.addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin * 2 + EditorViewConstants.confirmButtonSize
-
+        let buttonOnTheRight: UIButton
+        let trailingMargin: CGFloat
+        
+        if showSaveButton {
+            buttonOnTheRight = saveButton
+            trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
+        }
+        else {
+            buttonOnTheRight = confirmOrPostButton()
+            trailingMargin = confirmOrPostButtonHorizontalMargin()
+        }
+        
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
+            collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight.leadingAnchor, constant: -trailingMargin / 2),
             collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
         ])
@@ -311,6 +321,15 @@ final class EditorView: UIView, TextCanvasDelegate {
             return confirmButton
         case .post:
             return postButton
+        }
+    }
+    
+    func confirmOrPostButtonHorizontalMargin() -> CGFloat {
+        switch mainActionMode {
+        case .confirm:
+            return EditorViewConstants.confirmButtonHorizontalMargin
+        case .post:
+            return EditorViewConstants.postButtonHorizontalMargin
         }
     }
     
