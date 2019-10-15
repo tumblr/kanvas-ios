@@ -227,6 +227,14 @@ final class EditorControllerTests: FBSnapshotTestCase {
         XCTAssert(delegate.closeCalled, "Delegate close function not called")
     }
     
+    func testEditorWithCrossIconToClose() {
+        let settings = CameraSettings()
+        settings.crossIconInEditor = true
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
+        FBSnapshotVerifyView(viewController.view)
+    }
 }
 
 final class EditorControllerDelegateStub: EditorControllerDelegate {

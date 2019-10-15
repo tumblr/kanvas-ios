@@ -58,6 +58,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     private let closeButton = UIButton()
     private let saveButton = UIButton()
     private let showSaveButton: Bool
+    private let showCrossIcon: Bool
     private let postButton = UIButton()
     private let postLabel = UILabel()
     private let filterSelectionCircle = UIImageView()
@@ -81,9 +82,10 @@ final class EditorView: UIView, TextCanvasDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainActionMode: MainActionMode, showSaveButton: Bool) {
+    init(mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool) {
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
+        self.showCrossIcon = showCrossIcon
         super.init(frame: .zero)
         setupViews()
     }
@@ -136,7 +138,8 @@ final class EditorView: UIView, TextCanvasDelegate {
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
         closeButton.layer.applyShadows()
-        closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
+        let backIcon = showCrossIcon ? KanvasCameraImages.closeImage : KanvasCameraImages.backImage
+        closeButton.setImage(backIcon, for: .normal)
         closeButton.imageView?.contentMode = .scaleAspectFit
         
         navigationContainer.addSubview(closeButton)
