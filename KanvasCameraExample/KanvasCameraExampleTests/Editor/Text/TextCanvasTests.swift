@@ -38,12 +38,13 @@ final class TextCanvasTests: FBSnapshotTestCase {
     func testMovableTextView() {
         let view = newView()
         let options = TextOptions(text: "Example")
-        let transformations =  ViewTransformations(position: CGPoint(x: 0, y: 500),
+        let transformations =  ViewTransformations(position: CGPoint(x: 0, y: 300),
                                                    scale: 1.4,
                                                    rotation: 1.2)
         let textView = MovableTextView(options: options, transformations: transformations)
         textView.frame = CGRect(x: 0, y: 0, width: 250, height: 100)
         view.addSubview(textView)
+        textView.moveToDefinedPosition()
         FBSnapshotVerifyView(view)
     }
 }
