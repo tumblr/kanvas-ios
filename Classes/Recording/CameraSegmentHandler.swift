@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import Utils
 
 /// A container for segments
 enum CameraSegment {
@@ -358,7 +359,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         assetExport.outputFileType = .mp4
         let finalURL = NSURL.createNewVideoURL()
         assetExport.outputURL = finalURL
-        assetExport.metadata = KanvasMediaMetadata.createAVMetadataItems(from: .init(source: .kanvas_camera))
+        assetExport.metadata = TumblrMediaInfo(source: .kanvas_camera).createAVMetadataItems()
         assetExport.shouldOptimizeForNetworkUse = true
 
         assetExport.exportAsynchronously() {

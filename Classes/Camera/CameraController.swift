@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import MobileCoreServices
 import Photos
+import Utils
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -307,7 +308,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - Media Content Creation
-    class func saveImageToFile(_ image: UIImage?, info: KanvasMediaInfo) -> URL? {
+    class func saveImageToFile(_ image: UIImage?, info: TumblrMediaInfo) -> URL? {
         // TODO: Use NSURL.createNewImageURL rather than duplicate logic here
         // https://jira.tumblr.net/browse/KANVAS-575
         do {
@@ -323,7 +324,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             }
             if let jpgImageData = image.jpegData(compressionQuality: 1.0) {
                 try jpgImageData.write(to: fileURL, options: .atomic)
-                KanvasMediaMetadata.write(mediaInfo: info, toImage: fileURL)
+                info.write(toImage: fileURL)
             }
             return fileURL
         } catch {
@@ -747,7 +748,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didFinishExportingImage(image: UIImage?, action: KanvasExportAction) {
-        if let url = CameraController.saveImageToFile(image, info: KanvasMediaInfo(source: .kanvas_camera)) {
+        if let url = CameraController.saveImageToFile(image, info: TumblrMediaInfo(source: .kanvas_camera)) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
                 self?.cameraInputController.willCloseSoon = true
