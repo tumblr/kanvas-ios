@@ -436,6 +436,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         closeMenuButtonPressed()
     }
     
+    func didMoveToolsUp() {
+        editorView.textCanvas.removeSelectedText()
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the confirm button

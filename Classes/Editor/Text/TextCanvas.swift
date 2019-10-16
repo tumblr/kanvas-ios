@@ -36,7 +36,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     weak var delegate: TextCanvasDelegate?
     
     // View that is being edited
-    private var tappedView: MovableTextView?
+    private var selectedText: MovableTextView?
     
     // View being touched at the moment
     private var currentMovableView: MovableTextView?
@@ -154,9 +154,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     }
     
     /// Removes the tapped view from the canvas
-    func removeTappedView() {
-        tappedView?.removeFromSuperview()
-        tappedView = nil
+    func removeSelectedText() {
+        selectedText?.removeFromSuperview()
+        selectedText = nil
     }
     
     // MARK: - Gesture recognizers
@@ -167,8 +167,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
             movableView.goBackToOrigin()
         }, completion: { [weak self] _ in
             self?.delegate?.didTapText(options: movableView.options, transformations: movableView.transformations)
-            self?.tappedView = movableView
-            self?.removeTappedView()
+            self?.selectedText = movableView
         })
     }
     

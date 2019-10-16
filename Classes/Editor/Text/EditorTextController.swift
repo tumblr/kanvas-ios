@@ -17,6 +17,9 @@ protocol EditorTextControllerDelegate: class {
     /// - Parameter location: location of the text view before transformations
     /// - Parameter size: text view size
     func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    
+    /// Called when the keyboard moves up
+    func didMoveToolsUp()
 }
 
 /// Constants for EditorTextController
@@ -83,6 +86,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow),
+                                               name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
                                                name: UIResponder.keyboardWillHideNotification, object: nil)
         
@@ -156,6 +161,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
             let keyboardRectangle = keyboardFrame.cgRectValue
             textView.moveToolsUp(distance: keyboardRectangle.height)
         }
+    }
+    
+    @objc func keyboardDidShow(notification: NSNotification) {
+        delegate?.didMoveToolsUp()
     }
     
     // This method is called inside the keyboard animation,
