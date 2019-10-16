@@ -125,11 +125,33 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         set { textView.textContainerInset = newValue }
     }
     
+    private var croppedView: UITextView {
+        let view = UITextView(frame: textView.frame)
+        view.options = textView.options
+        view.sizeToFit()
+        return view
+    }
+    
+    /// Center of the text view in screen coordinates
+    var location: CGPoint {
+        let point = textView.center
+        let margin = (textView.bounds.width - croppedView.bounds.width) / 2
+        
+        let difference: CGFloat
+        switch textView.textAlignment {
+        case .left:
+            difference = -margin
+        case .right:
+            difference = margin
+        default:
+            difference = 0
+        }
+        
+        return CGPoint(x: point.x + difference, y: point.y)
+    }
+    
     /// Size of the text view
     var textSize: CGSize {
-        let croppedView = UITextView(frame: textView.frame)
-        croppedView.options = textView.options
-        croppedView.sizeToFit()
         return croppedView.contentSize
     }
     

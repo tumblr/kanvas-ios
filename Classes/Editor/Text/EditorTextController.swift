@@ -14,8 +14,9 @@ protocol EditorTextControllerDelegate: class {
     ///
     /// - Parameter options: text style options
     /// - Parameter transformations: position, scaling and rotation angle for the view
+    /// - Parameter location: location of the text view before transformations
     /// - Parameter size: text view size
-    func didConfirmText(options: TextOptions, transformations: ViewTransformations, size: CGSize)
+    func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize)
 }
 
 /// Constants for EditorTextController
@@ -127,7 +128,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     }
     
     private func didConfirmText() {
-        delegate?.didConfirmText(options: textView.options, transformations: textTransformations, size: textView.textSize)
+        delegate?.didConfirmText(options: textView.options, transformations: textTransformations, location: textView.location, size: textView.textSize)
     }
     
     // MARK: - ColorCollectionControllerDelegate

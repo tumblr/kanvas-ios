@@ -105,8 +105,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     ///
     /// - Parameter option: text style options
     /// - Parameter transformations: transformations for the view
+    /// - Parameter location: location of the text view before transformations
     /// - Parameter size: size of the text view
-    func addText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
+    func addText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         let textView = MovableTextView(options: options, transformations: transformations)
         textView.isUserInteractionEnabled = true
         textView.isExclusiveTouch = true
@@ -117,8 +118,8 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         NSLayoutConstraint.activate([
             textView.heightAnchor.constraint(equalToConstant: size.height),
             textView.widthAnchor.constraint(equalToConstant: size.width),
-            textView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            textView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            textView.topAnchor.constraint(equalTo: topAnchor, constant: location.y - size.height / 2),
+            textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: location.x - size.width / 2)
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(textTapped(recognizer:)))

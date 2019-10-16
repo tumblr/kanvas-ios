@@ -29,8 +29,9 @@ final class TextCanvasTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         let options = TextOptions(text: "Example")
+        let location = view.center
         let transformations =  ViewTransformations()
-        view.addText(options: options, transformations: transformations, size: view.frame.size)
+        view.addText(options: options, transformations: transformations, location: location, size: view.frame.size)
         FBSnapshotVerifyView(view)
     }
     
