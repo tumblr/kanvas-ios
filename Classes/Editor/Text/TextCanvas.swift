@@ -35,6 +35,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
     weak var delegate: TextCanvasDelegate?
     
+    // View that is being edited
+    private var tappedView: MovableTextView?
+    
     // View being touched at the moment
     private var currentMovableView: MovableTextView?
     
@@ -139,6 +142,10 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         textView.addGestureRecognizer(pinchRecognizer)
         textView.addGestureRecognizer(panRecognizer)
         textView.addGestureRecognizer(longPressRecognizer)
+        
+        UIView.animate(withDuration: Constants.animationDuration) {
+            textView.moveToDefinedPosition()
+        }
     }
     
     /// Saves the current view into its layer
@@ -146,12 +153,23 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         layer.contents = asImage().cgImage
     }
     
+    /// Removes the tapped view from the canvas
+    func removeTappedView() {
+        tappedView?.removeFromSuperview()
+        tappedView = nil
+    }
+    
     // MARK: - Gesture recognizers
     
     @objc func textTapped(recognizer: UITapGestureRecognizer) {
         guard let movableView = recognizer.view as? MovableTextView else { return }
-        delegate?.didTapText(options: movableView.options, transformations: movableView.transformations)
-        movableView.removeFromSuperview()
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            movableView.goBackToOrigin()
+        }, completion: { [weak self] _ in
+            self?.delegate?.didTapText(options: movableView.options, transformations: movableView.transformations)
+            self?.tappedView = movableView
+            self?.removeTappedView()
+        })
     }
     
     @objc func textRotated(recognizer: UIRotationGestureRecognizer) {

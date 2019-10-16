@@ -62,7 +62,6 @@ final class MovableTextView: UIView {
         super.init(frame: .zero)
         
         setupTextView(options: options)
-        applyTransform()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -116,6 +115,15 @@ final class MovableTextView: UIView {
         }
     }
     
+    /// Moves the view to its defined position, size and angle
+    func moveToDefinedPosition() {
+        applyTransform()
+    }
+    
+    /// Moves the view back to its initial position, size and angle
+    func goBackToOrigin() {
+        transform = .identity
+    }
     
     /// Removes the view from its superview with an animation
     func remove() {
