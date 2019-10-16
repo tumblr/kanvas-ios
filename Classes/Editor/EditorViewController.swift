@@ -46,6 +46,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
                                     showSaveButton: settings.features.editorSaving,
+                                    showCrossIcon: settings.crossIconInEditor,
                                     showTagButton: true)
         editorView.delegate = self
         player.playerView = editorView.playerView
