@@ -7,6 +7,7 @@
 import XCTest
 
 @testable import KanvasCamera
+@testable import Utils
 
 class MediaMetadataTests: XCTestCase {
 
@@ -23,7 +24,7 @@ class MediaMetadataTests: XCTestCase {
                     XCTFail()
                     return
                 }
-                let mediaInfo = KanvasMediaMetadata.readMediaInfo(fromVideo: url)
+                let mediaInfo = TumblrMediaInfo(fromVideoURL: url)
                 XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
                 expectation.fulfill()
             })
@@ -41,7 +42,7 @@ class MediaMetadataTests: XCTestCase {
                 XCTFail()
                 return
             }
-            let mediaInfo = try? KanvasMediaMetadata.readMediaInfo(fromImage: url)
+            let mediaInfo = try? TumblrMediaInfo(fromImage: url)
             XCTAssertEqual(mediaInfo??.source, .kanvas_camera)
             expectation.fulfill()
         }
