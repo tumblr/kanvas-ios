@@ -238,6 +238,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
 }
 
 final class EditorControllerDelegateStub: EditorControllerDelegate {
+
     private(set) var closeCalled = false
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
@@ -270,5 +271,9 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
         return false
+    }
+
+    func tagButtonPressed() {
+
     }
 }

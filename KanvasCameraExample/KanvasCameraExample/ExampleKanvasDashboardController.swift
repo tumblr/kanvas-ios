@@ -103,6 +103,14 @@ public class KanvasDashboardController: UIViewController {
 
 extension KanvasDashboardController: CameraControllerDelegate {
 
+    public func tagButtonPressed() {
+        // Only supported in Orangina
+    }
+
+    public func editorDismissed() {
+        // Only supported in Orangina
+    }
+
     public func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let error = error {
             assertionFailure("Error creating Kanvas media: \(error)")

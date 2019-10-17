@@ -225,4 +225,7 @@ import Foundation
 
     /// Logs when someone opens compose from Kanvas
     func logOpenComposeFromDashboard()
+
+    /// Logs when someone taps the tag button in the Editor
+    func logEditorTagTapped()
 }
