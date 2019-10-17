@@ -57,13 +57,13 @@ private struct Constants {
 }
 
 /// A UIView for the text tools view
-final class EditorTextView: UIView, StylableTextViewDelegate {
+final class EditorTextView: UIView, MainTextViewDelegate {
     
     weak var delegate: EditorTextViewDelegate?
     
     private let confirmButton: UIButton
-    private let textView: StylableTextView
-    private var textViewHeight: NSLayoutConstraint?
+    private let mainTextView: MainTextView
+    private var mainTextViewHeight: NSLayoutConstraint?
     
     // Containers
     private let toolsContainer: UIView
@@ -90,7 +90,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     let colorSelector: UIView
     
     var options: TextOptions {
-        get { return textView.options }
+        get { return mainTextView.options }
         set {
             text = newValue.text
             textColor = newValue.color
@@ -102,58 +102,58 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     }
     
     var text: String {
-        get { return textView.text }
-        set { textView.text = newValue }
+        get { return mainTextView.text }
+        set { mainTextView.text = newValue }
     }
     
     var font: UIFont? {
-        get { return textView.font }
-        set { textView.font = newValue }
+        get { return mainTextView.font }
+        set { mainTextView.font = newValue }
     }
     
     var textColor: UIColor? {
-        get { return textView.textColor }
+        get { return mainTextView.textColor }
         set {
             guard let color = newValue else { return }
             eyeDropper.backgroundColor = color
             eyeDropper.tintColor = color.isAlmostWhite() ? .black : .white
-            textView.textColor = color
+            mainTextView.textColor = color
         }
     }
     
     var highlightColor: UIColor? {
-        get { return textView.highlightColor }
-        set { textView.highlightColor = newValue }
+        get { return mainTextView.highlightColor }
+        set { mainTextView.highlightColor = newValue }
     }
     
     var alignment: NSTextAlignment {
-        get { return textView.textAlignment }
+        get { return mainTextView.textAlignment }
         set {
             guard let image = KanvasCameraImages.aligmentImages[newValue] else { return }
             alignmentSelector.setImage(image, for: .normal)
-            textView.textAlignment = newValue
+            mainTextView.textAlignment = newValue
         }
     }
     
     var textContainerInset: UIEdgeInsets {
-        get { return textView.textContainerInset }
-        set { textView.textContainerInset = newValue }
+        get { return mainTextView.textContainerInset }
+        set { mainTextView.textContainerInset = newValue }
     }
     
     private var croppedView: UITextView {
-        let view = CustomizableTextView(frame: textView.frame)
-        view.options = textView.options
+        let view = CustomizableTextView(frame: mainTextView.frame)
+        view.options = mainTextView.options
         view.sizeToFit()
         return view
     }
     
     /// Center of the text view in screen coordinates
     var location: CGPoint {
-        let point = textView.center
-        let margin = (textView.bounds.width - croppedView.bounds.width) / 2
+        let point = mainTextView.center
+        let margin = (mainTextView.bounds.width - croppedView.bounds.width) / 2
         
         let difference: CGFloat
-        switch textView.textAlignment {
+        switch mainTextView.textAlignment {
         case .left:
             difference = -margin
         case .right:
@@ -167,8 +167,8 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     
     /// Size of the text view
     var textSize: CGSize {
-        let croppedView = CustomizableTextView(frame: textView.frame)
-        croppedView.options = textView.options
+        let croppedView = CustomizableTextView(frame: mainTextView.frame)
+        croppedView.options = mainTextView.options
         croppedView.sizeToFit()
         return croppedView.contentSize
     }
@@ -180,7 +180,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     
     init() {
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
-        textView = StylableTextView()
+        mainTextView = MainTextView()
         toolsContainer = UIView()
         mainMenuContainer = UIView()
         colorPickerContainer = UIView()
@@ -193,12 +193,12 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         colorGradient = UIView()
         colorSelector = IgnoreTouchesView()
         super.init(frame: .zero)
-        textView.textViewDelegate = self
+        mainTextView.textViewDelegate = self
         setupViews()
     }
     
     private func setupViews() {
-        setUpTextView()
+        setUpMainTextView()
         setUpConfirmButton()
         setUpToolsContainer()
         setUpMainMenuContainer()
@@ -217,20 +217,20 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     // MARK: - Views
     
     /// Sets up the main text view
-    private func setUpTextView() {
-        textView.accessibilityIdentifier = "Editor Text View"
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(textView)
+    private func setUpMainTextView() {
+        mainTextView.accessibilityIdentifier = "Editor Text Main View"
+        mainTextView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(mainTextView)
         
-        textViewHeight = textView.heightAnchor.constraint(equalTo: heightAnchor)
-        textViewHeight?.isActive = true
+        mainTextViewHeight = mainTextView.heightAnchor.constraint(equalTo: heightAnchor)
+        mainTextViewHeight?.isActive = true
         NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: topAnchor),
-            textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
-            textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
+            mainTextView.topAnchor.constraint(equalTo: topAnchor),
+            mainTextView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
+            mainTextView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
         ])
         
-        textView.alpha = 0
+        mainTextView.alpha = 0
     }
     
     /// Sets up the confirmation button with a check mark
@@ -453,7 +453,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         delegate?.didTapEyeDropper()
     }
     
-    // MARK: - StylableViewDelegate
+    // MARK: - MainTextViewDelegate
     
     func didTapBackground() {
         delegate?.didTapTextViewBackground()
@@ -471,17 +471,17 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     /// Closes the keyboard and clears the main text view
     func endWriting() {
         closeKeyboard()
-        textView.text = nil
+        mainTextView.text = nil
     }
     
     /// Opens the keyboard
     func openKeyboard() {
-        textView.becomeFirstResponder()
+        mainTextView.becomeFirstResponder()
     }
     
     /// Closes the keyboard
     func closeKeyboard() {
-        textView.endEditing(true)
+        mainTextView.endEditing(true)
     }
     
     /// Moves up the text view and the tools menu
@@ -489,14 +489,14 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.performWithoutAnimation {
-            textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin + distance)
-            textView.setNeedsLayout()
-            textView.layoutIfNeeded()
+            mainTextViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin + distance)
+            mainTextView.setNeedsLayout()
+            mainTextView.layoutIfNeeded()
         }
         
         toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
         toolsContainer.alpha = 1
-        textView.alpha = 1
+        mainTextView.alpha = 1
         confirmButton.alpha = 1
     }
     
@@ -507,10 +507,10 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         toolsContainer.transform = .identity
         
         UIView.performWithoutAnimation {
-            textView.alpha = 0
-            textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
-            textView.setNeedsLayout()
-            textView.layoutIfNeeded()
+            mainTextView.alpha = 0
+            mainTextViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
+            mainTextView.setNeedsLayout()
+            mainTextView.layoutIfNeeded()
         }
     }
     
@@ -521,7 +521,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     /// - Parameter show: true to show, false to hide
     private func showTextView(_ show: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
-            self.textView.alpha = show ? 1 : 0
+            self.mainTextView.alpha = show ? 1 : 0
         }
     }
     

@@ -86,6 +86,7 @@ final class MovableTextView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         innerTextView.setScaleFactor(scale)
+        innerTextView.updateHighlight()
     }
 
     // MARK: - Transforms

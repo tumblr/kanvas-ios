@@ -57,11 +57,10 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
         updateHighlight()
     }
     
-    private func updateHighlight() {
+    func updateHighlight() {
         removeHighlights()
         let range = NSRange(location: 0, length: text.count)
         layoutManager.enumerateLineFragments(forGlyphRange: range, using: { _, usedRect, _, _, _ in
-            print("L - lines \(usedRect)")
             let highlight = self.createHighlight(rect: usedRect)
             self.addSubview(highlight)
             self.sendSubviewToBack(highlight)
@@ -81,5 +80,28 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
         let view = UIView(frame: rect)
         view.backgroundColor = highlightColor
         return view
+    }
+}
+
+
+extension CustomizableTextView {
+    
+    var options: TextOptions {
+        get {
+            return TextOptions(text: text,
+                               font: font,
+                               color: textColor,
+                               highlightColor: highlightColor,
+                               alignment: textAlignment,
+                               textContainerInset: textContainerInset)
+        }
+        set {
+            text = newValue.text
+            font = newValue.font
+            textColor = newValue.color
+            highlightColor = newValue.highlightColor
+            textAlignment = newValue.alignment
+            textContainerInset = newValue.textContainerInset
+        }
     }
 }

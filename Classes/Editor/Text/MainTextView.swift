@@ -8,16 +8,16 @@ import Foundation
 import UIKit
 
 /// Protocol for the text view inside text tools
-protocol StylableTextViewDelegate: class {
+protocol MainTextViewDelegate: class {
     
     /// Called when the background was touched
     func didTapBackground()
 }
 
 /// Special text view for editing
-final class StylableTextView: CustomizableTextView {
+final class MainTextView: CustomizableTextView {
     
-    weak var textViewDelegate: StylableTextViewDelegate?
+    weak var textViewDelegate: MainTextViewDelegate?
     
     override var contentSize: CGSize {
         didSet {
