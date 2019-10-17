@@ -37,12 +37,14 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.exportStopMotionPhotoAsVideo = true
         settings.topButtonsSwapped = false
         settings.crossIconInEditor = false
+        settings.showTagButtonInEditor = false
         return settings
     }
     private var dashboardSettings: CameraSettings {
         settings.exportStopMotionPhotoAsVideo = false
         settings.topButtonsSwapped = true
         settings.crossIconInEditor = true
+        settings.showTagButtonInEditor = true
         return settings
     }
 
