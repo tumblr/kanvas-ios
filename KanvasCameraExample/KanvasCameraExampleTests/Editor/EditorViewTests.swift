@@ -20,7 +20,7 @@ final class EditorViewTests: FBSnapshotTestCase {
     }
     
     func newView() -> EditorView {
-        let view = EditorView(mainActionMode: .confirm, showSaveButton: false, showCrossIcon: false)
+        let view = EditorView(mainActionMode: .confirm, showSaveButton: false, showCrossIcon: false, showTagButton: false)
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return view
     }

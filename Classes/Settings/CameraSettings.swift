@@ -219,6 +219,10 @@ public struct CameraFeatures {
     /// This changes back carat in the editor to a cross icon
     public var crossIconInEditor = DefaultCameraSettings.crossIconInEditor
 
+    /// Tag button in Editor
+    /// This shows a # button in the editor to enable adding tags
+    public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
+
     override public init() { }
 
 }
@@ -366,4 +370,5 @@ private struct DefaultCameraSettings {
     static let features = CameraFeatures()
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
+    static let showTagButtonInEditor: Bool = false
 }
