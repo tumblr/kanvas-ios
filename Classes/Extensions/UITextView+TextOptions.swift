@@ -7,13 +7,14 @@
 import Foundation
 import UIKit
 
-extension UITextView {
+extension CustomizableTextView {
     
     var options: TextOptions {
         get {
             return TextOptions(text: text,
                                font: font,
                                color: textColor,
+                               highlightColor: highlightColor,
                                alignment: textAlignment,
                                textContainerInset: textContainerInset)
         }
@@ -21,6 +22,7 @@ extension UITextView {
             text = newValue.text
             font = newValue.font
             textColor = newValue.color
+            highlightColor = newValue.highlightColor
             textAlignment = newValue.alignment
             textContainerInset = newValue.textContainerInset
         }

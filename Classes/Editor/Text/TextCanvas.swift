@@ -125,6 +125,8 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
             textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: location.x - size.width / 2)
         ])
         
+        textView.innerTextView.highlightColor = .blue
+        
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(textTapped(recognizer:)))
         let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(textRotated(recognizer:)))
         let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(textPinched(recognizer:)))

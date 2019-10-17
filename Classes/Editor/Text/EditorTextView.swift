@@ -94,6 +94,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         set {
             text = newValue.text
             textColor = newValue.color
+            highlightColor = newValue.highlightColor
             font = newValue.font
             alignment = newValue.alignment
             textContainerInset = newValue.textContainerInset
@@ -120,6 +121,11 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         }
     }
     
+    var highlightColor: UIColor? {
+        get { return textView.highlightColor }
+        set { textView.highlightColor = newValue }
+    }
+    
     var alignment: NSTextAlignment {
         get { return textView.textAlignment }
         set {
@@ -135,7 +141,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     }
     
     private var croppedView: UITextView {
-        let view = UITextView(frame: textView.frame)
+        let view = CustomizableTextView(frame: textView.frame)
         view.options = textView.options
         view.sizeToFit()
         return view
@@ -161,6 +167,9 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     
     /// Size of the text view
     var textSize: CGSize {
+        let croppedView = CustomizableTextView(frame: textView.frame)
+        croppedView.options = textView.options
+        croppedView.sizeToFit()
         return croppedView.contentSize
     }
     

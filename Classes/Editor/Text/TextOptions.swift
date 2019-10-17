@@ -11,6 +11,7 @@ private struct Constants {
     static let defaultText: String = ""
     static let defaultFont: UIFont? = .fairwater(fontSize: 48)
     static let defaultColor: UIColor = .white
+    static let defaultHighlightColor: UIColor = .blue
     static let defaultAlignment: NSTextAlignment = .left
     static let defaultTextContainerInset: UIEdgeInsets = UIEdgeInsets(top: 8, left: 6, bottom: 8, right: 6)
 }
@@ -20,6 +21,7 @@ final class TextOptions {
     let text: String
     let font: UIFont?
     let color: UIColor?
+    let highlightColor: UIColor?
     let alignment: NSTextAlignment
     let textContainerInset: UIEdgeInsets
     
@@ -31,12 +33,14 @@ final class TextOptions {
     init(text: String = Constants.defaultText,
          font: UIFont? = Constants.defaultFont,
          color: UIColor? = Constants.defaultColor,
+         highlightColor: UIColor? = Constants.defaultHighlightColor,
          alignment: NSTextAlignment = Constants.defaultAlignment,
          textContainerInset: UIEdgeInsets = Constants.defaultTextContainerInset) {
         
         self.text = text
         self.font = font
         self.color = color
+        self.highlightColor = highlightColor
         self.alignment = alignment
         self.textContainerInset = textContainerInset
     }

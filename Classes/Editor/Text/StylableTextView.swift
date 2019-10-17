@@ -15,7 +15,7 @@ protocol StylableTextViewDelegate: class {
 }
 
 /// Special text view for editing
-final class StylableTextView: UITextView {
+final class StylableTextView: CustomizableTextView {
     
     weak var textViewDelegate: StylableTextViewDelegate?
     
@@ -30,8 +30,8 @@ final class StylableTextView: UITextView {
         centerContentVertically()
     }
     
-    init() {
-        super.init(frame: .zero, textContainer: nil)
+    override init() {
+        super.init()
         setUpView()
         setUpGestureRecognizers()
     }
