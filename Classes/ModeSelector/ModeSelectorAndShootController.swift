@@ -127,6 +127,13 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.enableShootButtonUserInteraction(enabled)
     }
     
+    /// enables or disables the gesture recognizers in the shutter button
+    ///
+    /// - Parameter enabled: true to enable, false to disable
+    func enableShootButtonGestureRecognizers(_ enabled: Bool) {
+        modeView.enableShootButtonGestureRecognizers(enabled)
+    }
+    
     /// shows the camera mode button
     func showModeButton() {
         modeView.showModeButton(true)
