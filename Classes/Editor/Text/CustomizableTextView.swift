@@ -77,9 +77,17 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
     }
     
     private func createHighlight(rect: CGRect) -> UIView {
-        let view = UIView(frame: rect)
+        let fontRect = createFontRect(rect: rect)
+        let view = UIView(frame: fontRect)
         view.backgroundColor = highlightColor
         return view
+    }
+    
+    private func createFontRect(rect: CGRect) -> CGRect {
+        guard let font = font else { return rect }
+        let topMargin = rect.height - font.lineHeight
+        
+        return rect
     }
 }
 
