@@ -24,15 +24,15 @@ protocol ColorSelectorControllerDelegate: class {
     func getColor(at point: CGPoint) -> UIColor
     
     /// Called when the selection circle appears
-    func didStartColorSelection()
+    func didShowCircle()
     
     /// Called when the selection circle is starts its movement
-    func didStartMovingColorSelector()
+    func didStartMovingCircle()
 
     /// Called when the selection circle is released
     ///
     /// - Parameter color: selected color
-    func didEndColorSelection(color: UIColor)
+    func didEndMovingCircle(color: UIColor)
 }
 
 /// Controller for handling the color selector in the drawing menu.
@@ -89,7 +89,7 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
         }
         
         if show {
-            delegate?.didStartColorSelection()
+            delegate?.didShowCircle()
         }
     }
     
@@ -139,7 +139,7 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
     func didPanCircle(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
-            delegate?.didStartMovingColorSelector()
+            delegate?.didStartMovingCircle()
             if delegate?.shouldShowTooltip() == true {
                 colorSelectorView.showTooltip(false)
                 colorSelectorView.showOverlay(false)
@@ -152,7 +152,7 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
             let currentLocation = moveCircle(recognizer: recognizer)
             let color = getColor(at: currentLocation)
             show(false)
-            delegate?.didEndColorSelection(color: color)
+            delegate?.didEndMovingCircle(color: color)
         case .possible:
             break
         @unknown default:

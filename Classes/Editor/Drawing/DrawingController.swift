@@ -497,15 +497,15 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return delegate.editorShouldShowColorSelectorTooltip()
     }
     
-    func didStartColorSelection() {
+    func didShowCircle() {
         delegate?.didStartColorSelection()
     }
     
-    func didStartMovingColorSelector() {
+    func didStartMovingCircle() {
         delegate?.didStartMovingColorSelector()
     }
     
-    func didEndColorSelection(color: UIColor) {
+    func didEndMovingCircle(color: UIColor) {
         setEyeDropperColor(color)
         setStrokeCircleColor(color)
         setDrawingColor(color, addToColorCollection: true)

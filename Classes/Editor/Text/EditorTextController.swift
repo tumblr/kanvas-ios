@@ -207,15 +207,15 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         return delegate.getColor(from: point)
     }
     
-    func didStartColorSelection() {
+    func didShowCircle() {
         delegate?.didStartColorSelection()
     }
     
-    func didStartMovingColorSelector() {
+    func didStartMovingCircle() {
         delegate?.didStartMovingColorSelector()
     }
     
-    func didEndColorSelection(color: UIColor) {
+    func didEndMovingCircle(color: UIColor) {
         textView.textColor = color
         addColorsForCarousel(colors: [color])
         
