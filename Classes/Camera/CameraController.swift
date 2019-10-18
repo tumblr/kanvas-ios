@@ -43,6 +43,12 @@ public protocol CameraControllerDelegate: class {
      A function that is called when the main camera dismiss button is pressed
      */
     func dismissButtonPressed()
+
+    /// Called when the tag button is pressed in the editor
+    func tagButtonPressed()
+
+    /// Called when the editor is dismissed
+    func editorDismissed()
     
     /// Called after the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
@@ -275,6 +281,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             controller = createPreviewViewController(segments)
         }
         controller.modalTransitionStyle = .crossDissolve
+        controller.modalPresentationStyle = .fullScreen
         return controller
     }
     
@@ -678,6 +685,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipStartedMoving() {
         delegate?.didBeginDragInteraction()
         modeAndShootController.enableShootButtonUserInteraction(true)
+        modeAndShootController.enableShootButtonGestureRecognizers(false)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
             self?.modeAndShootController.closeTrash()
@@ -690,6 +698,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndDragInteraction()
         let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
+        modeAndShootController.enableShootButtonGestureRecognizers(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
@@ -702,6 +711,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndDragInteraction()
         let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
+        modeAndShootController.enableShootButtonGestureRecognizers(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
@@ -781,6 +791,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.dismiss(animated: true)
         }
+        delegate?.editorDismissed()
+    }
+
+    func tagButtonPressed() {
+        delegate?.tagButtonPressed()
     }
     
     func editorShouldShowColorSelectorTooltip() -> Bool {

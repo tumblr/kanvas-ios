@@ -36,11 +36,15 @@ final class KanvasCameraExampleViewController: UIViewController {
     private var cameraSettings: CameraSettings {
         settings.exportStopMotionPhotoAsVideo = true
         settings.topButtonsSwapped = false
+        settings.crossIconInEditor = false
+        settings.showTagButtonInEditor = false
         return settings
     }
     private var dashboardSettings: CameraSettings {
         settings.exportStopMotionPhotoAsVideo = false
         settings.topButtonsSwapped = true
+        settings.crossIconInEditor = true
+        settings.showTagButtonInEditor = true
         return settings
     }
 
@@ -254,6 +258,14 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 // MARK: - CameraControllerDelegate
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
+
+    func tagButtonPressed() {
+        // Only supported in Orangina
+    }
+
+    func editorDismissed() {
+        // Only supported in Orangina
+    }
 
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeTooltip

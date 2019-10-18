@@ -227,9 +227,18 @@ final class EditorControllerTests: FBSnapshotTestCase {
         XCTAssert(delegate.closeCalled, "Delegate close function not called")
     }
     
+    func testEditorWithCrossIconToClose() {
+        let settings = CameraSettings()
+        settings.crossIconInEditor = true
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
+        FBSnapshotVerifyView(viewController.view)
+    }
 }
 
 final class EditorControllerDelegateStub: EditorControllerDelegate {
+
     private(set) var closeCalled = false
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
@@ -262,5 +271,9 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
         return false
+    }
+
+    func tagButtonPressed() {
+
     }
 }
