@@ -60,11 +60,12 @@ final class MediaPickerButtonView: UIView {
             layer.shadowOpacity = Constants.shadowOpacity
             layer.shadowRadius = Constants.shadowRadius
             layer.masksToBounds = false
-            buttonView.addTarget(self, action: #selector(buttonTouchUpInside), for: .touchUpInside)
             buttonView.add(into: self)
+            buttonView.addTarget(self, action: #selector(buttonDidPress), for: .touchUpInside)
             buttonView.addTarget(self, action: #selector(startGlow), for: .touchDown)
-            buttonView.addTarget(self, action: #selector(stopGlow), for: .touchCancel)
+            buttonView.addTarget(self, action: #selector(stopGlow), for: .touchUpInside)
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchUpOutside)
+            buttonView.addTarget(self, action: #selector(stopGlow), for: .touchCancel)
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchDragExit)
         }
     }
@@ -99,7 +100,7 @@ final class MediaPickerButtonView: UIView {
 
     // MARK: Private API
 
-    @objc private func buttonTouchUpInside() {
+    @objc private func buttonDidPress() {
         delegate?.mediaPickerButtonDidPress()
     }
 
