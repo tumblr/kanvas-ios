@@ -257,7 +257,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        modeAndShootController.resetMediaPickerButton()
     }
 
     // MARK: - navigation
@@ -614,7 +613,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePickerController.sourceType = .savedPhotosAlbum
         imagePickerController.allowsEditing = false
         imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
-        present(imagePickerController, animated: true, completion: nil)
+        present(imagePickerController, animated: true) {
+            self.modeAndShootController.resetMediaPickerButton()
+        }
         analyticsProvider?.logMediaPickerOpen()
     }
 
