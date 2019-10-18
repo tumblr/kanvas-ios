@@ -614,6 +614,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePickerController.sourceType = .savedPhotosAlbum
         imagePickerController.allowsEditing = false
         imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
+        imagePickerController.modalPresentationStyle = .fullScreen
         present(imagePickerController, animated: true, completion: nil)
         analyticsProvider?.logMediaPickerOpen()
     }

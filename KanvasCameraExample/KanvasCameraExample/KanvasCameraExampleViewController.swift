@@ -78,7 +78,9 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     @objc private func launchKanvasDashboardTapped() {
-        present(SplitViewController(settings: dashboardSettings), animated: true, completion: .none)
+        let controller = SplitViewController(settings: dashboardSettings)
+        controller.modalPresentationStyle = .fullScreen
+        present(controller, animated: true, completion: .none)
     }
 
     /// This returns the customized settings for the CameraController
@@ -114,6 +116,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     private func launchCamera(animated: Bool = true) {
         let controller = CameraController(settings: cameraSettings, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = self
+        controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
         self.present(controller, animated: animated, completion: nil)
     }
