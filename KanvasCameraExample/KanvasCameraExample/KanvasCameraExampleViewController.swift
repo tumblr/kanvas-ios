@@ -48,10 +48,46 @@ final class KanvasCameraExampleViewController: UIViewController {
         return settings
     }
 
+    private let backgroundColorNormal: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .systemBackground
+        }
+        else {
+            return .white
+        }
+    }()
+
+    private let backgroundColorHighlighted: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .systemGray6
+        }
+        else {
+            return UIColor(hex: 0xEEEEEE)
+        }
+    }()
+
+    private let labelColor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .label
+        }
+        else {
+            return .black
+        }
+    }()
+
+    private let labelColorHighlighted: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .secondaryLabel
+        }
+        else {
+            return .gray
+        }
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .white
+        view.backgroundColor = backgroundColorNormal
         view.addSubview(launchKanvasButton)
         view.addSubview(launchKanvasDashboardButton)
         view.addSubview(featuresTable)
@@ -134,13 +170,13 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasButton.heightAnchor.constraint(equalToConstant: buttonWidth).isActive = true
 
         // background
-        launchKanvasButton.setBackgroundImage(UIImage(color: .white), for: .normal)
-        launchKanvasButton.setBackgroundImage(UIImage(color: UIColor(hex: 0xEEEEEE)), for: .highlighted)
+        launchKanvasButton.setBackgroundImage(UIImage(color: backgroundColorNormal), for: .normal)
+        launchKanvasButton.setBackgroundImage(UIImage(color: backgroundColorHighlighted), for: .highlighted)
 
         // title
         launchKanvasButton.setTitle("", for: .normal)
-        launchKanvasButton.setTitleColor(.black, for: .normal)
-        launchKanvasButton.setTitleColor(.black, for: .highlighted)
+        launchKanvasButton.setTitleColor(labelColor, for: .normal)
+        launchKanvasButton.setTitleColor(labelColor, for: .highlighted)
         launchKanvasButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
 
         // action
@@ -160,8 +196,8 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasDashboardButton.setTitle("", for: .normal)
         launchKanvasDashboardButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
         launchKanvasDashboardButton.titleLabel?.textAlignment = .center
-        launchKanvasDashboardButton.setTitleColor(.black, for: .normal)
-        launchKanvasDashboardButton.setTitleColor(.gray, for: .highlighted)
+        launchKanvasDashboardButton.setTitleColor(labelColor, for: .normal)
+        launchKanvasDashboardButton.setTitleColor(labelColorHighlighted, for: .highlighted)
 
         // actions
         launchKanvasDashboardButton.addTarget(self, action: #selector(launchKanvasDashboardTapped), for: .touchUpInside)
@@ -186,7 +222,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     private func resetButton() {
         launchKanvasButton.isUserInteractionEnabled = true
 
-        launchKanvasButton.layer.borderColor = UIColor.black.cgColor
+        launchKanvasButton.layer.borderColor = labelColor.cgColor
         launchKanvasButton.layer.borderWidth = 3
         launchKanvasButton.layer.cornerRadius = launchKanvasButton.bounds.width / 2
         launchKanvasButton.layer.masksToBounds = true
