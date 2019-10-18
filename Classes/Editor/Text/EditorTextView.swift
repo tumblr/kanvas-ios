@@ -516,7 +516,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         }
     }
     
-    // MARK: - Private utilitites
+    // MARK: - Private utilities
     
     /// shows or hides the color picker menu
     ///
