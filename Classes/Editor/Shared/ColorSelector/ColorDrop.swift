@@ -66,10 +66,10 @@ final class ColorDrop: UIImageView {
         addSubview(innerDrop)
         
         NSLayoutConstraint.activate([
-            innerDrop.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: Constants.topBorderWidth),
-            innerDrop.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -Constants.bottomBorderWidth),
-            innerDrop.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: Constants.horizontalBorderWidth),
-            innerDrop.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -Constants.horizontalBorderWidth),
+            innerDrop.topAnchor.constraint(equalTo: topAnchor, constant: Constants.topBorderWidth),
+            innerDrop.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.bottomBorderWidth),
+            innerDrop.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.horizontalBorderWidth),
+            innerDrop.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalBorderWidth),
         ])
     }
 }

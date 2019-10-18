@@ -24,7 +24,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     private let launchKanvasButton = UIButton(type: .custom)
     private let launchKanvasDashboardButton = UIButton(type: .system)
     private var shouldShowWelcomeTooltip = true
-    private var shouldShowColorSelecterTooltip = true
+    private var shouldShowColorSelectorTooltip = true
     private var shouldShowStrokeSelectorAnimation = true
     private var firstLaunch = true
     private lazy var featuresTable: FeatureTableView = {
@@ -275,12 +275,12 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         shouldShowWelcomeTooltip = false
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
-        return shouldShowColorSelecterTooltip
+    func editorShouldShowColorSelectorTooltip() -> Bool {
+        return shouldShowColorSelectorTooltip
     }
     
-    func didDismissColorSelecterTooltip() {
-        shouldShowColorSelecterTooltip = false
+    func didDismissColorSelectorTooltip() {
+        shouldShowColorSelectorTooltip = false
     }
     
     func didEndStrokeSelectorAnimation() {
