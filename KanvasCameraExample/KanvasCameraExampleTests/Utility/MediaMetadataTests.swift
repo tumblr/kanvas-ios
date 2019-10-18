@@ -42,8 +42,8 @@ class MediaMetadataTests: XCTestCase {
                 XCTFail()
                 return
             }
-            let mediaInfo = try? TumblrMediaInfo(fromImage: url)
-            XCTAssertEqual(mediaInfo??.source, .kanvas_camera)
+            let mediaInfo = TumblrMediaInfo(fromImage: url)
+            XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5)
