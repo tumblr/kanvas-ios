@@ -8,11 +8,13 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// Protocol for closing the text tools
+/// Protocol for the text tools editor
 protocol EditorTextViewDelegate: class {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()
+    /// Called when the text view background is tapped
+    func didTapTextViewBackground()
     /// Called when the font selector is tapped
     func didTapFontSelector()
     /// Called when the alignment selector is tapped
@@ -44,10 +46,6 @@ private struct Constants {
     static let circularIconBorderColor: UIColor = .white
     static let circularIconCornerRadius: CGFloat = circularIconSize / 2
 
-    
-    // Overlay
-    static let overlayColor = UIColor.black.withAlphaComponent(0.7)
-    
     // Color collection width
     static let colorCollectionWidth: CGFloat = circularIconSize * 3 + circularIconPadding * 6
     
@@ -57,13 +55,12 @@ private struct Constants {
 }
 
 /// A UIView for the text tools view
-final class EditorTextView: UIView {
+final class EditorTextView: UIView, StylableTextViewDelegate {
     
     weak var delegate: EditorTextViewDelegate?
     
-    private let overlay: UIView
     private let confirmButton: UIButton
-    private let textView: UITextView
+    private let textView: StylableTextView
     
     // Containers
     private let toolsContainer: UIView
@@ -142,7 +139,6 @@ final class EditorTextView: UIView {
     }
     
     init() {
-        overlay = UIView()
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
         textView = StylableTextView()
         toolsContainer = UIView()
@@ -156,11 +152,11 @@ final class EditorTextView: UIView {
         eyeDropper = UIButton()
         colorGradient = UIView()
         super.init(frame: .zero)
+        textView.textViewDelegate = self
         setupViews()
     }
     
     private func setupViews() {
-        setUpOverlay()
         setUpTextView()
         setUpConfirmButton()
         setUpToolsContainer()
@@ -177,21 +173,6 @@ final class EditorTextView: UIView {
     
     
     // MARK: - Views
-    
-    /// Sets up the translucent black view used during text edition
-    private func setUpOverlay() {
-        overlay.accessibilityIdentifier = "Editor Text Overlay"
-        overlay.translatesAutoresizingMaskIntoConstraints = false
-        overlay.backgroundColor = Constants.overlayColor
-        addSubview(overlay)
-        
-        NSLayoutConstraint.activate([
-            overlay.topAnchor.constraint(equalTo: topAnchor),
-            overlay.bottomAnchor.constraint(equalTo: bottomAnchor),
-            overlay.leadingAnchor.constraint(equalTo: leadingAnchor),
-            overlay.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-    }
     
     /// Sets up the main text view
     private func setUpTextView() {
@@ -405,6 +386,12 @@ final class EditorTextView: UIView {
         showMainMenu(true)
     }
     
+    // MARK: - StylableViewDelegate
+    
+    func didTapBackground() {
+        delegate?.didTapTextViewBackground()
+    }
+    
     // MARK: - Public interface
     
     /// Focuses the main text view to show the keyboard
@@ -422,24 +409,25 @@ final class EditorTextView: UIView {
     ///
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
-        UIView.animate(withDuration: 0.0, animations: {
+        UIView.performWithoutAnimation {
             self.textView.frame = CGRect(x: self.textView.frame.origin.x,
                                          y: self.textView.frame.origin.y,
                                          width: self.textView.frame.width,
                                          height: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin - distance)
-            self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
-        }, completion: { _ in
-            self.showColorPickerMenu(false, animated: false)
-            self.showMainMenu(true, animated: false)
-            self.showTools(true)
-            self.showTextView(true)
-        })
+            
+            self.colorPickerContainer.alpha = 0
+            self.mainMenuContainer.alpha = 1
+        }
+        
+        self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
+        self.toolsContainer.alpha = 1
+        self.textView.alpha = 1
     }
     
     /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
-        showTextView(false)
-        showTools(false)
+        self.textView.alpha = 0
+        self.toolsContainer.alpha = 0
 
         textView.frame = CGRect(x: textView.frame.origin.x,
                                 y: textView.frame.origin.y,
@@ -471,9 +459,8 @@ final class EditorTextView: UIView {
     /// shows or hides the color picker menu
     ///
     /// - Parameter show: true to show, false to hide
-    private func showColorPickerMenu(_ show: Bool, animated: Bool = true) {
-        let animationDuration = animated ? Constants.animationDuration : Constants.noDuration
-        UIView.animate(withDuration: animationDuration) {
+    private func showColorPickerMenu(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.colorPickerContainer.alpha = show ? 1 : 0
         }
     }
@@ -481,9 +468,8 @@ final class EditorTextView: UIView {
     /// shows or hides the main menu
     ///
     /// - Parameter show: true to show, false to hide
-    private func showMainMenu(_ show: Bool, animated: Bool = true) {
-        let animationDuration = animated ? Constants.animationDuration : Constants.noDuration
-        UIView.animate(withDuration: animationDuration) {
+    private func showMainMenu(_ show: Bool) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.mainMenuContainer.alpha = show ? 1 : 0
         }
     }

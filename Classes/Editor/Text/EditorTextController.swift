@@ -105,7 +105,11 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     // MARK: - EditorTextViewDelegate
     
     func didTapConfirmButton() {
-        delegate?.didConfirmText(options: textView.options, transformations: textTransformations, size: textView.textSize)
+        didConfirmText()
+    }
+    
+    func didTapTextViewBackground() {
+        didConfirmText()
     }
     
     func didTapFontSelector() {
@@ -120,6 +124,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         if let newAlignment = alignments.first {
             textView.alignment = newAlignment
         }
+    }
+    
+    private func didConfirmText() {
+        delegate?.didConfirmText(options: textView.options, transformations: textTransformations, size: textView.textSize)
     }
     
     // MARK: - ColorCollectionControllerDelegate
@@ -140,6 +148,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     
     // MARK: - Keyboard
     
+    // This method is called inside the keyboard animation,
+    // so any UI change made here will be animated.
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
@@ -147,6 +157,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         }
     }
     
+    // This method is called inside the keyboard animation,
+    // so any UI change made here will be animated.
     @objc func keyboardWillHide(notification: NSNotification) {
         textView.moveToolsDown()
     }

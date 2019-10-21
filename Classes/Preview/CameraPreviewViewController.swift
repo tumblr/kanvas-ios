@@ -108,8 +108,8 @@ final class CameraPreviewViewController: UIViewController {
         cameraPreviewView.setSecondPlayer(player: secondPlayer)
     }
 
-    override public var prefersStatusBarHidden: Bool {
-        return true
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

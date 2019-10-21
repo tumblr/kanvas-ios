@@ -79,7 +79,7 @@ private class MenuCollectionView: IgnoreTouchesCollectionView {
     }
     
     private func configure() {
-        isScrollEnabled = false
+        isScrollEnabled = true
         allowsSelection = true
         bounces = true
         alwaysBounceHorizontal = true

@@ -24,7 +24,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     private let launchKanvasButton = UIButton(type: .custom)
     private let launchKanvasDashboardButton = UIButton(type: .system)
     private var shouldShowWelcomeTooltip = true
-    private var shouldShowColorSelecterTooltip = true
+    private var shouldShowColorSelectorTooltip = true
     private var shouldShowStrokeSelectorAnimation = true
     private var firstLaunch = true
     private lazy var featuresTable: FeatureTableView = {
@@ -36,11 +36,15 @@ final class KanvasCameraExampleViewController: UIViewController {
     private var cameraSettings: CameraSettings {
         settings.exportStopMotionPhotoAsVideo = true
         settings.topButtonsSwapped = false
+        settings.crossIconInEditor = false
+        settings.showTagButtonInEditor = false
         return settings
     }
     private var dashboardSettings: CameraSettings {
         settings.exportStopMotionPhotoAsVideo = false
         settings.topButtonsSwapped = true
+        settings.crossIconInEditor = true
+        settings.showTagButtonInEditor = true
         return settings
     }
 
@@ -255,6 +259,14 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
+    func tagButtonPressed() {
+        // Only supported in Orangina
+    }
+
+    func editorDismissed() {
+        // Only supported in Orangina
+    }
+
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeTooltip
     }
@@ -263,12 +275,12 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         shouldShowWelcomeTooltip = false
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
-        return shouldShowColorSelecterTooltip
+    func editorShouldShowColorSelectorTooltip() -> Bool {
+        return shouldShowColorSelectorTooltip
     }
     
-    func didDismissColorSelecterTooltip() {
-        shouldShowColorSelecterTooltip = false
+    func didDismissColorSelectorTooltip() {
+        shouldShowColorSelectorTooltip = false
     }
     
     func didEndStrokeSelectorAnimation() {

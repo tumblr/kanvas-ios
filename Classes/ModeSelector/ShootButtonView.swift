@@ -487,6 +487,15 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     func enableUserInteraction(_ enabled: Bool) {
         containerView.isUserInteractionEnabled = enabled
     }
+    
+    /// enables or disables the gesture recognizers in the shutter button
+    ///
+    /// - Parameter enabled: true to enable, false to disable
+    func enableGestureRecognizers(_ enabled: Bool) {
+        containerView.gestureRecognizers?.forEach { recognizer in
+            recognizer.isEnabled = enabled
+        }
+    }
 
     /// shows or hides the press effect on the shutter button
     ///

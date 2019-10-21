@@ -27,6 +27,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "AB7F29422121F02A00B8D599"
+            BuildableName = "KanvasCameraExample.app"
+            BlueprintName = "KanvasCameraExample"
+            ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -50,20 +59,15 @@
                <Test
                   Identifier = "CameraSegmentHandlerTests/testMerge()">
                </Test>
+               <Test
+                  Identifier = "GLPixelBufferViewTests">
+               </Test>
+               <Test
+                  Identifier = "GLPlayerTests">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "AB7F29422121F02A00B8D599"
-            BuildableName = "KanvasCameraExample.app"
-            BlueprintName = "KanvasCameraExample"
-            ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -97,8 +101,6 @@
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

@@ -20,13 +20,13 @@ protocol EditorControllerDelegate: class {
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
     
-    /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
+    /// Called after the color selector tooltip is dismissed
+    func didDismissColorSelectorTooltip()
     
-    /// Called to ask if color selecter tooltip should be shown
+    /// Called to ask if color selector tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
-    func editorShouldShowColorSelecterTooltip() -> Bool
+    func editorShouldShowColorSelectorTooltip() -> Bool
     
     /// Called after the stroke animation has ended
     func didEndStrokeSelectorAnimation()
@@ -35,14 +35,19 @@ protocol EditorControllerDelegate: class {
     ///
     /// - Returns: Bool for animation
     func editorShouldShowStrokeSelectorAnimation() -> Bool
+
+    /// Called when the tag button is pressed
+    func tagButtonPressed()
 }
 
 /// A view controller to edit the segments
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, GLPlayerDelegate {
-    
+
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
-                                    showSaveButton: settings.features.editorSaving)
+                                    showSaveButton: settings.features.editorSaving,
+                                    showCrossIcon: settings.crossIconInEditor,
+                                    showTagButton: settings.showTagButtonInEditor)
         editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
@@ -167,8 +172,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
     }
     
-    override public var prefersStatusBarHidden: Bool {
-        return true
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -220,6 +225,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         onBeforeSelectingEditionOption(.text)
         textController.showView(true, options: options, transformations: transformations)
+    }
+
+    func didTapTagButton() {
+        delegate?.tagButtonPressed()
+        analyticsProvider?.logEditorTagTapped()
     }
     
     func didBeginTouchesOnText() {
@@ -379,13 +389,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         closeMenuButtonPressed()
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
+    func editorShouldShowColorSelectorTooltip() -> Bool {
         guard let delegate = delegate else { return false }
-        return delegate.editorShouldShowColorSelecterTooltip()
+        return delegate.editorShouldShowColorSelectorTooltip()
     }
     
-    func didDismissColorSelecterTooltip() {
-        delegate?.didDismissColorSelecterTooltip()
+    func didDismissColorSelectorTooltip() {
+        delegate?.didDismissColorSelectorTooltip()
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
