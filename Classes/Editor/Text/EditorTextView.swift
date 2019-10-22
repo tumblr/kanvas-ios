@@ -61,6 +61,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     
     private let confirmButton: UIButton
     private let textView: StylableTextView
+    private var textViewHeight: NSLayoutConstraint?
     
     // Containers
     private let toolsContainer: UIView
@@ -202,11 +203,12 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textView)
         
+        textViewHeight = textView.heightAnchor.constraint(equalTo: heightAnchor)
+        textViewHeight?.isActive = true
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: topAnchor),
             textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
             textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
-            textView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
         textView.alpha = 0
@@ -432,11 +434,9 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.performWithoutAnimation {
-            self.textView.frame = CGRect(x: self.textView.frame.origin.x,
-                                         y: self.textView.frame.origin.y,
-                                         width: self.textView.frame.width,
-                                         height: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin - distance)
-            
+            self.textViewHeight?.constant = -(self.toolsContainer.frame.height + Constants.bottomMargin + distance)
+            self.textView.setNeedsLayout()
+            self.textView.layoutIfNeeded()
             self.colorPickerContainer.alpha = 0
             self.mainMenuContainer.alpha = 1
         }
@@ -451,10 +451,9 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         self.textView.alpha = 0
         self.toolsContainer.alpha = 0
 
-        textView.frame = CGRect(x: textView.frame.origin.x,
-                                y: textView.frame.origin.y,
-                                width: textView.frame.width,
-                                height: frame.height - self.toolsContainer.frame.height - Constants.bottomMargin)
+        textViewHeight?.constant = -(self.toolsContainer.frame.height + Constants.bottomMargin)
+        textView.setNeedsLayout()
+        textView.layoutIfNeeded()
         toolsContainer.transform = .identity
     }
     
