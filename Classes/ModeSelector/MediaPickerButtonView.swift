@@ -62,9 +62,10 @@ final class MediaPickerButtonView: UIView {
             layer.masksToBounds = false
             buttonView.addTarget(self, action: #selector(buttonTouchUpInside), for: .touchUpInside)
             buttonView.add(into: self)
+            
             buttonView.addTarget(self, action: #selector(startGlow), for: .touchDown)
-            buttonView.addTarget(self, action: #selector(stopGlow), for: .touchCancel)
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchUpOutside)
+            buttonView.addTarget(self, action: #selector(stopGlow), for: .touchCancel)
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchDragExit)
         }
     }
