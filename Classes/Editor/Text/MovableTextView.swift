@@ -139,7 +139,6 @@ private extension UITextView {
     func setScaleFactor(_ scaleFactor: CGFloat) {
         guard scaleFactor >= 1.0 else { return }
         let scaleFactorForDevice = scaleFactor * UIScreen.main.nativeScale
-        textInputView.contentScaleFactor = scaleFactorForDevice
         for subview in textInputView.subviews {
             subview.contentScaleFactor = scaleFactorForDevice
         }
