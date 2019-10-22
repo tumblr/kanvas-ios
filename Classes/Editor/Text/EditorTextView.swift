@@ -434,24 +434,24 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.performWithoutAnimation {
-            self.textViewHeight?.constant = -(self.toolsContainer.frame.height + Constants.bottomMargin + distance)
-            self.textView.setNeedsLayout()
-            self.textView.layoutIfNeeded()
-            self.colorPickerContainer.alpha = 0
-            self.mainMenuContainer.alpha = 1
+            textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin + distance)
+            textView.setNeedsLayout()
+            textView.layoutIfNeeded()
+            colorPickerContainer.alpha = 0
+            mainMenuContainer.alpha = 1
         }
         
-        self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
-        self.toolsContainer.alpha = 1
-        self.textView.alpha = 1
+        toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
+        toolsContainer.alpha = 1
+        textView.alpha = 1
     }
     
     /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
-        self.textView.alpha = 0
-        self.toolsContainer.alpha = 0
+        textView.alpha = 0
+        toolsContainer.alpha = 0
 
-        textViewHeight?.constant = -(self.toolsContainer.frame.height + Constants.bottomMargin)
+        textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
         textView.setNeedsLayout()
         textView.layoutIfNeeded()
         toolsContainer.transform = .identity
