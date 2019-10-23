@@ -95,4 +95,9 @@ struct KanvasCameraImages {
         .center: UIImage.imageFromCameraBundle(named: "centerAlignment"),
         .right: UIImage.imageFromCameraBundle(named: "rightAlignment"),
     ]
+    static let highlightUnselected = UIImage.imageFromCameraBundle(named: "highlightUnselected")
+    static let highlightSelected = UIImage.imageFromCameraBundle(named: "highlightSelected")
+    static func highlight(for selected: Bool) -> UIImage? {
+        return selected ? highlightSelected : highlightUnselected
+    }
 }
