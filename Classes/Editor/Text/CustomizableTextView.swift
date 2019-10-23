@@ -9,7 +9,7 @@ import UIKit
 
 class CustomizableTextView: UITextView, UITextViewDelegate {
     
-    private var backgroundViews: [UIView]
+    private var highlightViews: [UIView]
     
     var highlightColor: UIColor? {
         didSet {
@@ -30,25 +30,25 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
     }
     
     init() {
-        backgroundViews = []
+        highlightViews = []
         super.init(frame: .zero, textContainer: nil)
         delegate = self
     }
     
     init(frame: CGRect) {
-        backgroundViews = []
+        highlightViews = []
         super.init(frame: frame, textContainer: nil)
         delegate = self
     }
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
-        backgroundViews = []
+        highlightViews = []
         super.init(frame: frame, textContainer: textContainer)
         delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
-        backgroundViews = []
+        highlightViews = []
         super.init(coder: aDecoder)
         delegate = self
     }
@@ -61,33 +61,38 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
         removeHighlights()
         let range = NSRange(location: 0, length: text.count)
         layoutManager.enumerateLineFragments(forGlyphRange: range, using: { _, usedRect, _, _, _ in
-            let highlight = self.createHighlight(rect: usedRect)
-            self.addSubview(highlight)
-            self.sendSubviewToBack(highlight)
-            self.backgroundViews.append(highlight)
+            let highlightView = self.createHighlightView(rect: usedRect)
+            self.addSubview(highlightView)
+            self.sendSubviewToBack(highlightView)
+            self.highlightViews.append(highlightView)
         })
     }
     
     private func removeHighlights() {
-        backgroundViews.forEach { view in
+        highlightViews.forEach { view in
             view.removeFromSuperview()
         }
         
-        backgroundViews.removeAll()
+        highlightViews.removeAll()
     }
     
-    private func createHighlight(rect: CGRect) -> UIView {
+    private func createHighlightView(rect: CGRect) -> UIView {
         let fontRect = createFontRect(rect: rect)
         let view = UIView(frame: fontRect)
         view.backgroundColor = highlightColor
+        view.layer.cornerRadius = 3
         return view
     }
     
     private func createFontRect(rect: CGRect) -> CGRect {
         guard let font = font else { return rect }
-        let topMargin = rect.height - font.lineHeight
+        let capHeight = font.capHeight
+        let lineHeight = font.lineHeight
         
-        return rect
+        return CGRect(x: rect.origin.x + textContainerInset.left,
+                      y: rect.origin.y + textContainerInset.top + (lineHeight - capHeight) / 2.0,
+                      width: rect.width,
+                      height: capHeight)
     }
 }
 
