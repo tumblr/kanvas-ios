@@ -61,6 +61,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     
     private let confirmButton: UIButton
     private let textView: StylableTextView
+    private var textViewHeight: NSLayoutConstraint?
     
     // Containers
     private let toolsContainer: UIView
@@ -125,11 +126,33 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         set { textView.textContainerInset = newValue }
     }
     
+    private var croppedView: UITextView {
+        let view = UITextView(frame: textView.frame)
+        view.options = textView.options
+        view.sizeToFit()
+        return view
+    }
+    
+    /// Center of the text view in screen coordinates
+    var location: CGPoint {
+        let point = textView.center
+        let margin = (textView.bounds.width - croppedView.bounds.width) / 2
+        
+        let difference: CGFloat
+        switch textView.textAlignment {
+        case .left:
+            difference = -margin
+        case .right:
+            difference = margin
+        default:
+            difference = 0
+        }
+        
+        return CGPoint(x: point.x + difference, y: point.y)
+    }
+    
     /// Size of the text view
     var textSize: CGSize {
-        let croppedView = UITextView(frame: textView.frame)
-        croppedView.options = textView.options
-        croppedView.sizeToFit()
         return croppedView.contentSize
     }
     
@@ -180,11 +203,12 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textView)
         
+        textViewHeight = textView.heightAnchor.constraint(equalTo: heightAnchor)
+        textViewHeight?.isActive = true
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: topAnchor),
             textView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
             textView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
-            textView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
         textView.alpha = 0
@@ -410,29 +434,26 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.performWithoutAnimation {
-            self.textView.frame = CGRect(x: self.textView.frame.origin.x,
-                                         y: self.textView.frame.origin.y,
-                                         width: self.textView.frame.width,
-                                         height: self.frame.height - self.toolsContainer.frame.height - Constants.bottomMargin - distance)
-            
-            self.colorPickerContainer.alpha = 0
-            self.mainMenuContainer.alpha = 1
+            textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin + distance)
+            textView.setNeedsLayout()
+            textView.layoutIfNeeded()
+            colorPickerContainer.alpha = 0
+            mainMenuContainer.alpha = 1
         }
         
-        self.toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
-        self.toolsContainer.alpha = 1
-        self.textView.alpha = 1
+        toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
+        toolsContainer.alpha = 1
+        textView.alpha = 1
     }
     
     /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
-        self.textView.alpha = 0
-        self.toolsContainer.alpha = 0
+        textView.alpha = 0
+        toolsContainer.alpha = 0
 
-        textView.frame = CGRect(x: textView.frame.origin.x,
-                                y: textView.frame.origin.y,
-                                width: textView.frame.width,
-                                height: frame.height - self.toolsContainer.frame.height - Constants.bottomMargin)
+        textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
+        textView.setNeedsLayout()
+        textView.layoutIfNeeded()
         toolsContainer.transform = .identity
     }
     

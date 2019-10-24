@@ -429,11 +429,15 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - EditorTextControllerDelegate
     
-    func didConfirmText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
+    func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         if options.haveText {
-            editorView.textCanvas.addText(options: options, transformations: transformations, size: size)
+            editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
         }
         closeMenuButtonPressed()
+    }
+    
+    func didMoveToolsUp() {
+        editorView.textCanvas.removeSelectedText()
     }
     
     // MARK: - Public interface

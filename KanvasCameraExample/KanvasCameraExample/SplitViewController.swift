@@ -144,7 +144,7 @@ extension SplitViewController: KanvasDashboardControllerDelegate {
 
 extension SplitViewController: TMPageViewControllerDelegate {
     func canMoveToViewController(_ viewController: UIViewController) -> Bool {
-        return false
+        return true
     }
     
     func pageWillBecomeVisible(_ viewController: UIViewController) {
