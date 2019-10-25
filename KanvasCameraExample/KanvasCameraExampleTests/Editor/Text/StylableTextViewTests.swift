@@ -26,7 +26,7 @@ final class StylableTextViewTests: FBSnapshotTestCase {
     
     func testTextViewWithText() {
         let view = newView()
-        let textView = MainTextView()
+        let textView = StylableTextView()
         textView.add(into: view)
         textView.text = "Example"
         textView.textAlignment = .center
