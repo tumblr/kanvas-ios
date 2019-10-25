@@ -97,7 +97,7 @@ struct KanvasCameraImages {
     ]
     static let highlightUnselected = UIImage.imageFromCameraBundle(named: "highlightUnselected")
     static let highlightSelected = UIImage.imageFromCameraBundle(named: "highlightSelected")
-    static func highlight(for selected: Bool) -> UIImage? {
+    static func highlightImage(for selected: Bool) -> UIImage? {
         return selected ? highlightSelected : highlightUnselected
     }
 }

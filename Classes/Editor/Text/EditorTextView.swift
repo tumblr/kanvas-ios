@@ -15,10 +15,12 @@ protocol EditorTextViewDelegate: class {
     func didTapConfirmButton()
     /// Called when the text view background is tapped
     func didTapTextViewBackground()
-    /// Called when the font selector is tapped
-    func didTapFontSelector()
     /// Called when the alignment selector is tapped
     func didTapAlignmentSelector()
+    /// Called when the font selector is tapped
+    func didTapFontSelector()
+    /// Called when the highlight selector is tapped
+    func didTapHighlightSelector()
     /// Called when the eye dropper is tapped
     func didTapEyeDropper()
 }
@@ -27,7 +29,6 @@ protocol EditorTextViewDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let noDuration: TimeInterval = 0.0
-    static let brightnessThreshold: Double = 0.8
     
     // General margins
     static let topMargin: CGFloat = 19.5
@@ -41,7 +42,7 @@ private struct Constants {
     
     // Menu buttons
     static let customIconSize: CGFloat = 36
-    static let customIconMargin: CGFloat = 36
+    static let customIconMargin: CGFloat = 18
     static let circularIconSize: CGFloat = CircularImageView.size
     static let circularIconPadding: CGFloat = CircularImageView.padding
     static let circularIconBorderWidth: CGFloat = 2
@@ -73,6 +74,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     // Main menu
     private let fontSelector: UIButton
     private let alignmentSelector: UIButton
+    private let highlightSelector: UIButton
     private let openColorPicker: UIButton
     
     // Color picker menu
@@ -113,17 +115,25 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     
     var textColor: UIColor? {
         get { return mainTextView.textColor }
-        set {
-            guard let color = newValue else { return }
-            eyeDropper.backgroundColor = color
-            eyeDropper.tintColor = color.isAlmostWhite() ? .black : .white
-            mainTextView.textColor = color
-        }
+        set { mainTextView.textColor = newValue }
     }
     
     var highlightColor: UIColor? {
         get { return mainTextView.highlightColor }
-        set { mainTextView.highlightColor = newValue }
+        set {
+            guard let newColor = newValue, let image = KanvasCameraImages.highlightImage(for: newColor.isVisible) else { return }
+            highlightSelector.setImage(image, for: .normal)
+            mainTextView.highlightColor = newColor
+        }
+    }
+    
+    var eyeDropperColor: UIColor? {
+        get { return eyeDropper.backgroundColor }
+        set {
+            guard let newColor = newValue else { return }
+            eyeDropper.backgroundColor = newColor
+            eyeDropper.tintColor = newColor.matchingColor
+        }
     }
     
     var alignment: NSTextAlignment {
@@ -186,6 +196,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         colorPickerContainer = UIView()
         alignmentSelector = UIButton()
         fontSelector = UIButton()
+        highlightSelector = UIButton()
         colorCollection = UIView()
         openColorPicker = UIButton()
         closeColorPicker = UIButton()
@@ -205,6 +216,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         setUpColorPickerContainer()
         setUpAlignmentSelector()
         setUpFontSelector()
+        setUpHighlightSelector()
         setUpColorCollection()
         setUpOpenColorPicker()
         setUpCloseColorPicker()
@@ -313,6 +325,23 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(fontSelectorTapped(recognizer:)))
         fontSelector.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the highlight selector button
+    private func setUpHighlightSelector() {
+        highlightSelector.accessibilityIdentifier = "Editor Text Font Selector"
+        highlightSelector.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(highlightSelector)
+        
+        NSLayoutConstraint.activate([
+            highlightSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
+            highlightSelector.leadingAnchor.constraint(equalTo: fontSelector.trailingAnchor, constant: Constants.customIconMargin),
+            highlightSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
+            highlightSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(highlightSelectorTapped(recognizer:)))
+        highlightSelector.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the color carousel shown at the right of the main menu
@@ -431,12 +460,16 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         delegate?.didTapConfirmButton()
     }
     
+    @objc private func alignmentSelectorTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapAlignmentSelector()
+    }
+    
     @objc private func fontSelectorTapped(recognizer: UITapGestureRecognizer) {
         delegate?.didTapFontSelector()
     }
     
-    @objc private func alignmentSelectorTapped(recognizer: UITapGestureRecognizer) {
-        delegate?.didTapAlignmentSelector()
+    @objc private func highlightSelectorTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapHighlightSelector()
     }
     
     @objc private func openColorPickerTapped(recognizer: UITapGestureRecognizer) {
@@ -543,12 +576,5 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.mainMenuContainer.alpha = show ? 1 : 0
         }
-    }
-}
-
-private extension UIColor {
-    
-    func isAlmostWhite() -> Bool {
-        return brightness > Constants.brightnessThreshold
     }
 }

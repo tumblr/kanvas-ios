@@ -11,7 +11,7 @@ private struct Constants {
     static let defaultText: String = ""
     static let defaultFont: UIFont? = .fairwater(fontSize: 48)
     static let defaultColor: UIColor = .white
-    static let defaultHighlightColor: UIColor = .blue
+    static let defaultHighlightColor: UIColor = .clear
     static let defaultAlignment: NSTextAlignment = .left
     static let defaultTextContainerInset: UIEdgeInsets = UIEdgeInsets(top: 8, left: 6, bottom: 8, right: 6)
 }
