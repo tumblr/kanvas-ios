@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class MainTextViewTests: FBSnapshotTestCase {
+final class StylableTextViewTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
