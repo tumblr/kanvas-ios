@@ -223,7 +223,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     }
     
     func didEndMovingCircle(color: UIColor) {
-        textView.textColor = color
+        setColor(color)
         addColorsForCarousel(colors: [color])
         
         textView.openKeyboard()
