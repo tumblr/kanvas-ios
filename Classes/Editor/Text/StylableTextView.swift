@@ -7,8 +7,15 @@
 import Foundation
 import UIKit
 
-class CustomizableTextView: UITextView, UITextViewDelegate {
+/// Constants for StylableTextView
+private struct Constants {
+    static let highlightCornerRadius: CGFloat = 3.0
+}
+
+/// TextView that can be customized with TextOptions
+class StylableTextView: UITextView, UITextViewDelegate {
     
+    // Color rectangles behind the text
     private var highlightViews: [UIView]
     
     var highlightColor: UIColor? {
@@ -28,6 +35,8 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
             updateHighlight()
         }
     }
+    
+    // MARK: - Initializers
     
     init() {
         highlightViews = []
@@ -57,6 +66,7 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
         updateHighlight()
     }
     
+    /// Redraws the highlight rectangles
     func updateHighlight() {
         removeHighlights()
         let range = NSRange(location: 0, length: text.count)
@@ -68,6 +78,7 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
         })
     }
     
+    /// Removes the hightlight rectangles
     private func removeHighlights() {
         highlightViews.forEach { view in
             view.removeFromSuperview()
@@ -76,14 +87,20 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
         highlightViews.removeAll()
     }
     
+    /// Creates a highlight area for a line of text
+    ///
+    /// - Parameter rect: the rect of the line
     private func createHighlightView(rect: CGRect) -> UIView {
         let fontRect = createFontRect(rect: rect)
         let view = UIView(frame: fontRect)
         view.backgroundColor = highlightColor
-        view.layer.cornerRadius = 3
+        view.layer.cornerRadius = Constants.highlightCornerRadius
         return view
     }
     
+    /// Creates a highlight rectangle for a font
+    ///
+    /// - Parameter rect: the rect of the line
     private func createFontRect(rect: CGRect) -> CGRect {
         guard let font = font else { return rect }
         let capHeight = font.capHeight
@@ -96,8 +113,7 @@ class CustomizableTextView: UITextView, UITextViewDelegate {
     }
 }
 
-
-extension CustomizableTextView {
+extension StylableTextView {
     
     var options: TextOptions {
         get {

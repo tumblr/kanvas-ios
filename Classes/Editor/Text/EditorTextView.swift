@@ -151,7 +151,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     }
     
     private var croppedView: UITextView {
-        let view = CustomizableTextView(frame: mainTextView.frame)
+        let view = StylableTextView(frame: mainTextView.frame)
         view.options = mainTextView.options
         view.sizeToFit()
         return view
@@ -177,7 +177,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     
     /// Size of the text view
     var textSize: CGSize {
-        let croppedView = CustomizableTextView(frame: mainTextView.frame)
+        let croppedView = StylableTextView(frame: mainTextView.frame)
         croppedView.options = mainTextView.options
         croppedView.sizeToFit()
         return croppedView.contentSize

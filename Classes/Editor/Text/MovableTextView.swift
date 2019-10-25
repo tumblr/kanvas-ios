@@ -18,7 +18,7 @@ private struct Constants {
 /// A TextView wrapped in a UIView that can be rotated, moved and scaled
 final class MovableTextView: UIView {
     
-    let innerTextView: CustomizableTextView
+    let innerTextView: StylableTextView
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -55,7 +55,7 @@ final class MovableTextView: UIView {
     }
     
     init(options: TextOptions, transformations: ViewTransformations) {
-        self.innerTextView = CustomizableTextView()
+        self.innerTextView = StylableTextView()
         self.position = transformations.position
         self.scale = transformations.scale
         self.rotation = transformations.rotation

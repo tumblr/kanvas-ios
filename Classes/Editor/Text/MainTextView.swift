@@ -14,8 +14,8 @@ protocol MainTextViewDelegate: class {
     func didTapBackground()
 }
 
-/// Special text view for editing
-final class MainTextView: CustomizableTextView {
+/// Main text view for editing
+final class MainTextView: StylableTextView {
     
     weak var textViewDelegate: MainTextViewDelegate?
     
