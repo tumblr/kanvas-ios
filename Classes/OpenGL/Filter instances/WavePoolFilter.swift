@@ -5,11 +5,12 @@
 //
 
 import Foundation
+import GLKit
 
 /// Wave Pool Filter
 final class WavePoolFilter: GroupFilter {
 
-    init(glContext: EAGLContext?, transform: Transformation?) {
+    init(glContext: EAGLContext?, transform: GLKMatrix4?) {
         super.init(filters: [
             ImagePoolFilter(glContext: glContext, transform: transform),
             WaveFilter(glContext: glContext, transform: nil),

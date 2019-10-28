@@ -8,6 +8,8 @@ import UIKit
 import CoreMedia
 import AVFoundation
 import VideoToolbox
+import OpenGLES
+import GLKit
 
 /// Callbacks for opengl player
 protocol GLPlayerDelegate: class {
@@ -343,7 +345,7 @@ final class GLPlayer {
                 0.0, 0.0, 1.0, 0.0,
                 0.0, 0.0, 0.0, 1.0
             )
-            renderer.mediaTransform = Transformation(matrix: matrix)
+            renderer.mediaTransform = matrix
         }
     }
 

@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import GLKit
 
 /// Protocol for filters
 protocol FilterProtocol: class {
@@ -22,5 +23,6 @@ protocol FilterProtocol: class {
     /// Output format set by setupFormatDescription
     var outputFormatDescription: CMFormatDescription? { get set }
 
-    var transform: Transformation? { get set }
+    var transform: GLKMatrix4? { get set }
+
 }

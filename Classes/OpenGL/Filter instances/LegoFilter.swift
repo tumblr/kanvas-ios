@@ -10,11 +10,10 @@ import Foundation
 final class LegoFilter: Filter {
     
     override func setupShader() {
-        let fragment = Filter.loadShader("lego", type: .fragment)
-        let vertex = Filter.loadShader("Base", type: .vertex)
+        let fragment = Shader.getSourceCode("lego", type: .fragment)
+        let vertex = Shader.getSourceCode("base_filter", type: .vertex)
         if let fragment = fragment, let vertex = vertex {
-            let shader = Shader()
-            shader.setProgram(vertexShader: vertex, fragmentShader: fragment)
+            let shader = Shader(vertexShader: vertex, fragmentShader: fragment)
             self.shader = shader
         }
     }

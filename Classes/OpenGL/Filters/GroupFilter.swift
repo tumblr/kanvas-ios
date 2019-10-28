@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import GLKit
 
 /// A filter that renders shaders in a chain, with one output leading to the next
 class GroupFilter: FilterProtocol {
@@ -13,7 +14,7 @@ class GroupFilter: FilterProtocol {
     /// Output format
     var outputFormatDescription: CMFormatDescription?
 
-    var transform: Transformation?
+    var transform: GLKMatrix4?
 
     private var filters: [FilterProtocol] = []
     

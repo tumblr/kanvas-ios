@@ -8,5 +8,5 @@ varying lowp vec2 textureCoordinate;
 void main()
 {
     gl_Position = position;
-    textureCoordinate = (vec4(texturecoordinate.xy, 0., 1.) * transform).xy;
+    textureCoordinate = ((vec4((texturecoordinate.xy - 0.5) * 2., 0., 1.) * transform).xy / 2.) + 0.5;
 }

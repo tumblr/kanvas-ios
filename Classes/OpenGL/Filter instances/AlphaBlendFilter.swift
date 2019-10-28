@@ -24,11 +24,9 @@ final class AlphaBlendFilter: Filter {
     }
 
     override func setupShader() {
-        let fragment = Filter.loadShader("alpha_blend", type: .fragment)
-        let vertex = Filter.loadShader("alpha_blend", type: .vertex)
-        if let fragment = fragment, let vertex = vertex {
-            let shader = Shader()
-            shader.setProgram(vertexShader: vertex, fragmentShader: fragment)
+        if let fragment = Shader.getSourceCode("alpha_blend", type: .fragment),
+            let vertex = Shader.getSourceCode("base_filter", type: .vertex),
+            let shader = Shader(vertexShader: vertex, fragmentShader: fragment) {
             uniformTexture = GLU.getUniformLocation(shader.program, "textureOverlay")
             uniformOverlayScale = GLU.getUniformLocation(shader.program, "overlayScale")
             self.shader = shader

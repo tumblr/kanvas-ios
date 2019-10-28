@@ -7,6 +7,7 @@
 import AVFoundation
 import Foundation
 import OpenGLES
+import GLKit
 
 /// A basic filter implementation to render CVPixelBuffer
 class Filter: FilterProtocol {
@@ -36,12 +37,13 @@ class Filter: FilterProtocol {
     /// Time interval that the filter is running for
     var time: TimeInterval = 0
 
-    var transform: Transformation?
+    /// Transformation matrix that should be used for this filter
+    var transform: GLKMatrix4?
     
     /// Initializer with glContext
     ///
     /// - Parameter glContext: The current EAGLContext. Should be the same for the whole program
-    init(glContext: EAGLContext?, transform: Transformation?) {
+    init(glContext: EAGLContext?, transform: GLKMatrix4?) {
         self.glContext = glContext
         self.transform = transform
     }
@@ -174,11 +176,10 @@ class Filter: FilterProtocol {
     
     /// Should be overridden
     func setupShader() {
-        let fragment = Filter.loadShader("Base", type: .fragment)
-        let vertex = Filter.loadShader("Base", type: .vertex)
+        let fragment = Shader.getSourceCode("base_filter", type: .fragment)
+        let vertex = Shader.getSourceCode("base_filter", type: .vertex)
         if let fragment = fragment, let vertex = vertex {
-            let shader = Shader()
-            shader.setProgram(vertexShader: vertex, fragmentShader: fragment)
+            let shader = Shader(vertexShader: vertex, fragmentShader: fragment)
             self.shader = shader
         }
     }
@@ -315,8 +316,10 @@ class Filter: FilterProtocol {
             self.time = time
             updateUniforms()
 
-            var transform = self.transform?.transformationMatrix ?? Transformation.identity
-            GL_glUniformMatrix4fv(uniformTransform, 1, 0, &transform)
+            let transform = self.transform ?? GLKMatrix4Identity
+            transform.unsafePointer { m in
+                glUniformMatrix4fv(uniformTransform, 1, 0, m)
+            }
 
             // Set up our destination pixel buffer as the framebuffer's render target.
             glActiveTexture(GL_TEXTURE0.ui)
@@ -353,27 +356,7 @@ class Filter: FilterProtocol {
             return nil
         }
     }
-    
-    /// Loads shaders as a String
-    ///
-    /// - Parameters:
-    ///   - name: The name of the filter
-    ///   - type: fragment or vertex
-    /// - Returns: Bool for whether the shader was loaded
-    class func loadShader(_ name: String, type: ShaderExtension) -> String? {
-        let extString: String = type.rawValue
-        guard let path = Bundle(for: Filter.self).path(forResource: String("\(ShaderConstants.shaderDirectory)/\(name)"), ofType: extString) else {
-            return nil
-        }
-        do {
-            let source = try String(contentsOfFile: path, encoding: .utf8)
-            return source
-        }
-        catch {
-            return nil
-        }
-    }
-    
+
     // MARK: - uniforms
     /// This should be overridden by final class implementations
     func updateUniforms() {

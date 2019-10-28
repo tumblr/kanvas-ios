@@ -6,6 +6,8 @@
 
 import UIKit
 import CoreVideo
+import OpenGLES
+import GLKit
 
 /// OpenGL view for rendering a buffer of pixels.
 final class GLPixelBufferView: UIView {
@@ -78,11 +80,28 @@ final class GLPixelBufferView: UIView {
                 success = false
                 break bail
             }
-            renderShader = Shader()
-            if let renderShader = renderShader {
-                inputImageTexture = renderShader.getParameterLocation(name: "inputImageTexture")
-                uniformTransform = renderShader.getParameterLocation(name: "transform")
+            guard let vertexShaderSource = Shader.getSourceCode("base_render", type: .vertex),
+                let fragmentShaderSource = Shader.getSourceCode("base_render", type: .fragment),
+                let shader = Shader(vertexShader: vertexShaderSource, fragmentShader: fragmentShaderSource) else {
+                    assertionFailure("Failed to load shader")
+                    success = false
+                    break bail
             }
+            let inputImageTexture = shader.getParameterLocation(name: "inputImageTexture")
+            guard inputImageTexture >= 0 else {
+                assertionFailure("Failed to find inputImageTexture parameter")
+                success = false
+                break bail
+            }
+            let uniformTransform = shader.getParameterLocation(name: "transform")
+            guard uniformTransform >= 0 else {
+                    assertionFailure("Failed to find uniformTransform parameter")
+                    success = false
+                    break bail
+            }
+            self.renderShader = shader
+            self.inputImageTexture = inputImageTexture
+            self.uniformTransform = uniformTransform
         } while false
         if !success {
             self.reset()
@@ -197,9 +216,11 @@ final class GLPixelBufferView: UIView {
         glBindTexture(CVOpenGLESTextureGetTarget(texture), CVOpenGLESTextureGetName(texture))
         glUniform1i(inputImageTexture, 0)
 
-        var identity = Transformation.identity
-        GL_glUniformMatrix4fv(uniformTransform, 1, 0, &identity)
-        
+        let transformMatrix = self.tranformMatrix(mediaDimensions: CGSize(width: frameWidth, height: frameHeight), renderDimensions: self.bounds.size)
+        transformMatrix.unsafePointer { m in
+            glUniformMatrix4fv(uniformTransform, 1, 0, m)
+        }
+
         // Set texture parameters
         glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MIN_FILTER.ui, GL_LINEAR)
         glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MAG_FILTER.ui, GL_LINEAR)
@@ -208,29 +229,9 @@ final class GLPixelBufferView: UIView {
         
         glVertexAttribPointer(ShaderConstants.attribVertex, 2, GL_FLOAT.ui, 0, 0, ShaderConstants.squareVertices)
         glEnableVertexAttribArray(ShaderConstants.attribVertex)
-        
-        // Preserve aspect ratio; fill layer bounds
-        var textureSamplingSize = CGSize()
-        let cropScaleAmount = CGSize(width: self.bounds.size.width / frameWidth.g, height: self.bounds.size.height / frameHeight.g)
-        if cropScaleAmount.height > cropScaleAmount.width {
-            textureSamplingSize.width = self.bounds.size.width / (frameWidth.g * cropScaleAmount.height)
-            textureSamplingSize.height = 1.0
-        }
-        else {
-            textureSamplingSize.width = 1.0
-            textureSamplingSize.height = self.bounds.size.height / (frameHeight.g * cropScaleAmount.width)
-        }
-        textureSamplingSize.width = 1.0
-        textureSamplingSize.height = 1.0
 
         // Perform a vertical flip by swapping the top left and the bottom left coordinate.
         // CVPixelBuffers have a top left origin and OpenGL has a bottom left origin.
-        let passThroughTextureVertices: [GLfloat] = [
-            (1.0 - textureSamplingSize.width.f) / 2.0, (1.0 + textureSamplingSize.height.f) / 2.0, // top left
-            (1.0 + textureSamplingSize.width.f) / 2.0, (1.0 + textureSamplingSize.height.f) / 2.0, // top right
-            (1.0 - textureSamplingSize.width.f) / 2.0, (1.0 - textureSamplingSize.height.f) / 2.0, // bottom left
-            (1.0 + textureSamplingSize.width.f) / 2.0, (1.0 - textureSamplingSize.height.f) / 2.0, // bottom right
-        ]
         let textureVertices: [GLfloat] = [
             0.0, 1.0,
             1.0, 1.0,
@@ -248,6 +249,27 @@ final class GLPixelBufferView: UIView {
         glBindTexture(CVOpenGLESTextureGetTarget(texture), 0)
         glBindTexture(GL_TEXTURE_2D.ui, 0)
     }
+
+    func tranformMatrix(mediaDimensions: CGSize, renderDimensions: CGSize) -> GLKMatrix4 {
+        var scale = CGSize()
+        let screenScale = CGSize(width: renderDimensions.width / mediaDimensions.width, height: renderDimensions.height / mediaDimensions.height)
+        if screenScale.height > screenScale.width {
+            scale.width = renderDimensions.width / (mediaDimensions.width * screenScale.height)
+            scale.height = 1.0
+        }
+        else {
+            scale.width = 1.0
+            scale.height = renderDimensions.height / (mediaDimensions.height * screenScale.width)
+        }
+        let translate = CGSize(width: (1.0 - scale.width) / 2.0, height: (1.0 - scale.height) / 2.0)
+        return GLKMatrix4Make(
+            Float(scale.width), 0.0,                 0.0, Float(translate.width),
+            0.0,                Float(scale.height), 0.0, Float(translate.height),
+            0.0,                0.0,                 1.0, 0.0,
+            0.0,                0.0,                 0.0, 1.0
+        )
+    }
+
 
     /// Flushes the texture cache
     func flushPixelBufferCache() {

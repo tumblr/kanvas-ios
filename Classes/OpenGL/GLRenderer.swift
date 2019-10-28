@@ -8,6 +8,7 @@ import AVFoundation
 import func AVFoundation.AVMakeRect
 import Foundation
 import OpenGLES
+import GLKit
 
 /// Callbacks for opengl rendering
 protocol GLRendererDelegate: class {
@@ -34,7 +35,7 @@ protocol GLRendering: class {
     var delegate: GLRendererDelegate? { get set }
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
-    var mediaTransform: Transformation? { get set }
+    var mediaTransform: GLKMatrix4? { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func output(filteredPixelBuffer: CVPixelBuffer)
     func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
@@ -54,7 +55,8 @@ final class GLRenderer: GLRendering {
     // Image overlays
     var imageOverlays: [CGImage] = []
 
-    var mediaTransform: Transformation? {
+    /// Transformation matrix that is used by filters to propertly render media
+    var mediaTransform: GLKMatrix4? {
         didSet {
             synchronized(self) {
                 self.filter.transform = self.mediaTransform

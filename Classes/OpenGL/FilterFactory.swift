@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import GLKit
 
 /// Creates Filter instances from filter types
 struct FilterFactory {
@@ -12,7 +13,7 @@ struct FilterFactory {
     /// Creates a filter for the provided type and glContext
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
-    static func createFilter(type: FilterType, glContext: EAGLContext?, transform: Transformation?) -> FilterProtocol {
+    static func createFilter(type: FilterType, glContext: EAGLContext?, transform: GLKMatrix4?) -> FilterProtocol {
         var newFilter: FilterProtocol
         switch type {
         case .passthrough: fallthrough
@@ -54,7 +55,7 @@ struct FilterFactory {
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
     /// - Parameter overlays: Array of CVPixelBuffer instances to overlay.
-    static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer], transform: Transformation?) -> FilterProtocol {
+    static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer], transform: GLKMatrix4?) -> FilterProtocol {
         guard overlays.count > 0 else {
             return FilterFactory.createFilter(type: type, glContext: glContext, transform: transform)
         }
