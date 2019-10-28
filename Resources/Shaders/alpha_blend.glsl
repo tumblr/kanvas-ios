@@ -12,11 +12,11 @@ void main()
     lowp vec2 uv = vec2((textureCoordinate.x - rangeX.s) / (rangeX.t - rangeX.s), textureCoordinate.y);
 
     lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
-    lowp vec4 textureColor2 = texture2D(textureOverlay, uv);
+    lowp vec4 textureOverlayColor = texture2D(textureOverlay, uv);
     if (uv.x < 0. || uv.x >= 1.) {
-        textureColor2.a = 0.;
+        textureOverlayColor.a = 0.;
     }
 
     lowp float alpha = 1.;
-    gl_FragColor = vec4(mix(textureColor.rgb, textureColor2.rgb, textureColor2.a * alpha), textureColor.a);
+    gl_FragColor = vec4(mix(textureColor.rgb, textureOverlayColor.rgb, textureOverlayColor.a * alpha), textureColor.a);
 }
