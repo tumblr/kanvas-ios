@@ -690,6 +690,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
             self?.modeAndShootController.closeTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(false)
             self?.clipsController.hidePreviewButton()
         }
     }
@@ -703,6 +704,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(!filterSelectorVisible)
             self?.clipsController.showPreviewButton()
         }
     }
@@ -716,6 +718,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(!filterSelectorVisible)
             self?.clipsController.showPreviewButton()
             self?.updateLastClipPreview()
         }
