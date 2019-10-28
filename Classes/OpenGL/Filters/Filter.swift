@@ -27,18 +27,21 @@ class Filter: FilterProtocol {
     
     /// The output format description from a CMSampleBuffer
     var outputFormatDescription: CMFormatDescription?
-    
-    /// Output width for texture
-    var outputWidth: Int?
-    
-    /// Output height for texture
-    var outputHeight: Int?
 
     /// Time interval that the filter is running for
     var time: TimeInterval = 0
 
     /// Transformation matrix that should be used for this filter
     var transform: GLKMatrix4?
+
+    /// Input dimensions
+    var inputDimensions: CGSize = .zero
+
+    /// Output dimensions
+    var outputDimensions: CGSize = .zero
+
+    /// Switch the input dimensions when determining output dimensions
+    var switchInputDimensions: Bool = false
     
     /// Initializer with glContext
     ///
@@ -51,17 +54,29 @@ class Filter: FilterProtocol {
     /// Method to initialize the filter with the right output
     ///
     /// - Parameter sampleBuffer: the input sample buffer
-    func setupFormatDescription(from sampleBuffer: CMSampleBuffer) {
+    func setupFormatDescription(from sampleBuffer: CMSampleBuffer, outputDimensions: CGSize) {
         if outputFormatDescription == nil, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
-            let dimensions = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
-            deleteBuffers()
-            if !initializeBuffersWithOutputDimensions(dimensions) {
-                assertionFailure("Problem initializing filter")
-            }
+            setupFormatDescription(inputFormatDescription)
+        }
+    }
+
+    func setupFormatDescription(_ inputFormatDescription: CMFormatDescription) {
+        deleteBuffers()
+        let inputDimensionsCM = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
+        let inputDimensions = CGSize(width: inputDimensionsCM.width.g, height: inputDimensionsCM.height.g)
+        var outputDimensionsNonZero = outputDimensions == .zero ? inputDimensions : outputDimensions
+        if switchInputDimensions {
+            outputDimensionsNonZero = CGSize(width: outputDimensionsNonZero.height, height: outputDimensionsNonZero.width)
+        }
+        self.inputDimensions = inputDimensions
+        self.outputDimensions = outputDimensionsNonZero
+        guard initializeBuffers() else {
+            assertionFailure("Problem initializing filter")
+            return
         }
     }
     
-    private func initializeBuffersWithOutputDimensions(_ outputDimensions: CMVideoDimensions) -> Bool {
+    private func initializeBuffers() -> Bool {
         guard let glContext = glContext else {
             return false
         }
@@ -80,10 +95,13 @@ class Filter: FilterProtocol {
         glDisable(GL_DEPTH_TEST.ui)
         glGenFramebuffers(1, &offscreenBufferHandle)
         glBindFramebuffer(GL_FRAMEBUFFER.ui, offscreenBufferHandle)
+
+        guard inputDimensions != .zero && outputDimensions != .zero else {
+            assertionFailure("Input and output dimensions cannot be zero")
+            return false
+        }
         
         do {
-            self.outputWidth = Int(outputDimensions.width)
-            self.outputHeight = Int(outputDimensions.height)
             var err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, nil, glContext, nil, &textureCache)
             if err != 0 {
                 throw GLError.setupError("Error at CVOpenGLESTextureCacheCreate")
@@ -103,7 +121,7 @@ class Filter: FilterProtocol {
             uniformTransform = GLU.getUniformLocation(shader.program, "transform")
             
             let maxRetainedBufferCount = ShaderConstants.retainedBufferCount
-            bufferPool = createPixelBufferPool(outputDimensions.width, outputDimensions.height, FourCharCode(kCVPixelFormatType_32BGRA), Int32(maxRetainedBufferCount))
+            bufferPool = createPixelBufferPool(outputDimensions.width.i, outputDimensions.height.i, FourCharCode(kCVPixelFormatType_32BGRA), Int32(maxRetainedBufferCount))
             if bufferPool == nil {
                 throw GLError.setupError("Problem initializing a buffer pool.")
             }
@@ -245,11 +263,6 @@ class Filter: FilterProtocol {
             if offscreenBufferHandle == 0 {
                 throw GLError.setupError("Uninitialized buffer")
             }
-            let srcDimensions = CMVideoDimensions(width: Int32(CVPixelBufferGetWidth(pixelBuffer)), height: Int32(CVPixelBufferGetHeight(pixelBuffer)))
-            let dstDimensions = CMVideoFormatDescriptionGetDimensions(outputFormatDescription)
-            if srcDimensions.width != dstDimensions.width || srcDimensions.height != dstDimensions.height {
-                throw GLError.setupError("Invalid pixel buffer dimensions")
-            }
             if CVPixelBufferGetPixelFormatType(pixelBuffer) != OSType(kCVPixelFormatType_32BGRA) {
                 throw GLError.setupError("Invalid pixel buffer format")
             }
@@ -265,8 +278,8 @@ class Filter: FilterProtocol {
                                                                nil,
                                                                GL_TEXTURE_2D.ui,
                                                                GL_RGBA,
-                                                               srcDimensions.width,
-                                                               srcDimensions.height,
+                                                               inputDimensions.width.i,
+                                                               inputDimensions.height.i,
                                                                GL_BGRA.ui,
                                                                GL_UNSIGNED_BYTE.ui,
                                                                0,
@@ -300,8 +313,8 @@ class Filter: FilterProtocol {
                                                                nil,
                                                                GL_TEXTURE_2D.ui,
                                                                GL_RGBA,
-                                                               dstDimensions.width,
-                                                               dstDimensions.height,
+                                                               outputDimensions.width.i,
+                                                               outputDimensions.height.i,
                                                                GL_BGRA.ui,
                                                                GL_UNSIGNED_BYTE.ui,
                                                                0,
@@ -311,7 +324,7 @@ class Filter: FilterProtocol {
             }
             
             glBindFramebuffer(GL_FRAMEBUFFER.ui, offscreenBufferHandle)
-            glViewport(0, 0, srcDimensions.width, srcDimensions.height)
+            glViewport(0, 0, outputDimensions.width.i, outputDimensions.height.i)
             shader.useProgram()
             self.time = time
             updateUniforms()

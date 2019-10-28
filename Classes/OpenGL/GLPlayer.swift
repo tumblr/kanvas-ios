@@ -298,6 +298,8 @@ final class GLPlayer {
             return
         }
 
+        renderer.mediaTransform = nil
+
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
         renderer.processSampleBuffer(sampleBuffer, time: startTime)
@@ -326,6 +328,11 @@ final class GLPlayer {
             return
         }
 
+        if let track = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first {
+            renderer.switchInputDimensions = track.orientation.isPortrait
+            renderer.mediaTransform = track.glPreferredTransform
+        }
+
         avPlayer.replaceCurrentItem(with: playerItem)
         avPlayer.play()
 
@@ -335,18 +342,26 @@ final class GLPlayer {
         displayLink?.add(to: .main, forMode: .common)
         let frameRate = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first?.nominalFrameRate ?? 10.0
         displayLink?.preferredFramesPerSecond = Int(ceil(frameRate))
+    }
 
-        let transform = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first?.preferredTransform
-        let size = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first?.naturalSize
-        if let t = transform, let s = size {
-            let matrix = GLKMatrix4Make(
-                t.a.f, t.c.f, 0.0, t.tx.f / s.width.f,
-                t.b.f, t.d.f, 0.0, t.ty.f / s.height.f,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0
-            )
-            renderer.mediaTransform = matrix
+    func transformMatrix(mediaDimensions: CGSize, renderDimensions: CGSize) -> GLKMatrix4 {
+        var scale = CGSize()
+        let screenScale = CGSize(width: renderDimensions.width / mediaDimensions.width, height: renderDimensions.height / mediaDimensions.height)
+        if screenScale.height > screenScale.width {
+            scale.width = renderDimensions.width / (mediaDimensions.width * screenScale.height)
+            scale.height = 1.0
         }
+        else {
+            scale.width = 1.0
+            scale.height = renderDimensions.height / (mediaDimensions.height * screenScale.width)
+        }
+        let translate = CGSize(width: (1.0 - scale.width) / 2.0, height: (1.0 - scale.height) / 2.0)
+        return GLKMatrix4Make(
+            Float(scale.width), 0.0,                 0.0, Float(translate.width),
+            0.0,                Float(scale.height), 0.0, Float(translate.height),
+            0.0,                0.0,                 1.0, 0.0,
+            0.0,                0.0,                 0.0, 1.0
+        )
     }
 
     @objc private func step() {

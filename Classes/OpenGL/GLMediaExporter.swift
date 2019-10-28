@@ -12,6 +12,7 @@ import Photos
 enum GLMediaExporterError: Error {
     case failedDeleteExistingFile(Error)
     case noPresets
+    case noVideoTrack
     case noCompositor
     case export(Error)
     case incomplete
@@ -36,6 +37,8 @@ final class GLMediaExporter: MediaExporting {
 
     /// The image overlays to apply on top of each frame.
     var imageOverlays: [CGImage] = []
+
+    var dimensions: CGSize = .zero
 
     /// A timer you can hook into to get progress updates from an export.
     private(set) var progressTimer: Timer?
@@ -93,20 +96,19 @@ final class GLMediaExporter: MediaExporting {
         let asset = AVAsset(url: url)
         let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
         videoComposition.customVideoCompositorClass = GLVideoCompositor.self
-        guard let clipVideoTrack = asset.tracks(withMediaType: .video).first else { return }
-        let transformer = AVMutableVideoCompositionLayerInstruction(assetTrack: clipVideoTrack)
-        let videoTransform: CGAffineTransform = clipVideoTrack.preferredTransform
-        transformer.setTransform(clipVideoTrack.preferredTransform, at: .zero)
-        videoComposition.renderSize = UIScreen.main.bounds.size
-        videoComposition.frameDuration = CMTime(seconds: 30, preferredTimescale: 1) // TODO actual framerate
-        videoComposition.renderScale = 1.0
-        let instruction = AVMutableVideoCompositionInstruction()
-        instruction.timeRange = CMTimeRange(start: .zero, duration: CMTime(seconds: 60, preferredTimescale: 30))
-        instruction.layerInstructions = [transformer]
-        videoComposition.instructions = [instruction]
+
+        let presets = AVAssetExportSession.exportPresets(compatibleWith: asset)
+        guard let presetName = presets.first(where: { $0 == AVAssetExportPresetHighestQuality }) else {
+            completion(nil, GLMediaExporterError.noPresets)
+            return
+        }
+        guard let track = asset.tracks(withMediaType: .video).first else {
+            completion(nil, GLMediaExporterError.noVideoTrack)
+            return
+        }
 
         let outputURL = NSURL.createNewVideoURL()
-        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
+        let exportSession = AVAssetExportSession(asset: asset, presetName: presetName)
         exportSession?.outputFileType = .mov
         exportSession?.outputURL = outputURL
         exportSession?.shouldOptimizeForNetworkUse = true
@@ -115,6 +117,8 @@ final class GLMediaExporter: MediaExporting {
             completion(nil, GLMediaExporterError.noCompositor)
             return
         }
+        glVideoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
+        glVideoCompositor.renderer.mediaTransform = track.glPreferredTransform
         glVideoCompositor.imageOverlays = imageOverlays
         glVideoCompositor.filterType = filterType
         glVideoCompositor.refreshFilter()

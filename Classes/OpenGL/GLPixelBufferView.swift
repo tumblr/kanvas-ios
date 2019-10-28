@@ -16,10 +16,13 @@ final class GLPixelBufferView: UIView {
     private var textureCache: CVOpenGLESTextureCache?
     private var width: GLint = 0
     private var height: GLint = 0
+
     private var frameBufferHandle: GLuint = 0
     private var colorBufferHandle: GLuint = 0
+
     private var inputImageTexture: GLint = 0
     private var uniformTransform: GLint = 0
+
     
     override class var layerClass: AnyClass {
         return CAEAGLLayer.self
@@ -269,7 +272,6 @@ final class GLPixelBufferView: UIView {
             0.0,                0.0,                 0.0, 1.0
         )
     }
-
 
     /// Flushes the texture cache
     func flushPixelBufferCache() {

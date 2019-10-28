@@ -29,7 +29,7 @@ struct ShaderConstants {
         0.0,  1.0, // top left
         1.0,  1.0, // top right
     ]
-        
+
     static let attribVertex: GLuint = 0
     static let attribTexturePosition: GLuint = 1
     static let numAttributes: GLuint = 2

@@ -36,6 +36,8 @@ protocol GLRendering: class {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     var mediaTransform: GLKMatrix4? { get set }
+    var outputDimensions: CGSize { get set }
+    var switchInputDimensions: Bool { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func output(filteredPixelBuffer: CVPixelBuffer)
     func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
@@ -49,10 +51,10 @@ final class GLRenderer: GLRendering {
     /// Optional delegate
     weak var delegate: GLRendererDelegate?
 
-    // OpenGL Context
+    /// OpenGL Context
     let glContext: EAGLContext?
 
-    // Image overlays
+    /// Image overlays
     var imageOverlays: [CGImage] = []
 
     /// Transformation matrix that is used by filters to propertly render media
@@ -64,8 +66,21 @@ final class GLRenderer: GLRendering {
         }
     }
 
-    // Current filter type
+    var switchInputDimensions: Bool {
+        didSet {
+            synchronized(self) {
+                self.filter.switchInputDimensions = self.switchInputDimensions
+            }
+        }
+    }
+
+    /// Current filter type
     var filterType: FilterType = .passthrough
+
+    /// Output dimensions for media
+    /// This may be different than the input dimensions, not just because of resolution differences,
+    /// but also because the `mediaTransform` may change the dimensions.
+    var outputDimensions: CGSize = .zero
 
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
@@ -78,6 +93,7 @@ final class GLRenderer: GLRendering {
     init() {
         glContext = EAGLContext(api: .openGLES3)
         filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext, transform: mediaTransform)
+        switchInputDimensions = false
     }
 
     /// Processes a sample buffer, but swallows the completion
@@ -97,7 +113,7 @@ final class GLRenderer: GLRendering {
         let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         let filterAlreadyInitialized: Bool = synchronized(self) {
             if filter.outputFormatDescription == nil {
-                filter.setupFormatDescription(from: sampleBuffer)
+                filter.setupFormatDescription(from: sampleBuffer, outputDimensions: outputDimensions)
                 return false
             }
             return true
@@ -169,7 +185,7 @@ final class GLRenderer: GLRendering {
         }
         
         if imageFilter.outputFormatDescription == nil {
-            imageFilter.setupFormatDescription(from: sampleBuffer)
+            imageFilter.setupFormatDescription(from: sampleBuffer, outputDimensions: outputDimensions)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer, time: time)
@@ -181,6 +197,7 @@ final class GLRenderer: GLRendering {
     func refreshFilter() {
         synchronized(self) {
             filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() }, transform: mediaTransform)
+            filter.switchInputDimensions = self.switchInputDimensions
         }
     }
 

@@ -11,10 +11,33 @@ import GLKit
 /// A filter that renders shaders in a chain, with one output leading to the next
 class GroupFilter: FilterProtocol {
 
-    /// Output format
-    var outputFormatDescription: CMFormatDescription?
+    var switchInputDimensions: Bool {
+        get {
+            return filters.first?.switchInputDimensions ?? false
+        }
+        set {
+            filters.first?.switchInputDimensions = newValue
+        }
+    }
 
-    var transform: GLKMatrix4?
+    /// Output format
+    var outputFormatDescription: CMFormatDescription? {
+        get {
+            return filters.first?.outputFormatDescription
+        }
+        set {
+            filters.first?.outputFormatDescription = newValue
+        }
+    }
+
+    var transform: GLKMatrix4? {
+        get {
+            return filters.first?.transform
+        }
+        set {
+            filters.first?.transform = newValue
+        }
+    }
 
     private var filters: [FilterProtocol] = []
     
@@ -25,14 +48,19 @@ class GroupFilter: FilterProtocol {
     deinit {
         cleanup()
     }
-    
-    func setupFormatDescription(from sampleBuffer: CMSampleBuffer) {
-        if outputFormatDescription == nil {
-            if let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
-                outputFormatDescription = formatDescription
-            }
-            for filter in filters {
-                filter.setupFormatDescription(from: sampleBuffer)
+
+    func setupFormatDescription(from sampleBuffer: CMSampleBuffer, outputDimensions: CGSize) {
+        if outputFormatDescription == nil, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
+            setupFormatDescription(inputFormatDescription)
+        }
+    }
+
+    func setupFormatDescription(_ formatDescription: CMFormatDescription) {
+        var description = formatDescription
+        for filter in filters {
+            filter.setupFormatDescription(description)
+            if let outputFormatDescription = filter.outputFormatDescription {
+                description = outputFormatDescription
             }
         }
     }
@@ -48,8 +76,8 @@ class GroupFilter: FilterProtocol {
     }
     
     func cleanup() {
-        if outputFormatDescription != nil {
-            outputFormatDescription = nil
+        for filter in filters {
+            filter.cleanup()
         }
     }
 }

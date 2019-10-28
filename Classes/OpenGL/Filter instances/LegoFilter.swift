@@ -19,9 +19,7 @@ final class LegoFilter: Filter {
     }
     
     override func updateUniforms() {
-        if let width = outputWidth, let height = outputHeight {
-            let resolution: [Float] = [Float(width), Float(height)]
-            shader?.setFloat2Uniform(key: "iResolution", value: resolution)
-        }
+        let resolution: [Float] = [Float(outputDimensions.width), Float(outputDimensions.height)]
+        shader?.setFloat2Uniform(key: "iResolution", value: resolution)
     }
 }
