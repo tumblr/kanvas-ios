@@ -20,7 +20,7 @@ final class AlphaBlendFilter: Filter {
     init(glContext: EAGLContext?, pixelBuffer: CVPixelBuffer) {
         self.pixelBuffer = pixelBuffer
         self.overlayDimensions = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
-        super.init(glContext: glContext, transform: nil)
+        super.init(glContext: glContext)
     }
 
     override func setupShader() {

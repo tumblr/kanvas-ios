@@ -46,9 +46,8 @@ class Filter: FilterProtocol {
     /// Initializer with glContext
     ///
     /// - Parameter glContext: The current EAGLContext. Should be the same for the whole program
-    init(glContext: EAGLContext?, transform: GLKMatrix4?) {
+    init(glContext: EAGLContext?) {
         self.glContext = glContext
-        self.transform = transform
     }
     
     /// Method to initialize the filter with the right output

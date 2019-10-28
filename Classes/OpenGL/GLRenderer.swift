@@ -92,8 +92,9 @@ final class GLRenderer: GLRendering {
     /// - Parameter delegate: the callback
     init() {
         glContext = EAGLContext(api: .openGLES3)
-        filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext, transform: mediaTransform)
+        filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
         switchInputDimensions = false
+        mediaTransform = nil
     }
 
     /// Processes a sample buffer, but swallows the completion
@@ -169,7 +170,7 @@ final class GLRenderer: GLRendering {
             processingImage = false
         }
 
-        let imageFilter = FilterFactory.createFilter(type: self.filterType, glContext: glContext, transform: nil)
+        let imageFilter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
         var sampleTime = CMSampleTimingInfo()
         var videoInfo: CMVideoFormatDescription?
         CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &videoInfo)
@@ -196,7 +197,8 @@ final class GLRenderer: GLRendering {
     // MARK: - changing filters
     func refreshFilter() {
         synchronized(self) {
-            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() }, transform: mediaTransform)
+            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
+            filter.transform = mediaTransform
             filter.switchInputDimensions = self.switchInputDimensions
         }
     }

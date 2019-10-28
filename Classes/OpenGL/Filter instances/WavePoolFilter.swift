@@ -10,10 +10,10 @@ import GLKit
 /// Wave Pool Filter
 final class WavePoolFilter: GroupFilter {
 
-    init(glContext: EAGLContext?, transform: GLKMatrix4?) {
+    init(glContext: EAGLContext?) {
         super.init(filters: [
-            ImagePoolFilter(glContext: glContext, transform: transform),
-            WaveFilter(glContext: glContext, transform: nil),
+            ImagePoolFilter(glContext: glContext),
+            WaveFilter(glContext: glContext),
         ])
     }
 
