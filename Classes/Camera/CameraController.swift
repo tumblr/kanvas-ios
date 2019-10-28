@@ -458,8 +458,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         else {
             let showMediaPicker = !filterSettingsController.isFilterSelectorVisible()
             modeAndShootController.toggleMediaPickerButton(showMediaPicker)
+            // If it finished recording, then there is at least one clip and button shouldn't be shown.
         }
-        // If it finished recording, then there is at least one clip and button shouldn't be shown.
     }
     
     /// This enables the camera view user interaction based on the photo capture
