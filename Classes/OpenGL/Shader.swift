@@ -44,7 +44,7 @@ class Shader {
     
     init?(vertexShader: String, fragmentShader: String) {
         setProgram(vertexShader: vertexShader, fragmentShader: fragmentShader)
-        if program < 0 {
+        if program == 0 {
             return nil
         }
     }
