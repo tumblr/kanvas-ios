@@ -389,15 +389,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         closeMenuButtonPressed()
     }
     
-    func editorShouldShowColorSelectorTooltip() -> Bool {
-        guard let delegate = delegate else { return false }
-        return delegate.editorShouldShowColorSelectorTooltip()
-    }
-    
-    func didDismissColorSelectorTooltip() {
-        delegate?.didDismissColorSelectorTooltip()
-    }
-    
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
         guard let delegate = delegate else { return false }
         return delegate.editorShouldShowStrokeSelectorAnimation()
@@ -407,7 +398,36 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         delegate?.didEndStrokeSelectorAnimation()
     }
     
+    // MARK: - EditorTextControllerDelegate
+    
+    func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        if options.haveText {
+            editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
+        }
+        closeMenuButtonPressed()
+    }
+    
+    func didMoveToolsUp() {
+        editorView.textCanvas.removeSelectedText()
+    }
+    
+    // MARK: - DrawingControllerDelegate & EditorTextControllerDelegate
+    
+    func editorShouldShowColorSelectorTooltip() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowColorSelectorTooltip()
+    }
+    
+    func didDismissColorSelectorTooltip() {
+        delegate?.didDismissColorSelectorTooltip()
+    }
+    
     func didStartColorSelection() {
+        drawingController.showCanvas(false)
+        editorView.showTextCanvas(false)
+    }
+    
+    func didStartMovingColorSelector() {
         if !player.isMediaOnePhoto() {
             player.pause()
         }
@@ -417,6 +437,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         if !player.isMediaOnePhoto() {
             player.resume()
         }
+        drawingController.showCanvas(true)
+        editorView.showTextCanvas(true)
     }
     
     func getColor(from point: CGPoint) -> UIColor {
@@ -426,16 +448,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didDisplayFirstFrame(_ image: UIImage) {
         addCarouselDefaultColors(image)
     }
-    
-    // MARK: - EditorTextControllerDelegate
-    
-    func didConfirmText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
-        if options.haveText {
-            editorView.textCanvas.addText(options: options, transformations: transformations, size: size)
-        }
-        closeMenuButtonPressed()
-    }
-    
+
     // MARK: - Public interface
     
     /// shows or hides the confirm button

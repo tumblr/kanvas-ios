@@ -25,10 +25,9 @@ final class StylableTextView: UITextView {
         }
     }
     
-    override var frame: CGRect {
-        didSet {
-            centerContentVertically()
-        }
+    override func layoutIfNeeded() {
+        super.layoutIfNeeded()
+        centerContentVertically()
     }
     
     init() {

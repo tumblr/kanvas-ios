@@ -553,14 +553,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
     }
     
-    /// shows or hides all the menus
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showTools(show: Bool) {
-        showTopButtons(show)
-        showBottomPanel(show)
-    }
-    
     /// shows or hides the overlay of the stroke selector
     ///
     /// - Parameter show: true to show, false to hide
@@ -574,6 +566,24 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         else {
             self.overlay.alpha = show ? 1 : 0
         }
+    }
+    
+    /// shows or hides the drawing canvas
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCanvas(_ show: Bool) {
+        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+            self.drawingCanvas.alpha = show ? 1 : 0
+            self.temporalImageView.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides all the menus
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showTools(show: Bool) {
+        showTopButtons(show)
+        showBottomPanel(show)
     }
     
     // MARK: - Public interface

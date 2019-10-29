@@ -199,11 +199,21 @@ final class EditorView: UIView, TextCanvasDelegate {
         
         navigationContainer.addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin * 2 + EditorViewConstants.confirmButtonSize
-
+        let buttonOnTheRight: UIButton
+        let trailingMargin: CGFloat
+        
+        if showSaveButton {
+            buttonOnTheRight = saveButton
+            trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
+        }
+        else {
+            buttonOnTheRight = confirmOrPostButton()
+            trailingMargin = confirmOrPostButtonHorizontalMargin()
+        }
+        
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
+            collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight.leadingAnchor, constant: -trailingMargin / 2),
             collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
         ])
@@ -314,6 +324,15 @@ final class EditorView: UIView, TextCanvasDelegate {
         }
     }
     
+    func confirmOrPostButtonHorizontalMargin() -> CGFloat {
+        switch mainActionMode {
+        case .confirm:
+            return EditorViewConstants.confirmButtonHorizontalMargin
+        case .post:
+            return EditorViewConstants.postButtonHorizontalMargin
+        }
+    }
+    
     // MARK: - buttons
     @objc private func closeButtonPressed() {
         delegate?.didTapCloseButton()
@@ -374,6 +393,15 @@ final class EditorView: UIView, TextCanvasDelegate {
     func showCloseButton(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.closeButton.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the text canvas
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTextCanvas(_ show: Bool) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.textCanvas.alpha = show ? 1 : 0
         }
     }
     

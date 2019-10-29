@@ -17,10 +17,18 @@ class MockDashboardViewController: UIViewController {
 
     override func loadView() {
         let view = UIView(frame: UIScreen.main.bounds)
-        view.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            view.backgroundColor = .systemBackground
+        }
+        else {
+            view.backgroundColor = .white
+        }
         self.view = view
 
         let label = UILabel(frame: .zero)
+        if #available(iOS 13.0, *) {
+            label.textColor = .label
+        }
         label.text = "↝ Swipe right to open Kanvas ↝"
         label.textAlignment = .center
         label.sizeToFit()
@@ -30,7 +38,12 @@ class MockDashboardViewController: UIViewController {
 
         let button = UIButton(frame: .zero)
         button.setTitle("Tap to open Kanvas", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        if #available(iOS 13.0, *) {
+            button.setTitleColor(.label, for: .normal)
+        }
+        else {
+            button.setTitleColor(.black, for: .normal)
+        }
         button.addTarget(self, action: #selector(openKanvas), for: .touchUpInside)
         button.sizeToFit()
         button.frame.origin.x = (view.bounds.width / CGFloat(2.f)) - (button.frame.width / CGFloat(2.f))
