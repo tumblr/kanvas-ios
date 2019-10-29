@@ -23,8 +23,7 @@ class ShaderTests: XCTestCase {
                 XCTFail("Failed to load shader source code")
                 return
         }
-        let shader = Shader(vertexShader: vertexShaderCode, fragmentShader: fragmentShaderCode)
-        XCTAssertNotNil(shader)
+        let _ = Shader(vertexShader: vertexShaderCode, fragmentShader: fragmentShaderCode)
     }
 
 }
