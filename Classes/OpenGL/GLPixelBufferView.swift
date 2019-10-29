@@ -159,6 +159,7 @@ final class GLPixelBufferView: UIView {
             }
         }
         defer {
+            glFlush()
             if oldContext !== oglContext {
                 EAGLContext.setCurrent(oldContext)
             }
