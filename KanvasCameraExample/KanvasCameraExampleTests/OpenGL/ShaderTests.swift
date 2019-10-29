@@ -27,8 +27,4 @@ class ShaderTests: XCTestCase {
         XCTAssertNotNil(shader)
     }
 
-    func testShaderConstants() {
-        XCTAssertEqual(ShaderConstants.fragmentShader, "Shaders/base_render.glsl")
-    }
-
 }
