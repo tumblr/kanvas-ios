@@ -212,7 +212,7 @@ final class ColorSelectorView: UIView {
         delegate?.didPanCircle(recognizer: recognizer)
     }
     
-    // MARK: - Private utilitites
+    // MARK: - Private utilities
     
     /// Changes upper drop location on screen
     ///

@@ -23,13 +23,16 @@ protocol ColorSelectorControllerDelegate: class {
     /// - Returns: Color from image
     func getColor(at point: CGPoint) -> UIColor
     
-    /// Called when the selection circle is pressed
-    func didStartColorSelection()
+    /// Called when the selection circle appears
+    func didShowCircle()
+    
+    /// Called when the selection circle is starts its movement
+    func didStartMovingCircle()
 
     /// Called when the selection circle is released
     ///
     /// - Parameter color: selected color
-    func didEndColorSelection(color: UIColor)
+    func didEndMovingCircle(color: UIColor)
 }
 
 /// Controller for handling the color selector in the drawing menu.
@@ -84,6 +87,10 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
             colorSelectorView.showOverlay(true)
             colorSelectorView.showTooltip(true)
         }
+        
+        if show {
+            delegate?.didShowCircle()
+        }
     }
     
     /// Sets a new color for the color circle and drops
@@ -100,7 +107,7 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
     }
     
     /// Changes the color of the selection circle to the one from the initial position
-    func resetColorSelectorColor() {
+    func resetColor() {
         let color = getColor(at: circleInitialLocation)
         colorSelectorView.setColor(color)
     }
@@ -132,7 +139,7 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
     func didPanCircle(recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
-            delegate?.didStartColorSelection()
+            delegate?.didStartMovingCircle()
             if delegate?.shouldShowTooltip() == true {
                 colorSelectorView.showTooltip(false)
                 colorSelectorView.showOverlay(false)
@@ -145,7 +152,7 @@ final class ColorSelectorController: UIViewController, ColorSelectorViewDelegate
             let currentLocation = moveCircle(recognizer: recognizer)
             let color = getColor(at: currentLocation)
             show(false)
-            delegate?.didEndColorSelection(color: color)
+            delegate?.didEndMovingCircle(color: color)
         case .possible:
             break
         @unknown default:

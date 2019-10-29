@@ -20,6 +20,29 @@ protocol EditorTextControllerDelegate: class {
     
     /// Called when the keyboard moves up
     func didMoveToolsUp()
+    
+    /// Called to ask if color selector tooltip should be shown
+    ///
+    /// - Returns: Bool for tooltip
+    func editorShouldShowColorSelectorTooltip() -> Bool
+    
+    /// Called after the color selector tooltip is dismissed
+    func didDismissColorSelectorTooltip()
+    
+    /// Called when the color selector is panned
+    ///
+    /// - Parameter point: location to take the color from
+    /// - Returns: Color from image
+    func getColor(from point: CGPoint) -> UIColor
+    
+    /// Called when the color selector appears
+    func didStartColorSelection()
+    
+    /// Called when the color selector starts its movement
+    func didStartMovingColorSelector()
+    
+    /// Called when the color selector is released
+    func didEndColorSelection()
 }
 
 /// Constants for EditorTextController
@@ -30,8 +53,8 @@ private struct Constants {
 }
 
 /// A view controller that contains the text tools menu
-final class EditorTextController: UIViewController, EditorTextViewDelegate, ColorCollectionControllerDelegate, ColorPickerControllerDelegate {
-
+final class EditorTextController: UIViewController, EditorTextViewDelegate, ColorCollectionControllerDelegate, ColorPickerControllerDelegate, ColorSelectorControllerDelegate {
+    
     weak var delegate: EditorTextControllerDelegate?
     
     private var textTransformations: ViewTransformations
@@ -53,6 +76,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     
     private lazy var colorPickerController: ColorPickerController = {
         let controller = ColorPickerController()
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var colorSelectorController: ColorSelectorController = {
+        let controller = ColorSelectorController()
         controller.delegate = self
         return controller
     }()
@@ -94,6 +123,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         setUpView()
         load(childViewController: colorCollectionController, into: textView.colorCollection)
         load(childViewController: colorPickerController, into: textView.colorGradient)
+        load(childViewController: colorSelectorController, into: textView.colorSelector)
     }
     
     private func setUpView() {
@@ -132,6 +162,15 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         }
     }
     
+    func didTapEyeDropper() {
+        colorSelectorController.circleInitialLocation = textView.colorSelectorOrigin
+        colorSelectorController.resetLocation()
+        colorSelectorController.resetColor()
+        
+        textView.closeKeyboard()
+        colorSelectorController.show(true)
+    }
+    
     private func didConfirmText() {
         delegate?.didConfirmText(options: textView.options, transformations: textTransformations, location: textView.location, size: textView.textSize)
     }
@@ -150,6 +189,38 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         if definitive {
             addColorsForCarousel(colors: [color])
         }
+    }
+    
+    // MARK: - ColorSelectorControllerDelegate
+    
+    func shouldShowTooltip() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowColorSelectorTooltip()
+    }
+    
+    func didDismissTooltip() {
+        delegate?.didDismissColorSelectorTooltip()
+    }
+    
+    func getColor(at point: CGPoint) -> UIColor {
+        guard let delegate = delegate else { return .black }
+        return delegate.getColor(from: point)
+    }
+    
+    func didShowCircle() {
+        delegate?.didStartColorSelection()
+    }
+    
+    func didStartMovingCircle() {
+        delegate?.didStartMovingColorSelector()
+    }
+    
+    func didEndMovingCircle(color: UIColor) {
+        textView.textColor = color
+        addColorsForCarousel(colors: [color])
+        
+        textView.openKeyboard()
+        delegate?.didEndColorSelection()
     }
     
     // MARK: - Keyboard
@@ -174,7 +245,6 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     }
     
     // MARK: - Public interface
-    
     
     /// Adds colors to the color carousel
     ///

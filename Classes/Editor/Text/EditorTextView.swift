@@ -19,6 +19,8 @@ protocol EditorTextViewDelegate: class {
     func didTapFontSelector()
     /// Called when the alignment selector is tapped
     func didTapAlignmentSelector()
+    /// Called when the eye dropper is tapped
+    func didTapEyeDropper()
 }
 
 /// Constants for EditorTextView
@@ -77,9 +79,15 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     private let closeColorPicker: UIButton
     private let eyeDropper: UIButton
     
+    // Color selector
+    var colorSelectorOrigin: CGPoint {
+        return colorPickerContainer.convert(eyeDropper.center, to: self)
+    }
+    
     // Internal properties
     let colorCollection: UIView
     let colorGradient: UIView
+    let colorSelector: UIView
     
     var options: TextOptions {
         get { return textView.options }
@@ -174,6 +182,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         closeColorPicker = UIButton()
         eyeDropper = UIButton()
         colorGradient = UIView()
+        colorSelector = IgnoreTouchesView()
         super.init(frame: .zero)
         textView.textViewDelegate = self
         setupViews()
@@ -192,6 +201,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         setUpCloseColorPicker()
         setUpEyeDropper()
         setUpColorGradient()
+        setUpColorSelector()
     }
     
     
@@ -368,6 +378,10 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
             eyeDropper.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
             eyeDropper.widthAnchor.constraint(equalToConstant: Constants.circularIconSize),
         ])
+        
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(eyeDropperTapped(recognizer:)))
+        eyeDropper.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the horizontal gradient in the color picker menu
@@ -383,6 +397,22 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
             colorGradient.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -Constants.rightMargin),
             colorGradient.centerYAnchor.constraint(equalTo: colorPickerContainer.centerYAnchor),
             colorGradient.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
+        ])
+    }
+    
+    /// Sets up the color circle that is shown when tapping the eye dropper
+    private func setUpColorSelector() {
+        colorSelector.accessibilityIdentifier = "Editor Text Color Selector"
+        colorSelector.backgroundColor = .clear
+        colorSelector.clipsToBounds = false
+        colorSelector.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(colorSelector)
+        
+        NSLayoutConstraint.activate([
+            colorSelector.topAnchor.constraint(equalTo: topAnchor),
+            colorSelector.bottomAnchor.constraint(equalTo: bottomAnchor),
+            colorSelector.leadingAnchor.constraint(equalTo: leadingAnchor),
+            colorSelector.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
     
@@ -410,6 +440,10 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         showMainMenu(true)
     }
     
+    @objc private func eyeDropperTapped(recognizer: UITapGestureRecognizer) {
+        delegate?.didTapEyeDropper()
+    }
+    
     // MARK: - StylableViewDelegate
     
     func didTapBackground() {
@@ -420,13 +454,25 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
     
     /// Focuses the main text view to show the keyboard
     func startWriting() {
-        textView.becomeFirstResponder()
+        colorPickerContainer.alpha = 0
+        mainMenuContainer.alpha = 1
+        openKeyboard()
     }
     
     /// Closes the keyboard and clears the main text view
     func endWriting() {
-        textView.endEditing(true)
+        closeKeyboard()
         textView.text = nil
+    }
+    
+    /// Opens the keyboard
+    func openKeyboard() {
+        textView.becomeFirstResponder()
+    }
+    
+    /// Closes the keyboard
+    func closeKeyboard() {
+        textView.endEditing(true)
     }
     
     /// Moves up the text view and the tools menu
@@ -437,24 +483,26 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
             textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin + distance)
             textView.setNeedsLayout()
             textView.layoutIfNeeded()
-            colorPickerContainer.alpha = 0
-            mainMenuContainer.alpha = 1
         }
         
         toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
         toolsContainer.alpha = 1
         textView.alpha = 1
+        confirmButton.alpha = 1
     }
     
     /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
-        textView.alpha = 0
+        confirmButton.alpha = 0
         toolsContainer.alpha = 0
-
-        textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
-        textView.setNeedsLayout()
-        textView.layoutIfNeeded()
         toolsContainer.transform = .identity
+        
+        UIView.performWithoutAnimation {
+            textView.alpha = 0
+            textViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
+            textView.setNeedsLayout()
+            textView.layoutIfNeeded()
+        }
     }
     
     // MARK: - Private utilitites
@@ -468,14 +516,7 @@ final class EditorTextView: UIView, StylableTextViewDelegate {
         }
     }
     
-    /// shows or hides the tools container
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showTools(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.toolsContainer.alpha = show ? 1 : 0
-        }
-    }
+    // MARK: - Private utilities
     
     /// shows or hides the color picker menu
     ///
