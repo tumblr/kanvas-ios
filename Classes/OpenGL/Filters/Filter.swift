@@ -270,15 +270,16 @@ class Filter: FilterProtocol {
             var srcTexture: CVOpenGLESTexture? = nil
             var dstTexture: CVOpenGLESTexture? = nil
             var dstPixelBuffer: CVPixelBuffer? = nil
-            
+
+            let srcDimensions = CMVideoDimensions(width: Int32(CVPixelBufferGetWidth(pixelBuffer)), height: Int32(CVPixelBufferGetHeight(pixelBuffer)))
             err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
                                                                textureCache,
                                                                pixelBuffer,
                                                                nil,
                                                                GL_TEXTURE_2D.ui,
                                                                GL_RGBA,
-                                                               inputDimensions.width.i,
-                                                               inputDimensions.height.i,
+                                                               srcDimensions.width,
+                                                               srcDimensions.height,
                                                                GL_BGRA.ui,
                                                                GL_UNSIGNED_BYTE.ui,
                                                                0,
