@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import GLKit
 
 /// Creates Filter instances from filter types
 struct FilterFactory {

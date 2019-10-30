@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import GLKit
 
 /// Wave Pool Filter
 final class WavePoolFilter: GroupFilter {
