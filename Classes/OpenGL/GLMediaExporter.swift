@@ -7,6 +7,7 @@
 import Foundation
 import AVFoundation
 import Photos
+import Utils
 
 /// Errors that can be thrown from GLMediaExporter
 enum GLMediaExporterError: Error {
@@ -25,7 +26,7 @@ protocol MediaExporting: class {
     var imageOverlays: [CGImage] { get set }
     init()
     func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
-    func export(video url: URL, completion: @escaping (URL?, Error?) -> Void)
+    func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void)
 }
 
 /// Exports media with frame-by-frame OpenGL processing
@@ -84,7 +85,7 @@ final class GLMediaExporter: MediaExporting {
     /// Exports a video
     /// - Parameter video: URL of a video to export
     /// - Parameter completion: callback which is invoked with the processed video URL
-    func export(video url: URL, completion: @escaping (URL?, Error?) -> Void) {
+    func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void) {
         guard needsProcessing else {
             completion(url, nil)
             return
@@ -106,7 +107,9 @@ final class GLMediaExporter: MediaExporting {
         exportSession?.outputFileType = .mov
         exportSession?.outputURL = outputURL
         exportSession?.shouldOptimizeForNetworkUse = true
+        exportSession?.metadata = mediaInfo.createAVMetadataItems()
         exportSession?.videoComposition = videoComposition
+
         guard let glVideoCompositor = exportSession?.customVideoCompositor as? GLVideoCompositor else {
             completion(nil, GLMediaExporterError.noCompositor)
             return

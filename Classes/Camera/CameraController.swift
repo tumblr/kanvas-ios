@@ -13,8 +13,15 @@ import Utils
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
-    case image(URL)
-    case video(URL)
+    case image(URL, TumblrMediaInfo)
+    case video(URL, TumblrMediaInfo)
+
+    public var info: TumblrMediaInfo {
+        switch self {
+        case .image(_, let info): return info
+        case .video(_, let info): return info
+        }
+    }
 }
 
 public enum KanvasExportAction {
@@ -385,7 +392,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                            filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
                 if let url = url {
-                    let segment = CameraSegment.video(url)
+                    let segment = CameraSegment.video(url, TumblrMediaInfo(source: .kanvas_camera))
                     strongSelf.showPreviewWithSegments([segment])
                 }
             }
@@ -408,7 +415,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             performUIUpdate {
                 if let image = image {
                     if strongSelf.currentMode.quantity == .single {
-                        strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil)])
+                        strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil, TumblrMediaInfo(source: .kanvas_camera))])
                     }
                     else {
                         strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
@@ -576,7 +583,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 performUIUpdate {
                     if let url = url {
                         if mode.quantity == .single {
-                            strongSelf.showPreviewWithSegments([CameraSegment.video(url)])
+                            strongSelf.showPreviewWithSegments([CameraSegment.video(url, TumblrMediaInfo(source: .kanvas_camera))])
                             strongSelf.updateRecordState(event: .ended)
                             strongSelf.updateUI(forClipsPresent: false)
                         }
@@ -740,30 +747,36 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
 
     func didFinishExportingVideo(url: URL?) {
-        didFinishExportingVideo(url: url, action: .previewConfirm)
+        didFinishExportingVideo(url: url, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm)
     }
 
     func didFinishExportingImage(image: UIImage?) {
-        didFinishExportingImage(image: image, action: .previewConfirm)
+        didFinishExportingImage(image: image, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm)
     }
 
-    func didFinishExportingVideo(url: URL?, action: KanvasExportAction) {
-        if let videoURL = url {
-            let asset = AVURLAsset(url: videoURL)
+    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+        if let url = url, let info = info {
+            let asset = AVURLAsset(url: url)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
+            performUIUpdate { [weak self] in
+                self?.cameraInputController.willCloseSoon = true
+                self?.delegate?.didCreateMedia(media: .video(url, info), exportAction: action, error: nil)
+            }
         }
-        performUIUpdate { [weak self] in
-            self?.cameraInputController.willCloseSoon = true
-            self?.delegate?.didCreateMedia(media: url.map { .video($0) }, exportAction: action, error: url != nil ? nil : CameraControllerError.exportFailure)
+        else {
+            performUIUpdate { [weak self] in
+                self?.cameraInputController.willCloseSoon = true
+                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+            }
         }
     }
 
-    func didFinishExportingImage(image: UIImage?, action: KanvasExportAction) {
-        if let url = CameraController.saveImageToFile(image, info: TumblrMediaInfo(source: .kanvas_camera)) {
+    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+        if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
                 self?.cameraInputController.willCloseSoon = true
-                self?.delegate?.didCreateMedia(media: .image(url), exportAction: action, error: nil)
+                self?.delegate?.didCreateMedia(media: .image(url, info), exportAction: action, error: nil)
             }
         }
         else {
@@ -866,7 +879,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let mediaURLMaybe = info[.mediaURL] as? URL
 
         if let image = imageMaybe {
-            pick(image: image)
+            pick(image: image, url: mediaURLMaybe)
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
         }
         else if let mediaURL = mediaURLMaybe {
@@ -880,14 +893,18 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logMediaPickerDismiss()
     }
 
-    private func pick(image: UIImage) {
+    private func pick(image: UIImage, url: URL?) {
+        let mediaInfo: TumblrMediaInfo = {
+            guard let url = url else { return TumblrMediaInfo(source: .media_library) }
+            return TumblrMediaInfo(fromImage: url) ?? TumblrMediaInfo(source: .media_library)
+        }()
         if currentMode.quantity == .single {
             performUIUpdate {
-                self.showPreviewWithSegments([CameraSegment.image(image, nil)])
+                self.showPreviewWithSegments([CameraSegment.image(image, nil, mediaInfo)])
             }
         }
         else {
-            segmentsHandler.addNewImageSegment(image: image, size: image.size) { [weak self] success, segment in
+            segmentsHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo) { [weak self] success, segment in
                 guard let strongSelf = self else {
                     return
                 }
@@ -904,11 +921,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func pick(video url: URL) {
+        let mediaInfo = TumblrMediaInfo(fromVideoURL: url) ?? TumblrMediaInfo(source: .media_library)
         if currentMode.quantity == .single {
-            self.showPreviewWithSegments([CameraSegment.video(url)])
+            self.showPreviewWithSegments([CameraSegment.video(url, mediaInfo)])
         }
         else {
-            segmentsHandler.addNewVideoSegment(url: url)
+            segmentsHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
             performUIUpdate {
                 if let image = AVURLAsset(url: url).thumbnail() {
                     self.clipsController.addNewClip(MediaClip(representativeFrame: image,

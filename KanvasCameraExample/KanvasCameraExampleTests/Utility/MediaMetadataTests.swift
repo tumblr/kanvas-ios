@@ -19,12 +19,11 @@ class MediaMetadataTests: XCTestCase {
         let recorder = CameraRecorderStub(size: CGSize(width: 300, height: 300), photoOutput: nil, videoOutput: nil, audioOutput: nil, recordingDelegate: nil, segmentsHandler: segmentsHandler, settings: settings)
         recorder.startRecordingVideo(on: mode)
         recorder.stopRecordingVideo() { _ in
-            recorder.exportRecording(completion: { url in
-                guard let url = url else {
+            recorder.exportRecording(completion: { (url, mediaInfo) in
+                guard url != nil else {
                     XCTFail()
                     return
                 }
-                let mediaInfo = TumblrMediaInfo(fromVideoURL: url)
                 XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
                 expectation.fulfill()
             })

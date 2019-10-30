@@ -9,6 +9,7 @@ import UIKit
 import Photos
 import KanvasCamera
 import Photos
+import Utils
 
 /// Protocol for the KanvasDashboardController to delegate events to
 public protocol KanvasDashboardControllerDelegate: class {
@@ -122,6 +123,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         }
 
         save(media: media, moveFile: false)
+        print(media.info)
 
         switch exportAction {
         case .previewConfirm:
@@ -190,9 +192,9 @@ extension KanvasDashboardController: CameraControllerDelegate {
             }
         }
         switch media {
-        case let .image(url):
+        case let .image(url, info):
             addToLibrary(url: url, resourceType: .photo, moveFile: moveFile)
-        case let .video(url):
+        case let .video(url, info):
             addToLibrary(url: url, resourceType: .video, moveFile: moveFile)
         }
     }

@@ -8,6 +8,7 @@
 import AVFoundation
 import Foundation
 import XCTest
+import Utils
 
 final class CameraRecorderTests: XCTestCase {
 
@@ -76,7 +77,7 @@ final class CameraRecorderTests: XCTestCase {
     func createSegments() -> [CameraSegment] {
         var segments: [CameraSegment] = []
         if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let segment = CameraSegment.video(url)
+            let segment = CameraSegment.video(url, TumblrMediaInfo(source: .kanvas_camera))
 
             for _ in 0...5 {
                 segments.append(segment)

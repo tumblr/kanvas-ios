@@ -8,6 +8,7 @@
 import AVFoundation
 import Foundation
 import UIKit
+import Utils
 
 final class CameraRecorderStub: CameraRecordingProtocol {
 
@@ -50,7 +51,8 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         if isRecording() {
             recording = false
             if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-                cameraSegmentHandler.addNewVideoSegment(url: url)
+                let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+                cameraSegmentHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
                 completion(url)
             }
             else {
@@ -74,7 +76,8 @@ final class CameraRecorderStub: CameraRecordingProtocol {
             return
         }
         if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
-            cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, completion: { (success, segment) in
+            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+            cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo, completion: { (success, segment) in
                 completion(image)
             })
         }
@@ -84,9 +87,9 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         }
     }
 
-    func exportRecording(completion: @escaping (URL?) -> Void) {
-        cameraSegmentHandler.exportVideo(completion: { url in
-            completion(url)
+    func exportRecording(completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+        cameraSegmentHandler.exportVideo(completion: { url, mediaInfo in
+            completion(url, mediaInfo)
             self.recording = false
         })
     }

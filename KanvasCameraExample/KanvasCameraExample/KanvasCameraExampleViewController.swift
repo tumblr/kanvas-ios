@@ -7,7 +7,7 @@
 import KanvasCamera
 import Photos
 import UIKit
-
+import Utils
 
 /// This class contains a button that launches the camera module
 /// It is also the delegate for the camera, and handles saving the exported media
@@ -341,6 +341,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let media = media {
             save(media: media)
+            print(media.info)
         }
         else {
             assertionFailure("Failed to create media")
@@ -374,9 +375,9 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
             }
         }
         switch media {
-        case let .image(url):
+        case let .image(url, info):
             moveToLibrary(url: url, resourceType: .photo)
-        case let .video(url):
+        case let .video(url, info):
             moveToLibrary(url: url, resourceType: .video)
         }
     }
