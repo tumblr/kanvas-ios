@@ -105,11 +105,28 @@ class StylableTextView: UITextView, UITextViewDelegate {
         guard let font = font else { return rect }
         let capHeight = font.capHeight
         let lineHeight = font.lineHeight
+        let topMargin: CGFloat
+        let leftMargin: CGFloat
+        let extraVerticalPadding: CGFloat
+        let extraHorizontalPadding: CGFloat
         
-        return CGRect(x: rect.origin.x + textContainerInset.left,
-                      y: rect.origin.y + textContainerInset.top + (lineHeight - capHeight) / 2.0,
-                      width: rect.width,
-                      height: capHeight)
+        switch font {
+        case UIFont.favoritTumblr85(fontSize: font.pointSize):
+            topMargin = textContainerInset.left + 1
+            leftMargin = textContainerInset.left
+            extraVerticalPadding = 6
+            extraHorizontalPadding = 0
+        default:
+            topMargin = textContainerInset.left
+            leftMargin = textContainerInset.left
+            extraHorizontalPadding = 0
+            extraVerticalPadding = 0
+        }
+        
+        return CGRect(x: rect.origin.x + leftMargin - extraHorizontalPadding,
+                      y: rect.origin.y + topMargin - extraVerticalPadding + (lineHeight - capHeight) / 2.0,
+                      width: rect.width + extraHorizontalPadding * 2,
+                      height: capHeight + extraVerticalPadding * 2)
     }
 }
 
