@@ -123,6 +123,13 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     func enableShootButtonUserInteraction(_ enabled: Bool) {
         shootButton.enableUserInteraction(enabled)
     }
+    
+    /// enables or disables the gesture recognizers in the shutter button
+    ///
+    /// - Parameter enabled: true to enable, false to disable
+    func enableShootButtonGestureRecognizers(_ enabled: Bool) {
+        shootButton.enableGestureRecognizers(enabled)
+    }
 
     /// shows the tooltip below the mode selector
     func showTooltip() {

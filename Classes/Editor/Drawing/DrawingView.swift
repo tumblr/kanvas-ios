@@ -6,12 +6,8 @@
 
 import Foundation
 import UIKit
-import SharedUI
 
 protocol DrawingViewDelegate: class {
-    
-    /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()
@@ -27,11 +23,6 @@ protocol DrawingViewDelegate: class {
     
     /// Called when the eye dropper button is selected
     func didTapEyeDropper()
-    
-    /// Called when the color selecter is panned
-    ///
-    /// - Parameter recognizer: the pan gesture recognizer
-    func didPanColorSelecter(recognizer: UIPanGestureRecognizer)
     
     /// Called when the drawing canvas is tapped
     ///
@@ -72,22 +63,7 @@ private struct DrawingViewConstants {
     static let horizontalSelectorPadding: CGFloat = 14
     static let horizontalSelectorHeight: CGFloat = CircularImageView.size
     
-    // Color selecter
-    static let colorSelecterSize: CGFloat = 80
-    static let dropPadding: CGFloat = 18
-    static let colorSelecterAlpha: CGFloat = 0.65
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
-    
-    // Tooltip
-    static let tooltipForegroundColor: UIColor = .white
-    static let tooltipBackgroundColor: UIColor = .tumblrBrightBlue
-    static let tooltipArrowPosition: EasyTipView.ArrowPosition = .bottom
-    static let tooltipCornerRadius: CGFloat = 6
-    static let tooltipArrowWidth: CGFloat = 11
-    static let tooltipMargin: CGFloat = 12
-    static let tooltipFont: UIFont = .favoritTumblr85(fontSize: 14)
-    static let tooltipVerticalTextInset: CGFloat = 13
-    static let tooltipHorizontalTextInset: CGFloat = 16
 }
 
 /// View for DrawingController
@@ -128,11 +104,11 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     private let eyeDropperButton: CircularImageView
     let colorPickerSelectorContainer: UIView
     
-    // Color selecter
-    private let colorSelecter: CircularImageView
-    private var tooltip: EasyTipView?
-    private let upperDrop: ColorDrop
-    private let lowerDrop: ColorDrop
+    // Color selector
+    let colorSelectorContainer: UIView
+    var colorSelectorOrigin: CGPoint {
+        return colorPickerContainer.convert(eyeDropperButton.center, to: self)
+    }
     
     // Color collection
     let colorCollection: UIView
@@ -154,9 +130,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorCollection = UIView()
         colorPickerButton = CircularImageView()
         colorPickerSelectorContainer = UIView()
-        colorSelecter = CircularImageView()
-        upperDrop = ColorDrop()
-        lowerDrop = ColorDrop()
+        colorSelectorContainer = IgnoreTouchesView()
         overlay = UIView()
         
         super.init(frame: .zero)
@@ -197,9 +171,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         setUpCloseColorPickerButton()
         setUpEyeDropper()
         setUpColorPickerSelectorContainer()
-        setUpColorSelecter()
-        setUpColorSelecterDrop()
-        setUpTooltip()
+        setUpColorSelectorContainer()
     }
     
     /// Sets up a view where the drawing will be saved temporarily
@@ -462,61 +434,19 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         ])
     }
     
-    /// Sets up the draggable circle that is shown when the eyedropper is pressed
-    private func setUpColorSelecter() {
-        colorSelecter.backgroundColor = UIColor.black.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
-        colorSelecter.layer.cornerRadius = DrawingViewConstants.colorSelecterSize / 2
-        colorSelecter.accessibilityIdentifier = "Editor Color Selecter"
-        addSubview(colorSelecter)
+    private func setUpColorSelectorContainer() {
+        colorSelectorContainer.backgroundColor = .clear
+        colorSelectorContainer.accessibilityIdentifier = "Editor Color Selector Container"
+        colorSelectorContainer.clipsToBounds = false
+        colorSelectorContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(colorSelectorContainer)
         
         NSLayoutConstraint.activate([
-            colorSelecter.centerXAnchor.constraint(equalTo: eyeDropperButton.centerXAnchor),
-            colorSelecter.centerYAnchor.constraint(equalTo: eyeDropperButton.centerYAnchor),
-            colorSelecter.heightAnchor.constraint(equalToConstant: DrawingViewConstants.colorSelecterSize),
-            colorSelecter.widthAnchor.constraint(equalToConstant: DrawingViewConstants.colorSelecterSize),
+            colorSelectorContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            colorSelectorContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            colorSelectorContainer.topAnchor.constraint(equalTo: topAnchor),
+            colorSelectorContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
-        
-        colorSelecter.alpha = 0
-        
-        let panRecognizer = UIPanGestureRecognizer()
-        panRecognizer.addTarget(self, action: #selector(colorSelecterPanned(recognizer:)))
-        colorSelecter.addGestureRecognizer(panRecognizer)
-    }
-    
-    private func setUpColorSelecterDrop() {
-        setUpColorSelecterUpperDrop()
-        setUpColorSelecterLowerDrop()
-    }
-    
-    private func setUpColorSelecterUpperDrop() {
-        upperDrop.accessibilityIdentifier = "Editor Color Selecter Upper Drop"
-        addSubview(upperDrop)
-        
-        let verticalMargin = DrawingViewConstants.dropPadding
-        NSLayoutConstraint.activate([
-            upperDrop.bottomAnchor.constraint(equalTo: colorSelecter.topAnchor, constant: -verticalMargin),
-            upperDrop.centerXAnchor.constraint(equalTo: colorSelecter.centerXAnchor),
-            upperDrop.heightAnchor.constraint(equalToConstant: ColorDrop.defaultHeight),
-            upperDrop.widthAnchor.constraint(equalToConstant: ColorDrop.defaultWidth),
-        ])
-        
-        upperDrop.alpha = 0
-    }
-    
-    private func setUpColorSelecterLowerDrop() {
-        lowerDrop.accessibilityIdentifier = "Editor Color Selecter Lower Drop"
-        lowerDrop.transform = CGAffineTransform(rotationAngle: .pi)
-        addSubview(lowerDrop)
-        
-        let verticalMargin = DrawingViewConstants.dropPadding
-        NSLayoutConstraint.activate([
-            lowerDrop.topAnchor.constraint(equalTo: colorSelecter.bottomAnchor, constant: verticalMargin),
-            lowerDrop.centerXAnchor.constraint(equalTo: colorSelecter.centerXAnchor),
-            lowerDrop.heightAnchor.constraint(equalToConstant: ColorDrop.defaultHeight),
-            lowerDrop.widthAnchor.constraint(equalToConstant: ColorDrop.defaultWidth),
-        ])
-        
-        lowerDrop.alpha = 0
     }
     
     /// Sets up the color collection that contains the dominant colors as well as the last colors selected
@@ -535,23 +465,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
             colorCollection.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
             colorCollection.heightAnchor.constraint(equalToConstant: CircularImageView.size)
         ])
-    }
-    
-    /// Sets up the tooltip that is shown on top of the color selecter
-    private func setUpTooltip() {
-        var preferences = EasyTipView.Preferences()
-        preferences.drawing.foregroundColor = DrawingViewConstants.tooltipForegroundColor
-        preferences.drawing.backgroundColor = DrawingViewConstants.tooltipBackgroundColor
-        preferences.drawing.arrowPosition = DrawingViewConstants.tooltipArrowPosition
-        preferences.drawing.cornerRadius = DrawingViewConstants.tooltipCornerRadius
-        preferences.drawing.arrowWidth = DrawingViewConstants.tooltipArrowWidth
-        preferences.positioning.margin = DrawingViewConstants.tooltipMargin
-        preferences.drawing.font = DrawingViewConstants.tooltipFont
-        preferences.positioning.textVInset = DrawingViewConstants.tooltipVerticalTextInset
-        preferences.positioning.textHInset = DrawingViewConstants.tooltipHorizontalTextInset
-        
-        let text = NSLocalizedString("Drag to select color", comment: "Color selecter tooltip for the Camera")
-        tooltip = EasyTipView(text: text, preferences: preferences)
     }
     
     // MARK: - Gesture recognizers
@@ -581,10 +494,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         delegate?.didTapEyeDropper()
     }
     
-    @objc func colorSelecterPanned(recognizer: UIPanGestureRecognizer) {
-        delegate?.didPanColorSelecter(recognizer: recognizer)
-    }
-    
     @objc func drawingCanvasTapped(recognizer: UITapGestureRecognizer) {
         delegate?.didTapDrawingCanvas(recognizer: recognizer)
     }
@@ -595,22 +504,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     @objc func drawingCanvasLongPressed(recognizer: UILongPressGestureRecognizer) {
         delegate?.didLongPressDrawingCanvas(recognizer: recognizer)
-    }
-    
-    // MARK: - Private utilities
-    
-    /// Changes upper drop location on screen
-    ///
-    /// - Parameter point: the new location
-    private func moveUpperDrop(to point: CGPoint) {
-        upperDrop.center = point
-    }
-    
-    /// Changes lower drop location on screen
-    ///
-    /// - Parameter point: the new location
-    private func moveLowerDrop(to point: CGPoint) {
-        lowerDrop.center = point
     }
     
     // MARK: - View animations
@@ -660,27 +553,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
     }
     
-    /// shows or hides the color selecter
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showColorSelecter(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
-            self.colorSelecter.alpha = show ? 1 : 0
-            self.colorSelecter.transform = .identity
-            self.upperDrop.alpha = show ? 1 : 0
-            self.lowerDrop.alpha = 0
-        }
-    }
-    
-    /// shows or hides all the menus
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showTools(show: Bool) {
-        showTopButtons(show)
-        showBottomPanel(show)
-    }
-    
-    /// shows or hides the overlay of the color selecter
+    /// shows or hides the overlay of the stroke selector
     ///
     /// - Parameter show: true to show, false to hide
     /// - Parameter animate: whether the UI update is animated
@@ -695,20 +568,22 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
     }
     
-    /// shows or hides the tooltip above color selecter
+    /// shows or hides the drawing canvas
     ///
     /// - Parameter show: true to show, false to hide
-    func showTooltip(_ show: Bool) {
-        if show {
-            tooltip?.show(animated: true, forView: colorSelecter, withinSuperview: self)
+    func showCanvas(_ show: Bool) {
+        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+            self.drawingCanvas.alpha = show ? 1 : 0
+            self.temporalImageView.alpha = show ? 1 : 0
         }
-        else {
-            UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
-                self.tooltip?.removeFromSuperview()
-                self.tooltip?.dismiss()
-            }
-            delegate?.didDismissColorSelecterTooltip()
-        }
+    }
+    
+    /// shows or hides all the menus
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showTools(show: Bool) {
+        showTopButtons(show)
+        showBottomPanel(show)
     }
     
     // MARK: - Public interface
@@ -733,49 +608,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     func setEyeDropperColor(_ color: UIColor) {
         eyeDropperButton.backgroundColor = color
     }
-    
-    /// Sets a new color for the color selecter background
-    ///
-    /// - Parameter color: new color for the color selecter
-    func setColorSelecterColor(_ color: UIColor) {
-        colorSelecter.backgroundColor = color.withAlphaComponent(DrawingViewConstants.colorSelecterAlpha)
-        upperDrop.innerColor = color
-        lowerDrop.innerColor = color
-    }
-    
-    /// Changes color selector location on screen
-    ///
-    /// - Parameter point: the new location
-    func moveColorSelecter(to point: CGPoint) {
-        colorSelecter.center = point
-        
-        let offset = DrawingViewConstants.dropPadding + (DrawingViewConstants.colorSelecterSize + ColorDrop.defaultHeight) / 2
-        
-        let upperDropLocation = CGPoint(x: point.x, y: point.y - offset)
-        let lowerDropLocation = CGPoint(x: point.x, y: point.y + offset)
-        moveUpperDrop(to: upperDropLocation)
-        moveLowerDrop(to: lowerDropLocation)
-        
-        let topPoint = upperDrop.center.y - upperDrop.frame.height / 2
-        let upperDropVisible = topPoint > 0
-        upperDrop.alpha = upperDropVisible ? 1 : 0
-        lowerDrop.alpha = upperDropVisible ? 0 : 1
-    }
-    
-    /// Applies a transformation to the color selecter
-    ///
-    /// - Parameter transform: the transformation to apply
-    func transformColorSelecter(_ transform: CGAffineTransform) {
-        colorSelecter.transform = transform
-    }
-    
-    /// Calculates the color selecter initial location expressed in screen coordinates
-    ///
-    /// - Returns: the initial location for the color selecter
-    func getColorSelecterInitialLocation() -> CGPoint {
-        return colorPickerContainer.convert(eyeDropperButton.center, to: self)
-    }
-    
     
     // MARK: - DrawingCanvasDelegate
     

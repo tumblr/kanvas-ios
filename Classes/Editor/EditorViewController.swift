@@ -20,13 +20,13 @@ protocol EditorControllerDelegate: class {
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
     
-    /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
+    /// Called after the color selector tooltip is dismissed
+    func didDismissColorSelectorTooltip()
     
-    /// Called to ask if color selecter tooltip should be shown
+    /// Called to ask if color selector tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
-    func editorShouldShowColorSelecterTooltip() -> Bool
+    func editorShouldShowColorSelectorTooltip() -> Bool
     
     /// Called after the stroke animation has ended
     func didEndStrokeSelectorAnimation()
@@ -35,14 +35,19 @@ protocol EditorControllerDelegate: class {
     ///
     /// - Returns: Bool for animation
     func editorShouldShowStrokeSelectorAnimation() -> Bool
+
+    /// Called when the tag button is pressed
+    func tagButtonPressed()
 }
 
 /// A view controller to edit the segments
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, GLPlayerDelegate {
-    
+
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
-                                    showSaveButton: settings.features.editorSaving)
+                                    showSaveButton: settings.features.editorSaving,
+                                    showCrossIcon: settings.crossIconInEditor,
+                                    showTagButton: settings.showTagButtonInEditor)
         editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
@@ -221,6 +226,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         onBeforeSelectingEditionOption(.text)
         textController.showView(true, options: options, transformations: transformations)
     }
+
+    func didTapTagButton() {
+        delegate?.tagButtonPressed()
+        analyticsProvider?.logEditorTagTapped()
+    }
     
     func didBeginTouchesOnText() {
         showNavigationContainer(false)
@@ -379,15 +389,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         closeMenuButtonPressed()
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
-        guard let delegate = delegate else { return false }
-        return delegate.editorShouldShowColorSelecterTooltip()
-    }
-    
-    func didDismissColorSelecterTooltip() {
-        delegate?.didDismissColorSelecterTooltip()
-    }
-    
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
         guard let delegate = delegate else { return false }
         return delegate.editorShouldShowStrokeSelectorAnimation()
@@ -397,7 +398,36 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         delegate?.didEndStrokeSelectorAnimation()
     }
     
+    // MARK: - EditorTextControllerDelegate
+    
+    func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        if options.haveText {
+            editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
+        }
+        closeMenuButtonPressed()
+    }
+    
+    func didMoveToolsUp() {
+        editorView.textCanvas.removeSelectedText()
+    }
+    
+    // MARK: - DrawingControllerDelegate & EditorTextControllerDelegate
+    
+    func editorShouldShowColorSelectorTooltip() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowColorSelectorTooltip()
+    }
+    
+    func didDismissColorSelectorTooltip() {
+        delegate?.didDismissColorSelectorTooltip()
+    }
+    
     func didStartColorSelection() {
+        drawingController.showCanvas(false)
+        editorView.showTextCanvas(false)
+    }
+    
+    func didStartMovingColorSelector() {
         if !player.isMediaOnePhoto() {
             player.pause()
         }
@@ -407,6 +437,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         if !player.isMediaOnePhoto() {
             player.resume()
         }
+        drawingController.showCanvas(true)
+        editorView.showTextCanvas(true)
     }
     
     func getColor(from point: CGPoint) -> UIColor {
@@ -416,16 +448,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didDisplayFirstFrame(_ image: UIImage) {
         addCarouselDefaultColors(image)
     }
-    
-    // MARK: - EditorTextControllerDelegate
-    
-    func didConfirmText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
-        if options.haveText {
-            editorView.textCanvas.addText(options: options, transformations: transformations, size: size)
-        }
-        closeMenuButtonPressed()
-    }
-    
+
     // MARK: - Public interface
     
     /// shows or hides the confirm button

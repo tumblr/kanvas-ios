@@ -16,7 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
         let applicationViewController = KanvasCameraExampleViewController(nibName: nil, bundle: nil)
-        applicationViewController.view.tintColor = .tumblrWhite
+        if #available(iOS 13.0, *) {
+            applicationViewController.view.tintColor = .systemBackground
+        }
+        else {
+            applicationViewController.view.tintColor = .white
+        }
         window?.rootViewController = applicationViewController
         window?.makeKeyAndVisible()
         return true

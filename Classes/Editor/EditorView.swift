@@ -25,6 +25,8 @@ protocol EditorViewDelegate: class {
     func didBeginTouchesOnText()
     /// Called when the touch events on a movable view end
     func didEndTouchesOnText()
+    /// A function that is called when the tag button is pressed
+    func didTapTagButton()
 }
 
 /// Constants for EditorView
@@ -58,8 +60,11 @@ final class EditorView: UIView, TextCanvasDelegate {
     private let closeButton = UIButton()
     private let saveButton = UIButton()
     private let showSaveButton: Bool
+    private let showCrossIcon: Bool
     private let postButton = UIButton()
     private let postLabel = UILabel()
+    private let tagButton = UIButton()
+    private let showTagButton: Bool
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
     let collectionContainer = IgnoreTouchesView()
@@ -81,9 +86,11 @@ final class EditorView: UIView, TextCanvasDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainActionMode: MainActionMode, showSaveButton: Bool) {
+    init(mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool) {
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
+        self.showTagButton = showTagButton
+        self.showCrossIcon = showCrossIcon
         super.init(frame: .zero)
         setupViews()
     }
@@ -92,23 +99,24 @@ final class EditorView: UIView, TextCanvasDelegate {
         setupPlayer()
         drawingCanvas.add(into: self)
         textCanvas.add(into: self)
-        setUpNavigationContainer()
-        setUpCloseButton()
-        
+        setupNavigationContainer()
+        setupCloseButton()
+        if showTagButton {
+            setupTagButton()
+        }
         switch mainActionMode {
         case .confirm:
-            setUpConfirmButton()
+            setupConfirmButton()
         case .post:
             setupPostButton()
         }
         if showSaveButton {
             setupSaveButton()
         }
-        
-        setUpCollection()
-        setUpFilterMenu()
-        setUpTextMenu()
-        setUpDrawingMenu()
+        setupCollection()
+        setupFilterMenu()
+        setupTextMenu()
+        setupDrawingMenu()
     }
     
     // MARK: - views
@@ -120,7 +128,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     }
     
     /// Container that holds the back button and the bottom menu
-    private func setUpNavigationContainer() {
+    private func setupNavigationContainer() {
         navigationContainer.accessibilityIdentifier = "Navigation Container"
         navigationContainer.translatesAutoresizingMaskIntoConstraints = false
         
@@ -132,11 +140,30 @@ final class EditorView: UIView, TextCanvasDelegate {
             navigationContainer.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
+
+    private func setupTagButton() {
+        tagButton.accessibilityLabel = "Tag Button"
+        tagButton.layer.applyShadows()
+        tagButton.setImage(KanvasCameraImages.tagImage, for: .normal)
+        tagButton.imageView?.contentMode = .scaleAspectFit
+        tagButton.imageView?.tintColor = .white
+
+        navigationContainer.addSubview(tagButton)
+        tagButton.addTarget(self, action: #selector(tagButtonPressed), for: .touchUpInside)
+        tagButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tagButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
+            tagButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+            tagButton.heightAnchor.constraint(equalTo: tagButton.widthAnchor),
+            tagButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+        ])
+    }
     
-    private func setUpCloseButton() {
+    private func setupCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
         closeButton.layer.applyShadows()
-        closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
+        let backIcon = showCrossIcon ? KanvasCameraImages.closeImage : KanvasCameraImages.backImage
+        closeButton.setImage(backIcon, for: .normal)
         closeButton.imageView?.contentMode = .scaleAspectFit
         
         navigationContainer.addSubview(closeButton)
@@ -150,7 +177,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpConfirmButton() {
+    private func setupConfirmButton() {
         confirmButton.accessibilityLabel = "Confirm Button"
         navigationContainer.addSubview(confirmButton)
         confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
@@ -165,24 +192,34 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpCollection() {
+    private func setupCollection() {
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Edition Menu Collection Container"
         collectionContainer.clipsToBounds = false
         
         navigationContainer.addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin * 2 + EditorViewConstants.confirmButtonSize
-
+        let buttonOnTheRight: UIButton
+        let trailingMargin: CGFloat
+        
+        if showSaveButton {
+            buttonOnTheRight = saveButton
+            trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
+        }
+        else {
+            buttonOnTheRight = confirmOrPostButton()
+            trailingMargin = confirmOrPostButtonHorizontalMargin()
+        }
+        
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
+            collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight.leadingAnchor, constant: -trailingMargin / 2),
             collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
         ])
     }
     
-    private func setUpFilterMenu() {
+    private func setupFilterMenu() {
         filterMenuContainer.backgroundColor = .clear
         filterMenuContainer.accessibilityIdentifier = "Filter Menu Container"
         filterMenuContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -197,7 +234,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpTextMenu() {
+    private func setupTextMenu() {
         textMenuContainer.backgroundColor = .clear
         textMenuContainer.accessibilityIdentifier = "Text Menu Container"
         textMenuContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -212,7 +249,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
-    private func setUpDrawingMenu() {
+    private func setupDrawingMenu() {
         drawingMenuContainer.backgroundColor = .clear
         drawingMenuContainer.accessibilityIdentifier = "Drawing Menu Container"
         drawingMenuContainer.clipsToBounds = false
@@ -287,9 +324,22 @@ final class EditorView: UIView, TextCanvasDelegate {
         }
     }
     
+    func confirmOrPostButtonHorizontalMargin() -> CGFloat {
+        switch mainActionMode {
+        case .confirm:
+            return EditorViewConstants.confirmButtonHorizontalMargin
+        case .post:
+            return EditorViewConstants.postButtonHorizontalMargin
+        }
+    }
+    
     // MARK: - buttons
     @objc private func closeButtonPressed() {
         delegate?.didTapCloseButton()
+    }
+
+    @objc private func tagButtonPressed() {
+        delegate?.didTapTagButton()
     }
     
     @objc private func confirmButtonPressed() {
@@ -343,6 +393,15 @@ final class EditorView: UIView, TextCanvasDelegate {
     func showCloseButton(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.closeButton.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the text canvas
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTextCanvas(_ show: Bool) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.textCanvas.alpha = show ? 1 : 0
         }
     }
     

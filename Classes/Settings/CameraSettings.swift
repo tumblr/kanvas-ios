@@ -214,6 +214,14 @@ public struct CameraFeatures {
     /// Buttons Swapped on the Camera View
     /// This changes the position between the close icon and the rotate, flash, and ghost icons
     public var topButtonsSwapped = DefaultCameraSettings.topButtonsSwapped
+    
+    /// Cross Icon In Editor
+    /// This changes back carat in the editor to a cross icon
+    public var crossIconInEditor = DefaultCameraSettings.crossIconInEditor
+
+    /// Tag button in Editor
+    /// This shows a # button in the editor to enable adding tags
+    public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
 
     override public init() { }
 
@@ -361,5 +369,6 @@ private struct DefaultCameraSettings {
     static let exportStopMotionPhotoAsVideo: Bool = false
     static let features = CameraFeatures()
     static let topButtonsSwapped: Bool = false
-
+    static let crossIconInEditor: Bool = false
+    static let showTagButtonInEditor: Bool = false
 }

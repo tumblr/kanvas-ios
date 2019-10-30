@@ -8,13 +8,13 @@ import Foundation
 import UIKit
 
 protocol DrawingControllerDelegate: class {
-    /// Called to ask if color selecter tooltip should be shown
+    /// Called to ask if color selector tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
-    func editorShouldShowColorSelecterTooltip() -> Bool
+    func editorShouldShowColorSelectorTooltip() -> Bool
     
-    /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
+    /// Called after the color selector tooltip is dismissed
+    func didDismissColorSelectorTooltip()
     
     /// Called after the stroke animation has ended
     func didEndStrokeSelectorAnimation()
@@ -27,14 +27,17 @@ protocol DrawingControllerDelegate: class {
     /// Called after the confirm button was tapped
     func didConfirmDrawing()
     
-    /// Called when the color selecter is panned
+    /// Called when the color selector is panned
     ///
     /// - Parameter point: location to take the color from
     /// - Returns: Color from image
     func getColor(from point: CGPoint) -> UIColor
     
-    /// Called when the color selector is pressed
+    /// Called when the color selector appears
     func didStartColorSelection()
+    
+    /// Called when the color selector starts its movement
+    func didStartMovingColorSelector()
     
     /// Called when the color selector is released
     func didEndColorSelection()
@@ -60,7 +63,7 @@ private enum DrawingMode {
 }
 
 /// Controller for handling the drawing menu.
-final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, TextureSelectorControllerDelegate, ColorPickerControllerDelegate, ColorCollectionControllerDelegate {
+final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSelectorControllerDelegate, TextureSelectorControllerDelegate, ColorPickerControllerDelegate, ColorCollectionControllerDelegate, ColorSelectorControllerDelegate {
     
     weak var delegate: DrawingControllerDelegate?
     
@@ -94,6 +97,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return controller
     }()
     
+    private lazy var colorSelectorController: ColorSelectorController = {
+        let controller = ColorSelectorController()
+        controller.delegate = self
+        return controller
+    }()
+    
     // Drawing
     var drawingLayer: CALayer?
     private var drawingCollection: [UIImage]
@@ -101,9 +110,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private var mode: DrawingMode
     private var lastDrawingPoint: CGPoint
     
-    // Color picker and selecter
-    private var colorSelecterOrigin: CGPoint
-
     private var analyticsProvider: KanvasCameraAnalyticsProvider?
     private var currentStrokeSize: Float {
         return Float(strokeSelectorController.strokeSize)
@@ -119,9 +125,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
 
         drawingCollection = []
         drawingColor = .tumblrBrightBlue
-        colorSelecterOrigin = .zero
         mode = .draw
-        colorSelecterOrigin = .zero
         lastDrawingPoint = .zero
         
         super.init(nibName: .none, bundle: .none)
@@ -151,6 +155,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         load(childViewController: textureSelectorController, into: drawingView.textureSelectorContainer)
         load(childViewController: colorPickerController, into: drawingView.colorPickerSelectorContainer)
         load(childViewController: colorCollectionController, into: drawingView.colorCollection)
+        load(childViewController: colorSelectorController, into: drawingView.colorSelectorContainer)
     }
     
     // MARK: - View
@@ -299,14 +304,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingView.showTopButtons(show)
     }
     
-    /// Shows or hides the color selecter
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showColorSelecter(_ show: Bool) {
-        drawingView.showColorSelecter(show)
-    }
-    
-    /// Shows or hides the overlay of the color selecter
+    /// Shows or hides the overlay for the stroke selector
     ///
     /// - Parameter show: true to show, false to hide
     /// - Parameter animate: whether the UI update is animated
@@ -314,11 +312,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingView.showOverlay(show, animate: animate)
     }
     
-    /// Shows or hides the tooltip above color selecter
+    /// shows or hides the drawing layer
     ///
     /// - Parameter show: true to show, false to hide
-    func showTooltip(_ show: Bool) {
-        drawingView.showTooltip(show)
+    private func showDrawingLayer(_ show: Bool) {
+        UIView.animate(withDuration: DrawingControllerConstants.animationDuration) {
+            self.drawingLayer?.opacity = show ? 1 : 0
+        }
     }
     
     /// Enables or disables the user interaction on the view
@@ -406,8 +406,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         }
     }
     
-    func didDismissColorSelecterTooltip() {
-        delegate?.didDismissColorSelecterTooltip()
+    func didDismissTooltip() {
+        delegate?.didDismissColorSelectorTooltip()
     }
     
     func didTapConfirmButton() {
@@ -438,63 +438,16 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     }
     
     func didTapEyeDropper() {
-        resetColorSelecterLocation()
+        colorSelectorController.circleInitialLocation = drawingView.colorSelectorOrigin
+        colorSelectorController.resetLocation()
         showColorPickerContainer(false)
         showTopButtons(false)
-        resetColorSelecterColor()
-        showColorSelecter(true)
+        resetColorSelectorColor()
+        colorSelectorController.show(true)
         enableDrawingCanvas(false)
-        
-        if delegate?.editorShouldShowColorSelecterTooltip() == true {
-            showOverlay(true)
-            showTooltip(true)
-        }
-    }
-
-    func didPanColorSelecter(recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            delegate?.didStartColorSelection()
-            if delegate?.editorShouldShowColorSelecterTooltip() == true {
-                showTooltip(false)
-                showOverlay(false)
-            }
-        case .changed:
-            let currentLocation = moveColorSelecter(recognizer: recognizer)
-            let color = getColor(at: currentLocation)
-            setColorSelecterColor(color)
-        case .ended, .failed, .cancelled:
-            let currentLocation = moveColorSelecter(recognizer: recognizer)
-            let color = getColor(at: currentLocation)
-            setEyeDropperColor(color)
-            setStrokeCircleColor(color)
-            setDrawingColor(color, addToColorCollection: true)
-            showColorSelecter(false)
-            showColorPickerContainer(true)
-            showTopButtons(true)
-            enableDrawingCanvas(true)
-            analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .eyedropper)
-            delegate?.didEndColorSelection()
-        case .possible:
-            break
-        @unknown default:
-            break
-        }
     }
     
     // MARK: - Private utilities
-    
-    /// Gets the position of the user's finger on screen,
-    /// but adjusts it to fit the horizontal center of the selector.
-    ///
-    /// - Parameter recognizer: the gesture recognizer
-    /// - Parameter view: the view that contains the circle
-    /// - Returns: location of the user's finger
-    private func getSelectedLocation(with recognizer: UILongPressGestureRecognizer, in view: UIView) -> CGPoint {
-        let x = DrawingView.verticalSelectorWidth / 2
-        let y = recognizer.location(in: view).y
-        return CGPoint(x: x, y: y)
-    }
     
     // MARK: - Color Picker
     
@@ -512,47 +465,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         strokeSelectorController.tintStrokeCircle(color: color)
     }
     
-    /// Sets a new color for the color selecter background
-    ///
-    /// - Parameter color: new color for the color selecter
-    private func setColorSelecterColor(_ color: UIColor) {
-        drawingView.setColorSelecterColor(color)
-    }
-    
-    /// Takes the color selecter back to its initial position (same position as the eye dropper's)
-    private func resetColorSelecterLocation() {
-        let initialPoint = drawingView.getColorSelecterInitialLocation()
-        drawingView.moveColorSelecter(to: initialPoint)
-        drawingView.transformColorSelecter(CGAffineTransform(scaleX: 0, y: 0))
-        
-        colorSelecterOrigin = initialPoint
-    }
-    
-    /// Changes the background color of the color selecter to the one from its initial position
-    private func resetColorSelecterColor() {
-        let color = getColor(at: colorSelecterOrigin)
-        setColorSelecterColor(color)
+    /// Changes the color of the color selector to the one from its initial position
+    private func resetColorSelectorColor() {
+        let color = getColor(at: colorSelectorController.circleInitialLocation)
+        colorSelectorController.setColor(color)
         setDrawingColor(color)
-    }
-    
-    /// Changes the location of the color selecter to the location of the user's finger
-    ///
-    /// - Parameter recognizer: the gesture recognizer
-    /// - Returns: the new location of the color selecter
-    private func moveColorSelecter(recognizer: UIPanGestureRecognizer) -> CGPoint {
-        let translation = recognizer.translation(in: drawingView)
-        let point = CGPoint(x: colorSelecterOrigin.x + translation.x, y: colorSelecterOrigin.y + translation.y)
-        drawingView.moveColorSelecter(to: point)
-        return point
-    }
-    
-    /// Gets the color of a certain point of the media playing on the background
-    ///
-    /// - Parameter point: the location to take the color from
-    /// - Returns: the color of the pixel
-    private func getColor(at point: CGPoint) -> UIColor {
-        guard let delegate = delegate else { return .black }
-        return delegate.getColor(from: point)
     }
 
     // MARK: - ColorCollectionControllerDelegate
@@ -562,6 +479,42 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         setStrokeCircleColor(color)
         setDrawingColor(color)
         analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .swatch)
+    }
+    
+    // MARK: - ColorSelectorControllerDelegate
+    
+    /// Gets the color of a certain point of the media playing on the background
+    ///
+    /// - Parameter point: the location to take the color from
+    /// - Returns: the color of the pixel
+    func getColor(at point: CGPoint) -> UIColor {
+        guard let delegate = delegate else { return .black }
+        return delegate.getColor(from: point)
+    }
+    
+    func shouldShowTooltip() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowColorSelectorTooltip()
+    }
+    
+    func didShowCircle() {
+        delegate?.didStartColorSelection()
+    }
+    
+    func didStartMovingCircle() {
+        delegate?.didStartMovingColorSelector()
+    }
+    
+    func didEndMovingCircle(color: UIColor) {
+        setEyeDropperColor(color)
+        setStrokeCircleColor(color)
+        setDrawingColor(color, addToColorCollection: true)
+        
+        showColorPickerContainer(true)
+        showTopButtons(true)
+        enableDrawingCanvas(true)
+        analyticsProvider?.logEditorDrawingChangeColor(selectionTool: .eyedropper)
+        delegate?.didEndColorSelection()
     }
     
     // MARK: - Public interface
@@ -585,6 +538,14 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
                 self.delegate?.didEndStrokeSelectorAnimation()
             }
         })
+    }
+    
+    /// shows or hides the drawing canvas
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showCanvas(_ show: Bool) {
+        drawingView.showCanvas(show)
+        showDrawingLayer(show)
     }
 
     func logDraw(_ drawType: KanvasDrawingAction) {

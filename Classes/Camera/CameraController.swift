@@ -43,6 +43,12 @@ public protocol CameraControllerDelegate: class {
      A function that is called when the main camera dismiss button is pressed
      */
     func dismissButtonPressed()
+
+    /// Called when the tag button is pressed in the editor
+    func tagButtonPressed()
+
+    /// Called when the editor is dismissed
+    func editorDismissed()
     
     /// Called after the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
@@ -52,13 +58,13 @@ public protocol CameraControllerDelegate: class {
     /// - Returns: Bool for tooltip
     func cameraShouldShowWelcomeTooltip() -> Bool
     
-    /// Called after the color selecter tooltip is dismissed
-    func didDismissColorSelecterTooltip()
+    /// Called after the color selector tooltip is dismissed
+    func didDismissColorSelectorTooltip()
     
-    /// Called to ask if color selecter tooltip should be shown
+    /// Called to ask if color selector tooltip should be shown
     ///
     /// - Returns: Bool for tooltip
-    func editorShouldShowColorSelecterTooltip() -> Bool
+    func editorShouldShowColorSelectorTooltip() -> Bool
     
     /// Called after the stroke animation has ended
     func didEndStrokeSelectorAnimation()
@@ -251,7 +257,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        modeAndShootController.resetMediaPickerButton()
     }
 
     // MARK: - navigation
@@ -275,6 +280,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             controller = createPreviewViewController(segments)
         }
         controller.modalTransitionStyle = .crossDissolve
+        controller.modalPresentationStyle = .fullScreen
         return controller
     }
     
@@ -607,7 +613,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePickerController.sourceType = .savedPhotosAlbum
         imagePickerController.allowsEditing = false
         imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
-        present(imagePickerController, animated: true, completion: nil)
+        present(imagePickerController, animated: true) {
+            self.modeAndShootController.resetMediaPickerButton()
+        }
         analyticsProvider?.logMediaPickerOpen()
     }
 
@@ -678,6 +686,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func mediaClipStartedMoving() {
         delegate?.didBeginDragInteraction()
         modeAndShootController.enableShootButtonUserInteraction(true)
+        modeAndShootController.enableShootButtonGestureRecognizers(false)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
             self?.modeAndShootController.closeTrash()
@@ -690,6 +699,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndDragInteraction()
         let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
+        modeAndShootController.enableShootButtonGestureRecognizers(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
@@ -702,6 +712,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndDragInteraction()
         let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
         modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
+        modeAndShootController.enableShootButtonGestureRecognizers(true)
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
@@ -781,15 +792,20 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.dismiss(animated: true)
         }
+        delegate?.editorDismissed()
+    }
+
+    func tagButtonPressed() {
+        delegate?.tagButtonPressed()
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
+    func editorShouldShowColorSelectorTooltip() -> Bool {
         guard let delegate = delegate else { return false }
-        return delegate.editorShouldShowColorSelecterTooltip()
+        return delegate.editorShouldShowColorSelectorTooltip()
     }
     
-    func didDismissColorSelecterTooltip() {
-        delegate?.didDismissColorSelecterTooltip()
+    func didDismissColorSelectorTooltip() {
+        delegate?.didDismissColorSelectorTooltip()
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {

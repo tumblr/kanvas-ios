@@ -24,7 +24,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     private let launchKanvasButton = UIButton(type: .custom)
     private let launchKanvasDashboardButton = UIButton(type: .system)
     private var shouldShowWelcomeTooltip = true
-    private var shouldShowColorSelecterTooltip = true
+    private var shouldShowColorSelectorTooltip = true
     private var shouldShowStrokeSelectorAnimation = true
     private var firstLaunch = true
     private lazy var featuresTable: FeatureTableView = {
@@ -36,18 +36,58 @@ final class KanvasCameraExampleViewController: UIViewController {
     private var cameraSettings: CameraSettings {
         settings.exportStopMotionPhotoAsVideo = true
         settings.topButtonsSwapped = false
+        settings.crossIconInEditor = false
+        settings.showTagButtonInEditor = false
         return settings
     }
     private var dashboardSettings: CameraSettings {
         settings.exportStopMotionPhotoAsVideo = false
         settings.topButtonsSwapped = true
+        settings.crossIconInEditor = true
+        settings.showTagButtonInEditor = true
         return settings
     }
+
+    private let backgroundColorNormal: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .systemBackground
+        }
+        else {
+            return .white
+        }
+    }()
+
+    private let backgroundColorHighlighted: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .systemGray6
+        }
+        else {
+            return UIColor(hex: 0xEEEEEE)
+        }
+    }()
+
+    private let labelColor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .label
+        }
+        else {
+            return .black
+        }
+    }()
+
+    private let labelColorHighlighted: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .secondaryLabel
+        }
+        else {
+            return .gray
+        }
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .white
+        view.backgroundColor = backgroundColorNormal
         view.addSubview(launchKanvasButton)
         view.addSubview(launchKanvasDashboardButton)
         view.addSubview(featuresTable)
@@ -74,7 +114,9 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     @objc private func launchKanvasDashboardTapped() {
-        present(SplitViewController(settings: dashboardSettings), animated: true, completion: .none)
+        let controller = SplitViewController(settings: dashboardSettings)
+        controller.modalPresentationStyle = .fullScreen
+        present(controller, animated: true, completion: .none)
     }
 
     /// This returns the customized settings for the CameraController
@@ -110,6 +152,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     private func launchCamera(animated: Bool = true) {
         let controller = CameraController(settings: cameraSettings, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = self
+        controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
         self.present(controller, animated: animated, completion: nil)
     }
@@ -127,13 +170,13 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasButton.heightAnchor.constraint(equalToConstant: buttonWidth).isActive = true
 
         // background
-        launchKanvasButton.setBackgroundImage(UIImage(color: .white), for: .normal)
-        launchKanvasButton.setBackgroundImage(UIImage(color: UIColor(hex: 0xEEEEEE)), for: .highlighted)
+        launchKanvasButton.setBackgroundImage(UIImage(color: backgroundColorNormal), for: .normal)
+        launchKanvasButton.setBackgroundImage(UIImage(color: backgroundColorHighlighted), for: .highlighted)
 
         // title
         launchKanvasButton.setTitle("", for: .normal)
-        launchKanvasButton.setTitleColor(.black, for: .normal)
-        launchKanvasButton.setTitleColor(.black, for: .highlighted)
+        launchKanvasButton.setTitleColor(labelColor, for: .normal)
+        launchKanvasButton.setTitleColor(labelColor, for: .highlighted)
         launchKanvasButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
 
         // action
@@ -153,8 +196,8 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasDashboardButton.setTitle("", for: .normal)
         launchKanvasDashboardButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
         launchKanvasDashboardButton.titleLabel?.textAlignment = .center
-        launchKanvasDashboardButton.setTitleColor(.black, for: .normal)
-        launchKanvasDashboardButton.setTitleColor(.gray, for: .highlighted)
+        launchKanvasDashboardButton.setTitleColor(labelColor, for: .normal)
+        launchKanvasDashboardButton.setTitleColor(labelColorHighlighted, for: .highlighted)
 
         // actions
         launchKanvasDashboardButton.addTarget(self, action: #selector(launchKanvasDashboardTapped), for: .touchUpInside)
@@ -179,7 +222,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     private func resetButton() {
         launchKanvasButton.isUserInteractionEnabled = true
 
-        launchKanvasButton.layer.borderColor = UIColor.black.cgColor
+        launchKanvasButton.layer.borderColor = labelColor.cgColor
         launchKanvasButton.layer.borderWidth = 3
         launchKanvasButton.layer.cornerRadius = launchKanvasButton.bounds.width / 2
         launchKanvasButton.layer.masksToBounds = true
@@ -255,6 +298,14 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
+    func tagButtonPressed() {
+        // Only supported in Orangina
+    }
+
+    func editorDismissed() {
+        // Only supported in Orangina
+    }
+
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeTooltip
     }
@@ -263,12 +314,12 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         shouldShowWelcomeTooltip = false
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
-        return shouldShowColorSelecterTooltip
+    func editorShouldShowColorSelectorTooltip() -> Bool {
+        return shouldShowColorSelectorTooltip
     }
     
-    func didDismissColorSelecterTooltip() {
-        shouldShowColorSelecterTooltip = false
+    func didDismissColorSelectorTooltip() {
+        shouldShowColorSelectorTooltip = false
     }
     
     func didEndStrokeSelectorAnimation() {

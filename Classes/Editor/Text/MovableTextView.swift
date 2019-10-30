@@ -62,7 +62,6 @@ final class MovableTextView: UIView {
         super.init(frame: .zero)
         
         setupTextView(options: options)
-        applyTransform()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -116,6 +115,15 @@ final class MovableTextView: UIView {
         }
     }
     
+    /// Moves the view to its defined position, size and angle
+    func moveToDefinedPosition() {
+        applyTransform()
+    }
+    
+    /// Moves the view back to its initial position, size and angle
+    func goBackToOrigin() {
+        transform = .identity
+    }
     
     /// Removes the view from its superview with an animation
     func remove() {
@@ -138,6 +146,9 @@ private extension UITextView {
     /// Values must be higher than 1.0.
     func setScaleFactor(_ scaleFactor: CGFloat) {
         guard scaleFactor >= 1.0 else { return }
-        textInputView.contentScaleFactor = scaleFactor * UIScreen.main.nativeScale
+        let scaleFactorForDevice = scaleFactor * UIScreen.main.nativeScale
+        for subview in textInputView.subviews {
+            subview.contentScaleFactor = scaleFactorForDevice
+        }
     }
 }

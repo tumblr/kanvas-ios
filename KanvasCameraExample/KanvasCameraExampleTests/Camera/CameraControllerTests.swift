@@ -267,6 +267,14 @@ final class CameraControllerTests: FBSnapshotTestCase {
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
 
+    func tagButtonPressed() {
+
+    }
+
+    func editorDismissed() {
+
+    }
+
     func didDismissWelcomeTooltip() {
         
     }
@@ -275,11 +283,11 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         return false
     }
     
-    func didDismissColorSelecterTooltip() {
+    func didDismissColorSelectorTooltip() {
         
     }
     
-    func editorShouldShowColorSelecterTooltip() -> Bool {
+    func editorShouldShowColorSelectorTooltip() -> Bool {
         return false
     }
     

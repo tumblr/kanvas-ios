@@ -35,6 +35,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     
     weak var delegate: TextCanvasDelegate?
     
+    // View that is being edited
+    private var selectedText: MovableTextView?
+    
     // View being touched at the moment
     private var currentMovableView: MovableTextView?
     
@@ -105,8 +108,9 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     ///
     /// - Parameter option: text style options
     /// - Parameter transformations: transformations for the view
+    /// - Parameter location: location of the text view before transformations
     /// - Parameter size: size of the text view
-    func addText(options: TextOptions, transformations: ViewTransformations, size: CGSize) {
+    func addText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         let textView = MovableTextView(options: options, transformations: transformations)
         textView.isUserInteractionEnabled = true
         textView.isExclusiveTouch = true
@@ -117,8 +121,8 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         NSLayoutConstraint.activate([
             textView.heightAnchor.constraint(equalToConstant: size.height),
             textView.widthAnchor.constraint(equalToConstant: size.width),
-            textView.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            textView.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
+            textView.topAnchor.constraint(equalTo: topAnchor, constant: location.y - size.height / 2),
+            textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: location.x - size.width / 2)
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(textTapped(recognizer:)))
@@ -138,6 +142,10 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         textView.addGestureRecognizer(pinchRecognizer)
         textView.addGestureRecognizer(panRecognizer)
         textView.addGestureRecognizer(longPressRecognizer)
+        
+        UIView.animate(withDuration: Constants.animationDuration) {
+            textView.moveToDefinedPosition()
+        }
     }
     
     /// Saves the current view into its layer
@@ -145,12 +153,22 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         layer.contents = asImage().cgImage
     }
     
+    /// Removes the tapped view from the canvas
+    func removeSelectedText() {
+        selectedText?.removeFromSuperview()
+        selectedText = nil
+    }
+    
     // MARK: - Gesture recognizers
     
     @objc func textTapped(recognizer: UITapGestureRecognizer) {
         guard let movableView = recognizer.view as? MovableTextView else { return }
-        delegate?.didTapText(options: movableView.options, transformations: movableView.transformations)
-        movableView.removeFromSuperview()
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            movableView.goBackToOrigin()
+        }, completion: { [weak self] _ in
+            self?.delegate?.didTapText(options: movableView.options, transformations: movableView.transformations)
+            self?.selectedText = movableView
+        })
     }
     
     @objc func textRotated(recognizer: UIRotationGestureRecognizer) {
