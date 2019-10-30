@@ -453,8 +453,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         filterSettingsController.updateUI(forRecording: isRecording)
         if isRecording {
             modeAndShootController.hideModeButton()
+            modeAndShootController.toggleMediaPickerButton(false)
         }
-        // If it finished recording, then there is at least one clip and button shouldn't be shown.
+        else {
+            let showMediaPicker = !filterSettingsController.isFilterSelectorVisible()
+            modeAndShootController.toggleMediaPickerButton(showMediaPicker)
+            // If it finished recording, then there is at least one clip and button shouldn't be shown.
+        }
     }
     
     /// This enables the camera view user interaction based on the photo capture
@@ -690,6 +695,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
             self?.modeAndShootController.closeTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(false)
             self?.clipsController.hidePreviewButton()
         }
     }
@@ -703,6 +709,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(!filterSelectorVisible)
             self?.clipsController.showPreviewButton()
         }
     }
@@ -716,6 +723,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(!filterSelectorVisible)
             self?.clipsController.showPreviewButton()
             self?.updateLastClipPreview()
         }
