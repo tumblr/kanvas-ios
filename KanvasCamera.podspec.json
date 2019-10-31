@@ -23,6 +23,7 @@
   "resources": "Resources/*",
   "dependencies": {
     "TumblrTheme": [],
-	"SharedUI": []
+    "SharedUI": [],
+    "Utils": []
   }
 }

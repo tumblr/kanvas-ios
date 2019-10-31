@@ -7,15 +7,16 @@
 import AVFoundation
 import Foundation
 import UIKit
+import Utils
 
 /// Protocol for camera editor controller methods
 
 protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
-    func didFinishExportingVideo(url: URL?, action: KanvasExportAction)
+    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction)
     
     /// callback when finished exporting image
-    func didFinishExportingImage(image: UIImage?, action: KanvasExportAction)
+    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -247,42 +248,42 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
             if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
-                createFinalVideo(videoURL: videoURL, exportAction: action)
+                createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
             }
             else {
-                createFinalImage(image: image, exportAction: action)
+                createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
             }
         }
         else {
-            assetsHandler.mergeAssets(segments: segments) { [weak self] url in
+            assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
                 guard let url = url else {
                     self?.hideLoading()
                     self?.handleExportError()
                     return
                 }
-                self?.createFinalVideo(videoURL: url, exportAction: action)
+                self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? TumblrMediaInfo(source: .media_library), exportAction: action)
             }
         }
     }
 
-    private func createFinalVideo(videoURL: URL, exportAction: KanvasExportAction) {
+    private func createFinalVideo(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL) { (exportedVideoURL, _) in
+        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
                     self.hideLoading()
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingVideo(url: url, action: exportAction)
+                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction)
                 self.hideLoading()
             }
         }
     }
 
-    private func createFinalImage(image: UIImage, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: UIImage, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
@@ -293,7 +294,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingImage(image: image, action: exportAction)
+                self.delegate?.didFinishExportingImage(image: image, info: mediaInfo, action: exportAction)
                 self.hideLoading()
             }
         }

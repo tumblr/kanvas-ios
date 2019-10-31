@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 import Photos
+import Utils
 
 final class CameraControllerTests: FBSnapshotTestCase {
 
@@ -318,7 +319,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         case (.none, .none): creationEmpty = true
         case (_, .some): creationError = true
         case (.some(.image(_)), _): imageCreatedCalled = true
-        case (.some(.video(let url)), _): videoURL = url
+        case (.some(.video(let url, _)), _): videoURL = url
         }
     }
 
