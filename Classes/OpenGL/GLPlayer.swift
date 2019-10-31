@@ -344,26 +344,6 @@ final class GLPlayer {
         displayLink?.preferredFramesPerSecond = Int(ceil(frameRate))
     }
 
-    func transformMatrix(mediaDimensions: CGSize, renderDimensions: CGSize) -> GLKMatrix4 {
-        var scale = CGSize()
-        let screenScale = CGSize(width: renderDimensions.width / mediaDimensions.width, height: renderDimensions.height / mediaDimensions.height)
-        if screenScale.height > screenScale.width {
-            scale.width = renderDimensions.width / (mediaDimensions.width * screenScale.height)
-            scale.height = 1.0
-        }
-        else {
-            scale.width = 1.0
-            scale.height = renderDimensions.height / (mediaDimensions.height * screenScale.width)
-        }
-        let translate = CGSize(width: (1.0 - scale.width) / 2.0, height: (1.0 - scale.height) / 2.0)
-        return GLKMatrix4Make(
-            Float(scale.width), 0.0,                 0.0, Float(translate.width),
-            0.0,                Float(scale.height), 0.0, Float(translate.height),
-            0.0,                0.0,                 1.0, 0.0,
-            0.0,                0.0,                 0.0, 1.0
-        )
-    }
-
     @objc private func step() {
         guard let currentlyPlayingMedia = currentlyPlayingMedia else {
             return
