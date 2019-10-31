@@ -7,6 +7,7 @@ PODS:
   - KanvasCamera (0.1.0):
     - SharedUI
     - TumblrTheme
+    - Utils
   - SharedUI (1.0.0):
     - TumblrTheme
   - TumblrTheme (1.0.0):
@@ -36,7 +37,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  KanvasCamera: 31c879bbedacc6a7327e2d5e60dec26d8b0a0692
+  KanvasCamera: f0fb112d25df1b258d6b799ea2b8b19477d89c46
   SharedUI: 0672b5b98d1f56ce98232d8f8750ef74d9874bfd
   TumblrTheme: 368431e661c58bce0f75d3a1d4612ae5911058f1
   Utils: d688e84bd7ff63b069fd5032b868501af13af612

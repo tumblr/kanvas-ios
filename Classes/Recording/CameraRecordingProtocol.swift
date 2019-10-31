@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import Utils
 
 /// A protocol for camera recording callbacks
 protocol CameraRecordingDelegate: class {
@@ -99,7 +100,7 @@ protocol CameraRecordingProtocol {
     ///
     /// - Parameter completion: Returns a destination URL if successful
     /// - Returns: Void
-    func exportRecording(completion: @escaping (URL?) -> Void)
+    func exportRecording(completion: @escaping (URL?, TumblrMediaInfo?) -> Void)
 
     /// deletes a segment at the selected index
     ///

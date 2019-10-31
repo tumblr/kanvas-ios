@@ -7,6 +7,7 @@
 import XCTest
 
 @testable import KanvasCamera
+@testable import Utils
 
 class MediaMetadataTests: XCTestCase {
 
@@ -18,13 +19,12 @@ class MediaMetadataTests: XCTestCase {
         let recorder = CameraRecorderStub(size: CGSize(width: 300, height: 300), photoOutput: nil, videoOutput: nil, audioOutput: nil, recordingDelegate: nil, segmentsHandler: segmentsHandler, settings: settings)
         recorder.startRecordingVideo(on: mode)
         recorder.stopRecordingVideo() { _ in
-            recorder.exportRecording(completion: { url in
-                guard let url = url else {
+            recorder.exportRecording(completion: { (url, mediaInfo) in
+                guard url != nil else {
                     XCTFail()
                     return
                 }
-                let mediaInfo = MediaMetadata.readMediaInfo(fromVideo: url as NSURL)
-                XCTAssertEqual(mediaInfo, .kanvas)
+                XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
                 expectation.fulfill()
             })
         }
@@ -37,12 +37,12 @@ class MediaMetadataTests: XCTestCase {
         let segmentsHandler = CameraSegmentHandler()
         let recorder = CameraRecorderStub(size: CGSize(width: 300, height: 300), photoOutput: nil, videoOutput: nil, audioOutput: nil, recordingDelegate: nil, segmentsHandler: segmentsHandler, settings: settings)
         recorder.takePhoto(on: .photo) { image in
-            guard let url = CameraController.saveImageToFile(image, info: .kanvas) else {
+            guard let url = CameraController.saveImageToFile(image, info: .init(source: .kanvas_camera)) else {
                 XCTFail()
                 return
             }
-            let mediaInfo = try? MediaMetadata.readMediaInfo(fromImage: url)
-            XCTAssertEqual(mediaInfo, .kanvas)
+            let mediaInfo = TumblrMediaInfo(fromImage: url)
+            XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5)
