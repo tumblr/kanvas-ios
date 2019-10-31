@@ -220,7 +220,7 @@ final class GLPixelBufferView: UIView {
         glBindTexture(CVOpenGLESTextureGetTarget(texture), CVOpenGLESTextureGetName(texture))
         glUniform1i(inputImageTexture, 0)
 
-        let transformMatrix = self.tranformMatrix(mediaDimensions: CGSize(width: frameWidth, height: frameHeight), renderDimensions: self.bounds.size)
+        let transformMatrix = self.transformMatrix(mediaDimensions: CGSize(width: frameWidth, height: frameHeight), renderDimensions: self.bounds.size)
         transformMatrix.unsafePointer { m in
             glUniformMatrix4fv(uniformTransform, 1, 0, m)
         }
@@ -254,7 +254,7 @@ final class GLPixelBufferView: UIView {
         glBindTexture(GL_TEXTURE_2D.ui, 0)
     }
 
-    func tranformMatrix(mediaDimensions: CGSize, renderDimensions: CGSize) -> GLKMatrix4 {
+    func transformMatrix(mediaDimensions: CGSize, renderDimensions: CGSize) -> GLKMatrix4 {
         var scale = CGSize()
         let screenScale = CGSize(width: renderDimensions.width / mediaDimensions.width, height: renderDimensions.height / mediaDimensions.height)
         if screenScale.height > screenScale.width {
