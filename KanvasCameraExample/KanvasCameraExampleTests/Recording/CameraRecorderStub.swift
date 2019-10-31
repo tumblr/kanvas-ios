@@ -8,6 +8,7 @@
 import AVFoundation
 import Foundation
 import UIKit
+import Utils
 
 final class CameraRecorderStub: CameraRecordingProtocol {
 
@@ -17,7 +18,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
     private var startTime: Date?
     var recordingDelegate: CameraRecordingDelegate? = nil
 
-    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?, segmentsHandler: SegmentsHandlerType) {
+    required init(size: CGSize, photoOutput: AVCapturePhotoOutput?, videoOutput: AVCaptureVideoDataOutput?, audioOutput: AVCaptureAudioDataOutput?, recordingDelegate: CameraRecordingDelegate?, segmentsHandler: SegmentsHandlerType, settings: CameraSettings) {
         self.recordingDelegate = recordingDelegate
         self.cameraSegmentHandler = segmentsHandler
     }
@@ -38,7 +39,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         return nil
     }
 
-    func startRecordingVideo() {
+    func startRecordingVideo(on mode: CameraMode) {
         if isRecording() {
             return
         }
@@ -50,7 +51,8 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         if isRecording() {
             recording = false
             if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-                cameraSegmentHandler.addNewVideoSegment(url: url)
+                let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+                cameraSegmentHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
                 completion(url)
             }
             else {
@@ -68,13 +70,14 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         recording = false
     }
 
-    func takePhoto(completion: @escaping (UIImage?) -> Void) {
+    func takePhoto(on mode: CameraMode, cameraPosition: AVCaptureDevice.Position? = .back, completion: @escaping (UIImage?) -> Void) {
         if isRecording() {
             completion(nil)
             return
         }
         if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
-            cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, completion: { (success, segment) in
+            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+            cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo, completion: { (success, segment) in
                 completion(image)
             })
         }
@@ -84,21 +87,31 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         }
     }
 
-    func exportRecording(completion: @escaping (URL?) -> Void) {
-        cameraSegmentHandler.exportVideo(completion: { url in
-            completion(url)
+    func exportRecording(completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+        cameraSegmentHandler.exportVideo(completion: { url, mediaInfo in
+            completion(url, mediaInfo)
             self.recording = false
         })
     }
 
-    func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool = false) {
+    func deleteSegment(at index: Int, removeFromDisk: Bool = false) {
         if isRecording() {
             return
         }
-        cameraSegmentHandler.deleteSegment(index: index, removeFromDisk: false)
+        cameraSegmentHandler.deleteSegment(at: index, removeFromDisk: false)
     }
 
-    func takeGifMovie(completion: @escaping (URL?) -> Void) {
+    func deleteAllSegments(removeFromDisk: Bool) {
+        while cameraSegmentHandler.segments.count > 0 {
+            cameraSegmentHandler.deleteSegment(at: 0, removeFromDisk: removeFromDisk)
+        }
+    }
+
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        cameraSegmentHandler.moveSegment(from: originIndex, to: destinationIndex)
+    }
+    
+    func takeGifMovie(useLongerDuration: Bool = false, completion: @escaping (URL?) -> Void) {
         if isRecording() {
             completion(nil)
             return
@@ -125,6 +138,10 @@ final class CameraRecorderStub: CameraRecordingProtocol {
 
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         currentVideoSample = sampleBuffer
+    }
+
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+
     }
 
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {

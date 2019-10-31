@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import TumblrTheme
 
 /// Protocol to handle mode button user actions
 protocol ModeButtonViewDelegate: class {
@@ -15,10 +16,10 @@ protocol ModeButtonViewDelegate: class {
 }
 
 private struct ModeButtonViewConstants {
-    static let ContentVerticalInset: CGFloat = 8
-    static let ContentHorizontalInset: CGFloat = ContentVerticalInset * 2
-    static let BorderWidth: CGFloat = 2
-    static let FontSize: CGFloat = 16
+    static let contentVerticalInset: CGFloat = 6
+    static let contentHorizontalInset: CGFloat = 20
+    static let borderWidth: CGFloat = 2
+    static let buttonFont: UIFont = .favoritTumblr85(fontSize: 18.5)
 }
 
 /// The capsule mode button view
@@ -60,15 +61,15 @@ final class ModeButtonView: IgnoreTouchesView {
     private func setUpButton() {
         modeButton.backgroundColor = .clear
         modeButton.contentHorizontalAlignment = .center
-        modeButton.contentEdgeInsets = UIEdgeInsets(top: ModeButtonViewConstants.ContentVerticalInset,
-                                                    left: ModeButtonViewConstants.ContentHorizontalInset,
-                                                    bottom: ModeButtonViewConstants.ContentVerticalInset,
-                                                    right: ModeButtonViewConstants.ContentHorizontalInset)
+        modeButton.contentEdgeInsets = UIEdgeInsets(top: ModeButtonViewConstants.contentVerticalInset,
+                                                    left: ModeButtonViewConstants.contentHorizontalInset,
+                                                    bottom: ModeButtonViewConstants.contentVerticalInset,
+                                                    right: ModeButtonViewConstants.contentHorizontalInset)
         modeButton.setTitle("", for: .normal)   // Needed so there is a title label which we can set font to.
-        modeButton.titleLabel?.font = modeButton.titleLabel?.font.withSize(ModeButtonViewConstants.FontSize)
+        modeButton.titleLabel?.font = ModeButtonViewConstants.buttonFont
         modeButton.setTitleColor(.white, for: .normal)
 
-        modeButton.layer.borderWidth = ModeButtonViewConstants.BorderWidth
+        modeButton.layer.borderWidth = ModeButtonViewConstants.borderWidth
         modeButton.layer.borderColor = UIColor.white.cgColor
         disposables.append(modeButton.observe(\.bounds) { object, _ in
             object.layer.cornerRadius = object.bounds.height / 2

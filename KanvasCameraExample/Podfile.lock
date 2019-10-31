@@ -4,11 +4,22 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - KanvasCamera (0.1.0)
+  - KanvasCamera (0.1.0):
+    - SharedUI
+    - TumblrTheme
+    - Utils
+  - SharedUI (1.0.0):
+    - TumblrTheme
+  - TumblrTheme (1.0.0):
+    - Utils
+  - Utils (1.0.0)
 
 DEPENDENCIES:
   - FBSnapshotTestCase (= 2.1.4)
   - KanvasCamera (from `../`)
+  - SharedUI (from `../../SharedUI`)
+  - TumblrTheme (from `../../TumblrTheme`)
+  - Utils (from `../../Utils`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -17,11 +28,20 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   KanvasCamera:
     :path: "../"
+  SharedUI:
+    :path: "../../SharedUI"
+  TumblrTheme:
+    :path: "../../TumblrTheme"
+  Utils:
+    :path: "../../Utils"
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  KanvasCamera: 073931b870ae38dc3972b2ed9537f265a2c79cbf
+  KanvasCamera: f0fb112d25df1b258d6b799ea2b8b19477d89c46
+  SharedUI: 0672b5b98d1f56ce98232d8f8750ef74d9874bfd
+  TumblrTheme: 368431e661c58bce0f75d3a1d4612ae5911058f1
+  Utils: d688e84bd7ff63b069fd5032b868501af13af612
 
-PODFILE CHECKSUM: d660d2b8b126fa915d709c9b7f6f0ef384125197
+PODFILE CHECKSUM: 63b078cc4d16185e4085a606e1099ac60b3bff20
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.7.5

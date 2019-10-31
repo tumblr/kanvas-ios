@@ -13,31 +13,26 @@ import UIKit
 extension UIView {
     
     var safeLayoutGuide: UILayoutGuide {
-        if #available(iOS 11.0, *) {
-            return safeAreaLayoutGuide
+        let id = "\(accessibilityIdentifier ?? "").safe_layout"
+        
+        if let safeGuide = layoutGuides.filter({ $0.identifier == id }).first {
+            return safeGuide
         }
         else {
-            let id = "\(accessibilityIdentifier ?? "").safe_layout"
-            if let safeGuide = layoutGuides.filter({ $0.identifier == id }).first {
-                return safeGuide
-            }
-            else {
-                let safeGuide = UILayoutGuide()
-                safeGuide.identifier = id
-                addLayoutGuide(safeGuide)
-                
-                NSLayoutConstraint.activate([
-                    safeGuide.leadingAnchor.constraint(equalTo: leadingAnchor),
-                    safeGuide.trailingAnchor.constraint(equalTo: trailingAnchor),
-                    safeGuide.topAnchor.constraint(equalTo: topAnchor),
-                    safeGuide.bottomAnchor.constraint(equalTo: bottomAnchor)
-                    ])
-                
-                return safeGuide
-            }
+            let safeGuide = UILayoutGuide()
+            safeGuide.identifier = id
+            addLayoutGuide(safeGuide)
+            
+            NSLayoutConstraint.activate([
+                safeGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+                safeGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+                safeGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+                safeGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            ])
+            
+            return safeGuide
         }
     }
-    
 }
 
 /**
@@ -49,7 +44,7 @@ enum ViewPositioning {
 }
 
 private struct KanvasViewConstants {
-    static let AnimationDuration: TimeInterval = 0.2
+    static let animationDuration: TimeInterval = 0.2
 }
 
 extension UIView {
@@ -90,7 +85,7 @@ extension UIView {
         }
         
         if case viewPositioning = ViewPositioning.back {
-            containerView.sendSubview(toBack: self)
+            containerView.sendSubviewToBack(self)
         }
     }
     
@@ -123,7 +118,7 @@ extension UIView {
     internal func showViews(shownViews: [UIView?],
                             hiddenViews: [UIView?],
                             animated: Bool = false,
-                            animationDuration: TimeInterval = KanvasViewConstants.AnimationDuration) {
+                            animationDuration: TimeInterval = KanvasViewConstants.animationDuration) {
         let duration = animated ? animationDuration : 0
         for view in (shownViews + hiddenViews) {
             view?.isUserInteractionEnabled = false

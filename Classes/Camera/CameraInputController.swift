@@ -8,40 +8,25 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// An enum for AVCaptureOutput types
-enum CameraOutput {
-    case photo // AVCapturePhotoOutput
-    case video // AVCaptureVideoDataOutput
-}
-
-/// A convenience check for building to simulators
-private struct CameraDevicePlatform {
-    static var isSimulator: Bool {
-        return TARGET_OS_SIMULATOR != 0
-    }
-}
-
-/// Error cases for configuring inputs
-enum CameraInputError: Swift.Error {
-    case captureSessionAlreadyRunning
-    case captureSessionIsMissing
-    case inputsAreInvalid
-    case invalidOperation
-    case noCamerasAvailable
-    case unknown
-}
-
 /// Default values for the input camera
 private struct CameraInputConstants {
-    static let SampleBufferQueue: String = "SampleBufferQueue"
-    static let AudioQueue: String = "AudioQueue"
-    static let FlashColor = UIColor.white.withAlphaComponent(0.4)
+    static let sessionQueue: String = "kanvas.camera.sessionQueue"
+    static let videoQueue: String = "kanvas.camera.videoQueue"
+    static let audioQueue: String = "kanvas.camera.audioQueue"
+    static let flashColor = UIColor.white.withAlphaComponent(0.4)
+    static let previewBlurAnimationDuration = 0.4
 }
 
 /// The class for controlling the device camera.
 /// It directly interfaces with AVFoundation classes to control video / audio input
 
-final class CameraInputController: UIViewController {
+final class CameraInputController: UIViewController, CameraRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, FilteredInputViewControllerDelegate {
+
+    /// Flag used to indicate that this view controller will be closing, and the capture session should not restart.
+    var willCloseSoon = false
+
+    private let targetFrameRate: Int32 = 30
+    private let minimumFrameRate: Int32 = 24
 
     /// The current camera device position
     private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
@@ -57,17 +42,39 @@ final class CameraInputController: UIViewController {
         switch currentCameraPosition {
         case .front: return frontCamera
         case .back, .unspecified: return rearCamera
+        @unknown default:
+            return rearCamera
         }
     }
 
+    /// Current applied filter type
+    var currentFilterType: FilterType? {
+        return filteredInputViewController?.currentFilter
+    }
+
+    private var filteredInputViewControllerInstance: FilteredInputViewController?
+    private var filteredInputViewController: FilteredInputViewController? {
+        if filteredInputViewControllerInstance == nil {
+            if settings.features.openGLPreview {
+                filteredInputViewControllerInstance = FilteredInputViewController(delegate: self, settings: settings)
+            }
+            else {
+                filteredInputViewControllerInstance = nil
+            }
+        }
+        return filteredInputViewControllerInstance
+    }
     private let previewLayer = AVCaptureVideoPreviewLayer()
+    private let previewBlurView = UIVisualEffectView(effect: CameraInputController.blurEffect())
     private let flashLayer = CALayer()
-    private let sampleBufferQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.SampleBufferQueue)
-    private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.AudioQueue, qos: .utility)
+    private let sessionQueue = DispatchQueue(label: CameraInputConstants.sessionQueue)
+    private let videoQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.videoQueue, attributes: [], target: DispatchQueue.global(qos: .userInteractive))
+    private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, attributes: [])
+    private let isSimulator = TARGET_OS_SIMULATOR != 0
 
     private var settings: CameraSettings
     private var recorderType: CameraRecordingProtocol.Type
-    private var segmentsHandlerType: SegmentsHandlerType.Type
+    private var segmentsHandler: SegmentsHandlerType
 
     private var captureSession: AVCaptureSession?
     private var frontCamera: AVCaptureDevice?
@@ -86,8 +93,11 @@ final class CameraInputController: UIViewController {
         case .video: return videoDataOutput
         }
     }
-    private var recorder: CameraRecordingProtocol?
-
+    private(set) var recorder: CameraRecordingProtocol?
+    
+    /// The delegate methods for zooming and touches
+    weak var delegate: CameraInputControllerDelegate?
+    
     @available(*, unavailable, message: "use init(defaultFlashOption:) instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -107,38 +117,126 @@ final class CameraInputController: UIViewController {
     ///   - recorderClass: Class that will provide a recorder that defines exactly how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
-    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandlerClass: SegmentsHandlerType.Type) {
+    ///   - delegate: Delegate for input
+    public init(settings: CameraSettings, recorderClass: CameraRecordingProtocol.Type, segmentsHandler: SegmentsHandlerType, delegate: CameraInputControllerDelegate? = nil) {
         self.settings = settings
         recorderType = recorderClass
-        segmentsHandlerType = segmentsHandlerClass
+        self.segmentsHandler = segmentsHandler
+        self.delegate = delegate
         super.init(nibName: .none, bundle: .none)
+        setupNotifications()
     }
 
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
     @objc private func appWillResignActive() {
-        captureSession?.stopRunning()
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
+        }
     }
 
     @objc private func appDidBecomeActive() {
-        captureSession?.startRunning()
+        sessionQueue.async {
+            self.captureSession?.startRunning()
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    func stopSession() {
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
+        }
     }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        createCaptureSession()
-        configureSession()
+        sessionQueue.sync {
+            self.createCaptureSession()
+        }
+        sessionQueue.async {
+            self.configureSession()
+            self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+        }
         setupGestures()
-        setupPreview()
-        setupFlash(defaultOption: settings.preferredFlashOption)
-        setupRecorder(recorderType, segmentsHandlerType: segmentsHandlerType)
 
-        if !CameraDevicePlatform.isSimulator { // if running on simulator, the startRunning() call takes a long time to return
-            captureSession?.startRunning()
+        if filteredInputViewController != nil {
+            setupFilteredPreview()
+        }
+        else {
+            setupPreview()
+        }
+
+        setupFlash(defaultOption: settings.preferredFlashOption)
+
+        setupPreviewBlur()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard !willCloseSoon else {
+            return
+        }
+
+        guard !isSimulator else {
+            self.previewBlurView.effect = nil
+            return
+        }
+
+        self.setupFilteredPreview()
+        self.setupPreviewBlur()
+        self.sessionQueue.async {
+            if self.captureSession == nil {
+                self.createCaptureSession()
+                self.configureSession()
+                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+            }
+            self.captureSession?.startRunning()
+            performUIUpdate {
+                UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
+                    self.previewBlurView.effect = nil
+                }
+            }
         }
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        guard !isSimulator else { return }
+
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
+        }
+        filteredInputViewControllerInstance?.reset()
+        previewBlurView.effect = CameraInputController.blurEffect()
+    }
+
+    func cleanup() {
+        guard !isSimulator else { return }
+
+        teardownFilteredPreview()
+
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
+            self.removeSessionInputsAndOutputs()
+            self.captureSession = nil
+        }
+    }
+
+    private static func blurEffect() -> UIBlurEffect {
+        return UIBlurEffect(style: .light)
+    }
+
     private func configureSession() {
-        guard !CameraDevicePlatform.isSimulator else {
+        guard !isSimulator else {
             return
         }
         do {
@@ -147,6 +245,7 @@ final class CameraInputController: UIViewController {
             try configureCameraInputs()
             try configurePhotoOutput()
             try configureVideoDataOutput()
+            try configureAudioDataInput()
             try configureAudioDataOutput()
             try configureCurrentOutput()
             captureSession?.commitConfiguration()
@@ -158,11 +257,11 @@ final class CameraInputController: UIViewController {
     }
 
     private func setupGestures() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped(gesture:)))
-        view.addGestureRecognizer(tap)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapped(gesture:))))
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
+        view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinched)))
     }
 
     private func setupPreview() {
@@ -172,8 +271,37 @@ final class CameraInputController: UIViewController {
         view.layer.addSublayer(previewLayer)
     }
 
+    private func setupFilteredPreview() {
+        guard let filteredInputViewController = self.filteredInputViewController else { return }
+
+        if !children.contains(filteredInputViewController) {
+            load(childViewController: filteredInputViewController, into: view)
+        }
+    }
+
+    func teardownFilteredPreview() {
+        guard filteredInputViewControllerInstance != nil else { return }
+        filteredInputViewControllerInstance?.reset()
+        filteredInputViewControllerInstance?.unloadFromParentViewController()
+        filteredInputViewControllerInstance = nil
+    }
+
+    private func setupPreviewBlur() {
+        guard !UIAccessibility.isReduceTransparencyEnabled else { return }
+
+        if !view.subviews.contains(previewBlurView) {
+            previewBlurView.backgroundColor = .clear
+            previewBlurView.frame = self.view.bounds
+            previewBlurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            if isSimulator {
+                previewBlurView.effect = nil
+            }
+            view.addSubview(previewBlurView)
+        }
+    }
+
     private func setupFlash(defaultOption: AVCaptureDevice.FlashMode) {
-        flashLayer.backgroundColor = CameraInputConstants.FlashColor.cgColor
+        flashLayer.backgroundColor = CameraInputConstants.flashColor.cgColor
         flashLayer.frame = previewLayer.bounds
         hideFlashLayer()
 
@@ -181,21 +309,26 @@ final class CameraInputController: UIViewController {
         flashMode = defaultOption
     }
 
-    private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, segmentsHandlerType: SegmentsHandlerType.Type) {
+    private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, segmentsHandler: SegmentsHandlerType) {
         let size = currentResolution()
-        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandlerType.init())
+        self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandler, settings: settings)
     }
 
     // MARK: - Internal methods
 
     /// Switches between front and rear camera, if possible
     func switchCameras() {
-        captureSession?.stopRunning()
-        do {
-            try? toggleFrontRearCameras()
-            try? configureCurrentOutput()
+        sessionQueue.async {
+            self.captureSession?.stopRunning()
+            do {
+                try? self.toggleFrontRearCameras()
+                try? self.configureCurrentOutput()
+            }
+            self.captureSession?.startRunning()
         }
-        captureSession?.startRunning()
+
+        // have to rebuild the filtered input display setup
+        filteredInputViewController?.reset()
     }
 
     /// Changes the current output modes corresponding to camera mode
@@ -203,10 +336,10 @@ final class CameraInputController: UIViewController {
     /// - Parameter mode: The current camera mode
     /// - throws:
     func configureMode(_ mode: CameraMode) throws {
-        switch mode {
+        switch mode.group {
         case .photo:
             currentCameraOutput = .photo
-        case .gif, .stopMotion:
+        case .video, .gif:
             currentCameraOutput = .video
         }
         do { try configureCurrentOutput() } catch {
@@ -219,13 +352,13 @@ final class CameraInputController: UIViewController {
     /// Records a gif using the CameraRecordingProtocol type
     ///
     /// - Parameter completion: returns a local file URL if successful
-    func takeGif(completion: @escaping (URL?) -> Void) {
+    func takeGif(useLongerDuration: Bool = false, completion: @escaping (URL?) -> Void) {
         guard let recorder = recorder else {
             completion(nil)
             return
         }
         addArtificialFlashIfNecessary()
-        recorder.takeGifMovie(completion: { [weak self] url in
+        recorder.takeGifMovie(useLongerDuration: useLongerDuration, completion: { [weak self] url in
             self?.removeArtificialFlashIfNecessary()
             completion(url)
         })
@@ -233,24 +366,27 @@ final class CameraInputController: UIViewController {
 
     /// Takes a photo using the CameraRecordingProtocol type
     ///
+    /// - Parameter mode: current camera mode
     /// - Parameter completion: returns a UIImage if successful
-    func takePhoto(completion: @escaping (UIImage?) -> Void) {
+    func takePhoto(on mode: CameraMode, completion: @escaping (UIImage?) -> Void) {
         guard let recorder = recorder else {
             completion(nil)
             return
         }
-        recorder.takePhoto(completion: { (image) in
+        recorder.takePhoto(on: mode, cameraPosition: currentCameraPosition, completion: { (image) in
             completion(image)
         })
     }
 
     /// Starts video recording using the CameraRecordingProtocol type
     ///
+    /// - Parameter mode: current camera mode
     /// - Returns: return true if successfully started recording
-    func startRecording() -> Bool {
+    func startRecording(on mode: CameraMode) -> Bool {
         guard let recorder = self.recorder else { return false }
+        startAudioSession()
         addArtificialFlashIfNecessary()
-        recorder.startRecordingVideo()
+        recorder.startRecordingVideo(on: mode)
         return true
     }
 
@@ -264,6 +400,7 @@ final class CameraInputController: UIViewController {
         }
         recorder.stopRecordingVideo(completion: { [weak self] url in
             self?.removeArtificialFlashIfNecessary()
+            self?.stopAudioSession()
             completion(url)
         })
     }
@@ -307,43 +444,27 @@ final class CameraInputController: UIViewController {
         flashMode = .off == flashMode ? .on : .off
     }
 
-    /// Sets the video camera zoom factor
-    ///
-    /// - Parameter zoomFactor: should be a value between 1 and the videoMaxZoomFactor. 1 is standard zoom
-    func setZoom(zoomFactor: CGFloat) throws {
-        guard let camera = currentDevice else { return }
-        var targetZoomFactor = zoomFactor
-        if targetZoomFactor > 1 {
-            targetZoomFactor = 1
-        }
-        if targetZoomFactor < camera.activeFormat.videoMaxZoomFactor {
-            targetZoomFactor = camera.activeFormat.videoMaxZoomFactor
-        }
-        do {
-            try camera.lockForConfiguration()
-            camera.videoZoomFactor = zoomFactor
-            camera.unlockForConfiguration()
-        } catch {
-            // the zoom factor is different for various devices, setting the zoom shouldn't crash
-            NSLog("failed to zoom for \(zoomFactor)")
-            throw CameraInputError.inputsAreInvalid
-        }
-    }
-
-    /// The current camera's zoom
-    ///
-    /// - Returns: returns the current device's videoZoomFactor, if a device is found
-    func currentZoom() -> CGFloat? {
-        return currentDevice?.videoZoomFactor
-    }
-
     /// Deletes a segment at an index
     ///
     /// - Parameter index: Int
-    func deleteSegmentAtIndex(_ index: Int) {
-        recorder?.deleteSegmentAtIndex(index, removeFromDisk: true)
+    func deleteSegment(at index: Int) {
+        recorder?.deleteSegment(at: index, removeFromDisk: true)
     }
 
+    func deleteAllSegments() {
+        recorder?.deleteAllSegments(removeFromDisk: true)
+    }
+
+    /// Moves a segment inside the sequence
+    ///
+    /// - Parameters:
+    ///   - originIndex: Int
+    ///   - destinationIndex: Int
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        guard let recorder = recorder else { return }
+        recorder.moveSegment(from: originIndex, to: destinationIndex)
+    }
+    
     /// The currently recorded segments of images and video
     ///
     /// - Returns: an array of CameraSegment
@@ -351,6 +472,25 @@ final class CameraInputController: UIViewController {
         return recorder?.segments() ?? []
     }
 
+    /// Applies the filter
+    func applyFilter(filterType: FilterType) {
+        filteredInputViewController?.applyFilter(type: filterType)
+    }
+    
+    /// Starts the current audio session
+    func startAudioSession() {
+        guard let captureSession = captureSession, let audioInput = currentMicInput else { return }
+        if captureSession.canAddInput(audioInput) {
+            captureSession.addInput(audioInput)
+        }
+    }
+    
+    /// Stops the current audio session
+    func stopAudioSession() {
+        guard let captureSession = captureSession, let audioInput = currentMicInput else { return }
+        captureSession.removeInput(audioInput)
+    }
+    
     // MARK: - private methods
 
     @objc private func tapped(gesture: UITapGestureRecognizer) {
@@ -363,7 +503,12 @@ final class CameraInputController: UIViewController {
     }
 
     @objc private func doubleTapped() {
+        delegate?.cameraInputControllerShouldResetZoom()
         switchCameras()
+    }
+
+    @objc func pinched(_ gesture: UIPinchGestureRecognizer) {
+        delegate?.cameraInputControllerPinched(gesture: gesture)
     }
 
     private func currentResolution() -> CGSize {
@@ -401,6 +546,8 @@ final class CameraInputController: UIViewController {
                 rearCamera = camera
             case .unspecified:
                 break // unspecified cameras are not currently supported
+            @unknown default:
+                break
             }
             if camera.isFocusModeSupported(.continuousAutoFocus) {
                 try camera.lockForConfiguration()
@@ -456,18 +603,13 @@ final class CameraInputController: UIViewController {
         else { throw CameraInputError.invalidOperation }
         videoDataOutput = videoOutput
 
-        videoDataOutput?.setSampleBufferDelegate(self, queue: sampleBufferQueue)
+        videoDataOutput?.setSampleBufferDelegate(self, queue: videoQueue)
     }
 
     private func configureAudioDataOutput() throws {
-        guard let captureSession = self.captureSession, let microphone = microphone else { throw CameraInputError.captureSessionIsMissing }
+        guard let captureSession = self.captureSession else { throw CameraInputError.captureSessionIsMissing }
 
         do {
-            let audioInput = try AVCaptureDeviceInput(device: microphone)
-            currentMicInput = audioInput
-            if captureSession.canAddInput(audioInput) {
-                captureSession.addInput(audioInput)
-            }
             let audioOutput = AVCaptureAudioDataOutput()
             if captureSession.canAddOutput(audioOutput) {
                 captureSession.addOutput(audioOutput)
@@ -480,6 +622,12 @@ final class CameraInputController: UIViewController {
         } catch {
             print("audio input failed")
         }
+    }
+    
+    private func configureAudioDataInput() throws {
+        guard let microphone = microphone else { return }
+        let audioInput = try AVCaptureDeviceInput(device: microphone)
+        currentMicInput = audioInput
     }
 
     private func configureCurrentOutput() throws {
@@ -539,21 +687,21 @@ final class CameraInputController: UIViewController {
             hideFlashLayer()
         }
     }
-}
 
-// MARK: - CameraRecordingDelegate
-// more documentation on the protocol methods can be found in the CameraRecordingDelegate
-extension CameraInputController: CameraRecordingDelegate {
-    var photoSettingsForCamera: AVCapturePhotoSettings? {
+    // MARK: - CameraRecordingDelegate
+    // more documentation on the protocol methods can be found in the CameraRecordingDelegate
+    func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
-        settings.flashMode = flashMode
+        if output?.supportedFlashModes.contains(.on) == true {
+            settings.flashMode = flashMode
+        }
         return settings
     }
 
     func cameraWillTakeVideo() {
         guard let camera = currentDevice else { return }
         if flashMode == .on {
-            if camera.hasTorch {
+            if camera.hasTorch && camera.isTorchModeSupported(.on) {
                 do {
                     try camera.lockForConfiguration()
                     camera.torchMode = .on
@@ -567,7 +715,7 @@ extension CameraInputController: CameraRecordingDelegate {
 
     func cameraWillFinishVideo() {
         guard let camera = currentDevice else { return }
-        if camera.hasTorch && camera.torchMode != .off {
+        if camera.hasTorch && camera.torchMode != .off && camera.isTorchModeSupported(.off) {
             do {
                 try camera.lockForConfiguration()
                 camera.torchMode = .off
@@ -577,25 +725,110 @@ extension CameraInputController: CameraRecordingDelegate {
             }
         }
     }
-}
 
-// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
+        let filteredImage = filteredInputViewController?.filterImageWithCurrentPipeline(image: image)
+        return filteredImage ?? image
+    }
 
-extension CameraInputController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    
+    // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if output == audioDataOutput {
             recorder?.processAudioSampleBuffer(sampleBuffer)
         }
         else if output == videoDataOutput {
-            recorder?.processVideoSampleBuffer(sampleBuffer)
+            filteredInputViewController?.filterSampleBuffer(sampleBuffer)
+            if !settings.features.openGLCapture {
+                recorder?.processVideoSampleBuffer(sampleBuffer)
+            }
         }
     }
 
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        // dropping a sample should be okay here, processor could be busy
         var mode: CMAttachmentMode = 0
-        let reason = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_DroppedFrameReason, &mode)
-        print("CMSampleBuffer was dropped for reason: \(String(describing: reason))")
+        let reasonMaybe = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_DroppedFrameReason, attachmentModeOut: &mode)
+        guard let reason = reasonMaybe else {
+            assertionFailure("CMSampleBuffer was dropped for an unknown reason")
+            return
+        }
+        let reasonString = String(describing: reason)
+        print("CMSampleBuffer was dropped for reason: \(reason)")
+
+        // While dropping a sample is usually OK, OutOfBuffers is problematic because it means the CMSampleBuffer is
+        // being retained for too long. This is either becuase processing each frame is taking too long, OR
+        // CMSampleBuffers are being improperly retained (memory leak). While a blip of OutOfBuffers is probably
+        // processing time, a sustained stream of them is a leak. We might have a combination of both :/
+        // Anyway, this will help us recover from OutOfBuffers (see method doc for more info)
+        if reasonString == (kCMSampleBufferDroppedFrameReason_OutOfBuffers as String) {
+            recoverFromDroppedFrameOutOfBuffers()
+        }
+    }
+
+    /// Recover from dropping a frame when OutOfBuffers is reported
+    ///
+    /// This is fun. While switching filters, eventually the AVCaptureSession will start spewing
+    /// OutOfBuffers DroppedFrameReason, which hangs the camera output. This is due to a memory leak which isn't easily
+    /// discoverable, so initially it was addressed by restarting the AVCaptureSession. When done on another queue, this
+    /// is really fast on most devices, only noticable with a momentary change of focus, so it was acceptable. However,
+    /// it was discovered on an iPhone 6 that OutOfBuffers seemingly happens for other legitimate reasons, and the
+    /// AVCaptureSession restarts would take much longer, and sometimes many in a row, making the camera fairly unusable.
+    ///
+    /// To recover from OutOfBuffers on all devices, we... flip the max framerate between 30fps and 29fps.
+    ///
+    /// ¯\_(ツ)_/¯
+    ///
+    /// This works because it causes a configuration change, making the AVCaptureSession recreate its internal
+    /// CMSampleBuffer cache.
+    func recoverFromDroppedFrameOutOfBuffers() {
+        sessionQueue.sync {
+            if let session = captureSession, let device = currentDevice {
+                do {
+                    let currentMaxFrameRate: Int32 = device.activeVideoMaxFrameDuration.timescale
+                    let newMaxFrameRate: Int32 = currentMaxFrameRate == targetFrameRate ? targetFrameRate - 1 : targetFrameRate
+                    print("Adjusting framerate to recover from OutOfBuffers")
+                    session.beginConfiguration()
+                    try device.lockForConfiguration()
+                    device.activeVideoMinFrameDuration = CMTimeMake(value: 1, timescale: minimumFrameRate)
+                    device.activeVideoMaxFrameDuration = CMTimeMake(value: 1, timescale: newMaxFrameRate)
+                    device.unlockForConfiguration()
+                    session.commitConfiguration()
+                } catch {
+                    assertionFailure("Failed to lock the device for configuration: \(error)")
+                }
+            }
+        }
+    }
+
+    // MARK: - FilteredInputViewControllerDelegate
+    func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        if settings.features.openGLCapture {
+            recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+        }
+    }
+
+    // MARK: - breakdown
+    
+    /// Function to remove the current inputs and outputs from the capture session
+    func removeSessionInputsAndOutputs() {
+        if let input = currentCameraInput {
+            captureSession?.removeInput(input)
+            currentCameraInput = nil
+        }
+        if let audioInput = currentMicInput {
+            captureSession?.removeInput(audioInput)
+            currentMicInput = nil
+        }
+        if let aPhotoOutput = photoOutput {
+            captureSession?.removeOutput(aPhotoOutput)
+            photoOutput = nil
+        }
+        if let aVideoDataOutput = videoDataOutput {
+            captureSession?.removeOutput(aVideoDataOutput)
+            videoDataOutput = nil
+        }
+        if let audioOutput = audioDataOutput {
+            captureSession?.removeOutput(audioOutput)
+            audioDataOutput = nil
+        }
     }
 }

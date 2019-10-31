@@ -8,6 +8,7 @@
 import AVFoundation
 import Foundation
 import XCTest
+import Utils
 
 final class CameraRecorderTests: XCTestCase {
 
@@ -19,7 +20,8 @@ final class CameraRecorderTests: XCTestCase {
                 videoOutput: nil,
                 audioOutput: nil,
                 recordingDelegate: nil,
-                segmentsHandler: CameraSegmentHandlerStub())
+                segmentsHandler: CameraSegmentHandlerStub(),
+                settings: CameraSettings())
         return cameraRecorder
     }
 
@@ -27,7 +29,7 @@ final class CameraRecorderTests: XCTestCase {
     func testPhoto() {
         let cameraRecorder = setupCameraRecorder()
         let expectation = XCTestExpectation(description: "photo")
-        cameraRecorder.takePhoto(completion: { image in
+        cameraRecorder.takePhoto(on: .photo, completion: { image in
             expectation.fulfill()
         })
         wait(for: [expectation], timeout: 5)
@@ -45,11 +47,12 @@ final class CameraRecorderTests: XCTestCase {
 
     /// This test should fail to return a url since it is testing on simulator, but it should always hit the completion block
     func testStopMotion() {
+        let mode = CameraMode.stopMotion
         let cameraRecorder = setupCameraRecorder()
         let delegate = CameraRecorderDelegateStub()
         cameraRecorder.recordingDelegate = delegate
 
-        cameraRecorder.startRecordingVideo()
+        cameraRecorder.startRecordingVideo(on: mode)
         let blockExpectation = XCTestExpectation(description: "block expectation")
         XCTAssert(cameraRecorder.isRecording(), "CameraRecorder failed to start recording")
 
@@ -67,14 +70,14 @@ final class CameraRecorderTests: XCTestCase {
             cameraRecorder.addSegment(segment)
         }
         XCTAssert(cameraRecorder.segments().count == segments.count, "Wrong number of segments")
-        cameraRecorder.deleteSegmentAtIndex(0, removeFromDisk: false)
+        cameraRecorder.deleteSegment(at: 0, removeFromDisk: false)
         XCTAssert(cameraRecorder.segments().count == segments.count - 1, "CameraRecorder has wrong number of segments after deleting")
     }
 
     func createSegments() -> [CameraSegment] {
         var segments: [CameraSegment] = []
         if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let segment = CameraSegment.video(url)
+            let segment = CameraSegment.video(url, TumblrMediaInfo(source: .kanvas_camera))
 
             for _ in 0...5 {
                 segments.append(segment)
@@ -88,6 +91,10 @@ final class CameraRecorderTests: XCTestCase {
 
 /// This mocks up a camera recorder delegate for future classes that require recording segments
 final class CameraRecorderDelegateStub: CameraRecordingDelegate {
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
+        return image
+    }
+
     var videoStart: Bool
     var videoFinish: Bool
 
@@ -96,10 +103,10 @@ final class CameraRecorderDelegateStub: CameraRecordingDelegate {
         videoFinish = false
     }
 
-    var photoSettingsForCamera: AVCapturePhotoSettings? {
+    func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         return nil
     }
-
+    
     func cameraWillTakeVideo() {
         videoStart = true
     }

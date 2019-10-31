@@ -36,6 +36,7 @@ final class CameraPreviewViewController: UIViewController {
     private let settings: CameraSettings
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
+    private let cameraMode: CameraMode?
 
     private var currentSegmentIndex: Int = 0
     private var timer: Timer = Timer()
@@ -62,15 +63,36 @@ final class CameraPreviewViewController: UIViewController {
     ///   - settings: The CameraSettings instance for export optioins
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType) {
+    ///   - cameraMode: The camera mode that the preview was coming from, if any
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, cameraMode: CameraMode?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
+        self.cameraMode = cameraMode
         self.currentPlayer = firstPlayer
 
         super.init(nibName: .none, bundle: .none)
+        setupNotifications()
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+ 
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+    }
+    
+    @objc private func appDidBecomeActive() {
+        resumePlayback()
+    }
+
+    @objc private func appWillResignActive() {
+        timer.invalidate()
+        currentPlayer.pause()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -86,8 +108,8 @@ final class CameraPreviewViewController: UIViewController {
         cameraPreviewView.setSecondPlayer(player: secondPlayer)
     }
 
-    override public var prefersStatusBarHidden: Bool {
-        return true
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -97,9 +119,24 @@ final class CameraPreviewViewController: UIViewController {
     // MARK: - playback methods
 
     private func restartPlayback() {
+        currentPlayer.pause()
+        timer.invalidate()
         currentSegmentIndex = 0
         if let firstSegment = segments.first {
             playSegment(segment: firstSegment)
+        }
+    }
+    
+    private func resumePlayback() {
+        guard segments.count > currentSegmentIndex else {
+            return
+        }
+        let segment = segments[currentSegmentIndex]
+        if let image = segment.image {
+            playImage(image: image)
+        }
+        else if segment.videoURL != nil {
+            currentPlayer.play()
         }
     }
 
@@ -115,10 +152,19 @@ final class CameraPreviewViewController: UIViewController {
 
     private func playImage(image: UIImage) {
         cameraPreviewView.setImage(image: image)
-        let displayTime = KanvasCameraTimes.StopMotionFrameTimeInterval
+        let displayTime = timeIntervalForImageSegments(segments)
         timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
             self?.playNextSegment()
         })
+    }
+    
+    private func timeIntervalForImageSegments(_ segments: [CameraSegment]) -> TimeInterval {
+        for segment in segments {
+            if segment.image == nil {
+                return KanvasCameraTimes.stopMotionFrameTimeInterval
+            }
+        }
+        return CMTimeGetSeconds(CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale))
     }
 
     private func playVideo(url: URL) {
@@ -158,7 +204,7 @@ final class CameraPreviewViewController: UIViewController {
 
     @objc private func playNextSegment() {
         currentPlayer.pause()
-        currentPlayer.seek(to: kCMTimeZero)
+        currentPlayer.seek(to: CMTime.zero)
         currentSegmentIndex = (currentSegmentIndex + 1) % segments.count
         guard currentSegmentIndex < segments.count else { return }
         playSegment(segment: segments[currentSegmentIndex])
@@ -190,7 +236,9 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
         stopPlayback()
         showLoading()
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
-            if settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
+            // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
+            // then single photos from that mode should still export as video.
+            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
                 performUIUpdate {
                     self.delegate?.didFinishExportingVideo(url: videoURL)
                     self.hideLoading()
@@ -209,7 +257,7 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
     }
 
     private func createFinalContent() {
-        assetsHandler.mergeAssets(segments: segments, completion: { url in
+        assetsHandler.mergeAssets(segments: segments, completion: { url, _  in
             performUIUpdate {
                 if let url = url {
                     self.delegate?.didFinishExportingVideo(url: url)
@@ -217,18 +265,21 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                 }
                 else {
                     self.hideLoading()
-                    // TODO: Localize strings
-                    let viewModel = ModalViewModel(text: "There was an issue loading your post...",
-                                                   confirmTitle: "Try again",
-                                                   confirmCallback: {
-                                                       self.showLoading()
-                                                       self.createFinalContent()
-                                                   },
-                                                   cancelTitle: "Cancel",
-                                                   cancelCallback: { [unowned self] in self.delegate?.didFinishExportingVideo(url: url) },
-                                                   buttonsLayout: .oneBelowTheOther)
-                    let controller = ModalController(viewModel: viewModel)
-                    self.present(controller, animated: true, completion: .none)
+                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"), preferredStyle: .alert)
+                    
+                    let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel) { [weak self] _ in
+                        self?.delegate?.didFinishExportingVideo(url: url)
+                    }
+                    
+                    let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { [weak self] _ in
+                        self?.showLoading()
+                        self?.createFinalContent()
+                    }
+                    
+                    alertController.addAction(tryAgainButton)
+                    alertController.addAction(cancelButton)
+                    
+                    self.present(alertController, animated: true, completion: .none)
                 }
             }
         })

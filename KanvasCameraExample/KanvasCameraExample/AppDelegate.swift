@@ -12,8 +12,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let applicationViewController = KanvasCameraExampleViewController(nibName: nil, bundle: nil)
+        if #available(iOS 13.0, *) {
+            applicationViewController.view.tintColor = .systemBackground
+        }
+        else {
+            applicationViewController.view.tintColor = .white
+        }
+        window?.rootViewController = applicationViewController
+        window?.makeKeyAndVisible()
         return true
     }
 

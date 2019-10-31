@@ -6,24 +6,33 @@
 
 import AVFoundation
 import Foundation
+import Utils
 
 /// A container for segments
 enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
-    case image(UIImage, URL?)
-    case video(URL)
+    case image(UIImage, URL?, TumblrMediaInfo)
+    case video(URL, TumblrMediaInfo?)
 
     var image: UIImage? {
         switch self {
-        case .image(let image, _): return image
+        case .image(let image, _, _): return image
         case .video: return nil
         }
     }
 
     var videoURL: URL? {
         switch self {
-        case .image(_, let url): return url
-        case .video(let url): return url
+        case .image(_, let url,_): return url
+        case .video(let url, _): return url
+        }
+    }
+
+    var mediaInfo: TumblrMediaInfo {
+        switch self {
+        case .image(_, _, let mediaInfo): return mediaInfo
+        case .video(let url, let mediaInfo):
+            return mediaInfo ?? TumblrMediaInfo(fromVideoURL: url) ?? TumblrMediaInfo(source: .media_library)
         }
     }
 }
@@ -36,7 +45,7 @@ protocol AssetsHandlerType {
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void)
+    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, TumblrMediaInfo?) -> Void)
 
 }
 
@@ -57,7 +66,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     /// Creates a new CameraSegment from a video url and appends to segments
     ///
     /// - Parameter url: the local url of the video
-    func addNewVideoSegment(url: URL)
+    func addNewVideoSegment(url: URL, mediaInfo: TumblrMediaInfo)
 
     /// Creates a video from a UIImage representation and appends as a CameraSegment
     ///
@@ -65,15 +74,24 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     ///   - image: UIImage
     ///   - size: size (resolution) of the video
     ///   - completion: completion handler, success bool and URL of video
-    func addNewImageSegment(image: UIImage, size: CGSize, completion: @escaping (Bool, CameraSegment?) -> Void)
+    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void)
 
     /// Deletes a segment and removes from local storage. When running tests, it should be false
     ///
     /// - Parameters:
     ///   - index: the index of the segment to be deleted
     ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
-    func deleteSegment(index: Int, removeFromDisk: Bool)
+    func deleteSegment(at index: Int, removeFromDisk: Bool)
 
+    func deleteAllSegments(removeFromDisk: Bool)
+
+    /// Moves one segment to a new position
+    ///
+    /// - Parameters:
+    ///   - originIndex: the index the segment has right now
+    ///   - destinationIndex: the index we want the segment to have
+    func moveSegment(from originIndex: Int, to destinationIndex: Int)
+    
     /// an approximation of the total duration. calculating the exact duration would have to be asynchronous
     ///
     /// - Returns: seconds of total recorded video + photos
@@ -82,7 +100,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     /// This functions exports the complete final video to a local resource.
     ///
     /// - Parameter completion: returns a local video URL if merged successfully
-    func exportVideo(completion: @escaping (URL?) -> Void)
+    func exportVideo(completion: @escaping (URL?, TumblrMediaInfo?) -> Void)
 
     /// This removes all segments from disk and memory
     func reset(removeFromDisk: Bool)
@@ -94,6 +112,10 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     func videoOutputSettingsForSize(size: CGSize) -> [String: Any]
 }
 
+private struct CameraSegmentHandlerConstants {
+    static let silentURL = Bundle(for: CameraSegmentHandler.self).url(forResource: "silence", withExtension: "aac")
+}
+
 /// A class to handle the various segments of a stop motion video, and also creates the final output
 
 final class CameraSegmentHandler: SegmentsHandlerType {
@@ -101,6 +123,12 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
+    private var silentAsset: AVAsset? {
+        guard let url = CameraSegmentHandlerConstants.silentURL else {
+            return nil
+        }
+        return AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+    }
 
     /// Appends an existing CameraSegment
     ///
@@ -112,12 +140,12 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// Creates a new CameraSegment from a video url and appends to segments
     ///
     /// - Parameter url: the local url of the video
-    func addNewVideoSegment(url: URL) {
+    func addNewVideoSegment(url: URL, mediaInfo: TumblrMediaInfo) {
         guard FileManager.default.fileExists(atPath: url.path) else {
             assertionFailure("no video exists at file url")
             return
         }
-        let segment = CameraSegment.video(url)
+        let segment = CameraSegment.video(url, mediaInfo)
         segments.append(segment)
     }
 
@@ -127,7 +155,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - image: UIImage
     ///   - size: size (resolution) of the video
     ///   - completion: completion handler, success bool and URL of video
-    func addNewImageSegment(image: UIImage, size: CGSize, completion: @escaping (Bool, CameraSegment?) -> Void) {
+    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
         guard let url = setupAssetWriter(size: size), let assetWriter = assetWriter, let input = assetWriterVideoInput else {
             completion(false, nil)
             return
@@ -138,7 +166,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: bufferAttributes)
         createVideoFromImage(image: image, assetWriter: assetWriter, adaptor: adaptor, input: input, completion: { success in
             if success {
-                let segment = CameraSegment.image(image, url)
+                let segment = CameraSegment.image(image, url, mediaInfo)
                 self.segments.append(segment)
                 completion(success, segment)
             }
@@ -153,7 +181,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameters:
     ///   - index: the index of the segment to be deleted
     ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
-    func deleteSegment(index: Int, removeFromDisk: Bool = true) {
+    func deleteSegment(at index: Int, removeFromDisk: Bool = true) {
         guard index < segments.count else { return }
         let segment = segments[index]
         let fileManager = FileManager.default
@@ -167,18 +195,35 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         segments.remove(at: index)
     }
 
+    func deleteAllSegments(removeFromDisk: Bool = true) {
+        while segments.count > 0 {
+            deleteSegment(at: 0, removeFromDisk: removeFromDisk)
+        }
+    }
+    
+    /// Moves a segment to a new index
+    ///
+    /// - Parameters:
+    ///   - originIndex: current index of the segment
+    ///   - destinationIndex: future index of the segment
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        guard originIndex != destinationIndex else { return }
+        guard originIndex < segments.count, destinationIndex < segments.count else { return }
+        segments.move(from: originIndex, to: destinationIndex)
+    }
+
     /// an approximation of the total duration. calculating the exact duration would have to be asynchronous
     ///
     /// - Returns: seconds of total recorded video + photos
     func currentTotalDuration() -> TimeInterval {
-        var totalDuration: CMTime = kCMTimeZero
+        var totalDuration: CMTime = CMTime.zero
         for segment in segments {
             if let segmentURL = segment.videoURL {
                 let asset = AVURLAsset(url: segmentURL)
                 totalDuration = CMTimeAdd(totalDuration, asset.duration)
             }
             else if segment.image != nil {
-                totalDuration = CMTimeAdd(totalDuration, KanvasCameraTimes.StopMotionFrameTime)
+                totalDuration = CMTimeAdd(totalDuration, KanvasCameraTimes.stopMotionFrameTime)
             }
         }
         return CMTimeGetSeconds(totalDuration)
@@ -187,7 +232,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// This functions exports the complete final video to a local resource.
     ///
     /// - Parameter completion: returns a local video URL if merged successfully
-    func exportVideo(completion: @escaping (URL?) -> Void) {
+    func exportVideo(completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
         mergeAssets(segments: segments, completion: completion)
     }
 
@@ -207,40 +252,74 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         }
     }
 
-    /// concatenates all of the videos in the segments
+    /// concatenates all of the videos and images with `videoURL`s in the segments
     ///
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
-        let mixComposition = AVMutableComposition()
+    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+        let preciseOptions = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
+        let mixComposition = AVMutableComposition(urlAssetInitializationOptions: preciseOptions)
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
+        // CameraSegments with images should also have a video url associated with it; that url is created when the addNewImageSegment method is called
         var videoCompTrack, audioCompTrack: AVMutableCompositionTrack?
-        var insertTime = kCMTimeZero
+        var insertTime = CMTime.zero
+        let allImages = containsOnlyImages(segments: segments)
 
         for segment in segments {
             guard let segmentURL = segment.videoURL else { continue }
-            let urlAsset = AVURLAsset(url: segmentURL)
-            var videoDuration: CMTime = kCMTimeZero
+            let urlAsset = AVURLAsset(url: segmentURL, options: preciseOptions)
+            var videoDuration: CMTime = CMTime.zero
 
             if let videoTrack = urlAsset.tracks(withMediaType: .video).first {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
-                addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
-                videoDuration = videoTrack.timeRange.duration
+                /// If all of the segments are photos, then the individual frame times are shorter
+                if allImages {
+                    let endTime = CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                    videoDuration = CMTimeCompare(videoTrack.timeRange.duration, endTime) == 1 ? endTime : videoTrack.timeRange.duration
+                    addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: CMTimeRangeMake(start: videoTrack.timeRange.start, duration: videoDuration))
+                }
+                else {
+                    addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
+                    videoDuration = videoTrack.timeRange.duration
+                }
             }
             if let audioTrack = urlAsset.tracks(withMediaType: .audio).first {
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
                 var audioTimeRange = audioTrack.timeRange
                 if CMTimeCompare(audioTrack.timeRange.duration, videoDuration) == 1 {
-                    audioTimeRange = CMTimeRangeMake(audioTimeRange.start, videoDuration); // crop audio to video range
+                    audioTimeRange = CMTimeRangeMake(start: audioTimeRange.start, duration: videoDuration); // crop audio to video range
                 }
                 addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
             }
-            insertTime = CMTimeAdd(insertTime, videoDuration)
+            else {
+                audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+                insertEmptyAudio(compositionTrack: audioCompTrack, duration: videoDuration, insertTime: insertTime)
+            }
+            insertTime = mixComposition.duration
         }
-        exportComposition(composition: mixComposition, completion: { url in
-            completion(url)
-        })
+        exportComposition(segments: segments, composition: mixComposition, completion: completion)
+    }
+    
+    private func containsOnlyImages(segments: [CameraSegment]) -> Bool {
+        for segment in segments {
+            if segment.image == nil {
+                return false
+            }
+        }
+        return true
+    }
+    
+    private func insertEmptyAudio(compositionTrack: AVMutableCompositionTrack?, duration: CMTime, insertTime: CMTime) {
+        guard let silentAsset = silentAsset else {
+            NSLog("silent asset not found")
+            return
+        }
+        let tracks = silentAsset.tracks(withMediaType: .audio)
+        guard let silenceTrack = tracks.first else {
+            return
+        }
+        try? compositionTrack?.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration), of: silenceTrack, at: insertTime)
     }
 
     /// Video output settings, used by internal classes for recording and exporting
@@ -278,18 +357,34 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameters:
     ///   - composition: the final composition to be exported
     ///   - completion: url of the local video
-    private func exportComposition(composition: AVMutableComposition, completion: @escaping (URL?) -> Void) {
+    private func exportComposition(segments: [CameraSegment], composition: AVMutableComposition, completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
         guard composition.tracks.count > 0, let assetExport = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else {
-            completion(nil)
+            completion(nil, nil)
             return
         }
         assetExport.outputFileType = .mp4
         let finalURL = NSURL.createNewVideoURL()
         assetExport.outputURL = finalURL
+
+        let mediaInfo: TumblrMediaInfo = {
+            // If this video is just one segment, let's use its media info...
+            if segments.count == 1, let onlySegment = segments.first {
+                return onlySegment.mediaInfo
+            }
+            // Otherwise, we just say it was made with Kanvas Camera, since "Stitch" mode is
+            // a camera feature (even though some/all of the media could be taken without the
+            // Kanvas Camera.
+            // TODO support attribution for each segment in a video
+            else {
+                return TumblrMediaInfo(source: .kanvas_camera)
+            }
+        }()
+        assetExport.metadata = mediaInfo.createAVMetadataItems()
+
         assetExport.shouldOptimizeForNetworkUse = true
 
         assetExport.exportAsynchronously() {
-            completion(assetExport.status == .completed ? finalURL : nil)
+            completion(assetExport.status == .completed ? finalURL : nil, mediaInfo)
         }
     }
 
@@ -316,26 +411,29 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - input: asset writer input
     ///   - completion: returns success bool
     private func createVideoFromImage(image: UIImage, assetWriter: AVAssetWriter, adaptor: AVAssetWriterInputPixelBufferAdaptor, input: AVAssetWriterInput, completion: @escaping (Bool) -> Void) {
-        assetWriter.startWriting()
-        assetWriter.startSession(atSourceTime: kCMTimeZero)
         guard let buffer = createNewPixelBuffer(from: image) else {
             completion(false)
             return
         }
-        adaptor.append(buffer: buffer, time: kCMTimeZero, completion: { firstAppended in
-            if firstAppended {
-                let endTime = KanvasCameraTimes.StopMotionFrameTime
+        assetWriter.startWriting()
+        assetWriter.startSession(atSourceTime: CMTime.zero)
+        /// should also append a buffer at the end time
+        var firstBufferAppended = false
+        adaptor.assetWriterInput.requestMediaDataWhenReady(on: DispatchQueue.main) {
+            if !firstBufferAppended {
+                adaptor.append(buffer, withPresentationTime: CMTime.zero)
+                firstBufferAppended = true
+            }
+            else {
+                let endTime = KanvasCameraTimes.stopMotionFrameTime
+                adaptor.append(buffer, withPresentationTime: endTime)
                 assetWriter.endSession(atSourceTime: endTime)
                 adaptor.assetWriterInput.markAsFinished()
                 assetWriter.finishWriting() {
                     completion(assetWriter.status == .completed)
                 }
             }
-            else {
-                assetWriter.cancelWriting()
-                completion(false)
-            }
-        })
+        }
     }
 
     /// Creates a new pixel buffer from a UIImage for appending to an asset writer

@@ -24,20 +24,4 @@ final class MediaClipsEditorViewTests: FBSnapshotTestCase {
         return editorView
     }
 
-    func testShowTrash() {
-        let editorView = newEditorView()
-        UIView.setAnimationsEnabled(false)
-        editorView.showTrash()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(editorView)
-    }
-
-    func testHideTrash() {
-        let editorView = newEditorView()
-        UIView.setAnimationsEnabled(false)
-        editorView.hideTrash()
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(editorView)
-    }
-
 }

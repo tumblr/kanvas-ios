@@ -6,20 +6,27 @@
 
 import AVFoundation
 import Foundation
+import Utils
 
 /// A protocol for camera recording callbacks
-protocol CameraRecordingDelegate {
+protocol CameraRecordingDelegate: class {
 
     /// this is called before a photo is taken. It uses the returned settings (if any) for the current device
     ///
     /// - Returns: AVCapturePhotoSettings for flash, etc
-    var photoSettingsForCamera: AVCapturePhotoSettings? { get }
+    func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings?
 
     /// this is called before a video is taken. Methods to change UI, update torch, should be called from this method
     func cameraWillTakeVideo()
 
     /// this is called after a video is taken. Methods to change UI, update torch, should be called from this method
     func cameraWillFinishVideo()
+
+    /// this is called after a photo is taken, returns a filtered image if necessary
+    ///
+    /// - Parameter image: the input image
+    /// - Returns: the output filtered image, if necessary
+    func cameraDidTakePhoto(image: UIImage?) -> UIImage?
 }
 
 /// A protocol adopted by the various capture recorders
@@ -34,12 +41,14 @@ protocol CameraRecordingProtocol {
     ///   - audioOutput: AVCaptureAudioDataOutput - for recording the microphone
     ///   - recordingDelegate: delegate for recording methods
     ///   - segmentsHandler: handler for segments and final output creating
+    ///   - cameraSettings: CameraSettings
     init(size: CGSize,
          photoOutput: AVCapturePhotoOutput?,
          videoOutput: AVCaptureVideoDataOutput?,
          audioOutput: AVCaptureAudioDataOutput?,
          recordingDelegate: CameraRecordingDelegate?,
-         segmentsHandler: SegmentsHandlerType)
+         segmentsHandler: SegmentsHandlerType,
+         settings: CameraSettings)
 
     /// the recording delegate for callback methods
     var recordingDelegate: CameraRecordingDelegate? { get set }
@@ -66,8 +75,9 @@ protocol CameraRecordingProtocol {
 
     /// starts recording video
     ///
+    /// - Parameter mode: Current camera mode
     /// - Returns: returns whether it has successfully started
-    func startRecordingVideo()
+    func startRecordingVideo(on mode: CameraMode)
 
     /// stops recording video, and exports the recording to a local file
     ///
@@ -80,27 +90,44 @@ protocol CameraRecordingProtocol {
 
     /// takes a photo and appends to the segments.
     ///
+    /// - Parameter mode: current camera mode
+    /// - Parameter cameraPosition: camera used when taking the photo (back or front camera). This is an optional value
     /// - Parameter completion: returns a UIImage if successful
     /// - Returns: Void
-    func takePhoto(completion: @escaping (UIImage?) -> Void)
+    func takePhoto(on mode: CameraMode, cameraPosition: AVCaptureDevice.Position?, completion: @escaping (UIImage?) -> Void)
 
     /// composites a video and exports the resulting file to mp4
     ///
     /// - Parameter completion: Returns a destination URL if successful
     /// - Returns: Void
-    func exportRecording(completion: @escaping (URL?) -> Void)
+    func exportRecording(completion: @escaping (URL?, TumblrMediaInfo?) -> Void)
 
     /// deletes a segment at the selected index
     ///
     /// - Parameter index: location of the segment from `segments`
     /// - Parameter removeFromDisk: whether to also delete the file from disk
-    func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool)
+    func deleteSegment(at index: Int, removeFromDisk: Bool)
+
+    /// deletes all segments
+    ///
+    /// - Parameter removeFromDisk: whether to also delete the file from disk
+    func deleteAllSegments(removeFromDisk: Bool)
+
+    /// moves a segment
+    ///
+    /// - Parameters:
+    ///   - originIndex: index at which the segments is right now
+    ///   - destinationIndex: index at which we want the segment to be after this
+    /// - Returns: Void
+    func moveSegment(from originIndex: Int, to destinationIndex: Int)
 
     /// takes a `boomerang` (but actually is a video recording).
     ///
-    /// - Parameter completion: Returns the destination url
+    /// - Parameter
+    ///     useLongerDuration: whether to use a longer than normal duration for recording
+    ///     completion: Returns the destination url
     /// - Returns: Void
-    func takeGifMovie(completion: @escaping (URL?) -> Void)
+    func takeGifMovie(useLongerDuration: Bool, completion: @escaping (URL?) -> Void)
 
     /// cancels current recording and discards all properties
     func reset()
@@ -114,6 +141,13 @@ protocol CameraRecordingProtocol {
     ///
     /// - Parameter sampleBuffer: CMSampleBuffer input to be processed
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer)
+
+    /// process the video pixel buffer at the presentation time
+    ///
+    /// - Parameters:
+    ///   - pixelBuffer: The image buffer
+    ///   - presentationTime: The append time for the buffer
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime)
 
     /// processes the audio buffer
     ///

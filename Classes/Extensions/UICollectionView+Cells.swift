@@ -21,7 +21,7 @@ public protocol Identifiable {
 
 public extension Identifiable {
 
-    public static var identifier: String {
+    static var identifier: String {
         return String(describing: self)
     }
 
@@ -39,7 +39,7 @@ public extension UICollectionView {
      - parameter cellType: A nibloadable collection view cell type
      to take the identifier and nib from.
      */
-    public func register<T: UICollectionViewCell>(cell cellType: T.Type) {
+    func register<T: UICollectionViewCell>(cell cellType: T.Type) {
         register(cellType, forCellWithReuseIdentifier: cellType.identifier)
     }
 
@@ -49,9 +49,9 @@ public extension UICollectionView {
      - parameter headerType: A nibloadable reusable view type
      to take the identifier and nib from.
      */
-    public func register<T: UICollectionReusableView>(header headerType: T.Type) {
+    func register<T: UICollectionReusableView>(header headerType: T.Type) {
         register(headerType,
-                 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                  withReuseIdentifier: headerType.identifier)
     }
 
@@ -63,7 +63,7 @@ public extension UICollectionView {
      */
     func register<T: UICollectionReusableView>(footer footerType: T.Type) {
         register(footerType,
-                 forSupplementaryViewOfKind: UICollectionElementKindSectionFooter,
+                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                  withReuseIdentifier: footerType.identifier)
     }
 
@@ -74,7 +74,7 @@ public extension UICollectionView {
      - parameter cellType: A collection cell to take the identifier from.
      - parameter indexPath: IndexPath where to add the cell to the collection view.
      */
-    public func dequeue<T: UICollectionViewCell>(cell cellType: T.Type, for indexPath: IndexPath) -> T? {
+    func dequeue<T: UICollectionViewCell>(cell cellType: T.Type, for indexPath: IndexPath) -> T? {
         return dequeueReusableCell(withReuseIdentifier: cellType.identifier, for: indexPath) as? T
     }
 
@@ -84,8 +84,8 @@ public extension UICollectionView {
 
      - parameter headerType: A collection reusable header view to take the identifier from.
      */
-    public func dequeue<T: UICollectionReusableView>(header headerType: T.Type, for indexPath: IndexPath) -> T? {
-        return dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader,
+    func dequeue<T: UICollectionReusableView>(header headerType: T.Type, for indexPath: IndexPath) -> T? {
+        return dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                 withReuseIdentifier: headerType.identifier,
                                                 for: indexPath) as? T
     }
@@ -96,13 +96,13 @@ public extension UICollectionView {
 
      - parameter footerType: AA collection reusable footer view to take the identifier from.
      */
-    public func dequeue<T: UICollectionReusableView>(footer footerType: T.Type, for indexPath: IndexPath) -> T? {
-        return dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter,
+    func dequeue<T: UICollectionReusableView>(footer footerType: T.Type, for indexPath: IndexPath) -> T? {
+        return dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter,
                                                 withReuseIdentifier: footerType.identifier,
                                                 for: indexPath) as? T
     }
 
-    public func dequeue<T: UICollectionReusableView>(view viewType: T.Type, ofKind kind: String, for indexPath: IndexPath) -> T? {
+    func dequeue<T: UICollectionReusableView>(view viewType: T.Type, ofKind kind: String, for indexPath: IndexPath) -> T? {
         return dequeueReusableSupplementaryView(ofKind: kind,
                                                 withReuseIdentifier: viewType.identifier,
                                                 for: indexPath) as? T

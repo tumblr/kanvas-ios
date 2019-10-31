@@ -21,7 +21,7 @@ final class MediaClipsCollectionControllerTests: XCTestCase {
     func newMediaClip() -> MediaClip? {
         var mediaClip: MediaClip? = nil
         if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
-            mediaClip = MediaClip(representativeFrame: image, overlayText: "00:02")
+            mediaClip = MediaClip(representativeFrame: image, overlayText: "00:02", lastFrame: image)
         }
         return mediaClip
     }
@@ -34,17 +34,6 @@ final class MediaClipsCollectionControllerTests: XCTestCase {
         }
         viewController.addNewClip(mediaClip)
         XCTAssert(viewController.getClips().count == 1, "Clip count \(viewController.getClips()) does not match expected after adding")
-    }
-
-    func testDeleteClips() {
-        let viewController = newViewController()
-        guard let mediaClip = newMediaClip() else {
-            XCTFail("Media clip was not created")
-            return
-        }
-        viewController.addNewClip(mediaClip)
-        viewController.removeLastClip()
-        XCTAssert(viewController.getClips().count == 0, "Clip count does not match expected after deleting")
     }
 
 }

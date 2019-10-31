@@ -7,11 +7,28 @@
 import AVFoundation
 import Foundation
 import UIKit
+import MobileCoreServices
+import Photos
+import Utils
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
-    case image(URL)
-    case video(URL)
+    case image(URL, TumblrMediaInfo)
+    case video(URL, TumblrMediaInfo)
+
+    public var info: TumblrMediaInfo {
+        switch self {
+        case .image(_, let info): return info
+        case .video(_, let info): return info
+        }
+    }
+}
+
+public enum KanvasExportAction {
+    case previewConfirm
+    case confirm
+    case post
+    case save
 }
 
 // Error handling
@@ -28,22 +45,63 @@ public protocol CameraControllerDelegate: class {
      - parameter media: KanvasCameraMedia - this is the media created in the controller (can be image, video, etc)
      - seealso: enum KanvasCameraMedia
      */
-    func didCreateMedia(media: KanvasCameraMedia?, error: Error?)
+    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
 
     /**
      A function that is called when the main camera dismiss button is pressed
      */
     func dismissButtonPressed()
+
+    /// Called when the tag button is pressed in the editor
+    func tagButtonPressed()
+
+    /// Called when the editor is dismissed
+    func editorDismissed()
+    
+    /// Called after the welcome tooltip is dismissed
+    func didDismissWelcomeTooltip()
+    
+    /// Called to ask if welcome tooltip should be shown
+    ///
+    /// - Returns: Bool for tooltip
+    func cameraShouldShowWelcomeTooltip() -> Bool
+    
+    /// Called after the color selector tooltip is dismissed
+    func didDismissColorSelectorTooltip()
+    
+    /// Called to ask if color selector tooltip should be shown
+    ///
+    /// - Returns: Bool for tooltip
+    func editorShouldShowColorSelectorTooltip() -> Bool
+    
+    /// Called after the stroke animation has ended
+    func didEndStrokeSelectorAnimation()
+    
+    /// Called to ask if stroke selector animation should be shown
+    ///
+    /// - Returns: Bool for animation
+    func editorShouldShowStrokeSelectorAnimation() -> Bool
+    
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
+    
+    /// Called when a drag interaction starts
+    func didBeginDragInteraction()
+    
+    /// Called when a drag interaction ends
+    func didEndDragInteraction()
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
 
+    private lazy var options: [[Option<CameraOption>]] = {
+        return getOptions(from: self.settings)
+    }()
     private lazy var cameraView: CameraView = {
-        let view = CameraView()
+        let view = CameraView(settings: self.settings, numberOfOptionRows: CGFloat(options.count))
         view.delegate = self
         return view
     }()
@@ -53,8 +111,7 @@ public class CameraController: UIViewController {
         return controller
     }()
     private lazy var topOptionsController: OptionsController<CameraController> = {
-        let options = getOptions(from: self.settings)
-        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.ButtonMargin)
+        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.optionHorizontalMargin, settings: self.settings)
         controller.delegate = self
         return controller
     }()
@@ -65,17 +122,38 @@ public class CameraController: UIViewController {
     }()
 
     private lazy var cameraInputController: CameraInputController = {
-        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandlerClass: self.segmentsHandlerClass)
+        let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandler: self.segmentsHandler, delegate: self)
+        addChild(controller)
+        return controller
+    }()
+    private lazy var imagePreviewController: ImagePreviewController = {
+        let controller = ImagePreviewController()
+        return controller
+    }()
+    private lazy var filterSettingsController: FilterSettingsController = {
+        let controller = FilterSettingsController(settings: self.settings)
+        controller.delegate = self
         return controller
     }()
 
+    private lazy var segmentsHandler: SegmentsHandlerType = {
+        return segmentsHandlerClass.init()
+    }()
+    
     private let settings: CameraSettings
-    private let analyticsProvider: KanvasCameraAnalyticsProvider
+    private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private var currentMode: CameraMode
     private var isRecording: Bool
     private var disposables: [NSKeyValueObservation] = []
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
+    private let cameraZoomHandler: CameraZoomHandler
+    private let feedbackGenerator: UINotificationFeedbackGenerator
+    private var mediaPickerThumbnailTargetSize: CGSize = CGSize(width: 0, height: 0)
+    private var lastMediaPickerFetchResult: PHFetchResult<PHAsset>?
+    private var mediaPickerThumbnailQueue = DispatchQueue(label: "kanvas.mediaPickerThumbnailQueue")
+
+    private weak var overlayViewController: UIViewController?
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -85,7 +163,7 @@ public class CameraController: UIViewController {
     /// interact with the user, which options should the controller give the user
     /// and which should be the result of the interaction.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, analyticsProvider: KanvasCameraAnalyticsProvider) {
+    convenience public init(settings: CameraSettings, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, analyticsProvider: analyticsProvider)
     }
 
@@ -102,14 +180,17 @@ public class CameraController: UIViewController {
     init(settings: CameraSettings,
          recorderClass: CameraRecordingProtocol.Type,
          segmentsHandlerClass: SegmentsHandlerType.Type,
-         analyticsProvider: KanvasCameraAnalyticsProvider) {
+         analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
         self.analyticsProvider = analyticsProvider
+        cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
+        feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
+        cameraZoomHandler.delegate = self
     }
 
     @available(*, unavailable, message: "use init(settings:) instead")
@@ -122,16 +203,16 @@ public class CameraController: UIViewController {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 
-    override public var prefersStatusBarHidden: Bool {
-        return true
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+    override public var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
     }
 
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
 
     /// Requests permissions for video
@@ -147,12 +228,12 @@ public class CameraController: UIViewController {
     
     /// logs opening the camera
     public func logOpen() {
-        analyticsProvider.logCameraOpen(mode: currentMode)
+        analyticsProvider?.logCameraOpen(mode: currentMode)
     }
     
     /// logs closing the camera
     public func logDismiss() {
-        analyticsProvider.logDismiss()
+        analyticsProvider?.logDismiss()
     }
 
     // MARK: - View Lifecycle
@@ -167,20 +248,82 @@ public class CameraController: UIViewController {
         cameraView.addClipsView(clipsController.view)
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
+        cameraView.addImagePreviewView(imagePreviewController.view)
+        if settings.features.cameraFilters {
+            cameraView.addFiltersView(filterSettingsController.view)
+        }
         bindMediaContentAvailable()
-        bindContentSelected()
+        PHPhotoLibrary.shared().register(self)
+    }
+    
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if delegate?.cameraShouldShowWelcomeTooltip() == true {
+            showWelcomeTooltip()
+        }
+    }
+
+    override public func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
     }
 
     // MARK: - navigation
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
-        let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandlerClass.init())
-        controller.delegate = self
+        cameraInputController.stopSession()
+        let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
+        overlayViewController = controller
+        if controller is EditorViewController {
+            analyticsProvider?.logEditorOpen()
+        }
+    }
+    
+    private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
+        let controller: UIViewController
+        if settings.features.editor {
+            controller = createEditorViewController(segments)
+        }
+        else {
+            controller = createPreviewViewController(segments)
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        controller.modalPresentationStyle = .fullScreen
+        return controller
+    }
+    
+    private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: GLMediaExporter.self, cameraMode: currentMode, analyticsProvider: analyticsProvider)
+        controller.delegate = self
+        return controller
+    }
+    
+    private func createPreviewViewController(_ segments: [CameraSegment]) -> CameraPreviewViewController {
+        let controller = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, cameraMode: currentMode)
+        controller.delegate = self
+        return controller
+    }
+    
+    /// Shows the tooltip below the mode selector
+    private func showWelcomeTooltip() {
+        modeAndShootController.showTooltip()
+    }
+    
+    private func showDismissTooltip() {
+        let alertController = UIAlertController(title: nil, message: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"), preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel)
+        let discardAction = UIAlertAction(title: NSLocalizedString("I'm sure", comment: "Confirmation to discard all the clips"), style: .destructive) { [weak self] (UIAlertAction) in
+            self?.handleCloseButtonPressed()
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(discardAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - Media Content Creation
-    private func saveImageToFile(_ image: UIImage?) -> URL? {
+    class func saveImageToFile(_ image: UIImage?, info: TumblrMediaInfo) -> URL? {
+        // TODO: Use NSURL.createNewImageURL rather than duplicate logic here
+        // https://jira.tumblr.net/browse/KANVAS-575
         do {
             guard let image = image, let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return nil
@@ -192,9 +335,9 @@ public class CameraController: UIViewController {
             if FileManager.default.fileExists(atPath: fileURL.path) {
                 try FileManager.default.removeItem(at: fileURL)
             }
-            
-            if let jpgImageData = UIImageJPEGRepresentation(image, 1.0) {
+            if let jpgImageData = image.jpegData(compressionQuality: 1.0) {
                 try jpgImageData.write(to: fileURL, options: .atomic)
+                info.write(toImage: fileURL)
             }
             return fileURL
         } catch {
@@ -207,7 +350,7 @@ public class CameraController: UIViewController {
         var text = ""
         if let url = url {
             let asset = AVURLAsset(url: url)
-            let seconds = CMTimeGetSeconds(asset.duration)
+            let seconds = CMTimeGetSeconds(asset.duration).rounded()
             let formatter = DateComponentsFormatter()
             formatter.allowedUnits = [.minute, .second]
             formatter.zeroFormattingBehavior = .pad
@@ -218,28 +361,66 @@ public class CameraController: UIViewController {
         return text
     }
     
-    private func takeGif() {
-        cameraInputController.takeGif(completion: { url in
-            self.analyticsProvider.logCapturedMedia(type: self.currentMode, cameraPosition: self.cameraInputController.currentCameraPosition, length: 0)
+    private func getLastFrameFrom(_ url: URL) -> UIImage {
+        let asset = AVURLAsset(url: url, options: nil)
+        let generate = AVAssetImageGenerator(asset: asset)
+        generate.appliesPreferredTrackTransform = true
+        let lastFrameTime = CMTimeGetSeconds(asset.duration) * 60.0
+        let time = CMTimeMake(value: Int64(lastFrameTime), timescale: 2)
+        do {
+            let cgImage = try generate.copyCGImage(at: time, actualTime: nil)
+            return UIImage(cgImage: cgImage)
+        }
+        catch {
+            return UIImage()
+        }
+    }
+
+    private func takeGif(useLongerDuration: Bool = false) {
+        guard !isRecording else { return }
+        updatePhotoCaptureState(event: .started)
+        AudioServicesPlaySystemSoundWithCompletion(SystemSoundID(1108), nil)
+        cameraInputController.takeGif(useLongerDuration: useLongerDuration, completion: { [weak self] url in
+            defer {
+                self?.updatePhotoCaptureState(event: .ended)
+            }
+            guard let strongSelf = self else { return }
+            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                           cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                           length: 0,
+                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible(),
+                                                           filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
                 if let url = url {
-                    let segment = CameraSegment.video(url)
-                    self.showPreviewWithSegments([segment])
+                    let segment = CameraSegment.video(url, TumblrMediaInfo(source: .kanvas_camera))
+                    strongSelf.showPreviewWithSegments([segment])
                 }
             }
         })
     }
     
     private func takePhoto() {
-        cameraInputController.takePhoto(completion: { image in
-            self.analyticsProvider.logCapturedMedia(type: self.currentMode, cameraPosition: self.cameraInputController.currentCameraPosition, length: 0)
+        guard !isRecording else { return }
+        updatePhotoCaptureState(event: .started)
+        cameraInputController.takePhoto(on: currentMode, completion: { [weak self] image in
+            defer {
+                self?.updatePhotoCaptureState(event: .ended)
+            }
+            guard let strongSelf = self else { return }
+            strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                           cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                           length: 0,
+                                                           ghostFrameEnabled: strongSelf.imagePreviewVisible(),
+                                                           filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
                 if let image = image {
-                    if self.currentMode == .photo {
-                        self.showPreviewWithSegments([CameraSegment.image(image, nil)])
+                    if strongSelf.currentMode.quantity == .single {
+                        strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil, TumblrMediaInfo(source: .kanvas_camera))])
                     }
                     else {
-                        self.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: nil))
+                        strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                        overlayText: nil,
+                                                                        lastFrame: image))
                     }
                 }
             }
@@ -253,9 +434,17 @@ public class CameraController: UIViewController {
             do {
                 try cameraInputController.configureMode(mode)
             } catch {
-                
+                // we can ignore this error for now since configuring mode may not succeed for devices without all the modes available (flash, multiple cameras)
             }
         }
+    }
+
+    /// Is the image preview (ghost frame) visible?
+    private func imagePreviewVisible() -> Bool {
+        return accessUISync { [weak self] in
+            return (self?.topOptionsController.imagePreviewOptionAvailable() ?? false) &&
+                   (self?.imagePreviewController.imagePreviewVisible() ?? false)
+        } ?? false
     }
     
     private enum RecordingEvent {
@@ -263,20 +452,39 @@ public class CameraController: UIViewController {
         case ended
     }
     
+    /// This updates the camera view based on the current video recording state
+    ///
+    /// - Parameter event: The recording event (started or ended)
     private func updateRecordState(event: RecordingEvent) {
         isRecording = event == .started
         cameraView.updateUI(forRecording: isRecording)
+        filterSettingsController.updateUI(forRecording: isRecording)
         if isRecording {
             modeAndShootController.hideModeButton()
+            modeAndShootController.toggleMediaPickerButton(false)
         }
-        // If it finished recording, then there is at least one clip and button shouldn't be shown.
+        else {
+            let showMediaPicker = !filterSettingsController.isFilterSelectorVisible()
+            modeAndShootController.toggleMediaPickerButton(showMediaPicker)
+            // If it finished recording, then there is at least one clip and button shouldn't be shown.
+        }
+    }
+    
+    /// This enables the camera view user interaction based on the photo capture
+    ///
+    /// - Parameter event: The recording event state (started or ended)
+    private func updatePhotoCaptureState(event: RecordingEvent) {
+        isRecording = event == .started
+        performUIUpdate {
+            self.cameraView.isUserInteractionEnabled = !self.isRecording
+        }
     }
     
     // MARK: - UI
-    private func enableBottomViewButtons(show: Bool) {
-        cameraView.bottomActionsView.updateUndo(enabled: show)
-        cameraView.bottomActionsView.updateNext(enabled: show)
-        if clipsController.hasClips {
+    private func updateUI(forClipsPresent hasClips: Bool) {
+        topOptionsController.configureOptions(areThereClips: hasClips)
+        clipsController.showViews(hasClips)
+        if hasClips || settings.enabledModes.count == 1 {
             modeAndShootController.hideModeButton()
         }
         else {
@@ -284,151 +492,490 @@ public class CameraController: UIViewController {
         }
     }
     
-    // MARK : - Private utilities
-    private func bindMediaContentAvailable() {
-        disposables.append(clipsController.observe(\.hasClips) { [unowned self] object, _ in
-            performUIUpdate {
-                self.enableBottomViewButtons(show: !object.clipIsSelected && object.hasClips)
-            }
-        })
-        enableBottomViewButtons(show: clipsController.hasClips)
+    /// Updates the fullscreen preview with the last image of the clip collection
+    private func updateLastClipPreview() {
+        imagePreviewController.setImagePreview(clipsController.getLastFrameFromLastClip())
     }
     
-    private func bindContentSelected() {
-        disposables.append(clipsController.observe(\.clipIsSelected) { [unowned self] object, _ in
+    // MARK : - Private utilities
+    private func bindMediaContentAvailable() {
+        disposables.append(clipsController.observe(\.hasClips) { [weak self] object, _ in
             performUIUpdate {
-                self.enableBottomViewButtons(show: !object.clipIsSelected && object.hasClips)
+                self?.updateUI(forClipsPresent: object.hasClips)
             }
         })
+        updateUI(forClipsPresent: clipsController.hasClips)
     }
-}
-
-// MARK: - CameraViewDelegate
-extension CameraController: CameraViewDelegate {
-
-    func undoButtonPressed() {
-        clipsController.undo()
-        cameraInputController.deleteSegmentAtIndex(cameraInputController.segments().count - 1)
-        analyticsProvider.logUndoTapped()
+    
+    /// Prepares the device for giving haptic feedback
+    private func prepareHapticFeedback() {
+        feedbackGenerator.prepare()
     }
-
-    func nextButtonPressed() {
-        showPreviewWithSegments(cameraInputController.segments())
-        analyticsProvider.logNextTapped()
+    
+    /// Makes the device give haptic feedback
+    private func generateHapticFeedback() {
+        feedbackGenerator.notificationOccurred(.success)
     }
+    
+    // MARK: - CameraViewDelegate
 
     func closeButtonPressed() {
-        delegate?.dismissButtonPressed()
+        modeAndShootController.dismissTooltip()
+        // Let's prompt for losing clips if they have clips and it's the "x" button, rather than the ">" button.
+        if clipsController.hasClips && !settings.topButtonsSwapped {
+            showDismissTooltip()
+        }
+        else {
+            handleCloseButtonPressed()
+        }
     }
 
-}
+    func handleCloseButtonPressed() {
+        performUIUpdate {
+            self.delegate?.dismissButtonPressed()
+        }
+    }
 
-// MARK: - ModeSelectorAndShootControllerDelegate
-extension CameraController: ModeSelectorAndShootControllerDelegate {
+    // MARK: - ModeSelectorAndShootControllerDelegate
+
+    func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
+        if mode.group == .video {
+            cameraZoomHandler.setZoom(point: currentPoint, gesture: gesture)
+        }
+    }
 
     func didOpenMode(_ mode: CameraMode, andClosed oldMode: CameraMode?) {
         updateMode(mode)
     }
 
     func didTapForMode(_ mode: CameraMode) {
-        switch mode {
+        switch mode.group {
         case .gif:
             takeGif()
-        case .photo:
-            takePhoto()
-        case .stopMotion:
+        case .photo, .video:
             takePhoto()
         }
     }
 
     func didStartPressingForMode(_ mode: CameraMode) {
-        switch mode {
-        case .stopMotion:
-            let _ = cameraInputController.startRecording()
-            updateRecordState(event: .started)
-        default: break
+        switch mode.group {
+        case .gif:
+            takeGif(useLongerDuration: true)
+        case .video:
+            prepareHapticFeedback()
+            let _ = cameraInputController.startRecording(on: mode)
+            performUIUpdate { [weak self] in
+                self?.updateRecordState(event: .started)
+            }
+        case .photo:
+            break
         }
     }
 
     func didEndPressingForMode(_ mode: CameraMode) {
-        switch mode {
-        case .stopMotion:
-            cameraInputController.endRecording(completion: { url in
+        switch mode.group {
+        case .video:
+            cameraInputController.endRecording(completion: { [weak self] url in
+                guard let strongSelf = self else { return }
                 if let videoURL = url {
                     let asset = AVURLAsset(url: videoURL)
-                    self.analyticsProvider.logCapturedMedia(type: self.currentMode, cameraPosition: self.cameraInputController.currentCameraPosition, length: CMTimeGetSeconds(asset.duration))
+                    strongSelf.analyticsProvider?.logCapturedMedia(type: strongSelf.currentMode,
+                                                                   cameraPosition: strongSelf.cameraInputController.currentCameraPosition,
+                                                                   length: CMTimeGetSeconds(asset.duration),
+                                                                   ghostFrameEnabled: strongSelf.imagePreviewVisible(),
+                                                                   filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
                 }
                 performUIUpdate {
-                    if let url = url, let image = AVURLAsset(url: url).thumbnail() {                
-                        self.clipsController.addNewClip(MediaClip(representativeFrame: image, overlayText: self.durationStringForAssetAtURL(url)))
+                    if let url = url {
+                        if mode.quantity == .single {
+                            strongSelf.showPreviewWithSegments([CameraSegment.video(url, TumblrMediaInfo(source: .kanvas_camera))])
+                            strongSelf.updateRecordState(event: .ended)
+                            strongSelf.updateUI(forClipsPresent: false)
+                        }
+                        else if let image = AVURLAsset(url: url).thumbnail() {
+                            strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                            overlayText: strongSelf.durationStringForAssetAtURL(url),
+                                                                            lastFrame: strongSelf.getLastFrameFrom(url)))
+                            strongSelf.updateRecordState(event: .ended)
+                        }
                     }
+                    
+                    strongSelf.generateHapticFeedback()
                 }
             })
-            updateRecordState(event: .ended)
         default: break
         }
     }
+    
+    func didDropToDelete(_ mode: CameraMode) {
+        switch mode.quantity {
+        case .multiple:
+            clipsController.removeDraggingClip()
+        case .single:
+            break
+        }
+    }
+    
+    func didDismissWelcomeTooltip() {
+        delegate?.didDismissWelcomeTooltip()
+    }
 
-}
+    func didTapMediaPickerButton() {
+        let imagePickerController = KanvasUIImagePickerViewController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .savedPhotosAlbum
+        imagePickerController.allowsEditing = false
+        imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
+        present(imagePickerController, animated: true) {
+            self.modeAndShootController.resetMediaPickerButton()
+        }
+        analyticsProvider?.logMediaPickerOpen()
+    }
 
-// MARK: - OptionsCollectionControllerDelegate (Top Options)
-extension CameraController: OptionsControllerDelegate {
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        mediaPickerThumbnailTargetSize = targetSize
+        self.delegate?.provideMediaPickerThumbnail(targetSize: targetSize) { [weak self] image in
+            if let image = image {
+                completion(image)
+                return
+            }
+            else {
+                self?.fetchMostRecentPhotoLibraryImage(targetSize: targetSize, completion: completion)
+            }
+        }
+    }
 
-    func optionSelected(_ item: CameraDeviceOption) {
+    private func fetchMostRecentPhotoLibraryImage(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        mediaPickerThumbnailQueue.async {
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            fetchOptions.fetchLimit = 1
+            let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+            self.lastMediaPickerFetchResult = fetchResult
+            if fetchResult.count > 0 {
+                let requestOptions = PHImageRequestOptions()
+                requestOptions.deliveryMode = .opportunistic
+                requestOptions.resizeMode = .fast
+                let lastMediaPickerAsset = fetchResult.object(at: 0) as PHAsset
+                PHImageManager.default().requestImage(for: lastMediaPickerAsset, targetSize: targetSize, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+                    performUIUpdate {
+                        completion(image)
+                    }
+                })
+            }
+            else {
+                performUIUpdate {
+                    completion(nil)
+                }
+            }
+        }
+    }
+
+    // MARK: - OptionsCollectionControllerDelegate (Top Options)
+
+    func optionSelected(_ item: CameraOption) {
         switch item {
         case .flashOn:
             cameraInputController.setFlashMode(on: true)
-            analyticsProvider.logFlashToggled()
+            analyticsProvider?.logFlashToggled()
         case .flashOff:
             cameraInputController.setFlashMode(on: false)
-            analyticsProvider.logFlashToggled()
+            analyticsProvider?.logFlashToggled()
         case .backCamera, .frontCamera:
             cameraInputController.switchCameras()
-            analyticsProvider.logFlipCamera()
+            analyticsProvider?.logFlipCamera()
+            cameraZoomHandler.resetZoom()
+        case .imagePreviewOn:
+            imagePreviewController.showImagePreview(true)
+            analyticsProvider?.logImagePreviewToggled(enabled: true)
+        case .imagePreviewOff:
+            imagePreviewController.showImagePreview(false)
+            analyticsProvider?.logImagePreviewToggled(enabled: false)
         }
     }
 
-}
+    // MARK: - MediaClipsEditorDelegate
 
-// MARK: - MediaClipsEditorDelegate
-extension CameraController: MediaClipsEditorDelegate {
+    func mediaClipStartedMoving() {
+        delegate?.didBeginDragInteraction()
+        modeAndShootController.enableShootButtonUserInteraction(true)
+        modeAndShootController.enableShootButtonGestureRecognizers(false)
+        performUIUpdate { [weak self] in
+            self?.cameraView.updateUI(forDraggingClip: true)
+            self?.modeAndShootController.closeTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(false)
+            self?.clipsController.hidePreviewButton()
+        }
+    }
+
+    func mediaClipFinishedMoving() {
+        analyticsProvider?.logMovedClip()
+        delegate?.didEndDragInteraction()
+        let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
+        modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
+        modeAndShootController.enableShootButtonGestureRecognizers(true)
+        performUIUpdate { [weak self] in
+            self?.cameraView.updateUI(forDraggingClip: false)
+            self?.modeAndShootController.hideTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(!filterSelectorVisible)
+            self?.clipsController.showPreviewButton()
+        }
+    }
 
     func mediaClipWasDeleted(at index: Int) {
-        cameraInputController.deleteSegmentAtIndex(index)
-        analyticsProvider.logDeleteSegment()
+        cameraInputController.deleteSegment(at: index)
+        delegate?.didEndDragInteraction()
+        let filterSelectorVisible = filterSettingsController.isFilterSelectorVisible()
+        modeAndShootController.enableShootButtonUserInteraction(!filterSelectorVisible)
+        modeAndShootController.enableShootButtonGestureRecognizers(true)
+        performUIUpdate { [weak self] in
+            self?.cameraView.updateUI(forDraggingClip: false)
+            self?.modeAndShootController.hideTrash()
+            self?.modeAndShootController.toggleMediaPickerButton(!filterSelectorVisible)
+            self?.clipsController.showPreviewButton()
+            self?.updateLastClipPreview()
+        }
+        analyticsProvider?.logDeleteSegment()
     }
 
-}
+    func mediaClipWasAdded(at index: Int) {
+        updateLastClipPreview()
+    }
 
-// MARK: - CameraPreviewControllerDelegate
-extension CameraController: CameraPreviewControllerDelegate {
+    func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
+        cameraInputController.moveSegment(from: originIndex, to: destinationIndex)
+        updateLastClipPreview()
+    }
+    
+    func nextButtonWasPressed() {
+        showPreviewWithSegments(cameraInputController.segments())
+        analyticsProvider?.logNextTapped()
+    }
+
+    // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate
+
     func didFinishExportingVideo(url: URL?) {
-        if let videoURL = url {
-            let asset = AVURLAsset(url: videoURL)
-            analyticsProvider.logConfirmedMedia(mode: currentMode, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
-        }
-        performUIUpdate {
-            self.delegate?.didCreateMedia(media: url.map { .video($0) }, error: url != nil ? nil : CameraControllerError.exportFailure)
-        }
+        didFinishExportingVideo(url: url, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm)
     }
 
     func didFinishExportingImage(image: UIImage?) {
-        analyticsProvider.logConfirmedMedia(mode: currentMode, clipsCount: 1, length: 0)
-        performUIUpdate {
-            if let url = self.saveImageToFile(image) {
-                let media = KanvasCameraMedia.image(url)
-                self.delegate?.didCreateMedia(media: media, error: nil)
+        didFinishExportingImage(image: image, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm)
+    }
+
+    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+        if let url = url, let info = info {
+            let asset = AVURLAsset(url: url)
+            logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
+            performUIUpdate { [weak self] in
+                self?.cameraInputController.willCloseSoon = true
+                self?.delegate?.didCreateMedia(media: .video(url, info), exportAction: action, error: nil)
             }
-            else {
-                self.delegate?.didCreateMedia(media: nil, error: CameraControllerError.exportFailure)
+        }
+        else {
+            performUIUpdate { [weak self] in
+                self?.cameraInputController.willCloseSoon = true
+                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
             }
+        }
+    }
+
+    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+        if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
+            logMediaCreation(action: action, clipsCount: 1, length: 0)
+            performUIUpdate { [weak self] in
+                self?.cameraInputController.willCloseSoon = true
+                self?.delegate?.didCreateMedia(media: .image(url, info), exportAction: action, error: nil)
+            }
+        }
+        else {
+            performUIUpdate { [weak self] in
+                self?.cameraInputController.willCloseSoon = true
+                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+            }
+        }
+    }
+
+    func logMediaCreation(action: KanvasExportAction, clipsCount: Int, length: TimeInterval) {
+        switch action {
+        case .previewConfirm:
+            analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: clipsCount, length: length)
+        case .confirm, .post, .save:
+            analyticsProvider?.logEditorCreatedMedia(clipsCount: clipsCount, length: length)
         }
     }
 
     func dismissButtonPressed() {
-        analyticsProvider.logPreviewDismissed()
-        performUIUpdate {
-            self.dismiss(animated: true)
+        if settings.features.editor {
+            analyticsProvider?.logEditorBack()
         }
+        else {
+            analyticsProvider?.logPreviewDismissed()
+        }
+        performUIUpdate { [weak self] in
+            self?.dismiss(animated: true)
+        }
+        delegate?.editorDismissed()
+    }
+
+    func tagButtonPressed() {
+        delegate?.tagButtonPressed()
+    }
+    
+    func editorShouldShowColorSelectorTooltip() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowColorSelectorTooltip()
+    }
+    
+    func didDismissColorSelectorTooltip() {
+        delegate?.didDismissColorSelectorTooltip()
+    }
+    
+    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+        guard let delegate = delegate else { return false }
+        return delegate.editorShouldShowStrokeSelectorAnimation()
+    }
+    
+    func didEndStrokeSelectorAnimation() {
+        delegate?.didEndStrokeSelectorAnimation()
+    }
+    
+    // MARK: CameraZoomHandlerDelegate
+    var currentDeviceForZooming: AVCaptureDevice? {
+        return cameraInputController.currentDevice
+    }
+    
+    // MARK: CameraInputControllerDelegate
+    func cameraInputControllerShouldResetZoom() {
+        cameraZoomHandler.resetZoom()
+    }
+    
+    func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer) {
+        cameraZoomHandler.setZoom(gesture: gesture)
+    }
+    
+    // MARK: - FilterSettingsControllerDelegate
+    
+    func didSelectFilter(_ filterItem: FilterItem, animated: Bool) {
+        cameraInputController.applyFilter(filterType: filterItem.type)
+        if animated {
+            analyticsProvider?.logFilterSelected(filterType: filterItem.type)
+        }
+    }
+    
+    func didTapSelectedFilter(recognizer: UITapGestureRecognizer) {
+        modeAndShootController.tapShootButton(recognizer: recognizer)
+    }
+    
+    func didLongPressSelectedFilter(recognizer: UILongPressGestureRecognizer) {
+        modeAndShootController.longPressShootButton(recognizer: recognizer)
+    }
+    
+    func didTapVisibilityButton(visible: Bool) {
+        if visible {
+            analyticsProvider?.logOpenFiltersSelector()
+        }
+        modeAndShootController.enableShootButtonUserInteraction(!visible)
+        modeAndShootController.toggleMediaPickerButton(!visible)
+        modeAndShootController.dismissTooltip()
+    }
+
+    // MARK: - UIImagePickerControllerDelegate
+
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        let imageMaybe = info[.originalImage] as? UIImage
+        let mediaURLMaybe = info[.mediaURL] as? URL
+
+        if let image = imageMaybe {
+            pick(image: image, url: mediaURLMaybe)
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
+        }
+        else if let mediaURL = mediaURLMaybe {
+            pick(video: mediaURL)
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .video)
+        }
+    }
+
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+        analyticsProvider?.logMediaPickerDismiss()
+    }
+
+    private func pick(image: UIImage, url: URL?) {
+        let mediaInfo: TumblrMediaInfo = {
+            guard let url = url else { return TumblrMediaInfo(source: .media_library) }
+            return TumblrMediaInfo(fromImage: url) ?? TumblrMediaInfo(source: .media_library)
+        }()
+        if currentMode.quantity == .single {
+            performUIUpdate {
+                self.showPreviewWithSegments([CameraSegment.image(image, nil, mediaInfo)])
+            }
+        }
+        else {
+            segmentsHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo) { [weak self] success, segment in
+                guard let strongSelf = self else {
+                    return
+                }
+                guard success else {
+                    return
+                }
+                performUIUpdate {
+                    strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                                    overlayText: nil,
+                                                                    lastFrame: image))
+                }
+            }
+        }
+    }
+
+    private func pick(video url: URL) {
+        let mediaInfo = TumblrMediaInfo(fromVideoURL: url) ?? TumblrMediaInfo(source: .media_library)
+        if currentMode.quantity == .single {
+            self.showPreviewWithSegments([CameraSegment.video(url, mediaInfo)])
+        }
+        else {
+            segmentsHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
+            performUIUpdate {
+                if let image = AVURLAsset(url: url).thumbnail() {
+                    self.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                                                              overlayText: self.durationStringForAssetAtURL(url),
+                                                              lastFrame: self.getLastFrameFrom(url)))
+                }
+            }
+        }
+    }
+
+    // MARK: - breakdown
+    
+    /// This function should be called to stop the camera session and properly breakdown the inputs
+    public func cleanup() {
+        resetState()
+        cameraInputController.cleanup()
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    }
+
+}
+
+extension CameraController: PHPhotoLibraryChangeObserver {
+    public func photoLibraryDidChange(_ changeInstance: PHChange) {
+        guard
+            let lastMediaPickerFetchResult = lastMediaPickerFetchResult,
+            let changeDetails = changeInstance.changeDetails(for: lastMediaPickerFetchResult),
+            changeDetails.insertedIndexes?.count == 1,
+            changeDetails.removedIndexes?.count == 1
+        else {
+            return
+        }
+        fetchMostRecentPhotoLibraryImage(targetSize: mediaPickerThumbnailTargetSize) { image in
+            guard let image = image else { return }
+            self.modeAndShootController.setMediaPickerButtonThumbnail(image)
+        }
+    }
+
+    public func resetState() {
+        overlayViewController?.dismiss(animated: true, completion: nil)
+        clipsController.removeAllClips()
+        cameraInputController.deleteAllSegments()
+        imagePreviewController.setImagePreview(nil)
     }
 }

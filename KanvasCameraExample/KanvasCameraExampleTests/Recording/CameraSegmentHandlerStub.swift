@@ -8,6 +8,7 @@
 import AVFoundation
 import Foundation
 import UIKit
+import Utils
 
 final class CameraSegmentHandlerStub: SegmentsHandlerType {
     var segments: [CameraSegment] = []
@@ -19,41 +20,51 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
         segments.append(segment)
     }
 
-    func addNewVideoSegment(url: URL) {
+    func addNewVideoSegment(url: URL, mediaInfo: TumblrMediaInfo) {
         guard let videoURL = videoURL else { return }
-        let segment = CameraSegment.video(videoURL)
+        let segment = CameraSegment.video(videoURL, mediaInfo)
         segments.append(segment)
     }
 
-    func addNewImageSegment(image: UIImage, size: CGSize, completion: @escaping (Bool, CameraSegment?) -> Void) {
+    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
         guard let url = videoURL else { return }
-        let segment = CameraSegment.image(image, url)
+        let segment = CameraSegment.image(image, url, mediaInfo)
         segments.append(segment)
         completion(true, segment)
     }
 
-    func deleteSegment(index: Int, removeFromDisk: Bool) {
+    func deleteSegment(at index: Int, removeFromDisk: Bool) {
         guard index < segments.count else {
             return
         }
         segments.remove(at: index)
     }
 
+    func deleteAllSegments(removeFromDisk: Bool) {
+        while segments.count > 0 {
+            deleteSegment(at: 0, removeFromDisk: removeFromDisk)
+        }
+    }
+
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        segments.move(from: originIndex, to: destinationIndex)
+    }
+    
     func currentTotalDuration() -> TimeInterval {
         let timePerSegment: TimeInterval = 2
         return Double(segments.count) * timePerSegment
     }
 
-    func exportVideo(completion: @escaping (URL?) -> Void) {
-        completion(videoURL)
+    func exportVideo(completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+        completion(videoURL, TumblrMediaInfo(source: .kanvas_camera))
     }
 
     func reset(removeFromDisk: Bool) {
 
     }
 
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
-        completion(videoURL)
+    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+        completion(videoURL, TumblrMediaInfo(source: .kanvas_camera))
     }
 
     func videoOutputSettingsForSize(size: CGSize) -> [String: Any] {

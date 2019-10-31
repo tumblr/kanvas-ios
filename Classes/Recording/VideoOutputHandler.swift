@@ -19,27 +19,29 @@ protocol VideoOutputHandlerProtocol {
 }
 
 private struct VideoHandlerConstants {
-    static let Queue = "VideoQueue"
+    static let queue = "VideoQueue"
 }
 
 /// A class to handle video recording
 final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
 
     /// start time of the current clip
-    private(set) var startTime: CMTime = kCMTimeZero
+    private(set) var startTime: CMTime = CMTime.zero
 
     /// whether current handler is recording
     private(set) var recording: Bool = false
 
     private var currentVideoSampleBuffer: CMSampleBuffer?
+    private weak var currentVideoPixelBuffer: CVPixelBuffer?
     private var currentAudioSampleBuffer: CMSampleBuffer?
+    private var currentPresentationTime: CMTime?
     private var assetWriter: AVAssetWriter?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     private var videoInput: AVAssetWriterInput?
     private var audioInput: AVAssetWriterInput?
     private var recordedVideoFrameFirst: Bool = false
-    private let videoQueue: DispatchQueue = DispatchQueue(label: VideoHandlerConstants.Queue)
-    private var finalizing: Bool = false
+    private var videoQueue: DispatchQueue = DispatchQueue(label: VideoHandlerConstants.queue)
+    private let stopRecordingSemaphore = DispatchSemaphore(value: 0)
 
     // MARK: - external methods
 
@@ -50,23 +52,22 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
     ///   - pixelBufferAdaptor: the pixel buffer adapator
     ///   - audioInput: the audio input for the asset writer. This can be nil
     func startRecordingVideo(assetWriter: AVAssetWriter,
-                                                pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor,
-                                                audioInput: AVAssetWriterInput?) {
-        guard recording == false, finalizing == false else {
-            assertionFailure("Should not start record while recording is already in progress")
-            return
-        }
-
+                             pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor,
+                             audioInput: AVAssetWriterInput?) {
         self.assetWriter = assetWriter
         self.pixelBufferAdaptor = pixelBufferAdaptor
         self.videoInput = pixelBufferAdaptor.assetWriterInput
         self.audioInput = audioInput
+        videoQueue = DispatchQueue(label: assetWriter.outputURL.absoluteString)
 
         recordedVideoFrameFirst = false
-        startTime = CMTime(value: 0, timescale: KanvasCameraTimes.StopMotionFrameTimescale)
+        startTime = CMTime(value: 0, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
 
         if let sampleBuffer = currentVideoSampleBuffer {
             startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+        }
+        else if let _ = currentVideoPixelBuffer, let presentationTime = currentPresentationTime {
+            startTime = presentationTime
         }
 
         guard assetWriter.startWriting() else {
@@ -79,31 +80,32 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         if let sampleBuffer = currentVideoSampleBuffer {
             processVideoSampleBuffer(sampleBuffer)
         }
+        else if let pixelBuffer = currentVideoPixelBuffer, let presentationTime = currentPresentationTime {
+            processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+        }
+
+        stopRecordingSemaphore.signal()
     }
 
     /// Stops recording video and exports as a mp4
     ///
     /// - Parameter completion: success boolean if asset writer completed
     func stopRecordingVideo(completion: @escaping (Bool) -> Void) {
-        guard recording && !finalizing else {
-            completion(false)
-            return
-        }
-
+        stopRecordingSemaphore.wait()
         recording = false
-        finalizing = true
-        videoQueue.async {
-            if let sampleBuffer = self.currentVideoSampleBuffer {
-                self.startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            }
 
-            self.videoInput?.markAsFinished()
-            self.audioInput?.markAsFinished()
-            self.assetWriter?.finishWriting(completionHandler: { [unowned self] in
-                self.finalizing = false
-                completion(self.assetWriter?.status == .completed && self.assetWriter?.error == nil)
-            })
+        if let sampleBuffer = currentVideoSampleBuffer {
+            startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         }
+        else if let _ = currentVideoPixelBuffer, let presentationTime = currentPresentationTime {
+            startTime = presentationTime
+        }
+
+        videoInput?.markAsFinished()
+        audioInput?.markAsFinished()
+        assetWriter?.finishWriting(completionHandler: { [weak self] in
+            completion(self?.assetWriter?.status == .completed && self?.assetWriter?.error == nil)
+        })
     }
 
     // MARK: - sample buffer processing
@@ -115,7 +117,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         currentVideoSampleBuffer = sampleBuffer
         if recording {
             var newBuffer: CMSampleBuffer? = nil
-            CMSampleBufferCreateCopy(kCFAllocatorDefault, sampleBuffer, &newBuffer)
+            CMSampleBufferCreateCopy(allocator: kCFAllocatorDefault, sampleBuffer: sampleBuffer, sampleBufferOut: &newBuffer)
             guard let buffer = newBuffer else { return }
 
             videoQueue.async {
@@ -130,6 +132,28 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         }
     }
 
+    /// The video pixel buffer processor
+    ///
+    /// - Parameters:
+    ///   - pixelBuffer: The filtered pixel buffer input
+    ///   - presentationTime: The time to append the buffer
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        let currentVideoPixelBuffer = pixelBuffer.copy()
+        self.currentVideoPixelBuffer = currentVideoPixelBuffer
+        currentPresentationTime = presentationTime
+        if recording {
+            videoQueue.async {
+                if self.videoInput?.isReadyForMoreMediaData == true {
+                    if self.recordedVideoFrameFirst == false {
+                        self.assetWriter?.startSession(atSourceTime: presentationTime)
+                        self.recordedVideoFrameFirst = true
+                    }
+                    self.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: presentationTime)
+                }
+            }
+        }
+    }
+
     /// The audio buffer processor
     ///
     /// - Parameter sampleBuffer: The input audio sample buffer
@@ -137,7 +161,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         currentAudioSampleBuffer = sampleBuffer
         if recording && recordedVideoFrameFirst == true {
             var newBuffer: CMSampleBuffer? = nil
-            CMSampleBufferCreateCopy(kCFAllocatorDefault, sampleBuffer, &newBuffer)
+            CMSampleBufferCreateCopy(allocator: kCFAllocatorDefault, sampleBuffer: sampleBuffer, sampleBufferOut: &newBuffer)
             guard let buffer = newBuffer else { return }
 
             videoQueue.async {
@@ -156,5 +180,9 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         let timestamp = CMSampleBufferGetPresentationTimeStamp(currentVideoSample)
         let difference = CMTimeSubtract(timestamp, startTime)
         return CMTimeGetSeconds(difference)
+    }
+
+    func assetWriterURL() -> URL? {
+        return assetWriter?.outputURL
     }
 }

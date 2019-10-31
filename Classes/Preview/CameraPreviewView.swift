@@ -19,8 +19,8 @@ protocol CameraPreviewViewDelegate: class {
 
 /// Constants for CameraPreviewView
 private struct CameraPreviewViewConstants {
-    static let ConfirmButtonSize: CGFloat = 54
-    static let ConfirmButtonMargin: CGFloat = 64
+    static let confirmButtonSize: CGFloat = 54
+    static let confirmButtonMargin: CGFloat = 64
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -49,14 +49,14 @@ final class CameraPreviewView: UIView {
 
     private func setupViews() {
         imageView.backgroundColor = .black
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.add(into: self)
 
         imageView.layer.addSublayer(firstPlayerLayer)
         imageView.layer.addSublayer(secondPlayerLayer)
 
-        firstPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-        secondPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+        firstPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        secondPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
 
         performLayerActionsWithoutAnimation {
             firstPlayerLayer.opacity = 0
@@ -78,33 +78,34 @@ final class CameraPreviewView: UIView {
 
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
-        closeButton.applyShadows()
+        closeButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
+        closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
+        closeButton.imageView?.contentMode = .scaleAspectFit
+        
         addSubview(closeButton)
-        closeButton.setImage(KanvasCameraImages.BackImage, for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
-
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.ButtonMargin),
-            closeButton.topAnchor.constraint(equalTo: topAnchor, constant: CameraConstants.ButtonMargin),
+            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
+            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.ButtonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
         ])
     }
 
     private func setUpConfirmButton() {
         confirmButton.accessibilityLabel = "Confirm Button"
-        confirmButton.applyShadows()
+        confirmButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
         addSubview(confirmButton)
-        confirmButton.setImage(KanvasCameraImages.ConfirmImage, for: .normal)
+        confirmButton.setImage(KanvasCameraImages.confirmImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             confirmButton.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            confirmButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CameraPreviewViewConstants.ConfirmButtonMargin),
+            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -CameraPreviewViewConstants.confirmButtonMargin),
             confirmButton.heightAnchor.constraint(equalTo: confirmButton.widthAnchor),
-            confirmButton.widthAnchor.constraint(equalToConstant: CameraPreviewViewConstants.ConfirmButtonSize)
+            confirmButton.widthAnchor.constraint(equalToConstant: CameraPreviewViewConstants.confirmButtonSize)
         ])
     }
     

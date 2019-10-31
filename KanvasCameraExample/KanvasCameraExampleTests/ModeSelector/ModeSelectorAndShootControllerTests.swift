@@ -20,7 +20,7 @@ final class ModeSelectorAndShootControllerTests: FBSnapshotTestCase {
     
     func newViewController() -> ModeSelectorAndShootController {
         let settings = CameraSettings()
-        settings.enabledModes = [.stopMotion, .photo, .gif]
+        settings.enabledModes = [.stopMotion, .photo, .loop]
         let viewController = ModeSelectorAndShootController(settings: settings)
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
@@ -46,7 +46,7 @@ final class ModeSelectorAndShootControllerTests: FBSnapshotTestCase {
     func testSetMode() {
         let viewController = newViewController()
         UIView.setAnimationsEnabled(false)
-        viewController.setMode(.stopMotion, from: .gif)
+        viewController.setMode(.stopMotion, from: .loop)
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
     }
@@ -74,10 +74,19 @@ final class ModeSelectorAndShootControllerTests: FBSnapshotTestCase {
         viewController.delegate = newDelegateStub()
         viewController.shootButtonViewDidEndLongPress()
     }
-
+    
+    func testDropInteraction() {
+        let viewController = newViewController()
+        viewController.delegate = newDelegateStub()
+        viewController.shootButtonDidReceiveDropInteraction()
+    }
 }
 
 final class ModeSelectorAndShootDelegateStub: ModeSelectorAndShootControllerDelegate {
+    func didDropToDelete(_ mode: CameraMode) {
+        XCTAssert(mode == .stopMotion, "Mode did not match for shoot button")
+    }
+    
     func didOpenMode(_ mode: CameraMode, andClosed oldMode: CameraMode?) {
         XCTAssert(mode == .photo, "The correct mode did not open properly")
     }
@@ -92,5 +101,21 @@ final class ModeSelectorAndShootDelegateStub: ModeSelectorAndShootControllerDele
 
     func didEndPressingForMode(_ mode: CameraMode) {
         XCTAssert(mode == .stopMotion, "Mode did not match for shoot button")
+    }
+    
+    func didPanForZoom(_ mode: CameraMode, _ currentPoint: CGPoint, _ gesture: UILongPressGestureRecognizer) {
+        XCTAssert(mode == .stopMotion, "Mode did not match for shoot button")
+    }
+    
+    func didDismissWelcomeTooltip() {
+        // Works on every mode
+    }
+
+    func didTapMediaPickerButton() {
+        // Works on every mode
+    }
+
+    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        completion(nil)
     }
 }

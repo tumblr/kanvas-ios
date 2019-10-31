@@ -11,11 +11,18 @@ import XCTest
 final class CameraConstantsTests: XCTestCase {
     
     func testButtonSize() {
-        XCTAssert(34 == CameraConstants.ButtonSize, "Button size should match expected value")
+        XCTAssert(26.5 == CameraConstants.optionButtonSize, "Button size should match expected value")
     }
 
-    func testButtonMargin() {
-        XCTAssert(32 == CameraConstants.ButtonMargin, "Button margin should match expected value")
+    func testOptionHorizontalMargin() {
+        XCTAssert(24 == CameraConstants.optionHorizontalMargin, "Option horizontal margin should match expected value")
     }
-
+    
+    func testOptionVerticalMargin() {
+        XCTAssert(24 == CameraConstants.optionVerticalMargin, "Option vertical margin should match expected value")
+    }
+    
+    func testOptionSpacing() {
+        XCTAssert(33 == CameraConstants.optionSpacing, "Option spacing should match expected value")
+    }
 }

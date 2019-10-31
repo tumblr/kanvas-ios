@@ -10,20 +10,32 @@ import Foundation
 struct KanvasCameraStrings {
     // MARK: - Camera Modes
 
-    // PhotoModeName: used in the camera mode button
-    static let PhotoModeName: String = NSLocalizedString("Photo", comment: "Photo camera mode")
+    // photoModeName: used in the camera mode button
+    static let photoModeName: String = NSLocalizedString("Photo", comment: "Photo camera mode")
 
-    // GifModeName: used in the camera mode button
-    static let GifModeName: String = NSLocalizedString("Gif", comment: "Gif camera mode")
+    // loopModeName: used in the camera mode button
+    static let loopModeName: String = NSLocalizedString("Loop", comment: "Gif camera mode")
 
-    // StopMotionModeName: used in the camera mode button
-    static let StopMotionModeName: String = NSLocalizedString("Shoot", comment: "Stop motion camera mode")
-
+    // stopMotionModeName: used in the camera mode button
+    static let stopMotionModeName: String = NSLocalizedString("Capture", comment: "Stop motion camera mode")
+    
+    // normalModeName: used in the camera mode button
+    static let normalModeName: String = NSLocalizedString("Normal", comment: "Normal camera mode")
+    
+    // stitchModeName: used in the camera mode button
+    static let stitchModeName: String = NSLocalizedString("Stitch", comment: "Stitch camera mode")
+    
+    // gifModeName: used in the camera mode button
+    static let gifModeName: String = NSLocalizedString("GIF", comment: "GIF camera mode")
+    
     static func name(for mode: CameraMode) -> String {
         switch mode {
-        case .photo: return PhotoModeName
-        case .gif: return GifModeName
-        case .stopMotion: return StopMotionModeName
+        case .photo: return photoModeName
+        case .loop: return loopModeName
+        case .stopMotion: return stopMotionModeName
+        case .normal: return normalModeName
+        case .stitch: return stitchModeName
+        case .gif: return gifModeName
         }
     }
 }

@@ -15,13 +15,21 @@
   "requires_arc": true,
   "frameworks": [
     "Foundation",
+    "GLKit",
+    "OpenGLES",
     "UIKit"
   ],
-  "source_files": "Classes/**/*.{h,m,swift}",
+  "source_files": "Classes/**/*.{h,m,swift,vsh,glsl}",
   "resources": "Resources/*",
   "dependencies": {
-  },
-  "pod_target_xcconfig": {
-    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES": true
+    "TumblrTheme": [
+
+    ],
+    "SharedUI": [
+
+    ],
+    "Utils": [
+
+    ]
   }
 }

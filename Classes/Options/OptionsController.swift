@@ -7,6 +7,12 @@
 import Foundation
 import UIKit
 
+private struct OptionsControllerConstants {
+    static let rowSpacing: CGFloat = 20
+    static let animationDuration = 0.25
+    static let imagePreviewRow = 2
+}
+
 /// An option in this collection can be one of 2 kinds
 /// and so behave in one of 2 ways
 ///
@@ -50,13 +56,27 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
 
     typealias Item = Delegate.OptionsItem
 
-    private lazy var optionsStackView: OptionsStackView<Item> = {
-        let view = OptionsStackView(options: options, interItemSpacing: self.spacing)
-        view.delegate = self
-        return view
+    private lazy var optionsStackViews: [OptionsStackView<Item>] = {
+        var optionViews: [OptionsStackView<Item>] = []
+        for index in 0..<options.count {
+            let view = OptionsStackView(section: index, options: options[index], interItemSpacing: self.spacing, settings: self.settings)
+            view.delegate = self
+            optionViews.append(view)
+        }
+        
+        return optionViews
     }()
-    private let options: [Option<Item>]
+
+    private lazy var imagePreviewOptionsStackView: OptionsStackView<Item>? = {
+        if OptionsControllerConstants.imagePreviewRow < self.optionsStackViews.count {
+            return self.optionsStackViews[OptionsControllerConstants.imagePreviewRow]
+        }
+        return nil
+    }()
+    
+    private let options: [[Option<Item>]]
     private let spacing: CGFloat
+    private let settings: CameraSettings
 
     weak var delegate: Delegate?
 
@@ -65,9 +85,10 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     /// - Parameters:
     ///   - options: the Option items to display in the stack view
     ///   - spacing: the amount of spacing for the internal stack view
-    init(options: [Option<Item>], spacing: CGFloat) {
+    init(options: [[Option<Item>]], spacing: CGFloat, settings: CameraSettings) {
         self.options = options
         self.spacing = spacing
+        self.settings = settings
         super.init(nibName: .none, bundle: .none)
     }
 
@@ -75,29 +96,58 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    /// This is overridden in order to get the extended tap area from OptionsStackView
+    override func loadView() {
+        view = createVerticalStackView()
+    }
+    
+    // Creates the stack view that will contain the other two
+    private func createVerticalStackView() -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: optionsStackViews)
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.spacing = CameraConstants.optionSpacing
+        return stackView
+    }
+    
+    // MARK: - Public interface
+    
+    /// Changes the visibility of the top options depending on the clip collection size
+    ///
+    /// - Parameter areThereClips: whether there are clips or the collection is empty
+    func configureOptions(areThereClips: Bool) {
+        UIView.animate(withDuration: OptionsControllerConstants.animationDuration) { [weak self] in
+            self?.imagePreviewOptionsStackView?.alpha = areThereClips ? 1 : 0
+        }
+    }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        optionsStackView.add(into: view)
+    /// Is the image preview option available?
+    func imagePreviewOptionAvailable() -> Bool {
+        return self.imagePreviewOptionsStackView?.alpha == 1
     }
 }
 
 extension OptionsController: OptionsStackViewDelegate {
 
-    func optionWasTapped(optionIndex: Int) {
-        let item = options[optionIndex]
+    func optionWasTapped(section: Int, optionIndex: Int) {
+        let item = options[section][optionIndex]
         switch item.type {
         case .twoOptionsImages(alternateOption: let otherOption, alternateImage: let otherImage):
-            alternateOption(index: optionIndex, newOption: otherOption, newImage: otherImage)
+            alternateOption(section: section, index: optionIndex, newOption: otherOption, newImage: otherImage)
         case .twoOptionsAnimation(animation: let animation, duration: let duration, completion: let completion):
-            animateOption(index: optionIndex, duration: duration, animation: animation, completion: completion)
+            animateOption(section: section, index: optionIndex, duration: duration, animation: animation, completion: completion)
         }
-        optionsStackView.changeOptions(to: options)
-        delegate?.optionSelected(options[optionIndex].option)
+        
+        for section in 0..<options.count {
+            optionsStackViews[section].changeOptions(to: options[section])
+        }
+        
+        delegate?.optionSelected(options[section][optionIndex].option)
     }
 
-    private func alternateOption(index: Int, newOption: Item, newImage: UIImage?) {
-        let item = options[index]
+    private func alternateOption(section: Int, index: Int, newOption: Item, newImage: UIImage?) {
+        let item = options[section][index]
         let oldOption = item.option
         let oldImage = item.image
         item.option = newOption
@@ -105,11 +155,11 @@ extension OptionsController: OptionsStackViewDelegate {
         item.type = .twoOptionsImages(alternateOption: oldOption, alternateImage: oldImage)
     }
 
-    private func animateOption(index: Int, duration: TimeInterval, animation: @escaping (UIView) -> (), completion: ((UIView) -> ())?) {
+    private func animateOption(section: Int, index: Int, duration: TimeInterval, animation: @escaping (UIView) -> (), completion: ((UIView) -> ())?) {
         UIView.animate(withDuration: duration, animations: {
-            animation(self.optionsStackView.stackView.arrangedSubviews[index])
+            animation(self.optionsStackViews[section].stackView.arrangedSubviews[index])
         }, completion: { _ in
-            completion?(self.optionsStackView.stackView.arrangedSubviews[index])
+            completion?(self.optionsStackViews[section].stackView.arrangedSubviews[index])
         })
     }
 

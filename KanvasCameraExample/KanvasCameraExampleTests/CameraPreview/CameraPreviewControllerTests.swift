@@ -9,6 +9,7 @@ import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
+import Utils
 
 final class CameraPreviewControllerTests: FBSnapshotTestCase {
 
@@ -21,11 +22,12 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
     func getAllSegments() -> [CameraSegment] {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
            let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL),
-                CameraSegment.video(videoURL),
-                CameraSegment.image(image, videoURL),
-                CameraSegment.video(videoURL)
+                CameraSegment.image(image, videoURL, mediaInfo),
+                CameraSegment.video(videoURL, mediaInfo),
+                CameraSegment.image(image, videoURL, mediaInfo),
+                CameraSegment.video(videoURL, mediaInfo)
             ]
         }
         return []
@@ -33,9 +35,10 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
 
     func getVideoSegments() -> [CameraSegment] {
         if let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.video(videoURL),
-                CameraSegment.video(videoURL)
+                CameraSegment.video(videoURL, mediaInfo),
+                CameraSegment.video(videoURL, mediaInfo)
             ]
         }
         return []
@@ -44,8 +47,9 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
     func getPhotoSegment() -> [CameraSegment] {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL)
+                CameraSegment.image(image, videoURL, mediaInfo)
             ]
         }
         return []
@@ -54,17 +58,18 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
     func getPhotoSegments() -> [CameraSegment] {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL),
-                CameraSegment.image(image, videoURL)
+                CameraSegment.image(image, videoURL, mediaInfo),
+                CameraSegment.image(image, videoURL, mediaInfo)
             ]
         }
         return []
     }
 
-    func newViewController(segments: [CameraSegment], delegate: CameraPreviewControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil) -> CameraPreviewViewController {
+    func newViewController(settings: CameraSettings = CameraSettings(), segments: [CameraSegment], delegate: CameraPreviewControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil) -> CameraPreviewViewController {
         let handler = assetsHandler ?? AssetsHandlerStub()
-        let viewController = CameraPreviewViewController(settings: CameraSettings(), segments: segments, assetsHandler: handler)
+        let viewController = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: handler, cameraMode: cameraMode)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
@@ -130,6 +135,31 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
     }
+    
+    func testConfirmPhotoAsVideoInStopMotionMode() {
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let settings = CameraSettings()
+        settings.exportStopMotionPhotoAsVideo = true
+        let handler = newAssetHandlerStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .stopMotion)
+        viewController.confirmButtonPressed()
+        XCTAssertTrue(!handler.mergeAssetsCalled, "Handler merge assets function called")
+        XCTAssertTrue(delegate.videoExportCalled, "Delegate video export function not called")
+    }
+    
+    func testConfirmPhotoAsPhotoInStopMotionMode() {
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let settings = CameraSettings()
+        settings.exportStopMotionPhotoAsVideo = true
+        let handler = newAssetHandlerStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .photo)
+        viewController.confirmButtonPressed()
+        XCTAssertTrue(!handler.mergeAssetsCalled, "Handler merge assets function called")
+        XCTAssertTrue(delegate.imageExportCalled, "Delegate image export function not called")
+        XCTAssertFalse(delegate.videoExportCalled, "Delegate video export function should not be called")
+    }
 
     func testConfirmVideos() {
         let segments = getVideoSegments()
@@ -193,10 +223,11 @@ final class CameraPreviewControllerDelegateStub: CameraPreviewControllerDelegate
 final class AssetsHandlerStub: AssetsHandlerType {
     private(set) var mergeAssetsCalled = false
 
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?) -> Void) {
+    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
         mergeAssetsCalled = true
         let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4")
-        completion(videoURL)
+        let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+        completion(videoURL, mediaInfo)
     }
 
 

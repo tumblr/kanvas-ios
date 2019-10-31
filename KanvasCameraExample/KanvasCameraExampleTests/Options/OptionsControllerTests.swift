@@ -24,16 +24,16 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         animationCalled = false
     }
 
-    func getOptions() -> [Option<String>] {
-        let image = KanvasCameraImages.FlashOnImage
-        return [Option(option: "Option 1.1", image: image, type: .twoOptionsImages(alternateOption: "Option 1.2", alternateImage: image)),
-                Option(option: "Option 2", image: image, type: .twoOptionsAnimation(animation: { [unowned self] _ in self.animationCalled = true },
+    func getOptions() -> [[Option<String>]] {
+        let image = KanvasCameraImages.flashOnImage
+        return [[Option(option: "Option 1.1", image: image, type: .twoOptionsImages(alternateOption: "Option 1.2", alternateImage: image)),
+                Option(option: "Option 2", image: image, type: .twoOptionsAnimation(animation: { [weak self] _ in self?.animationCalled = true },
                                                                                     duration: AnimationDuration,
-                                                                                    completion: nil))]
+                                                                                    completion: nil))]]
     }
 
-    func newViewController(options: [Option<String>]) -> OptionsController<OptionsControllerDelegateStub> {
-        let viewController = OptionsController<OptionsControllerDelegateStub>(options: options, spacing: 0)
+    func newViewController(options: [[Option<String>]]) -> OptionsController<OptionsControllerDelegateStub> {
+        let viewController = OptionsController<OptionsControllerDelegateStub>(options: options, spacing: 0, settings: CameraSettings())
         viewController.delegate = newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 100)
         return viewController
@@ -48,12 +48,12 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         let options = getOptions()
         let viewController = newViewController(options: options)
         UIView.setAnimationsEnabled(false)
-        viewController.optionWasTapped(optionIndex: 0)
+        viewController.optionWasTapped(section: 0, optionIndex: 0)
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
         // Test that the option was correctly changed
-        XCTAssertEqual(options[0].option, "Option 1.2")
-        if case let .twoOptionsImages(alternateOption: otherOption, alternateImage: _) = options[0].type {
+        XCTAssertEqual(options[0][0].option, "Option 1.2")
+        if case let .twoOptionsImages(alternateOption: otherOption, alternateImage: _) = options[0][0].type {
             XCTAssertEqual(otherOption, "Option 1.1")
         }
         else {
@@ -65,7 +65,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         let options = getOptions()
         let viewController = newViewController(options: options)
         UIView.setAnimationsEnabled(false)
-        viewController.optionWasTapped(optionIndex: 1)
+        viewController.optionWasTapped(section: 0, optionIndex: 1)
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
         // Test that the animation was made
@@ -73,7 +73,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         XCTAssert(animationCalled, "Animation not called")
         // completion test would run async, should not test
         // Test option was not mutated
-        XCTAssertEqual(options[1].option, "Option 2")
+        XCTAssertEqual(options[0][1].option, "Option 2")
     }
 
 }

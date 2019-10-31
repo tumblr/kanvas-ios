@@ -20,7 +20,7 @@ final class IgnoreTouchesViewTests: XCTestCase {
         let view = newTouchesView()
         let point = CGPoint(x: 20, y: 20)
         let touched = view.hitTest(point, with: nil)
-        XCTAssert(touched == nil, "The view should ignore touches that are not its subviews")
+        XCTAssertNil(touched, "The view should ignore touches that are not its subviews")
     }
 
     func testSubview() {
@@ -29,8 +29,7 @@ final class IgnoreTouchesViewTests: XCTestCase {
         view.addSubview(subview)
         let point = CGPoint(x: 20, y: 20)
         let touched = view.hitTest(point, with: nil)
-        XCTAssert(touched == subview, "The view should return the subview as the receiver")
-
+        XCTAssertEqual(touched, subview, "The view should return the subview as the receiver")
     }
 
 }

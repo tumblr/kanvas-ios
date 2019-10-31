@@ -14,16 +14,16 @@ final class CameraSettingsTests: XCTestCase {
     func testDefaultSettings() {
         let settings = CameraSettings()
         
-        XCTAssert(settings.enabledModes == [.photo, .gif, .stopMotion], "Expected default settings for camera modes to be enabled.")
+        XCTAssert(settings.enabledModes == [.photo, .loop, .stopMotion], "Expected default settings for camera modes to be enabled.")
         XCTAssert(settings.defaultCameraPositionOption == .back, "Expected camera to open to back position.")
     }
     
     func testEnabledModes() {
         let settings = CameraSettings()
         settings.enabledModes = [.photo]
-        settings.defaultMode = .gif
+        settings.defaultMode = .loop
         XCTAssert(settings.defaultMode == .none, "Camera mode should have no default since setting gif is unsupported")
-        XCTAssert(settings.enableGifMode == false, "Gif mode should be disabled")
+        XCTAssert(settings.enableLoopMode == false, "Gif mode should be disabled")
         XCTAssert(settings.enableStopMotionMode == false, "Stop motion mode should be disabled")
     }
     
@@ -35,6 +35,25 @@ final class CameraSettingsTests: XCTestCase {
     func testDefaultFlash() {
         let settings = CameraSettings()
         XCTAssert(settings.preferredFlashOption == .off, "Default flash should be off")
+    }
+
+    func testCameraFeatures() {
+        let settings = CameraSettings()
+        XCTAssertFalse(settings.features.ghostFrame)
+        XCTAssertFalse(settings.features.openGLPreview)
+        XCTAssertFalse(settings.features.openGLCapture)
+        XCTAssertFalse(settings.features.cameraFilters)
+        XCTAssertFalse(settings.features.experimentalCameraFilters)
+        var features = CameraFeatures()
+        features.ghostFrame = true
+        features.openGLPreview = true
+        features.openGLCapture = true
+        features.cameraFilters = true
+        XCTAssertTrue(features.ghostFrame)
+        XCTAssertTrue(features.openGLPreview)
+        XCTAssertTrue(features.openGLCapture)
+        XCTAssertTrue(features.cameraFilters)
+        XCTAssertFalse(settings.features.experimentalCameraFilters)
     }
     
 }

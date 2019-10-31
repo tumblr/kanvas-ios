@@ -8,20 +8,21 @@ import AVFoundation
 import Foundation
 import UIKit
 import VideoToolbox
+import Utils
 
 /// Default values for the camera recorder
 private struct CameraRecordingConstants {
     /// queue for exporting
-    static let PrepareQueue: String = "PrepareQueue"
+    static let prepareQueue: String = "PrepareQueue"
 }
 
 /// An implementation of a CameraRecordingProtocol without filters
 
 final class CameraRecorder: NSObject {
-    var recordingDelegate: CameraRecordingDelegate?
+    weak var recordingDelegate: CameraRecordingDelegate?
 
     private var url: URL?
-    private var size: CGSize
+    private(set) var size: CGSize
 
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
@@ -32,35 +33,41 @@ final class CameraRecorder: NSObject {
     private let videoOutput: AVCaptureVideoDataOutput?
     private let audioOutput: AVCaptureAudioDataOutput?
 
-    private var currentVideoSampleBuffer: CMSampleBuffer?
-    private var currentAudioSampleBuffer: CMSampleBuffer?
-
     private var currentRecordingMode: CameraMode
-    private let segmentsHandler: SegmentsHandlerType
+    let segmentsHandler: SegmentsHandlerType
 
     private let photoOutputHandler: PhotoOutputHandler
     private let gifVideoOutputHandler: GifVideoOutputHandler
-    private let videoOutputHandler: VideoOutputHandler
+    private var videoOutputHandlers: [VideoOutputHandler]
+    private var currentVideoOutputHandler: VideoOutputHandler? {
+        return videoOutputHandlers.last
+    }
 
+    private var takingPhoto: Bool = false
+
+    private let settings: CameraSettings
+    
     required init(size: CGSize,
                   photoOutput: AVCapturePhotoOutput?,
                   videoOutput: AVCaptureVideoDataOutput?,
                   audioOutput: AVCaptureAudioDataOutput?,
                   recordingDelegate: CameraRecordingDelegate?,
-                  segmentsHandler: SegmentsHandlerType) {
+                  segmentsHandler: SegmentsHandlerType,
+                  settings: CameraSettings) {
         self.size = size
 
         photoOutputHandler = PhotoOutputHandler(photoOutput: photoOutput)
-        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput)
-        videoOutputHandler = VideoOutputHandler()
+        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput, usePixelBuffer: settings.features.openGLCapture)
+        videoOutputHandlers = []
 
         self.photoOutput = photoOutput
         self.videoOutput = videoOutput
         self.audioOutput = audioOutput
         self.recordingDelegate = recordingDelegate
         self.segmentsHandler = segmentsHandler
+        self.settings = settings
 
-        currentRecordingMode = .stopMotion
+        currentRecordingMode = settings.features.newCameraModes ? .normal : .stopMotion
 
         super.init()
 
@@ -96,9 +103,9 @@ final class CameraRecorder: NSObject {
     }
 
     private func setupAudioForAssetWriter() {
-        let sampleRate = AVAudioSession.sharedInstance().preferredSampleRate
+        let sampleRate = AVAudioSession.sharedInstance().sampleRate
         guard sampleRate != 0 else {
-            NSLog("should not setup up the audio asset writer if no preferred sample rate found")
+            NSLog("should not setup up the audio asset writer if no sample rate found")
             return
         }
         var audioChannelLayout: AudioChannelLayout = AudioChannelLayout()
@@ -116,7 +123,7 @@ final class CameraRecorder: NSObject {
 
     private func setupNotifications() {
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appWillResignActive), name: Notification.Name.UIApplicationWillResignActive, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
     }
 
     deinit {
@@ -125,12 +132,12 @@ final class CameraRecorder: NSObject {
 
     @objc private func appWillResignActive() {
         if isRecording() {
-            switch currentRecordingMode {
+            switch currentRecordingMode.group {
             case .gif:
                 cancelGif()
-            case .stopMotion:
+            case .video:
                 stopRecordingVideo(completion: { _ in })
-            default:
+            case .photo:
                 break
             }
         }
@@ -159,11 +166,16 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func isRecording() -> Bool {
-        switch currentRecordingMode {
-        case .stopMotion:
-            return videoOutputHandler.recording
+        switch currentRecordingMode.group {
+        case .video:
+            if let handler = currentVideoOutputHandler {
+                return handler.recording
+            }
+            else {
+                return false
+            }
         case .photo:
-            return false
+            return takingPhoto
         case .gif:
             return gifVideoOutputHandler.recording
         }
@@ -184,94 +196,147 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     // MARK: - video
-    func startRecordingVideo() {
+    func startRecordingVideo(on mode: CameraMode) {
         if isRecording() {
             return
         }
-        currentRecordingMode = .stopMotion
+
+        let outputHandler = VideoOutputHandler()
+        videoOutputHandlers.append(outputHandler)
+
+        currentRecordingMode = mode
         recordingDelegate?.cameraWillTakeVideo()
 
         setupAssetWriter(url: NSURL.createNewVideoURL())
         guard let assetWriter = assetWriter, let pixelBufferAdaptor = assetWriterPixelBufferInput else {
             return
         }
-        videoOutputHandler.startRecordingVideo(assetWriter: assetWriter, pixelBufferAdaptor: pixelBufferAdaptor, audioInput: assetWriterAudioInput)
+        outputHandler.startRecordingVideo(assetWriter: assetWriter, pixelBufferAdaptor: pixelBufferAdaptor, audioInput: assetWriterAudioInput)
     }
 
     func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
-        videoOutputHandler.stopRecordingVideo { [weak self] success in
-            if let strongSelf = self {
-                strongSelf.recordingDelegate?.cameraWillFinishVideo()
-                if success, let url = strongSelf.url {
-                    strongSelf.segmentsHandler.addNewVideoSegment(url: url)
-                    completion(url)
-                }
-                else {
-                    completion(nil)
+        if let videoOutputHandler = currentVideoOutputHandler {
+            videoOutputHandler.stopRecordingVideo { [weak self] success in
+                if let strongSelf = self {
+                    strongSelf.recordingDelegate?.cameraWillFinishVideo()
+                    strongSelf.removeVideoOutputHandler(videoOutputHandler)
+                    if success, let url = videoOutputHandler.assetWriterURL() {
+                        if strongSelf.currentRecordingMode.quantity == .multiple {
+                            strongSelf.segmentsHandler.addNewVideoSegment(url: url, mediaInfo: TumblrMediaInfo(source: .kanvas_camera))
+                        }
+                        completion(url)
+                    }
+                    else {
+                        completion(nil)
+                    }
                 }
             }
         }
     }
 
-    func takePhoto(completion: @escaping (UIImage?) -> Void) {
-        currentRecordingMode = .photo
+    private func removeVideoOutputHandler(_ handler: VideoOutputHandler) {
+        videoOutputHandlers = videoOutputHandlers.filter() { $0 != handler }
+    }
 
-        let settings = recordingDelegate?.photoSettingsForCamera
-        photoOutputHandler.takePhoto(settings: settings ?? AVCapturePhotoSettings()) { [unowned self] image in
-            guard let image = image else {
+    func takePhoto(on mode: CameraMode, cameraPosition: AVCaptureDevice.Position? = .back, completion: @escaping (UIImage?) -> Void) {
+        guard isRecording() == false else {
+            return
+        }
+        
+        currentRecordingMode = mode
+
+        let settings = recordingDelegate?.photoSettings(for: photoOutput)
+        takingPhoto = true
+        photoOutputHandler.takePhoto(settings: settings ?? AVCapturePhotoSettings()) { [weak self] image in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.takingPhoto = false
+            guard var image = image else {
                 completion(nil)
                 return
             }
-            self.segmentsHandler.addNewImageSegment(image: image, size: self.size, completion: { (success, _) in
-                completion(success ? image : nil)
-            })
+            if cameraPosition == .front, let flippedImage = image.flipLeftMirrored() {
+                image = flippedImage
+            }
+            guard let filteredImage = strongSelf.recordingDelegate?.cameraDidTakePhoto(image: image) else {
+                completion(nil)
+                return
+            }
+            
+            if strongSelf.currentRecordingMode.quantity == .multiple {
+                strongSelf.segmentsHandler.addNewImageSegment(image: filteredImage, size: strongSelf.size, mediaInfo: TumblrMediaInfo(source: .kanvas_camera), completion: { (success, _) in
+                    completion(success ? filteredImage : nil)
+                })
+            }
+            else {
+                completion(filteredImage)
+            }
         }
     }
 
-    func exportRecording(completion: @escaping (URL?) -> Void) {
-        segmentsHandler.exportVideo(completion: { url in
-            completion(url)
+    func exportRecording(completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+        segmentsHandler.exportVideo(completion: { url, mediaInfo in
+            completion(url, mediaInfo)
         })
     }
 
-    func deleteSegmentAtIndex(_ index: Int, removeFromDisk: Bool = true) {
-        segmentsHandler.deleteSegment(index: index, removeFromDisk: removeFromDisk)
+    func deleteSegment(at index: Int, removeFromDisk: Bool = true) {
+        segmentsHandler.deleteSegment(at: index, removeFromDisk: removeFromDisk)
+    }
+
+    func deleteAllSegments(removeFromDisk: Bool = true) {
+        segmentsHandler.deleteAllSegments(removeFromDisk: removeFromDisk)
+    }
+
+    func moveSegment(from originIndex: Int, to destinationIndex: Int) {
+        segmentsHandler.moveSegment(from: originIndex, to: destinationIndex)
     }
 
     // MARK: - gif
-    func takeGifMovie(completion: @escaping (URL?) -> Void) {
+    func takeGifMovie(useLongerDuration: Bool = false, completion: @escaping (URL?) -> Void) {
         if isRecording() {
             completion(nil)
             return
         }
-        currentRecordingMode = .gif
+        currentRecordingMode = settings.features.newCameraModes ? .gif : .loop
         recordingDelegate?.cameraWillTakeVideo()
 
         setupAssetWriter(url: NSURL.createNewVideoURL())
 
-        gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput) { [unowned self] success in
-            self.recordingDelegate?.cameraWillFinishVideo()
-            completion(success ? self.url : nil)
+        gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput, longerDuration: useLongerDuration) { [weak self] success in
+            guard let strongSelf = self else { return }
+            strongSelf.recordingDelegate?.cameraWillFinishVideo()
+            completion(success ? strongSelf.url : nil)
         }
     }
 
     func processVideoSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        self.currentVideoSampleBuffer = sampleBuffer
-        switch currentRecordingMode {
-        case .stopMotion:
-            videoOutputHandler.processVideoSampleBuffer(sampleBuffer)
+        switch currentRecordingMode.group {
+        case .video:
+            currentVideoOutputHandler?.processVideoSampleBuffer(sampleBuffer)
         case .gif:
             gifVideoOutputHandler.processVideoSampleBuffer(sampleBuffer)
-        default: break
+        case .photo: break
+        }
+    }
+
+    func processVideoPixelBuffer(_ pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
+        switch currentRecordingMode.group {
+        case .video:
+            currentVideoOutputHandler?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
+        case .gif:
+            gifVideoOutputHandler.processVideoPixelBuffer(pixelBuffer)
+        case .photo: break
         }
     }
 
     func processAudioSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        self.currentAudioSampleBuffer = sampleBuffer
-        switch currentRecordingMode {
-        case .stopMotion:
-            videoOutputHandler.processAudioSampleBuffer(sampleBuffer)
-        default: break
+        switch currentRecordingMode.group {
+        case .video:
+            currentVideoOutputHandler?.processAudioSampleBuffer(sampleBuffer)
+        case .gif, .photo:
+            break
         }
     }
 
@@ -281,9 +346,9 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func currentClipDuration() -> TimeInterval? {
-        guard currentRecordingMode == .stopMotion else {
+        guard currentRecordingMode.group == .video else {
             return nil
         }
-        return videoOutputHandler.currentClipDuration()
+        return currentVideoOutputHandler?.currentClipDuration()
     }
 }
