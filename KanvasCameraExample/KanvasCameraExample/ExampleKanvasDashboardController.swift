@@ -192,9 +192,9 @@ extension KanvasDashboardController: CameraControllerDelegate {
             }
         }
         switch media {
-        case let .image(url, info):
+        case let .image(url, _):
             addToLibrary(url: url, resourceType: .photo, moveFile: moveFile)
-        case let .video(url, info):
+        case let .video(url, _):
             addToLibrary(url: url, resourceType: .video, moveFile: moveFile)
         }
     }

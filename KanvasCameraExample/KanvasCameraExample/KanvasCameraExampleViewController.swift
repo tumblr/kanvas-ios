@@ -375,9 +375,9 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
             }
         }
         switch media {
-        case let .image(url, info):
+        case let .image(url, _):
             moveToLibrary(url: url, resourceType: .photo)
-        case let .video(url, info):
+        case let .video(url, _):
             moveToLibrary(url: url, resourceType: .video)
         }
     }
