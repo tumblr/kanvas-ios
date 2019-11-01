@@ -242,7 +242,7 @@ private extension KanvasDashboardController {
     }
 
     func unloadKanvasView() {
-        if let kanvasView = kanvasViewController.view {
+        if let kanvasViewController = _kanvasViewControllerBackingProperty, let kanvasView = kanvasViewController.view {
             kanvasView.removeFromSuperview()
             kanvasViewController.removeFromParent()
         }
@@ -263,21 +263,16 @@ extension KanvasDashboardController {
     }
 
     public func pageDidBecomeHidden() {
-        let kanvasCleanupTimer = Timer(fire: .init(timeIntervalSinceNow: 10.0), interval: 0, repeats: false) { [weak self] timer in
-            guard let strongSelf = self else {
-                return
-            }
+            let strongSelf = self
             if let kanvasViewControllerInstance = strongSelf._kanvasViewControllerBackingProperty {
-                kanvasViewControllerInstance.cleanup()
-                strongSelf.unloadKanvasView()
-                strongSelf._kanvasViewControllerBackingProperty = nil
-                strongSelf.kanvasCleanupTimer?.invalidate()
-                strongSelf.kanvasCleanupTimer = nil
+                DispatchQueue.main.async {
+                    kanvasViewControllerInstance.cleanup()
+                    strongSelf.unloadKanvasView()
+                    strongSelf._kanvasViewControllerBackingProperty = nil
+                    strongSelf.kanvasCleanupTimer?.invalidate()
+                    strongSelf.kanvasCleanupTimer = nil
+                }
             }
-        }
-        kanvasCleanupTimer.tolerance = 1.0
-        RunLoop.current.add(kanvasCleanupTimer, forMode: .common)
-        self.kanvasCleanupTimer = kanvasCleanupTimer
     }
 
     public func pageGainedFocus() {
