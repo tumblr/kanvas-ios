@@ -321,10 +321,8 @@ final class GLPlayer {
     }
 
     private func playVideo() {
-        guard let currentlyPlayingMedia = currentlyPlayingMedia else {
-            return
-        }
-        guard let playerItem = currentlyPlayingMedia.playerItem else {
+        guard let currentlyPlayingMedia = currentlyPlayingMedia,
+            let playerItem = currentlyPlayingMedia.playerItem else {
             return
         }
 
@@ -334,11 +332,22 @@ final class GLPlayer {
         }
 
         avPlayer.replaceCurrentItem(with: playerItem)
-        avPlayer.play()
-
-        if displayLink == nil {
-            displayLink = CADisplayLink(target: self, selector: #selector(step))
+        playerItem.seek(to: .zero) { success in
+            guard success else { assertionFailure("Failed to seek"); return }
+            self.avPlayer.play()
+            self.setupDisplayLink()
         }
+    }
+
+    private func setupDisplayLink() {
+        guard let currentlyPlayingMedia = currentlyPlayingMedia else {
+            return
+        }
+        if displayLink != nil {
+            displayLink?.invalidate()
+            displayLink = nil
+        }
+        displayLink = CADisplayLink(target: self, selector: #selector(step))
         displayLink?.add(to: .main, forMode: .common)
         let frameRate = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first?.nominalFrameRate ?? 10.0
         displayLink?.preferredFramesPerSecond = Int(ceil(frameRate))
@@ -361,10 +370,9 @@ final class GLPlayer {
     }
 
     @objc func videoDidPlayToEndTime(notification: Notification) {
-        displayLink?.remove(from: .main, forMode: .common)
-        avPlayer.currentItem?.seek(to: .zero, completionHandler: { success in
-            self.playNextMedia()
-        })
+        displayLink?.invalidate()
+        displayLink = nil
+        playNextMedia()
     }
 
     private func timeIntervalForImageSegments() -> TimeInterval {
