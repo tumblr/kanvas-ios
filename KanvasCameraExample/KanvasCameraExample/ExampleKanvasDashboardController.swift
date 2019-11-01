@@ -263,16 +263,16 @@ extension KanvasDashboardController {
     }
 
     public func pageDidBecomeHidden() {
-            let strongSelf = self
-            if let kanvasViewControllerInstance = strongSelf._kanvasViewControllerBackingProperty {
-                DispatchQueue.main.async {
-                    kanvasViewControllerInstance.cleanup()
-                    strongSelf.unloadKanvasView()
-                    strongSelf._kanvasViewControllerBackingProperty = nil
-                    strongSelf.kanvasCleanupTimer?.invalidate()
-                    strongSelf.kanvasCleanupTimer = nil
-                }
+        let strongSelf = self
+        if let kanvasViewControllerInstance = strongSelf._kanvasViewControllerBackingProperty {
+            DispatchQueue.main.async {
+                kanvasViewControllerInstance.cleanup()
+                strongSelf.unloadKanvasView()
+                strongSelf._kanvasViewControllerBackingProperty = nil
+                strongSelf.kanvasCleanupTimer?.invalidate()
+                strongSelf.kanvasCleanupTimer = nil
             }
+        }
     }
 
     public func pageGainedFocus() {
