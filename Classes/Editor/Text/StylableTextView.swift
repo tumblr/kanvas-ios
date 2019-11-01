@@ -70,7 +70,9 @@ class StylableTextView: UITextView, UITextViewDelegate {
     func updateHighlight() {
         removeHighlights()
         let range = NSRange(location: 0, length: text.count)
-        layoutManager.enumerateLineFragments(forGlyphRange: range, using: { _, usedRect, _, _, _ in
+        layoutManager.enumerateLineFragments(forGlyphRange: range, using: { _, usedRect, _, glyphRange, _ in
+            // Checks that the line is not just a '\n'
+            guard !(glyphRange.length == 1 && self.text[glyphRange.lowerBound] == "\n") else { return }
             let highlightView = self.createHighlightView(rect: usedRect)
             self.addSubview(highlightView)
             self.sendSubviewToBack(highlightView)
@@ -149,5 +151,11 @@ extension StylableTextView {
             textAlignment = newValue.alignment
             textContainerInset = newValue.textContainerInset
         }
+    }
+}
+
+extension String {
+    subscript (i: Int) -> Character {
+        return self[index(startIndex, offsetBy: i)]
     }
 }
