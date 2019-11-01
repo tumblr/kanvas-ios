@@ -109,16 +109,16 @@ class StylableTextView: UITextView, UITextViewDelegate {
         let leftMargin: CGFloat
         let extraVerticalPadding: CGFloat
         let extraHorizontalPadding: CGFloat
-        
+
         switch font {
         case UIFont.favoritTumblr85(fontSize: font.pointSize):
-            topMargin = textContainerInset.left + 1
-            leftMargin = textContainerInset.left
+            topMargin = 8.0
+            leftMargin = 5.7
             extraVerticalPadding = 6
             extraHorizontalPadding = 0
         default:
-            topMargin = textContainerInset.left
-            leftMargin = textContainerInset.left
+            topMargin = 6.0
+            leftMargin = 6.0
             extraHorizontalPadding = 0
             extraVerticalPadding = 0
         }
