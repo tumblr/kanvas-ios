@@ -70,10 +70,22 @@ class StylableTextView: UITextView, UITextViewDelegate {
     func updateHighlight() {
         removeHighlights()
         let range = NSRange(location: 0, length: text.count)
-        layoutManager.enumerateLineFragments(forGlyphRange: range, using: { _, usedRect, _, glyphRange, _ in
+        
+        layoutManager.enumerateLineFragments(forGlyphRange: range, using: { _, usedRect, textContainer, glyphRange, _ in
             // Checks that the line is not just a '\n'
             guard !(glyphRange.length == 1 && self.text[glyphRange.lowerBound] == "\n") else { return }
-            let highlightView = self.createHighlightView(rect: usedRect)
+            var finalRect: CGRect
+            
+            if self.text[glyphRange.upperBound - 1] == " " {
+                let spaceRect = self.layoutManager.boundingRect(forGlyphRange: NSRange(location: glyphRange.upperBound - 1, length: 1), in: textContainer)
+                finalRect = CGRect(x: usedRect.origin.x, y: usedRect.origin.y,
+                                   width: usedRect.width - spaceRect.width, height: usedRect.height)
+            }
+            else {
+                finalRect = usedRect
+            }
+            
+            let highlightView = self.createHighlightView(rect: finalRect)
             self.addSubview(highlightView)
             self.sendSubviewToBack(highlightView)
             self.highlightViews.append(highlightView)
