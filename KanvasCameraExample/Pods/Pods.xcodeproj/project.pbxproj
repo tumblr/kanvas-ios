@@ -1326,9 +1326,9 @@
 		B2D564BD3C3F895B20D93E97C3750F98 /* Text */ = {
 			isa = PBXGroup;
 			children = (
-				657AB0422370632800944C65 /* MainTextView.swift */,
 				B290F73030390179530F1BEC14366AF9 /* EditorTextController.swift */,
 				13B677DDA78BF4C5A3552C5565D5D9AD /* EditorTextView.swift */,
+				657AB0422370632800944C65 /* MainTextView.swift */,
 				99B058F53E047A73A734783561677A8B /* MovableTextView.swift */,
 				971CC412B7F0AA8D130FA8DDE3CCA7AF /* StylableTextView.swift */,
 				D0849E758A5C7DDB9228FCE0042BA137 /* TextCanvas.swift */,
