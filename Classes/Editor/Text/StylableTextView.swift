@@ -68,16 +68,16 @@ class StylableTextView: UITextView, UITextViewDelegate {
     
     /// Redraws the highlight rectangles
     func updateHighlight() {
-        removeHighlights()
+        removeHighlight()
         let range = NSRange(location: 0, length: text.count)
         
         layoutManager.enumerateLineFragments(forGlyphRange: range, using: { _, usedRect, textContainer, glyphRange, _ in
-            // Checks that the line is not just a '\n'
-            guard !(glyphRange.length == 1 && self.text[glyphRange.lowerBound] == "\n") else { return }
-            var finalRect: CGRect
+            guard !self.isEmptyLine(text: self.text, glyphRange: glyphRange)  else { return }
+            let finalRect: CGRect
             
-            if self.text[glyphRange.upperBound - 1] == " " {
-                let spaceRect = self.layoutManager.boundingRect(forGlyphRange: NSRange(location: glyphRange.upperBound - 1, length: 1), in: textContainer)
+            if self.endsInBlankSpace(text: self.text, glyphRange: glyphRange) {
+                let lastSpaceRange = NSRange(location: glyphRange.upperBound - 1, length: 1)
+                let spaceRect = self.layoutManager.boundingRect(forGlyphRange: lastSpaceRange, in: textContainer)
                 finalRect = CGRect(x: usedRect.origin.x, y: usedRect.origin.y,
                                    width: usedRect.width - spaceRect.width, height: usedRect.height)
             }
@@ -93,7 +93,7 @@ class StylableTextView: UITextView, UITextViewDelegate {
     }
     
     /// Removes the hightlight rectangles
-    private func removeHighlights() {
+    private func removeHighlight() {
         highlightViews.forEach { view in
             view.removeFromSuperview()
         }
@@ -123,12 +123,12 @@ class StylableTextView: UITextView, UITextViewDelegate {
         let leftMargin: CGFloat
         let extraVerticalPadding: CGFloat
         let extraHorizontalPadding: CGFloat
-
+        
         switch font {
         case UIFont.favoritTumblr85(fontSize: font.pointSize):
             topMargin = 8.0
             leftMargin = 5.7
-            extraVerticalPadding = 6
+            extraVerticalPadding = 0.125 * font.pointSize
             extraHorizontalPadding = 0
         default:
             topMargin = 6.0
@@ -142,8 +142,25 @@ class StylableTextView: UITextView, UITextViewDelegate {
                       width: rect.width + extraHorizontalPadding * 2,
                       height: capHeight + extraVerticalPadding * 2)
     }
+    
+    /// Checks if a line of text is empty
+    ///
+    /// - Parameter text: complete string of text
+    /// - Parameter glyphRange: the range that represents the line
+    private func isEmptyLine(text: String, glyphRange: NSRange) -> Bool {
+        return glyphRange.length == 1 && text[glyphRange.lowerBound] == "\n"
+    }
+    
+    /// Checks if a line of text ends in a space
+    ///
+    /// - Parameter text: complete string of text
+    /// - Parameter glyphRange: the range that represents the line
+    private func endsInBlankSpace(text: String, glyphRange: NSRange) -> Bool {
+        return text[glyphRange.upperBound - 1] == " "
+    }
 }
 
+// Extension for getting and setting the style options from a StylableTextView
 extension StylableTextView {
     
     var options: TextOptions {
@@ -163,11 +180,5 @@ extension StylableTextView {
             textAlignment = newValue.alignment
             textContainerInset = newValue.textContainerInset
         }
-    }
-}
-
-extension String {
-    subscript (i: Int) -> Character {
-        return self[index(startIndex, offsetBy: i)]
     }
 }
