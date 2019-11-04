@@ -767,13 +767,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             let asset = AVURLAsset(url: url)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
-                self?.cameraInputController.willCloseSoon = true
+                self?.handleCloseSoon(action: action)
                 self?.delegate?.didCreateMedia(media: .video(url, info), exportAction: action, error: nil)
             }
         }
         else {
             performUIUpdate { [weak self] in
-                self?.cameraInputController.willCloseSoon = true
+                self?.handleCloseSoon(action: action)
                 self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
             }
         }
@@ -783,16 +783,20 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
-                self?.cameraInputController.willCloseSoon = true
+                self?.handleCloseSoon(action: action)
                 self?.delegate?.didCreateMedia(media: .image(url, info), exportAction: action, error: nil)
             }
         }
         else {
             performUIUpdate { [weak self] in
-                self?.cameraInputController.willCloseSoon = true
+                self?.handleCloseSoon(action: action)
                 self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
             }
         }
+    }
+
+    func handleCloseSoon(action: KanvasExportAction) {
+        cameraInputController.willCloseSoon = action == .previewConfirm
     }
 
     func logMediaCreation(action: KanvasExportAction, clipsCount: Int, length: TimeInterval) {
