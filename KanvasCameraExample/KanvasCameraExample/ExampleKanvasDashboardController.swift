@@ -36,6 +36,8 @@ public protocol KanvasDashboardStateDelegate: class {
 
     /// The blog UUID for Kanvas Dashboard to post to
     var kanvasDashboardBlogUUID: String? { get }
+
+    var kanvasDashboardUnloadStrategy: KanvasDashboardController.UnloadStrategy { get }
 }
 
 /// KanvasDashboardController: the view controller for Kanvas on the Dashboard
@@ -53,6 +55,12 @@ public class KanvasDashboardController: UIViewController {
     public weak var stateDelegate: KanvasDashboardStateDelegate?
 
     private var kanvasCleanupTimer: Timer?
+
+    public enum UnloadStrategy {
+        case never
+        case always
+        case delay(delay: TimeInterval)
+    }
 
     init(settings: CameraSettings) {
         self.settings = settings
@@ -252,7 +260,7 @@ private extension KanvasDashboardController {
 
 extension KanvasDashboardController {
 
-    public func pageWillBecomeVisible() {
+    public func pageWillBecomeVisible(tapped: Bool) {
         if let kanvasCleanupTimer = kanvasCleanupTimer {
             kanvasCleanupTimer.invalidate()
             self.kanvasCleanupTimer = nil
@@ -262,20 +270,38 @@ extension KanvasDashboardController {
         }
     }
 
-    public func pageDidBecomeHidden() {
-        let strongSelf = self
-        if let kanvasViewControllerInstance = strongSelf._kanvasViewControllerBackingProperty {
-            DispatchQueue.main.async {
+    public func pageDidBecomeHidden(tapped: Bool) {
+        unloadKanvas()
+        logDismiss(withTap: tapped)
+    }
+
+    private func unloadKanvas() {
+        let unload = { [weak self] in
+            if let kanvasViewControllerInstance = self?._kanvasViewControllerBackingProperty {
                 kanvasViewControllerInstance.cleanup()
-                strongSelf.unloadKanvasView()
-                strongSelf._kanvasViewControllerBackingProperty = nil
-                strongSelf.kanvasCleanupTimer?.invalidate()
-                strongSelf.kanvasCleanupTimer = nil
+                self?.unloadKanvasView()
+                self?._kanvasViewControllerBackingProperty = nil
             }
+        }
+        let unloadStrategy = stateDelegate?.kanvasDashboardUnloadStrategy ?? .always
+        switch unloadStrategy {
+        case .never:
+            break
+        case .always:
+            unload()
+        case .delay(let delay):
+            let kanvasCleanupTimer = Timer(fire: .init(timeIntervalSinceNow: delay), interval: 0, repeats: false) { [weak self] timer in
+                unload()
+                self?.kanvasCleanupTimer?.invalidate()
+                self?.kanvasCleanupTimer = nil
+            }
+            kanvasCleanupTimer.tolerance = 1.0
+            RunLoop.current.add(kanvasCleanupTimer, forMode: .common)
+            self.kanvasCleanupTimer = kanvasCleanupTimer
         }
     }
 
-    public func pageGainedFocus() {
-
+    public func pageGainedFocus(tapped: Bool) {
+        logOpen(withTap: tapped)
     }
 }
