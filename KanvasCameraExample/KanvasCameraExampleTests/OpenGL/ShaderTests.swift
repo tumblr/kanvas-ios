@@ -18,11 +18,12 @@ class ShaderTests: XCTestCase {
     }
 
     func testShaderInit() {
-        let _ = Shader()
-    }
-
-    func testShaderConstants() {
-        XCTAssertEqual(ShaderConstants.fragmentShader, "Shaders/Base.glsl")
+        guard let vertexShaderCode = Shader.getSourceCode("base_filter", type: .vertex),
+            let fragmentShaderCode = Shader.getSourceCode("base_filter", type: .fragment) else {
+                XCTFail("Failed to load shader source code")
+                return
+        }
+        let _ = Shader(vertexShader: vertexShaderCode, fragmentShader: fragmentShaderCode)
     }
 
 }

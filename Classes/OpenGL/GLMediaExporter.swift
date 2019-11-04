@@ -13,6 +13,7 @@ import Utils
 enum GLMediaExporterError: Error {
     case failedDeleteExistingFile(Error)
     case noPresets
+    case noVideoTrack
     case noCompositor
     case export(Error)
     case incomplete
@@ -37,6 +38,8 @@ final class GLMediaExporter: MediaExporting {
 
     /// The image overlays to apply on top of each frame.
     var imageOverlays: [CGImage] = []
+
+    var dimensions: CGSize = .zero
 
     /// A timer you can hook into to get progress updates from an export.
     private(set) var progressTimer: Timer?
@@ -95,10 +98,13 @@ final class GLMediaExporter: MediaExporting {
         let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
         videoComposition.customVideoCompositorClass = GLVideoCompositor.self
 
-        // TODO shouldn't I always pick the highest quality, not the first?
         let presets = AVAssetExportSession.exportPresets(compatibleWith: asset)
-        guard let presetName = presets.first else {
+        guard let presetName = presets.first(where: { $0 == AVAssetExportPresetHighestQuality }) else {
             completion(nil, GLMediaExporterError.noPresets)
+            return
+        }
+        guard let track = asset.tracks(withMediaType: .video).first else {
+            completion(nil, GLMediaExporterError.noVideoTrack)
             return
         }
 
@@ -114,6 +120,8 @@ final class GLMediaExporter: MediaExporting {
             completion(nil, GLMediaExporterError.noCompositor)
             return
         }
+        glVideoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
+        glVideoCompositor.renderer.mediaTransform = track.glPreferredTransform
         glVideoCompositor.imageOverlays = imageOverlays
         glVideoCompositor.filterType = filterType
         glVideoCompositor.refreshFilter()

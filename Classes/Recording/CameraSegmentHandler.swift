@@ -282,6 +282,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 else {
                     addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
                     videoDuration = videoTrack.timeRange.duration
+                    videoCompTrack?.preferredTransform = videoTrack.preferredTransform
                 }
             }
             if let audioTrack = urlAsset.tracks(withMediaType: .audio).first {

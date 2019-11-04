@@ -7,12 +7,20 @@
 import Foundation
 import XCTest
 import AVFoundation
+import GLKit
 
 @testable import KanvasCamera
 
 class GLPlayerTests: XCTestCase {
 
     class GLRendererMock: GLRendering {
+
+        var mediaTransform: GLKMatrix4?
+
+        var outputDimensions: CGSize = .zero
+
+        var switchInputDimensions: Bool = false
+
         var startTime: TimeInterval?
 
         weak var delegate: GLRendererDelegate?

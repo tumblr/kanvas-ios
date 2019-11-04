@@ -263,4 +263,7 @@ extension CGFloat {
     public var f: Float {
         return Float(self)
     }
+    public var i: Int32 {
+        return Int32(self)
+    }
 }

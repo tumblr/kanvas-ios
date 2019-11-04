@@ -73,6 +73,8 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
 
     var startTime: CMTime?
 
+    var dimensions: CGSize = .zero
+
     /// Convenience initializer
     override convenience init() {
         self.init(
