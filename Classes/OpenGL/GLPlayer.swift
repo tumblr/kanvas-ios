@@ -8,6 +8,8 @@ import UIKit
 import CoreMedia
 import AVFoundation
 import VideoToolbox
+import OpenGLES
+import GLKit
 
 /// Callbacks for opengl player
 protocol GLPlayerDelegate: class {
@@ -296,6 +298,8 @@ final class GLPlayer {
             return
         }
 
+        renderer.mediaTransform = nil
+
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
         renderer.processSampleBuffer(sampleBuffer, time: startTime)
@@ -322,6 +326,11 @@ final class GLPlayer {
         }
         guard let playerItem = currentlyPlayingMedia.playerItem else {
             return
+        }
+
+        if let track = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first {
+            renderer.switchInputDimensions = track.orientation.isPortrait
+            renderer.mediaTransform = track.glPreferredTransform
         }
 
         avPlayer.replaceCurrentItem(with: playerItem)

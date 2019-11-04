@@ -29,14 +29,12 @@ struct ShaderConstants {
         0.0,  1.0, // top left
         1.0,  1.0, // top right
     ]
-        
+
     static let attribVertex: GLuint = 0
     static let attribTexturePosition: GLuint = 1
     static let numAttributes: GLuint = 2
     static let retainedBufferCount = 8
     static let shaderDirectory = "Shaders"
-    static let vertexShader = String("\(shaderDirectory)/Base.\(ShaderExtension.vertex.rawValue)")
-    static let fragmentShader = String("\(shaderDirectory)/Base.\(ShaderExtension.fragment.rawValue)")
 }
 
 /// A wrapper for fragment and vertex shaders. Creates the program as well
@@ -44,10 +42,30 @@ class Shader {
     private(set) var program: GLuint = 0
     private var uniforms: [String: GLint] = [:]
     
-    init() {
-        if let vertexShader = Filter.loadShader("Base", type: .vertex),
-            let fragmentShader = Filter.loadShader("Base", type: .fragment) {
-            setProgram(vertexShader: vertexShader, fragmentShader: fragmentShader)
+    init?(vertexShader: String, fragmentShader: String) {
+        setProgram(vertexShader: vertexShader, fragmentShader: fragmentShader)
+        if program == 0 {
+            return nil
+        }
+    }
+
+    /// Gets the shader source code
+    ///
+    /// - Parameters:
+    ///   - name: The name of the filter
+    ///   - type: fragment or vertex
+    /// - Returns: The shader source code as a String
+    class func getSourceCode(_ name: String, type: ShaderExtension) -> String? {
+        let extString: String = type.rawValue
+        guard let path = Bundle(for: Shader.self).path(forResource: String("\(ShaderConstants.shaderDirectory)/\(name)"), ofType: extString) else {
+            return nil
+        }
+        do {
+            let source = try String(contentsOfFile: path, encoding: .utf8)
+            return source
+        }
+        catch {
+            return nil
         }
     }
     
@@ -56,13 +74,13 @@ class Shader {
     /// - Parameters:
     ///   - vertexShader: vertex
     ///   - fragmentShader: fragment
-    func setProgram(vertexShader: String, fragmentShader: String) {
+    private func setProgram(vertexShader: String, fragmentShader: String) {
         // Load vertex and fragment shaders
         let attribLocation: [GLuint] = [
-            UInt32(0), UInt32(1)
+            UInt32(0), UInt32(1), UInt32(2)
             ]
         let attribName: [String] = [
-            "position", "texturecoordinate"
+            "position", "texturecoordinate", "transform"
             ]
         var uniformLocations: [GLint] = []
         
@@ -73,11 +91,6 @@ class Shader {
                            [],
                            &uniformLocations,
                            &self.program)
-    }
-    
-    private func loadShader(shaderType: UInt32, source: String) -> GLuint {
-        let shader = glCreateShader(shaderType)
-        return shader
     }
     
     /// Searches for the uniform handle in the program

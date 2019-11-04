@@ -13,25 +13,21 @@ import GLKit
 final class AlphaBlendFilter: Filter {
 
     private let pixelBuffer: CVPixelBuffer
-    private let dimensions: CMVideoDimensions
+    private let overlayDimensions: CGSize
     private var uniformTexture: GLint = 0
-    private var uniformModelView: GLint = 0
     private var uniformOverlayScale: GLint = 0
 
     init(glContext: EAGLContext?, pixelBuffer: CVPixelBuffer) {
         self.pixelBuffer = pixelBuffer
-        self.dimensions = CMVideoDimensions(width: Int32(CVPixelBufferGetWidth(pixelBuffer)), height: Int32(CVPixelBufferGetHeight(pixelBuffer)))
+        self.overlayDimensions = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
         super.init(glContext: glContext)
     }
 
     override func setupShader() {
-        let fragment = Filter.loadShader("alpha_blend", type: .fragment)
-        let vertex = Filter.loadShader("alpha_blend", type: .vertex)
-        if let fragment = fragment, let vertex = vertex {
-            let shader = Shader()
-            shader.setProgram(vertexShader: vertex, fragmentShader: fragment)
+        if let fragment = Shader.getSourceCode("alpha_blend", type: .fragment),
+            let vertex = Shader.getSourceCode("base_filter", type: .vertex),
+            let shader = Shader(vertexShader: vertex, fragmentShader: fragment) {
             uniformTexture = GLU.getUniformLocation(shader.program, "textureOverlay")
-            uniformModelView = GLU.getUniformLocation(shader.program, "modelView")
             uniformOverlayScale = GLU.getUniformLocation(shader.program, "overlayScale")
             self.shader = shader
         }
@@ -53,8 +49,8 @@ final class AlphaBlendFilter: Filter {
                                                            nil,
                                                            GL_TEXTURE_2D.ui,
                                                            GL_RGBA,
-                                                           dimensions.width,
-                                                           dimensions.height,
+                                                           overlayDimensions.width.i,
+                                                           overlayDimensions.height.i,
                                                            GL_BGRA.ui,
                                                            GL_UNSIGNED_BYTE.ui,
                                                            0,
@@ -74,18 +70,15 @@ final class AlphaBlendFilter: Filter {
     }
 
     private func getOverlayScale() -> CGSize? {
-        guard let outputWidth = outputWidth, let outputHeight = outputHeight else {
-            return nil
-        }
         var overlayScale = CGSize()
-        let cropScaleAmount = CGSize(width: dimensions.width.g / outputWidth.g, height: dimensions.height.g / outputHeight.g)
+        let cropScaleAmount = CGSize(width: overlayDimensions.width / outputDimensions.width, height: overlayDimensions.height / outputDimensions.height)
         if cropScaleAmount.height > cropScaleAmount.width {
-            overlayScale.width = dimensions.width.g / (outputWidth.g * cropScaleAmount.height)
+            overlayScale.width = overlayDimensions.width / (outputDimensions.width * cropScaleAmount.height)
             overlayScale.height = 1.0
         }
         else {
             overlayScale.width = 1.0
-            overlayScale.height = dimensions.height.g / (outputHeight.g * cropScaleAmount.width)
+            overlayScale.height = overlayDimensions.height / (outputDimensions.height * cropScaleAmount.width)
         }
         return overlayScale
     }
