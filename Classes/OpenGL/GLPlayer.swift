@@ -338,7 +338,6 @@ final class GLPlayer {
         // isn't necessary, but is necessary subsequent times)
         // Also, the `finished` block parameter isn't used, since if for some reason
         // seek doesn't work, we really don't have a recourse.
-        // TODO: could we wait for playerItem.status === .readyToPlay?
         playerItem.seek(to: .zero) { _ in
             self.avPlayer.play()
             self.setupDisplayLink()
