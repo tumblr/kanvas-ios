@@ -332,8 +332,15 @@ final class GLPlayer {
         }
 
         avPlayer.replaceCurrentItem(with: playerItem)
+
+        // Rewind current AVPlayerItem to ensure playback starts from the beginning
+        // (AVPlayerItems are reused when looping video, so the first time this
+        // isn't necessary, but is necessary subsequent times)
         playerItem.seek(to: .zero) { success in
-            guard success else { assertionFailure("Failed to seek"); return }
+            guard success else {
+                assertionFailure("Failed to rewind video")
+                return
+            }
             self.avPlayer.play()
             self.setupDisplayLink()
         }
