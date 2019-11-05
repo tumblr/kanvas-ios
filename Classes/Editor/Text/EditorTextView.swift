@@ -110,7 +110,10 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     
     var font: UIFont? {
         get { return mainTextView.font }
-        set { mainTextView.font = newValue }
+        set {
+            mainTextView.font = newValue
+            mainTextView.resizeFont()
+        }
     }
     
     var textColor: UIColor? {
