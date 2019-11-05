@@ -377,9 +377,11 @@ final class GLPlayer {
     }
 
     @objc func videoDidPlayToEndTime(notification: Notification) {
-        displayLink?.invalidate()
-        displayLink = nil
-        playNextMedia()
+        performUIUpdate {
+            self.displayLink?.invalidate()
+            self.displayLink = nil
+            self.playNextMedia()
+        }
     }
 
     private func timeIntervalForImageSegments() -> TimeInterval {
