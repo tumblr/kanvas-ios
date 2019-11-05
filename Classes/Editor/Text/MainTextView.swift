@@ -9,7 +9,7 @@ import UIKit
 
 /// Constants for MainTextView
 private struct Constants {
-    static let maximumFontSize: CGFloat = 48
+    static let fontSizes: [CGFloat] = [10, 12, 14, 16, 18, 21, 26, 32, 48, 64, 80]
 }
 
 /// Protocol for the text view inside text tools
@@ -93,15 +93,19 @@ final class MainTextView: StylableTextView {
         
         var expectedFont = font
         if expectedSize.height > frameSize.height {
-            while let currentFont = font, sizeThatFits(CGSize(width: frameWidth, height: CGFloat(MAXFLOAT))).height > frameSize.height {
-                expectedFont = currentFont.withSize(currentFont.pointSize - 1)
+            while let currentFont = font,
+                let currentPosition = Constants.fontSizes.firstIndex(of: currentFont.pointSize),
+                currentPosition > 0 && sizeThatFits(CGSize(width: frameWidth, height: CGFloat(MAXFLOAT))).height > frameSize.height {
+                expectedFont = currentFont.withSize(Constants.fontSizes[currentPosition - 1])
                 font = expectedFont
             }
         }
         else {
-            while let currentFont = font, currentFont.pointSize < Constants.maximumFontSize && sizeThatFits(CGSize(width: frameWidth, height: CGFloat(MAXFLOAT))).height < frameSize.height {
+            while let currentFont = font,
+                let currentPosition = Constants.fontSizes.firstIndex(of: currentFont.pointSize),
+                currentPosition < Constants.fontSizes.count - 1 && sizeThatFits(CGSize(width: frameWidth, height: CGFloat(MAXFLOAT))).height < frameSize.height {
                 expectedFont = font
-                font = currentFont.withSize(currentFont.pointSize + 1)
+                font = currentFont.withSize(Constants.fontSizes[currentPosition + 1])
             }
             font = expectedFont
         }
