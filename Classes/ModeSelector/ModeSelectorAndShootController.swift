@@ -204,6 +204,11 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.toggleMediaPickerButton(visible)
     }
 
+    func showMediaPickerButton(basedOn mode: CameraMode) {
+        let mediaPickerVisible = mode.quantity == .single && mode.group != .gif
+        toggleMediaPickerButton(mediaPickerVisible)
+    }
+
     func loadMediaPickerThumbnail() {
         delegate?.provideMediaPickerThumbnail(targetSize: modeView.thumbnailSize) { image in
             guard let image = image else {
