@@ -41,6 +41,8 @@ protocol DrawingControllerDelegate: class {
     
     /// Called when the color selector is released
     func didEndColorSelection()
+
+    func didFillBackground(mode: CGBlendMode, color: CGColor)
 }
 
 /// Constants for Drawing Controller
@@ -243,6 +245,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             drawingLayer?.contents = image.cgImage
         }
         UIGraphicsEndImageContext()
+
+        delegate?.didFillBackground(mode: mode.blendMode, color: drawingColor.cgColor)
     }
     
     /// Sets a new color for drawing

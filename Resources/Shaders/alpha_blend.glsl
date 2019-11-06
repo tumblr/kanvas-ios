@@ -4,6 +4,7 @@ uniform sampler2D inputImageTexture;
 uniform sampler2D textureOverlay;
 
 uniform lowp vec2 overlayScale;
+uniform lowp vec4 backgroundFillColor;
 
 void main()
 {
@@ -14,7 +15,7 @@ void main()
     lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
     lowp vec4 textureOverlayColor = texture2D(textureOverlay, uv);
     if (uv.x < 0. || uv.x >= 1.) {
-        textureOverlayColor.a = 0.;
+        textureOverlayColor = backgroundFillColor;
     }
 
     lowp float alpha = 1.;

@@ -38,6 +38,7 @@ protocol GLRendering: class {
     var mediaTransform: GLKMatrix4? { get set }
     var outputDimensions: CGSize { get set }
     var switchInputDimensions: Bool { get set }
+    var backgroundFillColor: CGColor { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func output(filteredPixelBuffer: CVPixelBuffer)
     func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
@@ -56,6 +57,9 @@ final class GLRenderer: GLRendering {
 
     /// Image overlays
     var imageOverlays: [CGImage] = []
+
+    /// Background fill color
+    var backgroundFillColor: CGColor = UIColor.clear.cgColor
 
     /// Transformation matrix that is used by filters to propertly render media
     var mediaTransform: GLKMatrix4? {
@@ -197,7 +201,7 @@ final class GLRenderer: GLRendering {
     // MARK: - changing filters
     func refreshFilter() {
         synchronized(self) {
-            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
+            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() }, backgroundFillColor: backgroundFillColor)
             filter.transform = mediaTransform
             filter.switchInputDimensions = self.switchInputDimensions
         }

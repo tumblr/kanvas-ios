@@ -54,20 +54,10 @@ struct FilterFactory {
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
     /// - Parameter overlays: Array of CVPixelBuffer instances to overlay.
-    static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer]) -> FilterProtocol {
+    static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer], backgroundFillColor: CGColor) -> FilterProtocol {
         guard overlays.count > 0 else {
             return FilterFactory.createFilter(type: type, glContext: glContext)
         }
-        if type == .passthrough || type == .off {
-            if overlays.count == 1, let overlay = overlays.first {
-                return AlphaBlendFilter(glContext: glContext, pixelBuffer: overlay)
-            }
-            else {
-                return GroupFilter(filters: overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
-            }
-        }
-        else {
-            return GroupFilter(filters: [FilterFactory.createFilter(type: type, glContext: glContext)] + overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
-        }
+        return GroupFilter(filters: [FilterFactory.createFilter(type: type, glContext: glContext)] + overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0, backgroundFillColor: backgroundFillColor) })
     }
 }
