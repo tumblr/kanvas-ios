@@ -99,4 +99,9 @@ final class MainTextView: StylableTextView {
         
         font = bestFont
     }
+    
+    override func scrollRectToVisible(_ rect: CGRect, animated: Bool) {
+        // Intentionally left empty.
+        // This prevents the text from being pulled up when changing the font size.
+    }
 }
