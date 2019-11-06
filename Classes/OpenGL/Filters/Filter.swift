@@ -40,6 +40,9 @@ class Filter: FilterProtocol {
     /// Output dimensions
     var outputDimensions: CGSize = .zero
 
+    /// Original output dimensions
+    var originalOutputDimensions: CGSize = .zero
+
     /// Switch the input dimensions when determining output dimensions
     var switchInputDimensions: Bool = false
     
@@ -64,8 +67,11 @@ class Filter: FilterProtocol {
         let inputDimensionsCM = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
         let inputDimensions = CGSize(width: inputDimensionsCM.width.g, height: inputDimensionsCM.height.g)
         var outputDimensionsNonZero = outputDimensions == .zero ? inputDimensions : outputDimensions
-        if switchInputDimensions {
-            outputDimensionsNonZero = CGSize(width: outputDimensionsNonZero.height, height: outputDimensionsNonZero.width)
+        if originalOutputDimensions == .zero {
+            if switchInputDimensions {
+                outputDimensionsNonZero = CGSize(width: outputDimensionsNonZero.height, height: outputDimensionsNonZero.width)
+            }
+            originalOutputDimensions = outputDimensionsNonZero
         }
         self.inputDimensions = inputDimensions
         self.outputDimensions = outputDimensionsNonZero
