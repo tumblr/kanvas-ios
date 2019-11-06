@@ -404,6 +404,15 @@ final class EditorView: UIView, TextCanvasDelegate {
             self.textCanvas.alpha = show ? 1 : 0
         }
     }
+
+    /// shows or hides the tag button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTagButton(_ show: Bool) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.tagButton.alpha = show ? 1 : 0
+        }
+    }
     
     // MARK: - TextCanvasDelegate
     
