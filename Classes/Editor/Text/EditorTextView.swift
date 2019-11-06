@@ -237,10 +237,11 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         mainTextView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainTextView)
         
-        mainTextViewHeight = mainTextView.heightAnchor.constraint(equalTo: heightAnchor)
+        let topMargin = Constants.topMargin + Constants.confirmButtonSize
+        mainTextViewHeight = mainTextView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, constant: -topMargin)
         mainTextViewHeight?.isActive = true
         NSLayoutConstraint.activate([
-            mainTextView.topAnchor.constraint(equalTo: topAnchor),
+            mainTextView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topMargin),
             mainTextView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
             mainTextView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
         ])
@@ -525,7 +526,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.performWithoutAnimation {
-            mainTextViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin + distance)
+            mainTextViewHeight?.constant = -(Constants.topMargin + Constants.confirmButtonSize + toolsContainer.frame.height + Constants.bottomMargin + distance)
             mainTextView.setNeedsLayout()
             mainTextView.layoutIfNeeded()
         }
@@ -544,7 +545,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         UIView.performWithoutAnimation {
             mainTextView.alpha = 0
-            mainTextViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
+            mainTextViewHeight?.constant = -(Constants.topMargin + Constants.confirmButtonSize + toolsContainer.frame.height + Constants.bottomMargin)
             mainTextView.setNeedsLayout()
             mainTextView.layoutIfNeeded()
         }
