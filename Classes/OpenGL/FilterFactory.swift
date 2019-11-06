@@ -58,16 +58,6 @@ struct FilterFactory {
         guard overlays.count > 0 else {
             return FilterFactory.createFilter(type: type, glContext: glContext)
         }
-        if type == .passthrough || type == .off {
-            if overlays.count == 1, let overlay = overlays.first {
-                return AlphaBlendFilter(glContext: glContext, pixelBuffer: overlay)
-            }
-            else {
-                return GroupFilter(filters: overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
-            }
-        }
-        else {
-            return GroupFilter(filters: [FilterFactory.createFilter(type: type, glContext: glContext)] + overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
-        }
+        return GroupFilter(filters: [FilterFactory.createFilter(type: type, glContext: glContext)] + overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
     }
 }
