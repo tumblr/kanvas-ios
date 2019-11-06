@@ -79,6 +79,8 @@ final class MainTextView: StylableTextView {
         }
     }
     
+    // MARK: - Text scaling
+    
     override func textViewDidChange(_ textView: UITextView) {
         super.textViewDidChange(textView)
         resizeFont()
