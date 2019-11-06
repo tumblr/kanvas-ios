@@ -254,6 +254,50 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
+    func testCameraInNormalModeShowsMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.normal]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
+
+    func testCameraInStitchModeDoesNotShowMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.stitch]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
+
+    func testCameraInGIFModeDoesNotShowMediaPickerButton() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.gif]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        FBSnapshotVerifyView(controller.view)
+    }
+
+    func testCameraClosingFiltersInStitchModeDoesNotShowMediaPickerAgain() {
+        let settings = CameraSettings()
+        settings.enabledModes = [.stitch]
+        settings.features.mediaPicking = true
+        settings.features.cameraFilters = true
+        let delegate = newDelegateStub()
+        let controller = newController(delegate: delegate, settings: settings)
+        UIView.setAnimationsEnabled(false)
+        controller.didTapVisibilityButton(visible: true)
+        controller.didTapVisibilityButton(visible: false)
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(controller.view)
+    }
+
     // Can't test `dismissButtonPressed` because it requires presenting and dismissing preview controller.
     
     func testCameraWithTopButtonsSwapped() {

@@ -244,14 +244,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     override public func viewDidLoad() {
         super.viewDidLoad()
+        if settings.features.cameraFilters {
+            cameraView.addFiltersView(filterSettingsController.view)
+        }
         cameraView.addModeView(modeAndShootController.view)
         cameraView.addClipsView(clipsController.view)
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
         cameraView.addImagePreviewView(imagePreviewController.view)
-        if settings.features.cameraFilters {
-            cameraView.addFiltersView(filterSettingsController.view)
-        }
         bindMediaContentAvailable()
         PHPhotoLibrary.shared().register(self)
     }
@@ -461,11 +461,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         filterSettingsController.updateUI(forRecording: isRecording)
         if isRecording {
             modeAndShootController.hideModeButton()
-            modeAndShootController.toggleMediaPickerButton(false)
+            toggleMediaPicker(visible: false)
         }
         else {
-            let showMediaPicker = !filterSettingsController.isFilterSelectorVisible()
-            modeAndShootController.toggleMediaPickerButton(showMediaPicker)
+            toggleMediaPicker(visible: true)
             // If it finished recording, then there is at least one clip and button shouldn't be shown.
         }
     }
@@ -546,6 +545,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didOpenMode(_ mode: CameraMode, andClosed oldMode: CameraMode?) {
         updateMode(mode)
+        toggleMediaPicker(visible: true)
     }
 
     func didTapForMode(_ mode: CameraMode) {
@@ -703,7 +703,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: true)
             self?.modeAndShootController.closeTrash()
-            self?.modeAndShootController.toggleMediaPickerButton(false)
+            self?.toggleMediaPicker(visible: false)
             self?.clipsController.hidePreviewButton()
         }
     }
@@ -717,7 +717,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
-            self?.modeAndShootController.toggleMediaPickerButton(!filterSelectorVisible)
+            self?.toggleMediaPicker(visible: true)
             self?.clipsController.showPreviewButton()
         }
     }
@@ -731,7 +731,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         performUIUpdate { [weak self] in
             self?.cameraView.updateUI(forDraggingClip: false)
             self?.modeAndShootController.hideTrash()
-            self?.modeAndShootController.toggleMediaPickerButton(!filterSelectorVisible)
+            self?.toggleMediaPicker(visible: true)
             self?.clipsController.showPreviewButton()
             self?.updateLastClipPreview()
         }
@@ -875,8 +875,25 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             analyticsProvider?.logOpenFiltersSelector()
         }
         modeAndShootController.enableShootButtonUserInteraction(!visible)
-        modeAndShootController.toggleMediaPickerButton(!visible)
+        toggleMediaPicker(visible: !visible)
         modeAndShootController.dismissTooltip()
+    }
+
+    /// Toggles the media picker
+    /// This takes the current camera mode and filter selector visibility into account, as the media picker should
+    /// only be shown in Normal mode when the filter selector is hidden.
+    private func toggleMediaPicker(visible: Bool) {
+        if visible {
+            if !filterSettingsController.isFilterSelectorVisible() {
+                modeAndShootController.showMediaPickerButton(basedOn: currentMode)
+            }
+            else {
+                modeAndShootController.toggleMediaPickerButton(false)
+            }
+        }
+        else {
+            modeAndShootController.toggleMediaPickerButton(false)
+        }
     }
 
     // MARK: - UIImagePickerControllerDelegate
