@@ -9,7 +9,7 @@ import UIKit
 
 /// Constants for MainTextView
 private struct Constants {
-    static let fontSizes: [CGFloat] = [10, 12, 14, 16, 18, 21, 26, 32, 48, 64, 80]
+    static let fontSizes: [CGFloat] = [10, 12, 14, 16, 18, 21, 26, 32, 48, 64]
 }
 
 /// Protocol for the text view inside text tools
@@ -85,29 +85,16 @@ final class MainTextView: StylableTextView {
     }
     
     func resizeFont() {
-        if text.isEmpty || bounds.size.equalTo(.zero) { return }
-
-        let frameSize = frame.size
-        let frameWidth = frameSize.width
-        let expectedSize = sizeThatFits(CGSize(width: frameWidth, height: CGFloat(MAXFLOAT)))
+        guard !bounds.size.equalTo(.zero), let currentFont = font else { return }
+        var bestFont = currentFont.withSize(Constants.fontSizes[0])
         
-        var expectedFont = font
-        if expectedSize.height > frameSize.height {
-            while let currentFont = font,
-                let currentPosition = Constants.fontSizes.firstIndex(of: currentFont.pointSize),
-                currentPosition > 0 && sizeThatFits(CGSize(width: frameWidth, height: CGFloat(MAXFLOAT))).height > frameSize.height {
-                expectedFont = currentFont.withSize(Constants.fontSizes[currentPosition - 1])
-                font = expectedFont
+        for fontSize in Constants.fontSizes {
+            font = currentFont.withSize(fontSize)
+            if sizeThatFits(CGSize(width: frame.size.width, height: CGFloat(MAXFLOAT))).height < frame.size.height {
+                bestFont = currentFont.withSize(fontSize)
             }
         }
-        else {
-            while let currentFont = font,
-                let currentPosition = Constants.fontSizes.firstIndex(of: currentFont.pointSize),
-                currentPosition < Constants.fontSizes.count - 1 && sizeThatFits(CGSize(width: frameWidth, height: CGFloat(MAXFLOAT))).height < frameSize.height {
-                expectedFont = font
-                font = currentFont.withSize(Constants.fontSizes[currentPosition + 1])
-            }
-            font = expectedFont
-        }
+        
+        font = bestFont
     }
 }
