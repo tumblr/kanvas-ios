@@ -15,6 +15,8 @@ class GLPlayerTests: XCTestCase {
 
     class GLRendererMock: GLRendering {
 
+        var backgroundFillColor: CGColor = UIColor.clear.cgColor
+
         var mediaTransform: GLKMatrix4?
 
         var outputDimensions: CGSize = .zero
