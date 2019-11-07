@@ -54,6 +54,7 @@ struct FilterFactory {
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
     /// - Parameter overlays: Array of CVPixelBuffer instances to overlay.
+    /// - Parameter backgroundFillColor: color to fill anywhere overlays don't cover.
     static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer], backgroundFillColor: CGColor) -> FilterProtocol {
         guard overlays.count > 0 else {
             return FilterFactory.createFilter(type: type, glContext: glContext)

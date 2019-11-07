@@ -42,6 +42,7 @@ protocol DrawingControllerDelegate: class {
     /// Called when the color selector is released
     func didEndColorSelection()
 
+    /// Called when the background is filled with a color
     func didFillBackground(mode: CGBlendMode, color: CGColor)
 }
 
