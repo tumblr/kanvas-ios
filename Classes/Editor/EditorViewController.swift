@@ -344,6 +344,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         collectionController.showView(true)
         showConfirmButton(true)
         showCloseButton(true)
+        showTagButton(true)
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
@@ -370,6 +371,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         collectionController.showView(false)
         showConfirmButton(false)
         showCloseButton(false)
+        showTagButton(false)
     }
     
     // MARK: - EditorFilterControllerDelegate
@@ -464,6 +466,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
+    }
+
+    /// shows or hides the tag button (#)
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTagButton(_ show: Bool) {
+        editorView.showTagButton(show)
     }
     
     /// shows or hides the editor menu and the back button
