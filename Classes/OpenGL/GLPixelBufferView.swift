@@ -265,7 +265,9 @@ final class GLPixelBufferView: UIView {
             scale.width = 1.0
             scale.height = renderDimensions.height / (mediaDimensions.height * screenScale.width)
         }
-        let translate = CGSize(width: (1.0 - scale.width) / 2.0, height: (1.0 - scale.height) / 2.0)
+        // since base_render.vsh takes this transform and applies it from the center point,
+        // we don't need to translate anything.
+        let translate = CGSize(width: 0, height: 0)
         return GLKMatrix4Make(
             Float(scale.width), 0.0,                 0.0, Float(translate.width),
             0.0,                Float(scale.height), 0.0, Float(translate.height),
