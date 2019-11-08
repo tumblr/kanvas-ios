@@ -327,7 +327,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         delegate?.dismissButtonPressed()
     }
     
-    func closeMenuButtonPressed() {
+    func confirmMenuButtonPressed() {
         guard let editionOption = openedMenu else { return }
         
         switch editionOption {
@@ -377,7 +377,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     // MARK: - EditorFilterControllerDelegate
     
     func didConfirmFilters() {
-        closeMenuButtonPressed()
+        confirmMenuButtonPressed()
     }
     
     func didSelectFilter(_ filterItem: FilterItem) {
@@ -389,7 +389,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didConfirmDrawing() {
         analyticsProvider?.logEditorDrawingConfirm()
-        closeMenuButtonPressed()
+        confirmMenuButtonPressed()
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
@@ -407,7 +407,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         if options.haveText {
             editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
         }
-        closeMenuButtonPressed()
+        confirmMenuButtonPressed()
     }
     
     func didMoveToolsUp() {
