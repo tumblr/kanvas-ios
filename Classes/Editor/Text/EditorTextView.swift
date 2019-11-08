@@ -214,8 +214,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         setUpToolsContainer()
         setUpMainMenuContainer()
         setUpColorPickerContainer()
-        setUpAlignmentSelector()
         setUpFontSelector()
+        setUpAlignmentSelector()
         setUpHighlightSelector()
         setUpColorCollection()
         setUpOpenColorPicker()
@@ -292,23 +292,6 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         colorPickerContainer.alpha = 0
     }
     
-    /// Sets up the alignment selector button
-    private func setUpAlignmentSelector() {
-        alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
-        alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
-        mainMenuContainer.addSubview(alignmentSelector)
-        
-        NSLayoutConstraint.activate([
-            alignmentSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
-            alignmentSelector.leadingAnchor.constraint(equalTo: mainMenuContainer.leadingAnchor, constant: Constants.leftMargin),
-            alignmentSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
-            alignmentSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
-        ])
-        
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(alignmentSelectorTapped(recognizer:)))
-        alignmentSelector.addGestureRecognizer(tapRecognizer)
-    }
-    
     /// Sets up the font selector button
     private func setUpFontSelector() {
         fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
@@ -318,13 +301,30 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         NSLayoutConstraint.activate([
             fontSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
-            fontSelector.leadingAnchor.constraint(equalTo: alignmentSelector.trailingAnchor, constant: Constants.customIconMargin),
+            fontSelector.leadingAnchor.constraint(equalTo: mainMenuContainer.leadingAnchor, constant: Constants.leftMargin),
             fontSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
             fontSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(fontSelectorTapped(recognizer:)))
         fontSelector.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the alignment selector button
+    private func setUpAlignmentSelector() {
+        alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
+        alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(alignmentSelector)
+        
+        NSLayoutConstraint.activate([
+            alignmentSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
+            alignmentSelector.leadingAnchor.constraint(equalTo: fontSelector.trailingAnchor, constant: Constants.customIconMargin),
+            alignmentSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
+            alignmentSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(alignmentSelectorTapped(recognizer:)))
+        alignmentSelector.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the highlight selector button
@@ -335,7 +335,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         NSLayoutConstraint.activate([
             highlightSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
-            highlightSelector.leadingAnchor.constraint(equalTo: fontSelector.trailingAnchor, constant: Constants.customIconMargin),
+            highlightSelector.leadingAnchor.constraint(equalTo: alignmentSelector.trailingAnchor, constant: Constants.customIconMargin),
             highlightSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
             highlightSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
         ])
