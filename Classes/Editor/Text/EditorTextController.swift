@@ -59,8 +59,9 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     
     private var textTransformations: ViewTransformations
 
-    private var fonts: [UIFont?]
     private var alignments: [NSTextAlignment]
+    private var fonts: [UIFont?]
+    private var highlight: Bool?
     
     private lazy var textView: EditorTextView = {
         let textView = EditorTextView()
@@ -136,6 +137,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         
         fonts.rotate(to: options.font)
         alignments.rotate(to: options.alignment)
+        highlight = options.highlightColor?.isVisible
+        textView.eyeDropperColor = highlight == true ? options.highlightColor : options.color
     }
     
     // MARK: - EditorTextViewDelegate
@@ -148,6 +151,13 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         didConfirmText()
     }
     
+    func didTapAlignmentSelector() {
+        alignments.rotateLeft()
+        if let newAlignment = alignments.first {
+            textView.alignment = newAlignment
+        }
+    }
+    
     func didTapFontSelector() {
         fonts.rotateLeft()
         if let newFont = fonts.first {
@@ -155,11 +165,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         }
     }
     
-    func didTapAlignmentSelector() {
-        alignments.rotateLeft()
-        if let newAlignment = alignments.first {
-            textView.alignment = newAlignment
-        }
+    func didTapHighlightSelector() {
+        swapColors()
     }
     
     func didTapEyeDropper() {
@@ -178,13 +185,13 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     // MARK: - ColorCollectionControllerDelegate
     
     func didSelectColor(_ color: UIColor) {
-        textView.textColor = color
+        setColor(color)
     }
     
     // MARK: - ColorPickerControllerDelegate
     
     func didSelectColor(_ color: UIColor, definitive: Bool) {
-        textView.textColor = color
+        setColor(color)
         
         if definitive {
             addColorsForCarousel(colors: [color])
@@ -216,7 +223,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     }
     
     func didEndMovingCircle(color: UIColor) {
-        textView.textColor = color
+        setColor(color)
         addColorsForCarousel(colors: [color])
         
         textView.openKeyboard()
@@ -292,6 +299,37 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         textView.endWriting()
         UIView.animate(withDuration: Constants.animationDuration) {
             self.textView.alpha = 0
+        }
+    }
+    
+    // MARK: - Private utilities
+    
+    /// Sets the new color as the text color or the highlight color depending on the current state
+    ///
+    /// - Parameter color: the new color to be set
+    private func setColor(_ color: UIColor?) {
+        textView.eyeDropperColor = color
+        if highlight == true {
+            textView.highlightColor = color
+            textView.textColor = color?.matchingColor
+        }
+        else {
+            textView.textColor = color
+        }
+    }
+    
+    /// Swaps the colors of the text and the background
+    private func swapColors() {
+        highlight?.toggle()
+        if highlight == true {
+            guard let color = textView.textColor else { return }
+            textView.highlightColor = color
+            textView.textColor = color.matchingColor
+        }
+        else {
+            guard let color = textView.highlightColor else { return }
+            textView.highlightColor = .clear
+            textView.textColor = color
         }
     }
 }
