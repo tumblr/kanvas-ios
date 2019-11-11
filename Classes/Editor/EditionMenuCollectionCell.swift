@@ -36,7 +36,7 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     static let height = EditionMenuCollectionCellConstants.height
     static let width = EditionMenuCollectionCellConstants.width
     
-    private let circleView = UIImageView()
+    let circleView = UIImageView()
     
     weak var delegate: EditionMenuCollectionCellDelegate?
         

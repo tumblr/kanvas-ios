@@ -276,6 +276,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         }
     }
     
+    func showConfirmButton(_ show: Bool) {
+        textView.showConfirmButton(show)
+    }
+    
     // MARK: - Show & Hide
     
     /// Makes the view appear

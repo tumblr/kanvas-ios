@@ -32,6 +32,7 @@ protocol EditorViewDelegate: class {
 /// Constants for EditorView
 private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
+    static let editionOptionAnimationDuration: TimeInterval = 0.5
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
@@ -42,6 +43,9 @@ private struct EditorViewConstants {
     static let postButtonLabelMargin: CGFloat = 3
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
+    static let fakeOptionCellMinSize: CGFloat = 36
+    static let fakeOptionCellMaxSize: CGFloat = 50
+    static let fakeOptionCellDestination = CGPoint(x: 337.0, y: 57.5)
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -64,6 +68,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     private let postButton = UIButton()
     private let postLabel = UILabel()
     private let tagButton = UIButton()
+    private let fakeOptionCell = UIImageView()
     private let showTagButton: Bool
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
@@ -101,6 +106,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         textCanvas.add(into: self)
         setupNavigationContainer()
         setupCloseButton()
+        setupFakeOptionCell()
         if showTagButton {
             setupTagButton()
         }
@@ -175,6 +181,21 @@ final class EditorView: UIView, TextCanvasDelegate {
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
         ])
+    }
+    
+    private func setupFakeOptionCell() {
+        fakeOptionCell.accessibilityLabel = "Fake Option Cell"
+        
+        addSubview(fakeOptionCell)
+        fakeOptionCell.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            fakeOptionCell.centerXAnchor.constraint(equalTo: centerXAnchor),
+            fakeOptionCell.centerYAnchor.constraint(equalTo: centerYAnchor),
+            fakeOptionCell.heightAnchor.constraint(equalToConstant: EditorViewConstants.fakeOptionCellMaxSize),
+            fakeOptionCell.widthAnchor.constraint(equalToConstant: EditorViewConstants.fakeOptionCellMaxSize),
+        ])
+        
+        fakeOptionCell.alpha = 0
     }
     
     private func setupConfirmButton() {
@@ -363,6 +384,36 @@ final class EditorView: UIView, TextCanvasDelegate {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.navigationContainer.alpha = show ? 1 : 0
         }
+    }
+    
+    func animateEditionOption(cell: EditionMenuCollectionCell, completion: @escaping () -> Void) {
+        guard let cellParent = cell.superview else { return }
+        fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
+        fakeOptionCell.image = cell.circleView.image
+        fakeOptionCell.transform = .identity
+        fakeOptionCell.alpha = 1
+        UIView.animate(withDuration: EditorViewConstants.editionOptionAnimationDuration, animations: {
+            self.fakeOptionCell.image = KanvasCameraImages.confirmImage
+            let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
+            let distance = EditorViewConstants.fakeOptionCellDestination - self.fakeOptionCell.center
+            print("L - \(EditorViewConstants.fakeOptionCellDestination)  - \(self.fakeOptionCell.center)")
+            self.fakeOptionCell.transform = CGAffineTransform(translationX: distance.x, y: distance.y).concatenating(CGAffineTransform(scaleX: scale, y: scale))
+        }, completion: { _ in
+            self.fakeOptionCell.alpha = 0
+            completion()
+        })
+    }
+    
+    func animateReturnOfEditionOption(cell: EditionMenuCollectionCell) {
+        cell.alpha = 0
+        fakeOptionCell.alpha = 1
+        UIView.animate(withDuration: EditorViewConstants.editionOptionAnimationDuration, animations: {
+            self.fakeOptionCell.image = cell.circleView.image
+            self.fakeOptionCell.transform = .identity
+        }, completion: { _ in
+            self.fakeOptionCell.alpha = 0
+            cell.alpha = 1
+        })
     }
     
     /// shows or hides the confirm button

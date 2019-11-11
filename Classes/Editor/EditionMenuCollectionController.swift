@@ -11,7 +11,7 @@ protocol EditionMenuCollectionControllerDelegate: class {
     /// Callback for the selection of an option
     ///
     /// - Parameter editionOption: the selected option
-    func didSelectEditionOption(_ editionOption: EditionOption)
+    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell)
 }
 
 /// Constants for Collection Controller
@@ -125,16 +125,17 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     /// Selects an option
     ///
     /// - Parameter index: position of the option in the collection
-    private func selectEditionOption(index: Int) {
+    /// - Parameter cell: selected cell
+    private func selectEditionOption(index: Int, cell: EditionMenuCollectionCell) {
         guard let option = editionOptions.object(at: index) else { return }
-        delegate?.didSelectEditionOption(option)
+        delegate?.didSelectEditionOption(option, cell: cell)
     }
     
     // MARK: - EditionMenuCollectionCellDelegate
     
     func didTap(cell: EditionMenuCollectionCell, recognizer: UITapGestureRecognizer) {
         if let indexPath = editionMenuCollectionView.collectionView.indexPath(for: cell) {
-            selectEditionOption(index: indexPath.item)
+            selectEditionOption(index: indexPath.item, cell: cell)
         }
     }
 }

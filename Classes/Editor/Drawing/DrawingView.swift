@@ -275,6 +275,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         topButtonContainer.addArrangedSubview(confirmButton)
         topButtonContainer.addArrangedSubview(undoButton)
         topButtonContainer.addArrangedSubview(eraseButton)
+        
+        confirmButton.alpha = 0
     }
     
     /// Sets up a view that holds the main menu and also the color picker
@@ -515,6 +517,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         UIView.transition(with: eraseButton, duration: DrawingViewConstants.animationDuration, options: .transitionCrossDissolve, animations: {
             self.eraseButton.setBackgroundImage(image, for: .normal)
         }, completion: nil)
+    }
+    
+    func showConfirmButton(_ show: Bool) {
+        confirmButton.alpha = show ? 1 : 0
     }
     
     /// shows or hides the bottom panel (it includes the buttons menu and the color picker)

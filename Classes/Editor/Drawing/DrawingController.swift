@@ -545,6 +545,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         })
     }
     
+    func showConfirmButton(_ show: Bool) {
+        drawingView.showConfirmButton(show)
+    }
+    
     /// shows or hides the drawing canvas
     ///
     /// - Parameter show: true to show, false to hide
