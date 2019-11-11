@@ -87,6 +87,10 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         return colorPickerContainer.convert(eyeDropper.center, to: self)
     }
     
+    var confirmButtonLocation: CGPoint {
+        return topButtonsContainer.convert(confirmButton.center, to: nil)
+    }
+    
     // Internal properties
     let colorCollection: UIView
     let colorGradient: UIView

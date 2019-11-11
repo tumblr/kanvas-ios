@@ -131,7 +131,7 @@
 		6725654BD91B852FF5BCF0EC4AB77DAE /* CameraFilterCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C30128D32C53AA65C468A81A54935E7 /* CameraFilterCollectionCell.swift */; };
 		6841DDBC6945F318F5D8607BDB079CA2 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34558E6E8E0AA2D12CCF800EB58791B7 /* CameraController.swift */; };
 		684D8AB5AA355277447103B990E4A740 /* UIFont+Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D661F1024AEF0707E5EBED7159FC156B /* UIFont+Fonts.swift */; };
-		68584A041176119B5F308BCC8EE4968F /* CGPoint+Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694B51AEF85CF68F23EE4153C26A2C73 /* CGPoint+Addition.swift */; };
+		68584A041176119B5F308BCC8EE4968F /* CGPoint+Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694B51AEF85CF68F23EE4153C26A2C73 /* CGPoint+Operators.swift */; };
 		68ED50571AA191BD0A5EAFDD5D4A921A /* Utils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38DF616A8419350AA28B526670D13B0B /* Utils.framework */; };
 		6AE239C5D116E1C06F5705699FB9EAF0 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF0CCD093AD8EE84FBAAAF873F9865C /* XCTest.framework */; };
 		6B5649A4F2A7F64D5D1C361DBC0D304E /* MediaClipsCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E33EFA3EEE3FC02E4533517ABD9F93 /* MediaClipsCollectionController.swift */; };
@@ -506,7 +506,7 @@
 		6626B2D657E4A95D5A23CADAB02281C0 /* TagsViewTagCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsViewTagCell.swift; sourceTree = "<group>"; };
 		667743545AC39F4C33DF05F202FE7CCA /* GroupFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GroupFilter.swift; sourceTree = "<group>"; };
 		66E4E7EAD168055DB472FC0BA6425415 /* TimelineContaining.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TimelineContaining.swift; path = Source/TimelineContaining.swift; sourceTree = "<group>"; };
-		694B51AEF85CF68F23EE4153C26A2C73 /* CGPoint+Addition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGPoint+Addition.swift"; sourceTree = "<group>"; };
+		694B51AEF85CF68F23EE4153C26A2C73 /* CGPoint+Operators.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGPoint+Operators.swift"; sourceTree = "<group>"; };
 		6B69BD890E64A39F0A025A3F306F1C98 /* FilterFactory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterFactory.swift; sourceTree = "<group>"; };
 		6C55B6A9694FA5473B18562A1BD8793F /* ImagePreviewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImagePreviewController.swift; sourceTree = "<group>"; };
 		6D1AA7490F5B815C5C37F17A72E5405C /* ToastPresentationStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToastPresentationStyle.swift; path = Source/ToastPresentationStyle.swift; sourceTree = "<group>"; };
@@ -936,7 +936,7 @@
 				B783B70AE18F14220477F52303E66B5D /* CALayer+CGImage.swift */,
 				9E165B02404F11A069442AFAC4B71BC0 /* CALayer+Color.swift */,
 				489B87A1A5CBA47B486B79A421129E96 /* CALayer+Shadows.swift */,
-				694B51AEF85CF68F23EE4153C26A2C73 /* CGPoint+Addition.swift */,
+				694B51AEF85CF68F23EE4153C26A2C73 /* CGPoint+Operators.swift */,
 				30C3F78A2EECC135262F6A4AEA4E54B4 /* CGRect+Center.swift */,
 				59FC79341EAFC6FDCB1C05E7A9E0D1EF /* ClosedRange+Clamp.swift */,
 				1DD5FD36CF670CBC023896295CBA1811 /* IndexPath+Order.swift */,
@@ -1879,7 +1879,7 @@
 				657AB0432370632800944C65 /* MainTextView.swift in Sources */,
 				27CC7F55BAAF6AB90E5A976FC64B78F8 /* CameraView.swift in Sources */,
 				71875E5A533347C9FF3513486A1178C9 /* CameraZoomHandler.swift in Sources */,
-				68584A041176119B5F308BCC8EE4968F /* CGPoint+Addition.swift in Sources */,
+				68584A041176119B5F308BCC8EE4968F /* CGPoint+Operators.swift in Sources */,
 				58E8BA2CCAFF527D5029C38376BF60C7 /* CGRect+Center.swift in Sources */,
 				99BA85F4B06732179ACF09FF9F1CC0CF /* ChromaFilter.swift in Sources */,
 				58692857A16E66075257AAAFB8EADBA2 /* CircularImageView.swift in Sources */,

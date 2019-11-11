@@ -371,13 +371,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             filterController.showView(true)
         case .text:
             textController.showView(true)
-            editorView.animateEditionOption(cell: cell, completion: {
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
                 self.textController.showConfirmButton(true)
             })
         case .drawing:
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-            editorView.animateEditionOption(cell: cell, completion: {
+            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: {
                 self.drawingController.showConfirmButton(true)
             })
         case .media:

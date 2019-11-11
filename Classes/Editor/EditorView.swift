@@ -45,7 +45,6 @@ private struct EditorViewConstants {
     static let saveButtonHorizontalMargin: CGFloat = 20
     static let fakeOptionCellMinSize: CGFloat = 36
     static let fakeOptionCellMaxSize: CGFloat = 50
-    static let fakeOptionCellDestination = CGPoint(x: 337.0, y: 57.5)
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -386,18 +385,17 @@ final class EditorView: UIView, TextCanvasDelegate {
         }
     }
     
-    func animateEditionOption(cell: EditionMenuCollectionCell, completion: @escaping () -> Void) {
+    func animateEditionOption(cell: EditionMenuCollectionCell, finalLocation: CGPoint, completion: @escaping () -> Void) {
         guard let cellParent = cell.superview else { return }
         fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
         fakeOptionCell.image = cell.circleView.image
-        fakeOptionCell.transform = .identity
         fakeOptionCell.alpha = 1
+        cell.alpha = 0
         UIView.animate(withDuration: EditorViewConstants.editionOptionAnimationDuration, animations: {
             self.fakeOptionCell.image = KanvasCameraImages.confirmImage
             let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
-            let distance = EditorViewConstants.fakeOptionCellDestination - self.fakeOptionCell.center
-            print("L - \(EditorViewConstants.fakeOptionCellDestination)  - \(self.fakeOptionCell.center)")
-            self.fakeOptionCell.transform = CGAffineTransform(translationX: distance.x, y: distance.y).concatenating(CGAffineTransform(scaleX: scale, y: scale))
+            self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale)
+            self.fakeOptionCell.center = finalLocation
         }, completion: { _ in
             self.fakeOptionCell.alpha = 0
             completion()
@@ -405,11 +403,12 @@ final class EditorView: UIView, TextCanvasDelegate {
     }
     
     func animateReturnOfEditionOption(cell: EditionMenuCollectionCell) {
-        cell.alpha = 0
+        guard let cellParent = cell.superview else { return }
         fakeOptionCell.alpha = 1
         UIView.animate(withDuration: EditorViewConstants.editionOptionAnimationDuration, animations: {
             self.fakeOptionCell.image = cell.circleView.image
             self.fakeOptionCell.transform = .identity
+            self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
         }, completion: { _ in
             self.fakeOptionCell.alpha = 0
             cell.alpha = 1

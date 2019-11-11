@@ -87,6 +87,10 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         return controller
     }()
     
+    var confirmButtonLocation: CGPoint {
+        return textView.confirmButtonLocation
+    }
+    
     // MARK: - Initializers
     
     init() {

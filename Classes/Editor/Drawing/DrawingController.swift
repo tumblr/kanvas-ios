@@ -106,6 +106,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return controller
     }()
     
+    var confirmButtonLocation: CGPoint {
+        return drawingView.confirmButtonLocation
+    }
+    
     // Drawing
     var drawingLayer: CALayer?
     private var drawingCollection: [UIImage]

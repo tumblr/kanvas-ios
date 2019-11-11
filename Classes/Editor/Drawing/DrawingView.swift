@@ -110,6 +110,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         return colorPickerContainer.convert(eyeDropperButton.center, to: self)
     }
     
+    var confirmButtonLocation: CGPoint {
+        return topButtonContainer.convert(confirmButton.center, to: nil)
+    }
+    
     // Color collection
     let colorCollection: UIView
     
