@@ -391,11 +391,18 @@ final class EditorView: UIView, TextCanvasDelegate {
         fakeOptionCell.image = cell.circleView.image
         fakeOptionCell.alpha = 1
         cell.alpha = 0
-        UIView.animate(withDuration: EditorViewConstants.editionOptionAnimationDuration, animations: {
-            self.fakeOptionCell.image = KanvasCameraImages.confirmImage
-            let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
-            self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale)
-            self.fakeOptionCell.center = finalLocation
+        
+        let duration = EditorViewConstants.editionOptionAnimationDuration
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
+                self.fakeOptionCell.image = KanvasCameraImages.confirmImage
+                let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
+                self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale)
+                self.fakeOptionCell.center = finalLocation
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.45 / duration, relativeDuration: 0.05 / duration, animations: {
+                self.fakeOptionCell.center = finalLocation
+            })
         }, completion: { _ in
             self.fakeOptionCell.alpha = 0
             completion()
@@ -405,10 +412,17 @@ final class EditorView: UIView, TextCanvasDelegate {
     func animateReturnOfEditionOption(cell: EditionMenuCollectionCell) {
         guard let cellParent = cell.superview else { return }
         fakeOptionCell.alpha = 1
-        UIView.animate(withDuration: EditorViewConstants.editionOptionAnimationDuration, animations: {
-            self.fakeOptionCell.image = cell.circleView.image
-            self.fakeOptionCell.transform = .identity
-            self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
+        
+        let duration = EditorViewConstants.editionOptionAnimationDuration
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
+                self.fakeOptionCell.image = cell.circleView.image
+                self.fakeOptionCell.transform = .identity
+                self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.45 / duration, relativeDuration: 0.05 / duration, animations: {
+                self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
+            })
         }, completion: { _ in
             self.fakeOptionCell.alpha = 0
             cell.alpha = 1
