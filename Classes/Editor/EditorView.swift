@@ -105,7 +105,6 @@ final class EditorView: UIView, TextCanvasDelegate {
         textCanvas.add(into: self)
         setupNavigationContainer()
         setupCloseButton()
-        setupFakeOptionCell()
         if showTagButton {
             setupTagButton()
         }
@@ -122,6 +121,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         setupFilterMenu()
         setupTextMenu()
         setupDrawingMenu()
+        setupFakeOptionCell()
     }
     
     // MARK: - views
@@ -180,21 +180,6 @@ final class EditorView: UIView, TextCanvasDelegate {
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
         ])
-    }
-    
-    private func setupFakeOptionCell() {
-        fakeOptionCell.accessibilityLabel = "Fake Option Cell"
-        
-        addSubview(fakeOptionCell)
-        fakeOptionCell.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            fakeOptionCell.centerXAnchor.constraint(equalTo: centerXAnchor),
-            fakeOptionCell.centerYAnchor.constraint(equalTo: centerYAnchor),
-            fakeOptionCell.heightAnchor.constraint(equalToConstant: EditorViewConstants.fakeOptionCellMaxSize),
-            fakeOptionCell.widthAnchor.constraint(equalToConstant: EditorViewConstants.fakeOptionCellMaxSize),
-        ])
-        
-        fakeOptionCell.alpha = 0
     }
     
     private func setupConfirmButton() {
@@ -282,6 +267,21 @@ final class EditorView: UIView, TextCanvasDelegate {
             drawingMenuContainer.topAnchor.constraint(equalTo: topAnchor),
             drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+    }
+    
+    private func setupFakeOptionCell() {
+        fakeOptionCell.accessibilityLabel = "Fake Option Cell"
+        
+        addSubview(fakeOptionCell)
+        fakeOptionCell.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            fakeOptionCell.centerXAnchor.constraint(equalTo: centerXAnchor),
+            fakeOptionCell.centerYAnchor.constraint(equalTo: centerYAnchor),
+            fakeOptionCell.heightAnchor.constraint(equalToConstant: EditorViewConstants.fakeOptionCellMaxSize),
+            fakeOptionCell.widthAnchor.constraint(equalToConstant: EditorViewConstants.fakeOptionCellMaxSize),
+        ])
+        
+        fakeOptionCell.alpha = 0
     }
 
     func setupPostButton() {
