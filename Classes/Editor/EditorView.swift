@@ -426,9 +426,10 @@ final class EditorView: UIView, TextCanvasDelegate {
                 self.fakeOptionCell.transform = .identity
                 self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
             })
-        }, completion: { _ in
-            self.fakeOptionCell.alpha = 0
-            cell.alpha = 1
+            UIView.addKeyframe(withRelativeStartTime: 0.45 / duration, relativeDuration: 0.05 / duration, animations: {
+                self.fakeOptionCell.alpha = 0
+                cell.alpha = 1
+            })
         })
     }
     
