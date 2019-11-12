@@ -53,7 +53,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         case post
     }
     
-    weak var playerView: GLPlayerView?
+    weak var playerView: MediaPlayerView?
 
     private let mainActionMode: MainActionMode
     private let confirmButton = UIButton()
@@ -122,7 +122,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     // MARK: - views
 
     private func setupPlayer() {
-        let playerView = GLPlayerView()
+        let playerView = MediaPlayerView()
         playerView.add(into: self)
         self.playerView = playerView
     }

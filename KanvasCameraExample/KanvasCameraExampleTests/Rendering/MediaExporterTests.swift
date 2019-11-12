@@ -9,7 +9,7 @@ import XCTest
 
 @testable import KanvasCamera
 
-final class GLVideoCompositorTests: XCTestCase {
+class MediaExporterTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
@@ -20,7 +20,7 @@ final class GLVideoCompositorTests: XCTestCase {
     }
 
     func testInit() {
-        let _ = GLVideoCompositor()
+        let _ = MediaExporter()
     }
 
 }

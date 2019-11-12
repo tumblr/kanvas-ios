@@ -12,20 +12,20 @@ import OpenGLES
 import GLKit
 
 /// Callbacks for opengl player
-protocol GLPlayerDelegate: class {
+protocol MediaPlayerDelegate: class {
     /// Called then the first pixel buffer is shown
     /// - Parameter image: the first frame shown
     func didDisplayFirstFrame(_ image: UIImage)
 }
 
 /// Types of media the player can play.
-enum GLPlayerMedia {
+enum MediaPlayerContent {
     case image(UIImage)
     case video(URL)
 }
 
 /// View for rendering the player.
-final class GLPlayerView: UIView {
+final class MediaPlayerView: UIView {
 
     weak var pixelBufferView: GLPixelBufferView?
 
@@ -43,8 +43,8 @@ final class GLPlayerView: UIView {
 
 }
 
-/// Controls the playback of many GLPlayerMedia
-final class GLPlayer {
+/// Controls the playback of many MediaPlayerContent
+final class MediaPlayer {
 
     private struct Constants {
         static let onlyImagesFrameDuration: CMTimeValue = 120
@@ -52,7 +52,7 @@ final class GLPlayer {
         static let timescale: CMTimeScale = 600
     }
 
-    private enum GLPlayerMediaInternal {
+    private enum MediaPlayerContentLoaded {
         case image(UIImage, CMSampleBuffer)
         case video(URL, AVPlayerItem, AVPlayerItemVideoOutput)
 
@@ -93,20 +93,20 @@ final class GLPlayer {
         }
     }
 
-    weak var delegate: GLPlayerDelegate?
+    weak var delegate: MediaPlayerDelegate?
 
     /// The GLRendering instance for the player.
-    let renderer: GLRendering
+    let renderer: Rendering
 
-    /// The GLPlayerView that this controls.
-    weak var playerView: GLPlayerView?
+    /// The MediaPlayerView that this controls.
+    weak var playerView: MediaPlayerView?
 
     /// The last timestamp a still photo has a filter applied. This is used to replicate the filter when exporting an image.
     var lastStillFilterTime: TimeInterval = 0
     
-    private var playableMedia: [GLPlayerMediaInternal] = []
+    private var playableMedia: [MediaPlayerContentLoaded] = []
     private var currentlyPlayingMediaIndex: Int = -1
-    private var currentlyPlayingMedia: GLPlayerMediaInternal? {
+    private var currentlyPlayingMedia: MediaPlayerContentLoaded? {
         guard currentlyPlayingMediaIndex >= 0 && currentlyPlayingMediaIndex < playableMedia.count else {
             return nil
         }
@@ -126,8 +126,8 @@ final class GLPlayer {
 
     /// Default initializer
     /// - Parameter renderer: GLRendering instance for this player to use.
-    init(renderer: GLRendering?) {
-        self.renderer = renderer ?? GLRenderer()
+    init(renderer: Rendering?) {
+        self.renderer = renderer ?? Renderer()
         self.renderer.delegate = self
     }
 
@@ -137,7 +137,7 @@ final class GLPlayer {
 
     // MARK: - Public API
 
-    /// The FilterYype for the GLPlayer to use to process frames with
+    /// The filter type for the player to use to process frames with
     var filterType: FilterType? {
         get {
             return renderer.filterType
@@ -150,8 +150,8 @@ final class GLPlayer {
     }
 
     /// Plays a list of media repeatidly.
-    /// - Parameter media: the list of GLPlayerMedia to play
-    func play(media: [GLPlayerMedia]) {
+    /// - Parameter media: the list of media to play
+    func play(media: [MediaPlayerContent]) {
         guard media.count > 0 else {
             return
         }
@@ -238,15 +238,17 @@ final class GLPlayer {
     
     // MARK: - Media loading
 
-    private func loadAll(media: [GLPlayerMedia]) {
+    private func loadAll(media: [MediaPlayerContent]) {
         playableMedia.removeAll()
         for item in media {
-            guard let internalMedia = GLPlayer.loadMedia(media: item) else { continue }
-            playableMedia.append(internalMedia)
+            guard let loadedMedia = MediaPlayer.loadMedia(media: item) else {
+                continue
+            }
+            playableMedia.append(loadedMedia)
         }
     }
 
-    private static func loadMedia(media: GLPlayerMedia) -> GLPlayerMediaInternal? {
+    private static func loadMedia(media: MediaPlayerContent) -> MediaPlayerContentLoaded? {
         switch media {
         case .image(let image):
             return loadImageMedia(image: image)
@@ -255,18 +257,18 @@ final class GLPlayer {
         }
     }
 
-    private static func loadVideoMedia(url: URL) -> GLPlayerMediaInternal? {
+    private static func loadVideoMedia(url: URL) -> MediaPlayerContentLoaded? {
         let playerItem = AVPlayerItem(url: url)
         let videoOutput = AVPlayerItemVideoOutput(pixelBufferAttributes: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
         playerItem.add(videoOutput)
-        return GLPlayerMediaInternal.video(url, playerItem, videoOutput)
+        return .video(url, playerItem, videoOutput)
     }
 
-    private static func loadImageMedia(image: UIImage) -> GLPlayerMediaInternal? {
+    private static func loadImageMedia(image: UIImage) -> MediaPlayerContentLoaded? {
         guard let sampleBuffer = image.pixelBuffer()?.sampleBuffer() else {
             return nil
         }
-        return GLPlayerMediaInternal.image(image, sampleBuffer)
+        return .image(image, sampleBuffer)
     }
 
     // MARK: - Playback
@@ -409,7 +411,7 @@ final class GLPlayer {
     }
 }
 
-extension GLPlayer: GLRendererDelegate {
+extension MediaPlayer: RenderingDelegate {
 
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         self.currentPixelBuffer = pixelBuffer

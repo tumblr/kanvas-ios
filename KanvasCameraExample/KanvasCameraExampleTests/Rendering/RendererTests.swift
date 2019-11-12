@@ -8,7 +8,7 @@
 import XCTest
 import CoreMedia
 
-class GLRendererDelegateStub: GLRendererDelegate {
+class RendererDelegateStub: RenderingDelegate {
     var calledRendererReadyForDisplay = false
     var calledRendererFilteredPixelBufferReady = false
     var calledRendererRanOutOfBuffers = false
@@ -26,7 +26,7 @@ class GLRendererDelegateStub: GLRendererDelegate {
     }
 }
 
-class GLRendererTests: XCTestCase {
+class RendererTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
@@ -37,8 +37,8 @@ class GLRendererTests: XCTestCase {
     }
 
     func testInit() {
-        let delegate = GLRendererDelegateStub()
-        let renderer = GLRenderer()
+        let delegate = RendererDelegateStub()
+        let renderer = Renderer()
         renderer.delegate = delegate
     }
 

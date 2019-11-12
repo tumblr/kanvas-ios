@@ -9,8 +9,8 @@ import AVFoundation
 import Photos
 import Utils
 
-/// Errors that can be thrown from GLMediaExporter
-enum GLMediaExporterError: Error {
+/// Errors that can be thrown from MediaExporter
+enum MediaExporterError: Error {
     case failedDeleteExistingFile(Error)
     case noPresets
     case noVideoTrack
@@ -32,7 +32,7 @@ protocol MediaExporting: class {
 }
 
 /// Exports media with frame-by-frame OpenGL processing
-final class GLMediaExporter: MediaExporting {
+final class MediaExporter: MediaExporting {
 
     /// The FilterType to apply frame-by-frame processing with.
     var filterType: FilterType = .passthrough
@@ -65,14 +65,14 @@ final class GLMediaExporter: MediaExporting {
             return
         }
         guard let pixelBuffer = image.pixelBuffer() else {
-            completion(nil, GLMediaExporterError.noPixelBuffer)
+            completion(nil, MediaExporterError.noPixelBuffer)
             return
         }
         guard let sampleBuffer = pixelBuffer.sampleBuffer() else {
-            completion(nil, GLMediaExporterError.noSampleBuffer)
+            completion(nil, MediaExporterError.noSampleBuffer)
             return
         }
-        let renderer = GLRenderer()
+        let renderer = Renderer()
         renderer.backgroundFillColor = backgroundFillColor
         renderer.imageOverlays = imageOverlays
         renderer.filterType = filterType
@@ -82,7 +82,7 @@ final class GLMediaExporter: MediaExporting {
         renderer.processSampleBuffer(sampleBuffer, time: time)
         renderer.processSampleBuffer(sampleBuffer, time: time) { (filteredPixelBuffer, time) in
             guard let processedImage = UIImage(pixelBuffer: filteredPixelBuffer) else {
-                completion(nil, GLMediaExporterError.noProcessedImage)
+                completion(nil, MediaExporterError.noProcessedImage)
                 return
             }
             completion(processedImage, nil)
@@ -100,15 +100,15 @@ final class GLMediaExporter: MediaExporting {
 
         let asset = AVAsset(url: url)
         let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
-        videoComposition.customVideoCompositorClass = GLVideoCompositor.self
+        videoComposition.customVideoCompositorClass = VideoCompositor.self
 
         let presets = AVAssetExportSession.exportPresets(compatibleWith: asset)
         guard let presetName = presets.first(where: { $0 == AVAssetExportPresetHighestQuality }) else {
-            completion(nil, GLMediaExporterError.noPresets)
+            completion(nil, MediaExporterError.noPresets)
             return
         }
         guard let track = asset.tracks(withMediaType: .video).first else {
-            completion(nil, GLMediaExporterError.noVideoTrack)
+            completion(nil, MediaExporterError.noVideoTrack)
             return
         }
 
@@ -120,26 +120,26 @@ final class GLMediaExporter: MediaExporting {
         exportSession?.metadata = mediaInfo.createAVMetadataItems()
         exportSession?.videoComposition = videoComposition
 
-        guard let glVideoCompositor = exportSession?.customVideoCompositor as? GLVideoCompositor else {
-            completion(nil, GLMediaExporterError.noCompositor)
+        guard let videoCompositor = exportSession?.customVideoCompositor as? VideoCompositor else {
+            completion(nil, MediaExporterError.noCompositor)
             return
         }
-        glVideoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
-        glVideoCompositor.renderer.mediaTransform = track.glPreferredTransform
-        glVideoCompositor.renderer.backgroundFillColor = backgroundFillColor
-        glVideoCompositor.imageOverlays = imageOverlays
-        glVideoCompositor.filterType = filterType
-        glVideoCompositor.refreshFilter()
+        videoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
+        videoCompositor.renderer.mediaTransform = track.glPreferredTransform
+        videoCompositor.renderer.backgroundFillColor = backgroundFillColor
+        videoCompositor.imageOverlays = imageOverlays
+        videoCompositor.filterType = filterType
+        videoCompositor.refreshFilter()
         self.progressTimer = Timer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: exportSession, repeats: true)
         exportSession?.exportAsynchronously {
             self.progressTimer?.invalidate()
             self.progressTimer = nil
             guard exportSession?.status == .completed else {
                 if let error = exportSession?.error {
-                    completion(nil, GLMediaExporterError.export(error))
+                    completion(nil, MediaExporterError.export(error))
                 }
                 else {
-                    completion(nil, GLMediaExporterError.incomplete)
+                    completion(nil, MediaExporterError.incomplete)
                 }
                 return
             }

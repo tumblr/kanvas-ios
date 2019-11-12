@@ -11,9 +11,9 @@ import GLKit
 
 @testable import KanvasCamera
 
-class GLPlayerTests: XCTestCase {
+class MediaPlayerTests: XCTestCase {
 
-    class GLRendererMock: GLRendering {
+    class RendererMock: Rendering {
 
         var backgroundFillColor: CGColor = UIColor.clear.cgColor
 
@@ -25,7 +25,7 @@ class GLPlayerTests: XCTestCase {
 
         var startTime: TimeInterval?
 
-        weak var delegate: GLRendererDelegate?
+        weak var delegate: RenderingDelegate?
 
         var filterType: FilterType = .passthrough
         var imageOverlays: [CGImage] = []
@@ -68,10 +68,8 @@ class GLPlayerTests: XCTestCase {
             return
         }
         let renderer = mockRenderer()
-        let player = GLPlayer(renderer: renderer)
-        player.play(media: [
-            GLPlayerMedia.image(image)
-        ])
+        let player = MediaPlayer(renderer: renderer)
+        player.play(media: [.image(image)])
         XCTAssertEqual(renderer.processedSampleBufferCallCount, 2, "Expected processSampleBuffer to be called twice")
         XCTAssertNotNil(renderer.processedSampleBuffer, "Expected processSampleBuffer to be called")
     }
@@ -90,10 +88,8 @@ class GLPlayerTests: XCTestCase {
         let frameRate = videoTrack.nominalFrameRate
 
         let renderer = mockRenderer()
-        let player = GLPlayer(renderer: renderer)
-        player.play(media: [
-            GLPlayerMedia.video(videoURL)
-        ])
+        let player = MediaPlayer(renderer: renderer)
+        player.play(media: [.video(videoURL)])
 
         // Let the video play for one second
         RunLoop.main.run(until: Date(timeIntervalSinceNow: 1))
@@ -107,8 +103,8 @@ class GLPlayerTests: XCTestCase {
         XCTAssertNotNil(renderer.processedSampleBuffer, "Expected processSampleBuffer to be called")
     }
 
-    func mockRenderer() -> GLRendererMock {
-        return GLRendererMock()
+    func mockRenderer() -> RendererMock {
+        return RendererMock()
     }
 
 }
