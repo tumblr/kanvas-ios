@@ -406,9 +406,6 @@ final class EditorView: UIView, TextCanvasDelegate {
                 self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale)
                 self.fakeOptionCell.center = finalLocation
             })
-            UIView.addKeyframe(withRelativeStartTime: 0.45 / duration, relativeDuration: 0.05 / duration, animations: {
-                self.fakeOptionCell.center = finalLocation
-            })
         }, completion: { _ in
             self.fakeOptionCell.alpha = 0
             completion()
@@ -427,9 +424,6 @@ final class EditorView: UIView, TextCanvasDelegate {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
                 self.fakeOptionCell.image = cell.circleView.image
                 self.fakeOptionCell.transform = .identity
-                self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
-            })
-            UIView.addKeyframe(withRelativeStartTime: 0.45 / duration, relativeDuration: 0.05 / duration, animations: {
                 self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
             })
         }, completion: { _ in
