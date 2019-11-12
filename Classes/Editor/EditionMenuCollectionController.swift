@@ -11,6 +11,7 @@ protocol EditionMenuCollectionControllerDelegate: class {
     /// Callback for the selection of an option
     ///
     /// - Parameter editionOption: the selected option
+    /// - Parameter cell: the selected cell
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell)
 }
 
@@ -125,7 +126,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     /// Selects an option
     ///
     /// - Parameter index: position of the option in the collection
-    /// - Parameter cell: selected cell
+    /// - Parameter cell: the selected cell
     private func selectEditionOption(index: Int, cell: EditionMenuCollectionCell) {
         guard let option = editionOptions.object(at: index) else { return }
         delegate?.didSelectEditionOption(option, cell: cell)

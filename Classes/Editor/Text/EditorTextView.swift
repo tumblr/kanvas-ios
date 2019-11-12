@@ -87,6 +87,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         return colorPickerContainer.convert(eyeDropper.center, to: self)
     }
     
+    /// Confirm button location expressed in screen coordinates
     var confirmButtonLocation: CGPoint {
         return topButtonsContainer.convert(confirmButton.center, to: nil)
     }
@@ -570,6 +571,9 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         }
     }
     
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
         confirmButton.alpha = show ? 1 : 0
     }

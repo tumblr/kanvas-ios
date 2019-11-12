@@ -269,6 +269,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         ])
     }
     
+    /// Sets up the image used for the animation that transforms a menu cell into a checkmark button
     private func setupFakeOptionCell() {
         fakeOptionCell.accessibilityLabel = "Fake Option Cell"
         
@@ -385,6 +386,11 @@ final class EditorView: UIView, TextCanvasDelegate {
         }
     }
     
+    /// transforms an option cell into a checkmark button with an animation
+    ///
+    /// - Parameter cell: the cell to be transformed
+    /// - Parameter finalLocation: the location where the checkmark button will be
+    /// - Parameter completion: a closure to execute when the animation ends
     func animateEditionOption(cell: EditionMenuCollectionCell, finalLocation: CGPoint, completion: @escaping () -> Void) {
         guard let cellParent = cell.superview else { return }
         fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
@@ -409,6 +415,9 @@ final class EditorView: UIView, TextCanvasDelegate {
         })
     }
     
+    /// transforms the checkmark button of the current menu into its option cell with an animation
+    ///
+    /// - Parameter cell: the cell in which the checkmark button will be tranformed
     func animateReturnOfEditionOption(cell: EditionMenuCollectionCell) {
         guard let cellParent = cell.superview else { return }
         fakeOptionCell.alpha = 1

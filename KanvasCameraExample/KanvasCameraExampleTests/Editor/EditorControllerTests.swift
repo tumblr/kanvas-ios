@@ -258,7 +258,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
         UIView.setAnimationsEnabled(false)
-        viewController.didSelectEditionOption(.filter)
+        viewController.didSelectEditionOption(.filter, cell: EditionMenuCollectionCell())
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
     }
@@ -270,7 +270,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
         UIView.setAnimationsEnabled(false)
-        viewController.didSelectEditionOption(.filter)
+        viewController.didSelectEditionOption(.filter, cell: EditionMenuCollectionCell())
         viewController.didConfirmFilters()
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
