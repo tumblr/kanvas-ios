@@ -228,11 +228,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         let cell = collectionController.textCell
         onBeforeSelectingEditionOption(.text, cell: collectionController.textCell)
+        textController.showView(true, options: options, transformations: transformations)
         editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
             self.textController.showConfirmButton(true)
         })
-        
-        textController.showView(true, options: options, transformations: transformations)
     }
 
     func didTapTagButton() {
