@@ -28,6 +28,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     
     private lazy var editionMenuCollectionView = EditionMenuCollectionView()
     private var editionOptions: [EditionOption]
+    private(set) var textCell: EditionMenuCollectionCell?
     
     weak var delegate: EditionMenuCollectionControllerDelegate?
     
@@ -110,6 +111,9 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
             cell.bindTo(option)
             cell.delegate = self
+            if option == .text {
+                textCell = cell
+            }
         }
         return cell
     }

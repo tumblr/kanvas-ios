@@ -226,8 +226,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
-        onBeforeSelectingEditionOption(.text)
-        textController.showConfirmButton(true)
+        let cell = collectionController.textCell
+        onBeforeSelectingEditionOption(.text, cell: collectionController.textCell)
+        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+            self.textController.showConfirmButton(true)
+        })
+        
         textController.showView(true, options: options, transformations: transformations)
     }
 
@@ -339,15 +343,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         case .filter:
             filterController.showView(false)
         case .text:
-            if let selectedCell = selectedCell {
-                editorView.animateReturnOfEditionOption(cell: selectedCell)
-            }
+            editorView.animateReturnOfEditionOption(cell: selectedCell)
             textController.showView(false)
             textController.showConfirmButton(false)
         case .drawing:
-            if let selectedCell = selectedCell {
-                editorView.animateReturnOfEditionOption(cell: selectedCell)
-            }
+            editorView.animateReturnOfEditionOption(cell: selectedCell)
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
         case .media:
