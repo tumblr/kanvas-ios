@@ -12,6 +12,7 @@ import XCTest
 import Utils
 
 class MediaExporterStub: MediaExporting {
+    var backgroundFillColor: CGColor = UIColor.clear.cgColor
     var filterType: FilterType = .passthrough
     var imageOverlays: [CGImage] = []
 
@@ -238,6 +239,40 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let segments = getPhotoSegment()
         let delegate = newDelegateStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
+        FBSnapshotVerifyView(viewController.view)
+    }
+
+    func testEditorShowsTagButton() {
+        let settings = CameraSettings()
+        settings.showTagButtonInEditor = true
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
+        FBSnapshotVerifyView(viewController.view)
+    }
+
+    func testEditorWithFiltersOpenHidesTagButton() {
+        let settings = CameraSettings()
+        settings.showTagButtonInEditor = true
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
+        UIView.setAnimationsEnabled(false)
+        viewController.didSelectEditionOption(.filter)
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(viewController.view)
+    }
+
+    func testEditorWhenClosingFiltersShowsTagButton() {
+        let settings = CameraSettings()
+        settings.showTagButtonInEditor = true
+        let segments = getPhotoSegment()
+        let delegate = newDelegateStub()
+        let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
+        UIView.setAnimationsEnabled(false)
+        viewController.didSelectEditionOption(.filter)
+        viewController.didConfirmFilters()
+        UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
     }
 }

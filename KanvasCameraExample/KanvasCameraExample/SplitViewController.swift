@@ -28,9 +28,13 @@ import SharedUI
 
     private let kanvasSettings: CameraSettings
 
+    private var openedKanvasWithTap: Bool = false
+    private var closedKanvasWithTap: Bool = false
+
     private lazy var kanvasController: KanvasDashboardController = {
         let kanvasDashboardController = KanvasDashboardController(settings: kanvasSettings)
         kanvasDashboardController.delegate = self
+        kanvasDashboardController.stateDelegate = self
         return kanvasDashboardController
     }()
 
@@ -109,10 +113,12 @@ extension SplitViewController: DashboardPagingController {
     }
 
     func navigateToKanvas() {
+        openedKanvasWithTap = true
         pageViewController?.moveToViewController(kanvasController, animated: true, direction: .reverse)
     }
 
     @objc func navigateFromKanvas() {
+        closedKanvasWithTap = true
         pageViewController?.moveToViewController(tumblrTabBarController, animated: true, direction: .forward)
     }
 
@@ -142,6 +148,20 @@ extension SplitViewController: KanvasDashboardControllerDelegate {
     }
 }
 
+extension SplitViewController: KanvasDashboardStateDelegate {
+    var kanvasDashboardAnalyticsProvider: KanvasCameraAnalyticsProvider {
+        return KanvasCameraAnalyticsStub()
+    }
+
+    var kanvasDashboardBlogUUID: String? {
+        return nil
+    }
+
+    var kanvasDashboardUnloadStrategy: KanvasDashboardController.UnloadStrategy {
+        return .never
+    }
+}
+
 extension SplitViewController: TMPageViewControllerDelegate {
     func canMoveToViewController(_ viewController: UIViewController) -> Bool {
         return true
@@ -149,19 +169,21 @@ extension SplitViewController: TMPageViewControllerDelegate {
     
     func pageWillBecomeVisible(_ viewController: UIViewController) {
         if viewController == kanvasController {
-            kanvasController.pageWillBecomeVisible()
+            kanvasController.pageWillBecomeVisible(tapped: openedKanvasWithTap)
         }
     }
 
     func pageDidBecomeHidden(_ viewController: UIViewController) {
         if viewController == kanvasController {
-            kanvasController.pageDidBecomeHidden()
+            kanvasController.pageDidBecomeHidden(tapped: closedKanvasWithTap)
+            closedKanvasWithTap = false
         }
     }
 
     func pageGainedFocus(_ viewController: UIViewController) {
         if viewController == kanvasController {
-            kanvasController.pageGainedFocus()
+            kanvasController.pageGainedFocus(tapped: openedKanvasWithTap)
+            openedKanvasWithTap = false
         }
     }
 }

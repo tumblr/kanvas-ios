@@ -49,7 +49,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Current applied filter type
     var currentFilterType: FilterType? {
-        return filteredInputViewController?.currentFilter
+        return filteredInputViewControllerInstance?.currentFilter
     }
 
     private var filteredInputViewControllerInstance: FilteredInputViewController?
@@ -328,7 +328,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         // have to rebuild the filtered input display setup
-        filteredInputViewController?.reset()
+        filteredInputViewControllerInstance?.reset()
     }
 
     /// Changes the current output modes corresponding to camera mode
@@ -474,7 +474,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Applies the filter
     func applyFilter(filterType: FilterType) {
-        filteredInputViewController?.applyFilter(type: filterType)
+        filteredInputViewControllerInstance?.applyFilter(type: filterType)
     }
     
     /// Starts the current audio session
@@ -727,7 +727,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     func cameraDidTakePhoto(image: UIImage?) -> UIImage? {
-        let filteredImage = filteredInputViewController?.filterImageWithCurrentPipeline(image: image)
+        let filteredImage = filteredInputViewControllerInstance?.filterImageWithCurrentPipeline(image: image)
         return filteredImage ?? image
     }
 
@@ -737,7 +737,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             recorder?.processAudioSampleBuffer(sampleBuffer)
         }
         else if output == videoDataOutput {
-            filteredInputViewController?.filterSampleBuffer(sampleBuffer)
+            filteredInputViewControllerInstance?.filterSampleBuffer(sampleBuffer)
             if !settings.features.openGLCapture {
                 recorder?.processVideoSampleBuffer(sampleBuffer)
             }

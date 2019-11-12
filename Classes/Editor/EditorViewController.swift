@@ -94,6 +94,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             player.filterType = filterType
         }
     }
+    private var backgroundFillColor: CGColor = UIColor.clear.cgColor
 
     weak var delegate: EditorControllerDelegate?
     
@@ -269,6 +270,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private func createFinalVideo(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
+        exporter.backgroundFillColor = backgroundFillColor
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
             performUIUpdate {
@@ -286,6 +288,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private func createFinalImage(image: UIImage, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
+        exporter.backgroundFillColor = backgroundFillColor
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
@@ -327,7 +330,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         delegate?.dismissButtonPressed()
     }
     
-    func closeMenuButtonPressed() {
+    func confirmMenuButtonPressed() {
         guard let editionOption = openedMenu else { return }
         
         switch editionOption {
@@ -344,6 +347,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         collectionController.showView(true)
         showConfirmButton(true)
         showCloseButton(true)
+        showTagButton(true)
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
@@ -370,12 +374,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         collectionController.showView(false)
         showConfirmButton(false)
         showCloseButton(false)
+        showTagButton(false)
     }
     
     // MARK: - EditorFilterControllerDelegate
     
     func didConfirmFilters() {
-        closeMenuButtonPressed()
+        confirmMenuButtonPressed()
     }
     
     func didSelectFilter(_ filterItem: FilterItem) {
@@ -387,7 +392,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didConfirmDrawing() {
         analyticsProvider?.logEditorDrawingConfirm()
-        closeMenuButtonPressed()
+        confirmMenuButtonPressed()
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
@@ -398,6 +403,15 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didEndStrokeSelectorAnimation() {
         delegate?.didEndStrokeSelectorAnimation()
     }
+
+    func didFillBackground(mode: CGBlendMode, color: CGColor) {
+        if mode == .normal {
+            backgroundFillColor = color
+        }
+        else if mode == .clear {
+            backgroundFillColor = UIColor.clear.cgColor
+        }
+    }
     
     // MARK: - EditorTextControllerDelegate
     
@@ -405,7 +419,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         if options.haveText {
             editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
         }
-        closeMenuButtonPressed()
+        confirmMenuButtonPressed()
     }
     
     func didMoveToolsUp() {
@@ -464,6 +478,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     /// - Parameter show: true to show, false to hide
     func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
+    }
+
+    /// shows or hides the tag button (#)
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTagButton(_ show: Bool) {
+        editorView.showTagButton(show)
     }
     
     /// shows or hides the editor menu and the back button
