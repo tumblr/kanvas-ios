@@ -411,7 +411,7 @@ final class MediaPlayer {
     }
 }
 
-extension MediaPlayer: RenderingDelegate {
+extension MediaPlayer: RendererDelegate {
 
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         self.currentPixelBuffer = pixelBuffer

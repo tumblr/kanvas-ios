@@ -8,7 +8,7 @@
 import XCTest
 import CoreMedia
 
-class RendererDelegateStub: RenderingDelegate {
+class RendererDelegateStub: RendererDelegate {
     var calledRendererReadyForDisplay = false
     var calledRendererFilteredPixelBufferReady = false
     var calledRendererRanOutOfBuffers = false

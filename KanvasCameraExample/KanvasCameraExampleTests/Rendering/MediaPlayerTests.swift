@@ -25,7 +25,7 @@ class MediaPlayerTests: XCTestCase {
 
         var startTime: TimeInterval?
 
-        weak var delegate: RenderingDelegate?
+        weak var delegate: RendererDelegate?
 
         var filterType: FilterType = .passthrough
         var imageOverlays: [CGImage] = []

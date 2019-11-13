@@ -10,11 +10,32 @@ import Foundation
 import OpenGLES
 import GLKit
 
+/// Callbacks for rendering
+protocol RendererDelegate: class {
+    /// Called when renderer has a processed pixel buffer ready for display. This may skip frames, so it's only
+    /// intended to be used for display purposes.
+    ///
+    /// - Parameters:
+    ///   - pixelBuffer: the filtered pixel buffer
+    func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer)
+
+    /// Called when renderer has a processed pixel buffer ready. This is called for every frame, so this can be
+    /// used for recording purposes.
+    ///
+    /// - Parameters:
+    ///   - pixelBuffer: the filtered pixel buffer
+    ///   - presentationTime: The append time
+    func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime)
+
+    /// Called when no buffers are available
+    func rendererRanOutOfBuffers()
+}
+
 /// Renders pixel buffers with open gl
 final class Renderer: Rendering {
 
     /// Optional delegate
-    weak var delegate: RenderingDelegate?
+    weak var delegate: RendererDelegate?
 
     /// OpenGL Context
     let glContext: EAGLContext?
