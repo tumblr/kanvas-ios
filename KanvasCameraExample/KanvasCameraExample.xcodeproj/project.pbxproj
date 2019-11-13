@@ -1232,7 +1232,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"GLES_SILENCE_DEPRECATION=1",
 				);
 				INFOPLIST_FILE = KanvasCameraExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1258,7 +1257,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"GLES_SILENCE_DEPRECATION=1",
 				);
 				INFOPLIST_FILE = KanvasCameraExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

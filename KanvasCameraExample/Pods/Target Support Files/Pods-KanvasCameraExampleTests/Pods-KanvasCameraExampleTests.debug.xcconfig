@@ -1,6 +1,6 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 FRAMEWORK_SEARCH_PATHS = $(inherited) "$(PLATFORM_DIR)/Developer/Library/Frameworks" "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase" "${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera" "${PODS_CONFIGURATION_BUILD_DIR}/SharedUI" "${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme" "${PODS_CONFIGURATION_BUILD_DIR}/Utils"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 GLES_SILENCE_DEPRECATION=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera/KanvasCamera.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/SharedUI/SharedUI.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme/TumblrTheme.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Utils/Utils.framework/Headers"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
 OTHER_LDFLAGS = $(inherited) -framework "FBSnapshotTestCase" -framework "Foundation" -framework "GLKit" -framework "KanvasCamera" -framework "OpenGLES" -framework "QuartzCore" -framework "SharedUI" -framework "TumblrTheme" -framework "UIKit" -framework "Utils" -framework "XCTest"
