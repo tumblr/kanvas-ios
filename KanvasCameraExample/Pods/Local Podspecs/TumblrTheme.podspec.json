@@ -11,7 +11,7 @@
   },
   "homepage": "https://github.tumblr.net/TumblrMobile/orangina",
   "platforms": {
-    "ios": "11.0"
+    "ios": "12.0"
   },
   "requires_arc": true,
   "frameworks": [
