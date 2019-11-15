@@ -70,6 +70,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     private let toolsContainer: UIView
     private let mainMenuContainer: UIView
     private let colorPickerContainer: UIView
+    private let topButtonsContainer: UIView
     
     // Main menu
     private let fontSelector: UIButton
@@ -84,6 +85,11 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     // Color selector
     var colorSelectorOrigin: CGPoint {
         return colorPickerContainer.convert(eyeDropper.center, to: self)
+    }
+    
+    /// Confirm button location expressed in screen coordinates
+    var confirmButtonLocation: CGPoint {
+        return topButtonsContainer.convert(confirmButton.center, to: nil)
     }
     
     // Internal properties
@@ -197,6 +203,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         toolsContainer = UIView()
         mainMenuContainer = UIView()
         colorPickerContainer = UIView()
+        topButtonsContainer = IgnoreTouchesView()
         alignmentSelector = UIButton()
         fontSelector = UIButton()
         highlightSelector = UIButton()
@@ -213,6 +220,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     
     private func setupViews() {
         setUpMainTextView()
+        setUpTopButtonsContainer()
         setUpConfirmButton()
         setUpToolsContainer()
         setUpMainMenuContainer()
@@ -250,21 +258,37 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     }
     
     /// Sets up the confirmation button with a check mark
+    private func setUpTopButtonsContainer() {
+        topButtonsContainer.accessibilityIdentifier = "Editor Text Top Buttons Container"
+        topButtonsContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(topButtonsContainer)
+        
+        NSLayoutConstraint.activate([
+            topButtonsContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topMargin),
+            topButtonsContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            topButtonsContainer.heightAnchor.constraint(equalToConstant: Constants.confirmButtonSize),
+            topButtonsContainer.widthAnchor.constraint(equalToConstant: Constants.confirmButtonSize)
+        ])
+    }
+    
+    /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
         confirmButton.accessibilityIdentifier = "Editor Text Confirm Button"
         confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(confirmButton)
+        topButtonsContainer.addSubview(confirmButton)
         
         NSLayoutConstraint.activate([
-            confirmButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topMargin),
-            confirmButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            confirmButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor),
+            confirmButton.centerYAnchor.constraint(equalTo: topButtonsContainer.centerYAnchor),
             confirmButton.heightAnchor.constraint(equalToConstant: Constants.confirmButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: Constants.confirmButtonSize)
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
         confirmButton.addGestureRecognizer(tapRecognizer)
+        
+        confirmButton.alpha = 0
     }
     
     /// Sets up the container that holds the main menu and the color picker menu
@@ -534,12 +558,12 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         toolsContainer.transform = CGAffineTransform(translationX: 0, y: -distance)
         toolsContainer.alpha = 1
         mainTextView.alpha = 1
-        confirmButton.alpha = 1
+        topButtonsContainer.alpha = 1
     }
     
     /// Moves the text view and the tools menu to their original position
     func moveToolsDown() {
-        confirmButton.alpha = 0
+        topButtonsContainer.alpha = 0
         toolsContainer.alpha = 0
         toolsContainer.transform = .identity
         
@@ -549,6 +573,13 @@ final class EditorTextView: UIView, MainTextViewDelegate {
             mainTextView.setNeedsLayout()
             mainTextView.layoutIfNeeded()
         }
+    }
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        confirmButton.alpha = show ? 1 : 0
     }
     
     // MARK: - Private utilitites

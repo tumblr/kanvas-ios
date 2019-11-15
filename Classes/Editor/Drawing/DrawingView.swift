@@ -110,6 +110,11 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         return colorPickerContainer.convert(eyeDropperButton.center, to: self)
     }
     
+    /// Confirm button location expressed in screen coordinates
+    var confirmButtonLocation: CGPoint {
+        return topButtonContainer.convert(confirmButton.center, to: nil)
+    }
+    
     // Color collection
     let colorCollection: UIView
     
@@ -275,6 +280,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         topButtonContainer.addArrangedSubview(confirmButton)
         topButtonContainer.addArrangedSubview(undoButton)
         topButtonContainer.addArrangedSubview(eraseButton)
+        
+        confirmButton.alpha = 0
     }
     
     /// Sets up a view that holds the main menu and also the color picker
@@ -617,5 +624,12 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     func didEndTouches() {
         showTools(show: true)
+    }
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        confirmButton.alpha = show ? 1 : 0
     }
 }

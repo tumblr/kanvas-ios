@@ -87,6 +87,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let exporterClass: MediaExporting.Type
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
+    private var selectedCell: EditionMenuCollectionCell?
 
     private let player: MediaPlayer
     private var filterType: FilterType? {
@@ -225,8 +226,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
-        onBeforeSelectingEditionOption(.text)
+        let cell = collectionController.textCell
+        onBeforeSelectingEditionOption(.text, cell: cell)
         textController.showView(true, options: options, transformations: transformations)
+        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+            self.textController.showConfirmButton(true)
+        })
     }
 
     func didTapTagButton() {
@@ -337,9 +342,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         case .filter:
             filterController.showView(false)
         case .text:
+            editorView.animateReturnOfEditionOption(cell: selectedCell)
             textController.showView(false)
+            textController.showConfirmButton(false)
         case .drawing:
+            editorView.animateReturnOfEditionOption(cell: selectedCell)
             drawingController.showView(false)
+            drawingController.showConfirmButton(false)
         case .media:
             break
         }
@@ -352,8 +361,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - EditionMenuCollectionControllerDelegate
     
-    func didSelectEditionOption(_ editionOption: EditionOption) {
-        onBeforeSelectingEditionOption(editionOption)
+    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
+        onBeforeSelectingEditionOption(editionOption, cell: cell)
         
         switch editionOption {
         case .filter:
@@ -361,15 +370,22 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             filterController.showView(true)
         case .text:
             textController.showView(true)
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+                self.textController.showConfirmButton(true)
+            })
         case .drawing:
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
+            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: {
+                self.drawingController.showConfirmButton(true)
+            })
         case .media:
             break
         }
     }
     
-    private func onBeforeSelectingEditionOption(_ editionOption: EditionOption) {
+    private func onBeforeSelectingEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+        selectedCell = cell
         openedMenu = editionOption
         collectionController.showView(false)
         showConfirmButton(false)

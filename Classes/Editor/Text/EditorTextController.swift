@@ -87,6 +87,11 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         return controller
     }()
     
+    /// Confirm button location expressed in screen coordinates
+    var confirmButtonLocation: CGPoint {
+        return textView.confirmButtonLocation
+    }
+    
     // MARK: - Initializers
     
     init() {
@@ -274,6 +279,13 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         else {
             hide()
         }
+    }
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        textView.showConfirmButton(show)
     }
     
     // MARK: - Show & Hide
