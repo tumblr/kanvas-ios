@@ -121,12 +121,16 @@
 		625B06B634038CB2C18BCACDF0299D84 /* UIViewController+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F9D6428FDA874DEB20C5B7F8A3D58F /* UIViewController+Orientation.swift */; };
 		62EBD13646D45BC162F5EBB1419BC1F0 /* NumTypes+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBCE24AE8D104317BB147CFC78B7701 /* NumTypes+Conversion.swift */; };
 		63E18A42D2A7AF509835F2845A3B7D19 /* OptionsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E131A57919B2929FCAE30652A294ABDF /* OptionsStackView.swift */; };
-		657A02F52388262B0039FEEE /* StickerCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A02EE2388262B0039FEEE /* StickerCollectionController.swift */; };
-		657A02F62388262B0039FEEE /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A02EF2388262B0039FEEE /* Sticker.swift */; };
-		657A02F72388262B0039FEEE /* MediaDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A02F12388262B0039FEEE /* MediaDrawerController.swift */; };
-		657A02F82388262B0039FEEE /* StickerCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A02F22388262B0039FEEE /* StickerCollectionView.swift */; };
-		657A02F92388262B0039FEEE /* StickerCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A02F32388262B0039FEEE /* StickerCollectionCell.swift */; };
-		657A02FA2388262B0039FEEE /* MediaDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A02F42388262B0039FEEE /* MediaDrawerView.swift */; };
+		65E7DA102388267F00A8FDCD /* StickerCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA052388267F00A8FDCD /* StickerCollectionController.swift */; };
+		65E7DA112388267F00A8FDCD /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA062388267F00A8FDCD /* Sticker.swift */; };
+		65E7DA122388267F00A8FDCD /* StickerCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA072388267F00A8FDCD /* StickerCollectionView.swift */; };
+		65E7DA132388267F00A8FDCD /* StickerCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA082388267F00A8FDCD /* StickerCollectionCell.swift */; };
+		65E7DA142388267F00A8FDCD /* DrawerTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA0A2388267F00A8FDCD /* DrawerTabBarController.swift */; };
+		65E7DA152388267F00A8FDCD /* DrawerTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA0B2388267F00A8FDCD /* DrawerTabBarView.swift */; };
+		65E7DA162388267F00A8FDCD /* DrawerTabBarOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA0C2388267F00A8FDCD /* DrawerTabBarOption.swift */; };
+		65E7DA172388267F00A8FDCD /* DrawerTabBarOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA0D2388267F00A8FDCD /* DrawerTabBarOptionCell.swift */; };
+		65E7DA182388267F00A8FDCD /* MediaDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA0E2388267F00A8FDCD /* MediaDrawerController.swift */; };
+		65E7DA192388267F00A8FDCD /* MediaDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7DA0F2388267F00A8FDCD /* MediaDrawerView.swift */; };
 		68A13044882C1164BA466A6FAC7AE8A7 /* FilteredInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0129BC9003CE70040D0E9A171115FFF9 /* FilteredInputViewController.swift */; };
 		68E56593B81E21BB7D495D98B64448BA /* CameraRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601AE565CF3AFA708FCF543E3A527BF0 /* CameraRecorder.swift */; };
 		69D018C4F88053CB1BC5D89771C75BA5 /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2A0FCC9B85A4FFB97FEF4EA02EFEC8 /* EditorTextView.swift */; };
@@ -514,13 +518,17 @@
 		650A03C36A6E910271DD530620A07415 /* UIColor+Util.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIColor+Util.swift"; path = "Source/UIColor+Util.swift"; sourceTree = "<group>"; };
 		655924240AC0A32F6D21B2F86945A385 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		6579F760622EFE89EEA741DB7D9A3906 /* SharedUI-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SharedUI-Info.plist"; sourceTree = "<group>"; };
-		657A02EE2388262B0039FEEE /* StickerCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionController.swift; sourceTree = "<group>"; };
-		657A02EF2388262B0039FEEE /* Sticker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
-		657A02F12388262B0039FEEE /* MediaDrawerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrawerController.swift; sourceTree = "<group>"; };
-		657A02F22388262B0039FEEE /* StickerCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionView.swift; sourceTree = "<group>"; };
-		657A02F32388262B0039FEEE /* StickerCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionCell.swift; sourceTree = "<group>"; };
-		657A02F42388262B0039FEEE /* MediaDrawerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrawerView.swift; sourceTree = "<group>"; };
 		659C89BCA338C32B727680867086503A /* TumblrTheme-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TumblrTheme-prefix.pch"; sourceTree = "<group>"; };
+		65E7DA052388267F00A8FDCD /* StickerCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionController.swift; sourceTree = "<group>"; };
+		65E7DA062388267F00A8FDCD /* Sticker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
+		65E7DA072388267F00A8FDCD /* StickerCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionView.swift; sourceTree = "<group>"; };
+		65E7DA082388267F00A8FDCD /* StickerCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionCell.swift; sourceTree = "<group>"; };
+		65E7DA0A2388267F00A8FDCD /* DrawerTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerTabBarController.swift; sourceTree = "<group>"; };
+		65E7DA0B2388267F00A8FDCD /* DrawerTabBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerTabBarView.swift; sourceTree = "<group>"; };
+		65E7DA0C2388267F00A8FDCD /* DrawerTabBarOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerTabBarOption.swift; sourceTree = "<group>"; };
+		65E7DA0D2388267F00A8FDCD /* DrawerTabBarOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerTabBarOptionCell.swift; sourceTree = "<group>"; };
+		65E7DA0E2388267F00A8FDCD /* MediaDrawerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrawerController.swift; sourceTree = "<group>"; };
+		65E7DA0F2388267F00A8FDCD /* MediaDrawerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrawerView.swift; sourceTree = "<group>"; };
 		6626B2D657E4A95D5A23CADAB02281C0 /* TagsViewTagCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsViewTagCell.swift; sourceTree = "<group>"; };
 		66DBB329133057B3ADAC708F4B15BFBB /* ColorSelectorController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorSelectorController.swift; sourceTree = "<group>"; };
 		66E4E7EAD168055DB472FC0BA6425415 /* TimelineContaining.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TimelineContaining.swift; path = Source/TimelineContaining.swift; sourceTree = "<group>"; };
@@ -899,7 +907,7 @@
 		3AB349FF5FA584CD14F4D2C84B83ECB0 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				657A02ED2388262B0039FEEE /* Media */,
+				65E7DA032388267F00A8FDCD /* Media */,
 				560B21D365E9A8042996425F5B28630C /* EditionMenuCollectionCell.swift */,
 				EE540A99BC511E9C74AFCC78B18BE13E /* EditionMenuCollectionController.swift */,
 				646502F7F1416F9DC121D3C9F01EB049 /* EditionMenuCollectionView.swift */,
@@ -1075,23 +1083,35 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		657A02ED2388262B0039FEEE /* Media */ = {
+		65E7DA032388267F00A8FDCD /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				657A02EE2388262B0039FEEE /* StickerCollectionController.swift */,
-				657A02EF2388262B0039FEEE /* Sticker.swift */,
-				657A02F02388262B0039FEEE /* TabBar */,
-				657A02F12388262B0039FEEE /* MediaDrawerController.swift */,
-				657A02F22388262B0039FEEE /* StickerCollectionView.swift */,
-				657A02F32388262B0039FEEE /* StickerCollectionCell.swift */,
-				657A02F42388262B0039FEEE /* MediaDrawerView.swift */,
+				65E7DA042388267F00A8FDCD /* Stickers */,
+				65E7DA092388267F00A8FDCD /* TabBar */,
+				65E7DA0E2388267F00A8FDCD /* MediaDrawerController.swift */,
+				65E7DA0F2388267F00A8FDCD /* MediaDrawerView.swift */,
 			);
 			path = Media;
 			sourceTree = "<group>";
 		};
-		657A02F02388262B0039FEEE /* TabBar */ = {
+		65E7DA042388267F00A8FDCD /* Stickers */ = {
 			isa = PBXGroup;
 			children = (
+				65E7DA052388267F00A8FDCD /* StickerCollectionController.swift */,
+				65E7DA062388267F00A8FDCD /* Sticker.swift */,
+				65E7DA072388267F00A8FDCD /* StickerCollectionView.swift */,
+				65E7DA082388267F00A8FDCD /* StickerCollectionCell.swift */,
+			);
+			path = Stickers;
+			sourceTree = "<group>";
+		};
+		65E7DA092388267F00A8FDCD /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				65E7DA0A2388267F00A8FDCD /* DrawerTabBarController.swift */,
+				65E7DA0B2388267F00A8FDCD /* DrawerTabBarView.swift */,
+				65E7DA0C2388267F00A8FDCD /* DrawerTabBarOption.swift */,
+				65E7DA0D2388267F00A8FDCD /* DrawerTabBarOptionCell.swift */,
 			);
 			path = TabBar;
 			sourceTree = "<group>";
@@ -1896,6 +1916,7 @@
 				20531BB389086F60F71C000E1D855161 /* AlphaBlendFilter.swift in Sources */,
 				8DD2630D1CE682EFB2232FCD226335FA /* Array+Move.swift in Sources */,
 				BDF7190D6A093B77DC43638DBA12FAE0 /* Array+Object.swift in Sources */,
+				65E7DA152388267F00A8FDCD /* DrawerTabBarView.swift in Sources */,
 				BEB39F664FAC016BB4BBC07F3A7D0BF7 /* Array+Rotate.swift in Sources */,
 				6DA8579D4E3CC73ED0F14AF50D9294A2 /* AVAssetTrack+transform.swift in Sources */,
 				BA685633796C58E44B2B12303A56C6C1 /* AVURLAsset+Thumbnail.swift in Sources */,
@@ -1929,7 +1950,7 @@
 				B0D0B10CD9383E7317282F59C17359A8 /* ColorPickerController.swift in Sources */,
 				273348E402BD64D25472A8576704B602 /* ColorPickerView.swift in Sources */,
 				DBA72BC4A5965E9B1679B08F40124675 /* ColorSelectorController.swift in Sources */,
-				657A02F82388262B0039FEEE /* StickerCollectionView.swift in Sources */,
+				65E7DA162388267F00A8FDCD /* DrawerTabBarOption.swift in Sources */,
 				88C3C5047DA9FE5D76AB3402012EFF17 /* ColorSelectorView.swift in Sources */,
 				A35F5DD1DF023E9ABB1F8821B76E0D9C /* ColorThief.swift in Sources */,
 				4B47E14C77ECB5BB0CA72299CADCB73A /* ConicalGradientLayer.swift in Sources */,
@@ -1949,9 +1970,8 @@
 				39AC3933CEEC0D0373F0C4144122D73B /* EditorFilterView.swift in Sources */,
 				3E6C2E3F302436B8EB92A928D8D63A07 /* EditorTextController.swift in Sources */,
 				69D018C4F88053CB1BC5D89771C75BA5 /* EditorTextView.swift in Sources */,
-				657A02F72388262B0039FEEE /* MediaDrawerController.swift in Sources */,
 				345B5B58830E9D3719F61BDFB3CD1043 /* EditorView.swift in Sources */,
-				657A02F62388262B0039FEEE /* Sticker.swift in Sources */,
+				65E7DA112388267F00A8FDCD /* Sticker.swift in Sources */,
 				F9DCA07DB45A96C96BFA5566FB1B9E80 /* EditorViewController.swift in Sources */,
 				10CC8293AF7024E4F1F7B3005C8C5721 /* EMInterferenceFilter.swift in Sources */,
 				603174D6EB2F92652249D1B533AC7AA5 /* ExtendedButton.swift in Sources */,
@@ -1961,7 +1981,7 @@
 				11A84279AA2FAB996D9EC44E04F5E7A1 /* FilterCollectionCell.swift in Sources */,
 				6D14A0E3A9177646A967869E23154FFA /* FilterCollectionInnerCell.swift in Sources */,
 				22FA536B4C21A8304E0E0E29AD797B9F /* FilterCollectionView.swift in Sources */,
-				657A02F52388262B0039FEEE /* StickerCollectionController.swift in Sources */,
+				65E7DA102388267F00A8FDCD /* StickerCollectionController.swift in Sources */,
 				68A13044882C1164BA466A6FAC7AE8A7 /* FilteredInputViewController.swift in Sources */,
 				5989A37E92D4815C1EC6A3EE98AD8A8F /* FilterFactory.swift in Sources */,
 				0A80D0F03AE5094F3DEB7D22E690CC5C /* FilterItem.swift in Sources */,
@@ -1981,9 +2001,11 @@
 				001CA4C3E9B42549A83105592D4A2978 /* IgnoreTouchesCollectionView.swift in Sources */,
 				37893A6A11BA2772181D714C4F9F7DC8 /* IgnoreTouchesView.swift in Sources */,
 				93CDCE03BD6067F0F2D711BE82A88C2C /* ImagePoolFilter.swift in Sources */,
+				65E7DA142388267F00A8FDCD /* DrawerTabBarController.swift in Sources */,
 				6D70757C8746405C3308B9A0270B6051 /* ImagePreviewController.swift in Sources */,
 				DA11877AD6505FF02EF5276456C2E803 /* IndexPath+Order.swift in Sources */,
 				38C34CCCF4493654FEDF29FCA1A442D1 /* KanvasCamera-dummy.m in Sources */,
+				65E7DA132388267F00A8FDCD /* StickerCollectionCell.swift in Sources */,
 				6F499098E08BA00EB3A519030FF41C3D /* KanvasCameraAnalyticsProvider.swift in Sources */,
 				2208A4B47552FDBE9539E2773D2FEF5A /* KanvasCameraColors.swift in Sources */,
 				3291749DA397AB6B6F26FF59C038DD6F /* KanvasCameraImages.swift in Sources */,
@@ -2000,6 +2022,7 @@
 				79F091F666C7960AEF86577E7E9BB5F3 /* MediaClipsCollectionCell.swift in Sources */,
 				37569035E110A5F891EA6686E96E7720 /* MediaClipsCollectionController.swift in Sources */,
 				F312F84D8385F1F0CEC21B3BCCF829B6 /* MediaClipsCollectionView.swift in Sources */,
+				65E7DA192388267F00A8FDCD /* MediaDrawerView.swift in Sources */,
 				5A46DDB757F241ADAFE26C36208C98E6 /* MediaClipsEditorView.swift in Sources */,
 				317193ACB96E132C907E289306C529FA /* MediaClipsEditorViewController.swift in Sources */,
 				FB21852701D4D8B5BB3E51F3D2F19A8A /* MediaExporter.swift in Sources */,
@@ -2009,6 +2032,7 @@
 				7D196B956FDB972BF5B6ECDB87649DB9 /* MirrorTwoFilter.swift in Sources */,
 				5253B3B82C80D93DC6E94AFBB3CC91EA /* MMCQ.swift in Sources */,
 				CF4DCA40755445382E0E6E38B55A3D4D /* ModeButtonView.swift in Sources */,
+				65E7DA122388267F00A8FDCD /* StickerCollectionView.swift in Sources */,
 				026D7802D0890227AA7FCC8561A897B3 /* ModeSelectorAndShootController.swift in Sources */,
 				E08FB8214DAF8339B413B0104E09AAC2 /* ModeSelectorAndShootView.swift in Sources */,
 				2A47C5F2646D4D451970F3502067ADD3 /* MovableTextView.swift in Sources */,
@@ -2027,6 +2051,7 @@
 				562D3FC578FD444D38C2A256CE7727CA /* RGBA.swift in Sources */,
 				F018A4EBAC64205F5D95362E29E29DD6 /* RGBFilter.swift in Sources */,
 				AFD2D65CF6E239D47F6AAAA25939BA25 /* RoundedTexture.swift in Sources */,
+				65E7DA172388267F00A8FDCD /* DrawerTabBarOptionCell.swift in Sources */,
 				C5684FA3D3C98517D67FD572EE58C0FD /* ScrollHandler.swift in Sources */,
 				C0C96AF57C5B358BEC318FFC3EB75373 /* Shader.swift in Sources */,
 				19111DB530E3E3C9278C83CF600EE10A /* Sharpie.swift in Sources */,
@@ -2036,7 +2061,6 @@
 				8D1EC132AA4909A38B632D1E8661A91B /* StrokeSelectorView.swift in Sources */,
 				0132705B6E3C6EDFD0B687B23F0D6464 /* StylableTextView.swift in Sources */,
 				1BC4C33B0F7EA5F2E094495345D561EF /* Synchronized.swift in Sources */,
-				657A02F92388262B0039FEEE /* StickerCollectionCell.swift in Sources */,
 				58965050E8FBAF1A12372A7B3D71F5BE /* TextCanvas.swift in Sources */,
 				EC9F7D28E614D581EEF46EC44DB26139 /* TextOptions.swift in Sources */,
 				C3ECC9F2ADC0B2F77D14CE2F0ABEDB7B /* Texture.swift in Sources */,
@@ -2047,6 +2071,7 @@
 				0AC20F1A45FD5C20CC3F43FBAD2FB77E /* UICollectionView+Cells.swift in Sources */,
 				8195BAF91E1209E98859F27AD2852B98 /* UIColor+Brightness.swift in Sources */,
 				281EC720DF8AE624505A9741BA4354ED /* UIColor+Lerp.swift in Sources */,
+				65E7DA182388267F00A8FDCD /* MediaDrawerController.swift in Sources */,
 				272A11677B8E7730CC376F666E6303CF /* UIFont+Fonts.swift in Sources */,
 				5C6C5A20F9C56486D702D2933723CF6D /* UIFont+Utils.swift in Sources */,
 				5D42028850B53FCD3ED9B44C1AACC4C4 /* UIGestureRecognizer+Active.swift in Sources */,
@@ -2057,7 +2082,6 @@
 				9AA2F223C742B6E5A73623DFC99DF615 /* UIUpdate.swift in Sources */,
 				78427D4CDB5F27C9413B5347D9924CFD /* UIView+Image.swift in Sources */,
 				971C2BE96A68234CBD82253C2E72D487 /* UIView+Layout.swift in Sources */,
-				657A02FA2388262B0039FEEE /* MediaDrawerView.swift in Sources */,
 				79F39FDF7FE3AC53E4832A4F91F9AED3 /* UIViewController+Load.swift in Sources */,
 				4F68C93BC455881E94EC3DE446B412C7 /* VideoCompositor.swift in Sources */,
 				1FC13568AF8EC38983DC838FE0054130 /* VideoOutputHandler.swift in Sources */,

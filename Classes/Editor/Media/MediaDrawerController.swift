@@ -18,9 +18,17 @@ private struct Constants {
 }
 
 /// A view controller that contains the text tools menu
-final class MediaDrawerController: UIViewController, UITabBarControllerDelegate, MediaDrawerViewDelegate, StickerCollectionControllerDelegate {
+final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, DrawerTabBarControllerDelegate, StickerCollectionControllerDelegate {
     
-    weak var mediaDrawerDelegate: MediaDrawerControllerDelegate?
+    weak var delegate: MediaDrawerControllerDelegate?
+    
+    private var openedMenu: UIViewController?
+    
+    private lazy var drawerTabBarController: DrawerTabBarController = {
+        let controller = DrawerTabBarController()
+        controller.delegate = self
+        return controller
+    }()
     
     private lazy var stickerCollectionController: StickerCollectionController = {
         let controller = StickerCollectionController()
@@ -58,20 +66,32 @@ final class MediaDrawerController: UIViewController, UITabBarControllerDelegate,
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        setUpView()
+        openedMenu = stickerCollectionController
         
+        load(childViewController: drawerTabBarController, into: mediaDrawerView.tabBarContainer)
         load(childViewController: stickerCollectionController, into: mediaDrawerView.childContainer)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        mediaDrawerDelegate?.didDismissMediaDrawer()
+        delegate?.didDismissMediaDrawer()
     }
-    
-    // MARK: - Layout
-    
-    private func setUpView() {
         
+    // MARK: - DrawerTabBarControllerDelegate
+    
+    func didSelectOption(_ option: DrawerTabBarOption) {
+        let newMenu: UIViewController
+        
+        switch option {
+        case .stickers:
+            newMenu = stickerCollectionController
+        }
+        
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            self.openedMenu?.view.alpha = 0
+            self.openedMenu = newMenu
+            self.openedMenu?.view.alpha = 1
+        })
     }
     
     // MARK: - StickerCollectionControllerDelegate

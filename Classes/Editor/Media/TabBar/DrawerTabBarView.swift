@@ -7,23 +7,26 @@
 import Foundation
 import UIKit
 
-private struct StickerCollectionViewConstants {
-    
+private struct Constants {
+    static let height = DrawerTabBarOptionCell.height
 }
 
 /// Collection view for EditionMenuCollectionController
-final class StickerCollectionView: IgnoreTouchesView {
+final class DrawerTabBarView: IgnoreTouchesView {
+    
+    static let height = Constants.height
     
     let collectionView: UICollectionView
     
     init() {
-        collectionView = StickerInnerCollectionView(frame: .zero, collectionViewLayout: StickerCollectionViewLayout())
+        collectionView = DrawerTabBarCollectionView(frame: .zero, collectionViewLayout: DrawerTabBarCollectionViewLayout())
         collectionView.accessibilityIdentifier = "Sticker Collection View"
         collectionView.backgroundColor = .clear
         
         super.init(frame: .zero)
         
         clipsToBounds = false
+        backgroundColor = .white
         setUpViews()
     }
     
@@ -46,7 +49,7 @@ final class StickerCollectionView: IgnoreTouchesView {
 }
 
 
-private class StickerInnerCollectionView: IgnoreTouchesCollectionView {
+private class DrawerTabBarCollectionView: IgnoreTouchesCollectionView {
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -74,7 +77,7 @@ private class StickerInnerCollectionView: IgnoreTouchesCollectionView {
     }
 }
 
-private class StickerCollectionViewLayout: UICollectionViewFlowLayout {
+private class DrawerTabBarCollectionViewLayout: UICollectionViewFlowLayout {
 
     override init() {
         super.init()
@@ -89,7 +92,7 @@ private class StickerCollectionViewLayout: UICollectionViewFlowLayout {
     private func configure() {
         scrollDirection = .horizontal
         itemSize = UICollectionViewFlowLayout.automaticSize
-        estimatedItemSize = CGSize(width: StickerCollectionCell.width, height: StickerCollectionCell.height)
+        estimatedItemSize = CGSize(width: DrawerTabBarOptionCell.width, height: DrawerTabBarOptionCell.height)
         minimumInteritemSpacing = 0
         minimumLineSpacing = 0
     }

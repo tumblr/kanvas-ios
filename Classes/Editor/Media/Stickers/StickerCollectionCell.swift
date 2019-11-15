@@ -48,7 +48,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter sticker: The sticker to display
     func bindTo(_ sticker: Sticker) {
-        stickerView.image = UIImage()
+        stickerView.image = KanvasCameraImages.filterTypes[.wavePool]!
     }
     
     

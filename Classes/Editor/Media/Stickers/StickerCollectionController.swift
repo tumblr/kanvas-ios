@@ -11,9 +11,10 @@ protocol StickerCollectionControllerDelegate: class {
     func didSelectSticker(_ sticker: Sticker)
 }
 
-/// Constants for Collection Controller
+/// Constants for Sticker Controller
 private struct StickerCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.25
+    static let collectionInset = UIEdgeInsets(top: 60, left: 0, bottom: 0, right: 0)
 }
 
 /// Controller for handling the filter item collection.
@@ -27,6 +28,9 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     /// Initializes the sticker collection
     init() {
         stickers = []
+        for _ in 1...500 {
+            stickers.append(Sticker(image: ""))
+        }
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -52,7 +56,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         stickerCollectionView.collectionView.delegate = self
         stickerCollectionView.collectionView.dataSource = self
     }
-        
+
     // MARK: - Public interface
     
     /// shows or hides the sticker collection
@@ -64,6 +68,12 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         }
     }
     
+    // MARK: - UICollectionViewDelegate
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollView.contentOffset.x = 0.0
+    }
+
     // MARK: - UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

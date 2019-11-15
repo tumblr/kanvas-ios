@@ -80,7 +80,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private lazy var mediaDrawerController: MediaDrawerController = {
         let controller = MediaDrawerController()
-        controller.mediaDrawerDelegate = self
+        controller.delegate = self
         return controller
     }()
     
