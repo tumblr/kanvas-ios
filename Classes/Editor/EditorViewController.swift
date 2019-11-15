@@ -42,7 +42,7 @@ protocol EditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaPlayerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
@@ -75,6 +75,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private lazy var drawingController: DrawingController = {
         let controller = DrawingController(analyticsProvider: analyticsProvider)
         controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var mediaDrawerController: MediaDrawerController = {
+        let controller = MediaDrawerController()
+        controller.mediaDrawerDelegate = self
         return controller
     }()
     
@@ -380,7 +386,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.drawingController.showConfirmButton(true)
             })
         case .media:
-            break
+            openMediaDrawer()
         }
     }
     
@@ -480,6 +486,18 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         addCarouselDefaultColors(image)
     }
 
+    // MARK: - MediaDrawerControllerDelegate
+    
+    func didDismissMediaDrawer() {
+        confirmMenuButtonPressed()
+    }
+    
+    // MARK: - Media Drawer
+    
+    private func openMediaDrawer() {
+        present(mediaDrawerController, animated: true, completion: .none)
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the confirm button
