@@ -165,8 +165,8 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     
     func didTapFontSelector() {
         fonts.rotateLeft()
-        if let newFont = fonts.first {
-            textView.font = newFont
+        if let newFont = fonts.first, let currentFont = textView.font {
+            textView.font = newFont?.withSize(currentFont.pointSize)
         }
     }
     

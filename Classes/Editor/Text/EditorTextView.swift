@@ -116,7 +116,10 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     
     var font: UIFont? {
         get { return mainTextView.font }
-        set { mainTextView.font = newValue }
+        set {
+            mainTextView.font = newValue
+            mainTextView.resizeFont()
+        }
     }
     
     var textColor: UIColor? {
@@ -222,8 +225,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         setUpToolsContainer()
         setUpMainMenuContainer()
         setUpColorPickerContainer()
-        setUpAlignmentSelector()
         setUpFontSelector()
+        setUpAlignmentSelector()
         setUpHighlightSelector()
         setUpColorCollection()
         setUpOpenColorPicker()
@@ -242,10 +245,11 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         mainTextView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainTextView)
         
-        mainTextViewHeight = mainTextView.heightAnchor.constraint(equalTo: heightAnchor)
+        let topMargin = Constants.topMargin + Constants.confirmButtonSize
+        mainTextViewHeight = mainTextView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, constant: -topMargin)
         mainTextViewHeight?.isActive = true
         NSLayoutConstraint.activate([
-            mainTextView.topAnchor.constraint(equalTo: topAnchor),
+            mainTextView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topMargin),
             mainTextView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.textViewLeftMargin),
             mainTextView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.textViewRightMargin),
         ])
@@ -316,23 +320,6 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         colorPickerContainer.alpha = 0
     }
     
-    /// Sets up the alignment selector button
-    private func setUpAlignmentSelector() {
-        alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
-        alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
-        mainMenuContainer.addSubview(alignmentSelector)
-        
-        NSLayoutConstraint.activate([
-            alignmentSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
-            alignmentSelector.leadingAnchor.constraint(equalTo: mainMenuContainer.leadingAnchor, constant: Constants.leftMargin),
-            alignmentSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
-            alignmentSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
-        ])
-        
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(alignmentSelectorTapped(recognizer:)))
-        alignmentSelector.addGestureRecognizer(tapRecognizer)
-    }
-    
     /// Sets up the font selector button
     private func setUpFontSelector() {
         fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
@@ -342,13 +329,30 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         NSLayoutConstraint.activate([
             fontSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
-            fontSelector.leadingAnchor.constraint(equalTo: alignmentSelector.trailingAnchor, constant: Constants.customIconMargin),
+            fontSelector.leadingAnchor.constraint(equalTo: mainMenuContainer.leadingAnchor, constant: Constants.leftMargin),
             fontSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
             fontSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(fontSelectorTapped(recognizer:)))
         fontSelector.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the alignment selector button
+    private func setUpAlignmentSelector() {
+        alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
+        alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(alignmentSelector)
+        
+        NSLayoutConstraint.activate([
+            alignmentSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
+            alignmentSelector.leadingAnchor.constraint(equalTo: fontSelector.trailingAnchor, constant: Constants.customIconMargin),
+            alignmentSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
+            alignmentSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
+        ])
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(alignmentSelectorTapped(recognizer:)))
+        alignmentSelector.addGestureRecognizer(tapRecognizer)
     }
     
     /// Sets up the highlight selector button
@@ -359,7 +363,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         NSLayoutConstraint.activate([
             highlightSelector.topAnchor.constraint(equalTo: mainMenuContainer.topAnchor),
-            highlightSelector.leadingAnchor.constraint(equalTo: fontSelector.trailingAnchor, constant: Constants.customIconMargin),
+            highlightSelector.leadingAnchor.constraint(equalTo: alignmentSelector.trailingAnchor, constant: Constants.customIconMargin),
             highlightSelector.heightAnchor.constraint(equalToConstant: Constants.customIconSize),
             highlightSelector.widthAnchor.constraint(equalToConstant: Constants.customIconSize)
         ])
@@ -546,7 +550,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// - Parameter distance: space from original position
     func moveToolsUp(distance: CGFloat) {
         UIView.performWithoutAnimation {
-            mainTextViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin + distance)
+            mainTextViewHeight?.constant = -(Constants.topMargin + Constants.confirmButtonSize + toolsContainer.frame.height + Constants.bottomMargin + distance)
             mainTextView.setNeedsLayout()
             mainTextView.layoutIfNeeded()
         }
@@ -565,7 +569,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         UIView.performWithoutAnimation {
             mainTextView.alpha = 0
-            mainTextViewHeight?.constant = -(toolsContainer.frame.height + Constants.bottomMargin)
+            mainTextViewHeight?.constant = -(Constants.topMargin + Constants.confirmButtonSize + toolsContainer.frame.height + Constants.bottomMargin)
             mainTextView.setNeedsLayout()
             mainTextView.layoutIfNeeded()
         }
