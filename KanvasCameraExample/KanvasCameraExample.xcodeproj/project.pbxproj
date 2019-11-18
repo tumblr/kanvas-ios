@@ -33,6 +33,21 @@
 		651D4B6122CE683B004AB75C /* DrawingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B6022CE683B004AB75C /* DrawingViewTests.swift */; };
 		651DEBA72209F17400476F22 /* ConicalGradientLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */; };
 		651DEBA92209FC4300476F22 /* RGBATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA82209FC4300476F22 /* RGBATests.swift */; };
+		65241ABE2388277D0071E841 /* StickerTypeCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AAD2388277D0071E841 /* StickerTypeCollectionViewTests.swift */; };
+		65241ABF2388277D0071E841 /* StickerTypeCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AAE2388277D0071E841 /* StickerTypeCollectionCellTests.swift */; };
+		65241AC02388277D0071E841 /* StickerTypeCollectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AAF2388277D0071E841 /* StickerTypeCollectionControllerTests.swift */; };
+		65241AC12388277D0071E841 /* StickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AB02388277D0071E841 /* StickerTests.swift */; };
+		65241AC22388277D0071E841 /* StickerCollectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AB22388277D0071E841 /* StickerCollectionControllerTests.swift */; };
+		65241AC32388277D0071E841 /* StickerCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AB32388277D0071E841 /* StickerCollectionViewTests.swift */; };
+		65241AC42388277D0071E841 /* StickerCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AB42388277D0071E841 /* StickerCollectionCellTests.swift */; };
+		65241AC52388277D0071E841 /* StickerMenuControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AB52388277D0071E841 /* StickerMenuControllerTests.swift */; };
+		65241AC62388277D0071E841 /* StickerMenuViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AB62388277D0071E841 /* StickerMenuViewTests.swift */; };
+		65241AC72388277D0071E841 /* DrawerTabBarControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AB82388277D0071E841 /* DrawerTabBarControllerTests.swift */; };
+		65241AC82388277D0071E841 /* DrawerTabBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241AB92388277D0071E841 /* DrawerTabBarCell.swift */; };
+		65241AC92388277D0071E841 /* DrawerTabBarViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241ABA2388277D0071E841 /* DrawerTabBarViewTests.swift */; };
+		65241ACA2388277D0071E841 /* DrawerTabBarOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241ABB2388277D0071E841 /* DrawerTabBarOptionTests.swift */; };
+		65241ACB2388277D0071E841 /* MediaDrawerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241ABC2388277D0071E841 /* MediaDrawerControllerTests.swift */; };
+		65241ACC2388277D0071E841 /* MediaDrawerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65241ABD2388277D0071E841 /* MediaDrawerViewTests.swift */; };
 		65244CDA22BD5A4C0038050F /* ScrollHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65244CD922BD5A4C0038050F /* ScrollHandlerTests.swift */; };
 		652DFA1A22281F00007B1EF5 /* FilterItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1422281F00007B1EF5 /* FilterItemTests.swift */; };
 		653B044A22E911DB005AAFCA /* ColorCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B044722E911DB005AAFCA /* ColorCollectionCellTests.swift */; };
@@ -179,6 +194,21 @@
 		651D4B6022CE683B004AB75C /* DrawingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingViewTests.swift; sourceTree = "<group>"; };
 		651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayerTests.swift; sourceTree = "<group>"; };
 		651DEBA82209FC4300476F22 /* RGBATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBATests.swift; sourceTree = "<group>"; };
+		65241AAD2388277D0071E841 /* StickerTypeCollectionViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerTypeCollectionViewTests.swift; sourceTree = "<group>"; };
+		65241AAE2388277D0071E841 /* StickerTypeCollectionCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerTypeCollectionCellTests.swift; sourceTree = "<group>"; };
+		65241AAF2388277D0071E841 /* StickerTypeCollectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerTypeCollectionControllerTests.swift; sourceTree = "<group>"; };
+		65241AB02388277D0071E841 /* StickerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerTests.swift; sourceTree = "<group>"; };
+		65241AB22388277D0071E841 /* StickerCollectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionControllerTests.swift; sourceTree = "<group>"; };
+		65241AB32388277D0071E841 /* StickerCollectionViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionViewTests.swift; sourceTree = "<group>"; };
+		65241AB42388277D0071E841 /* StickerCollectionCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerCollectionCellTests.swift; sourceTree = "<group>"; };
+		65241AB52388277D0071E841 /* StickerMenuControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerMenuControllerTests.swift; sourceTree = "<group>"; };
+		65241AB62388277D0071E841 /* StickerMenuViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerMenuViewTests.swift; sourceTree = "<group>"; };
+		65241AB82388277D0071E841 /* DrawerTabBarControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerTabBarControllerTests.swift; sourceTree = "<group>"; };
+		65241AB92388277D0071E841 /* DrawerTabBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerTabBarCell.swift; sourceTree = "<group>"; };
+		65241ABA2388277D0071E841 /* DrawerTabBarViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerTabBarViewTests.swift; sourceTree = "<group>"; };
+		65241ABB2388277D0071E841 /* DrawerTabBarOptionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerTabBarOptionTests.swift; sourceTree = "<group>"; };
+		65241ABC2388277D0071E841 /* MediaDrawerControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrawerControllerTests.swift; sourceTree = "<group>"; };
+		65241ABD2388277D0071E841 /* MediaDrawerViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrawerViewTests.swift; sourceTree = "<group>"; };
 		65244CD922BD5A4C0038050F /* ScrollHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollHandlerTests.swift; sourceTree = "<group>"; };
 		652DFA1422281F00007B1EF5 /* FilterItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterItemTests.swift; sourceTree = "<group>"; };
 		653B044722E911DB005AAFCA /* ColorCollectionCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionCellTests.swift; sourceTree = "<group>"; };
@@ -383,6 +413,60 @@
 			path = Drawing;
 			sourceTree = "<group>";
 		};
+		65241AAA2388277D0071E841 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				65241AAB2388277D0071E841 /* Stickers */,
+				65241AB72388277D0071E841 /* TabBar */,
+				65241ABC2388277D0071E841 /* MediaDrawerControllerTests.swift */,
+				65241ABD2388277D0071E841 /* MediaDrawerViewTests.swift */,
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
+		65241AAB2388277D0071E841 /* Stickers */ = {
+			isa = PBXGroup;
+			children = (
+				65241AAC2388277D0071E841 /* StickerType */,
+				65241AB02388277D0071E841 /* StickerTests.swift */,
+				65241AB12388277D0071E841 /* StickerCollection */,
+				65241AB52388277D0071E841 /* StickerMenuControllerTests.swift */,
+				65241AB62388277D0071E841 /* StickerMenuViewTests.swift */,
+			);
+			path = Stickers;
+			sourceTree = "<group>";
+		};
+		65241AAC2388277D0071E841 /* StickerType */ = {
+			isa = PBXGroup;
+			children = (
+				65241AAD2388277D0071E841 /* StickerTypeCollectionViewTests.swift */,
+				65241AAE2388277D0071E841 /* StickerTypeCollectionCellTests.swift */,
+				65241AAF2388277D0071E841 /* StickerTypeCollectionControllerTests.swift */,
+			);
+			path = StickerType;
+			sourceTree = "<group>";
+		};
+		65241AB12388277D0071E841 /* StickerCollection */ = {
+			isa = PBXGroup;
+			children = (
+				65241AB22388277D0071E841 /* StickerCollectionControllerTests.swift */,
+				65241AB32388277D0071E841 /* StickerCollectionViewTests.swift */,
+				65241AB42388277D0071E841 /* StickerCollectionCellTests.swift */,
+			);
+			path = StickerCollection;
+			sourceTree = "<group>";
+		};
+		65241AB72388277D0071E841 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				65241AB82388277D0071E841 /* DrawerTabBarControllerTests.swift */,
+				65241AB92388277D0071E841 /* DrawerTabBarCell.swift */,
+				65241ABA2388277D0071E841 /* DrawerTabBarViewTests.swift */,
+				65241ABB2388277D0071E841 /* DrawerTabBarOptionTests.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
 		652DFA1022281F00007B1EF5 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
@@ -510,6 +594,7 @@
 			children = (
 				651D4B5B22CE67A5004AB75C /* Drawing */,
 				65E46B9922BD22DE004FD226 /* Filters */,
+				65241AAA2388277D0071E841 /* Media */,
 				655C934C234CC9A1008F26AF /* Shared */,
 				65AA995A2310443C00D64232 /* Text */,
 				65E46B9D22BD22DE004FD226 /* EditionMenuCollectionControllerTests.swift */,
@@ -924,6 +1009,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65241AC62388277D0071E841 /* StickerMenuViewTests.swift in Sources */,
 				65AA995C2310494700D64232 /* EditorTextControllerTests.swift in Sources */,
 				653EAB9923180ADC0004974E /* TextCanvasTests.swift in Sources */,
 				6589D13022E91C7900A7357B /* SharpieTests.swift in Sources */,
@@ -945,9 +1031,12 @@
 				ABE4990121370FAB00379F7F /* MediaClipsEditorViewTests.swift in Sources */,
 				6589D13322E91C7900A7357B /* RoundedTextureTests.swift in Sources */,
 				6578F83F22E120BD002B952C /* UIImage+DominantColorsTests.swift in Sources */,
+				65241AC12388277D0071E841 /* StickerTests.swift in Sources */,
 				65244CDA22BD5A4C0038050F /* ScrollHandlerTests.swift in Sources */,
 				0EAE0C89213985E8004CD7FF /* CameraSegmentHandlerStub.swift in Sources */,
+				65241AC52388277D0071E841 /* StickerMenuControllerTests.swift in Sources */,
 				654910EC22EB565E006DE5A1 /* EditorFilterViewTests.swift in Sources */,
+				65241ABE2388277D0071E841 /* StickerTypeCollectionViewTests.swift in Sources */,
 				65E46B9522BD22CA004FD226 /* CameraFilterCollectionControllerTests.swift in Sources */,
 				653D062C22BD2C30007118C5 /* FilterCollectionInnerCellTests.swift in Sources */,
 				764AC470221D8588005C82EC /* ShaderTests.swift in Sources */,
@@ -965,16 +1054,20 @@
 				76ED1DD622C15A9B00E6AF79 /* MediaPickerButtonViewTests.swift in Sources */,
 				6578F83A22E12098002B952C /* MMCQTests.swift in Sources */,
 				AB7263EF212CCBB30044ED96 /* CameraSegmentHandlerTests.swift in Sources */,
+				65241AC02388277D0071E841 /* StickerTypeCollectionControllerTests.swift in Sources */,
 				0EAE0CB12139B966004CD7FF /* CameraPreviewControllerTests.swift in Sources */,
 				0E6450B921B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift in Sources */,
 				653B044B22E911DB005AAFCA /* ColorCollectionViewTests.swift in Sources */,
 				0EDE7A3B216425BD009DB00F /* ExtendedStackViewTests.swift in Sources */,
 				657FB5FC23636BDC00D65F10 /* StylableTextViewTests.swift in Sources */,
 				655C934F234CCA80008F26AF /* ColorSelectorViewTests.swift in Sources */,
+				65241AC72388277D0071E841 /* DrawerTabBarControllerTests.swift in Sources */,
+				65241AC92388277D0071E841 /* DrawerTabBarViewTests.swift in Sources */,
 				6578F83B22E12098002B952C /* ColorThiefTests.swift in Sources */,
 				65E46BA922BD22DE004FD226 /* EditorControllerTests.swift in Sources */,
 				764AC46E221D851B005C82EC /* RendererTests.swift in Sources */,
 				ABE49907213712E100379F7F /* OptionsStackViewTests.swift in Sources */,
+				65241AC32388277D0071E841 /* StickerCollectionViewTests.swift in Sources */,
 				AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */,
 				ABE498FC21370DFD00379F7F /* MediaClipsCollectionControllerTests.swift in Sources */,
 				651DEBA72209F17400476F22 /* ConicalGradientLayerTests.swift in Sources */,
@@ -986,7 +1079,9 @@
 				0EAE0CB42139B9B8004CD7FF /* LoadingIndicatorViewTests.swift in Sources */,
 				654AE16422E8B8E900C8C0E4 /* TextureSelectorControllerTests.swift in Sources */,
 				764AC46A221D84B5005C82EC /* FilterTests.swift in Sources */,
+				65241AC22388277D0071E841 /* StickerCollectionControllerTests.swift in Sources */,
 				651D4B6122CE683B004AB75C /* DrawingViewTests.swift in Sources */,
+				65241ACB2388277D0071E841 /* MediaDrawerControllerTests.swift in Sources */,
 				7669B5A82230E548000D3EB5 /* UIImage+PixelBufferTests.swift in Sources */,
 				65E46B9722BD22CA004FD226 /* CameraFilterCollectionCellTests.swift in Sources */,
 				65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */,
@@ -1002,6 +1097,7 @@
 				653B044C22E911DB005AAFCA /* ColorCollectionControllerTests.swift in Sources */,
 				ABE498FA21370DFD00379F7F /* MediaClipsCollectionViewTests.swift in Sources */,
 				0EAE0C7E21387C39004CD7FF /* ModeButtonViewTests.swift in Sources */,
+				65241AC82388277D0071E841 /* DrawerTabBarCell.swift in Sources */,
 				ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */,
 				6589D13122E91C7900A7357B /* PencilTests.swift in Sources */,
 				6589D13222E91C7900A7357B /* MarkerTests.swift in Sources */,
@@ -1010,22 +1106,26 @@
 				76826A0E2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift in Sources */,
 				654AE16022E8B8CD00C8C0E4 /* StrokeSelectorControllerTests.swift in Sources */,
 				ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */,
+				65241AC42388277D0071E841 /* StickerCollectionCellTests.swift in Sources */,
 				0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */,
 				65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */,
 				0EAE0CB22139B966004CD7FF /* CameraPreviewViewTests.swift in Sources */,
 				652DFA1A22281F00007B1EF5 /* FilterItemTests.swift in Sources */,
 				ABE4991F2137307500379F7F /* QueueTests.swift in Sources */,
 				6578F83E22E120BD002B952C /* CALayer+ColorTests.swift in Sources */,
+				65241ABF2388277D0071E841 /* StickerTypeCollectionCellTests.swift in Sources */,
 				65E46BA622BD22DE004FD226 /* EditionMenuCollectionControllerTests.swift in Sources */,
 				65AA995E2310499100D64232 /* EditorTextViewTests.swift in Sources */,
 				6585AF8223270F9700A0E962 /* MainTextViewTests.swift in Sources */,
 				65E46BA722BD22DE004FD226 /* EditorViewTests.swift in Sources */,
+				65241ACA2388277D0071E841 /* DrawerTabBarOptionTests.swift in Sources */,
 				65B980D8231EB6AF00D3E9F0 /* TrashViewTests.swift in Sources */,
 				653D062E22BD2C49007118C5 /* FilterCollectionTests.swift in Sources */,
 				651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */,
 				764AC467221D8485005C82EC /* FilteredInputViewControllerTests.swift in Sources */,
 				653B044A22E911DB005AAFCA /* ColorCollectionCellTests.swift in Sources */,
 				654910EE22EB5675006DE5A1 /* EditorFilterControllerTests.swift in Sources */,
+				65241ACC2388277D0071E841 /* MediaDrawerViewTests.swift in Sources */,
 				ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */,
 				653B045522E9143C005AAFCA /* HorizontalCollectionLayoutTests.swift in Sources */,
 				651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */,

@@ -107,4 +107,3 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         }
     }
 }
-

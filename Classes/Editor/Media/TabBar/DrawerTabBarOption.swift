@@ -10,7 +10,7 @@ enum DrawerTabBarOption: String {
     var description: String {
         switch self {
         case .stickers:
-            return "Stickers"
+            return NSLocalizedString("Stickers", comment: "Stickers tab text in media drawer")
         }
     }
 }
