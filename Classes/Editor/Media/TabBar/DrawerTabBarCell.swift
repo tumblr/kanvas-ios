@@ -8,15 +8,16 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol DrawerTabBarOptionCellDelegate: class {
+protocol DrawerTabBarCellDelegate: class {
     /// Callback method when tapping a cell
     ///
     /// - Parameters:
     ///   - cell: the cell that was tapped
     ///   - recognizer: the tap gesture recognizer
-    func didTap(cell: DrawerTabBarOptionCell, recognizer: UITapGestureRecognizer)
+    func didTap(cell: DrawerTabBarCell, recognizer: UITapGestureRecognizer)
 }
 
+/// Constants for DrawerTabBarCell
 private struct Constants {
     static let labelHeight: CGFloat = 16
     static let spacing: CGFloat = 4.0
@@ -28,8 +29,8 @@ private struct Constants {
     static let mainColor: UIColor = .black
 }
 
-/// The cell in DrawerTabBarController to display an individual option
-final class DrawerTabBarOptionCell: UICollectionViewCell {
+/// The cell in DrawerTabBarController to display an individual tab
+final class DrawerTabBarCell: UICollectionViewCell {
     
     static let height = Constants.height
     static let width = Constants.width
@@ -37,7 +38,7 @@ final class DrawerTabBarOptionCell: UICollectionViewCell {
     private let label = UILabel()
     private let bottomLine = UIView()
     
-    weak var delegate: DrawerTabBarOptionCellDelegate?
+    weak var delegate: DrawerTabBarCellDelegate?
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,6 +56,7 @@ final class DrawerTabBarOptionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         label.text = nil
+        bottomLine.alpha = 0
     }
     
     // MARK: - Layout
@@ -66,7 +68,7 @@ final class DrawerTabBarOptionCell: UICollectionViewCell {
     
     private func setupBottomLine() {
         contentView.addSubview(bottomLine)
-        bottomLine.accessibilityIdentifier = "Drawer Tab Bar Option Cell Bottom Line"
+        bottomLine.accessibilityIdentifier = "Drawer Tab Bar Cell Bottom Line"
         bottomLine.translatesAutoresizingMaskIntoConstraints = false
         bottomLine.clipsToBounds = true
         bottomLine.layer.masksToBounds = true
@@ -84,7 +86,7 @@ final class DrawerTabBarOptionCell: UICollectionViewCell {
     
     private func setupLabel() {
         contentView.addSubview(label)
-        label.accessibilityIdentifier = "Drawer Tab Bar Option Cell Label"
+        label.accessibilityIdentifier = "Drawer Tab Bar Cell Label"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.contentMode = .scaleAspectFill
         label.clipsToBounds = true

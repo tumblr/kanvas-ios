@@ -8,11 +8,11 @@ import Foundation
 import UIKit
 
 private struct Constants {
-    static let height = DrawerTabBarOptionCell.height
+    static let height = DrawerTabBarCell.height
 }
 
-/// Collection view for EditionMenuCollectionController
-final class DrawerTabBarView: IgnoreTouchesView {
+/// Collection view for DrawerTabBarController
+final class DrawerTabBarView: UIView {
     
     static let height = Constants.height
     
@@ -20,7 +20,7 @@ final class DrawerTabBarView: IgnoreTouchesView {
     
     init() {
         collectionView = DrawerTabBarCollectionView(frame: .zero, collectionViewLayout: DrawerTabBarCollectionViewLayout())
-        collectionView.accessibilityIdentifier = "Sticker Collection View"
+        collectionView.accessibilityIdentifier = "Drawer Tab Bar Collection View"
         collectionView.backgroundColor = .clear
         
         super.init(frame: .zero)
@@ -49,7 +49,7 @@ final class DrawerTabBarView: IgnoreTouchesView {
 }
 
 
-private class DrawerTabBarCollectionView: IgnoreTouchesCollectionView {
+private class DrawerTabBarCollectionView: UICollectionView {
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -92,7 +92,7 @@ private class DrawerTabBarCollectionViewLayout: UICollectionViewFlowLayout {
     private func configure() {
         scrollDirection = .horizontal
         itemSize = UICollectionViewFlowLayout.automaticSize
-        estimatedItemSize = CGSize(width: DrawerTabBarOptionCell.width, height: DrawerTabBarOptionCell.height)
+        estimatedItemSize = CGSize(width: DrawerTabBarCell.width, height: DrawerTabBarCell.height)
         minimumInteritemSpacing = 0
         minimumLineSpacing = 0
     }

@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// A representation for a sticker to be presented in the StickerCollectionController
+/// A representation for a sticker to be presented in the Media Drawer
 struct Sticker {
     var image: String
 }

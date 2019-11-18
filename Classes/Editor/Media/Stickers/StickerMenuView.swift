@@ -7,14 +7,8 @@
 import Foundation
 import UIKit
 
-/// Protocol for the sticker menu view
-protocol StickerMenuViewDelegate: class {
-    
-}
-
 /// Constants for StickerMenuView
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
     static let backgroundColor: UIColor = .white
     static let bottomCollectionHeight: CGFloat = StickerTypeCollectionCell.totalHeight
     static let bottomCollectionCornerRadius: CGFloat = 30
@@ -23,8 +17,7 @@ private struct Constants {
 /// A UIView for the sticker menu view
 final class StickerMenuView: UIView {
         
-    weak var delegate: StickerMenuViewDelegate?
-    
+    // Containers
     let mainCollectionContainer: UIView
     let bottomCollectionContainer: UIView
     
@@ -47,6 +40,7 @@ final class StickerMenuView: UIView {
         setupBottomCollectionContainer()
     }
     
+    /// Sets up the main sticker collection
     private func setupMainCollectionContainer() {
         addSubview(mainCollectionContainer)
         mainCollectionContainer.accessibilityLabel = "Sticker Menu Main Collection Container"
@@ -62,6 +56,7 @@ final class StickerMenuView: UIView {
         ])
     }
     
+    /// Sets up the sticker type collection shown at the bottom
     private func setupBottomCollectionContainer() {
         addSubview(bottomCollectionContainer)
         bottomCollectionContainer.accessibilityLabel = "Sticker Menu Bottom Collection Container"
@@ -79,6 +74,4 @@ final class StickerMenuView: UIView {
         bottomCollectionContainer.layer.cornerRadius = Constants.bottomCollectionCornerRadius
         bottomCollectionContainer.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
     }
-    
 }
-

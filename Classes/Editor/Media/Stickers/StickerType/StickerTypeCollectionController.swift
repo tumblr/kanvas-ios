@@ -7,18 +7,20 @@
 import Foundation
 import UIKit
 
+/// Protocol for selecting a sticker type
 protocol StickerTypeCollectionControllerDelegate: class {
     func didSelectStickerType(_ stickerType: Sticker)
 }
 
-/// Constants for Sticker Type Controller
+/// Constants for StickerTypeController
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
     static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
 }
 
-/// Controller for handling the sticker type item collection.
+/// Controller for handling the sticker type collection.
 final class StickerTypeCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, StickerTypeCollectionCellDelegate {
+    
+    weak var delegate: StickerTypeCollectionControllerDelegate?
     
     private lazy var stickerTypeCollectionView = StickerTypeCollectionView()
     private var stickerTypes: [Sticker]
@@ -36,8 +38,6 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
             }
         }
     }
-    
-    weak var delegate: StickerTypeCollectionControllerDelegate?
     
     /// Initializes the sticker type collection
     init() {
@@ -77,17 +77,6 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
         selectStickerType(index:  Constants.initialIndexPath.item)
     }
 
-    // MARK: - Public interface
-    
-    /// shows or hides the sticker collection
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showView(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.stickerTypeCollectionView.alpha = show ? 1 : 0
-        }
-    }
-
     // MARK: - UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -115,7 +104,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     /// Selects a sticker
     ///
-    /// - Parameter index: position of the sticker in the collection
+    /// - Parameter index: position of the sticker type in the collection
     private func selectStickerType(index: Int) {
         guard let stickerType = stickerTypes.object(at: index) else { return }
         delegate?.didSelectStickerType(stickerType)

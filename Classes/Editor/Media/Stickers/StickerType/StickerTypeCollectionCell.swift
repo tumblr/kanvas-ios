@@ -17,6 +17,7 @@ protocol StickerTypeCollectionCellDelegate: class {
     func didTap(cell: StickerTypeCollectionCell, recognizer: UITapGestureRecognizer)
 }
 
+/// Constants for StickerTypeCollectionCell
 private struct Constants {
     static let imageHeight: CGFloat = 60
     static let imageWidth: CGFloat = 60
@@ -25,7 +26,7 @@ private struct Constants {
     static let unselectedColor: UIColor = .white
 }
 
-/// The cell in StickerCollectionView to display an individual sticker
+/// The cell in StickerTypeCollectionView to display an individual sticker
 final class StickerTypeCollectionCell: UICollectionViewCell {
     
     static let totalHeight = Constants.imageHeight + Constants.bottomPadding
@@ -51,8 +52,9 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        mainView.backgroundColor = Constants.unselectedColor
         stickerView.image = nil
+        stickerView.backgroundColor = nil
+        mainView.backgroundColor = Constants.unselectedColor
     }
     
     // MARK: - Layout
@@ -62,6 +64,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         setUpStickerView()
     }
     
+    /// Sets up the container that changes its color depending on whether the cell is selected or not
     private func setUpMainView() {
         contentView.addSubview(mainView)
         mainView.accessibilityIdentifier = "Sticker Type Collection Cell Main View"
@@ -78,7 +81,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         ])
     }
 
-    
+    /// Sets up the view that contains the sticker
     private func setUpStickerView() {
         mainView.addSubview(stickerView)
         stickerView.accessibilityIdentifier = "Sticker Type Collection Cell Sticker View"

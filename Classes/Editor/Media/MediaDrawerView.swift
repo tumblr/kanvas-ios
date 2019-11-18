@@ -7,11 +7,6 @@
 import Foundation
 import UIKit
 
-/// Protocol for the media drawer view
-protocol MediaDrawerViewDelegate: class {
-    
-}
-
 /// Constants for MediaDrawerView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
@@ -30,11 +25,11 @@ final class MediaDrawerView: UIView {
     
     static let tabBarHeight: CGFloat = Constants.tabBarHeight
     
-    weak var delegate: MediaDrawerViewDelegate?
-    
     private let topContainer: UIView
     private let topContainerLine: UIView
     private let backPanel: UIView
+    
+    // Containers
     let tabBarContainer: UIView
     let childContainer: UIView
     
@@ -63,6 +58,21 @@ final class MediaDrawerView: UIView {
         setupTabBar()
     }
     
+    /// Sets up the container for the new view after a tab is selected
+    private func setupChildContainer() {
+        addSubview(childContainer)
+        childContainer.accessibilityLabel = "Media Drawer Child Container"
+        childContainer.translatesAutoresizingMaskIntoConstraints = false
+        childContainer.clipsToBounds = false
+        
+        NSLayoutConstraint.activate([
+            childContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topContainerHeight + Constants.tabBarHeight),
+            childContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            childContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            childContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+        ])
+    }
+    
     private func setupBackPanel() {
         addSubview(backPanel)
         backPanel.accessibilityLabel = "Media Drawer Back Panel"
@@ -77,6 +87,7 @@ final class MediaDrawerView: UIView {
         ])
     }
     
+    /// Sets up the top view with rounded corners
     private func setupTopContainer() {
         addSubview(topContainer)
         topContainer.accessibilityLabel = "Media Drawer Top Container"
@@ -94,6 +105,7 @@ final class MediaDrawerView: UIView {
         topContainer.layer.masksToBounds = true
     }
     
+    /// Sets up the small black line with rounded ends in the top view
     private func setupTopContainerLine() {
         topContainer.addSubview(topContainerLine)
         topContainerLine.accessibilityLabel = "Media Drawer Top Container Line"
@@ -111,6 +123,7 @@ final class MediaDrawerView: UIView {
         topContainerLine.layer.masksToBounds = true
     }
     
+    /// Sets up the top tab bar
     private func setupTabBar() {
         addSubview(tabBarContainer)
         tabBarContainer.accessibilityLabel = "Media Drawer Tab Bar Container"
@@ -121,20 +134,6 @@ final class MediaDrawerView: UIView {
             tabBarContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             tabBarContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             tabBarContainer.heightAnchor.constraint(equalToConstant: Constants.tabBarHeight),
-        ])
-    }
-    
-    private func setupChildContainer() {
-        addSubview(childContainer)
-        childContainer.accessibilityLabel = "Media Drawer Child Container"
-        childContainer.translatesAutoresizingMaskIntoConstraints = false
-        childContainer.clipsToBounds = false
-        
-        NSLayoutConstraint.activate([
-            childContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topContainerHeight + Constants.tabBarHeight),
-            childContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            childContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            childContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
         ])
     }
 }

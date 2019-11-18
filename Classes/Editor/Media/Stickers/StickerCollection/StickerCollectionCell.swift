@@ -17,6 +17,7 @@ protocol StickerCollectionCellDelegate: class {
     func didTap(cell: StickerCollectionCell, recognizer: UITapGestureRecognizer)
 }
 
+/// Constants for StickerCollectionCell
 private struct Constants {
     static let height: CGFloat = 80
     static let width: CGFloat = 80
@@ -48,9 +49,8 @@ final class StickerCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter sticker: The sticker to display
     func bindTo(_ sticker: Sticker) {
-        stickerView.image = KanvasCameraImages.filterTypes[.wavePool]!
+        stickerView.image = KanvasCameraImages.confirmImage
     }
-    
     
     /// Updates the cell to be reused
     override func prepareForReuse() {

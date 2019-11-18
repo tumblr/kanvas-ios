@@ -7,11 +7,7 @@
 import Foundation
 import UIKit
 
-private struct Constants {
-    
-}
-
-/// Collection view for EditionMenuCollectionController
+/// Collection view for StickerTypeCollectionController
 final class StickerTypeCollectionView: UIView {
     
     let collectionView: UICollectionView
@@ -94,4 +90,3 @@ private class StickerTypeCollectionViewLayout: UICollectionViewFlowLayout {
         minimumLineSpacing = 0
     }
 }
-

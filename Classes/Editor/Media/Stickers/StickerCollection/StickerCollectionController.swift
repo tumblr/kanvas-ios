@@ -7,23 +7,23 @@
 import Foundation
 import UIKit
 
+/// Protocol for selecting a sticker
 protocol StickerCollectionControllerDelegate: class {
     func didSelectSticker(_ sticker: Sticker)
 }
 
-/// Constants for Sticker Controller
+/// Constants for StickerCollectionController
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
     static let collectionInsets = UIEdgeInsets(top: 0, left: 22, bottom: 0, right: 22)
 }
 
 /// Controller for handling the filter item collection.
 final class StickerCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, StickerCollectionCellDelegate {
     
+    weak var delegate: StickerCollectionControllerDelegate?
+    
     private lazy var stickerCollectionView = StickerCollectionView()
     private var stickers: [Sticker]
-    
-    weak var delegate: StickerCollectionControllerDelegate?
     
     /// Initializes the sticker collection
     init() {
@@ -59,16 +59,8 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
 
     // MARK: - Public interface
     
-    /// shows or hides the sticker collection
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showView(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.stickerCollectionView.alpha = show ? 1 : 0
-        }
-    }
-    
     func setType(_ stickerType: Sticker) {
+        stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
         stickerCollectionView.collectionView.reloadData()
     }
     

@@ -7,11 +7,7 @@
 import Foundation
 import UIKit
 
-private struct Constants {
-    
-}
-
-/// Collection view for EditionMenuCollectionController
+/// Collection view for StickerCollectionController
 final class StickerCollectionView: UIView {
     
     let collectionView: UICollectionView

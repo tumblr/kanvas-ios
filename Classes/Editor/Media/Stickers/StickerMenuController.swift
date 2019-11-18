@@ -7,18 +7,13 @@
 import Foundation
 import UIKit
 
-/// Protocol for confirming the a sticker
+/// Protocol for confirming a sticker
 protocol StickerMenuControllerDelegate: class {
     func didSelectSticker(_ sticker: Sticker)
 }
 
-/// Constants for StickerMenuController
-private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
-}
-
 /// A view controller that contains the text tools menu
-final class StickerMenuController: UIViewController, StickerMenuViewDelegate, StickerCollectionControllerDelegate, StickerTypeCollectionControllerDelegate {
+final class StickerMenuController: UIViewController, StickerCollectionControllerDelegate, StickerTypeCollectionControllerDelegate {
     
     weak var delegate: StickerMenuControllerDelegate?
         
@@ -34,11 +29,7 @@ final class StickerMenuController: UIViewController, StickerMenuViewDelegate, St
         return controller
     }()
     
-    private lazy var stickerMenuView: StickerMenuView = {
-        let view = StickerMenuView()
-        view.delegate = self
-        return view
-    }()
+    private lazy var stickerMenuView: StickerMenuView = StickerMenuView()
     
     // MARK: - Initializers
     
@@ -73,6 +64,7 @@ final class StickerMenuController: UIViewController, StickerMenuViewDelegate, St
     
     func didSelectSticker(_ sticker: Sticker) {
         delegate?.didSelectSticker(sticker)
+        dismiss(animated: true, completion: nil)
     }
     
     // MARK: - StickerTypeCollectionControllerDelegate

@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// Protocol for confirming the media drawer
+/// Protocol for dismissing the media drawer
 protocol MediaDrawerControllerDelegate: class {
     func didDismissMediaDrawer()
 }
@@ -17,8 +17,8 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.25
 }
 
-/// A view controller that contains the text tools menu
-final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, DrawerTabBarControllerDelegate, StickerMenuControllerDelegate {
+/// A view controller that contains the media drawer in text tools
+final class MediaDrawerController: UIViewController, DrawerTabBarControllerDelegate, StickerMenuControllerDelegate {
     
     weak var delegate: MediaDrawerControllerDelegate?
     
@@ -36,11 +36,7 @@ final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, Dr
         return controller
     }()
     
-    private lazy var mediaDrawerView: MediaDrawerView = {
-        let view = MediaDrawerView()
-        view.delegate = self
-        return view
-    }()
+    private lazy var mediaDrawerView: MediaDrawerView = MediaDrawerView()
     
     // MARK: - Initializers
     

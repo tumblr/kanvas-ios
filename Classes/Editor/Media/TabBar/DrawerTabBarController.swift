@@ -7,39 +7,39 @@
 import Foundation
 import UIKit
 
+/// Constants for selecting a tab
 protocol DrawerTabBarControllerDelegate: class {
     func didSelectOption(_ option: DrawerTabBarOption)
 }
 
-/// Constants for Sticker Controller
+/// Constants for DrawerTabBarController
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
     static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
 }
 
-/// Controller for handling the filter item collection.
-final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, DrawerTabBarOptionCellDelegate {
+/// Controller for handling the tab collection.
+final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, DrawerTabBarCellDelegate {
+    
+    weak var delegate: DrawerTabBarControllerDelegate?
     
     private lazy var drawerTabBarView = DrawerTabBarView()
     private var options: [DrawerTabBarOption]
     private var selectedIndexPath: IndexPath? {
         didSet {
             if let indexPath = oldValue,
-                let cell = drawerTabBarView.collectionView.cellForItem(at: indexPath) as? DrawerTabBarOptionCell {
+                let cell = drawerTabBarView.collectionView.cellForItem(at: indexPath) as? DrawerTabBarCell {
                 cell.setSelected(false)
             }
         }
         willSet {
             if let indexPath = newValue,
-                let cell = drawerTabBarView.collectionView.cellForItem(at: indexPath) as? DrawerTabBarOptionCell {
+                let cell = drawerTabBarView.collectionView.cellForItem(at: indexPath) as? DrawerTabBarCell {
                 cell.setSelected(true)
             }
         }
     }
     
-    weak var delegate: DrawerTabBarControllerDelegate?
-    
-    /// Initializes the sticker collection
+    /// Initializes the tab bar collection
     init() {
         options = [.stickers]
         super.init(nibName: .none, bundle: .none)
@@ -63,7 +63,7 @@ final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        drawerTabBarView.collectionView.register(cell: DrawerTabBarOptionCell.self)
+        drawerTabBarView.collectionView.register(cell: DrawerTabBarCell.self)
         drawerTabBarView.collectionView.delegate = self
         drawerTabBarView.collectionView.dataSource = self
     }
@@ -76,7 +76,7 @@ final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, 
     // MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let totalCellWidth = DrawerTabBarOptionCell.width * CGFloat(options.count)
+        let totalCellWidth = DrawerTabBarCell.width * CGFloat(options.count)
         let leftInset = (collectionView.frame.width - totalCellWidth) / 2
         let rightInset = leftInset
         return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
@@ -93,9 +93,9 @@ final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, 
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DrawerTabBarOptionCell.identifier, for: indexPath)
-        if let cell = cell as? DrawerTabBarOptionCell, let sticker = options.object(at: indexPath.item) {
-            cell.bindTo(sticker)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DrawerTabBarCell.identifier, for: indexPath)
+        if let cell = cell as? DrawerTabBarCell, let option = options.object(at: indexPath.item) {
+            cell.bindTo(option)
             cell.delegate = self
             
             if indexPath == selectedIndexPath {
@@ -105,19 +105,19 @@ final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, 
         return cell
     }
     
-    // MARK: Sticker selection
+    // MARK: Tab option selection
     
-    /// Selects a sticker
+    /// Selects a tab option
     ///
-    /// - Parameter index: position of the option in the collection
+    /// - Parameter index: position of the tab option in the collection
     private func selectOption(index: Int) {
         guard let option = options.object(at: index) else { return }
         delegate?.didSelectOption(option)
     }
     
-    // MARK: - StickerCollectionCellDelegate
+    // MARK: - DrawerTabBarCellDelegate
     
-    func didTap(cell: DrawerTabBarOptionCell, recognizer: UITapGestureRecognizer) {
+    func didTap(cell: DrawerTabBarCell, recognizer: UITapGestureRecognizer) {
         if let indexPath = drawerTabBarView.collectionView.indexPath(for: cell), selectedIndexPath != indexPath {
             selectedIndexPath = indexPath
             selectOption(index: indexPath.item)
