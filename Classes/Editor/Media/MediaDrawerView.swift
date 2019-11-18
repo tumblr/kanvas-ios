@@ -16,6 +16,7 @@ protocol MediaDrawerViewDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let topContainerHeight: CGFloat = 52
+    static let topContainerCornerRadius: CGFloat = 30
     static let topContainerLineHeight: CGFloat = 5
     static let topContainerLineWidth: CGFloat = 36
     static let topContainerLineRadius: CGFloat = 36
@@ -55,7 +56,6 @@ final class MediaDrawerView: UIView {
     }
     
     private func setupView() {
-        backgroundColor = .clear
         setupChildContainer()
         setupBackPanel()
         setupTopContainer()
@@ -90,7 +90,7 @@ final class MediaDrawerView: UIView {
             topContainer.heightAnchor.constraint(equalToConstant: Constants.topContainerHeight),
         ])
         
-        topContainer.layer.cornerRadius = 30
+        topContainer.layer.cornerRadius = Constants.topContainerCornerRadius
         topContainer.layer.masksToBounds = true
     }
     
@@ -129,7 +129,6 @@ final class MediaDrawerView: UIView {
         childContainer.accessibilityLabel = "Media Drawer Child Container"
         childContainer.translatesAutoresizingMaskIntoConstraints = false
         childContainer.clipsToBounds = false
-        childContainer.backgroundColor = Constants.backgroundColor
         
         NSLayoutConstraint.activate([
             childContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topContainerHeight + Constants.tabBarHeight),

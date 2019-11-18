@@ -18,7 +18,7 @@ private struct Constants {
 }
 
 /// A view controller that contains the text tools menu
-final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, DrawerTabBarControllerDelegate, StickerCollectionControllerDelegate {
+final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, DrawerTabBarControllerDelegate, StickerMenuControllerDelegate {
     
     weak var delegate: MediaDrawerControllerDelegate?
     
@@ -30,8 +30,8 @@ final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, Dr
         return controller
     }()
     
-    private lazy var stickerCollectionController: StickerCollectionController = {
-        let controller = StickerCollectionController()
+    private lazy var stickerMenuController: StickerMenuController = {
+        let controller = StickerMenuController()
         controller.delegate = self
         return controller
     }()
@@ -66,10 +66,10 @@ final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, Dr
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        openedMenu = stickerCollectionController
+        openedMenu = stickerMenuController
         
         load(childViewController: drawerTabBarController, into: mediaDrawerView.tabBarContainer)
-        load(childViewController: stickerCollectionController, into: mediaDrawerView.childContainer)
+        load(childViewController: stickerMenuController, into: mediaDrawerView.childContainer)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -84,7 +84,7 @@ final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, Dr
         
         switch option {
         case .stickers:
-            newMenu = stickerCollectionController
+            newMenu = stickerMenuController
         }
         
         UIView.animate(withDuration: Constants.animationDuration, animations: {
@@ -94,7 +94,7 @@ final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, Dr
         })
     }
     
-    // MARK: - StickerCollectionControllerDelegate
+    // MARK: - StickerMenuControllerDelegate
     
     func didSelectSticker(_ sticker: Sticker) {
         

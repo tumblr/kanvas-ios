@@ -17,16 +17,16 @@ protocol StickerCollectionCellDelegate: class {
     func didTap(cell: StickerCollectionCell, recognizer: UITapGestureRecognizer)
 }
 
-private struct StickerCollectionCellConstants {
-    static let height: CGFloat = 50
-    static let width: CGFloat = 50
+private struct Constants {
+    static let height: CGFloat = 80
+    static let width: CGFloat = 80
 }
 
 /// The cell in StickerCollectionView to display an individual sticker
 final class StickerCollectionCell: UICollectionViewCell {
     
-    static let height = StickerCollectionCellConstants.height
-    static let width = StickerCollectionCellConstants.width
+    static let height = Constants.height
+    static let width = Constants.width
     
     private let stickerView = UIImageView()
     
@@ -72,8 +72,8 @@ final class StickerCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             stickerView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
             stickerView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            stickerView.heightAnchor.constraint(equalToConstant: StickerCollectionCellConstants.height),
-            stickerView.widthAnchor.constraint(equalToConstant: StickerCollectionCellConstants.width)
+            stickerView.heightAnchor.constraint(equalToConstant: Constants.height),
+            stickerView.widthAnchor.constraint(equalToConstant: Constants.width)
         ])
     }
     

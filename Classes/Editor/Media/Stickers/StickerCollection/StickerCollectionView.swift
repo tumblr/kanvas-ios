@@ -7,12 +7,12 @@
 import Foundation
 import UIKit
 
-private struct StickerCollectionViewConstants {
+private struct Constants {
     
 }
 
 /// Collection view for EditionMenuCollectionController
-final class StickerCollectionView: IgnoreTouchesView {
+final class StickerCollectionView: UIView {
     
     let collectionView: UICollectionView
     
@@ -46,7 +46,7 @@ final class StickerCollectionView: IgnoreTouchesView {
 }
 
 
-private class StickerInnerCollectionView: IgnoreTouchesCollectionView {
+private class StickerInnerCollectionView: UICollectionView {
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -62,8 +62,8 @@ private class StickerInnerCollectionView: IgnoreTouchesCollectionView {
         isScrollEnabled = true
         allowsSelection = true
         bounces = true
-        alwaysBounceHorizontal = true
-        alwaysBounceVertical = false
+        alwaysBounceHorizontal = false
+        alwaysBounceVertical = true
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         autoresizesSubviews = true

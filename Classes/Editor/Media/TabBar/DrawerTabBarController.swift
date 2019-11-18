@@ -24,12 +24,14 @@ final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, 
     private var options: [DrawerTabBarOption]
     private var selectedIndexPath: IndexPath? {
         didSet {
-            if let indexPath = oldValue, let cell = drawerTabBarView.collectionView.cellForItem(at: indexPath) as? DrawerTabBarOptionCell {
+            if let indexPath = oldValue,
+                let cell = drawerTabBarView.collectionView.cellForItem(at: indexPath) as? DrawerTabBarOptionCell {
                 cell.setSelected(false)
             }
         }
         willSet {
-            if let indexPath = newValue, let cell = drawerTabBarView.collectionView.cellForItem(at: indexPath) as? DrawerTabBarOptionCell {
+            if let indexPath = newValue,
+                let cell = drawerTabBarView.collectionView.cellForItem(at: indexPath) as? DrawerTabBarOptionCell {
                 cell.setSelected(true)
             }
         }
@@ -69,17 +71,6 @@ final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         selectedIndexPath = Constants.initialIndexPath
-    }
-        
-    // MARK: - Public interface
-    
-    /// shows or hides the tab bar
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showView(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.drawerTabBarView.alpha = show ? 1 : 0
-        }
     }
     
     // MARK: - UICollectionViewDelegateFlowLayout

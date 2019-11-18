@@ -12,9 +12,9 @@ protocol StickerCollectionControllerDelegate: class {
 }
 
 /// Constants for Sticker Controller
-private struct StickerCollectionControllerConstants {
+private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let collectionInset = UIEdgeInsets(top: 60, left: 0, bottom: 0, right: 0)
+    static let collectionInsets = UIEdgeInsets(top: 0, left: 22, bottom: 0, right: 22)
 }
 
 /// Controller for handling the filter item collection.
@@ -63,17 +63,21 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: StickerCollectionControllerConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.stickerCollectionView.alpha = show ? 1 : 0
         }
     }
     
-    // MARK: - UICollectionViewDelegate
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        scrollView.contentOffset.x = 0.0
+    func setType(_ stickerType: Sticker) {
+        stickerCollectionView.collectionView.reloadData()
     }
-
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return Constants.collectionInsets
+    }
+    
     // MARK: - UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
