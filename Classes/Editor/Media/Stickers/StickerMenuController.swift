@@ -69,7 +69,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     
     // MARK: - StickerTypeCollectionControllerDelegate
     
-    func didSelectStickerType(_ stickerType: Sticker) {
+    func didSelectStickerType(_ stickerType: StickerType) {
         stickerCollectionController.setType(stickerType)
     }
 }

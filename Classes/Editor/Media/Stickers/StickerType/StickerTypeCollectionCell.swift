@@ -32,6 +32,8 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     static let totalHeight = Constants.imageHeight + Constants.bottomPadding
     static let totalWidth = Constants.imageWidth
     
+    private var imageTask: URLSessionTask?
+    
     private let mainView = UIView()
     private let stickerView = UIImageView()
     
@@ -52,6 +54,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageTask?.cancel()
         stickerView.image = nil
         stickerView.backgroundColor = nil
         mainView.backgroundColor = Constants.unselectedColor
@@ -87,7 +90,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         stickerView.accessibilityIdentifier = "Sticker Type Collection Cell Sticker View"
         stickerView.translatesAutoresizingMaskIntoConstraints = false
         stickerView.contentMode = .scaleAspectFill
-        stickerView.clipsToBounds = true
+        stickerView.clipsToBounds = false
         stickerView.layer.masksToBounds = true
         
         NSLayoutConstraint.activate([
@@ -114,9 +117,14 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     
     /// Updates the cell according to the sticker properties
     ///
-    /// - Parameter sticker: The sticker to display
-    func bindTo(_ sticker: Sticker) {
-        stickerView.image = KanvasCameraImages.filterTypes[.wavePool]!
+    /// - Parameter sticker: The sticker type to display
+    func bindTo(_ stickerType: StickerType, cache: NSCache<NSString, UIImage>) {
+        if let image = cache.object(forKey: NSString(string: stickerType.imageUrl)) {
+            stickerView.image = image
+        }
+        else {
+            imageTask = stickerView.load(from: stickerType.imageUrl, cache: cache)
+        }
     }
     
     func setSelected(_ selected: Bool) {

@@ -26,8 +26,11 @@ final class StickerCollectionCellTests: FBSnapshotTestCase {
     
     func testStickerCollectionCell() {
         let cell = newCell()
-        let sticker = Sticker(image: "")
-        cell.bindTo(sticker)
+        let sticker = Sticker(baseUrl: "https://d1d7t1ygvx8siu.cloudfront.net/SDK-Assets/",
+                                   keyword: "stamps.tistheseason",
+                                   number: 1,
+                                   imageExtension: "jpg")
+        cell.bindTo(sticker, cache: NSCache<NSString, UIImage>())
         FBSnapshotVerifyView(cell)
     }
 }

@@ -9,12 +9,13 @@ import UIKit
 
 /// Protocol for selecting a sticker type
 protocol StickerTypeCollectionControllerDelegate: class {
-    func didSelectStickerType(_ stickerType: Sticker)
+    func didSelectStickerType(_ stickerType: StickerType)
 }
 
 /// Constants for StickerTypeController
 private struct Constants {
     static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
+    static let cacheSize: Int = 100
 }
 
 /// Controller for handling the sticker type collection.
@@ -23,7 +24,15 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     weak var delegate: StickerTypeCollectionControllerDelegate?
     
     private lazy var stickerTypeCollectionView = StickerTypeCollectionView()
-    private var stickerTypes: [Sticker]
+    private lazy var stickerService = StickerService()
+    private var stickerTypes: [StickerType] = []
+    
+    private lazy var imageCache: NSCache<NSString, UIImage> = {
+        let cache = NSCache<NSString, UIImage>()
+        cache.countLimit = Constants.cacheSize
+        return cache
+    }()
+    
     private var selectedIndexPath: IndexPath? {
         didSet {
             if let indexPath = oldValue,
@@ -41,10 +50,6 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     /// Initializes the sticker type collection
     init() {
-        stickerTypes = []
-        for _ in 1...500 {
-            stickerTypes.append(Sticker(image: ""))
-        }
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -69,6 +74,8 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
         stickerTypeCollectionView.collectionView.register(cell: StickerTypeCollectionCell.self)
         stickerTypeCollectionView.collectionView.delegate = self
         stickerTypeCollectionView.collectionView.dataSource = self
+        
+        stickerTypes = stickerService.getStickerTypes()
     }
     
     override func viewDidLayoutSubviews() {
@@ -89,8 +96,8 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerTypeCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? StickerTypeCollectionCell, let sticker = stickerTypes.object(at: indexPath.item) {
-            cell.bindTo(sticker)
+        if let cell = cell as? StickerTypeCollectionCell, let stickerType = stickerTypes.object(at: indexPath.item) {
+            cell.bindTo(stickerType, cache: imageCache)
             cell.delegate = self
             
             if indexPath == selectedIndexPath {

@@ -29,6 +29,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     static let height = Constants.height
     static let width = Constants.width
     
+    private var imageTask: URLSessionTask?
     private let stickerView = UIImageView()
     
     weak var delegate: StickerCollectionCellDelegate?
@@ -48,13 +49,19 @@ final class StickerCollectionCell: UICollectionViewCell {
     /// Updates the cell according to the sticker properties
     ///
     /// - Parameter sticker: The sticker to display
-    func bindTo(_ sticker: Sticker) {
-        stickerView.image = KanvasCameraImages.confirmImage
+    func bindTo(_ sticker: Sticker, cache: NSCache<NSString, UIImage>) {
+        if let image = cache.object(forKey: NSString(string: sticker.imageUrl)) {
+            stickerView.image = image
+        }
+        else {
+            imageTask = stickerView.load(from: sticker.imageUrl, cache: cache)
+        }
     }
     
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageTask?.cancel()
         stickerView.image = nil
         stickerView.backgroundColor = nil
     }
@@ -65,8 +72,8 @@ final class StickerCollectionCell: UICollectionViewCell {
         contentView.addSubview(stickerView)
         stickerView.accessibilityIdentifier = "Sticker Collection Cell View"
         stickerView.translatesAutoresizingMaskIntoConstraints = false
-        stickerView.contentMode = .scaleAspectFill
-        stickerView.clipsToBounds = true
+        stickerView.contentMode = .scaleAspectFit
+        stickerView.clipsToBounds = false
         stickerView.layer.masksToBounds = true
         
         NSLayoutConstraint.activate([

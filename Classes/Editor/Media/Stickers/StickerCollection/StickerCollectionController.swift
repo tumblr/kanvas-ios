@@ -14,7 +14,8 @@ protocol StickerCollectionControllerDelegate: class {
 
 /// Constants for StickerCollectionController
 private struct Constants {
-    static let collectionInsets = UIEdgeInsets(top: 0, left: 22, bottom: 0, right: 22)
+    static let collectionInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 22, bottom: 0, right: 22)
+    static let cacheSize: Int = 200
 }
 
 /// Controller for handling the filter item collection.
@@ -23,14 +24,16 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     weak var delegate: StickerCollectionControllerDelegate?
     
     private lazy var stickerCollectionView = StickerCollectionView()
-    private var stickers: [Sticker]
+    private lazy var stickerService = StickerService()
+    private var stickers: [Sticker] = []
+    private lazy var imageCache: NSCache<NSString, UIImage> = {
+        let cache = NSCache<NSString, UIImage>()
+        cache.countLimit = Constants.cacheSize
+        return cache
+    }()
     
     /// Initializes the sticker collection
     init() {
-        stickers = []
-        for _ in 1...500 {
-            stickers.append(Sticker(image: ""))
-        }
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -59,7 +62,8 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
 
     // MARK: - Public interface
     
-    func setType(_ stickerType: Sticker) {
+    func setType(_ stickerType: StickerType) {
+        stickers = stickerService.getStickers(for: stickerType)
         stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
         stickerCollectionView.collectionView.reloadData()
     }
@@ -83,7 +87,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerCollectionCell.identifier, for: indexPath)
         if let cell = cell as? StickerCollectionCell, let sticker = stickers.object(at: indexPath.item) {
-            cell.bindTo(sticker)
+            cell.bindTo(sticker, cache: imageCache)
             cell.delegate = self
         }
         return cell
