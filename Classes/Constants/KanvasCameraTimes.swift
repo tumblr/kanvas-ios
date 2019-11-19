@@ -18,7 +18,7 @@ struct KanvasCameraTimes {
     static let gifTapRecordingTime: TimeInterval = 1
 
     /// gifHoldRecordingTime: the recording time for a GIF when holding the shutter (before reversing)
-    static let gifHoldRecordingTime: TimeInterval = 2
+    static let gifHoldRecordingTime: TimeInterval = 3
 
     /// Returns the recording time for the mode and whether the shutter is held or not
     /// - Parameter mode: camera mode
