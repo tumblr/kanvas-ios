@@ -15,12 +15,14 @@ struct KanvasCameraTimes {
     static let videoRecordingTime: TimeInterval = 30
 
     // GifRecordingTime: the maximum amount of time for each gif (before reversing)
-    static let gifRecordingTime: TimeInterval = 1
+    static let gifTapRecordingTime: TimeInterval = 1
 
-    static func recordingTime(for mode: CameraMode) -> TimeInterval {
+    static let gifTapHoldRecordingTime: TimeInterval = 2
+
+    static func recordingTime(for mode: CameraMode, gifHold: Bool = false) -> TimeInterval {
         switch mode.group {
         case .photo: return 0
-        case .gif: return gifRecordingTime
+        case .gif: return !gifHold ? gifTapRecordingTime : gifTapHoldRecordingTime
         case .video: return videoRecordingTime
         }
     }

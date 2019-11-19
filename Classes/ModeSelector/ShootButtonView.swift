@@ -11,11 +11,11 @@ import UIKit
 ///
 /// - tap: By tapping on the capture button
 /// - hold: By holding the capture button pressed
-/// - tapAndHold: By doing any of the actions the capture button will react some way
+/// - tapOrHold: By doing any of the actions the capture button will react some way
 enum CaptureTrigger {
     case tap
     case hold
-    case tapAndHold(animateCircle: Bool)
+    case tapOrHold(animateCircle: Bool)
 }
 
 /// Protocol to handle capture button user actions
@@ -84,7 +84,8 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     private var trigger: CaptureTrigger
 
     private let timeSegmentLayer: ConicalGradientLayer
-    private var maximumTime: TimeInterval?
+    private var tapMaximumTime: TimeInterval?
+    private var holdMaximumTime: TimeInterval?
     private var buttonState: ShootButtonState = .neutral
     private var startingPoint: CGPoint?
 
@@ -139,9 +140,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     ///   - trigger: The type of trigger for the button (tap, hold)
     ///   - image: the image to display in the button
     ///   - timeLimit: the animation duration of the ring
-    func configureFor(trigger: CaptureTrigger, image: UIImage?, timeLimit: TimeInterval?) {
+    func configureFor(trigger: CaptureTrigger, image: UIImage?, timeLimit: TimeInterval?, holdTimeLimit: TimeInterval?) {
         self.trigger = trigger
-        maximumTime = timeLimit
+        tapMaximumTime = timeLimit
+        holdMaximumTime = holdTimeLimit
         animateImageChange(image)
     }
 
@@ -281,11 +283,11 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         switch trigger {
         case .tap:
             animateTapEffect()
-            startCircleAnimation()
-        case .tapAndHold(animateCircle: true):
+            startCircleAnimation(hold: false)
+        case .tapOrHold(animateCircle: true):
             animateTapEffect()
-            startCircleAnimation()
-        case .tapAndHold(animateCircle: false):
+            startCircleAnimation(hold: false)
+        case .tapOrHold(animateCircle: false):
             animateTapEffect()
         case .hold: return // Do nothing on tap
         }
@@ -294,7 +296,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     
     private func onLongPress(recognizer: UILongPressGestureRecognizer) {
         switch trigger {
-        case .hold, .tapAndHold:
+        case .hold, .tapOrHold:
             onLongPressAllowed(recognizer: recognizer)
         default:
             break
@@ -314,8 +316,8 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
     
     /// Starts the gradient animation based on the maximum time previously set
-    private func startCircleAnimation() {
-        if let timeLimit = maximumTime {
+    private func startCircleAnimation(hold: Bool) {
+        if let timeLimit = !hold ? tapMaximumTime : holdMaximumTime {
             animateCircle(for: timeLimit, completion: { [weak self] in self?.circleAnimationCallback() })
         }
     }
@@ -331,9 +333,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         showPressBackgroundCircle(show: started)
         if started {
             buttonState = .animating
-            if let timeLimit = maximumTime {
-                animateCircle(for: timeLimit, completion: { [weak self] in self?.circleAnimationCallback() })
-            }
+            startCircleAnimation(hold: true)
             delegate?.shootButtonViewDidStartLongPress()
         }
         else {

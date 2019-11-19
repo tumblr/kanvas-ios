@@ -102,7 +102,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         modeSelectorButton.setTitle(KanvasCameraStrings.name(for: selectedMode))
         shootButton.configureFor(trigger: triggerFor(selectedMode),
                                  image: KanvasCameraImages.image(for: selectedMode),
-                                 timeLimit: KanvasCameraTimes.recordingTime(for: selectedMode))
+                                 timeLimit: KanvasCameraTimes.recordingTime(for: selectedMode, gifHold: false),
+                                 holdTimeLimit: KanvasCameraTimes.recordingTime(for: selectedMode, gifHold: true))
     }
 
     /// show or hide the mode button with an animation
@@ -281,8 +282,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private func triggerFor(_ mode: CameraMode) -> CaptureTrigger {
         switch mode.group {
             case .photo: return .tap
-            case .gif: return .tapAndHold(animateCircle: true)
-            case .video: return .tapAndHold(animateCircle: false)
+            case .gif: return .tapOrHold(animateCircle: true)
+            case .video: return .tapOrHold(animateCircle: false)
         }
     }
 }

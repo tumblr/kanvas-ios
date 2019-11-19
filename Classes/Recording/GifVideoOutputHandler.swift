@@ -129,7 +129,7 @@ final class GifVideoOutputHandler: NSObject {
             gifPixelBuffers.append(buffer)
             currentVideoPixelBuffer = nil
             gifFrames += 1
-            if gifFrames >= KanvasCameraTimes.gifTotalFrames {
+            if gifFrames >= maxGifFrames {
                 gifFinishedBursting()
             }
         }
@@ -144,7 +144,7 @@ final class GifVideoOutputHandler: NSObject {
             if let buffer = newBuffer {
                 gifBuffers.append(buffer)
                 gifFrames += 1
-                if gifFrames >= KanvasCameraTimes.gifTotalFrames {
+                if gifFrames >= maxGifFrames {
                     gifFinishedBursting()
                 }
             }
