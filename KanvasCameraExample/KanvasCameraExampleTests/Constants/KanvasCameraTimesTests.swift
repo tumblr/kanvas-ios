@@ -36,7 +36,7 @@ final class KanvasCameraTimesTests: XCTestCase {
     }
 
     func testGifHoldRecordingTime() {
-        XCTAssert(KanvasCameraTimes.gifHoldRecordingTime == 2, "Returned value does not match expected value")
+        XCTAssert(KanvasCameraTimes.gifHoldRecordingTime == 3, "Returned value does not match expected value")
     }
 
     func testGifPreferredFramesPerSecond() {
@@ -48,12 +48,12 @@ final class KanvasCameraTimesTests: XCTestCase {
     }
 
     func testGifHoldTotalFrames() {
-        XCTAssertEqual(KanvasCameraTimes.gifHoldNumberOfFrames, 20, "Returned value does not match expected value")
+        XCTAssertEqual(KanvasCameraTimes.gifHoldNumberOfFrames, 30, "Returned value does not match expected value")
     }
 
     func testGifRecordingTime() {
         XCTAssertEqual(KanvasCameraTimes.recordingTime(for: .gif, hold: false), 1, "Tapping the GIF shutter should record for 1 second")
-        XCTAssertEqual(KanvasCameraTimes.recordingTime(for: .gif, hold: true), 2, "Holding the GIF shutter should record for 2 seconds")
+        XCTAssertEqual(KanvasCameraTimes.recordingTime(for: .gif, hold: true), 3, "Holding the GIF shutter should record for 2 seconds")
     }
 
 }
