@@ -283,10 +283,14 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         switch trigger {
         case .tap:
             animateTapEffect()
-            startCircleAnimation(hold: false)
+            if let duration = tapMaximumTime {
+                startCircleAnimation(duration: duration)
+            }
         case .tapOrHold(animateCircle: true):
-            animateTapEffect()
-            startCircleAnimation(hold: false)
+            if let duration = tapMaximumTime {
+                animateTapEffect(duration: duration)
+                startCircleAnimation(duration: duration)
+            }
         case .tapOrHold(animateCircle: false):
             animateTapEffect()
         case .hold: return // Do nothing on tap
@@ -296,29 +300,33 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     
     private func onLongPress(recognizer: UILongPressGestureRecognizer) {
         switch trigger {
-        case .hold, .tapOrHold:
+        case .hold:
             onLongPressAllowed(recognizer: recognizer)
+        case .tapOrHold(let animateCircle):
+            onLongPressAllowed(recognizer: recognizer, continueAnimationUntilComplete: animateCircle)
         default:
             break
         }
     }
     
-    private func onLongPressAllowed(recognizer: UILongPressGestureRecognizer) {
+    private func onLongPressAllowed(recognizer: UILongPressGestureRecognizer, continueAnimationUntilComplete: Bool = false) {
         switch recognizer.state {
         case .began:
             updateForLongPress(started: true)
             updateZoom(recognizer: recognizer)
         case .ended, .cancelled, .failed:
-            updateForLongPress(started: false)
+            if !continueAnimationUntilComplete {
+                updateForLongPress(started: false)
+            }
         default:
             updateZoom(recognizer: recognizer)
         }
     }
     
-    /// Starts the gradient animation based on the maximum time previously set
-    private func startCircleAnimation(hold: Bool) {
-        if let timeLimit = !hold ? tapMaximumTime : holdMaximumTime {
-            animateCircle(for: timeLimit, completion: { [weak self] in self?.circleAnimationCallback() })
+    /// Starts the gradient animation
+    private func startCircleAnimation(duration: TimeInterval) {
+        animateCircle(for: duration) { [weak self] in
+            self?.circleAnimationCallback()
         }
     }
     
@@ -333,7 +341,9 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         showPressBackgroundCircle(show: started)
         if started {
             buttonState = .animating
-            startCircleAnimation(hold: true)
+            if let duration = holdMaximumTime {
+                startCircleAnimation(duration: duration)
+            }
             delegate?.shootButtonViewDidStartLongPress()
         }
         else {
@@ -349,6 +359,9 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
 
     private func circleAnimationCallback() {
         terminateCircleAnimation()
+        showBorderView(show: true)
+        showPressInnerCircle(show: false)
+        showPressBackgroundCircle(show: false)
         switch buttonState {
             case .animating:
                 delegate?.shootButtonReachedMaximumTime()
@@ -456,10 +469,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
     
     /// Shows the two concentric circles for a short period of time
-    private func animateTapEffect() {
+    private func animateTapEffect(duration: TimeInterval = 0.1) {
         showBorderView(show: false, animated: false)
         showShutterButtonPressed(show: true, animated: false)
-        performUIUpdateAfter(deadline: .now() + 0.1) { [weak self] in
+        performUIUpdateAfter(deadline: .now() + duration) { [weak self] in
             self?.showBorderView(show: true, animated: false)
             self?.showShutterButtonPressed(show: false, animated: true)
         }
