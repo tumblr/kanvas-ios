@@ -29,13 +29,14 @@ final class GifVideoOutputHandler: NSObject {
     private var gifPixelBuffers: [CVPixelBuffer] = []
     private var gifFrames: Int = 0
     private var gifCompletion: ((Bool) -> Void)?
-    private var maxGifFrames = KanvasCameraTimes.gifTotalFrames
 
     private var assetWriter: AVAssetWriter?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     private var videoInput: AVAssetWriterInput?
     private var audioInput: AVAssetWriterInput?
     private let shouldUsePixelBuffers: Bool
+    private var framesPerSecond: Int = 0
+    private var numberOfFrames: Int = 0
 
     /// Designated initializer for GifVideoOutputHandler
     ///
@@ -61,7 +62,8 @@ final class GifVideoOutputHandler: NSObject {
                       pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?,
                       videoInput: AVAssetWriterInput?,
                       audioInput: AVAssetWriterInput?,
-                      longerDuration: Bool = false,
+                      numberOfFrames: Int,
+                      framesPerSecond: Int,
                       completion: @escaping (Bool) -> Void) {
 
         guard !recording else {
@@ -74,18 +76,14 @@ final class GifVideoOutputHandler: NSObject {
         self.pixelBufferAdaptor = pixelBufferAdaptor
         self.videoInput = videoInput
         self.audioInput = audioInput
-        if longerDuration {
-            maxGifFrames = 2 * KanvasCameraTimes.gifTotalFrames
-        }
-        else {
-            maxGifFrames = KanvasCameraTimes.gifTotalFrames
-        }
+        self.numberOfFrames = numberOfFrames
+        self.framesPerSecond = framesPerSecond
 
         gifFrames = 0
         gifCompletion = completion
 
         let link = CADisplayLink(target: self, selector: #selector(gifLoop))
-        link.preferredFramesPerSecond = KanvasCameraTimes.gifPreferredFramesPerSecond
+        link.preferredFramesPerSecond = framesPerSecond
         link.add(to: RunLoop.main, forMode: RunLoop.Mode.default)
         gifLink = link
     }
@@ -129,7 +127,7 @@ final class GifVideoOutputHandler: NSObject {
             gifPixelBuffers.append(buffer)
             currentVideoPixelBuffer = nil
             gifFrames += 1
-            if gifFrames >= maxGifFrames {
+            if gifFrames >= numberOfFrames {
                 gifFinishedBursting()
             }
         }
@@ -144,7 +142,7 @@ final class GifVideoOutputHandler: NSObject {
             if let buffer = newBuffer {
                 gifBuffers.append(buffer)
                 gifFrames += 1
-                if gifFrames >= maxGifFrames {
+                if gifFrames >= numberOfFrames {
                     gifFinishedBursting()
                 }
             }
@@ -154,7 +152,16 @@ final class GifVideoOutputHandler: NSObject {
     private func gifFinishedBursting() {
         invalidateLink()
 
-        var nextTime = CMTime(value: 0, timescale: KanvasCameraTimes.gifTimeScale)
+        // the time duration value of each gif frame on export
+        let timeValue: CMTimeValue = CMTimeValue(framesPerSecond)
+
+        // the timescale used for each gif frame
+        let timeScale: CMTimeScale = Int32(timeValue * Int64(framesPerSecond))
+
+        // frameTime: the composed CMTime from the duration and timescale
+        let frameTime: CMTime = CMTimeMake(value: timeValue, timescale: timeScale)
+
+        var nextTime = CMTime(value: 0, timescale: timeScale)
         assetWriter?.startWriting()
         assetWriter?.startSession(atSourceTime: nextTime)
         var index = 0
@@ -167,7 +174,7 @@ final class GifVideoOutputHandler: NSObject {
                 }
                 let pixelBuffer = strongSelf.gifPixelBuffers[index]
                 let appendTime = nextTime
-                nextTime = CMTimeAdd(nextTime, KanvasCameraTimes.gifFrameTime)
+                nextTime = CMTimeAdd(nextTime, frameTime)
                 strongSelf.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
                 if index == strongSelf.gifPixelBuffers.count - 1 {
                     strongSelf.videoInput?.markAsFinished()
@@ -189,7 +196,7 @@ final class GifVideoOutputHandler: NSObject {
                     return
                 }
                 let appendTime = nextTime
-                nextTime = CMTimeAdd(nextTime, KanvasCameraTimes.gifFrameTime)
+                nextTime = CMTimeAdd(nextTime, frameTime)
                 strongSelf.pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: appendTime)
                 if index == strongSelf.gifBuffers.count - 1 {
                     strongSelf.videoInput?.markAsFinished()

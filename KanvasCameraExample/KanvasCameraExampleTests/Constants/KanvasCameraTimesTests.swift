@@ -15,10 +15,6 @@ final class KanvasCameraTimesTests: XCTestCase {
         XCTAssert(KanvasCameraTimes.videoRecordingTime == 30, "Returned value does not match expected value")
     }
 
-    func testGifRecordingTime() {
-        XCTAssert(KanvasCameraTimes.gifRecordingTime == 1, "Returned value does not match expected value")
-    }
-
     func testStopMotionFrameDuration() {
         XCTAssert(KanvasCameraTimes.singlePhotoWithVideoFrameDuration == 300, "Returned value does not match expected value")
     }
@@ -35,24 +31,29 @@ final class KanvasCameraTimesTests: XCTestCase {
         XCTAssert(KanvasCameraTimes.stopMotionFrameTimeInterval == 0.5, "Returned value does not match expected value")
     }
 
+    func testGifTapRecordingTime() {
+        XCTAssert(KanvasCameraTimes.gifTapRecordingTime == 1, "Returned value does not match expected value")
+    }
+
+    func testGifHoldRecordingTime() {
+        XCTAssert(KanvasCameraTimes.gifHoldRecordingTime == 2, "Returned value does not match expected value")
+    }
+
     func testGifPreferredFramesPerSecond() {
         XCTAssert(KanvasCameraTimes.gifPreferredFramesPerSecond == 10, "Returned value does not match expected value")
     }
 
-    func testGifTotalFrames() {
-        XCTAssert(KanvasCameraTimes.gifTotalFrames == 10, "Returned value does not match expected value")
+    func testGifTapTotalFrames() {
+        XCTAssert(KanvasCameraTimes.gifTapNumberOfFrames == 10, "Returned value does not match expected value")
     }
 
-    func testGifTimeValue() {
-        XCTAssert(KanvasCameraTimes.gifTimeValue == 10, "Returned value does not match expected value")
+    func testGifHoldTotalFrames() {
+        XCTAssert(KanvasCameraTimes.gifHoldNumberOfFrames == 10, "Returned value does not match expected value")
     }
 
-    func testGifTimescale() {
-        XCTAssert(KanvasCameraTimes.gifTimeScale == 100, "Returned value does not match expected value")
-    }
-
-    func testGifFrameTime() {
-        XCTAssert(CMTimeCompare(KanvasCameraTimes.gifFrameTime, CMTime(value: 10, timescale: 100)) == 0, "Returned value does not match expected value")
+    func testGifRecordingTime() {
+        XCTAssertEqual(KanvasCameraTimes.recordingTime(for: .gif, hold: false), 1, "Tapping the GIF shutter should record for 1 second")
+        XCTAssertEqual(KanvasCameraTimes.recordingTime(for: .gif, hold: true), 1, "Holding the GIF shutter should record for 2 seconds")
     }
 
 }

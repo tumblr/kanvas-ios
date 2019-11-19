@@ -39,7 +39,7 @@ final class CameraRecorderTests: XCTestCase {
     func testGif() {
         let cameraRecorder = setupCameraRecorder()
         let expectation = XCTestExpectation(description: "photo")
-        cameraRecorder.takeGifMovie(completion: { url in
+        cameraRecorder.takeGifMovie(numberOfFrames: 10, framesPerSecond: 10, completion: { url in
             expectation.fulfill()
         })
         wait(for: [expectation], timeout: 5)

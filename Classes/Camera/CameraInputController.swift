@@ -352,13 +352,13 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// Records a gif using the CameraRecordingProtocol type
     ///
     /// - Parameter completion: returns a local file URL if successful
-    func takeGif(useLongerDuration: Bool = false, completion: @escaping (URL?) -> Void) {
+    func takeGif(numberOfFrames: Int, framesPerSecond: Int, completion: @escaping (URL?) -> Void) {
         guard let recorder = recorder else {
             completion(nil)
             return
         }
         addArtificialFlashIfNecessary()
-        recorder.takeGifMovie(useLongerDuration: useLongerDuration, completion: { [weak self] url in
+        recorder.takeGifMovie(numberOfFrames: numberOfFrames, framesPerSecond: framesPerSecond, completion: { [weak self] url in
             self?.removeArtificialFlashIfNecessary()
             completion(url)
         })

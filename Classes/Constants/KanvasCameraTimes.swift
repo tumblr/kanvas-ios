@@ -11,54 +11,54 @@ import Foundation
 struct KanvasCameraTimes {
     // MARK: - Shooting
 
-    // VideoRecordingTime: the maximum recording time for each video clip
+    /// VideoRecordingTime: the maximum recording time for each video clip
     static let videoRecordingTime: TimeInterval = 30
 
-    // GifRecordingTime: the maximum amount of time for each gif (before reversing)
+    /// gifTapRecordingTime: the recording time for a GIF when tapping the shutter (before reversing)
     static let gifTapRecordingTime: TimeInterval = 1
 
-    static let gifTapHoldRecordingTime: TimeInterval = 2
+    /// gifHoldRecordingTime: the recording time for a GIF when holding the shutter (before reversing)
+    static let gifHoldRecordingTime: TimeInterval = 2
 
-    static func recordingTime(for mode: CameraMode, gifHold: Bool = false) -> TimeInterval {
+    /// Returns the recording time for the mode and whether the shutter is held or not
+    /// - Parameter mode: camera mode
+    /// - Parameter hold: whether the shutter is held or not
+    /// - Returns: the TimeInterval
+    static func recordingTime(for mode: CameraMode, hold: Bool = false) -> TimeInterval {
         switch mode.group {
         case .photo: return 0
-        case .gif: return !gifHold ? gifTapRecordingTime : gifTapHoldRecordingTime
+        case .gif: return !hold ? gifTapRecordingTime : gifHoldRecordingTime
         case .video: return videoRecordingTime
         }
     }
+
     // MARK: - Stop motion
 
-    // OnlyImagesFrameDuration: the duration value of each photo clip in a video if there are ONLY videos
+    /// OnlyImagesFrameDuration: the duration value of each photo clip in a video if there are ONLY videos
     static let onlyImagesFrameDuration: CMTimeValue = 120
     
-    // SinglePhotoWithVideoFrameDuration: the duration value of a single photo exported as a video. Also applies to photos exported with video
+    /// SinglePhotoWithVideoFrameDuration: the duration value of a single photo exported as a video. Also applies to photos exported with video
     static let singlePhotoWithVideoFrameDuration: CMTimeValue = 300
 
-    // StopMotionFrameTimescale: the timescale used for creating videos
+    /// StopMotionFrameTimescale: the timescale used for creating videos
     static let stopMotionFrameTimescale: CMTimeScale = 600
 
-    // StopMotionFrameTime: the CMTime for each frame composed from the duration and timescale
+    /// StopMotionFrameTime: the CMTime for each frame composed from the duration and timescale
     static let stopMotionFrameTime: CMTime = CMTime(value: singlePhotoWithVideoFrameDuration, timescale: stopMotionFrameTimescale)
 
-    // StopMotionFrameTimeInterval: the equivalent amount of seconds for each frame time
+    /// StopMotionFrameTimeInterval: the equivalent amount of seconds for each frame time
     static let stopMotionFrameTimeInterval: TimeInterval = CMTimeGetSeconds(stopMotionFrameTime)
 
     // MARK: - Gif
 
-    // GifPreferredFramesPerSecond: the interval that frames will be captured
+    /// gifPreferredFramesPerSecond: the interval that frames will be captured in GIF mode
     static let gifPreferredFramesPerSecond = 10
 
-    // GifTotalFrames: the total number of captured frames before reversing
-    static let gifTotalFrames = 10
+    /// gifTapNumberOfFrames: the number of frames to record when tapping the shutter in GIF mode
+    static let gifTapNumberOfFrames = Int(KanvasCameraTimes.gifTapRecordingTime * Double(KanvasCameraTimes.gifPreferredFramesPerSecond))
 
-    // GifTimeValue: the time duration value of each gif frame on export
-    static let gifTimeValue: CMTimeValue = 10
-
-    // GifTimeScale: the timescale used for each gif frame
-    static let gifTimeScale: CMTimeScale = Int32(gifTimeValue * Int64(KanvasCameraTimes.gifPreferredFramesPerSecond))
-
-    // GifFrameTime: the composed CMTime from the duration and timescale
-    static let gifFrameTime: CMTime = CMTimeMake(value: gifTimeValue, timescale: gifTimeScale)
+    /// gifHoldNumberOfFrames: the number of frames to record when holding the shutter in GIF mode
+    static let gifHoldNumberOfFrames = Int(KanvasCameraTimes.gifHoldRecordingTime * Double(KanvasCameraTimes.gifPreferredFramesPerSecond))
 
     // MARK: - Other
 

@@ -140,10 +140,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     ///   - trigger: The type of trigger for the button (tap, hold)
     ///   - image: the image to display in the button
     ///   - timeLimit: the animation duration of the ring
-    func configureFor(trigger: CaptureTrigger, image: UIImage?, timeLimit: TimeInterval?, holdTimeLimit: TimeInterval?) {
+    func configureFor(trigger: CaptureTrigger, image: UIImage?, timeLimit: TimeInterval?, holdTimeLimit: TimeInterval? = nil) {
         self.trigger = trigger
         tapMaximumTime = timeLimit
-        holdMaximumTime = holdTimeLimit
+        holdMaximumTime = holdTimeLimit ?? timeLimit
         animateImageChange(image)
     }
 

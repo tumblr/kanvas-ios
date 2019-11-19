@@ -102,8 +102,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         modeSelectorButton.setTitle(KanvasCameraStrings.name(for: selectedMode))
         shootButton.configureFor(trigger: triggerFor(selectedMode),
                                  image: KanvasCameraImages.image(for: selectedMode),
-                                 timeLimit: KanvasCameraTimes.recordingTime(for: selectedMode, gifHold: false),
-                                 holdTimeLimit: KanvasCameraTimes.recordingTime(for: selectedMode, gifHold: true))
+                                 timeLimit: KanvasCameraTimes.recordingTime(for: selectedMode, hold: false),
+                                 holdTimeLimit: KanvasCameraTimes.recordingTime(for: selectedMode, hold: true))
     }
 
     /// show or hide the mode button with an animation
