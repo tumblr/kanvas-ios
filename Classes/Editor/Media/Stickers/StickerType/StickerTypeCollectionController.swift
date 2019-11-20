@@ -37,13 +37,13 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
         didSet {
             if let indexPath = oldValue,
                 let cell = stickerTypeCollectionView.collectionView.cellForItem(at: indexPath) as? StickerTypeCollectionCell {
-                cell.setSelected(false)
+                cell.isSelected = false
             }
         }
         willSet {
             if let indexPath = newValue,
                 let cell = stickerTypeCollectionView.collectionView.cellForItem(at: indexPath) as? StickerTypeCollectionCell {
-                cell.setSelected(true)
+                cell.isSelected = true
             }
         }
     }
@@ -101,7 +101,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
             cell.delegate = self
             
             if indexPath == selectedIndexPath {
-                cell.setSelected(true)
+                cell.isSelected = true
             }
         }
         return cell
@@ -119,7 +119,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     // MARK: - StickerTypeCollectionCellDelegate
     
-    func didTap(cell: StickerTypeCollectionCell, recognizer: UITapGestureRecognizer) {
+    func didTap(cell: StickerTypeCollectionCell) {
         if let indexPath = stickerTypeCollectionView.collectionView.indexPath(for: cell), indexPath != selectedIndexPath {
             selectedIndexPath = indexPath
             selectStickerType(index: indexPath.item)

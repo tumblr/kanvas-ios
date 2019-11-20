@@ -14,7 +14,7 @@ protocol StickerTypeCollectionCellDelegate: class {
     /// - Parameters:
     ///   - cell: the cell that was tapped
     ///   - recognizer: the tap gesture recognizer
-    func didTap(cell: StickerTypeCollectionCell, recognizer: UITapGestureRecognizer)
+    func didTap(cell: StickerTypeCollectionCell)
 }
 
 /// Constants for StickerTypeCollectionCell
@@ -23,6 +23,7 @@ private struct Constants {
     static let imageWidth: CGFloat = 60
     static let bottomPadding: CGFloat = 30
     static let selectedColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.2)
+    static let pressingColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.05)
     static let unselectedColor: UIColor = .white
 }
 
@@ -34,21 +35,25 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     
     private var imageTask: URLSessionTask?
     
-    private let mainView = UIView()
+    private let mainView = UIButton()
     private let stickerView = UIImageView()
     
     weak var delegate: StickerTypeCollectionCellDelegate?
-        
+    
+    override var isSelected: Bool {
+        willSet {
+            mainView.backgroundColor = newValue ? Constants.selectedColor : Constants.unselectedColor
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
-        setUpRecognizers()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
-        setUpRecognizers()
     }
     
     /// Updates the cell to be reused
@@ -82,6 +87,12 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
             mainView.heightAnchor.constraint(equalToConstant: Constants.imageHeight + Constants.bottomPadding),
             mainView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)
         ])
+        
+        mainView.addTarget(self, action: #selector(didPress), for: .touchUpInside)
+        mainView.addTarget(self, action: #selector(didStartPressing), for: .touchDown)
+        mainView.addTarget(self, action: #selector(didStopPressing), for: .touchUpOutside)
+        mainView.addTarget(self, action: #selector(didStopPressing), for: .touchCancel)
+        mainView.addTarget(self, action: #selector(didStopPressing), for: .touchDragExit)
     }
 
     /// Sets up the view that contains the sticker
@@ -101,16 +112,22 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         ])
     }
     
-    // MARK: - Gesture recognizers
+    // MARK: - Gestures
     
-    private func setUpRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer()
-        contentView.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+    @objc private func didPress() {
+        delegate?.didTap(cell: self)
     }
     
-    @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(cell: self, recognizer: recognizer)
+    @objc private func didStartPressing() {
+        if !isSelected {
+            mainView.backgroundColor = Constants.pressingColor
+        }
+    }
+    
+    @objc private func didStopPressing() {
+        if !isSelected {
+            mainView.backgroundColor = Constants.unselectedColor
+        }
     }
     
     // MARK: - Public interface
@@ -118,6 +135,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     /// Updates the cell according to the sticker properties
     ///
     /// - Parameter sticker: The sticker type to display
+    /// - Parameter cache: A cache to save the the image after loading
     func bindTo(_ stickerType: StickerType, cache: NSCache<NSString, UIImage>) {
         if let image = cache.object(forKey: NSString(string: stickerType.imageUrl)) {
             stickerView.image = image
@@ -127,9 +145,5 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
                 cache.setObject(image, forKey: NSString(string: url.absoluteString))
             }
         }
-    }
-    
-    func setSelected(_ selected: Bool) {
-        mainView.backgroundColor = selected ? Constants.selectedColor : Constants.unselectedColor
     }
 }

@@ -13,14 +13,15 @@ protocol StickerCollectionCellDelegate: class {
     ///
     /// - Parameters:
     ///   - cell: the cell that was tapped
-    ///   - recognizer: the tap gesture recognizer
-    func didTap(cell: StickerCollectionCell, recognizer: UITapGestureRecognizer)
+    func didTap(cell: StickerCollectionCell)
 }
 
 /// Constants for StickerCollectionCell
 private struct Constants {
     static let height: CGFloat = 80
     static let width: CGFloat = 80
+    static let pressingColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.05)
+    static let unselectedColor: UIColor = .white
 }
 
 /// The cell in StickerCollectionView to display an individual sticker
@@ -29,21 +30,20 @@ final class StickerCollectionCell: UICollectionViewCell {
     static let height = Constants.height
     static let width = Constants.width
     
-    private var imageTask: URLSessionTask?
+    private let mainView = UIButton()
     private let stickerView = UIImageView()
+    private var imageTask: URLSessionTask?
     
     weak var delegate: StickerCollectionCellDelegate?
         
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
-        setUpRecognizers()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
-        setUpRecognizers()
     }
     
     /// Updates the cell according to the sticker properties
@@ -64,6 +64,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageTask?.cancel()
+        mainView.backgroundColor = Constants.unselectedColor
         stickerView.image = nil
         stickerView.backgroundColor = nil
     }
@@ -71,7 +72,35 @@ final class StickerCollectionCell: UICollectionViewCell {
     // MARK: - Layout
     
     private func setUpView() {
-        contentView.addSubview(stickerView)
+        setUpMainView()
+        setUpStickerView()
+    }
+    
+    private func setUpMainView() {
+        contentView.addSubview(mainView)
+        mainView.accessibilityIdentifier = "Sticker Collection Cell Main View"
+        mainView.backgroundColor = Constants.unselectedColor
+        mainView.translatesAutoresizingMaskIntoConstraints = false
+        mainView.clipsToBounds = true
+        mainView.layer.masksToBounds = true
+        
+        NSLayoutConstraint.activate([
+            mainView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            mainView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            mainView.heightAnchor.constraint(equalToConstant: Constants.height),
+            mainView.widthAnchor.constraint(equalToConstant: Constants.width)
+        ])
+        
+        mainView.addTarget(self, action: #selector(didPress), for: .touchUpInside)
+        mainView.addTarget(self, action: #selector(didStartPressing), for: .touchDown)
+        mainView.addTarget(self, action: #selector(didStopPressing), for: .touchUpInside)
+        mainView.addTarget(self, action: #selector(didStopPressing), for: .touchUpOutside)
+        mainView.addTarget(self, action: #selector(didStopPressing), for: .touchCancel)
+        mainView.addTarget(self, action: #selector(didStopPressing), for: .touchDragExit)
+    }
+    
+    private func setUpStickerView() {
+        mainView.addSubview(stickerView)
         stickerView.accessibilityIdentifier = "Sticker Collection Cell View"
         stickerView.translatesAutoresizingMaskIntoConstraints = false
         stickerView.contentMode = .scaleAspectFit
@@ -79,22 +108,28 @@ final class StickerCollectionCell: UICollectionViewCell {
         stickerView.layer.masksToBounds = true
         
         NSLayoutConstraint.activate([
-            stickerView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            stickerView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            stickerView.heightAnchor.constraint(equalToConstant: Constants.height),
-            stickerView.widthAnchor.constraint(equalToConstant: Constants.width)
+            stickerView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor),
+            stickerView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor),
+            stickerView.heightAnchor.constraint(equalTo: mainView.heightAnchor),
+            stickerView.widthAnchor.constraint(equalTo: mainView.widthAnchor)
         ])
     }
     
-    // MARK: - Gesture recognizers
+        // MARK: - Gestures
     
-    private func setUpRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer()
-        contentView.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+    @objc private func didPress() {
+        delegate?.didTap(cell: self)
     }
     
-    @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        delegate?.didTap(cell: self, recognizer: recognizer)
+    @objc private func didStartPressing() {
+        if !isSelected {
+            mainView.backgroundColor = Constants.pressingColor
+        }
+    }
+    
+    @objc private func didStopPressing() {
+        if !isSelected {
+            mainView.backgroundColor = Constants.unselectedColor
+        }
     }
 }
