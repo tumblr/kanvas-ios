@@ -24,7 +24,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     weak var delegate: StickerTypeCollectionControllerDelegate?
     
     private lazy var stickerTypeCollectionView = StickerTypeCollectionView()
-    private lazy var stickerService = StickerService()
+    private lazy var stickerProvider = StickerProvider()
     private var stickerTypes: [StickerType] = []
     
     private lazy var imageCache: NSCache<NSString, UIImage> = {
@@ -75,7 +75,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
         stickerTypeCollectionView.collectionView.delegate = self
         stickerTypeCollectionView.collectionView.dataSource = self
         
-        stickerTypes = stickerService.getStickerTypes()
+        stickerTypes = stickerProvider.getStickerTypes()
     }
     
     override func viewDidLayoutSubviews() {

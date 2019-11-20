@@ -12,10 +12,10 @@ private struct Constants {
     static let resourceExtension: String = "json"
 }
 
-final class StickerService {
+final class StickerProvider {
     
     func getData() -> Dictionary<String, AnyObject> {
-        if let path = Bundle(for: StickerService.self).path(forResource: Constants.resourceName, ofType: Constants.resourceExtension) {
+        if let path = Bundle(for: StickerProvider.self).path(forResource: Constants.resourceName, ofType: Constants.resourceExtension) {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

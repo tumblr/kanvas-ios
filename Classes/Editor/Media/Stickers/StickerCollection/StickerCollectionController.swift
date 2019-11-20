@@ -24,7 +24,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     weak var delegate: StickerCollectionControllerDelegate?
     
     private lazy var stickerCollectionView = StickerCollectionView()
-    private lazy var stickerService = StickerService()
+    private lazy var stickerProvider = StickerProvider()
     private var stickers: [Sticker] = []
     private lazy var imageCache: NSCache<NSString, UIImage> = {
         let cache = NSCache<NSString, UIImage>()
@@ -63,7 +63,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     // MARK: - Public interface
     
     func setType(_ stickerType: StickerType) {
-        stickers = stickerService.getStickers(for: stickerType)
+        stickers = stickerProvider.getStickers(for: stickerType)
         stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
         stickerCollectionView.collectionView.reloadData()
     }
