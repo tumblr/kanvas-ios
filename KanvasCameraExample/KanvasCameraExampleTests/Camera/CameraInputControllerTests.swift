@@ -33,7 +33,7 @@ final class CameraInputControllerTests: XCTestCase {
 
     func testTakeGif() {
         let cameraInputController = newCameraInputController()
-        cameraInputController.takeGif { (url) in
+        cameraInputController.takeGif(numberOfFrames: 10, framesPerSecond: 10) { (url) in
             XCTAssertNotNil(url, "URL should not be nil")
         }
     }

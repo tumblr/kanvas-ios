@@ -11,11 +11,11 @@ import UIKit
 ///
 /// - tap: By tapping on the capture button
 /// - hold: By holding the capture button pressed
-/// - tapAndHold: By doing any of the actions the capture button will react some way
+/// - tapOrHold: By doing any of the actions the capture button will react some way
 enum CaptureTrigger {
     case tap
     case hold
-    case tapAndHold(animateCircle: Bool)
+    case tapOrHold(animateCircle: Bool)
 }
 
 /// Protocol to handle capture button user actions
@@ -84,7 +84,8 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     private var trigger: CaptureTrigger
 
     private let timeSegmentLayer: ConicalGradientLayer
-    private var maximumTime: TimeInterval?
+    private var tapMaximumTime: TimeInterval?
+    private var holdMaximumTime: TimeInterval?
     private var buttonState: ShootButtonState = .neutral
     private var startingPoint: CGPoint?
 
@@ -139,9 +140,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     ///   - trigger: The type of trigger for the button (tap, hold)
     ///   - image: the image to display in the button
     ///   - timeLimit: the animation duration of the ring
-    func configureFor(trigger: CaptureTrigger, image: UIImage?, timeLimit: TimeInterval?) {
+    func configureFor(trigger: CaptureTrigger, image: UIImage?, timeLimit: TimeInterval?, holdTimeLimit: TimeInterval? = nil) {
         self.trigger = trigger
-        maximumTime = timeLimit
+        tapMaximumTime = timeLimit
+        holdMaximumTime = holdTimeLimit ?? timeLimit
         animateImageChange(image)
     }
 
@@ -261,62 +263,63 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     // MARK: - Gesture Recognizers
 
     private func configureTapRecognizer() {
-        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
+        tapRecognizer.addTarget(self, action: #selector(onTap(recognizer:)))
     }
 
     private func configureLongPressRecognizer() {
         longPressRecognizer.minimumPressDuration = ShootButtonViewConstants.longPressMinimumDuration
-        longPressRecognizer.addTarget(self, action: #selector(handleLongPress(recognizer:)))
+        longPressRecognizer.addTarget(self, action: #selector(onLongPress(recognizer:)))
     }
 
-    @objc private func handleTap(recognizer: UITapGestureRecognizer) {
-        onTap(recognizer: recognizer)
-    }
-
-    @objc private func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        onLongPress(recognizer: recognizer)
-    }
-    
-    private func onTap(recognizer: UITapGestureRecognizer) {
+    @objc private func onTap(recognizer: UITapGestureRecognizer) {
         switch trigger {
         case .tap:
             animateTapEffect()
-            startCircleAnimation()
-        case .tapAndHold(animateCircle: true):
-            animateTapEffect()
-            startCircleAnimation()
-        case .tapAndHold(animateCircle: false):
+            if let duration = tapMaximumTime {
+                startCircleAnimation(duration: duration)
+            }
+        case .tapOrHold(animateCircle: true):
+            if let duration = tapMaximumTime {
+                animateTapEffect(duration: duration)
+                startCircleAnimation(duration: duration)
+            }
+        case .tapOrHold(animateCircle: false):
             animateTapEffect()
         case .hold: return // Do nothing on tap
         }
         delegate?.shootButtonViewDidTap()
     }
-    
-    private func onLongPress(recognizer: UILongPressGestureRecognizer) {
+
+    @objc private func onLongPress(recognizer: UILongPressGestureRecognizer) {
         switch trigger {
-        case .hold, .tapAndHold:
+        case .hold, .tapOrHold(animateCircle: false):
             onLongPressAllowed(recognizer: recognizer)
+        case .tapOrHold(animateCircle: true):
+            onLongPressAllowed(recognizer: recognizer, continueAnimationUntilComplete: true)
         default:
             break
         }
     }
     
-    private func onLongPressAllowed(recognizer: UILongPressGestureRecognizer) {
+    private func onLongPressAllowed(recognizer: UILongPressGestureRecognizer, continueAnimationUntilComplete: Bool = false) {
         switch recognizer.state {
         case .began:
-            updateForLongPress(started: true)
+            updateForLongPress(started: true, keepPressedUntilCircleAnimationComplete: continueAnimationUntilComplete)
+            delegate?.shootButtonViewDidStartLongPress()
             updateZoom(recognizer: recognizer)
         case .ended, .cancelled, .failed:
-            updateForLongPress(started: false)
+            updateForLongPress(started: false, keepPressedUntilCircleAnimationComplete: continueAnimationUntilComplete)
+            delegate?.shootButtonViewDidEndLongPress()
         default:
             updateZoom(recognizer: recognizer)
         }
     }
     
-    /// Starts the gradient animation based on the maximum time previously set
-    private func startCircleAnimation() {
-        if let timeLimit = maximumTime {
-            animateCircle(for: timeLimit, completion: { [weak self] in self?.circleAnimationCallback() })
+    /// Starts the gradient animation
+    private func startCircleAnimation(duration: TimeInterval, completion: @escaping () -> () = {}) {
+        animateCircle(for: duration) { [weak self] in
+            self?.circleAnimationCallback()
+            completion()
         }
     }
     
@@ -325,23 +328,46 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         delegate?.shootButtonDidZoom(currentPoint: currentPoint, gesture: recognizer)
     }
 
-    private func updateForLongPress(started: Bool) {
+    private func showPress(for duration: TimeInterval) {
+        showBorderView(show: false)
+        showPressInnerCircle(show: true)
+        showPressBackgroundCircle(show: true)
+        startCircleAnimation(duration: duration) { [weak self] in
+            guard let self = self else { return }
+            self.showBorderView(show: true)
+            self.showPressInnerCircle(show: false)
+            self.showPressBackgroundCircle(show: false)
+            self.buttonState = .released
+            self.terminateCircleAnimation()
+            self.containerView.layer.removeAllAnimations()
+            self.borderView.layer.removeAllAnimations()
+        }
+    }
+
+    private func updateForLongPress(started: Bool, keepPressedUntilCircleAnimationComplete: Bool = false) {
+        guard !keepPressedUntilCircleAnimationComplete else {
+            if started {
+                if let duration = holdMaximumTime {
+                    showPress(for: duration)
+                }
+            }
+            return
+        }
+
         showBorderView(show: !started)
         showPressInnerCircle(show: started)
         showPressBackgroundCircle(show: started)
         if started {
             buttonState = .animating
-            if let timeLimit = maximumTime {
-                animateCircle(for: timeLimit, completion: { [weak self] in self?.circleAnimationCallback() })
+            if let duration = holdMaximumTime {
+                startCircleAnimation(duration: duration)
             }
-            delegate?.shootButtonViewDidStartLongPress()
         }
         else {
             buttonState = .released
             terminateCircleAnimation()
             containerView.layer.removeAllAnimations()
             borderView.layer.removeAllAnimations()
-            delegate?.shootButtonViewDidEndLongPress()
         }
     }
 
@@ -456,10 +482,10 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     }
     
     /// Shows the two concentric circles for a short period of time
-    private func animateTapEffect() {
+    private func animateTapEffect(duration: TimeInterval = 0.1) {
         showBorderView(show: false, animated: false)
         showShutterButtonPressed(show: true, animated: false)
-        performUIUpdateAfter(deadline: .now() + 0.1) { [weak self] in
+        performUIUpdateAfter(deadline: .now() + duration) { [weak self] in
             self?.showBorderView(show: true, animated: false)
             self?.showShutterButtonPressed(show: false, animated: true)
         }
