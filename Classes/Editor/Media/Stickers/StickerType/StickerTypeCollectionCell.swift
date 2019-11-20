@@ -123,7 +123,9 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
             stickerView.image = image
         }
         else {
-            imageTask = stickerView.load(from: stickerType.imageUrl, cache: cache)
+            imageTask = stickerView.load(from: stickerType.imageUrl) { url, image in
+                cache.setObject(image, forKey: NSString(string: url.absoluteString))
+            }
         }
     }
     

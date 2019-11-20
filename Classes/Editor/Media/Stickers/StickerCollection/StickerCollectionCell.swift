@@ -54,7 +54,9 @@ final class StickerCollectionCell: UICollectionViewCell {
             stickerView.image = image
         }
         else {
-            imageTask = stickerView.load(from: sticker.imageUrl, cache: cache)
+            imageTask = stickerView.load(from: sticker.imageUrl) { url, image in
+                cache.setObject(image, forKey: NSString(string: url.absoluteString))
+            }
         }
     }
     

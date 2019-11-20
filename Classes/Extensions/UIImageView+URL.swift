@@ -9,7 +9,7 @@ import UIKit
 
 extension UIImageView {
     
-    func load(from url: URL, cache: NSCache<NSString, UIImage>? = nil) -> URLSessionTask {
+    func load(from url: URL, completion: ((URL, UIImage) -> Void)? = nil) -> URLSessionTask {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
                 let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
@@ -17,10 +17,7 @@ extension UIImageView {
                 let image = UIImage(data: data)
                 else { return }
             
-            if let cache = cache {
-                cache.setObject(image, forKey: NSString(string: url.absoluteString))
-            }
-            
+            completion?(url, image)
             DispatchQueue.main.async() {
                 self.image = image
             }
@@ -29,8 +26,8 @@ extension UIImageView {
         return task
     }
     
-    func load(from link: String, cache: NSCache<NSString, UIImage>? = nil) -> URLSessionTask? {
+    func load(from link: String, completion: ((URL, UIImage) -> Void)? = nil) -> URLSessionTask? {
         guard let url = URL(string: link) else { return nil }
-        return load(from: url, cache: cache)
+        return load(from: url, completion: completion)
     }
 }
