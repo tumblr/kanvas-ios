@@ -14,18 +14,20 @@ protocol StickerCollectionControllerDelegate: class {
 
 /// Constants for StickerCollectionController
 private struct Constants {
-    static let collectionInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 22, bottom: 0, right: 22)
+    static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 22, bottom: 0, right: 22)
     static let cacheSize: Int = 200
 }
 
 /// Controller for handling the filter item collection.
-final class StickerCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, StickerCollectionCellDelegate {
+final class StickerCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, StickerCollectionCellDelegate, StaggeredGridLayoutDelegate {
     
     weak var delegate: StickerCollectionControllerDelegate?
     
     private lazy var stickerCollectionView = StickerCollectionView()
     private lazy var stickerProvider = StickerProvider()
+    private var stickerType: StickerType? = nil
     private var stickers: [Sticker] = []
+    private var cellSizes: [CGSize] = []
     private lazy var imageCache: NSCache<NSString, UIImage> = {
         let cache = NSCache<NSString, UIImage>()
         cache.countLimit = Constants.cacheSize
@@ -58,20 +60,25 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         stickerCollectionView.collectionView.register(cell: StickerCollectionCell.self)
         stickerCollectionView.collectionView.delegate = self
         stickerCollectionView.collectionView.dataSource = self
+        stickerCollectionView.collectionViewLayout.delegate = self
     }
 
     // MARK: - Public interface
     
     func setType(_ stickerType: StickerType) {
+        self.stickerType = stickerType
         stickers = stickerProvider.getStickers(for: stickerType)
+        cellSizes = .init(repeating: .zero, count: stickers.count)
         stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
         stickerCollectionView.collectionView.reloadData()
     }
     
-    // MARK: - UICollectionViewDelegateFlowLayout
+    // MARK: - StaggeredGridLayoutDelegate
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return Constants.collectionInsets
+    func collectionView(_ collectionView: UICollectionView, heightForImageAtIndexPath indexPath: IndexPath) -> CGFloat {
+        guard cellSizes[indexPath.item] != .zero else { return 0 }
+        let ratio = cellSizes[indexPath.item].height / cellSizes[indexPath.item].width
+        return ratio * stickerCollectionView.collectionViewLayout.itemWidth
     }
     
     // MARK: - UICollectionViewDataSource
@@ -86,8 +93,8 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? StickerCollectionCell, let sticker = stickers.object(at: indexPath.item) {
-            cell.bindTo(sticker, cache: imageCache)
+        if let cell = cell as? StickerCollectionCell, let sticker = stickers.object(at: indexPath.item), let type = stickerType {
+            cell.bindTo(sticker, type: type, cache: imageCache, index: indexPath.item)
             cell.delegate = self
         }
         return cell
@@ -108,6 +115,17 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     func didTap(cell: StickerCollectionCell) {
         if let indexPath = stickerCollectionView.collectionView.indexPath(for: cell) {
             selectSticker(index: indexPath.item)
+        }
+    }
+    
+    func didLoadImage(index: Int, type: StickerType, image: UIImage) {
+        guard let currentType = stickerType, type == currentType else { return }
+        let previousSize = cellSizes[index]
+        cellSizes[index] = image.size
+        if previousSize == .zero {
+            DispatchQueue.main.async { [weak self] in
+                self?.stickerCollectionView.collectionViewLayout.invalidateLayout()
+            }
         }
     }
 }

@@ -7,13 +7,20 @@
 import Foundation
 import UIKit
 
+private struct Constants {
+    static let numberOfColumns: Int = 4
+    static let horizontalInset: CGFloat = 12
+}
+
 /// Collection view for StickerCollectionController
 final class StickerCollectionView: UIView {
     
+    let collectionViewLayout: StaggeredGridLayout
     let collectionView: UICollectionView
     
     init() {
-        collectionView = StickerInnerCollectionView(frame: .zero, collectionViewLayout: StickerCollectionViewLayout())
+        collectionViewLayout = StaggeredGridLayout(numberOfColumns: Constants.numberOfColumns, cellPadding: StickerCollectionCell.padding)
+        collectionView = StickerInnerCollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.accessibilityIdentifier = "Sticker Collection View"
         collectionView.backgroundColor = .clear
         
@@ -59,34 +66,13 @@ private class StickerInnerCollectionView: UICollectionView {
         allowsSelection = true
         bounces = true
         alwaysBounceHorizontal = false
-        alwaysBounceVertical = true
+        alwaysBounceVertical = false
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         autoresizesSubviews = true
-        contentInset = .zero
+        contentInset = UIEdgeInsets(top: 0, left: Constants.horizontalInset, bottom: 0, right: Constants.horizontalInset)
         decelerationRate = UIScrollView.DecelerationRate.fast
         dragInteractionEnabled = true
         reorderingCadence = .immediate
-    }
-}
-
-private class StickerCollectionViewLayout: UICollectionViewFlowLayout {
-
-    override init() {
-        super.init()
-        configure()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        configure()
-    }
-    
-    private func configure() {
-        scrollDirection = .vertical
-        itemSize = UICollectionViewFlowLayout.automaticSize
-        estimatedItemSize = CGSize(width: StickerCollectionCell.width, height: StickerCollectionCell.height)
-        minimumInteritemSpacing = 0
-        minimumLineSpacing = 0
     }
 }

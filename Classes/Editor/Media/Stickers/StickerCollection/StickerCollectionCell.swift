@@ -9,17 +9,21 @@ import UIKit
 
 /// Delegate for touch events on this cell
 protocol StickerCollectionCellDelegate: class {
-    /// Callback method when tapping a cell
+    /// Callback method for when tapping a cell
     ///
     /// - Parameters:
     ///   - cell: the cell that was tapped
     func didTap(cell: StickerCollectionCell)
+    
+    /// Callback method for when tapping a cell
+    ///
+    /// - image: the image just loaded
+    func didLoadImage(index: Int, type: StickerType, image: UIImage)
 }
 
 /// Constants for StickerCollectionCell
 private struct Constants {
-    static let height: CGFloat = 80
-    static let width: CGFloat = 80
+    static let padding: CGFloat = 10
     static let pressingColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.05)
     static let unselectedColor: UIColor = .white
 }
@@ -27,8 +31,7 @@ private struct Constants {
 /// The cell in StickerCollectionView to display an individual sticker
 final class StickerCollectionCell: UICollectionViewCell {
     
-    static let height = Constants.height
-    static let width = Constants.width
+    static let padding: CGFloat = Constants.padding
     
     private let mainView = UIButton()
     private let stickerView = UIImageView()
@@ -49,13 +52,15 @@ final class StickerCollectionCell: UICollectionViewCell {
     /// Updates the cell according to the sticker properties
     ///
     /// - Parameter sticker: The sticker to display
-    func bindTo(_ sticker: Sticker, cache: NSCache<NSString, UIImage>) {
+    func bindTo(_ sticker: Sticker, type: StickerType, cache: NSCache<NSString, UIImage>, index: Int) {
         if let image = cache.object(forKey: NSString(string: sticker.imageUrl)) {
             stickerView.image = image
+            delegate?.didLoadImage(index: index, type: type, image: image)
         }
         else {
-            imageTask = stickerView.load(from: sticker.imageUrl) { url, image in
+            imageTask = stickerView.load(from: sticker.imageUrl) { [weak self] url, image in
                 cache.setObject(image, forKey: NSString(string: url.absoluteString))
+                self?.delegate?.didLoadImage(index: index, type: type, image: image)
             }
         }
     }
@@ -87,8 +92,8 @@ final class StickerCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             mainView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
             mainView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            mainView.heightAnchor.constraint(equalToConstant: Constants.height),
-            mainView.widthAnchor.constraint(equalToConstant: Constants.width)
+            mainView.heightAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.heightAnchor),
+            mainView.widthAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.widthAnchor)
         ])
         
         mainView.addTarget(self, action: #selector(didPress), for: .touchUpInside)
