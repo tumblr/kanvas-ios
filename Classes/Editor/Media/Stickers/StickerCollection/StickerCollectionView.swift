@@ -9,7 +9,7 @@ import UIKit
 
 private struct Constants {
     static let numberOfColumns: Int = 4
-    static let horizontalInset: CGFloat = 12
+    static let horizontalInset: CGFloat = 22
 }
 
 /// Collection view for StickerCollectionController
@@ -19,7 +19,7 @@ final class StickerCollectionView: UIView {
     let collectionView: UICollectionView
     
     init() {
-        collectionViewLayout = StaggeredGridLayout(numberOfColumns: Constants.numberOfColumns, cellPadding: StickerCollectionCell.padding)
+        collectionViewLayout = StaggeredGridLayout(numberOfColumns: Constants.numberOfColumns)
         collectionView = StickerInnerCollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.accessibilityIdentifier = "Sticker Collection View"
         collectionView.backgroundColor = .clear

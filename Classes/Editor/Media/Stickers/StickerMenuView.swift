@@ -60,7 +60,6 @@ final class StickerMenuView: UIView {
     private func setupBottomCollectionContainer() {
         addSubview(bottomCollectionContainer)
         bottomCollectionContainer.accessibilityLabel = "Sticker Menu Bottom Collection Container"
-        bottomCollectionContainer.backgroundColor = Constants.backgroundColor
         bottomCollectionContainer.translatesAutoresizingMaskIntoConstraints = false
         bottomCollectionContainer.clipsToBounds = true
         
@@ -71,7 +70,14 @@ final class StickerMenuView: UIView {
             bottomCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
         ])
         
+        bottomCollectionContainer.backgroundColor = Constants.backgroundColor
         bottomCollectionContainer.layer.cornerRadius = Constants.bottomCollectionCornerRadius
         bottomCollectionContainer.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        
+        bottomCollectionContainer.layer.masksToBounds = false
+        bottomCollectionContainer.layer.shadowColor = UIColor.black.cgColor
+        bottomCollectionContainer.layer.shadowOffset = CGSize(width: 0, height: -1.0)
+        bottomCollectionContainer.layer.shadowOpacity = 0.15
+        bottomCollectionContainer.layer.shadowRadius = 3.0
     }
 }

@@ -19,7 +19,7 @@ final class StickerTypeCollectionView: UIView {
         
         super.init(frame: .zero)
         
-        clipsToBounds = false
+        clipsToBounds = true
         setUpViews()
     }
     

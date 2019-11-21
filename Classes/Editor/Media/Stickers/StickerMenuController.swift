@@ -64,7 +64,6 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     
     func didSelectSticker(_ sticker: Sticker) {
         delegate?.didSelectSticker(sticker)
-        dismiss(animated: true, completion: nil)
     }
     
     // MARK: - StickerTypeCollectionControllerDelegate

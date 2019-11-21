@@ -21,7 +21,7 @@ protocol DrawerTabBarCellDelegate: class {
 private struct Constants {
     static let labelHeight: CGFloat = 16
     static let spacing: CGFloat = 4.0
-    static let bottomLineHeight: CGFloat = 1.0
+    static let bottomLineHeight: CGFloat = 2.0
     static let height: CGFloat = labelHeight + spacing + bottomLineHeight
     static let width: CGFloat = 80
     static let selectedFont: UIFont = .favoritTumblrMedium(fontSize: 14)

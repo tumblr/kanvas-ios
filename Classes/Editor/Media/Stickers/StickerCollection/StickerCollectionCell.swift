@@ -23,7 +23,7 @@ protocol StickerCollectionCellDelegate: class {
 
 /// Constants for StickerCollectionCell
 private struct Constants {
-    static let padding: CGFloat = 10
+    static let padding: CGFloat = 6
     static let pressingColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.05)
     static let unselectedColor: UIColor = .white
 }
@@ -115,8 +115,8 @@ final class StickerCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             stickerView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor),
             stickerView.centerYAnchor.constraint(equalTo: mainView.centerYAnchor),
-            stickerView.heightAnchor.constraint(equalTo: mainView.heightAnchor),
-            stickerView.widthAnchor.constraint(equalTo: mainView.widthAnchor)
+            stickerView.heightAnchor.constraint(equalTo: mainView.heightAnchor, constant: -Constants.padding * 2),
+            stickerView.widthAnchor.constraint(equalTo: mainView.widthAnchor, constant: -Constants.padding * 2)
         ])
     }
     

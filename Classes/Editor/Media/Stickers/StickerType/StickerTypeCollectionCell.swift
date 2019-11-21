@@ -19,19 +19,23 @@ protocol StickerTypeCollectionCellDelegate: class {
 
 /// Constants for StickerTypeCollectionCell
 private struct Constants {
-    static let imageHeight: CGFloat = 60
-    static let imageWidth: CGFloat = 60
-    static let bottomPadding: CGFloat = 30
+    static let imageHeight: CGFloat = 50
+    static let imageWidth: CGFloat = 50
+    static let topPadding: CGFloat = 15
+    static let bottomPadding: CGFloat = 35
+    static let horizontalPadding: CGFloat = 25
     static let selectedColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.2)
     static let pressingColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.05)
-    static let unselectedColor: UIColor = .white
+    static let unselectedColor: UIColor = .clear
+    static let totalHeight = Constants.topPadding + Constants.imageHeight + Constants.bottomPadding
+    static let totalWidth = Constants.imageWidth + Constants.horizontalPadding
 }
 
 /// The cell in StickerTypeCollectionView to display an individual sticker
 final class StickerTypeCollectionCell: UICollectionViewCell {
     
-    static let totalHeight = Constants.imageHeight + Constants.bottomPadding
-    static let totalWidth = Constants.imageWidth
+    static let totalHeight = Constants.totalHeight
+    static let totalWidth = Constants.totalWidth
     
     private var imageTask: URLSessionTask?
     
@@ -84,8 +88,8 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             mainView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
             mainView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            mainView.heightAnchor.constraint(equalToConstant: Constants.imageHeight + Constants.bottomPadding),
-            mainView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)
+            mainView.heightAnchor.constraint(equalToConstant: Constants.totalHeight),
+            mainView.widthAnchor.constraint(equalToConstant: Constants.totalWidth)
         ])
         
         mainView.addTarget(self, action: #selector(didPress), for: .touchUpInside)
@@ -101,11 +105,12 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         stickerView.accessibilityIdentifier = "Sticker Type Collection Cell Sticker View"
         stickerView.translatesAutoresizingMaskIntoConstraints = false
         stickerView.contentMode = .scaleAspectFill
-        stickerView.clipsToBounds = false
+        stickerView.clipsToBounds = true
         stickerView.layer.masksToBounds = true
         
         NSLayoutConstraint.activate([
-            stickerView.topAnchor.constraint(equalTo: mainView.topAnchor),
+            stickerView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: Constants.topPadding),
+            stickerView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: -Constants.bottomPadding),
             stickerView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor),
             stickerView.heightAnchor.constraint(equalToConstant: Constants.imageHeight),
             stickerView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)

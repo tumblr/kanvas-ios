@@ -17,6 +17,7 @@ private struct Constants {
     static let topContainerLineRadius: CGFloat = 36
     static let topContainerLineColor: UIColor = .black
     static let backgroundColor: UIColor = .white
+    static let bottomBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.8)
     static let tabBarHeight: CGFloat = DrawerTabBarView.height
 }
 
@@ -63,6 +64,7 @@ final class MediaDrawerView: UIView {
         addSubview(childContainer)
         childContainer.accessibilityLabel = "Media Drawer Child Container"
         childContainer.translatesAutoresizingMaskIntoConstraints = false
+        childContainer.backgroundColor = Constants.bottomBackgroundColor
         childContainer.clipsToBounds = false
         
         NSLayoutConstraint.activate([

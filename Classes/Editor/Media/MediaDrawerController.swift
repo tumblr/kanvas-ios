@@ -9,6 +9,7 @@ import UIKit
 
 /// Protocol for dismissing the media drawer
 protocol MediaDrawerControllerDelegate: class {
+    func didSelectSticker(_ sticker: Sticker)
     func didDismissMediaDrawer()
 }
 
@@ -83,16 +84,15 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
             newMenu = stickerMenuController
         }
         
-        UIView.animate(withDuration: Constants.animationDuration, animations: {
-            self.openedMenu?.view.alpha = 0
-            self.openedMenu = newMenu
-            self.openedMenu?.view.alpha = 1
-        })
+        openedMenu?.view.alpha = 0
+        openedMenu = newMenu
+        openedMenu?.view.alpha = 1
     }
     
     // MARK: - StickerMenuControllerDelegate
     
     func didSelectSticker(_ sticker: Sticker) {
-        
+        delegate?.didSelectSticker(sticker)
+        dismiss(animated: true, completion: nil)
     }
 }

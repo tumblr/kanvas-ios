@@ -492,6 +492,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         confirmMenuButtonPressed()
     }
     
+    func didSelectSticker(_ sticker: Sticker) {
+        // TODO: Add sticker to layer
+    }
+    
     // MARK: - Media Drawer
     
     private func openMediaDrawer() {
