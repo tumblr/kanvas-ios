@@ -71,6 +71,7 @@ final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         selectedIndexPath = Constants.initialIndexPath
+        selectOption(index: Constants.initialIndexPath.item)
     }
     
     // MARK: - UICollectionViewDelegateFlowLayout

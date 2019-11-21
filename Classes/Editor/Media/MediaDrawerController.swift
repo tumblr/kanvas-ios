@@ -63,7 +63,6 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        openedMenu = stickerMenuController
         
         load(childViewController: drawerTabBarController, into: mediaDrawerView.tabBarContainer)
         load(childViewController: stickerMenuController, into: mediaDrawerView.childContainer)
