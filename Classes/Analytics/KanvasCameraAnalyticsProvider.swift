@@ -228,4 +228,7 @@ import Foundation
 
     /// Logs when someone taps the tag button in the Editor
     func logEditorTagTapped()
+
+    /// Logs when the Create icon is presented in the Dashboard header
+    func logIconPresentedOnDashboard()
 }

@@ -174,6 +174,10 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "logEditorTagTapped")
     }
 
+    public func logIconPresentedOnDashboard() {
+        logString(string: "logIconPresentedOnDashboard")
+    }
+
     func logString(string: String) {
         NSLog("\(self): \(string)")
     }
