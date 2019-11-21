@@ -34,7 +34,7 @@ struct ShaderConstants {
     static let attribTexturePosition: GLuint = 1
     static let numAttributes: GLuint = 2
     static let retainedBufferCount = 8
-    static let shaderDirectory = "Shaders"
+    static let shaderDirectory = "OpenGLShaders"
 }
 
 /// A wrapper for fragment and vertex shaders. Creates the program as well

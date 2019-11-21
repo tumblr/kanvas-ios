@@ -42,7 +42,7 @@ protocol EditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, GLPlayerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
@@ -89,7 +89,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
 
-    private let player: GLPlayer
+    private let player: MediaPlayer
     private var filterType: FilterType? {
         didSet {
             player.filterType = filterType
@@ -124,7 +124,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
 
-        self.player = GLPlayer(renderer: GLRenderer())
+        self.player = MediaPlayer(renderer: Renderer())
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
@@ -148,12 +148,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        let media: [GLPlayerMedia] = segments.compactMap {segment in
+        let media: [MediaPlayerContent] = segments.compactMap {segment in
             if let image = segment.image {
-                return GLPlayerMedia.image(image)
+                return .image(image)
             }
             else if let url = segment.videoURL {
-                return GLPlayerMedia.video(url)
+                return .video(url)
             }
             else {
                 return nil

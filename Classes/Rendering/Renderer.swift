@@ -10,8 +10,8 @@ import Foundation
 import OpenGLES
 import GLKit
 
-/// Callbacks for opengl rendering
-protocol GLRendererDelegate: class {
+/// Callbacks for rendering
+protocol RendererDelegate: class {
     /// Called when renderer has a processed pixel buffer ready for display. This may skip frames, so it's only
     /// intended to be used for display purposes.
     ///
@@ -26,31 +26,16 @@ protocol GLRendererDelegate: class {
     ///   - pixelBuffer: the filtered pixel buffer
     ///   - presentationTime: The append time
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime)
-    
+
     /// Called when no buffers are available
     func rendererRanOutOfBuffers()
 }
 
-protocol GLRendering: class {
-    var delegate: GLRendererDelegate? { get set }
-    var filterType: FilterType { get set }
-    var imageOverlays: [CGImage] { get set }
-    var mediaTransform: GLKMatrix4? { get set }
-    var outputDimensions: CGSize { get set }
-    var switchInputDimensions: Bool { get set }
-    var backgroundFillColor: CGColor { get set }
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
-    func output(filteredPixelBuffer: CVPixelBuffer)
-    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
-    func refreshFilter()
-    func reset()
-}
-
 /// Renders pixel buffers with open gl
-final class GLRenderer: GLRendering {
+final class Renderer: Rendering {
 
     /// Optional delegate
-    weak var delegate: GLRendererDelegate?
+    weak var delegate: RendererDelegate?
 
     /// OpenGL Context
     let glContext: EAGLContext?
