@@ -125,7 +125,7 @@
 		6244957B5A6E956A58CC74A620C00CF7 /* NavigationBarStyleDefining.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0948E3942450CD3CCB59F38C8197D3FC /* NavigationBarStyleDefining.swift */; };
 		642F052884E0983961F43481CAF3DEBE /* CALayer+CGImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B783B70AE18F14220477F52303E66B5D /* CALayer+CGImage.swift */; };
 		657AB0432370632800944C65 /* MainTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657AB0422370632800944C65 /* MainTextView.swift */; };
-		65E7F34323706A200021FC2B /* String+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7F34223706A200021FC2B /* String+Subscript.swift */; };
+		65E7F34323706A200021FC2B /* String+UTF16Substring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E7F34223706A200021FC2B /* String+UTF16Substring.swift */; };
 		6658ED04B9DE0250C8EE7863B222C6E5 /* GrayscaleFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88943131C9729A3D5A7759CE49E15BF9 /* GrayscaleFilter.swift */; };
 		66AF9BC7628E822DC6B063A0A1146B5B /* FilteredInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FDD522A579CD4F0AE9E56C720CEE81 /* FilteredInputViewController.swift */; };
 		6725654BD91B852FF5BCF0EC4AB77DAE /* CameraFilterCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C30128D32C53AA65C468A81A54935E7 /* CameraFilterCollectionCell.swift */; };
@@ -502,7 +502,7 @@
 		6579F760622EFE89EEA741DB7D9A3906 /* SharedUI-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SharedUI-Info.plist"; sourceTree = "<group>"; };
 		657AB0422370632800944C65 /* MainTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTextView.swift; sourceTree = "<group>"; };
 		659C89BCA338C32B727680867086503A /* TumblrTheme-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TumblrTheme-prefix.pch"; sourceTree = "<group>"; };
-		65E7F34223706A200021FC2B /* String+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Subscript.swift"; sourceTree = "<group>"; };
+		65E7F34223706A200021FC2B /* String+UTF16Substring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UTF16Substring.swift"; sourceTree = "<group>"; };
 		6626B2D657E4A95D5A23CADAB02281C0 /* TagsViewTagCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsViewTagCell.swift; sourceTree = "<group>"; };
 		667743545AC39F4C33DF05F202FE7CCA /* GroupFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GroupFilter.swift; sourceTree = "<group>"; };
 		66E4E7EAD168055DB472FC0BA6425415 /* TimelineContaining.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TimelineContaining.swift; path = Source/TimelineContaining.swift; sourceTree = "<group>"; };
@@ -941,7 +941,7 @@
 				59FC79341EAFC6FDCB1C05E7A9E0D1EF /* ClosedRange+Clamp.swift */,
 				1DD5FD36CF670CBC023896295CBA1811 /* IndexPath+Order.swift */,
 				FA2094AF16D0D40922C6166E1D2E281D /* NSURL+Media.swift */,
-				65E7F34223706A200021FC2B /* String+Subscript.swift */,
+				65E7F34223706A200021FC2B /* String+UTF16Substring.swift */,
 				3924B2BCF6B84DE4AE70C00B95D22214 /* UICollectionView+Cells.swift */,
 				311C3EFF263BDD90D4C2A0C1DF6CA883 /* UIColor+Brightness.swift */,
 				CFA4A55DA39D579A572E510CC58AAA8C /* UIColor+Lerp.swift */,
@@ -1863,7 +1863,7 @@
 				B4F1B235196EF207B31FF92922DD9DD5 /* CALayer+Color.swift in Sources */,
 				56FF13843949003CF8D2FA86D4569B16 /* CALayer+Shadows.swift in Sources */,
 				6841DDBC6945F318F5D8607BDB079CA2 /* CameraController.swift in Sources */,
-				65E7F34323706A200021FC2B /* String+Subscript.swift in Sources */,
+				65E7F34323706A200021FC2B /* String+UTF16Substring.swift in Sources */,
 				6725654BD91B852FF5BCF0EC4AB77DAE /* CameraFilterCollectionCell.swift in Sources */,
 				EB311B66AE99F0645BC580811867004B /* CameraFilterCollectionController.swift in Sources */,
 				DE29BAED047B2EB2A5F3544AA06B0396 /* CameraInputController.swift in Sources */,

@@ -72,10 +72,10 @@ class StylableTextView: UITextView, UITextViewDelegate {
         let range = NSRange(location: 0, length: text.count)
         
         layoutManager.enumerateLineFragments(forGlyphRange: range, using: { _, usedRect, textContainer, glyphRange, _ in
-            guard !self.isEmptyLine(text: self.text, glyphRange: glyphRange)  else { return }
+            guard !self.isEmptyLine(text: self.text, utf16LineRange: glyphRange)  else { return }
             let finalRect: CGRect
             
-            if self.endsInBlankSpace(text: self.text, glyphRange: glyphRange) {
+            if self.endsInBlankSpace(text: self.text, utf16LineRange: glyphRange) {
                 let lastSpaceRange = NSRange(location: glyphRange.upperBound - 1, length: 1)
                 let spaceRect = self.layoutManager.boundingRect(forGlyphRange: lastSpaceRange, in: textContainer)
                 finalRect = CGRect(x: usedRect.origin.x, y: usedRect.origin.y,
@@ -146,17 +146,17 @@ class StylableTextView: UITextView, UITextViewDelegate {
     /// Checks if a line of text is empty
     ///
     /// - Parameter text: complete string of text
-    /// - Parameter glyphRange: the range that represents the line
-    private func isEmptyLine(text: String, glyphRange: NSRange) -> Bool {
-        return glyphRange.length == 1 && text[glyphRange.lowerBound] == "\n"
+    /// - Parameter utf16LineRange: the range of utf16 indexes that represents the line
+    private func isEmptyLine(text: String, utf16LineRange: NSRange) -> Bool {
+        return text.copy(withUTF16Range: utf16LineRange) == "\n"
     }
     
     /// Checks if a line of text ends in a space
     ///
     /// - Parameter text: complete string of text
-    /// - Parameter glyphRange: the range that represents the line
-    private func endsInBlankSpace(text: String, glyphRange: NSRange) -> Bool {
-        return text[glyphRange.upperBound - 1] == " "
+    /// - Parameter utf16LineRange: the range of utf16 indexes that represents the line
+    private func endsInBlankSpace(text: String, utf16LineRange: NSRange) -> Bool {
+        return text.copy(withUTF16Range: utf16LineRange)?.last == " "
     }
 }
 
