@@ -9,6 +9,7 @@ import UIKit
 
 private struct Constants {
     static let numberOfColumns: Int = 4
+    static let topInset: CGFloat = 24
     static let horizontalInset: CGFloat = 22
 }
 
@@ -70,7 +71,7 @@ private class StickerInnerCollectionView: UICollectionView {
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         autoresizesSubviews = true
-        contentInset = UIEdgeInsets(top: 0, left: Constants.horizontalInset, bottom: 0, right: Constants.horizontalInset)
+        contentInset = UIEdgeInsets(top: Constants.topInset, left: Constants.horizontalInset, bottom: 0, right: Constants.horizontalInset)
         decelerationRate = UIScrollView.DecelerationRate.fast
         dragInteractionEnabled = true
         reorderingCadence = .immediate
