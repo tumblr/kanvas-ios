@@ -121,6 +121,7 @@
 		625B06B634038CB2C18BCACDF0299D84 /* UIViewController+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F9D6428FDA874DEB20C5B7F8A3D58F /* UIViewController+Orientation.swift */; };
 		62EBD13646D45BC162F5EBB1419BC1F0 /* NumTypes+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBCE24AE8D104317BB147CFC78B7701 /* NumTypes+Conversion.swift */; };
 		63E18A42D2A7AF509835F2845A3B7D19 /* OptionsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E131A57919B2929FCAE30652A294ABDF /* OptionsStackView.swift */; };
+		654D3004238831030034D976 /* Stickers in Resources */ = {isa = PBXBuildFile; fileRef = 654D3003238831030034D976 /* Stickers */; };
 		65D4A307238829C200052BD6 /* StickerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D4A2F4238829C200052BD6 /* StickerType.swift */; };
 		65D4A308238829C200052BD6 /* StickerTypeCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D4A2F5238829C200052BD6 /* StickerTypeCollectionCell.swift */; };
 		65D4A309238829C200052BD6 /* StickerTypeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D4A2F6238829C200052BD6 /* StickerTypeCollectionView.swift */; };
@@ -525,6 +526,7 @@
 		646502F7F1416F9DC121D3C9F01EB049 /* EditionMenuCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionView.swift; sourceTree = "<group>"; };
 		64761C4ADBCCE81F45C05095DCD10283 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
 		650A03C36A6E910271DD530620A07415 /* UIColor+Util.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIColor+Util.swift"; path = "Source/UIColor+Util.swift"; sourceTree = "<group>"; };
+		654D3003238831030034D976 /* Stickers */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Stickers; path = Resources/Stickers; sourceTree = "<group>"; };
 		655924240AC0A32F6D21B2F86945A385 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		6579F760622EFE89EEA741DB7D9A3906 /* SharedUI-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SharedUI-Info.plist"; sourceTree = "<group>"; };
 		659C89BCA338C32B727680867086503A /* TumblrTheme-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TumblrTheme-prefix.pch"; sourceTree = "<group>"; };
@@ -925,7 +927,6 @@
 		3AB349FF5FA584CD14F4D2C84B83ECB0 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				65D4A2F1238829C200052BD6 /* Media */,
 				560B21D365E9A8042996425F5B28630C /* EditionMenuCollectionCell.swift */,
 				EE540A99BC511E9C74AFCC78B18BE13E /* EditionMenuCollectionController.swift */,
 				646502F7F1416F9DC121D3C9F01EB049 /* EditionMenuCollectionView.swift */,
@@ -934,6 +935,7 @@
 				750D40B90C5EB1DF6B93250F6AA99147 /* EditorViewController.swift */,
 				A382B947243DEC7B33CE1AE58859137D /* Drawing */,
 				A3CF7686041529262CF97CA7280ABD3A /* Filters */,
+				65D4A2F1238829C200052BD6 /* Media */,
 				4A3B282163B92FE3CE84AC886AA9E22D /* Shared */,
 				927459553FDCA8132FA5CCCB489217F8 /* Text */,
 			);
@@ -952,7 +954,6 @@
 		403E07BC4B81AD7001A838C170CAC9D6 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				65D4A318238829D900052BD6 /* UIImageView+URL.swift */,
 				D54FC0FDBC035382BA0760FEAF8F7CE9 /* Array+Move.swift */,
 				0DFB2A13343D22CF74737A0E85974D5B /* Array+Object.swift */,
 				F84B8B27338E229348F2C18FDABDA2AB /* Array+Rotate.swift */,
@@ -975,6 +976,7 @@
 				77F3E211CFD8D573B7BC5C533EA56A96 /* UIImage+Camera.swift */,
 				0640431A2665F9AB72A4634DB029DBB1 /* UIImage+DominantColors.swift */,
 				420304A6D43BC9BBC748A4B0E549806A /* UIImage+FlipLeftMirrored.swift */,
+				65D4A318238829D900052BD6 /* UIImageView+URL.swift */,
 				FC312CC1259C1491F1B9C3527DC574FA /* UIView+Image.swift */,
 				EFFC18C4B30E7516EC999E77F0B34A94 /* UIView+Layout.swift */,
 				5C9FE43B63D2D716BA7814A51C999589 /* UIViewController+Load.swift */,
@@ -988,6 +990,7 @@
 			children = (
 				92676B44F65844C6A1B23B0358D029D4 /* Assets.xcassets */,
 				1F29F1935CEC70FEB7E67BF1EA538349 /* OpenGLShaders */,
+				654D3003238831030034D976 /* Stickers */,
 				36B632AB0159866B53DF878054BB0DCE /* silence.aac */,
 			);
 			name = Resources;
@@ -1117,10 +1120,10 @@
 			isa = PBXGroup;
 			children = (
 				65D4A2F3238829C200052BD6 /* StickerType */,
-				65D4A2F8238829C200052BD6 /* StickerMenuController.swift */,
 				65D4A2F9238829C200052BD6 /* StickerCollection */,
-				65D4A2FE238829C200052BD6 /* StickerProvider.swift */,
+				65D4A2F8238829C200052BD6 /* StickerMenuController.swift */,
 				65D4A2FF238829C200052BD6 /* StickerMenuView.swift */,
+				65D4A2FE238829C200052BD6 /* StickerProvider.swift */,
 			);
 			path = Stickers;
 			sourceTree = "<group>";
@@ -1161,13 +1164,13 @@
 		6BFE39F6FBC291C556688C5BDF1DCE2A /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				65D4A31A238829E600052BD6 /* StaggeredGridLayout.swift */,
 				D299E8A6F3763E082F182970CC0DEBDF /* ConicalGradientLayer.swift */,
 				3DB81B487E1DCAB2705480AF97CFB75F /* Device.swift */,
 				0E81A4AD5845D5183AB3CE6B94DD13BC /* IgnoreTouchesCollectionView.swift */,
 				A1DB61657E6EC8BA65EA2281FC943973 /* IgnoreTouchesView.swift */,
 				C9DB08311BEF0E4CC51929698C46075C /* Queue.swift */,
 				1EB718940FCFA38FF76B169B8EC85EB9 /* RGBA.swift */,
+				65D4A31A238829E600052BD6 /* StaggeredGridLayout.swift */,
 				3566145922A00F84FE6A4E6D96CB90E5 /* Synchronized.swift */,
 				DECFECF0DAD4BEA637E80A0779D58339 /* TrashView.swift */,
 				CCDC9150616A2B6725F2877E7F5BC753 /* UIUpdate.swift */,
@@ -1909,6 +1912,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				654D3004238831030034D976 /* Stickers in Resources */,
 				0FBEAD3661767E6C17D2CCE8EED003FE /* Assets.xcassets in Resources */,
 				E5B91775E791965014A34320792DEC5F /* OpenGLShaders in Resources */,
 				B3C9548327E7077004610C4FCC2555E7 /* silence.aac in Resources */,

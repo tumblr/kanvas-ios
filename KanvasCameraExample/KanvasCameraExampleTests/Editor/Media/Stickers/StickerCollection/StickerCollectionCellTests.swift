@@ -20,17 +20,18 @@ final class StickerCollectionCellTests: FBSnapshotTestCase {
     
     func newCell() -> StickerCollectionCell {
         let frame = CGRect(origin: CGPoint.zero,
-                           size: CGSize(width: StickerCollectionCell.width, height: StickerCollectionCell.height))
+                           size: CGSize(width: 100, height: 100))
         return StickerCollectionCell(frame: frame)
     }
     
     func testStickerCollectionCell() {
         let cell = newCell()
+        let stickerType = StickerType(baseUrl: "", keyword: "", thumbUrl: "", count: 0)
         let sticker = Sticker(baseUrl: "https://d1d7t1ygvx8siu.cloudfront.net/SDK-Assets/",
                                    keyword: "stamps.tistheseason",
                                    number: 1,
                                    imageExtension: "jpg")
-        cell.bindTo(sticker, cache: NSCache<NSString, UIImage>())
+        cell.bindTo(sticker, type: stickerType, cache: NSCache<NSString, UIImage>(), index: 0)
         FBSnapshotVerifyView(cell)
     }
 }

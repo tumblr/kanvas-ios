@@ -8,6 +8,7 @@ import Foundation
 import UIKit
 
 private struct Constants {
+    static let resourceDirectory: String = "Stickers"
     static let resourceName: String = "stickers"
     static let resourceExtension: String = "json"
 }
@@ -15,7 +16,7 @@ private struct Constants {
 final class StickerProvider {
     
     func getData() -> Dictionary<String, AnyObject> {
-        if let path = Bundle(for: StickerProvider.self).path(forResource: Constants.resourceName, ofType: Constants.resourceExtension) {
+        if let path = Bundle(for: StickerProvider.self).path(forResource: "\(Constants.resourceDirectory)/\(Constants.resourceName)", ofType: Constants.resourceExtension) {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

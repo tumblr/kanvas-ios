@@ -15,7 +15,7 @@ protocol StickerTypeCollectionControllerDelegate: class {
 /// Constants for StickerTypeController
 private struct Constants {
     static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
-    static let cacheSize: Int = 100
+    static let cacheSize: Int = 20
 }
 
 /// Controller for handling the sticker type collection.
