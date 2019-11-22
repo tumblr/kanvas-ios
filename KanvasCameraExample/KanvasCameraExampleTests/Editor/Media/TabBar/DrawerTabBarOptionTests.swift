@@ -17,4 +17,3 @@ final class DrawerTabBarOptionTests: XCTestCase {
         XCTAssertEqual(option.description, "Stickers", "Option description does not match")
     }
 }
-

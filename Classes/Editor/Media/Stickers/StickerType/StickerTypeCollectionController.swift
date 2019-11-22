@@ -81,7 +81,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         selectedIndexPath = Constants.initialIndexPath
-        selectStickerType(index:  Constants.initialIndexPath.item)
+        selectStickerType(index: Constants.initialIndexPath.item)
     }
 
     // MARK: - UICollectionViewDataSource

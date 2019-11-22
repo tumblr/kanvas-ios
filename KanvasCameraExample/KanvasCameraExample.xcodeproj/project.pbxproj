@@ -71,6 +71,7 @@
 		65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65513E0C23019DBE0025C59D /* ColorDropTests.swift */; };
 		655C934F234CCA80008F26AF /* ColorSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655C934E234CCA80008F26AF /* ColorSelectorViewTests.swift */; };
 		655C9351234CCA99008F26AF /* ColorSelectorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655C9350234CCA99008F26AF /* ColorSelectorControllerTests.swift */; };
+		6578D870238890B7002545BD /* StickerProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578D86F238890B7002545BD /* StickerProviderTests.swift */; };
 		6578F83A22E12098002B952C /* MMCQTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83822E12098002B952C /* MMCQTests.swift */; };
 		6578F83B22E12098002B952C /* ColorThiefTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83922E12098002B952C /* ColorThiefTests.swift */; };
 		6578F83E22E120BD002B952C /* CALayer+ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83C22E120BD002B952C /* CALayer+ColorTests.swift */; };
@@ -234,6 +235,7 @@
 		65513E0C23019DBE0025C59D /* ColorDropTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDropTests.swift; sourceTree = "<group>"; };
 		655C934E234CCA80008F26AF /* ColorSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectorViewTests.swift; sourceTree = "<group>"; };
 		655C9350234CCA99008F26AF /* ColorSelectorControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectorControllerTests.swift; sourceTree = "<group>"; };
+		6578D86F238890B7002545BD /* StickerProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerProviderTests.swift; sourceTree = "<group>"; };
 		6578F83822E12098002B952C /* MMCQTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMCQTests.swift; sourceTree = "<group>"; };
 		6578F83922E12098002B952C /* ColorThiefTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorThiefTests.swift; sourceTree = "<group>"; };
 		6578F83C22E120BD002B952C /* CALayer+ColorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+ColorTests.swift"; sourceTree = "<group>"; };
@@ -446,6 +448,7 @@
 				6531E8682388283400AAFD91 /* StickerCollection */,
 				6531E86D2388283400AAFD91 /* StickerMenuControllerTests.swift */,
 				6531E86E2388283400AAFD91 /* StickerMenuViewTests.swift */,
+				6578D86F238890B7002545BD /* StickerProviderTests.swift */,
 			);
 			path = Stickers;
 			sourceTree = "<group>";
@@ -1113,6 +1116,7 @@
 				65E46BA822BD22DE004FD226 /* EditionMenuCollectionCellTests.swift in Sources */,
 				76826A0E2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift in Sources */,
 				654AE16022E8B8CD00C8C0E4 /* StrokeSelectorControllerTests.swift in Sources */,
+				6578D870238890B7002545BD /* StickerProviderTests.swift in Sources */,
 				ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */,
 				6531E8782388283400AAFD91 /* StickerTypeCollectionCellTests.swift in Sources */,
 				0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */,

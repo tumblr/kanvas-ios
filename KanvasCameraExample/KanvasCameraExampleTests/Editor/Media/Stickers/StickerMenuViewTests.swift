@@ -30,4 +30,3 @@ final class StickerMenuViewTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(view)
     }
 }
-
