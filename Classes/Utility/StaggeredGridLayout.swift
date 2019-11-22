@@ -34,10 +34,12 @@
 import Foundation
 import UIKit
 
+/// Protocol for obtaining the height of a cell
 protocol StaggeredGridLayoutDelegate: AnyObject {
-    func collectionView(_ collectionView: UICollectionView, heightForImageAtIndexPath indexPath: IndexPath) -> CGFloat
+    func collectionView(_ collectionView: UICollectionView, heightOfCellAtIndexPath indexPath: IndexPath) -> CGFloat
 }
 
+/// A CollectionViewLayout that lays out the cells in a staggered grid formation. Each cell may have a different height.
 class StaggeredGridLayout: UICollectionViewLayout {
 
     weak var delegate: StaggeredGridLayoutDelegate?
@@ -94,7 +96,7 @@ class StaggeredGridLayout: UICollectionViewLayout {
         for item in 0..<collectionView.numberOfItems(inSection: 0) {
             let indexPath = IndexPath(item: item, section: 0)
         
-            let imageHeight = delegate?.collectionView(collectionView, heightForImageAtIndexPath: indexPath) ?? 0
+            let imageHeight = delegate?.collectionView(collectionView, heightOfCellAtIndexPath: indexPath) ?? 0
             let height = cellPadding * 2 + imageHeight
             let frame = CGRect(x: xOffset[column],
                                y: yOffset[column],

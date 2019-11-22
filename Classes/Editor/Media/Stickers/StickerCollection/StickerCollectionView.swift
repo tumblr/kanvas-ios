@@ -7,6 +7,7 @@
 import Foundation
 import UIKit
 
+/// Constants for StickerCollectionView
 private struct Constants {
     static let numberOfColumns: Int = 4
     static let topInset: CGFloat = 24

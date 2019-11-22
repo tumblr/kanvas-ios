@@ -14,7 +14,7 @@ private struct Constants {
     static let bottomCollectionCornerRadius: CGFloat = 30
 }
 
-/// A UIView for the sticker menu view
+/// A view for the sticker menu controller
 final class StickerMenuView: UIView {
         
     // Containers
@@ -40,7 +40,7 @@ final class StickerMenuView: UIView {
         setupBottomCollectionContainer()
     }
     
-    /// Sets up the main sticker collection
+    /// Sets up the view for the main sticker collection
     private func setupMainCollectionContainer() {
         addSubview(mainCollectionContainer)
         mainCollectionContainer.accessibilityLabel = "Sticker Menu Main Collection Container"
@@ -56,7 +56,7 @@ final class StickerMenuView: UIView {
         ])
     }
     
-    /// Sets up the sticker type collection shown at the bottom
+    /// Sets up the view for the sticker type collection shown at the bottom
     private func setupBottomCollectionContainer() {
         addSubview(bottomCollectionContainer)
         bottomCollectionContainer.accessibilityLabel = "Sticker Menu Bottom Collection Container"

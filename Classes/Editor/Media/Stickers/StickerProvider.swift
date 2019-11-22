@@ -7,14 +7,17 @@
 import Foundation
 import UIKit
 
+/// Constants for StickerProvider
 private struct Constants {
     static let resourceDirectory: String = "Stickers"
     static let resourceName: String = "stickers"
     static let resourceExtension: String = "json"
 }
 
+/// Class that obtains the stickers and sticker types
 final class StickerProvider {
     
+    /// Creates a dictionary from the stickers JSON file
     func getData() -> Dictionary<String, AnyObject> {
         if let path = Bundle(for: StickerProvider.self).path(forResource: "\(Constants.resourceDirectory)/\(Constants.resourceName)", ofType: Constants.resourceExtension) {
             do {
@@ -32,6 +35,9 @@ final class StickerProvider {
         return Dictionary<String, AnyObject>()
     }
     
+    /// Gets the collection of stickers for a specific sticker type
+    ///
+    /// - Parameter stickerType: the sticker type
     func getStickers(for stickerType: StickerType) -> [Sticker] {
         var stickers: [Sticker] = []
         for number in 1...stickerType.count {
@@ -40,6 +46,7 @@ final class StickerProvider {
         return stickers
     }
     
+    /// Gets the collection of stickers types
     func getStickerTypes() -> [StickerType] {
         let data = getData()
         

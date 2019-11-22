@@ -66,6 +66,7 @@ final class DrawerTabBarCell: UICollectionViewCell {
         setupLabel()
     }
     
+    /// Sets up the line shown below the label when the tab is selected
     private func setupBottomLine() {
         contentView.addSubview(bottomLine)
         bottomLine.accessibilityIdentifier = "Drawer Tab Bar Cell Bottom Line"
@@ -84,6 +85,7 @@ final class DrawerTabBarCell: UICollectionViewCell {
         bottomLine.alpha = 0
     }
     
+    /// Sets up the label with the tab text
     private func setupLabel() {
         contentView.addSubview(label)
         label.accessibilityIdentifier = "Drawer Tab Bar Cell Label"
@@ -124,6 +126,9 @@ final class DrawerTabBarCell: UICollectionViewCell {
         label.text = option.description
     }
     
+    /// Updates the cell style depending on whether it selected or not
+    ///
+    /// - Parameter selected: true if it is selected, false if not.
     func setSelected(_ selected: Bool) {
         if selected {
             label.font = Constants.selectedFont

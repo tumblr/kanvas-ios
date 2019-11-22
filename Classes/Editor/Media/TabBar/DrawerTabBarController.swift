@@ -39,7 +39,8 @@ final class DrawerTabBarController: UIViewController, UICollectionViewDelegate, 
         }
     }
     
-    /// Initializes the tab bar collection
+    // MARK: - Initializers
+    
     init() {
         options = [.stickers]
         super.init(nibName: .none, bundle: .none)

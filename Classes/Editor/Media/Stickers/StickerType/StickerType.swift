@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// A representation for a sticker type to be presented in the Media Drawer
+/// A representation for a sticker type to be presented in the sticker type collection
 struct StickerType: Equatable {
     
     let baseUrl: String

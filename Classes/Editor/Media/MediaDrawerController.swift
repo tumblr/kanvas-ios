@@ -9,7 +9,12 @@ import UIKit
 
 /// Protocol for selecting a sticker and dimissing the media drawer
 protocol MediaDrawerControllerDelegate: class {
+    /// Callback for when a sticker is selected
+    ///
+    /// - Parameter sticker: the selected sticker
     func didSelectSticker(_ sticker: Sticker)
+    
+    /// Callback for when the media drawer is dismissed
     func didDismissMediaDrawer()
 }
 

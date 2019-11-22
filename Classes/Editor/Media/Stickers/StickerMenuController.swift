@@ -9,10 +9,13 @@ import UIKit
 
 /// Protocol for confirming a sticker
 protocol StickerMenuControllerDelegate: class {
+    /// Callback for when a sticker is selected
+    ///
+    /// - Parameter sticker: the selected sticker
     func didSelectSticker(_ sticker: Sticker)
 }
 
-/// A view controller that contains the text tools menu
+/// A view controller that contains the sticker main collection and the sticker type collection
 final class StickerMenuController: UIViewController, StickerCollectionControllerDelegate, StickerTypeCollectionControllerDelegate {
     
     weak var delegate: StickerMenuControllerDelegate?

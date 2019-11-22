@@ -9,12 +9,12 @@ import UIKit
 
 /// Delegate for touch events on this cell
 protocol StickerTypeCollectionCellDelegate: class {
-    /// Callback method when tapping a cell
+    /// Callback method when selecting a cell
     ///
     /// - Parameters:
-    ///   - cell: the cell that was tapped
+    ///   - cell: the cell that was selected
     ///   - recognizer: the tap gesture recognizer
-    func didTap(cell: StickerTypeCollectionCell)
+    func didSelect(cell: StickerTypeCollectionCell)
 }
 
 /// Constants for StickerTypeCollectionCell
@@ -31,7 +31,7 @@ private struct Constants {
     static let totalWidth = Constants.imageWidth + Constants.horizontalPadding
 }
 
-/// The cell in StickerTypeCollectionView to display an individual sticker
+/// The cell in StickerTypeCollectionView to display an individual sticker type
 final class StickerTypeCollectionCell: UICollectionViewCell {
     
     static let totalHeight = Constants.totalHeight
@@ -120,7 +120,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     // MARK: - Gestures
     
     @objc private func didPress() {
-        delegate?.didTap(cell: self)
+        delegate?.didSelect(cell: self)
     }
     
     @objc private func didStartPressing() {
@@ -137,10 +137,11 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     
     // MARK: - Public interface
     
-    /// Updates the cell according to the sticker properties
+    /// Updates the cell according to the sticker type properties
     ///
-    /// - Parameter sticker: The sticker type to display
-    /// - Parameter cache: A cache to save the the image after loading
+    /// - Parameters
+    ///    - sticker: The sticker type to display
+    ///    - cache: A cache to save the the image after loading
     func bindTo(_ stickerType: StickerType, cache: NSCache<NSString, UIImage>) {
         if let image = cache.object(forKey: NSString(string: stickerType.imageUrl)) {
             stickerView.image = image

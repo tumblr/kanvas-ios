@@ -9,6 +9,9 @@ import UIKit
 
 /// Protocol for selecting a sticker
 protocol StickerCollectionControllerDelegate: class {
+    /// Callback for when a sticker is selected
+    ///
+    /// - Parameter sticker: the selected sticker
     func didSelectSticker(_ sticker: Sticker)
 }
 
@@ -18,8 +21,8 @@ private struct Constants {
     static let cacheSize: Int = 30
 }
 
-/// Controller for handling the filter item collection.
-final class StickerCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, StickerCollectionCellDelegate, StaggeredGridLayoutDelegate {
+/// Controller for handling the sticker item collection.
+final class StickerCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, StickerCollectionCellDelegate, StaggeredGridLayoutDelegate {
     
     weak var delegate: StickerCollectionControllerDelegate?
     
@@ -65,6 +68,9 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
 
     // MARK: - Public interface
     
+    /// Loads a new collection for a new sticker type
+    ///
+    /// - Parameter stickerType: the new sticker type
     func setType(_ stickerType: StickerType) {
         self.stickerType = stickerType
         stickers = stickerProvider.getStickers(for: stickerType)
@@ -75,7 +81,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     
     // MARK: - StaggeredGridLayoutDelegate
     
-    func collectionView(_ collectionView: UICollectionView, heightForImageAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, heightOfCellAtIndexPath indexPath: IndexPath) -> CGFloat {
         guard cellSizes[indexPath.item] != .zero else { return 0 }
         let ratio = cellSizes[indexPath.item].height / cellSizes[indexPath.item].width
         return ratio * stickerCollectionView.collectionViewLayout.itemWidth

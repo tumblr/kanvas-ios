@@ -9,6 +9,9 @@ import UIKit
 
 /// Protocol for selecting a sticker type
 protocol StickerTypeCollectionControllerDelegate: class {
+    /// Callback for when a sticker type is selected
+    ///
+    /// - Parameter sticker: the selected sticker type
     func didSelectStickerType(_ stickerType: StickerType)
 }
 
@@ -48,7 +51,8 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
         }
     }
     
-    /// Initializes the sticker type collection
+    // MARK: - Initializers
+    
     init() {
         super.init(nibName: .none, bundle: .none)
     }
@@ -119,7 +123,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     // MARK: - StickerTypeCollectionCellDelegate
     
-    func didTap(cell: StickerTypeCollectionCell) {
+    func didSelect(cell: StickerTypeCollectionCell) {
         if let indexPath = stickerTypeCollectionView.collectionView.indexPath(for: cell), indexPath != selectedIndexPath {
             selectedIndexPath = indexPath
             selectStickerType(index: indexPath.item)

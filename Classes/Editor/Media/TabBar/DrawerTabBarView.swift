@@ -7,6 +7,7 @@
 import Foundation
 import UIKit
 
+/// Constants for DrawerTabBarView
 private struct Constants {
     static let height = DrawerTabBarCell.height
 }

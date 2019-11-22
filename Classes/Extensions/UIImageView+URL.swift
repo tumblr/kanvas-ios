@@ -7,6 +7,7 @@
 import Foundation
 import UIKit
 
+/// An extension for loading an image asynchronously by providing an URL or string.
 extension UIImageView {
     
     func load(from url: URL, completion: ((URL, UIImage) -> Void)? = nil) -> URLSessionTask {

@@ -17,7 +17,8 @@ final class StaggeredGridLayoutTests: XCTestCase {
     
     func testEstimatedItemSize() {
         let layout = newLayout(numberOfColumns: 4, cellPadding: 10)
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 200, height: 100), collectionViewLayout: layout)        
+        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 200, height: 100), collectionViewLayout: layout)
+        collectionView.setNeedsDisplay()
         let expectedItemWidth: CGFloat = 30.0
         XCTAssertEqual(layout.itemWidth, expectedItemWidth, "Item width does not match.")
     }

@@ -7,11 +7,12 @@
 import Foundation
 import UIKit
 
+/// Constants for Sticker
 private struct Constants {
     static let twoDigitsFormat: String = "%02d"
 }
 
-/// A representation for a sticker to be presented in the Media Drawer
+/// A representation for a sticker to be presented in the sticker collection
 struct Sticker {
     
     private let baseUrl: String
