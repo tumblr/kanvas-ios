@@ -14,10 +14,10 @@ private struct Constants {
 /// A representation for a sticker to be presented in the Media Drawer
 struct Sticker {
     
-    let baseUrl: String
-    let keyword: String
-    let number: Int
-    let imageExtension: String
+    private let baseUrl: String
+    private let keyword: String
+    private let number: Int
+    private let imageExtension: String
     
     var imageUrl: String {
         return "\(baseUrl)\(keyword)/\(String(format: Constants.twoDigitsFormat, number)).\(imageExtension)"

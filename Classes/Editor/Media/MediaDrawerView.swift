@@ -21,7 +21,7 @@ private struct Constants {
     static let tabBarHeight: CGFloat = DrawerTabBarView.height
 }
 
-/// A UIView for the media drawer view
+/// A UIView for the media drawer controller
 final class MediaDrawerView: UIView {
     
     static let tabBarHeight: CGFloat = Constants.tabBarHeight

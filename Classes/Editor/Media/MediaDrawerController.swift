@@ -7,15 +7,10 @@
 import Foundation
 import UIKit
 
-/// Protocol for dismissing the media drawer
+/// Protocol for selecting a sticker and dimissing the media drawer
 protocol MediaDrawerControllerDelegate: class {
     func didSelectSticker(_ sticker: Sticker)
     func didDismissMediaDrawer()
-}
-
-/// Constants for MediaDrawerController
-private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
 }
 
 /// A view controller that contains the media drawer in text tools

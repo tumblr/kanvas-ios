@@ -13,11 +13,14 @@ protocol StickerCollectionCellDelegate: class {
     ///
     /// - Parameters:
     ///   - cell: the cell that was tapped
-    func didTap(cell: StickerCollectionCell)
+    func didSelect(cell: StickerCollectionCell)
     
-    /// Callback method for when tapping a cell
+    /// Callback method for when an image has finished loading
     ///
-    /// - image: the image just loaded
+    /// - Parameters:
+    ///   - index: cell index in the collection
+    ///   - type: the sticker type
+    ///   - image: the image just loaded
     func didLoadImage(index: Int, type: StickerType, image: UIImage)
 }
 
@@ -51,7 +54,11 @@ final class StickerCollectionCell: UICollectionViewCell {
     
     /// Updates the cell according to the sticker properties
     ///
-    /// - Parameter sticker: The sticker to display
+    /// - Parameters:
+    ///   - sticker: The sticker to display
+    ///   - type: The sticker type
+    ///   - cache: A cache to save the image
+    ///   - index: cell index in the collection
     func bindTo(_ sticker: Sticker, type: StickerType, cache: NSCache<NSString, UIImage>, index: Int) {
         if let image = cache.object(forKey: NSString(string: sticker.imageUrl)) {
             stickerView.image = image
@@ -81,6 +88,7 @@ final class StickerCollectionCell: UICollectionViewCell {
         setUpStickerView()
     }
     
+    /// Sets up the container that changes its color depending on whether the cell is selected or not
     private func setUpMainView() {
         contentView.addSubview(mainView)
         mainView.accessibilityIdentifier = "Sticker Collection Cell Main View"
@@ -104,6 +112,7 @@ final class StickerCollectionCell: UICollectionViewCell {
         mainView.addTarget(self, action: #selector(didStopPressing), for: .touchDragExit)
     }
     
+    /// Sets up the view that contains the sticker
     private func setUpStickerView() {
         mainView.addSubview(stickerView)
         stickerView.accessibilityIdentifier = "Sticker Collection Cell View"
@@ -123,7 +132,7 @@ final class StickerCollectionCell: UICollectionViewCell {
         // MARK: - Gestures
     
     @objc private func didPress() {
-        delegate?.didTap(cell: self)
+        delegate?.didSelect(cell: self)
     }
     
     @objc private func didStartPressing() {

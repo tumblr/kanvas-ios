@@ -112,7 +112,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     
     // MARK: - StickerCollectionCellDelegate
     
-    func didTap(cell: StickerCollectionCell) {
+    func didSelect(cell: StickerCollectionCell) {
         if let indexPath = stickerCollectionView.collectionView.indexPath(for: cell) {
             selectSticker(index: indexPath.item)
         }
