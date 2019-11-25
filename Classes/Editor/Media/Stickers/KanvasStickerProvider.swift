@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Sticker provider to be used in Orangina
 public final class KanvasStickerProvider: StickerProvider {
     
     public init() {

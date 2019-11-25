@@ -70,6 +70,7 @@
 		654AE16622E8B8F700C8C0E4 /* TextureSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE16522E8B8F700C8C0E4 /* TextureSelectorViewTests.swift */; };
 		654D2FF023882A9E0034D976 /* StaggeredGridLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654D2FEF23882A9E0034D976 /* StaggeredGridLayoutTests.swift */; };
 		65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65513E0C23019DBE0025C59D /* ColorDropTests.swift */; };
+		655A7184238C0E74003FB27D /* KanvasStickerProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655A7183238C0E74003FB27D /* KanvasStickerProviderTests.swift */; };
 		655C934F234CCA80008F26AF /* ColorSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655C934E234CCA80008F26AF /* ColorSelectorViewTests.swift */; };
 		655C9351234CCA99008F26AF /* ColorSelectorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655C9350234CCA99008F26AF /* ColorSelectorControllerTests.swift */; };
 		6578D870238890B7002545BD /* ExperimentalStickerProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578D86F238890B7002545BD /* ExperimentalStickerProviderTests.swift */; };
@@ -235,6 +236,7 @@
 		654AE16522E8B8F700C8C0E4 /* TextureSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureSelectorViewTests.swift; sourceTree = "<group>"; };
 		654D2FEF23882A9E0034D976 /* StaggeredGridLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaggeredGridLayoutTests.swift; sourceTree = "<group>"; };
 		65513E0C23019DBE0025C59D /* ColorDropTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDropTests.swift; sourceTree = "<group>"; };
+		655A7183238C0E74003FB27D /* KanvasStickerProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasStickerProviderTests.swift; sourceTree = "<group>"; };
 		655C934E234CCA80008F26AF /* ColorSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectorViewTests.swift; sourceTree = "<group>"; };
 		655C9350234CCA99008F26AF /* ColorSelectorControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectorControllerTests.swift; sourceTree = "<group>"; };
 		6578D86F238890B7002545BD /* ExperimentalStickerProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentalStickerProviderTests.swift; sourceTree = "<group>"; };
@@ -450,8 +452,9 @@
 				6531E8682388283400AAFD91 /* StickerCollection */,
 				6531E86D2388283400AAFD91 /* StickerMenuControllerTests.swift */,
 				6531E86E2388283400AAFD91 /* StickerMenuViewTests.swift */,
-				6578D86F238890B7002545BD /* ExperimentalStickerProviderTests.swift */,
 				651A8F72238B4AEC00328C13 /* StickerProviderStub.swift */,
+				655A7183238C0E74003FB27D /* KanvasStickerProviderTests.swift */,
+				6578D86F238890B7002545BD /* ExperimentalStickerProviderTests.swift */,
 			);
 			path = Stickers;
 			sourceTree = "<group>";
@@ -1097,6 +1100,7 @@
 				65E46B9722BD22CA004FD226 /* CameraFilterCollectionCellTests.swift in Sources */,
 				65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */,
 				655C9351234CCA99008F26AF /* ColorSelectorControllerTests.swift in Sources */,
+				655A7184238C0E74003FB27D /* KanvasStickerProviderTests.swift in Sources */,
 				6531E87E2388283400AAFD91 /* StickerMenuControllerTests.swift in Sources */,
 				ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */,
 				6531E87F2388283400AAFD91 /* StickerMenuViewTests.swift in Sources */,
