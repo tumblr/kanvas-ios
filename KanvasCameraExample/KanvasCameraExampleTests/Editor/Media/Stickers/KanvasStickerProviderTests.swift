@@ -9,14 +9,14 @@ import XCTest
 
 class KanvasStickerProviderTests: XCTestCase {
     
-    func testGetStickersFromStickersFile() {
+    func testGetStickers() {
         let stickerProvider = KanvasStickerProvider()
         let type = StickerType(baseUrl: "", keyword: "", thumbUrl: "", count: 10)
         let stickers = stickerProvider.getStickers(for: type)
         XCTAssertTrue(stickers.isEmpty)
     }
     
-    func testGetStickerTypesFromStickersFile() {
+    func testGetStickerTypes() {
         let stickerProvider = KanvasStickerProvider()
         let types = stickerProvider.getStickerTypes()
         XCTAssertTrue(types.isEmpty)
