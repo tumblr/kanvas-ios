@@ -26,11 +26,20 @@ final class StickerTypeCollectionCellTests: FBSnapshotTestCase {
     
     func testStickerTypeCollectionCell() {
         let cell = newCell()
-        let sticker = StickerType(baseUrl: "https://d1d7t1ygvx8siu.cloudfront.net/SDK-Assets/",
-                              keyword: "stamps.tistheseason",
-                              thumbUrl: "pack.jpg",
-                              count: 28)
-        cell.bindTo(sticker, cache: NSCache<NSString, UIImage>())
+        let stickerType = StickerType(baseUrl: "baseUrl/",
+                              keyword: "keyword",
+                              thumbUrl: "thumbUrl",
+                              count: 1)
+        
+        guard let image = KanvasCameraImages.gradientImage else {
+            XCTFail("Test image could not be found")
+            return
+        }
+        
+        let cache = NSCache<NSString, UIImage>()
+        cache.setObject(image, forKey: NSString(string: stickerType.imageUrl))
+        
+        cell.bindTo(stickerType, cache: cache)
         FBSnapshotVerifyView(cell)
     }
 }

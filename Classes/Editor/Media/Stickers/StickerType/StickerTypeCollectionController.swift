@@ -27,8 +27,8 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     weak var delegate: StickerTypeCollectionControllerDelegate?
     
     private lazy var stickerTypeCollectionView = StickerTypeCollectionView()
-    private lazy var stickerProvider = StickerProvider()
     private var stickerTypes: [StickerType] = []
+    private let stickerProvider: StickerProvider
     
     private lazy var imageCache: NSCache<NSString, UIImage> = {
         let cache = NSCache<NSString, UIImage>()
@@ -53,7 +53,8 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     // MARK: - Initializers
     
-    init() {
+    init(stickerProviderClass: StickerProvider.Type) {
+        self.stickerProvider = stickerProviderClass.init()
         super.init(nibName: .none, bundle: .none)
     }
     

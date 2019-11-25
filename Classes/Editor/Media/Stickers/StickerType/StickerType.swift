@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// A representation for a sticker type to be presented in the sticker type collection
-struct StickerType: Equatable {
+public struct StickerType: Equatable {
     
     let baseUrl: String
     let keyword: String

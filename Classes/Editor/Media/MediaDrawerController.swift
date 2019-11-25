@@ -24,6 +24,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     weak var delegate: MediaDrawerControllerDelegate?
     
     private var openedMenu: UIViewController?
+    private let stickerProviderClass: StickerProvider.Type
     
     private lazy var drawerTabBarController: DrawerTabBarController = {
         let controller = DrawerTabBarController()
@@ -32,7 +33,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     }()
     
     private lazy var stickerMenuController: StickerMenuController = {
-        let controller = StickerMenuController()
+        let controller = StickerMenuController(stickerProviderClass: self.stickerProviderClass)
         controller.delegate = self
         return controller
     }()
@@ -41,7 +42,8 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     // MARK: - Initializers
     
-    init() {
+    init(stickerProviderClass: StickerProvider.Type) {
+        self.stickerProviderClass = stickerProviderClass
         super.init(nibName: .none, bundle: .none)
     }
     

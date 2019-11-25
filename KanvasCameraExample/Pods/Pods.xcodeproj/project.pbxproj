@@ -122,6 +122,7 @@
 		62EBD13646D45BC162F5EBB1419BC1F0 /* NumTypes+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBCE24AE8D104317BB147CFC78B7701 /* NumTypes+Conversion.swift */; };
 		63E18A42D2A7AF509835F2845A3B7D19 /* OptionsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E131A57919B2929FCAE30652A294ABDF /* OptionsStackView.swift */; };
 		654D3004238831030034D976 /* Stickers in Resources */ = {isa = PBXBuildFile; fileRef = 654D3003238831030034D976 /* Stickers */; };
+		659E2C2B238B27B600ADF807 /* ExperimentalStickerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E2C2A238B27B600ADF807 /* ExperimentalStickerProvider.swift */; };
 		65D4A307238829C200052BD6 /* StickerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D4A2F4238829C200052BD6 /* StickerType.swift */; };
 		65D4A308238829C200052BD6 /* StickerTypeCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D4A2F5238829C200052BD6 /* StickerTypeCollectionCell.swift */; };
 		65D4A309238829C200052BD6 /* StickerTypeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D4A2F6238829C200052BD6 /* StickerTypeCollectionView.swift */; };
@@ -530,6 +531,7 @@
 		655924240AC0A32F6D21B2F86945A385 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		6579F760622EFE89EEA741DB7D9A3906 /* SharedUI-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SharedUI-Info.plist"; sourceTree = "<group>"; };
 		659C89BCA338C32B727680867086503A /* TumblrTheme-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TumblrTheme-prefix.pch"; sourceTree = "<group>"; };
+		659E2C2A238B27B600ADF807 /* ExperimentalStickerProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentalStickerProvider.swift; sourceTree = "<group>"; };
 		65D4A2F4238829C200052BD6 /* StickerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerType.swift; sourceTree = "<group>"; };
 		65D4A2F5238829C200052BD6 /* StickerTypeCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerTypeCollectionCell.swift; sourceTree = "<group>"; };
 		65D4A2F6238829C200052BD6 /* StickerTypeCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerTypeCollectionView.swift; sourceTree = "<group>"; };
@@ -1124,6 +1126,7 @@
 				65D4A2F8238829C200052BD6 /* StickerMenuController.swift */,
 				65D4A2FF238829C200052BD6 /* StickerMenuView.swift */,
 				65D4A2FE238829C200052BD6 /* StickerProvider.swift */,
+				659E2C2A238B27B600ADF807 /* ExperimentalStickerProvider.swift */,
 			);
 			path = Stickers;
 			sourceTree = "<group>";
@@ -2090,6 +2093,7 @@
 				504681B5DBBB01F94697866564326DB2 /* OptionsController.swift in Sources */,
 				63E18A42D2A7AF509835F2845A3B7D19 /* OptionsStackView.swift in Sources */,
 				9A164F1F01117A664C700A8A3C0EDFE1 /* OptionView.swift in Sources */,
+				659E2C2B238B27B600ADF807 /* ExperimentalStickerProvider.swift in Sources */,
 				E1095A86F4A29B8AB8F23CB1B2351B05 /* Pencil.swift in Sources */,
 				65D4A317238829C200052BD6 /* MediaDrawerView.swift in Sources */,
 				085451582006D80EDAE9453FBC31F714 /* PhotoOutputHandler.swift in Sources */,

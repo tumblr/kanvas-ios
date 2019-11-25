@@ -19,7 +19,7 @@ final class StickerCollectionControllerTests: FBSnapshotTestCase {
     }
     
     func newViewController() -> StickerCollectionController {
-        let controller = StickerCollectionController()
+        let controller = StickerCollectionController(stickerProviderClass: StickerProviderStub.self)
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         controller.view.setNeedsDisplay()
         return controller

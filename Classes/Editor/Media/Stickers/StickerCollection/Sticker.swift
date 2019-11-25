@@ -13,7 +13,7 @@ private struct Constants {
 }
 
 /// A representation for a sticker to be presented in the sticker collection
-struct Sticker {
+public struct Sticker {
     
     private let baseUrl: String
     private let keyword: String

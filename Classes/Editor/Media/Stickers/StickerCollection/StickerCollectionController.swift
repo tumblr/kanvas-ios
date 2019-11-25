@@ -27,7 +27,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     weak var delegate: StickerCollectionControllerDelegate?
     
     private lazy var stickerCollectionView = StickerCollectionView()
-    private lazy var stickerProvider = StickerProvider()
+    private let stickerProvider: StickerProvider
     private var stickerType: StickerType? = nil
     private var stickers: [Sticker] = []
     private var cellSizes: [CGSize] = []
@@ -37,8 +37,10 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         return cache
     }()
     
-    /// Initializes the sticker collection
-    init() {
+    // MARK: - Initializers
+    
+    init(stickerProviderClass: StickerProvider.Type) {
+        self.stickerProvider = stickerProviderClass.init()
         super.init(nibName: .none, bundle: .none)
     }
     

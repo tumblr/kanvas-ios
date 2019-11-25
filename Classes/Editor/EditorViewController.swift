@@ -79,7 +79,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }()
     
     private lazy var mediaDrawerController: MediaDrawerController = {
-        let controller = MediaDrawerController()
+        let controller = MediaDrawerController(stickerProviderClass: self.stickerProviderClass)
         controller.delegate = self
         return controller
     }()
@@ -91,6 +91,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let exporterClass: MediaExporting.Type
+    private let stickerProviderClass: StickerProvider.Type
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
@@ -122,13 +123,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, stickerProviderClass: StickerProvider.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
+        self.stickerProviderClass = stickerProviderClass
 
         self.player = MediaPlayer(renderer: Renderer())
         super.init(nibName: .none, bundle: .none)

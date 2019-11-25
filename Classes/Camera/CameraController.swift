@@ -147,6 +147,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var disposables: [NSKeyValueObservation] = []
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
+    private let stickerProviderClass: StickerProvider.Type
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
     private var mediaPickerThumbnailTargetSize: CGSize = CGSize(width: 0, height: 0)
@@ -163,8 +164,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// interact with the user, which options should the controller give the user
     /// and which should be the result of the interaction.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, analyticsProvider: KanvasCameraAnalyticsProvider?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, analyticsProvider: analyticsProvider)
+    ///   - stickerProvider: An class conforming to StickerProvider
+    convenience public init(settings: CameraSettings, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, stickerProviderClass: stickerProviderClass, analyticsProvider: analyticsProvider)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -180,12 +182,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     init(settings: CameraSettings,
          recorderClass: CameraRecordingProtocol.Type,
          segmentsHandlerClass: SegmentsHandlerType.Type,
+         stickerProviderClass: StickerProvider.Type,
          analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
+        self.stickerProviderClass = stickerProviderClass
         self.analyticsProvider = analyticsProvider
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
@@ -293,7 +297,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
-        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, cameraMode: currentMode, analyticsProvider: analyticsProvider)
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, stickerProviderClass: stickerProviderClass, cameraMode: currentMode, analyticsProvider: analyticsProvider)
         controller.delegate = self
         return controller
     }
