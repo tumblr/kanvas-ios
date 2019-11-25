@@ -11,8 +11,8 @@ import UIKit
 protocol StickerMenuControllerDelegate: class {
     /// Callback for when a sticker is selected
     ///
-    /// - Parameter sticker: the selected sticker
-    func didSelectSticker(_ sticker: Sticker)
+    /// - Parameter sticker: the sticker image
+    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
 }
 
 /// A view controller that contains the sticker main collection and the sticker type collection
@@ -66,8 +66,10 @@ final class StickerMenuController: UIViewController, StickerCollectionController
         
     // MARK: - StickerCollectionControllerDelegate
     
-    func didSelectSticker(_ sticker: Sticker) {
-        delegate?.didSelectSticker(sticker)
+    func didSelectSticker(sticker: UIImage, with size: CGSize) {
+        let imageView = StylableImageView(image: sticker)
+        delegate?.didSelectSticker(imageView: imageView, transformations: ViewTransformations(),
+                                   location: UIScreen.main.bounds.center, size: size)
     }
     
     // MARK: - StickerTypeCollectionControllerDelegate

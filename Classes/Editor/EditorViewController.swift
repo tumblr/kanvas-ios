@@ -333,8 +333,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             imageOverlays.append(drawingOverlayImage)
         }
         
-        editorView.textCanvas.updateLayer()
-        if let textOverlayImage = editorView.textCanvas.layer.cgImage() {
+        editorView.movableViewCanvas.updateLayer()
+        if let textOverlayImage = editorView.movableViewCanvas.layer.cgImage() {
             imageOverlays.append(textOverlayImage)
         }
         return imageOverlays
@@ -452,11 +452,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - EditorTextControllerDelegate
     
-    func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
-        if options.haveText {
-            editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
-            if let font = KanvasTextFont.from(font: options.font), let alignment = KanvasTextAlignment.from(alignment: options.alignment) {
-                analyticsProvider?.logEditorTextConfirm(new: editingNewText, font: font, alignment: alignment, highlighted: options.highlightColor != nil)
+    func didConfirmText(textView: StylableTextView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        if !textView.text.isEmpty {
+            editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size)
+            if let font = KanvasTextFont.from(font: textView.options.font), let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
+                analyticsProvider?.logEditorTextConfirm(new: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
             }
             else {
                 assertionFailure("Logging unknown stuff")
@@ -466,7 +466,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didMoveToolsUp() {
-        editorView.textCanvas.removeSelectedText()
+        editorView.movableViewCanvas.removeSelectedView()
     }
 
     func didChange(font: UIFont) {
@@ -533,8 +533,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         confirmMenuButtonPressed()
     }
     
-    func didSelectSticker(_ sticker: Sticker) {
-        // TODO: Add sticker to layer (https://jira.tumblr.net/browse/KANVAS-850)
+    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
     }
     
     // MARK: - Media Drawer

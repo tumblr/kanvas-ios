@@ -19,8 +19,8 @@ final class TextCanvasTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newView() -> TextCanvas {
-        let view = TextCanvas()
+    func newView() -> MovableViewCanvas {
+        let view = MovableViewCanvas()
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         view.backgroundColor = .tumblrBrightBlue
         return view
@@ -28,23 +28,27 @@ final class TextCanvasTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let view = newView()
-        let options = TextOptions(text: "Example")
+        let textView = StylableTextView()
+        textView.backgroundColor = .clear
+        textView.options = TextOptions(text: "Example")
         let location = view.center
         let transformations =  ViewTransformations()
-        view.addText(options: options, transformations: transformations, location: location, size: view.frame.size)
+        view.addView(view: textView, transformations: transformations, location: location, size: view.frame.size)
         FBSnapshotVerifyView(view)
     }
     
     func testMovableTextView() {
         let view = newView()
-        let options = TextOptions(text: "Example")
+        let textView = StylableTextView()
+        textView.backgroundColor = .clear
+        textView.options = TextOptions(text: "Example")
         let transformations =  ViewTransformations(position: CGPoint(x: 0, y: 300),
                                                    scale: 1.4,
                                                    rotation: 1.2)
-        let textView = MovableTextView(options: options, transformations: transformations)
-        textView.frame = CGRect(x: 0, y: 0, width: 250, height: 100)
-        view.addSubview(textView)
-        textView.moveToDefinedPosition()
+        let movableView = MovableView(view: textView, transformations: transformations)
+        movableView.frame = CGRect(x: 0, y: 0, width: 250, height: 100)
+        view.addSubview(movableView)
+        movableView.moveToDefinedPosition()
         FBSnapshotVerifyView(view)
     }
 }

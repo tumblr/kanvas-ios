@@ -15,10 +15,10 @@ private struct Constants {
     static let translucentAlpha: CGFloat = 0.8
 }
 
-/// A TextView wrapped in a UIView that can be rotated, moved and scaled
-final class MovableTextView: UIView {
+/// A wrapper for UIViews that can be rotated, moved and scaled
+final class MovableView: UIView {
     
-    let innerTextView: StylableTextView
+    let innerView: UIView
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -41,27 +41,18 @@ final class MovableTextView: UIView {
         }
     }
     
-    var options: TextOptions {
-        get {
-            return innerTextView.options
-        }
-        set {
-            innerTextView.options = newValue
-        }
-    }
-    
     var transformations: ViewTransformations {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
     }
     
-    init(options: TextOptions, transformations: ViewTransformations) {
-        self.innerTextView = StylableTextView()
+    init(view innerView: UIView, transformations: ViewTransformations) {
+        self.innerView = innerView
         self.position = transformations.position
         self.scale = transformations.scale
         self.rotation = transformations.rotation
         super.init(frame: .zero)
         
-        setupTextView(options: options)
+        setupInnerView()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -70,14 +61,9 @@ final class MovableTextView: UIView {
     
     // MARK: - Layout
     
-    /// Sets up the inner text view
-    ///
-    /// - Parameter option: text style options
-    private func setupTextView(options: TextOptions) {
-        innerTextView.isUserInteractionEnabled = false
-        innerTextView.backgroundColor = .clear
-        innerTextView.options = options
-        innerTextView.add(into: self)
+    /// Sets up the inner view
+    private func setupInnerView() {
+        innerView.add(into: self)
     }
     
     
@@ -85,15 +71,14 @@ final class MovableTextView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        innerTextView.setScaleFactor(scale)
-        innerTextView.updateHighlight()
+        innerView.contentScaleFactor = scale
     }
 
     // MARK: - Transforms
     
     /// Updates the scaling, rotation and position transformations
     private func applyTransform() {
-        innerTextView.setScaleFactor(scale)
+        innerView.contentScaleFactor = scale
         
         transform = CGAffineTransform(scaleX: scale, y: scale)
             .concatenating(CGAffineTransform(rotationAngle: rotation))
@@ -129,27 +114,10 @@ final class MovableTextView: UIView {
     /// Removes the view from its superview with an animation
     func remove() {
         UIView.animate(withDuration: Constants.animationDuration, animations: {
-            self.innerTextView.transform = CGAffineTransform(scaleX: Constants.deletionScale, y: Constants.deletionScale)
+            self.innerView.transform = CGAffineTransform(scaleX: Constants.deletionScale, y: Constants.deletionScale)
             self.alpha = 0
         }, completion: { _ in
             self.removeFromSuperview()
         })
-    }
-}
-
-private extension UITextView {
-    
-    /// Sets a new scale factor to update the quality of the text. This value represents how content in the view is mapped
-    /// from the logical coordinate space (measured in points) to the device coordinate space (measured in pixels).
-    /// For example, if the scale factor is 2.0, 2 pixels will be used to draw each point of the frame.
-    ///
-    /// - Parameter scaleFactor: the new scale factor. The value will be internally multiplied by the native scale of the device.
-    /// Values must be higher than 1.0.
-    func setScaleFactor(_ scaleFactor: CGFloat) {
-        guard scaleFactor >= 1.0 else { return }
-        let scaleFactorForDevice = scaleFactor * UIScreen.main.nativeScale
-        for subview in textInputView.subviews {
-            subview.contentScaleFactor = scaleFactorForDevice
-        }
     }
 }

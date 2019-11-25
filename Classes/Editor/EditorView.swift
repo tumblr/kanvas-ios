@@ -53,7 +53,7 @@ private struct EditorViewConstants {
 
 /// A UIView to preview the contents of segments without exporting
 
-final class EditorView: UIView, TextCanvasDelegate {
+final class EditorView: UIView, MovableViewCanvasDelegate {
 
     enum MainActionMode {
         case confirm
@@ -81,8 +81,8 @@ final class EditorView: UIView, TextCanvasDelegate {
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
     
-    lazy var textCanvas: TextCanvas = {
-        let textCanvas = TextCanvas()
+    lazy var movableViewCanvas: MovableViewCanvas = {
+        let textCanvas = MovableViewCanvas()
         textCanvas.delegate = self
         return textCanvas
     }()
@@ -106,7 +106,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     private func setupViews() {
         setupPlayer()
         drawingCanvas.add(into: self)
-        textCanvas.add(into: self)
+        movableViewCanvas.add(into: self)
         setupNavigationContainer()
         setupCloseButton()
         if showTagButton {
@@ -473,7 +473,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     /// - Parameter show: true to show, false to hide
     func showTextCanvas(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-            self.textCanvas.alpha = show ? 1 : 0
+            self.movableViewCanvas.alpha = show ? 1 : 0
         }
     }
 
@@ -488,7 +488,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     
     // MARK: - TextCanvasDelegate
     
-    func didTapText(options: TextOptions, transformations: ViewTransformations) {
+    func didTapMovableView(options: TextOptions, transformations: ViewTransformations) {
         delegate?.didTapText(options: options, transformations: transformations)
     }
 
@@ -500,11 +500,11 @@ final class EditorView: UIView, TextCanvasDelegate {
         delegate?.didMoveText()
     }
     
-    func didBeginTouchesOnText() {
+    func didBeginTouchesOnMovableView() {
         delegate?.didBeginTouchesOnText()
     }
     
-    func didEndTouchesOnText() {
+    func didEndTouchesOnMovableView() {
         delegate?.didEndTouchesOnText()
     }
 }

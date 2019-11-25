@@ -11,8 +11,8 @@ import UIKit
 protocol StickerCollectionControllerDelegate: class {
     /// Callback for when a sticker is selected
     ///
-    /// - Parameter sticker: the selected sticker
-    func didSelectSticker(_ sticker: Sticker)
+    /// - Parameter image: the sticker image
+    func didSelectSticker(sticker: UIImage, with size: CGSize)
 }
 
 /// Constants for StickerCollectionController
@@ -107,23 +107,11 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         }
         return cell
     }
-    
-    // MARK: Sticker selection
-    
-    /// Selects a sticker
-    ///
-    /// - Parameter index: position of the sticker in the collection
-    private func selectSticker(index: Int) {
-        guard let sticker = stickers.object(at: index) else { return }
-        delegate?.didSelectSticker(sticker)
-    }
-    
+        
     // MARK: - StickerCollectionCellDelegate
     
-    func didSelect(cell: StickerCollectionCell) {
-        if let indexPath = stickerCollectionView.collectionView.indexPath(for: cell) {
-            selectSticker(index: indexPath.item)
-        }
+    func didSelect(sticker: UIImage, with size: CGSize) {
+        delegate?.didSelectSticker(sticker: sticker, with: size)
     }
     
     func didLoadImage(index: Int, type: StickerType, image: UIImage) {
