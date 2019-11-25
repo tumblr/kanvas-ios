@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class TextCanvasTests: FBSnapshotTestCase {
+final class MovableViewCanvasTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()

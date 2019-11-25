@@ -502,7 +502,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didStartColorSelection() {
         drawingController.showCanvas(false)
-        editorView.showTextCanvas(false)
+        editorView.showMovableViewCanvas(false)
     }
     
     func didStartMovingColorSelector() {
@@ -516,7 +516,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             player.resume()
         }
         drawingController.showCanvas(true)
-        editorView.showTextCanvas(true)
+        editorView.showMovableViewCanvas(true)
     }
     
     func getColor(from point: CGPoint) -> UIColor {

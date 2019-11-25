@@ -82,9 +82,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     let drawingCanvas = IgnoreTouchesView()
     
     lazy var movableViewCanvas: MovableViewCanvas = {
-        let textCanvas = MovableViewCanvas()
-        textCanvas.delegate = self
-        return textCanvas
+        let canvas = MovableViewCanvas()
+        canvas.delegate = self
+        return canvas
     }()
     
     weak var delegate: EditorViewDelegate?
@@ -471,7 +471,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     /// shows or hides the text canvas
     ///
     /// - Parameter show: true to show, false to hide
-    func showTextCanvas(_ show: Bool) {
+    func showMovableViewCanvas(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.movableViewCanvas.alpha = show ? 1 : 0
         }
@@ -486,7 +486,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         }
     }
     
-    // MARK: - TextCanvasDelegate
+    // MARK: - MovableViewCanvasDelegate
     
     func didTapMovableView(options: TextOptions, transformations: ViewTransformations) {
         delegate?.didTapText(options: options, transformations: transformations)
