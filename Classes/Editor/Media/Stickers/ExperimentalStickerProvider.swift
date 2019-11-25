@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// Constants for StickerProvider
+/// Constants for ExperimentalStickerProvider
 private struct Constants {
     static let resourceDirectory: String = "Stickers"
     static let resourceName: String = "stickers"

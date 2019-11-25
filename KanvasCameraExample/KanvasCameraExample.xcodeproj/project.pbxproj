@@ -453,8 +453,8 @@
 				6531E86D2388283400AAFD91 /* StickerMenuControllerTests.swift */,
 				6531E86E2388283400AAFD91 /* StickerMenuViewTests.swift */,
 				651A8F72238B4AEC00328C13 /* StickerProviderStub.swift */,
-				655A7183238C0E74003FB27D /* KanvasStickerProviderTests.swift */,
 				6578D86F238890B7002545BD /* ExperimentalStickerProviderTests.swift */,
+				655A7183238C0E74003FB27D /* KanvasStickerProviderTests.swift */,
 			);
 			path = Stickers;
 			sourceTree = "<group>";
