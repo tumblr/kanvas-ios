@@ -11,7 +11,11 @@ import UIKit
 protocol StickerMenuControllerDelegate: class {
     /// Callback for when a sticker is selected
     ///
-    /// - Parameter sticker: the sticker image
+    /// - Parameters
+    ///  - imageView: an image view with the sticker
+    ///  - transformations: transformations to be applied to the image view
+    ///  - location: initial position of the image in its parent view
+    ///  - size: image view size
     func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
 }
 
