@@ -14,6 +14,7 @@ protocol StickerCollectionCellDelegate: class {
     ///
     /// - Parameters:
     ///   - sticker: the sticker image
+    ///   - size: image view size
     func didSelect(sticker: UIImage, with size: CGSize)
     
     /// Callback method for when an image has finished loading
@@ -49,10 +50,6 @@ final class StickerCollectionCell: UICollectionViewCell {
     }()
     
     weak var delegate: StickerCollectionCellDelegate?
-    
-    var stickerImage: UIImage? {
-        return stickerView.image
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)

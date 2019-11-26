@@ -12,7 +12,7 @@ protocol EditorTextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
     ///
-    /// - Parameter options: text style options
+    /// - Parameter textView: confirmed text view 
     /// - Parameter transformations: position, scaling and rotation angle for the view
     /// - Parameter location: location of the text view before transformations
     /// - Parameter size: text view size
@@ -202,7 +202,6 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     private func didConfirmText() {
         let newTextView = StylableTextView()
         newTextView.isUserInteractionEnabled = false
-        newTextView.backgroundColor = .clear
         newTextView.options = textView.options
         
         delegate?.didConfirmText(textView: newTextView, transformations: textTransformations, location: textView.location, size: textView.textSize)

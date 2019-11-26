@@ -29,7 +29,6 @@ final class MovableViewCanvasTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         let textView = StylableTextView()
-        textView.backgroundColor = .clear
         textView.options = TextOptions(text: "Example")
         let location = view.center
         let transformations =  ViewTransformations()
@@ -40,7 +39,6 @@ final class MovableViewCanvasTests: FBSnapshotTestCase {
     func testMovableTextView() {
         let view = newView()
         let textView = StylableTextView()
-        textView.backgroundColor = .clear
         textView.options = TextOptions(text: "Example")
         let transformations =  ViewTransformations(position: CGPoint(x: 0, y: 300),
                                                    scale: 1.4,

@@ -48,18 +48,21 @@ class StylableTextView: UITextView, UITextViewDelegate {
         highlightViews = []
         super.init(frame: .zero, textContainer: nil)
         delegate = self
+        backgroundColor = .clear
     }
     
     init(frame: CGRect) {
         highlightViews = []
         super.init(frame: frame, textContainer: nil)
         delegate = self
+        backgroundColor = .clear
     }
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         highlightViews = []
         super.init(frame: frame, textContainer: textContainer)
         delegate = self
+        backgroundColor = .clear
     }
     
     required init?(coder aDecoder: NSCoder) {

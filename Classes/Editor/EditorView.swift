@@ -468,7 +468,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         }
     }
     
-    /// shows or hides the text canvas
+    /// shows or hides the canvas for movable views
     ///
     /// - Parameter show: true to show, false to hide
     func showMovableViewCanvas(_ show: Bool) {

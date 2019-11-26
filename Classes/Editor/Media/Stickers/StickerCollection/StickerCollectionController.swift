@@ -10,6 +10,7 @@ import UIKit
 /// Protocol for selecting a sticker
 protocol StickerCollectionControllerDelegate: class {
     /// Callback for when a sticker is selected
+    /// 
     /// - Parameters
     ///  - image: the sticker image
     ///  - size: image view size

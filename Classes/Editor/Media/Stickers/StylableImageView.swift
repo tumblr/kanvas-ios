@@ -7,6 +7,7 @@
 import Foundation
 import UIKit
 
+/// Image view that increases its image quality when its contentScaleFactor is modified
 final class StylableImageView: UIImageView {
     
     override var contentScaleFactor: CGFloat {
@@ -17,7 +18,7 @@ final class StylableImageView: UIImageView {
     
     // MARK: - Scale factor
     
-    /// Sets a new scale factor to update the quality of the text. This value represents how content in the view is mapped
+    /// Sets a new scale factor to update the quality of the inner image. This value represents how content in the view is mapped
     /// from the logical coordinate space (measured in points) to the device coordinate space (measured in pixels).
     /// For example, if the scale factor is 2.0, 2 pixels will be used to draw each point of the frame.
     ///

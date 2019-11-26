@@ -14,7 +14,7 @@ protocol StickerMenuControllerDelegate: class {
     /// - Parameters
     ///  - imageView: an image view with the sticker
     ///  - transformations: transformations to be applied to the image view
-    ///  - location: initial position of the image in its parent view
+    ///  - location: initial position of the image view in its parent view
     ///  - size: image view size
     func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
 }
