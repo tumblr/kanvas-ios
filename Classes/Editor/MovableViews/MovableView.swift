@@ -7,6 +7,16 @@
 import Foundation
 import UIKit
 
+/// Delegate for tapping a movable view
+protocol MovableViewDelegate: class {
+    /// Callback for when a movable view with text is tapped
+    ///
+    /// - Parameters
+    ///  - movableView: the tapped movable view
+    ///  - textView: the text view inside the movable view
+    func didTapTextView(movableView: MovableView, textView: StylableTextView)
+}
+
 /// Constants for MovableTextView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.35
@@ -18,7 +28,8 @@ private struct Constants {
 /// A wrapper for UIViews that can be rotated, moved and scaled
 final class MovableView: UIView {
     
-    let innerView: UIView
+    weak var delegate: MovableViewDelegate?
+    private let innerView: UIView
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -119,5 +130,11 @@ final class MovableView: UIView {
         }, completion: { _ in
             self.removeFromSuperview()
         })
+    }
+    
+    /// Called when the view is tapped
+    func onTap() {
+        guard let textView = innerView as? StylableTextView else { return }
+        delegate?.didTapTextView(movableView: self, textView: textView)
     }
 }

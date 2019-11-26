@@ -13,7 +13,7 @@ protocol MovableViewCanvasDelegate: class {
     ///
     /// - Parameter option: text style options
     /// - Parameter transformations: transformations for the view
-    func didTapMovableView(options: TextOptions, transformations: ViewTransformations)
+    func didTapTextView(options: TextOptions, transformations: ViewTransformations)
     
     /// Called when text is removed
     func didRemoveText()
@@ -37,7 +37,7 @@ private struct Constants {
 }
 
 /// View that contains the collection of movable views
-final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
+final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, MovableViewDelegate {
     
     weak var delegate: MovableViewCanvasDelegate?
     
@@ -118,6 +118,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     ///  - size: size of the view
     func addView(view: UIView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         let movableView = MovableView(view: view, transformations: transformations)
+        movableView.delegate = self
         movableView.isUserInteractionEnabled = true
         movableView.isExclusiveTouch = true
         movableView.isMultipleTouchEnabled = true
@@ -168,15 +169,8 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     // MARK: - Gesture recognizers
     
     @objc func movableViewTapped(recognizer: UITapGestureRecognizer) {
-        guard let movableView = recognizer.view as? MovableView,
-            let textView = movableView.innerView as? StylableTextView else { return }
-        
-        UIView.animate(withDuration: Constants.animationDuration, animations: {
-            movableView.goBackToOrigin()
-        }, completion: { [weak self] _ in
-            self?.delegate?.didTapMovableView(options: textView.options, transformations: movableView.transformations)
-            self?.selectedMovableView = movableView
-        })
+        guard let movableView = recognizer.view as? MovableView else { return }
+        movableView.onTap()
     }
     
     @objc func movableViewRotated(recognizer: UIRotationGestureRecognizer) {
@@ -281,6 +275,17 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         let oneIsTapGesture = gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer
         return !oneIsTapGesture
+    }
+    
+    // MARK: - MovableViewDelegate
+    
+    func didTapTextView(movableView: MovableView, textView: StylableTextView) {
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
+            movableView.goBackToOrigin()
+        }, completion: { [weak self] _ in
+            self?.delegate?.didTapTextView(options: textView.options, transformations: movableView.transformations)
+            self?.selectedMovableView = movableView
+        })
     }
     
     // MARK: - Private utilities

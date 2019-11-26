@@ -582,7 +582,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         confirmButton.alpha = show ? 1 : 0
     }
     
-    // MARK: - Private utilitites
+    // MARK: - Private utilities
     
     /// shows or hides the main text view
     ///

@@ -488,7 +488,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     
     // MARK: - MovableViewCanvasDelegate
     
-    func didTapMovableView(options: TextOptions, transformations: ViewTransformations) {
+    func didTapTextView(options: TextOptions, transformations: ViewTransformations) {
         delegate?.didTapText(options: options, transformations: transformations)
     }
 
