@@ -18,7 +18,7 @@ protocol StickerCollectionControllerDelegate: class {
 /// Constants for StickerCollectionController
 private struct Constants {
     static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 22, bottom: 0, right: 22)
-    static let cacheSize: Int = 30
+    static let cacheSize: Int = 80
 }
 
 /// Controller for handling the sticker item collection.
