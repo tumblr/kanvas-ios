@@ -78,6 +78,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         stickers = stickerProvider.getStickers(for: stickerType)
         cellSizes = .init(repeating: .zero, count: stickers.count)
         stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
+        stickerCollectionView.startLoading()
         stickerCollectionView.collectionView.reloadData()
     }
     
@@ -132,6 +133,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         cellSizes[index] = image.size
         if previousSize == .zero {
             DispatchQueue.main.async { [weak self] in
+                self?.stickerCollectionView.stopLoading()
                 self?.stickerCollectionView.collectionViewLayout.invalidateLayout()
             }
         }

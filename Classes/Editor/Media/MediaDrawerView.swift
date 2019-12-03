@@ -62,7 +62,7 @@ final class MediaDrawerView: UIView {
     /// Sets up the container for the new view after a tab is selected
     private func setupChildContainer() {
         addSubview(childContainer)
-        childContainer.accessibilityLabel = "Media Drawer Child Container"
+        childContainer.accessibilityIdentifier = "Media Drawer Child Container"
         childContainer.translatesAutoresizingMaskIntoConstraints = false
         childContainer.backgroundColor = Constants.bottomBackgroundColor
         childContainer.clipsToBounds = false
@@ -77,7 +77,7 @@ final class MediaDrawerView: UIView {
     
     private func setupBackPanel() {
         addSubview(backPanel)
-        backPanel.accessibilityLabel = "Media Drawer Back Panel"
+        backPanel.accessibilityIdentifier = "Media Drawer Back Panel"
         backPanel.backgroundColor = Constants.backgroundColor
         backPanel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -92,7 +92,7 @@ final class MediaDrawerView: UIView {
     /// Sets up the top view with rounded corners
     private func setupTopContainer() {
         addSubview(topContainer)
-        topContainer.accessibilityLabel = "Media Drawer Top Container"
+        topContainer.accessibilityIdentifier = "Media Drawer Top Container"
         topContainer.backgroundColor = Constants.backgroundColor
         topContainer.translatesAutoresizingMaskIntoConstraints = false
         
@@ -110,7 +110,7 @@ final class MediaDrawerView: UIView {
     /// Sets up the small black line with rounded ends in the top view
     private func setupTopContainerLine() {
         topContainer.addSubview(topContainerLine)
-        topContainerLine.accessibilityLabel = "Media Drawer Top Container Line"
+        topContainerLine.accessibilityIdentifier = "Media Drawer Top Container Line"
         topContainerLine.backgroundColor = Constants.topContainerLineColor
         topContainerLine.translatesAutoresizingMaskIntoConstraints = false
         
@@ -128,7 +128,7 @@ final class MediaDrawerView: UIView {
     /// Sets up the top tab bar
     private func setupTabBar() {
         addSubview(tabBarContainer)
-        tabBarContainer.accessibilityLabel = "Media Drawer Tab Bar Container"
+        tabBarContainer.accessibilityIdentifier = "Media Drawer Tab Bar Container"
         tabBarContainer.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([

@@ -41,6 +41,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     
     private let mainView = UIButton()
     private let stickerView = UIImageView()
+    private lazy var loadingView = LoadingIndicatorView()
     
     weak var delegate: StickerTypeCollectionCellDelegate?
     
@@ -74,6 +75,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     private func setUpView() {
         setUpMainView()
         setUpStickerView()
+        setUpLoadingView()
     }
     
     /// Sets up the container that changes its color depending on whether the cell is selected or not
@@ -110,11 +112,17 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             stickerView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: Constants.topPadding),
-            stickerView.topAnchor.constraint(equalTo: mainView.bottomAnchor, constant: Constants.bottomPadding),
+            stickerView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: -Constants.bottomPadding),
             stickerView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor),
             stickerView.heightAnchor.constraint(equalToConstant: Constants.imageHeight),
             stickerView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)
         ])
+    }
+    
+    /// Sets up the loading spinner
+    private func setUpLoadingView() {
+        loadingView.add(into: stickerView)
+        loadingView.backgroundColor = .clear
     }
     
     // MARK: - Gestures
@@ -143,12 +151,18 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     ///    - sticker: The sticker type to display
     ///    - cache: A cache to save the the image after loading
     func bindTo(_ stickerType: StickerType, cache: NSCache<NSString, UIImage>) {
+        loadingView.startLoading()
         if let image = cache.object(forKey: NSString(string: stickerType.imageUrl)) {
+            loadingView.stopLoading()
             stickerView.image = image
         }
         else {
-            imageTask = stickerView.load(from: stickerType.imageUrl) { url, image in
+            imageTask = stickerView.load(from: stickerType.imageUrl) { [weak self] url, image in
                 cache.setObject(image, forKey: NSString(string: url.absoluteString))
+                
+                performUIUpdate {
+                    self?.loadingView.stopLoading()
+                }
             }
         }
     }

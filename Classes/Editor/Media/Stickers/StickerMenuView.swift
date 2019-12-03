@@ -42,7 +42,7 @@ final class StickerMenuView: UIView {
     /// Sets up the view for the main sticker collection
     private func setupMainCollectionContainer() {
         addSubview(mainCollectionContainer)
-        mainCollectionContainer.accessibilityLabel = "Sticker Menu Main Collection Container"
+        mainCollectionContainer.accessibilityIdentifier = "Sticker Menu Main Collection Container"
         mainCollectionContainer.backgroundColor = Constants.backgroundColor
         mainCollectionContainer.translatesAutoresizingMaskIntoConstraints = false
         mainCollectionContainer.clipsToBounds = true
@@ -58,7 +58,7 @@ final class StickerMenuView: UIView {
     /// Sets up the view for the sticker type collection shown at the bottom
     private func setupBottomCollectionContainer() {
         addSubview(bottomCollectionContainer)
-        bottomCollectionContainer.accessibilityLabel = "Sticker Menu Bottom Collection Container"
+        bottomCollectionContainer.accessibilityIdentifier = "Sticker Menu Bottom Collection Container"
         bottomCollectionContainer.translatesAutoresizingMaskIntoConstraints = false
         bottomCollectionContainer.clipsToBounds = true
         

@@ -12,19 +12,21 @@ private struct Constants {
     static let numberOfColumns: Int = 4
     static let topInset: CGFloat = 24
     static let horizontalInset: CGFloat = 22
+    static let loadingViewSize: CGFloat = 55
+    static let loadingViewCornerRadius: CGFloat = 5
 }
 
 /// Collection view for StickerCollectionController
 final class StickerCollectionView: UIView {
     
+    private let loadingView: LoadingIndicatorView
     let collectionViewLayout: StaggeredGridLayout
     let collectionView: UICollectionView
     
     init() {
+        loadingView = LoadingIndicatorView()
         collectionViewLayout = StaggeredGridLayout(numberOfColumns: Constants.numberOfColumns)
         collectionView = StickerInnerCollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
-        collectionView.accessibilityIdentifier = "Sticker Collection View"
-        collectionView.backgroundColor = .clear
         
         super.init(frame: .zero)
         
@@ -45,8 +47,43 @@ final class StickerCollectionView: UIView {
     // MARK: - Layout
     
     private func setUpViews() {
+        setUpCollectionView()
+        setUpLoadingView()
+    }
+    
+    private func setUpCollectionView() {
         collectionView.add(into: self)
+        collectionView.accessibilityIdentifier = "Sticker Collection View"
+        collectionView.backgroundColor = .clear
         collectionView.clipsToBounds = true
+    }
+    
+    private func setUpLoadingView() {
+        addSubview(loadingView)
+        loadingView.accessibilityIdentifier = "Sticker Collection Loading View"
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            loadingView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+            loadingView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            loadingView.heightAnchor.constraint(equalToConstant: Constants.loadingViewSize),
+            loadingView.widthAnchor.constraint(equalToConstant: Constants.loadingViewSize)
+        ])
+        
+        loadingView.layer.cornerRadius = Constants.loadingViewCornerRadius
+        loadingView.layer.masksToBounds = true
+    }
+    
+    // MARK: - Public interface
+    
+    func startLoading() {
+        loadingView.alpha = 1
+        loadingView.startLoading()
+    }
+    
+    func stopLoading() {
+        loadingView.stopLoading()
+        loadingView.alpha = 0
     }
 }
 
