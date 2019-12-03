@@ -11,7 +11,6 @@ import UIKit
 private struct Constants {
     static let backgroundColor: UIColor = .white
     static let bottomCollectionHeight: CGFloat = StickerTypeCollectionCell.totalHeight
-    static let bottomCollectionCornerRadius: CGFloat = 30
 }
 
 /// A view for the sticker menu controller
@@ -71,9 +70,6 @@ final class StickerMenuView: UIView {
         ])
         
         bottomCollectionContainer.backgroundColor = Constants.backgroundColor
-        bottomCollectionContainer.layer.cornerRadius = Constants.bottomCollectionCornerRadius
-        bottomCollectionContainer.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        
         bottomCollectionContainer.layer.masksToBounds = false
         bottomCollectionContainer.layer.shadowColor = UIColor.black.cgColor
         bottomCollectionContainer.layer.shadowOffset = CGSize(width: 0, height: -1.0)

@@ -22,7 +22,7 @@ private struct Constants {
     static let imageHeight: CGFloat = 50
     static let imageWidth: CGFloat = 50
     static let topPadding: CGFloat = 15
-    static let bottomPadding: CGFloat = 35
+    static let bottomPadding: CGFloat = topPadding + (Device.belongsToIPhoneXGroup ? 20 : 0)
     static let horizontalPadding: CGFloat = 25
     static let selectedColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.2)
     static let pressingColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.05)
@@ -110,7 +110,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             stickerView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: Constants.topPadding),
-            stickerView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: -Constants.bottomPadding),
+            stickerView.topAnchor.constraint(equalTo: mainView.bottomAnchor, constant: Constants.bottomPadding),
             stickerView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor),
             stickerView.heightAnchor.constraint(equalToConstant: Constants.imageHeight),
             stickerView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)
