@@ -495,7 +495,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didSelectSticker(_ sticker: Sticker) {
-        // TODO: Add sticker to layer
+        // TODO: Add sticker to layer (https://jira.tumblr.net/browse/KANVAS-850)
     }
     
     // MARK: - Media Drawer
