@@ -52,6 +52,60 @@ import Foundation
     }
 }
 
+@objc public enum KanvasTextFont: Int {
+    case regular, script
+
+    public func string() -> String {
+        switch self {
+        case .regular:
+            return "regular"
+        case .script:
+            return "script"
+        }
+    }
+
+    public static func from(font: UIFont?) -> KanvasTextFont? {
+        guard let font = font else { return nil }
+        switch font.familyName {
+        case ".AppleSystemUIFont":
+            return .regular
+        case "Fairwater Script":
+            return .script
+        default:
+            return nil
+        }
+    }
+}
+
+@objc public enum KanvasTextAlignment: Int {
+    case left, center, right
+
+    public func string() -> String {
+        switch self {
+        case .left:
+            return "left"
+        case .center:
+            return "center"
+        case .right:
+            return "right"
+        }
+    }
+
+    public static func from(alignment: NSTextAlignment?) -> KanvasTextAlignment? {
+        guard let alignment = alignment else { return nil }
+        switch alignment {
+        case .left:
+            return .left
+        case .center:
+            return .center
+        case .right:
+            return .right
+        default:
+            return nil
+        }
+    }
+}
+
 @objc public enum KanvasDashboardOpenAction: Int {
     case tap, swipe
 
@@ -205,6 +259,41 @@ import Foundation
 
     /// Logs an event when someone confirms drawing
     func logEditorDrawingConfirm()
+
+    /// Logs an event when tapping the text tool to add a new text overlay
+    func logEditorTextAdd()
+
+    /// Logs an event when tapping on an existing text overlay to edit it
+    func logEditorTextEdit()
+
+    /// Logs an event when a text overlay is confirmed
+    /// - Parameter new: whether this text overlay is newly added or not
+    /// - Parameter font: the font
+    /// - Parameter alignment: the text alignment
+    /// - Parameter highlighted: whether the text is highlighted or not
+    func logEditorTextConfirm(new: Bool, font: KanvasTextFont, alignment: KanvasTextAlignment, highlighted: Bool)
+
+    /// Logs an event when a text overlay is moved
+    func logEditorTextMove()
+
+    /// Logs an event when a text overlay is removed
+    func logEditorTextRemove()
+
+    /// Logs an event when the font is changed
+    /// - Parameter font: the font
+    func logEditorTextChange(font: KanvasTextFont)
+
+    /// Logs an event when the text alignment is changed
+    /// - Parameter alignment: the text alignment
+    func logEditorTextChange(alignment: KanvasTextAlignment)
+
+    /// Logs an event when the text highlight is changed
+    /// - Parameter highlighted: whether the text is highlighted
+    func logEditorTextChange(highlighted: Bool)
+
+    /// Logs an event when the text color changes
+    /// - Parameter color: Always true
+    func logEditorTextChange(color: Bool)
 
     /// Logs an event when media is created from the editor
     func logEditorCreatedMedia(clipsCount: Int, length: TimeInterval)
