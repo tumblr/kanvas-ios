@@ -86,8 +86,8 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         mainView.layer.masksToBounds = true
         
         NSLayoutConstraint.activate([
-            mainView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            mainView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            mainView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            mainView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             mainView.heightAnchor.constraint(equalToConstant: Constants.totalHeight),
             mainView.widthAnchor.constraint(equalToConstant: Constants.totalWidth)
         ])

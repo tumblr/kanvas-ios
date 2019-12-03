@@ -69,7 +69,7 @@ final class MediaDrawerView: UIView {
         
         NSLayoutConstraint.activate([
             childContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topContainerHeight + Constants.tabBarHeight),
-            childContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            childContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
             childContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             childContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
         ])

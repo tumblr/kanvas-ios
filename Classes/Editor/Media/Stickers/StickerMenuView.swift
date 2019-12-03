@@ -50,7 +50,7 @@ final class StickerMenuView: UIView {
         
         NSLayoutConstraint.activate([
             mainCollectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            mainCollectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomCollectionHeight),
+            mainCollectionContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.bottomCollectionHeight),
             mainCollectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             mainCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
         ])
@@ -64,7 +64,7 @@ final class StickerMenuView: UIView {
         bottomCollectionContainer.clipsToBounds = true
         
         NSLayoutConstraint.activate([
-            bottomCollectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            bottomCollectionContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
             bottomCollectionContainer.heightAnchor.constraint(equalToConstant: Constants.bottomCollectionHeight),
             bottomCollectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             bottomCollectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
