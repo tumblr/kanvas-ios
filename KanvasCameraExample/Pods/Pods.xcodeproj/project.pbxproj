@@ -1038,7 +1038,6 @@
 			children = (
 				640F8F9111A42BA31D215CD70B6BE399 /* CameraPreviewView.swift */,
 				D71FD982113DDAD9AA6B27696AE404F7 /* CameraPreviewViewController.swift */,
-				64761C4ADBCCE81F45C05095DCD10283 /* LoadingIndicatorView.swift */,
 			);
 			name = Preview;
 			path = Classes/Preview;
@@ -1168,6 +1167,7 @@
 				3DB81B487E1DCAB2705480AF97CFB75F /* Device.swift */,
 				0E81A4AD5845D5183AB3CE6B94DD13BC /* IgnoreTouchesCollectionView.swift */,
 				A1DB61657E6EC8BA65EA2281FC943973 /* IgnoreTouchesView.swift */,
+				64761C4ADBCCE81F45C05095DCD10283 /* LoadingIndicatorView.swift */,
 				C9DB08311BEF0E4CC51929698C46075C /* Queue.swift */,
 				1EB718940FCFA38FF76B169B8EC85EB9 /* RGBA.swift */,
 				65D4A31A238829E600052BD6 /* StaggeredGridLayout.swift */,
