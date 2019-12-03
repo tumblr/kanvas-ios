@@ -13,6 +13,8 @@ private struct Constants {
     static let topInset: CGFloat = 24
     static let horizontalInset: CGFloat = 22
     static let loadingViewSize: CGFloat = 55
+    static let loadingViewBackgroundColor: UIColor = .clear
+    static let loadingViewColor: UIColor = .darkGray
     static let loadingViewCornerRadius: CGFloat = 5
 }
 
@@ -62,6 +64,8 @@ final class StickerCollectionView: UIView {
         addSubview(loadingView)
         loadingView.accessibilityIdentifier = "Sticker Collection Loading View"
         loadingView.translatesAutoresizingMaskIntoConstraints = false
+        loadingView.backgroundColor = Constants.loadingViewBackgroundColor
+        loadingView.indicatorColor = Constants.loadingViewColor
         
         NSLayoutConstraint.activate([
             loadingView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
@@ -69,9 +73,6 @@ final class StickerCollectionView: UIView {
             loadingView.heightAnchor.constraint(equalToConstant: Constants.loadingViewSize),
             loadingView.widthAnchor.constraint(equalToConstant: Constants.loadingViewSize)
         ])
-        
-        loadingView.layer.cornerRadius = Constants.loadingViewCornerRadius
-        loadingView.layer.masksToBounds = true
     }
     
     // MARK: - Public interface

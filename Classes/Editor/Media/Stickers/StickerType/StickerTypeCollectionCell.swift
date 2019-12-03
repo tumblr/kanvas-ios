@@ -29,6 +29,8 @@ private struct Constants {
     static let unselectedColor: UIColor = .clear
     static let totalHeight = Constants.topPadding + Constants.imageHeight + Constants.bottomPadding
     static let totalWidth = Constants.imageWidth + Constants.horizontalPadding
+    static let loadingViewBackgroundColor: UIColor = .clear
+    static let loadingViewColor: UIColor = .darkGray
 }
 
 /// The cell in StickerTypeCollectionView to display an individual sticker type
@@ -122,7 +124,8 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     /// Sets up the loading spinner
     private func setUpLoadingView() {
         loadingView.add(into: stickerView)
-        loadingView.backgroundColor = .clear
+        loadingView.backgroundColor = Constants.loadingViewBackgroundColor
+        loadingView.indicatorColor = Constants.loadingViewColor
     }
     
     // MARK: - Gestures

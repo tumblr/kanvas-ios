@@ -17,7 +17,12 @@ private struct LoadingIndicatorConstants {
 final class LoadingIndicatorView: UIView {
 
     private let indicator = UIActivityIndicatorView(style: .whiteLarge)
-
+    
+    var indicatorColor: UIColor {
+        set { indicator.color = newValue }
+        get { return indicator.color }
+    }
+    
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
