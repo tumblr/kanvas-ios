@@ -10,16 +10,16 @@ import UIKit
 /// A representation for a sticker type to be presented in the sticker type collection
 public struct StickerType: Equatable {
     
-    let baseUrl: String
-    let keyword: String
-    let thumbUrl: String
-    let count: Int
+    public let baseUrl: String
+    public let keyword: String
+    public let thumbUrl: String
+    public let count: Int
     
-    var imageUrl: String {
+    public var imageUrl: String {
         return "\(baseUrl)\(keyword)/\(thumbUrl)"
     }
     
-    init(baseUrl: String, keyword: String, thumbUrl: String, count: Int) {
+    public init(baseUrl: String, keyword: String, thumbUrl: String, count: Int) {
         self.baseUrl = baseUrl
         self.keyword = keyword
         self.thumbUrl = thumbUrl

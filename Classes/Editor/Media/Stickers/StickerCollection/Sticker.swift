@@ -20,11 +20,11 @@ public struct Sticker {
     private let number: Int
     private let imageExtension: String
     
-    var imageUrl: String {
+    public var imageUrl: String {
         return "\(baseUrl)\(keyword)/\(String(format: Constants.twoDigitsFormat, number)).\(imageExtension)"
     }
     
-    init(baseUrl: String, keyword: String, number: Int, imageExtension: String = "png") {
+    public init(baseUrl: String, keyword: String, number: Int, imageExtension: String = "png") {
         self.baseUrl = baseUrl
         self.keyword = keyword
         self.number = number

@@ -6,10 +6,10 @@
 
 import Foundation
 import UIKit
+import KanvasCamera
 
 /// Constants for ExperimentalStickerProvider
 private struct Constants {
-    static let resourceDirectory: String = "Stickers"
     static let resourceName: String = "stickers"
     static let resourceExtension: String = "json"
 }
@@ -23,7 +23,7 @@ public final class ExperimentalStickerProvider: StickerProvider {
     
     /// Creates a dictionary from the stickers JSON file
     func getData() -> Dictionary<String, AnyObject> {
-        if let path = Bundle(for: ExperimentalStickerProvider.self).path(forResource: "\(Constants.resourceDirectory)/\(Constants.resourceName)", ofType: Constants.resourceExtension) {
+        if let path = Bundle(for: ExperimentalStickerProvider.self).path(forResource: "\(Constants.resourceName)", ofType: Constants.resourceExtension) {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
