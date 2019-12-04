@@ -43,7 +43,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     
     private let mainView = UIButton()
     private let stickerView = UIImageView()
-    private lazy var loadingView = LoadingIndicatorView()
+    private let loadingView = LoadingIndicatorView()
     
     weak var delegate: StickerTypeCollectionCellDelegate?
     

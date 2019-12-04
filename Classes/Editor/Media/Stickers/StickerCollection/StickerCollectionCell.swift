@@ -29,6 +29,8 @@ private struct Constants {
     static let padding: CGFloat = 6
     static let pressingColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.05)
     static let unselectedColor: UIColor = .white
+    static let loadingViewBackgroundColor: UIColor = .clear
+    static let loadingViewColor: UIColor = .darkGray
 }
 
 /// The cell in StickerCollectionView to display an individual sticker
@@ -38,6 +40,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     
     private let mainView = UIButton()
     private let stickerView = UIImageView()
+    private let loadingView = LoadingIndicatorView()
     private var imageTask: URLSessionTask?
     
     weak var delegate: StickerCollectionCellDelegate?
@@ -50,26 +53,6 @@ final class StickerCollectionCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
-    }
-    
-    /// Updates the cell according to the sticker properties
-    ///
-    /// - Parameters:
-    ///   - sticker: The sticker to display
-    ///   - type: The sticker type
-    ///   - cache: A cache to save the image
-    ///   - index: cell index in the collection
-    func bindTo(_ sticker: Sticker, type: StickerType, cache: NSCache<NSString, UIImage>, index: Int) {
-        if let image = cache.object(forKey: NSString(string: sticker.imageUrl)) {
-            stickerView.image = image
-            delegate?.didLoadImage(index: index, type: type, image: image)
-        }
-        else {
-            imageTask = stickerView.load(from: sticker.imageUrl) { [weak self] url, image in
-                cache.setObject(image, forKey: NSString(string: url.absoluteString))
-                self?.delegate?.didLoadImage(index: index, type: type, image: image)
-            }
-        }
     }
     
     /// Updates the cell to be reused
@@ -86,6 +69,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     private func setUpView() {
         setUpMainView()
         setUpStickerView()
+        setUpLoadingView()
     }
     
     /// Sets up the container that changes its color depending on whether the cell is selected or not
@@ -129,7 +113,14 @@ final class StickerCollectionCell: UICollectionViewCell {
         ])
     }
     
-        // MARK: - Gestures
+    /// Sets up the loading spinner
+    private func setUpLoadingView() {
+        loadingView.add(into: stickerView)
+        loadingView.backgroundColor = Constants.loadingViewBackgroundColor
+        loadingView.indicatorColor = Constants.loadingViewColor
+    }
+    
+    // MARK: - Gestures
     
     @objc private func didPress() {
         delegate?.didSelect(cell: self)
@@ -144,6 +135,34 @@ final class StickerCollectionCell: UICollectionViewCell {
     @objc private func didStopPressing() {
         if !isSelected {
             mainView.backgroundColor = Constants.unselectedColor
+        }
+    }
+    
+    // MARK: - Public interface
+    
+    /// Updates the cell according to the sticker properties
+    ///
+    /// - Parameters:
+    ///   - sticker: The sticker to display
+    ///   - type: The sticker type
+    ///   - cache: A cache to save the image
+    ///   - index: cell index in the collection
+    func bindTo(_ sticker: Sticker, type: StickerType, cache: NSCache<NSString, UIImage>, index: Int) {
+        loadingView.startLoading()
+        if let image = cache.object(forKey: NSString(string: sticker.imageUrl)) {
+            loadingView.stopLoading()
+            stickerView.image = image
+            delegate?.didLoadImage(index: index, type: type, image: image)
+        }
+        else {
+            imageTask = stickerView.load(from: sticker.imageUrl) { [weak self] url, image in
+                cache.setObject(image, forKey: NSString(string: url.absoluteString))
+                self?.delegate?.didLoadImage(index: index, type: type, image: image)
+                
+                performUIUpdate {
+                    self?.loadingView.stopLoading()
+                }
+            }
         }
     }
 }

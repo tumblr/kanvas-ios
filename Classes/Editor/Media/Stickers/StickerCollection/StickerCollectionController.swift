@@ -76,16 +76,21 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     func setType(_ stickerType: StickerType) {
         self.stickerType = stickerType
         stickers = stickerProvider.getStickers(for: stickerType)
-        cellSizes = .init(repeating: .zero, count: stickers.count)
+        resetCellSizes()
         stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
-        stickerCollectionView.startLoading()
         stickerCollectionView.collectionView.reloadData()
+    }
+    
+    // MARK: - Private utilities
+    
+    private func resetCellSizes() {
+        let cellWidth = stickerCollectionView.collectionViewLayout.itemWidth
+        cellSizes = .init(repeating: CGSize(width: cellWidth, height: cellWidth), count: stickers.count)
     }
     
     // MARK: - StaggeredGridLayoutDelegate
     
     func collectionView(_ collectionView: UICollectionView, heightOfCellAtIndexPath indexPath: IndexPath) -> CGFloat {
-        guard cellSizes[indexPath.item] != .zero else { return 0 }
         let ratio = cellSizes[indexPath.item].height / cellSizes[indexPath.item].width
         return ratio * stickerCollectionView.collectionViewLayout.itemWidth
     }
@@ -129,11 +134,12 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     
     func didLoadImage(index: Int, type: StickerType, image: UIImage) {
         guard let currentType = stickerType, type == currentType else { return }
-        let previousSize = cellSizes[index]
-        cellSizes[index] = image.size
-        if previousSize == .zero {
+        let currentSize = cellSizes[index]
+        
+        if currentSize != image.size {
+            cellSizes[index] = image.size
+            
             DispatchQueue.main.async { [weak self] in
-                self?.stickerCollectionView.stopLoading()
                 self?.stickerCollectionView.collectionViewLayout.invalidateLayout()
             }
         }
