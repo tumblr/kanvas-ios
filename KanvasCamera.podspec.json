@@ -31,7 +31,6 @@
     "TumblrTheme": [],
     "SharedUI": [],
     "Utils": [],
-    "ImageLoader": [],
-    "SDWebImage": []
+    "ImageLoader": []
   }
 }
