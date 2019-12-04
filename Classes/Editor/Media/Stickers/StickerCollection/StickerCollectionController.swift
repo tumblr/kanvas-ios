@@ -18,7 +18,6 @@ protocol StickerCollectionControllerDelegate: class {
 /// Constants for StickerCollectionController
 private struct Constants {
     static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 22, bottom: 0, right: 22)
-    static let cacheSize: Int = 30
 }
 
 /// Controller for handling the sticker item collection.
@@ -31,11 +30,6 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     private var stickerType: StickerType? = nil
     private var stickers: [Sticker] = []
     private var cellSizes: [CGSize] = []
-    private lazy var imageCache: NSCache<NSString, UIImage> = {
-        let cache = NSCache<NSString, UIImage>()
-        cache.countLimit = Constants.cacheSize
-        return cache
-    }()
     
     // MARK: - Initializers
     
@@ -108,7 +102,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerCollectionCell.identifier, for: indexPath)
         if let cell = cell as? StickerCollectionCell, let sticker = stickers.object(at: indexPath.item), let type = stickerType {
-            cell.bindTo(sticker, type: type, cache: imageCache, index: indexPath.item)
+            cell.bindTo(sticker, type: type, index: indexPath.item)
             cell.delegate = self
         }
         return cell

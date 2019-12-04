@@ -1,6 +1,10 @@
 ${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExampleTests/Pods-KanvasCameraExampleTests-frameworks.sh
+${BUILT_PRODUCTS_DIR}/ImageLoader/ImageLoader.framework
 ${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework
+${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework
+${BUILT_PRODUCTS_DIR}/SDWebImageWebPCoder/SDWebImageWebPCoder.framework
 ${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework
 ${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework
 ${BUILT_PRODUCTS_DIR}/Utils/Utils.framework
+${BUILT_PRODUCTS_DIR}/libwebp/libwebp.framework
 ${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework

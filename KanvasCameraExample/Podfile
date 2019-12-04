@@ -6,6 +6,7 @@ target 'KanvasCameraExample' do
     pod 'TumblrTheme', :path => '../../TumblrTheme'
     pod 'SharedUI', :path => '../../SharedUI'
     pod 'Utils', :path => '../../Utils'
+    pod 'ImageLoader', :path => '../../ImageLoader'
 end
 
 target 'KanvasCameraExampleTests' do
