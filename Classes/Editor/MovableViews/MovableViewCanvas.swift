@@ -288,6 +288,12 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         })
     }
     
+    func didTapImageView(movableView: MovableView, imageView: StylableImageView) {
+        UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
+            self?.bringSubviewToFront(movableView)
+        }
+    }
+    
     // MARK: - Private utilities
     
     /// shows or hides the overlay

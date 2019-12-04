@@ -15,6 +15,13 @@ protocol MovableViewDelegate: class {
     ///  - movableView: the tapped movable view
     ///  - textView: the text view inside the movable view
     func didTapTextView(movableView: MovableView, textView: StylableTextView)
+    
+    /// Callback for when a movable view with an image is tapped
+    ///
+    /// - Parameters
+    ///  - movableView: the tapped movable view
+    ///  - imageView: the image view inside the movable view
+    func didTapImageView(movableView: MovableView, imageView: StylableImageView)
 }
 
 /// Constants for MovableTextView
@@ -134,7 +141,11 @@ final class MovableView: UIView {
     
     /// Called when the view is tapped
     func onTap() {
-        guard let textView = innerView as? StylableTextView else { return }
-        delegate?.didTapTextView(movableView: self, textView: textView)
+        if let textView = innerView as? StylableTextView {
+            delegate?.didTapTextView(movableView: self, textView: textView)
+        }
+        else if let imageView = innerView as? StylableImageView {
+            delegate?.didTapImageView(movableView: self, imageView: imageView)
+        }
     }
 }
