@@ -7,6 +7,7 @@ target 'KanvasCameraExample' do
     pod 'SharedUI', :path => '../../SharedUI'
     pod 'Utils', :path => '../../Utils'
     pod 'ImageLoader', :path => '../../ImageLoader'
+    pod 'SDWebImage', :path => '../../SDWebImage'
 end
 
 target 'KanvasCameraExampleTests' do

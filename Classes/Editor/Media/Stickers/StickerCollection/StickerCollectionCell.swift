@@ -7,6 +7,7 @@
 import Foundation
 import UIKit
 import ImageLoader
+import SDWebImage
 
 /// Delegate for touch events on this cell
 protocol StickerCollectionCellDelegate: class {
@@ -45,7 +46,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     private var imageTask: Cancelable?
     
     private lazy var imageLoader: ImageLoader = {
-        return ImageLoaderProvider.makeImageLoader()
+        return SDWebImageImageLoader(imageManager: SDWebImageManager.shared, authHeaderProvider: nil)
     }()
     
     weak var delegate: StickerCollectionCellDelegate?

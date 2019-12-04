@@ -31,15 +31,7 @@ final class StickerTypeCollectionCellTests: FBSnapshotTestCase {
                               thumbUrl: "thumbUrl",
                               count: 1)
         
-        guard let image = KanvasCameraImages.gradientImage else {
-            XCTFail("Test image could not be found")
-            return
-        }
-        
-        let cache = NSCache<NSString, UIImage>()
-        cache.setObject(image, forKey: NSString(string: stickerType.imageUrl))
-        
-        cell.bindTo(stickerType, cache: cache)
+        cell.bindTo(stickerType)
         FBSnapshotVerifyView(cell)
     }
 }
