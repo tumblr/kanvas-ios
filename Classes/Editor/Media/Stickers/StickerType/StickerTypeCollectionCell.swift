@@ -30,7 +30,7 @@ private struct Constants {
     static let totalHeight = Constants.topPadding + Constants.imageHeight + Constants.bottomPadding
     static let totalWidth = Constants.imageWidth + Constants.horizontalPadding
     static let loadingViewBackgroundColor: UIColor = .clear
-    static let loadingViewColor: UIColor = .darkGray
+    static let loadingViewColor: UIColor = .lightGray
 }
 
 /// The cell in StickerTypeCollectionView to display an individual sticker type

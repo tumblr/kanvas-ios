@@ -30,7 +30,7 @@ private struct Constants {
     static let pressingColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.05)
     static let unselectedColor: UIColor = .white
     static let loadingViewBackgroundColor: UIColor = .clear
-    static let loadingViewColor: UIColor = .darkGray
+    static let loadingViewColor: UIColor = .lightGray
 }
 
 /// The cell in StickerCollectionView to display an individual sticker
