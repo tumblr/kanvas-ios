@@ -11,7 +11,6 @@ import UIKit
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let topContainerHeight: CGFloat = 52
-    static let topContainerCornerRadius: CGFloat = 30
     static let topContainerLineHeight: CGFloat = 5
     static let topContainerLineWidth: CGFloat = 36
     static let topContainerLineRadius: CGFloat = 36
@@ -28,7 +27,6 @@ final class MediaDrawerView: UIView {
     
     private let topContainer: UIView
     private let topContainerLine: UIView
-    private let backPanel: UIView
     
     // Containers
     let tabBarContainer: UIView
@@ -39,7 +37,6 @@ final class MediaDrawerView: UIView {
     init() {
         topContainer = UIView()
         topContainerLine = UIView()
-        backPanel = UIView()
         tabBarContainer = UIView()
         childContainer = UIView()
         super.init(frame: .zero)
@@ -52,8 +49,8 @@ final class MediaDrawerView: UIView {
     }
     
     private func setupView() {
+        backgroundColor = Constants.backgroundColor
         setupChildContainer()
-        setupBackPanel()
         setupTopContainer()
         setupTopContainerLine()
         setupTabBar()
@@ -75,20 +72,6 @@ final class MediaDrawerView: UIView {
         ])
     }
     
-    private func setupBackPanel() {
-        addSubview(backPanel)
-        backPanel.accessibilityIdentifier = "Media Drawer Back Panel"
-        backPanel.backgroundColor = Constants.backgroundColor
-        backPanel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            backPanel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topContainerHeight / 2),
-            backPanel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            backPanel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            backPanel.heightAnchor.constraint(equalToConstant: Constants.topContainerHeight / 2),
-        ])
-    }
-    
     /// Sets up the top view with rounded corners
     private func setupTopContainer() {
         addSubview(topContainer)
@@ -102,9 +85,6 @@ final class MediaDrawerView: UIView {
             topContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             topContainer.heightAnchor.constraint(equalToConstant: Constants.topContainerHeight),
         ])
-        
-        topContainer.layer.cornerRadius = Constants.topContainerCornerRadius
-        topContainer.layer.masksToBounds = true
     }
     
     /// Sets up the small black line with rounded ends in the top view
