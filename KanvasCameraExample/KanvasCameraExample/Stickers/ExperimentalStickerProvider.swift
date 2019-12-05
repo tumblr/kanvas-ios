@@ -38,18 +38,7 @@ public final class ExperimentalStickerProvider: StickerProvider {
         
         return Dictionary<String, AnyObject>()
     }
-    
-    /// Gets the collection of stickers for a specific sticker type
-    ///
-    /// - Parameter stickerType: the sticker type
-    public func getStickers(for stickerType: StickerType) -> [Sticker] {
-        var stickers: [Sticker] = []
-        for number in 1...stickerType.count {
-            stickers.append(Sticker(baseUrl: stickerType.baseUrl, keyword: stickerType.keyword, number: number))
-        }
-        return stickers
-    }
-    
+        
     /// Gets the collection of stickers types
     public func getStickerTypes() -> [StickerType] {
         let data = getData()
@@ -66,7 +55,7 @@ public final class ExperimentalStickerProvider: StickerProvider {
                 let keyword = stickerItem["keyword"] as? String,
                 let thumbUrl = stickerItem["thumb_url"] as? String,
                 let count = stickerItem["count"] as? Int {
-                stickerType.append(StickerType(baseUrl: baseUrl, keyword: keyword, thumbUrl: thumbUrl, count: count))
+                stickerType.append(ExperimentalStickerType(baseUrl: baseUrl, keyword: keyword, thumbUrl: thumbUrl, count: count))
             }
         }
         

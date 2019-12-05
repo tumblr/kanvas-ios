@@ -7,5 +7,4 @@
 public protocol StickerProvider {
     init()
     func getStickerTypes() -> [StickerType]
-    func getStickers(for stickerType: StickerType) -> [Sticker]
 }

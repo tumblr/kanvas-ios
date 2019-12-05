@@ -71,7 +71,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     /// - Parameter stickerType: the new sticker type
     func setType(_ stickerType: StickerType) {
         self.stickerType = stickerType
-        stickers = stickerProvider.getStickers(for: stickerType)
+        stickers = stickerType.getStickers()
         resetCellSizes()
         stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
         stickerCollectionView.collectionView.reloadData()
@@ -117,7 +117,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     }
     
     func didLoadImage(index: Int, type: StickerType, image: UIImage) {
-        guard let currentType = stickerType, type == currentType else { return }
+        guard let currentType = stickerType, type.isEqual(to: currentType) else { return }
         let currentSize = cellSizes[index]
         
         if currentSize != image.size {

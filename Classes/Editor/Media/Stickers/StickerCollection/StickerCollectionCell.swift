@@ -154,7 +154,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     ///   - type: The sticker type
     ///   - index: cell index in the collection
     func bindTo(_ sticker: Sticker, type: StickerType, index: Int) {
-        guard let url = URL(string: sticker.imageUrl) else { return }
+        guard let url = URL(string: sticker.getImageUrl()) else { return }
         loadingView.startLoading()
         
         let completion: (UIImage?, Error?) -> (Void) = { [weak self] image, _ in

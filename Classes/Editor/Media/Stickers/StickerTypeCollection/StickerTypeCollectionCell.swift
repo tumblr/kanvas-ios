@@ -156,7 +156,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter sticker: The sticker type to display
     func bindTo(_ stickerType: StickerType) {
-        guard let url = URL(string: stickerType.imageUrl) else { return }
+        guard let url = URL(string: stickerType.getImageUrl()) else { return }
         loadingView.startLoading()
         
         let completion: (UIImage?, Error?) -> (Void) = { [weak self] image, _ in
