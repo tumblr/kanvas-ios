@@ -17,6 +17,8 @@ private struct Constants {
 /// Class that obtains the stickers from the stickers file in the example app
 public final class ExperimentalStickerProvider: StickerProvider {
     
+    private weak var delegate: StickerProviderDelegate?
+    
     public init() {
         
     }
@@ -39,14 +41,23 @@ public final class ExperimentalStickerProvider: StickerProvider {
         return Dictionary<String, AnyObject>()
     }
         
+    // MARK: - StickerProvider
+    
+    public func setDelegate(delegate: StickerProviderDelegate) {
+        self.delegate = delegate
+    }
+    
     /// Gets the collection of stickers types
-    public func getStickerTypes() -> [StickerType] {
+    public func getStickerTypes() {
         let data = getData()
         
         guard let providers = data["providers"] as? NSArray,
             let kanvasProvider = providers.firstObject as? Dictionary<String, Any>,
             let baseUrl = kanvasProvider["base_url"] as? String,
-            let stickerList = data["stickers"] as? NSArray else { return [] }
+            let stickerList = data["stickers"] as? NSArray else {
+                delegate?.didLoadStickerTypes([])
+                return
+        }
         
         var stickerType: [StickerType] = []
         
@@ -59,6 +70,6 @@ public final class ExperimentalStickerProvider: StickerProvider {
             }
         }
         
-        return stickerType
+        delegate?.didLoadStickerTypes(stickerList)
     }
 }

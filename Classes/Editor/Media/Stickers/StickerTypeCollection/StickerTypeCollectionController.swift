@@ -22,7 +22,7 @@ private struct Constants {
 }
 
 /// Controller for handling the sticker type collection.
-final class StickerTypeCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, StickerTypeCollectionCellDelegate {
+final class StickerTypeCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, StickerTypeCollectionCellDelegate, StickerProviderDelegate {
     
     weak var delegate: StickerTypeCollectionControllerDelegate?
     
@@ -50,6 +50,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
         self.stickerProvider = stickerProviderClass.init(session: session)
         super.init(nibName: .none, bundle: .none)
+        stickerProvider.setDelegate(delegate: self)
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -74,13 +75,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
         stickerTypeCollectionView.collectionView.delegate = self
         stickerTypeCollectionView.collectionView.dataSource = self
         
-        stickerTypes = stickerProvider.getStickerTypes()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        selectedIndexPath = Constants.initialIndexPath
-        selectStickerType(index: Constants.initialIndexPath.item)
+        stickerProvider.getStickerTypes()
     }
 
     // MARK: - UICollectionViewDataSource
@@ -122,6 +117,18 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
         if let indexPath = stickerTypeCollectionView.collectionView.indexPath(for: cell), indexPath != selectedIndexPath {
             selectedIndexPath = indexPath
             selectStickerType(index: indexPath.item)
+        }
+    }
+    
+    // MARK: - StickerProviderDelegate
+    
+    func didLoadStickerTypes(_ stickerTypes: [StickerType]) {
+        self.stickerTypes = stickerTypes
+        stickerTypeCollectionView.collectionView.reloadData()
+        
+        if selectedIndexPath == nil {
+            selectedIndexPath = Constants.initialIndexPath
+            selectStickerType(index: Constants.initialIndexPath.item)
         }
     }
 }

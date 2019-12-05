@@ -29,27 +29,9 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     weak var delegate: StickerCollectionControllerDelegate?
     
     private lazy var stickerCollectionView = StickerCollectionView()
-    private let stickerProvider: StickerProvider
     private var stickerType: StickerType? = nil
     private var stickers: [Sticker] = []
     private var cellSizes: [CGSize] = []
-    
-    // MARK: - Initializers
-    
-    init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
-        self.stickerProvider = stickerProviderClass.init(session: session)
-        super.init(nibName: .none, bundle: .none)
-    }
-    
-    @available(*, unavailable, message: "use init() instead")
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @available(*, unavailable, message: "use init() instead")
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        fatalError("init(nibName:bundle:) has not been implemented")
-    }
     
     // MARK: - View Life Cycle
     
@@ -74,7 +56,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         self.stickerType = stickerType
         stickers = stickerType.getStickers()
         resetCellSizes()
-        stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
+        scrollToTop()
         stickerCollectionView.collectionView.reloadData()
     }
     
@@ -83,6 +65,10 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     private func resetCellSizes() {
         let cellWidth = stickerCollectionView.collectionViewLayout.itemWidth
         cellSizes = .init(repeating: CGSize(width: cellWidth, height: cellWidth), count: stickers.count)
+    }
+    
+    private func scrollToTop() {
+        stickerCollectionView.collectionView.contentOffset.y = 0
     }
     
     // MARK: - StaggeredGridLayoutDelegate

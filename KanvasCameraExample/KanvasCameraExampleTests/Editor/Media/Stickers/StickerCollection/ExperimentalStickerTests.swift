@@ -4,20 +4,20 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+import KanvasCameraExample
 import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
 
-final class StickerTests: XCTestCase {
+final class ExperimentalStickerTests: XCTestCase {
     
-    func testSticker() {
+    func testExperimentalSticker() {
         let imageUrl = "https://d1d7t1ygvx8siu.cloudfront.net/SDK-Assets/stamps.tistheseason/01.jpg"
-        let sticker = Sticker(baseUrl: "https://d1d7t1ygvx8siu.cloudfront.net/SDK-Assets/",
+        let sticker = ExperimentalSticker(baseUrl: "https://d1d7t1ygvx8siu.cloudfront.net/SDK-Assets/",
                               keyword: "stamps.tistheseason",
                               number: 1,
                               imageExtension: "jpg")
-        XCTAssertEqual(sticker.imageUrl, imageUrl, "Image URL does not match")
+        XCTAssertEqual(sticker.getImageUrl(), imageUrl, "Image URL does not match")
     }
 }

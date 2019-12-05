@@ -6,7 +6,12 @@
 
 import TMTumblrSDK
 
+public protocol StickerProviderDelegate: class {
+    func didLoadStickerTypes(_ stickerTypes: [StickerType])
+}
+
 public protocol StickerProvider {
     init(session: TMSession)
-    func getStickerTypes() -> [StickerType]
+    func getStickerTypes()
+    func setDelegate(delegate: StickerProviderDelegate)
 }

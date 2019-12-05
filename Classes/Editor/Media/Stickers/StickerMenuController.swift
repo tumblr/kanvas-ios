@@ -29,8 +29,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     private lazy var stickerMenuView: StickerMenuView = StickerMenuView()
     
     private lazy var stickerCollectionController: StickerCollectionController = {
-        let controller = StickerCollectionController(session: self.session,
-                                                     stickerProviderClass: self.stickerProviderClass)
+        let controller = StickerCollectionController()
         controller.delegate = self
         return controller
     }()
