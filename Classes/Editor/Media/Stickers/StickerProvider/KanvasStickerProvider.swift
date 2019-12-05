@@ -5,12 +5,15 @@
 //
 
 import Foundation
+import TMTumblrSDK
 
 /// Sticker provider to be used in Orangina
 public final class KanvasStickerProvider: StickerProvider {
     
-    public init() {
-        
+    private let session: TMSession
+    
+    public init(session: TMSession) {
+        self.session = session
     }
     
     public func getStickerTypes() -> [StickerType] {

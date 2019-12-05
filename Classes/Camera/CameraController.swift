@@ -10,6 +10,7 @@ import UIKit
 import MobileCoreServices
 import Photos
 import Utils
+import TMTumblrSDK
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -142,6 +143,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     private let settings: CameraSettings
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    private let session: TMSession
     private var currentMode: CameraMode
     private var isRecording: Bool
     private var disposables: [NSKeyValueObservation] = []
@@ -165,8 +167,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// and which should be the result of the interaction.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
     ///   - stickerProvider: An class conforming to StickerProvider
-    convenience public init(settings: CameraSettings, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, stickerProviderClass: stickerProviderClass, analyticsProvider: analyticsProvider)
+    convenience public init(settings: CameraSettings, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?, session: TMSession) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, stickerProviderClass: stickerProviderClass, analyticsProvider: analyticsProvider, session: session)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -183,8 +185,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
          recorderClass: CameraRecordingProtocol.Type,
          segmentsHandlerClass: SegmentsHandlerType.Type,
          stickerProviderClass: StickerProvider.Type,
-         analyticsProvider: KanvasCameraAnalyticsProvider?) {
+         analyticsProvider: KanvasCameraAnalyticsProvider?,
+         session: TMSession) {
         self.settings = settings
+        self.session = session
         currentMode = settings.initialMode
         isRecording = false
         self.recorderClass = recorderClass
@@ -297,7 +301,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
-        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, stickerProviderClass: stickerProviderClass, cameraMode: currentMode, analyticsProvider: analyticsProvider)
+        let controller = EditorViewController(session: session, settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, stickerProviderClass: stickerProviderClass, cameraMode: currentMode, analyticsProvider: analyticsProvider)
         controller.delegate = self
         return controller
     }

@@ -8,6 +8,7 @@ import AVFoundation
 import Foundation
 import UIKit
 import Utils
+import TMTumblrSDK
 
 /// Protocol for camera editor controller methods
 
@@ -79,7 +80,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }()
     
     private lazy var mediaDrawerController: MediaDrawerController = {
-        let controller = MediaDrawerController(stickerProviderClass: self.stickerProviderClass)
+        let controller = MediaDrawerController(session: self.session,
+                                               stickerProviderClass: self.stickerProviderClass)
         controller.delegate = self
         return controller
     }()
@@ -88,6 +90,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
+    private let session: TMSession
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let exporterClass: MediaExporting.Type
@@ -124,7 +127,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, stickerProviderClass: StickerProvider.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(session: TMSession, settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, stickerProviderClass: StickerProvider.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+        self.session = session
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler

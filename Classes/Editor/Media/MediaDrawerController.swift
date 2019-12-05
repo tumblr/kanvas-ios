@@ -6,6 +6,7 @@
 
 import Foundation
 import UIKit
+import TMTumblrSDK
 
 /// Protocol for selecting a sticker and dimissing the media drawer
 protocol MediaDrawerControllerDelegate: class {
@@ -27,6 +28,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     weak var delegate: MediaDrawerControllerDelegate?
     
+    private let session: TMSession
     private var openedMenu: UIViewController?
     private let stickerProviderClass: StickerProvider.Type
     
@@ -37,7 +39,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     }()
     
     private lazy var stickerMenuController: StickerMenuController = {
-        let controller = StickerMenuController(stickerProviderClass: self.stickerProviderClass)
+        let controller = StickerMenuController(session: self.session, stickerProviderClass: self.stickerProviderClass)
         controller.delegate = self
         return controller
     }()
@@ -46,7 +48,8 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     // MARK: - Initializers
     
-    init(stickerProviderClass: StickerProvider.Type) {
+    init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
+        self.session = session
         self.stickerProviderClass = stickerProviderClass
         super.init(nibName: .none, bundle: .none)
     }

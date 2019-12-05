@@ -6,6 +6,7 @@
 
 import Foundation
 import UIKit
+import TMTumblrSDK
 
 /// Protocol for selecting a sticker
 protocol StickerCollectionControllerDelegate: class {
@@ -35,8 +36,8 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     
     // MARK: - Initializers
     
-    init(stickerProviderClass: StickerProvider.Type) {
-        self.stickerProvider = stickerProviderClass.init()
+    init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
+        self.stickerProvider = stickerProviderClass.init(session: session)
         super.init(nibName: .none, bundle: .none)
     }
     

@@ -4,7 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import TMTumblrSDK
+
 public protocol StickerProvider {
-    init()
+    init(session: TMSession)
     func getStickerTypes() -> [StickerType]
 }
