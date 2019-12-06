@@ -43,7 +43,7 @@ public struct KanvasStickerTypeResponseConverter: RequestSenderResponseConverter
         return .value([])
     }
 
-    private func parseStickerType(_ json: NSDictionary) -> StickerType? {
+    public func parseStickerType(_ json: NSDictionary) -> StickerType? {
         guard let id = json[Constants.idKey] as? String,
             let description = json[Constants.descriptionKey] as? String,
             let imageSizesJSON = json[Constants.imageKey] as? NSDictionary,
