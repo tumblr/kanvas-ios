@@ -68,7 +68,9 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     }
     
     private func scrollToTop() {
-        stickerCollectionView.collectionView.contentOffset.y = 0
+        let indexPath = IndexPath(item: 0, section: 0)
+        guard let _ = stickerCollectionView.collectionView.cellForItem(at: indexPath) else { return }
+        stickerCollectionView.collectionView.scrollToItem(at: indexPath, at: .top, animated: false)
     }
     
     // MARK: - StaggeredGridLayoutDelegate
