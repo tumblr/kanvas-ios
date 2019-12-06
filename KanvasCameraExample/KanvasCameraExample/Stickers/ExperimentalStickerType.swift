@@ -9,7 +9,7 @@ import UIKit
 import KanvasCamera
 
 /// An implementation of StickerType to be created by ExperimentalStickerProvider
-public class ExperimentalStickerType: StickerType, Equatable {
+public struct ExperimentalStickerType: StickerType, Equatable {
     
     public let baseUrl: String
     public let keyword: String

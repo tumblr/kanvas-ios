@@ -14,7 +14,7 @@ private struct Constants {
 }
 
 /// An implementation of Sticker to be created by ExperimentalStickerProvider
-public class ExperimentalSticker: Sticker {
+public struct ExperimentalSticker: Sticker {
     
     private let baseUrl: String
     private let keyword: String
