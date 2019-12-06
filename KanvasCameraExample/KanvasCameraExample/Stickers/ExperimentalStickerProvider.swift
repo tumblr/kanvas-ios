@@ -19,29 +19,11 @@ public final class ExperimentalStickerProvider: StickerProvider {
     
     private weak var delegate: StickerProviderDelegate?
     
-    public init() {
-        
-    }
+    // MARK: - StickerProvider Protocol
     
-    /// Creates a dictionary from the stickers JSON file
-    func getData() -> Dictionary<String, AnyObject> {
-        if let path = Bundle(for: ExperimentalStickerProvider.self).path(forResource: "\(Constants.resourceName)", ofType: Constants.resourceExtension) {
-            do {
-                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-                let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-                if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
-                    return jsonResult
-                }
-            }
-            catch {
-                print("Error loading \(Constants.resourceName).\(Constants.resourceExtension)")
-            }
-        }
-        
-        return Dictionary<String, AnyObject>()
+    public init(session: TMSession) {
+        // Session is not necessary for this provider implementation.
     }
-        
-    // MARK: - StickerProvider
     
     public func setDelegate(delegate: StickerProviderDelegate) {
         self.delegate = delegate
@@ -71,5 +53,25 @@ public final class ExperimentalStickerProvider: StickerProvider {
         }
         
         delegate?.didLoadStickerTypes(stickerList)
+    }
+    
+    // MARK: - Private utilities
+    
+    /// Creates a dictionary from the stickers JSON file
+    private func getData() -> Dictionary<String, AnyObject> {
+        if let path = Bundle(for: ExperimentalStickerProvider.self).path(forResource: "\(Constants.resourceName)", ofType: Constants.resourceExtension) {
+            do {
+                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+                let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+                if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
+                    return jsonResult
+                }
+            }
+            catch {
+                print("Error loading \(Constants.resourceName).\(Constants.resourceExtension)")
+            }
+        }
+        
+        return Dictionary<String, AnyObject>()
     }
 }
