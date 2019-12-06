@@ -6,7 +6,8 @@
 
 import Foundation
 
-public struct KanvasStickerType: StickerType, Equatable, Hashable {
+/// Representation of a StickerType to be created by KanvasStickerProvider.
+public struct KanvasStickerType: StickerType, Equatable {
     
     let id: String
     let description: String
@@ -15,7 +16,7 @@ public struct KanvasStickerType: StickerType, Equatable, Hashable {
     let title: String?
     let stickers: [Sticker]
     
-    // MARK: - StickerType
+    // MARK: - StickerType Protocol
     
     public func getImageUrl() -> String {
         return image.original.url.absoluteString
@@ -35,8 +36,4 @@ public struct KanvasStickerType: StickerType, Equatable, Hashable {
     public static func == (lhs: KanvasStickerType, rhs: KanvasStickerType) -> Bool {
         return lhs.getImageUrl() == rhs.getImageUrl()
     }
-    
-    // MARK: - Hashable
-    
-    public func hash(into hasher: inout Hasher) { hasher.combine(id.hashValue) }
 }

@@ -127,14 +127,17 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(session: TMSession, settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, stickerProviderClass: StickerProvider.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
-        self.session = session
+    ///   - session: The network session.
+    ///   - stickerProviderClass: Class that will provide the stickers in the editor.
+    ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, session: TMSession, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
+        self.session = session
         self.stickerProviderClass = stickerProviderClass
 
         self.player = MediaPlayer(renderer: Renderer())

@@ -47,6 +47,11 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     // MARK: - Initializers
     
+    /// The designated initializer for the sticker type collection controller
+    ///
+    /// - Parameters:
+    ///   - session: The network session.
+    ///   - stickerProviderClass: Class that will provide the stickers.
     init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
         self.stickerProvider = stickerProviderClass.init(session: session)
         super.init(nibName: .none, bundle: .none)

@@ -7,6 +7,7 @@
 import Foundation
 import NetworkAbstractions
 
+/// Constants for the response converter
 private struct Constants {
     static let stickerPacksKey = "sticker_packs"
     static let idKey = "id"
@@ -22,26 +23,27 @@ private struct Constants {
     static let heightKey = "height"
 }
 
+/// Class responsable of parsing the API response into StickerType objects.
 public struct KanvasStickerTypeResponseConverter: RequestSenderResponseConverter {
     
     public typealias ResponseType = [StickerType]
 
     public typealias NetworkingErrorModelType = Void
 
-    /// Converts a network response into a network result doing any JSON parsing for StickerPacks
+    /// Converts a network response into a network result doing any JSON parsing for StickerType
     ///
-    /// - Parameter response: The response from the network controller
-    /// - Returns: A network result that contains StickerPacks if able to extract any from the response's JSON or an empty StickerPack array if there was an error
+    /// - Parameter response: The response from KanvasStickerProvider
+    /// - Returns: A network result that contains a list of sticker type objects or an empty list if there was an error
     public func convertResponse(_ response: Response) -> NetworkAbstractions.Result<[StickerType], NetworkingError<Void>> {
 
         if let stickerPacksJSON = response.responseDictionary[Constants.stickerPacksKey] as? [NSDictionary] {
-            return .value(stickerPacksJSON.compactMap(parseStickerPack))
+            return .value(stickerPacksJSON.compactMap(parseStickerType))
         }
 
         return .value([])
     }
 
-    public func parseStickerPack(_ json: NSDictionary) -> StickerType? {
+    private func parseStickerType(_ json: NSDictionary) -> StickerType? {
         guard let id = json[Constants.idKey] as? String,
             let description = json[Constants.descriptionKey] as? String,
             let imageSizesJSON = json[Constants.imageKey] as? NSDictionary,
@@ -56,8 +58,9 @@ public struct KanvasStickerTypeResponseConverter: RequestSenderResponseConverter
         
         let stickers: [Sticker] = stickersJSON.compactMap { parseSticker($0, sponsored: sponsored) }
 
-        let pack = KanvasStickerType(id: id, description: description, image: imageSizes, sponsored: sponsored, title: title, stickers: stickers)
-        return pack
+        let type = KanvasStickerType(id: id, description: description, image: imageSizes,
+                                     sponsored: sponsored, title: title, stickers: stickers)
+        return type
     }
 
     private func parseSticker(_ json: NSDictionary, sponsored: Bool = false) -> Sticker? {

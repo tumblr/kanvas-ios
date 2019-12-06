@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 import KanvasCamera
 
-/// An implementation of StickerType to be used in Kanvas example app
+/// An implementation of StickerType to be created by ExperimentalStickerProvider
 public class ExperimentalStickerType: StickerType, Equatable {
     
     public let baseUrl: String
@@ -23,7 +23,7 @@ public class ExperimentalStickerType: StickerType, Equatable {
         self.count = count
     }
     
-    // MARK: - Public interface
+    // MARK: - StickerType Protocol
     
     public func getImageUrl() -> String {
         return "\(baseUrl)\(keyword)/\(thumbUrl)"
@@ -41,6 +41,8 @@ public class ExperimentalStickerType: StickerType, Equatable {
         guard let experimentalStickerType = stickerType as? ExperimentalStickerType else { return false }
         return self == experimentalStickerType
     }
+    
+    // MARK: - Equatable
     
     public static func == (lhs: ExperimentalStickerType, rhs: ExperimentalStickerType) -> Bool {
         return lhs.getImageUrl() == rhs.getImageUrl()

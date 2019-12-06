@@ -162,13 +162,15 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// and export the result to the device, saving to the phone all in between information
     /// needed to attain the final output.
     ///
-    /// - Parameter settings: Settings to configure in which ways should the controller
+    /// - Parameters
+    ///   - settings: Settings to configure in which ways should the controller
     /// interact with the user, which options should the controller give the user
     /// and which should be the result of the interaction.
+    ///   - session: The network session.
+    ///   - stickerProviderClass: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    ///   - stickerProvider: An class conforming to StickerProvider
-    convenience public init(settings: CameraSettings, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?, session: TMSession) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, stickerProviderClass: stickerProviderClass, analyticsProvider: analyticsProvider, session: session)
+    convenience public init(settings: CameraSettings, session: TMSession, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, session: session, stickerProviderClass: stickerProviderClass, analyticsProvider: analyticsProvider)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -181,18 +183,21 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     ///   - recorderClass: Class that will provide a recorder that defines how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
+    ///   - session: The network session.
+    ///   - stickerProviderClass: Class that will provide the stickers in the editor.
+    ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
     init(settings: CameraSettings,
          recorderClass: CameraRecordingProtocol.Type,
          segmentsHandlerClass: SegmentsHandlerType.Type,
+         session: TMSession,
          stickerProviderClass: StickerProvider.Type,
-         analyticsProvider: KanvasCameraAnalyticsProvider?,
-         session: TMSession) {
+         analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
-        self.session = session
         currentMode = settings.initialMode
         isRecording = false
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
+        self.session = session
         self.stickerProviderClass = stickerProviderClass
         self.analyticsProvider = analyticsProvider
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
@@ -301,7 +306,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
-        let controller = EditorViewController(session: session, settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, stickerProviderClass: stickerProviderClass, cameraMode: currentMode, analyticsProvider: analyticsProvider)
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, cameraMode: currentMode, session: session, stickerProviderClass: stickerProviderClass, analyticsProvider: analyticsProvider)
         controller.delegate = self
         return controller
     }

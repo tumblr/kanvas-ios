@@ -5,5 +5,7 @@
 //
 
 public protocol Sticker {
+    
+    /// Gets the url of the sticker image as a string.
     func getImageUrl() -> String
 }

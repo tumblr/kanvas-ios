@@ -8,6 +8,7 @@ import Foundation
 import CoreTumblr
 import TMTumblrSDK
 
+/// Constants for KanvasStickerProvider
 private struct Constants {
     static let stickerPackEndpoint = "stickerpacks"
 }
@@ -18,6 +19,9 @@ public final class KanvasStickerProvider: StickerProvider {
     private weak var delegate: StickerProviderDelegate?
     private let session: TMSession
     
+    /// The designated initializer for kanvas sticker provider
+    ///
+    /// - Parameter session: The network session.
     public init(session: TMSession) {
         self.session = session
     }

@@ -6,29 +6,24 @@
 
 import Foundation
 
-public struct KanvasSticker: Sticker, Hashable {
+/// Representation of a Sticker to be created by KanvasStickerProvider.
+public struct KanvasSticker: Sticker {
     
-    public struct Sizes: Equatable {
+    public struct Sizes {
         let original: Image
         let alternate: [Image]
     }
 
-    public struct Image: Hashable {
+    public struct Image {
         let url: URL
         let width: Int
         let height: Int
-
-        public func hash(into hasher: inout Hasher) {
-            hasher.combine(url.hashValue)
-            hasher.combine(width.hashValue)
-            hasher.combine(height.hashValue)
-        }
     }
 
     /// The sticker's id as a String
     let id: String
     
-    /// String description of the sticker
+    /// Description of the sticker
     let description: String
     
     /// The sticker's image as Sizes
@@ -37,41 +32,9 @@ public struct KanvasSticker: Sticker, Hashable {
     /// True if the sticker is part of a sponsored StickerPack
     let sponsored: Bool
     
-    /// Sticker ID used for analytics/logging purposes
-    public var analyticsID: String {
-        return id
-    }
-    
-    // MARK: - Sticker
+    // MARK: - Sticker Protocol
     
     public func getImageUrl() -> String {
         return image.original.url.absoluteString
-    }
-    
-    // MARK: - Hashable
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id.hashValue)
-    }
-    
-    /// Gets the `Image` that is the closest to `size` but always greater then it. So if you pass in 400, and there are 300, 500, 1200,
-    /// then you will be returned the 500 varient.
-    /// But the original size is currently 1200, so if you pass in anything larger then it, you will get the 1200 varient.
-    ///
-    /// - Parameter size: The size you want the image to be in pixels
-    /// - Returns: The image that is the closest to the `size`
-    func sizeClosestTo(_ size: CGSize) -> Image {
-        let filteredSizes = image.alternate.filter { $0.width >= Int(size.width) && $0.height >= Int(size.height) }
-        return filteredSizes.first ?? image.original
-    }
-
-    /// Gets the `Image` that is the smallest varient available
-    ///
-    /// - Returns: The image that is the smallest
-    func smallestSize() -> Image {
-        let sortedSizes = image.alternate.lazy.sorted { (lhs, rhs) -> Bool in
-            return lhs.width < rhs.width && lhs.height < rhs.height
-        }
-        return sortedSizes.first ?? image.original
     }
 }

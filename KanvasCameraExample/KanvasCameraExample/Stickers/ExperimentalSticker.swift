@@ -13,7 +13,7 @@ private struct Constants {
     static let twoDigitsFormat: String = "%02d"
 }
 
-/// An implementation of Sticker to be used in Kanvas example app
+/// An implementation of Sticker to be created by ExperimentalStickerProvider
 public class ExperimentalSticker: Sticker {
     
     private let baseUrl: String
@@ -28,7 +28,7 @@ public class ExperimentalSticker: Sticker {
         self.imageExtension = imageExtension
     }
     
-    // MARK: - Public interface
+    // MARK: - Sticker Protocol
     
     public func getImageUrl() -> String {
         return "\(baseUrl)\(keyword)/\(String(format: Constants.twoDigitsFormat, number)).\(imageExtension)"

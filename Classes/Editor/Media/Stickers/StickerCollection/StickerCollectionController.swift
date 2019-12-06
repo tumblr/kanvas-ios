@@ -49,9 +49,9 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
 
     // MARK: - Public interface
     
-    /// Loads a new collection for a new sticker type
+    /// Loads a new collection of stickers for a selected sticker type
     ///
-    /// - Parameter stickerType: the new sticker type
+    /// - Parameter stickerType: the selected sticker type
     func setType(_ stickerType: StickerType) {
         self.stickerType = stickerType
         stickers = stickerType.getStickers()

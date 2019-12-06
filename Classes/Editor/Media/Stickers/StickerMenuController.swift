@@ -43,6 +43,11 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     
     // MARK: - Initializers
     
+    /// The designated initializer for the sticker menu controller
+    ///
+    /// - Parameters:
+    ///   - session: The network session.
+    ///   - stickerProviderClass: Class that will provide the stickers from the API.
     init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
         self.stickerProviderClass = stickerProviderClass
         self.session = session
