@@ -1,3 +1,8 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'git@github.tumblr.net:TumblrMobile/Podspecs.git'
+source 'git@github.tumblr.net:TumblrMobile/ymobilelibs-pod-specs.git'
+install! 'cocoapods', :disable_input_output_paths => true
+
 platform :ios, '12.0'
 use_frameworks!
 
@@ -7,6 +12,12 @@ target 'KanvasCameraExample' do
     pod 'SharedUI', :path => '../../SharedUI'
     pod 'Utils', :path => '../../Utils'
     pod 'ImageLoader', :path => '../../ImageLoader'
+    pod 'CoreTumblr', :path => '../../CoreTumblr'
+    pod 'DataDisplayKit', :path => '../../DataDisplayKit'
+    pod 'NetworkAbstractions', :path => '../../NetworkAbstractions'
+    pod 'TMTimelineObject', :path => '../../TMTimelineObject'
+    pod 'PostForms', :path => '../../PostForms'
+    pod 'Timelines', :path => '../../Timelines'
 end
 
 target 'KanvasCameraExampleTests' do
