@@ -21,6 +21,10 @@ protocol EditorViewDelegate: class {
     func didTapSaveButton()
     /// A function that is called when a movable text is pressed
     func didTapText(options: TextOptions, transformations: ViewTransformations)
+    /// Called when text is moved
+    func didMoveText()
+    /// Called when text is removed
+    func didRemoveText()
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnText()
     /// Called when the touch events on a movable view end
@@ -486,6 +490,14 @@ final class EditorView: UIView, TextCanvasDelegate {
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         delegate?.didTapText(options: options, transformations: transformations)
+    }
+
+    func didRemoveText() {
+        delegate?.didRemoveText()
+    }
+
+    func didMoveText() {
+        delegate?.didMoveText()
     }
     
     func didBeginTouchesOnText() {

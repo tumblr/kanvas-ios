@@ -146,6 +146,42 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "logEditorDrawingConfirm")
     }
 
+    public func logEditorTextAdd() {
+        logString(string: "logEditorTextAdd")
+    }
+
+    public func logEditorTextEdit() {
+        logString(string: "logEditorTextEdit")
+    }
+
+    public func logEditorTextConfirm(new: Bool, font: KanvasTextFont, alignment: KanvasTextAlignment, highlighted: Bool) {
+        logString(string: "logEditorTextConfirm new:\(new) font:\(font.string()) alignment:\(alignment.string()) highlighted:\(highlighted)")
+    }
+
+    public func logEditorTextMove() {
+        logString(string: "logEditorTextMove")
+    }
+
+    public func logEditorTextRemove() {
+        logString(string: "logEditorTextRemove")
+    }
+
+    public func logEditorTextChange(font: KanvasTextFont) {
+        logString(string: "logEditorTextChangeFont font:\(font.string())")
+    }
+
+    public func logEditorTextChange(alignment: KanvasTextAlignment) {
+        logString(string: "logEditorTextChangeAlignment alignment:\(alignment.string())")
+    }
+
+    public func logEditorTextChange(highlighted: Bool) {
+        logString(string: "logEditorTextChangeBackground highlighted:\(highlighted)")
+    }
+
+    public func logEditorTextChange(color: Bool) {
+        logString(string: "logEditorTextChangeColor")
+    }
+
     public func logEditorCreatedMedia(clipsCount: Int, length: TimeInterval) {
         logString(string: "logEditorCreatedMedia clipsCount:\(clipsCount) length:\(format(length))")
     }
@@ -172,6 +208,10 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
 
     public func logEditorTagTapped() {
         logString(string: "logEditorTagTapped")
+    }
+
+    public func logIconPresentedOnDashboard() {
+        logString(string: "logIconPresentedOnDashboard")
     }
 
     func logString(string: String) {

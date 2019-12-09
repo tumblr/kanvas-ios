@@ -103,6 +103,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         }
     }
     private var backgroundFillColor: CGColor = UIColor.clear.cgColor
+    private var editingNewText: Bool = true
 
     weak var delegate: EditorControllerDelegate?
     
@@ -240,6 +241,16 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
             self.textController.showConfirmButton(true)
         })
+        analyticsProvider?.logEditorTextEdit()
+        editingNewText = false
+    }
+
+    func didMoveText() {
+        analyticsProvider?.logEditorTextMove()
+    }
+
+    func didRemoveText() {
+        analyticsProvider?.logEditorTextRemove()
     }
 
     func didTapTagButton() {
@@ -377,6 +388,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
         case .text:
+            analyticsProvider?.logEditorTextAdd()
+            editingNewText = true
             textController.showView(true)
             editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
                 self.textController.showConfirmButton(true)
@@ -442,12 +455,38 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         if options.haveText {
             editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
+            if let font = KanvasTextFont.from(font: options.font), let alignment = KanvasTextAlignment.from(alignment: options.alignment) {
+                analyticsProvider?.logEditorTextConfirm(new: editingNewText, font: font, alignment: alignment, highlighted: options.highlightColor != nil)
+            }
+            else {
+                assertionFailure("Logging unknown stuff")
+            }
         }
         confirmMenuButtonPressed()
     }
     
     func didMoveToolsUp() {
         editorView.textCanvas.removeSelectedText()
+    }
+
+    func didChange(font: UIFont) {
+        if let font = KanvasTextFont.from(font: font) {
+            analyticsProvider?.logEditorTextChange(font: font)
+        }
+    }
+
+    func didChange(highlight: Bool) {
+        analyticsProvider?.logEditorTextChange(highlighted: highlight)
+    }
+
+    func didChange(alignment: NSTextAlignment) {
+        if let alignment = KanvasTextAlignment.from(alignment: alignment) {
+            analyticsProvider?.logEditorTextChange(alignment: alignment)
+        }
+    }
+
+    func didChange(color: Bool) {
+        analyticsProvider?.logEditorTextChange(color: true)
     }
     
     // MARK: - DrawingControllerDelegate & EditorTextControllerDelegate

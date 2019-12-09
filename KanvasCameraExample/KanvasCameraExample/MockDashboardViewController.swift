@@ -38,6 +38,7 @@ class MockDashboardViewController: UIViewController {
 
         let button = UIButton(frame: .zero)
         button.setTitle("Tap to open Kanvas", for: .normal)
+        KanvasCameraAnalyticsStub().logIconPresentedOnDashboard()
         if #available(iOS 13.0, *) {
             button.setTitleColor(.label, for: .normal)
         }
