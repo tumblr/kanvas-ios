@@ -21,7 +21,7 @@ public final class ExperimentalStickerProvider: StickerProvider {
     
     // MARK: - StickerProvider Protocol
     
-    public init(session: TMSession) {
+    public init(session: TMSession?) {
         // Session is not necessary for this provider implementation.
     }
     
@@ -41,18 +41,18 @@ public final class ExperimentalStickerProvider: StickerProvider {
                 return
         }
         
-        var stickerType: [StickerType] = []
+        var stickerTypes: [StickerType] = []
         
         stickerList.forEach { element in
             if let stickerItem = element as? Dictionary<String, Any>,
                 let keyword = stickerItem["keyword"] as? String,
                 let thumbUrl = stickerItem["thumb_url"] as? String,
                 let count = stickerItem["count"] as? Int {
-                stickerType.append(ExperimentalStickerType(baseUrl: baseUrl, keyword: keyword, thumbUrl: thumbUrl, count: count))
+                stickerTypes.append(ExperimentalStickerType(baseUrl: baseUrl, keyword: keyword, thumbUrl: thumbUrl, count: count))
             }
         }
         
-        delegate?.didLoadStickerTypes(stickerList)
+        delegate?.didLoadStickerTypes(stickerTypes)
     }
     
     // MARK: - Private utilities

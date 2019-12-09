@@ -90,7 +90,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
-    private let session: TMSession
+    private let session: TMSession?
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let exporterClass: MediaExporting.Type
@@ -130,7 +130,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - session: The network session.
     ///   - stickerProviderClass: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, session: TMSession, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, session: TMSession?, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler

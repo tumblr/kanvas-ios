@@ -23,7 +23,7 @@ protocol StickerMenuControllerDelegate: class {
 /// A view controller that contains the sticker main collection and the sticker type collection
 final class StickerMenuController: UIViewController, StickerCollectionControllerDelegate, StickerTypeCollectionControllerDelegate {
     
-    private let session: TMSession
+    private let session: TMSession?
     private let stickerProviderClass: StickerProvider.Type
     weak var delegate: StickerMenuControllerDelegate?
     private lazy var stickerMenuView: StickerMenuView = StickerMenuView()
@@ -48,7 +48,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     /// - Parameters:
     ///   - session: The network session.
     ///   - stickerProviderClass: Class that will provide the stickers from the API.
-    init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
+    init(session: TMSession?, stickerProviderClass: StickerProvider.Type) {
         self.stickerProviderClass = stickerProviderClass
         self.session = session
         super.init(nibName: .none, bundle: .none)

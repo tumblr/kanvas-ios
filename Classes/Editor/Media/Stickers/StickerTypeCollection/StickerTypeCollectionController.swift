@@ -52,7 +52,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     /// - Parameters:
     ///   - session: The network session.
     ///   - stickerProviderClass: Class that will provide the stickers.
-    init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
+    init(session: TMSession?, stickerProviderClass: StickerProvider.Type) {
         self.stickerProvider = stickerProviderClass.init(session: session)
         super.init(nibName: .none, bundle: .none)
         stickerProvider.setDelegate(delegate: self)

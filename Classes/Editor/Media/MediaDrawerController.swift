@@ -28,7 +28,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     weak var delegate: MediaDrawerControllerDelegate?
     
-    private let session: TMSession
+    private let session: TMSession?
     private var openedMenu: UIViewController?
     private let stickerProviderClass: StickerProvider.Type
     
@@ -53,7 +53,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     /// - Parameters:
     ///   - session: The network session.
     ///   - stickerProviderClass: Class that will provide the stickers in the stickers tab.
-    init(session: TMSession, stickerProviderClass: StickerProvider.Type) {
+    init(session: TMSession?, stickerProviderClass: StickerProvider.Type) {
         self.session = session
         self.stickerProviderClass = stickerProviderClass
         super.init(nibName: .none, bundle: .none)

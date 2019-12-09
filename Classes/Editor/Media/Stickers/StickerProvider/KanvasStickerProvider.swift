@@ -17,9 +17,9 @@ private struct Constants {
 public final class KanvasStickerProvider: StickerProvider {
 
     private weak var delegate: StickerProviderDelegate?
-    private let session: TMSession
+    private let session: TMSession?
     
-    public init(session: TMSession) {
+    public init(session: TMSession?) {
         self.session = session
     }
     
@@ -31,7 +31,7 @@ public final class KanvasStickerProvider: StickerProvider {
     
     public func getStickerTypes() {
         let urlDeterminer = BaseURLDeterminer(urlProvider: TMSettingsAppReader(userDefaults: UserDefaults.standard))
-        guard let baseURL = urlDeterminer.baseURL() else {
+        guard let session = session, let baseURL = urlDeterminer.baseURL() else {
             delegate?.didLoadStickerTypes([])
             return
         }

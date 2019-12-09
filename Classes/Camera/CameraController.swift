@@ -143,7 +143,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     private let settings: CameraSettings
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
-    private let session: TMSession
+    private let session: TMSession?
     private var currentMode: CameraMode
     private var isRecording: Bool
     private var disposables: [NSKeyValueObservation] = []
@@ -169,7 +169,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     ///   - session: The network session.
     ///   - stickerProviderClass: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, session: TMSession, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    convenience public init(settings: CameraSettings, session: TMSession?, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, session: session, stickerProviderClass: stickerProviderClass, analyticsProvider: analyticsProvider)
     }
 
@@ -189,7 +189,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     init(settings: CameraSettings,
          recorderClass: CameraRecordingProtocol.Type,
          segmentsHandlerClass: SegmentsHandlerType.Type,
-         session: TMSession,
+         session: TMSession?,
          stickerProviderClass: StickerProvider.Type,
          analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
