@@ -6,7 +6,6 @@
 
 import Foundation
 import UIKit
-import TMTumblrSDK
 
 /// Protocol for selecting a sticker
 protocol StickerCollectionControllerDelegate: class {

@@ -6,7 +6,6 @@
 
 import Foundation
 import UIKit
-import TMTumblrSDK
 
 /// Protocol for confirming a sticker
 protocol StickerMenuControllerDelegate: class {
@@ -23,8 +22,7 @@ protocol StickerMenuControllerDelegate: class {
 /// A view controller that contains the sticker main collection and the sticker type collection
 final class StickerMenuController: UIViewController, StickerCollectionControllerDelegate, StickerTypeCollectionControllerDelegate {
     
-    private let session: TMSession?
-    private let stickerProviderClass: StickerProvider.Type
+    private let stickerProvider: StickerProvider?
     weak var delegate: StickerMenuControllerDelegate?
     private lazy var stickerMenuView: StickerMenuView = StickerMenuView()
     
@@ -35,8 +33,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     }()
     
     private lazy var stickerTypeCollectionController: StickerTypeCollectionController = {
-        let controller = StickerTypeCollectionController(session: self.session,
-                                                         stickerProviderClass: self.stickerProviderClass)
+        let controller = StickerTypeCollectionController(stickerProvider: self.stickerProvider)
         controller.delegate = self
         return controller
     }()
@@ -47,10 +44,9 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     ///
     /// - Parameters:
     ///   - session: The network session.
-    ///   - stickerProviderClass: Class that will provide the stickers from the API.
-    init(session: TMSession?, stickerProviderClass: StickerProvider.Type) {
-        self.stickerProviderClass = stickerProviderClass
-        self.session = session
+    ///   - stickerProvider: Class that will provide the stickers from the API.
+    init(stickerProvider: StickerProvider?) {
+        self.stickerProvider = stickerProvider
         super.init(nibName: .none, bundle: .none)
     }
     

@@ -4,8 +4,6 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import TMTumblrSDK
-
 public protocol StickerProviderDelegate: class {
     /// Callback for when the sticker request has finished loading
     ///
@@ -16,9 +14,7 @@ public protocol StickerProviderDelegate: class {
 public protocol StickerProvider {
     
     /// Designated initializer for the class.
-    ///
-    /// - Parameter session: the network session.
-    init(session: TMSession?)
+    init()
     
     /// Starts an API call to fetch the sticker types.
     func getStickerTypes()

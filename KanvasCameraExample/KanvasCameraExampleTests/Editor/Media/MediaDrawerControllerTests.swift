@@ -19,7 +19,7 @@ final class MediaDrawerControllerTests: FBSnapshotTestCase {
     }
     
     func newViewController() -> MediaDrawerController {
-        let controller = MediaDrawerController(stickerProviderClass: StickerProviderStub.self)
+        let controller = MediaDrawerController(stickerProvider: StickerProviderStub())
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         controller.view.setNeedsDisplay()
         return controller

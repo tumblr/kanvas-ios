@@ -6,7 +6,6 @@
 
 import Foundation
 import UIKit
-import TMTumblrSDK
 
 /// Protocol for selecting a sticker type
 protocol StickerTypeCollectionControllerDelegate: class {
@@ -28,7 +27,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     private lazy var stickerTypeCollectionView = StickerTypeCollectionView()
     private var stickerTypes: [StickerType] = []
-    private let stickerProvider: StickerProvider
+    private let stickerProvider: StickerProvider?
     
     private var selectedIndexPath: IndexPath? {
         didSet {
@@ -51,11 +50,11 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     ///
     /// - Parameters:
     ///   - session: The network session.
-    ///   - stickerProviderClass: Class that will provide the stickers.
-    init(session: TMSession?, stickerProviderClass: StickerProvider.Type) {
-        self.stickerProvider = stickerProviderClass.init(session: session)
+    ///   - stickerProvider: Class that will provide the stickers.
+    init(stickerProvider: StickerProvider?) {
+        self.stickerProvider = stickerProvider
         super.init(nibName: .none, bundle: .none)
-        stickerProvider.setDelegate(delegate: self)
+        stickerProvider?.setDelegate(delegate: self)
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -80,7 +79,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
         stickerTypeCollectionView.collectionView.delegate = self
         stickerTypeCollectionView.collectionView.dataSource = self
         
-        stickerProvider.getStickerTypes()
+        stickerProvider?.getStickerTypes()
     }
 
     // MARK: - UICollectionViewDataSource

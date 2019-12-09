@@ -21,8 +21,8 @@ public final class ExperimentalStickerProvider: StickerProvider {
     
     // MARK: - StickerProvider Protocol
     
-    public init(session: TMSession?) {
-        // Session is not necessary for this provider implementation.
+    public init() {
+
     }
     
     public func setDelegate(delegate: StickerProviderDelegate) {

@@ -8,7 +8,6 @@ import AVFoundation
 import Foundation
 import UIKit
 import Utils
-import TMTumblrSDK
 
 /// Protocol for camera editor controller methods
 
@@ -80,8 +79,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }()
     
     private lazy var mediaDrawerController: MediaDrawerController = {
-        let controller = MediaDrawerController(session: self.session,
-                                               stickerProviderClass: self.stickerProviderClass)
+        let controller = MediaDrawerController(stickerProvider: self.stickerProvider)
         controller.delegate = self
         return controller
     }()
@@ -90,11 +88,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
-    private let session: TMSession?
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let exporterClass: MediaExporting.Type
-    private let stickerProviderClass: StickerProvider.Type
+    private let stickerProvider: StickerProvider?
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
@@ -128,17 +125,16 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
     ///   - session: The network session.
-    ///   - stickerProviderClass: Class that will provide the stickers in the editor.
+    ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, session: TMSession?, stickerProviderClass: StickerProvider.Type, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
-        self.session = session
-        self.stickerProviderClass = stickerProviderClass
+        self.stickerProvider = stickerProvider
 
         self.player = MediaPlayer(renderer: Renderer())
         super.init(nibName: .none, bundle: .none)
