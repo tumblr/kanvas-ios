@@ -293,7 +293,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
-        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: GLMediaExporter.self, cameraMode: currentMode, analyticsProvider: analyticsProvider)
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, cameraMode: currentMode, analyticsProvider: analyticsProvider)
         controller.delegate = self
         return controller
     }
@@ -376,11 +376,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    private func takeGif(useLongerDuration: Bool = false) {
+    private func takeGif(numberOfFrames: Int, framesPerSecond: Int) {
         guard !isRecording else { return }
         updatePhotoCaptureState(event: .started)
         AudioServicesPlaySystemSoundWithCompletion(SystemSoundID(1108), nil)
-        cameraInputController.takeGif(useLongerDuration: useLongerDuration, completion: { [weak self] url in
+        cameraInputController.takeGif(numberOfFrames: numberOfFrames, framesPerSecond: framesPerSecond, completion: { [weak self] url in
             defer {
                 self?.updatePhotoCaptureState(event: .ended)
             }
@@ -551,7 +551,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didTapForMode(_ mode: CameraMode) {
         switch mode.group {
         case .gif:
-            takeGif()
+            takeGif(numberOfFrames: KanvasCameraTimes.gifTapNumberOfFrames, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond)
         case .photo, .video:
             takePhoto()
         }
@@ -560,7 +560,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didStartPressingForMode(_ mode: CameraMode) {
         switch mode.group {
         case .gif:
-            takeGif(useLongerDuration: true)
+            takeGif(numberOfFrames: KanvasCameraTimes.gifHoldNumberOfFrames, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond)
         case .video:
             prepareHapticFeedback()
             let _ = cameraInputController.startRecording(on: mode)

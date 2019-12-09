@@ -43,6 +43,19 @@ protocol EditorTextControllerDelegate: class {
     
     /// Called when the color selector is released
     func didEndColorSelection()
+
+    /// Called when the font is changes
+    func didChange(font: UIFont)
+
+    /// Called when the text alighment is changed
+    func didChange(alignment: NSTextAlignment)
+
+    /// Called when the text highlight is changed
+    ///
+    /// - Parameter highlight: is the text highlighted?
+    func didChange(highlight: Bool)
+
+    func didChange(color: Bool)
 }
 
 /// Constants for EditorTextController
@@ -86,6 +99,11 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         controller.delegate = self
         return controller
     }()
+    
+    /// Confirm button location expressed in screen coordinates
+    var confirmButtonLocation: CGPoint {
+        return textView.confirmButtonLocation
+    }
     
     // MARK: - Initializers
     
@@ -155,18 +173,21 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         alignments.rotateLeft()
         if let newAlignment = alignments.first {
             textView.alignment = newAlignment
+            delegate?.didChange(alignment: newAlignment)
         }
     }
     
     func didTapFontSelector() {
         fonts.rotateLeft()
-        if let newFont = fonts.first, let currentFont = textView.font {
-            textView.font = newFont?.withSize(currentFont.pointSize)
+        if let newFont = fonts.first ?? nil, let currentFont = textView.font {
+            textView.font = newFont.withSize(currentFont.pointSize)
+            delegate?.didChange(font: newFont)
         }
     }
     
     func didTapHighlightSelector() {
         swapColors()
+        delegate?.didChange(highlight: highlight ?? false)
     }
     
     func didTapEyeDropper() {
@@ -276,6 +297,13 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         }
     }
     
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        textView.showConfirmButton(show)
+    }
+    
     // MARK: - Show & Hide
     
     /// Makes the view appear
@@ -316,6 +344,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         else {
             textView.textColor = color
         }
+        delegate?.didChange(color: true)
     }
     
     /// Swaps the colors of the text and the background

@@ -11,7 +11,8 @@ protocol EditionMenuCollectionControllerDelegate: class {
     /// Callback for the selection of an option
     ///
     /// - Parameter editionOption: the selected option
-    func didSelectEditionOption(_ editionOption: EditionOption)
+    /// - Parameter cell: the selected cell
+    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell)
 }
 
 /// Constants for Collection Controller
@@ -27,6 +28,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     
     private lazy var editionMenuCollectionView = EditionMenuCollectionView()
     private var editionOptions: [EditionOption]
+    private(set) var textCell: EditionMenuCollectionCell?
     
     weak var delegate: EditionMenuCollectionControllerDelegate?
     
@@ -109,6 +111,9 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
             cell.bindTo(option)
             cell.delegate = self
+            if option == .text {
+                textCell = cell
+            }
         }
         return cell
     }
@@ -125,16 +130,17 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     /// Selects an option
     ///
     /// - Parameter index: position of the option in the collection
-    private func selectEditionOption(index: Int) {
+    /// - Parameter cell: the selected cell
+    private func selectEditionOption(index: Int, cell: EditionMenuCollectionCell) {
         guard let option = editionOptions.object(at: index) else { return }
-        delegate?.didSelectEditionOption(option)
+        delegate?.didSelectEditionOption(option, cell: cell)
     }
     
     // MARK: - EditionMenuCollectionCellDelegate
     
     func didTap(cell: EditionMenuCollectionCell, recognizer: UITapGestureRecognizer) {
         if let indexPath = editionMenuCollectionView.collectionView.indexPath(for: cell) {
-            selectEditionOption(index: indexPath.item)
+            selectEditionOption(index: indexPath.item, cell: cell)
         }
     }
 }

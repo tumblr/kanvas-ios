@@ -14,7 +14,13 @@ protocol TextCanvasDelegate: class {
     /// - Parameter option: text style options
     /// - Parameter transformations: transformations for the view
     func didTapText(options: TextOptions, transformations: ViewTransformations)
-    
+
+    /// Called when text is removed
+    func didRemoveText()
+
+    /// Called when text is moved
+    func didMoveText()
+
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnText()
     
@@ -181,7 +187,10 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         case .changed:
             let newRotation = originTransformations.rotation + recognizer.rotation
             movableView.rotation = newRotation
-        case .ended, .cancelled, .failed:
+        case .ended:
+            onRecognizerEnded()
+            delegate?.didMoveText()
+        case .cancelled, .failed:
             onRecognizerEnded()
         case .possible:
             break
@@ -200,7 +209,10 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         case .changed:
             let newScale = originTransformations.scale * recognizer.scale
             movableView.scale = newScale
-        case .ended, .cancelled, .failed:
+        case .ended:
+            onRecognizerEnded()
+            delegate?.didMoveText()
+        case .cancelled, .failed:
             onRecognizerEnded()
         case .possible:
             break
@@ -219,7 +231,10 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         case .changed:
             let newPosition = originTransformations.position + recognizer.translation(in: self)
             movableView.position = newPosition
-        case .ended, .cancelled, .failed:
+        case .ended:
+            onRecognizerEnded()
+            delegate?.didMoveText()
+        case .cancelled, .failed:
             onRecognizerEnded()
         case .possible:
             break
@@ -244,6 +259,7 @@ final class TextCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate {
         case .ended, .cancelled, .failed:
             if trashView.contains(touchPosition) {
                 movableView.remove()
+                delegate?.didRemoveText()
             }
             else {
                 movableView.fadeIn()

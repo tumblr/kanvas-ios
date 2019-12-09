@@ -294,7 +294,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     // MARK: - gif
-    func takeGifMovie(useLongerDuration: Bool = false, completion: @escaping (URL?) -> Void) {
+    func takeGifMovie(numberOfFrames: Int, framesPerSecond: Int, completion: @escaping (URL?) -> Void) {
         if isRecording() {
             completion(nil)
             return
@@ -304,7 +304,7 @@ extension CameraRecorder: CameraRecordingProtocol {
 
         setupAssetWriter(url: NSURL.createNewVideoURL())
 
-        gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput, longerDuration: useLongerDuration) { [weak self] success in
+        gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput, numberOfFrames: numberOfFrames, framesPerSecond: framesPerSecond) { [weak self] success in
             guard let strongSelf = self else { return }
             strongSelf.recordingDelegate?.cameraWillFinishVideo()
             completion(success ? strongSelf.url : nil)

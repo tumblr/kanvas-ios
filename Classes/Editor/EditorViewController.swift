@@ -42,7 +42,7 @@ protocol EditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, GLPlayerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
@@ -87,14 +87,16 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let exporterClass: MediaExporting.Type
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
+    private var selectedCell: EditionMenuCollectionCell?
 
-    private let player: GLPlayer
+    private let player: MediaPlayer
     private var filterType: FilterType? {
         didSet {
             player.filterType = filterType
         }
     }
     private var backgroundFillColor: CGColor = UIColor.clear.cgColor
+    private var editingNewText: Bool = true
 
     weak var delegate: EditorControllerDelegate?
     
@@ -123,7 +125,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
 
-        self.player = GLPlayer(renderer: GLRenderer())
+        self.player = MediaPlayer(renderer: Renderer())
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
@@ -147,12 +149,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        let media: [GLPlayerMedia] = segments.compactMap {segment in
+        let media: [MediaPlayerContent] = segments.compactMap {segment in
             if let image = segment.image {
-                return GLPlayerMedia.image(image)
+                return .image(image)
             }
             else if let url = segment.videoURL {
-                return GLPlayerMedia.video(url)
+                return .video(url)
             }
             else {
                 return nil
@@ -225,8 +227,22 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
-        onBeforeSelectingEditionOption(.text)
+        let cell = collectionController.textCell
+        onBeforeSelectingEditionOption(.text, cell: cell)
         textController.showView(true, options: options, transformations: transformations)
+        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+            self.textController.showConfirmButton(true)
+        })
+        analyticsProvider?.logEditorTextEdit()
+        editingNewText = false
+    }
+
+    func didMoveText() {
+        analyticsProvider?.logEditorTextMove()
+    }
+
+    func didRemoveText() {
+        analyticsProvider?.logEditorTextRemove()
     }
 
     func didTapTagButton() {
@@ -337,9 +353,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         case .filter:
             filterController.showView(false)
         case .text:
+            editorView.animateReturnOfEditionOption(cell: selectedCell)
             textController.showView(false)
+            textController.showConfirmButton(false)
         case .drawing:
+            editorView.animateReturnOfEditionOption(cell: selectedCell)
             drawingController.showView(false)
+            drawingController.showConfirmButton(false)
         case .media:
             break
         }
@@ -352,24 +372,33 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - EditionMenuCollectionControllerDelegate
     
-    func didSelectEditionOption(_ editionOption: EditionOption) {
-        onBeforeSelectingEditionOption(editionOption)
+    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
+        onBeforeSelectingEditionOption(editionOption, cell: cell)
         
         switch editionOption {
         case .filter:
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
         case .text:
+            analyticsProvider?.logEditorTextAdd()
+            editingNewText = true
             textController.showView(true)
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+                self.textController.showConfirmButton(true)
+            })
         case .drawing:
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
+            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: {
+                self.drawingController.showConfirmButton(true)
+            })
         case .media:
             break
         }
     }
     
-    private func onBeforeSelectingEditionOption(_ editionOption: EditionOption) {
+    private func onBeforeSelectingEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+        selectedCell = cell
         openedMenu = editionOption
         collectionController.showView(false)
         showConfirmButton(false)
@@ -418,12 +447,38 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         if options.haveText {
             editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
+            if let font = KanvasTextFont.from(font: options.font), let alignment = KanvasTextAlignment.from(alignment: options.alignment) {
+                analyticsProvider?.logEditorTextConfirm(new: editingNewText, font: font, alignment: alignment, highlighted: options.highlightColor != nil)
+            }
+            else {
+                assertionFailure("Logging unknown stuff")
+            }
         }
         confirmMenuButtonPressed()
     }
     
     func didMoveToolsUp() {
         editorView.textCanvas.removeSelectedText()
+    }
+
+    func didChange(font: UIFont) {
+        if let font = KanvasTextFont.from(font: font) {
+            analyticsProvider?.logEditorTextChange(font: font)
+        }
+    }
+
+    func didChange(highlight: Bool) {
+        analyticsProvider?.logEditorTextChange(highlighted: highlight)
+    }
+
+    func didChange(alignment: NSTextAlignment) {
+        if let alignment = KanvasTextAlignment.from(alignment: alignment) {
+            analyticsProvider?.logEditorTextChange(alignment: alignment)
+        }
+    }
+
+    func didChange(color: Bool) {
+        analyticsProvider?.logEditorTextChange(color: true)
     }
     
     // MARK: - DrawingControllerDelegate & EditorTextControllerDelegate

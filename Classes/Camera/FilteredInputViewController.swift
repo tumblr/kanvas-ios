@@ -18,9 +18,9 @@ protocol FilteredInputViewControllerDelegate: class {
 }
 
 /// class for controlling filters and rendering with opengl
-final class FilteredInputViewController: UIViewController, GLRendererDelegate {
-    private lazy var renderer: GLRenderer = {
-        let renderer = GLRenderer()
+final class FilteredInputViewController: UIViewController, RendererDelegate {
+    private lazy var renderer: Renderer = {
+        let renderer = Renderer()
         renderer.delegate = self
         return renderer
     }()

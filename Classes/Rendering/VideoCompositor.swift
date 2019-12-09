@@ -7,8 +7,8 @@
 import Foundation
 import AVFoundation
 
-/// Errors that can be thrown from GLVideoCompositor
-enum GLVideoCompositorError: Error {
+/// Errors that can be thrown from VideoCompositor
+enum VideoCompositorError: Error {
     case missingTrack
     case missingSourceFrame
     case missingSampleBuffer
@@ -16,7 +16,7 @@ enum GLVideoCompositorError: Error {
 
 /// Implements AVVideoCompositing, which allows for getting a CVPixelBuffer for each video frame,
 /// and providing a new CVPixelBuffer to use as the frame in the output video.
-final class GLVideoCompositor: NSObject, AVVideoCompositing {
+final class VideoCompositor: NSObject, AVVideoCompositing {
 
     var sourcePixelBufferAttributes: [String: Any]? {
         return [
@@ -49,7 +49,7 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
     }
 
     /// The GLRendering object that should be used to process frames
-    let renderer: GLRendering
+    let renderer: Rendering
 
     /// The FilterType used to process each frame
     var filterType: FilterType {
@@ -80,12 +80,12 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
         self.init(
             renderingQueue: DispatchQueue(label: "kanvas.videocompositor.renderingqueue"),
             renderContextQueue: DispatchQueue(label: "kanvas.videocompositor.rendercontextqueue"),
-            renderer: GLRenderer()
+            renderer: Renderer()
         )
     }
 
     /// Designated initializer
-    init(renderingQueue: DispatchQueue, renderContextQueue: DispatchQueue, renderer: GLRendering) {
+    init(renderingQueue: DispatchQueue, renderContextQueue: DispatchQueue, renderer: Rendering) {
         self.renderingQueue = renderingQueue
         self.renderContextQueue = renderContextQueue
         self.renderer = renderer
@@ -105,11 +105,11 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
             }
             else {
                 guard let trackID = asyncVideoCompositionRequest.sourceTrackIDs.first else {
-                    asyncVideoCompositionRequest.finish(with: GLVideoCompositorError.missingTrack)
+                    asyncVideoCompositionRequest.finish(with: VideoCompositorError.missingTrack)
                     return
                 }
                 guard let sourcePixelBuffer = asyncVideoCompositionRequest.sourceFrame(byTrackID: trackID.int32Value) else {
-                    asyncVideoCompositionRequest.finish(with: GLVideoCompositorError.missingSourceFrame)
+                    asyncVideoCompositionRequest.finish(with: VideoCompositorError.missingSourceFrame)
                     return
                 }
 
@@ -118,7 +118,7 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
                 }
 
                 guard let sampleBuffer = sourcePixelBuffer.sampleBuffer() else {
-                    asyncVideoCompositionRequest.finish(with: GLVideoCompositorError.missingSampleBuffer)
+                    asyncVideoCompositionRequest.finish(with: VideoCompositorError.missingSampleBuffer)
                     return
                 }
 
@@ -149,7 +149,7 @@ final class GLVideoCompositor: NSObject, AVVideoCompositing {
 
 }
 
-extension GLVideoCompositor: GLRendererDelegate {
+extension VideoCompositor: RendererDelegate {
 
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         // Empty since this method is for rendering, not storage

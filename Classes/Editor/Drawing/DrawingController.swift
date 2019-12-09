@@ -106,6 +106,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return controller
     }()
     
+    /// Confirm button location expressed in screen coordinates
+    var confirmButtonLocation: CGPoint {
+        return drawingView.confirmButtonLocation
+    }
+    
     // Drawing
     var drawingLayer: CALayer?
     private var drawingCollection: [UIImage]
@@ -543,6 +548,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
                 self.delegate?.didEndStrokeSelectorAnimation()
             }
         })
+    }
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        drawingView.showConfirmButton(show)
     }
     
     /// shows or hides the drawing canvas

@@ -18,7 +18,7 @@ final class GifVideoOutputHandlerTests: XCTestCase {
     func testBlockCompletion() {
         let handler = setupHandler()
         let blockExpectation = XCTestExpectation(description: "entered block")
-        handler.takeGifMovie(assetWriter: nil, pixelBufferAdaptor: nil, videoInput: nil, audioInput: nil) { success in
+        handler.takeGifMovie(assetWriter: nil, pixelBufferAdaptor: nil, videoInput: nil, audioInput: nil, numberOfFrames: 10, framesPerSecond: 10) { success in
             XCTAssert(success == false, "Should not have started gif without data output or asset writer")
             blockExpectation.fulfill()
         }

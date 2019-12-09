@@ -21,6 +21,10 @@ protocol EditorViewDelegate: class {
     func didTapSaveButton()
     /// A function that is called when a movable text is pressed
     func didTapText(options: TextOptions, transformations: ViewTransformations)
+    /// Called when text is moved
+    func didMoveText()
+    /// Called when text is removed
+    func didRemoveText()
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnText()
     /// Called when the touch events on a movable view end
@@ -32,6 +36,7 @@ protocol EditorViewDelegate: class {
 /// Constants for EditorView
 private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
+    static let editionOptionAnimationDuration: TimeInterval = 0.5
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
@@ -42,6 +47,8 @@ private struct EditorViewConstants {
     static let postButtonLabelMargin: CGFloat = 3
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
+    static let fakeOptionCellMinSize: CGFloat = 36
+    static let fakeOptionCellMaxSize: CGFloat = 45
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -53,7 +60,7 @@ final class EditorView: UIView, TextCanvasDelegate {
         case post
     }
     
-    weak var playerView: GLPlayerView?
+    weak var playerView: MediaPlayerView?
 
     private let mainActionMode: MainActionMode
     private let confirmButton = UIButton()
@@ -64,6 +71,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     private let postButton = UIButton()
     private let postLabel = UILabel()
     private let tagButton = UIButton()
+    private let fakeOptionCell = UIImageView()
     private let showTagButton: Bool
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
@@ -117,12 +125,13 @@ final class EditorView: UIView, TextCanvasDelegate {
         setupFilterMenu()
         setupTextMenu()
         setupDrawingMenu()
+        setupFakeOptionCell()
     }
     
     // MARK: - views
 
     private func setupPlayer() {
-        let playerView = GLPlayerView()
+        let playerView = MediaPlayerView()
         playerView.add(into: self)
         self.playerView = playerView
     }
@@ -263,6 +272,22 @@ final class EditorView: UIView, TextCanvasDelegate {
             drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
+    
+    /// Sets up the image used for the animation that transforms a menu cell into a checkmark button
+    private func setupFakeOptionCell() {
+        fakeOptionCell.accessibilityLabel = "Fake Option Cell"
+        
+        addSubview(fakeOptionCell)
+        fakeOptionCell.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            fakeOptionCell.centerXAnchor.constraint(equalTo: centerXAnchor),
+            fakeOptionCell.centerYAnchor.constraint(equalTo: centerYAnchor),
+            fakeOptionCell.heightAnchor.constraint(equalToConstant: EditorViewConstants.fakeOptionCellMaxSize),
+            fakeOptionCell.widthAnchor.constraint(equalToConstant: EditorViewConstants.fakeOptionCellMaxSize),
+        ])
+        
+        fakeOptionCell.alpha = 0
+    }
 
     func setupPostButton() {
         postButton.accessibilityLabel = "Post Button"
@@ -365,6 +390,53 @@ final class EditorView: UIView, TextCanvasDelegate {
         }
     }
     
+    /// transforms an option cell into a checkmark button with an animation
+    ///
+    /// - Parameter cell: the cell to be transformed
+    /// - Parameter finalLocation: the location where the checkmark button will be
+    /// - Parameter completion: a closure to execute when the animation ends
+    func animateEditionOption(cell: EditionMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping () -> Void) {
+        guard let cell = cell, let cellParent = cell.superview else { return }
+        fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
+        fakeOptionCell.image = cell.circleView.image
+        fakeOptionCell.alpha = 1
+        cell.alpha = 0
+        
+        let duration = EditorViewConstants.editionOptionAnimationDuration
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
+                self.fakeOptionCell.image = KanvasCameraImages.confirmImage
+                let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
+                self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale)
+                self.fakeOptionCell.center = finalLocation
+            })
+        }, completion: { _ in
+            self.fakeOptionCell.alpha = 0
+            completion()
+        })
+    }
+    
+    /// transforms the checkmark button of the current menu into its option cell with an animation
+    ///
+    /// - Parameter cell: the cell in which the checkmark button will be tranformed
+    func animateReturnOfEditionOption(cell: EditionMenuCollectionCell?) {
+        guard let cell = cell, let cellParent = cell.superview else { return }
+        fakeOptionCell.alpha = 1
+        
+        let duration = EditorViewConstants.editionOptionAnimationDuration
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
+                self.fakeOptionCell.image = cell.circleView.image
+                self.fakeOptionCell.transform = .identity
+                self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.45 / duration, relativeDuration: 0.05 / duration, animations: {
+                self.fakeOptionCell.alpha = 0
+                cell.alpha = 1
+            })
+        })
+    }
+    
     /// shows or hides the confirm button
     ///
     /// - Parameter show: true to show, false to hide
@@ -418,6 +490,14 @@ final class EditorView: UIView, TextCanvasDelegate {
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         delegate?.didTapText(options: options, transformations: transformations)
+    }
+
+    func didRemoveText() {
+        delegate?.didRemoveText()
+    }
+
+    func didMoveText() {
+        delegate?.didMoveText()
     }
     
     func didBeginTouchesOnText() {

@@ -21,6 +21,12 @@
   ],
   "source_files": "Classes/**/*.{h,m,swift,vsh,glsl}",
   "resources": "Resources/*",
+  "user_target_xcconfig": {
+    "GCC_PREPROCESSOR_DEFINITIONS": "GLES_SILENCE_DEPRECATION=1"
+  },
+  "pod_target_xcconfig": {
+    "GCC_PREPROCESSOR_DEFINITIONS": "GLES_SILENCE_DEPRECATION=1"
+  },
   "dependencies": {
     "TumblrTheme": [],
     "SharedUI": [],
