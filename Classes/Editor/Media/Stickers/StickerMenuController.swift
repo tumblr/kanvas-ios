@@ -42,9 +42,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     
     /// The designated initializer for the sticker menu controller
     ///
-    /// - Parameters:
-    ///   - session: The network session.
-    ///   - stickerProvider: Class that will provide the stickers from the API.
+    /// - Parameter stickerProvider: Class that will provide the stickers from the API.
     init(stickerProvider: StickerProvider?) {
         self.stickerProvider = stickerProvider
         super.init(nibName: .none, bundle: .none)

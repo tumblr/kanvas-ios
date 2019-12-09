@@ -48,9 +48,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     /// The designated initializer for the media drawer controller
     ///
-    /// - Parameters:
-    ///   - session: The network session.
-    ///   - stickerProvider: Class that will provide the stickers in the stickers tab.
+    /// - Parameter stickerProvider: Class that will provide the stickers in the stickers tab.
     init(stickerProvider: StickerProvider?) {
         self.stickerProvider = stickerProvider
         super.init(nibName: .none, bundle: .none)
