@@ -30,6 +30,7 @@
   "dependencies": {
     "TumblrTheme": [],
     "SharedUI": [],
-    "Utils": []
+    "Utils": [],
+    "ImageLoader": []
   }
 }

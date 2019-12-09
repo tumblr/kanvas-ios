@@ -6,6 +6,7 @@
 
 import Foundation
 import UIKit
+import ImageLoader
 
 /// Delegate for touch events on this cell
 protocol StickerTypeCollectionCellDelegate: class {
@@ -39,11 +40,14 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     static let totalHeight = Constants.totalHeight
     static let totalWidth = Constants.totalWidth
     
-    private var imageTask: URLSessionTask?
-    
     private let mainView = UIButton()
     private let stickerView = UIImageView()
     private let loadingView = LoadingIndicatorView()
+    private var imageTask: Cancelable?
+    
+    private lazy var imageLoader: ImageLoader = {
+        return ImageLoaderProvider.makeImageLoader()
+    }()
     
     weak var delegate: StickerTypeCollectionCellDelegate?
     
@@ -150,23 +154,19 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
     
     /// Updates the cell according to the sticker type properties
     ///
-    /// - Parameters
-    ///    - sticker: The sticker type to display
-    ///    - cache: A cache to save the the image after loading
-    func bindTo(_ stickerType: StickerType, cache: NSCache<NSString, UIImage>) {
+    /// - Parameter sticker: The sticker type to display
+    func bindTo(_ stickerType: StickerType) {
+        guard let url = URL(string: stickerType.imageUrl) else { return }
         loadingView.startLoading()
-        if let image = cache.object(forKey: NSString(string: stickerType.imageUrl)) {
-            loadingView.stopLoading()
-            stickerView.image = image
-        }
-        else {
-            imageTask = stickerView.load(from: stickerType.imageUrl) { [weak self] url, image in
-                cache.setObject(image, forKey: NSString(string: url.absoluteString))
-                
-                performUIUpdate {
-                    self?.loadingView.stopLoading()
-                }
+        
+        let completion: (UIImage?, Error?) -> (Void) = { [weak self] image, _ in
+            performUIUpdate {
+                self?.loadingView.stopLoading()
             }
         }
+        
+        imageTask = imageLoader.loadImage(at: url, OAuth: false, imageView: stickerView,
+                                          displayImageImmediately: true, preloadAllFrames: true,
+                                          completion: completion)
     }
 }

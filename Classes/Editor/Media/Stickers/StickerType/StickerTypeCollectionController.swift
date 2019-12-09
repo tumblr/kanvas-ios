@@ -18,7 +18,6 @@ protocol StickerTypeCollectionControllerDelegate: class {
 /// Constants for StickerTypeController
 private struct Constants {
     static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
-    static let cacheSize: Int = 20
 }
 
 /// Controller for handling the sticker type collection.
@@ -29,12 +28,6 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     private lazy var stickerTypeCollectionView = StickerTypeCollectionView()
     private var stickerTypes: [StickerType] = []
     private let stickerProvider: StickerProvider
-    
-    private lazy var imageCache: NSCache<NSString, UIImage> = {
-        let cache = NSCache<NSString, UIImage>()
-        cache.countLimit = Constants.cacheSize
-        return cache
-    }()
     
     private var selectedIndexPath: IndexPath? {
         didSet {
@@ -102,7 +95,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerTypeCollectionCell.identifier, for: indexPath)
         if let cell = cell as? StickerTypeCollectionCell, let stickerType = stickerTypes.object(at: indexPath.item) {
-            cell.bindTo(stickerType, cache: imageCache)
+            cell.bindTo(stickerType)
             cell.delegate = self
             
             if indexPath == selectedIndexPath {
