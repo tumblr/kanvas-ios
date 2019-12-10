@@ -252,6 +252,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didRemoveText() {
         analyticsProvider?.logEditorTextRemove()
     }
+    
+    func didMoveImage() {
+        // TODO: Add analytics (https://jira.tumblr.net/browse/KANVAS-880)
+    }
+    
+    func didRemoveImage() {
+        // TODO: Add analytics (https://jira.tumblr.net/browse/KANVAS-880)
+    }
 
     func didTapTagButton() {
         delegate?.tagButtonPressed()

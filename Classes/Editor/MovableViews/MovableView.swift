@@ -22,6 +22,18 @@ protocol MovableViewDelegate: class {
     ///  - movableView: the tapped movable view
     ///  - imageView: the image view inside the movable view
     func didTapImageView(movableView: MovableView, imageView: StylableImageView)
+    
+    /// Callback for when a movable view with text is moved
+    func didMoveTextView()
+    
+    /// Callback for when a movable view with an image is moved
+    func didMoveImageView()
+    
+    /// Callback for when a movable view with text is removed
+    func didRemoveTextView()
+    
+    /// Callback for when a movable view with an image is removed
+    func didRemoveImageView()
 }
 
 /// Constants for MovableTextView
@@ -136,6 +148,7 @@ final class MovableView: UIView {
             self.alpha = 0
         }, completion: { _ in
             self.removeFromSuperview()
+            self.onRemove()
         })
     }
     
@@ -146,6 +159,26 @@ final class MovableView: UIView {
         }
         else if let imageView = innerView as? StylableImageView {
             delegate?.didTapImageView(movableView: self, imageView: imageView)
+        }
+    }
+    
+    // Called when the view is moved
+    func onMove() {
+        if let _ = innerView as? StylableTextView {
+            delegate?.didMoveTextView()
+        }
+        else if let _ = innerView as? StylableImageView {
+            delegate?.didMoveImageView()
+        }
+    }
+    
+    // Called when the view is removed
+    func onRemove() {
+        if let _ = innerView as? StylableTextView {
+            delegate?.didRemoveTextView()
+        }
+        else if let _ = innerView as? StylableImageView {
+            delegate?.didRemoveImageView()
         }
     }
 }

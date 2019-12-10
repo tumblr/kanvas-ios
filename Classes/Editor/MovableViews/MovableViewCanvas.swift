@@ -21,6 +21,12 @@ protocol MovableViewCanvasDelegate: class {
     /// Called when text is moved
     func didMoveText()
     
+    /// Called when an image is removed
+    func didRemoveImage()
+
+    /// Called when an image is moved
+    func didMoveImage()
+    
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnMovableView()
     
@@ -185,7 +191,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
             movableView.rotation = newRotation
         case .ended:
             onRecognizerEnded()
-            delegate?.didMoveText()
+            movableView.onMove()
         case .cancelled, .failed:
             onRecognizerEnded()
         case .possible:
@@ -207,7 +213,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
             movableView.scale = newScale
         case .ended:
             onRecognizerEnded()
-            delegate?.didMoveText()
+            movableView.onMove()
         case .cancelled, .failed:
             onRecognizerEnded()
         case .possible:
@@ -229,7 +235,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
             movableView.position = newPosition
         case .ended:
             onRecognizerEnded()
-            delegate?.didMoveText()
+            movableView.onMove()
         case .cancelled, .failed:
             onRecognizerEnded()
         case .possible:
@@ -255,7 +261,6 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         case .ended, .cancelled, .failed:
             if trashView.contains(touchPosition) {
                 movableView.remove()
-                delegate?.didRemoveText()
             }
             else {
                 movableView.fadeIn()
@@ -292,6 +297,22 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
             self?.bringSubviewToFront(movableView)
         }
+    }
+    
+    func didMoveTextView() {
+        delegate?.didMoveText()
+    }
+    
+    func didMoveImageView() {
+        delegate?.didMoveImage()
+    }
+    
+    func didRemoveTextView() {
+        delegate?.didRemoveText()
+    }
+    
+    func didRemoveImageView() {
+        delegate?.didRemoveImage()
     }
     
     // MARK: - Private utilities

@@ -25,6 +25,10 @@ protocol EditorViewDelegate: class {
     func didMoveText()
     /// Called when text is removed
     func didRemoveText()
+    /// Called when an image is moved
+    func didMoveImage()
+    /// Called when an image is removed
+    func didRemoveImage()
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnText()
     /// Called when the touch events on a movable view end
@@ -498,6 +502,14 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
 
     func didMoveText() {
         delegate?.didMoveText()
+    }
+    
+    func didRemoveImage() {
+        delegate?.didRemoveImage()
+    }
+    
+    func didMoveImage() {
+        delegate?.didMoveImage()
     }
     
     func didBeginTouchesOnMovableView() {
