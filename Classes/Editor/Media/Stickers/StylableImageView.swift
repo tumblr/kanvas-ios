@@ -10,10 +10,23 @@ import UIKit
 /// Image view that increases its image quality when its contentScaleFactor is modified
 final class StylableImageView: UIImageView {
     
+    let id: String
+    
     override var contentScaleFactor: CGFloat {
         willSet {
             setScaleFactor(newValue)
         }
+    }
+    
+    // MARK: - Initializers
+    
+    init(id: String, image: UIImage?) {
+        self.id = id
+        super.init(image: image)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Scale factor

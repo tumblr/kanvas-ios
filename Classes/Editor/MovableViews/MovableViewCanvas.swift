@@ -22,10 +22,10 @@ protocol MovableViewCanvasDelegate: class {
     func didMoveText()
     
     /// Called when an image is removed
-    func didRemoveImage()
+    func didRemoveImage(_ imageView: StylableImageView)
 
     /// Called when an image is moved
-    func didMoveImage()
+    func didMoveImage(_ imageView: StylableImageView)
     
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnMovableView()
@@ -303,16 +303,16 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         delegate?.didMoveText()
     }
     
-    func didMoveImageView() {
-        delegate?.didMoveImage()
+    func didMoveImageView(_ imageView: StylableImageView) {
+        delegate?.didMoveImage(imageView)
     }
     
     func didRemoveTextView() {
         delegate?.didRemoveText()
     }
     
-    func didRemoveImageView() {
-        delegate?.didRemoveImage()
+    func didRemoveImageView(_ imageView: StylableImageView) {
+        delegate?.didRemoveImage(imageView)
     }
     
     // MARK: - Private utilities

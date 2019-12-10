@@ -13,9 +13,10 @@ protocol StickerCollectionCellDelegate: class {
     /// Callback method for when tapping a cell
     ///
     /// - Parameters:
+    ///   - id: the sticker id
     ///   - sticker: the sticker image
     ///   - size: image view size
-    func didSelect(sticker: UIImage, with size: CGSize)
+    func didSelect(id: String, image: UIImage, with size: CGSize)
     
     /// Callback method for when an image has finished loading
     ///
@@ -40,6 +41,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     
     static let padding: CGFloat = Constants.padding
     
+    private var stickerId: String?
     private let mainView = UIButton()
     private let stickerView = UIImageView()
     private let loadingView = LoadingIndicatorView()
@@ -65,6 +67,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageTask?.cancel()
+        stickerId = nil
         mainView.backgroundColor = Constants.unselectedColor
         stickerView.image = nil
         stickerView.backgroundColor = nil
@@ -129,8 +132,8 @@ final class StickerCollectionCell: UICollectionViewCell {
     // MARK: - Gestures
     
     @objc private func didPress() {
-        guard let image = stickerView.image else { return }
-        delegate?.didSelect(sticker: image, with: stickerView.bounds.size)
+        guard let id = stickerId, let image = stickerView.image else { return }
+        delegate?.didSelect(id: id, image: image, with: stickerView.bounds.size)
     }
     
     @objc private func didStartPressing() {
@@ -155,6 +158,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     ///   - index: cell index in the collection
     func bindTo(_ sticker: Sticker, type: StickerType, index: Int) {
         guard let url = URL(string: sticker.imageUrl) else { return }
+        stickerId = sticker.id
         loadingView.startLoading()
         
         let completion: (UIImage?, Error?) -> (Void) = { [weak self] image, _ in
