@@ -102,8 +102,8 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerCollectionCell.identifier, for: indexPath)
         if let cell = cell as? StickerCollectionCell, let sticker = stickers.object(at: indexPath.item), let type = stickerType {
-            cell.bindTo(sticker, type: type, index: indexPath.item)
             cell.delegate = self
+            cell.bindTo(sticker, type: type, index: indexPath.item)
         }
         return cell
     }
