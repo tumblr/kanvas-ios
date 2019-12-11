@@ -331,14 +331,18 @@ import Foundation
     func logEditorMediaDrawerSelectStickers()
     
     /// Logs when a sticker pack is selected in the Media Drawer
+    /// - Parameter stickerPackId: the ID of the sticker pack that was selected
     func logEditorStickerPackSelect(stickerPackId: String)
     
     /// Logs when a sticker is added in the canvas
+    /// - Parameter stickerId: the ID of the sticker that was added
     func logEditorStickerAdd(stickerId: String)
     
     /// Logs when a sticker is removed from the canvas
+    /// - Parameter stickerId: the ID of the sticker that was removed
     func logEditorStickerRemove(stickerId: String)
     
     /// Logs when a sticker is moved through the canvas
+    /// - Parameter stickerId: the ID of the sticker that was moved
     func logEditorStickerMove(stickerId: String)
 }
