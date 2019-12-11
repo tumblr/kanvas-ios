@@ -342,8 +342,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         }
         
         editorView.movableViewCanvas.updateLayer()
-        if let textOverlayImage = editorView.movableViewCanvas.layer.cgImage() {
-            imageOverlays.append(textOverlayImage)
+        if let movableViewsOverlayImage = editorView.movableViewCanvas.layer.cgImage() {
+            imageOverlays.append(movableViewsOverlayImage)
         }
         return imageOverlays
     }
