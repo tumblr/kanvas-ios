@@ -22,9 +22,13 @@ protocol MovableViewCanvasDelegate: class {
     func didMoveText()
     
     /// Called when an image is removed
+    ///
+    ///  - Parameter imageView:the image view that was removed
     func didRemoveImage(_ imageView: StylableImageView)
 
     /// Called when an image is moved
+    ///
+    ///  - Parameter imageView:the image view that was moved
     func didMoveImage(_ imageView: StylableImageView)
     
     /// Called when a touch event on a movable view begins

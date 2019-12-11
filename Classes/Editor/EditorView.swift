@@ -19,6 +19,12 @@ protocol EditorViewDelegate: class {
     func didTapPostButton()
     /// A function that is called when the save button is pressed
     func didTapSaveButton()
+    /// Called when a touch event on a movable view begins
+    func didBeginTouchesOnText()
+    /// Called when the touch events on a movable view end
+    func didEndTouchesOnText()
+    /// A function that is called when the tag button is pressed
+    func didTapTagButton()
     /// A function that is called when a movable text is pressed
     func didTapText(options: TextOptions, transformations: ViewTransformations)
     /// Called when text is moved
@@ -26,15 +32,13 @@ protocol EditorViewDelegate: class {
     /// Called when text is removed
     func didRemoveText()
     /// Called when an image is moved
+    ///
+    ///  - Parameter imageView:the image view that was moved
     func didMoveImage(_ imageView: StylableImageView)
     /// Called when an image is removed
+    ///
+    ///  - Parameter imageView:the image view that was removed
     func didRemoveImage(_ imageView: StylableImageView)
-    /// Called when a touch event on a movable view begins
-    func didBeginTouchesOnText()
-    /// Called when the touch events on a movable view end
-    func didEndTouchesOnText()
-    /// A function that is called when the tag button is pressed
-    func didTapTagButton()
 }
 
 /// Constants for EditorView
