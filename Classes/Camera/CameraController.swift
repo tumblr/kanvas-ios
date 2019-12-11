@@ -963,6 +963,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - UIImagePickerControllerDelegate
 
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        modeAndShootController.dismissTooltip()
         picker.dismiss(animated: true, completion: nil)
         let imageMaybe = info[.originalImage] as? UIImage
         let mediaURLMaybe = info[.mediaURL] as? URL
