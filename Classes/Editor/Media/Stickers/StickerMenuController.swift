@@ -17,6 +17,11 @@ protocol StickerMenuControllerDelegate: class {
     ///  - location: initial position of the image view in its parent view
     ///  - size: image view size
     func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    
+    /// Callback for when a sticker type is selected
+    ///
+    /// - Parameter stickerType: the selected sticker type
+    func didSelectStickerType(_ stickerType: StickerType)
 }
 
 /// A view controller that contains the sticker main collection and the sticker type collection
@@ -25,7 +30,6 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     weak var delegate: StickerMenuControllerDelegate?
     
     private lazy var stickerMenuView: StickerMenuView = StickerMenuView()
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let stickerProvider: StickerProvider?
     
     private lazy var stickerCollectionController: StickerCollectionController = {
@@ -45,9 +49,8 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     /// The designated initializer for the sticker menu controller
     ///
     /// - Parameter stickerProvider: Class that will provide the stickers from the API.
-    init(stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(stickerProvider: StickerProvider?) {
         self.stickerProvider = stickerProvider
-        self.analyticsProvider = analyticsProvider
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -85,7 +88,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     // MARK: - StickerTypeCollectionControllerDelegate
     
     func didSelectStickerType(_ stickerType: StickerType) {
-        analyticsProvider?.logEditorStickerPackSelect(stickerPackId: stickerType.id)
+        delegate?.didSelectStickerType(stickerType)
         stickerCollectionController.setType(stickerType)
     }
 }

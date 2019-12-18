@@ -19,7 +19,7 @@ final class StickerMenuControllerTests: FBSnapshotTestCase {
     }
     
     func newViewController() -> StickerMenuController {
-        let controller = StickerMenuController(stickerProvider: StickerProviderStub(), analyticsProvider: KanvasCameraAnalyticsStub())
+        let controller = StickerMenuController(stickerProvider: StickerProviderStub())
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         controller.view.setNeedsDisplay()
         return controller

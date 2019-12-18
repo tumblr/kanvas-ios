@@ -18,8 +18,14 @@ protocol MediaDrawerControllerDelegate: class {
     ///  - size: image view size
     func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
     
+    /// - Parameter stickerType: the selected sticker type
+    func didSelectStickerType(_ stickerType: StickerType)
+    
     /// Callback for when the media drawer is dismissed
     func didDismissMediaDrawer()
+    
+    /// Callback for when the stickers tab is selected
+    func didSelectStickersTab()
 }
 
 /// A view controller that contains the media drawer in text tools
@@ -27,7 +33,6 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     weak var delegate: MediaDrawerControllerDelegate?
     
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private var openedMenu: UIViewController?
     private let stickerProvider: StickerProvider?
     
@@ -38,8 +43,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     }()
     
     private lazy var stickerMenuController: StickerMenuController = {
-        let controller = StickerMenuController(stickerProvider: stickerProvider,
-                                               analyticsProvider: analyticsProvider)
+        let controller = StickerMenuController(stickerProvider: stickerProvider)
         controller.delegate = self
         return controller
     }()
@@ -52,10 +56,8 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     ///
     /// - Parameters
     ///     - stickerProvider: Class that will provide the stickers in the stickers tab.
-    ///     - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider.
-    init(stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(stickerProvider: StickerProvider?) {
         self.stickerProvider = stickerProvider
-        self.analyticsProvider = analyticsProvider
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -94,7 +96,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
         
         switch option {
         case .stickers:
-            analyticsProvider?.logEditorMediaDrawerSelectStickers()
+            delegate?.didSelectStickersTab()
             newMenu = stickerMenuController
         }
         
@@ -108,5 +110,9 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         delegate?.didSelectSticker(imageView: imageView, transformations: transformations, location: location, size: size)
         dismiss(animated: true, completion: nil)
+    }
+    
+    func didSelectStickerType(_ stickerType: StickerType) {
+        delegate?.didSelectStickerType(stickerType)
     }
 }

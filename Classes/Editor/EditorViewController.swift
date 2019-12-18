@@ -79,8 +79,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }()
     
     private lazy var mediaDrawerController: MediaDrawerController = {
-        let controller = MediaDrawerController(stickerProvider: self.stickerProvider,
-                                               analyticsProvider: self.analyticsProvider)
+        let controller = MediaDrawerController(stickerProvider: self.stickerProvider)
         controller.delegate = self
         return controller
     }()
@@ -541,13 +540,21 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - MediaDrawerControllerDelegate
     
+    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
+        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+    }
+    
+    func didSelectStickerType(_ stickerType: StickerType) {
+        analyticsProvider?.logEditorStickerPackSelect(stickerPackId: stickerType.id)
+    }
+    
     func didDismissMediaDrawer() {
         confirmMenuButtonPressed()
     }
     
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
-        analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
-        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+    func didSelectStickersTab() {
+        analyticsProvider?.logEditorMediaDrawerSelectStickers()
     }
     
     // MARK: - Media Drawer

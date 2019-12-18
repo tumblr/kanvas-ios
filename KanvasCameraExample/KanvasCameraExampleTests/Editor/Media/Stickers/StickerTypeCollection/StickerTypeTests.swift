@@ -13,9 +13,10 @@ import XCTest
 final class StickerTypeTests: XCTestCase {
     
     func testStickerTypes() {
+        let id = "id"
         let url = "imageUrl"
         let stickers: [Sticker] = []
-        let stickerType = StickerType(imageUrl: url, stickers: stickers)
+        let stickerType = StickerType(id: id, imageUrl: url, stickers: stickers)
         XCTAssertEqual(stickerType.imageUrl, url, "URL does not match")
     }
 }
