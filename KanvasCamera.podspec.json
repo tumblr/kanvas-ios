@@ -31,9 +31,6 @@
     "TumblrTheme": [],
     "SharedUI": [],
     "Utils": [],
-    "ImageLoader": [],
-    "CoreTumblr": [],
-    "NetworkAbstractions": [],
-    "TMTumblrSDK": []
+    "ImageLoader": []
   }
 }
