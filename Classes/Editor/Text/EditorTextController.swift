@@ -12,11 +12,11 @@ protocol EditorTextControllerDelegate: class {
     
     /// Called after the confirm button is tapped
     ///
-    /// - Parameter options: text style options
+    /// - Parameter textView: confirmed text view 
     /// - Parameter transformations: position, scaling and rotation angle for the view
     /// - Parameter location: location of the text view before transformations
     /// - Parameter size: text view size
-    func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    func didConfirmText(textView: StylableTextView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
     
     /// Called when the keyboard moves up
     func didMoveToolsUp()
@@ -200,7 +200,11 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     }
     
     private func didConfirmText() {
-        delegate?.didConfirmText(options: textView.options, transformations: textTransformations, location: textView.location, size: textView.textSize)
+        let newTextView = StylableTextView()
+        newTextView.isUserInteractionEnabled = false
+        newTextView.options = textView.options
+        
+        delegate?.didConfirmText(textView: newTextView, transformations: textTransformations, location: textView.location, size: textView.textSize)
     }
     
     // MARK: - ColorCollectionControllerDelegate

@@ -36,30 +36,44 @@ class StylableTextView: UITextView, UITextViewDelegate {
         }
     }
     
+    override var contentScaleFactor: CGFloat {
+        willSet {
+            setScaleFactor(newValue)
+        }
+    }
+    
     // MARK: - Initializers
     
     init() {
         highlightViews = []
         super.init(frame: .zero, textContainer: nil)
         delegate = self
+        backgroundColor = .clear
     }
     
     init(frame: CGRect) {
         highlightViews = []
         super.init(frame: frame, textContainer: nil)
         delegate = self
+        backgroundColor = .clear
     }
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         highlightViews = []
         super.init(frame: frame, textContainer: textContainer)
         delegate = self
+        backgroundColor = .clear
     }
     
     required init?(coder aDecoder: NSCoder) {
         highlightViews = []
         super.init(coder: aDecoder)
         delegate = self
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateHighlight()
     }
     
     func textViewDidChange(_ textView: UITextView) {
@@ -157,6 +171,23 @@ class StylableTextView: UITextView, UITextViewDelegate {
     /// - Parameter utf16LineRange: the range of utf16 indexes that represents the line
     private func endsInBlankSpace(text: String, utf16LineRange: NSRange) -> Bool {
         return text.copy(withUTF16Range: utf16LineRange)?.last == " "
+    }
+    
+    
+    // MARK: - Scale factor
+    
+    /// Sets a new scale factor to update the quality of the text. This value represents how content in the view is mapped
+    /// from the logical coordinate space (measured in points) to the device coordinate space (measured in pixels).
+    /// For example, if the scale factor is 2.0, 2 pixels will be used to draw each point of the frame.
+    ///
+    /// - Parameter scaleFactor: the new scale factor. The value will be internally multiplied by the native scale of the device.
+    /// Values must be higher than 1.0.
+    func setScaleFactor(_ scaleFactor: CGFloat) {
+        guard scaleFactor >= 1.0 else { return }
+        let scaleFactorForDevice = scaleFactor * UIScreen.main.nativeScale
+        for subview in textInputView.subviews {
+            subview.contentScaleFactor = scaleFactorForDevice
+        }
     }
 }
 
