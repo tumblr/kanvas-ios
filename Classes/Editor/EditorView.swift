@@ -25,6 +25,10 @@ protocol EditorViewDelegate: class {
     func didMoveText()
     /// Called when text is removed
     func didRemoveText()
+    /// Called when an image is moved
+    func didMoveImage()
+    /// Called when an image is removed
+    func didRemoveImage()
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnText()
     /// Called when the touch events on a movable view end
@@ -53,7 +57,7 @@ private struct EditorViewConstants {
 
 /// A UIView to preview the contents of segments without exporting
 
-final class EditorView: UIView, TextCanvasDelegate {
+final class EditorView: UIView, MovableViewCanvasDelegate {
 
     enum MainActionMode {
         case confirm
@@ -81,10 +85,10 @@ final class EditorView: UIView, TextCanvasDelegate {
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
     
-    lazy var textCanvas: TextCanvas = {
-        let textCanvas = TextCanvas()
-        textCanvas.delegate = self
-        return textCanvas
+    lazy var movableViewCanvas: MovableViewCanvas = {
+        let canvas = MovableViewCanvas()
+        canvas.delegate = self
+        return canvas
     }()
     
     weak var delegate: EditorViewDelegate?
@@ -106,7 +110,7 @@ final class EditorView: UIView, TextCanvasDelegate {
     private func setupViews() {
         setupPlayer()
         drawingCanvas.add(into: self)
-        textCanvas.add(into: self)
+        movableViewCanvas.add(into: self)
         setupNavigationContainer()
         setupCloseButton()
         if showTagButton {
@@ -468,12 +472,12 @@ final class EditorView: UIView, TextCanvasDelegate {
         }
     }
     
-    /// shows or hides the text canvas
+    /// shows or hides the canvas for movable views
     ///
     /// - Parameter show: true to show, false to hide
-    func showTextCanvas(_ show: Bool) {
+    func showMovableViewCanvas(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-            self.textCanvas.alpha = show ? 1 : 0
+            self.movableViewCanvas.alpha = show ? 1 : 0
         }
     }
 
@@ -486,9 +490,9 @@ final class EditorView: UIView, TextCanvasDelegate {
         }
     }
     
-    // MARK: - TextCanvasDelegate
+    // MARK: - MovableViewCanvasDelegate
     
-    func didTapText(options: TextOptions, transformations: ViewTransformations) {
+    func didTapTextView(options: TextOptions, transformations: ViewTransformations) {
         delegate?.didTapText(options: options, transformations: transformations)
     }
 
@@ -500,11 +504,19 @@ final class EditorView: UIView, TextCanvasDelegate {
         delegate?.didMoveText()
     }
     
-    func didBeginTouchesOnText() {
+    func didRemoveImage() {
+        delegate?.didRemoveImage()
+    }
+    
+    func didMoveImage() {
+        delegate?.didMoveImage()
+    }
+    
+    func didBeginTouchesOnMovableView() {
         delegate?.didBeginTouchesOnText()
     }
     
-    func didEndTouchesOnText() {
+    func didEndTouchesOnMovableView() {
         delegate?.didEndTouchesOnText()
     }
 }

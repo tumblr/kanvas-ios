@@ -11,8 +11,12 @@ import UIKit
 protocol MediaDrawerControllerDelegate: class {
     /// Callback for when a sticker is selected
     ///
-    /// - Parameter sticker: the selected sticker
-    func didSelectSticker(_ sticker: Sticker)
+    /// - Parameters
+    ///  - imageView: an image view with the sticker
+    ///  - transformations: transformations to be applied to the image view
+    ///  - location: initial position of the image view in its parent view
+    ///  - size: image view size
+    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
     
     /// Callback for when the media drawer is dismissed
     func didDismissMediaDrawer()
@@ -92,8 +96,8 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     // MARK: - StickerMenuControllerDelegate
     
-    func didSelectSticker(_ sticker: Sticker) {
-        delegate?.didSelectSticker(sticker)
+    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        delegate?.didSelectSticker(imageView: imageView, transformations: transformations, location: location, size: size)
         dismiss(animated: true, completion: nil)
     }
 }

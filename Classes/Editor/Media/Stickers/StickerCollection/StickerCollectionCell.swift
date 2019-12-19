@@ -13,8 +13,9 @@ protocol StickerCollectionCellDelegate: class {
     /// Callback method for when tapping a cell
     ///
     /// - Parameters:
-    ///   - cell: the cell that was tapped
-    func didSelect(cell: StickerCollectionCell)
+    ///   - sticker: the sticker image
+    ///   - size: image view size
+    func didSelect(sticker: UIImage, with size: CGSize)
     
     /// Callback method for when an image has finished loading
     ///
@@ -49,7 +50,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     }()
     
     weak var delegate: StickerCollectionCellDelegate?
-        
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
@@ -128,7 +129,8 @@ final class StickerCollectionCell: UICollectionViewCell {
     // MARK: - Gestures
     
     @objc private func didPress() {
-        delegate?.didSelect(cell: self)
+        guard let image = stickerView.image else { return }
+        delegate?.didSelect(sticker: image, with: stickerView.bounds.size)
     }
     
     @objc private func didStartPressing() {
