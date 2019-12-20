@@ -42,7 +42,7 @@ protocol EditorControllerDelegate: class {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaPlayerDelegate {
+final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
@@ -78,6 +78,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         return controller
     }()
     
+    private lazy var mediaDrawerController: MediaDrawerController = {
+        let controller = MediaDrawerController(stickerProviderClass: self.stickerProviderClass)
+        controller.delegate = self
+        return controller
+    }()
+    
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
 
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
@@ -85,6 +91,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let exporterClass: MediaExporting.Type
+    private let stickerProviderClass: StickerProvider.Type
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
@@ -117,13 +124,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, stickerProviderClass: StickerProvider.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
+        self.stickerProviderClass = stickerProviderClass
 
         self.player = MediaPlayer(renderer: Renderer())
         super.init(nibName: .none, bundle: .none)
@@ -244,6 +252,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didRemoveText() {
         analyticsProvider?.logEditorTextRemove()
     }
+    
+    func didMoveImage() {
+        // TODO: Add analytics (https://jira.tumblr.net/browse/KANVAS-880)
+    }
+    
+    func didRemoveImage() {
+        // TODO: Add analytics (https://jira.tumblr.net/browse/KANVAS-880)
+    }
 
     func didTapTagButton() {
         delegate?.tagButtonPressed()
@@ -325,9 +341,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             imageOverlays.append(drawingOverlayImage)
         }
         
-        editorView.textCanvas.updateLayer()
-        if let textOverlayImage = editorView.textCanvas.layer.cgImage() {
-            imageOverlays.append(textOverlayImage)
+        editorView.movableViewCanvas.updateLayer()
+        if let movableViewsOverlayImage = editorView.movableViewCanvas.layer.cgImage() {
+            imageOverlays.append(movableViewsOverlayImage)
         }
         return imageOverlays
     }
@@ -393,7 +409,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.drawingController.showConfirmButton(true)
             })
         case .media:
-            break
+            openMediaDrawer()
         }
     }
     
@@ -444,11 +460,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     // MARK: - EditorTextControllerDelegate
     
-    func didConfirmText(options: TextOptions, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
-        if options.haveText {
-            editorView.textCanvas.addText(options: options, transformations: transformations, location: location, size: size)
-            if let font = KanvasTextFont.from(font: options.font), let alignment = KanvasTextAlignment.from(alignment: options.alignment) {
-                analyticsProvider?.logEditorTextConfirm(new: editingNewText, font: font, alignment: alignment, highlighted: options.highlightColor != nil)
+    func didConfirmText(textView: StylableTextView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        if !textView.text.isEmpty {
+            editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size)
+            if let font = KanvasTextFont.from(font: textView.options.font), let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
+                analyticsProvider?.logEditorTextConfirm(new: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
             }
             else {
                 assertionFailure("Logging unknown stuff")
@@ -458,7 +474,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didMoveToolsUp() {
-        editorView.textCanvas.removeSelectedText()
+        editorView.movableViewCanvas.removeSelectedView()
     }
 
     func didChange(font: UIFont) {
@@ -494,7 +510,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didStartColorSelection() {
         drawingController.showCanvas(false)
-        editorView.showTextCanvas(false)
+        editorView.showMovableViewCanvas(false)
     }
     
     func didStartMovingColorSelector() {
@@ -508,7 +524,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             player.resume()
         }
         drawingController.showCanvas(true)
-        editorView.showTextCanvas(true)
+        editorView.showMovableViewCanvas(true)
     }
     
     func getColor(from point: CGPoint) -> UIColor {
@@ -519,6 +535,22 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         addCarouselDefaultColors(image)
     }
 
+    // MARK: - MediaDrawerControllerDelegate
+    
+    func didDismissMediaDrawer() {
+        confirmMenuButtonPressed()
+    }
+    
+    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+    }
+    
+    // MARK: - Media Drawer
+    
+    private func openMediaDrawer() {
+        present(mediaDrawerController, animated: true, completion: .none)
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the confirm button

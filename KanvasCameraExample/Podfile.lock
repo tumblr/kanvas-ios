@@ -4,10 +4,29 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
+  - ImageLoader (0.1.0):
+    - SDWebImage (= 5.2.3)
+    - SDWebImageWebPCoder (= 0.2.5)
   - KanvasCamera (0.1.0):
+    - ImageLoader
     - SharedUI
     - TumblrTheme
     - Utils
+  - libwebp (1.0.3):
+    - libwebp/demux (= 1.0.3)
+    - libwebp/mux (= 1.0.3)
+    - libwebp/webp (= 1.0.3)
+  - libwebp/demux (1.0.3):
+    - libwebp/webp
+  - libwebp/mux (1.0.3):
+    - libwebp/demux
+  - libwebp/webp (1.0.3)
+  - SDWebImage (5.2.3):
+    - SDWebImage/Core (= 5.2.3)
+  - SDWebImage/Core (5.2.3)
+  - SDWebImageWebPCoder (0.2.5):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.0)
   - SharedUI (1.0.0):
     - TumblrTheme
   - TumblrTheme (1.0.0):
@@ -16,6 +35,7 @@ PODS:
 
 DEPENDENCIES:
   - FBSnapshotTestCase (= 2.1.4)
+  - ImageLoader (from `../../ImageLoader`)
   - KanvasCamera (from `../`)
   - SharedUI (from `../../SharedUI`)
   - TumblrTheme (from `../../TumblrTheme`)
@@ -24,8 +44,13 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - FBSnapshotTestCase
+    - libwebp
+    - SDWebImage
+    - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
+  ImageLoader:
+    :path: "../../ImageLoader"
   KanvasCamera:
     :path: "../"
   SharedUI:
@@ -37,11 +62,15 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  KanvasCamera: 4a1b7bd31c0f5d33c1154db18bb153db25b47288
+  ImageLoader: e2008cb20d9be7b1a5dc9cc3fd1dde909de28a80
+  KanvasCamera: 655b0d0f479e1baf87365c17957b32e88975d0e3
+  libwebp: 057912d6d0abfb6357d8bb05c0ea470301f5d61e
+  SDWebImage: 46a7f73228f84ce80990c786e4372cf4db5875ce
+  SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   SharedUI: 4f52755920cdc9c21a910d013ebedebec3b0c95d
   TumblrTheme: 0d7d24e72e87184f0cfa2cb315e524701c09d436
   Utils: d6e32f8b5f9a5879632eb30001e336d97c8a43f2
 
-PODFILE CHECKSUM: 63b078cc4d16185e4085a606e1099ac60b3bff20
+PODFILE CHECKSUM: 4c1f94d4691efc45799e4d5049b580eaa7c2887e
 
 COCOAPODS: 1.7.5

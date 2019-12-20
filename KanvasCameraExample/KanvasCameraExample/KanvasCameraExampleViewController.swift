@@ -131,7 +131,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editor = true
         settings.features.editorFilters = true
         settings.features.editorText = true
-        settings.features.editorMedia = false
+        settings.features.editorMedia = true
         settings.features.editorDrawing = true
         settings.features.mediaPicking = true
         settings.features.editorPosting = true
@@ -150,7 +150,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: cameraSettings, analyticsProvider: KanvasCameraAnalyticsStub())
+        let controller = CameraController(settings: cameraSettings, stickerProviderClass: ExperimentalStickerProvider.self, analyticsProvider: KanvasCameraAnalyticsStub())
         controller.delegate = self
         controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve

@@ -1,11 +1,12 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
-FRAMEWORK_SEARCH_PATHS = $(inherited) "$(PLATFORM_DIR)/Developer/Library/Frameworks" "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase" "${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera" "${PODS_CONFIGURATION_BUILD_DIR}/SharedUI" "${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme" "${PODS_CONFIGURATION_BUILD_DIR}/Utils"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 GLES_SILENCE_DEPRECATION=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera/KanvasCamera.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/SharedUI/SharedUI.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme/TumblrTheme.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Utils/Utils.framework/Headers"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$(PLATFORM_DIR)/Developer/Library/Frameworks" "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase" "${PODS_CONFIGURATION_BUILD_DIR}/ImageLoader" "${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera" "${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage" "${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageWebPCoder" "${PODS_CONFIGURATION_BUILD_DIR}/SharedUI" "${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme" "${PODS_CONFIGURATION_BUILD_DIR}/Utils" "${PODS_CONFIGURATION_BUILD_DIR}/libwebp"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 GLES_SILENCE_DEPRECATION=1 $(inherited) SD_WEBP=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/ImageLoader/ImageLoader.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera/KanvasCamera.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageWebPCoder/SDWebImageWebPCoder.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/SharedUI/SharedUI.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme/TumblrTheme.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Utils/Utils.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/libwebp/libwebp.framework/Headers"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-OTHER_LDFLAGS = $(inherited) -framework "FBSnapshotTestCase" -framework "Foundation" -framework "GLKit" -framework "KanvasCamera" -framework "OpenGLES" -framework "QuartzCore" -framework "SharedUI" -framework "TumblrTheme" -framework "UIKit" -framework "Utils" -framework "XCTest"
+OTHER_LDFLAGS = $(inherited) -framework "FBSnapshotTestCase" -framework "Foundation" -framework "GLKit" -framework "ImageIO" -framework "ImageLoader" -framework "KanvasCamera" -framework "OpenGLES" -framework "QuartzCore" -framework "SDWebImage" -framework "SDWebImageWebPCoder" -framework "SharedUI" -framework "TumblrTheme" -framework "UIKit" -framework "Utils" -framework "XCTest" -framework "libwebp"
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
 PODS_ROOT = ${SRCROOT}/Pods
+USER_HEADER_SEARCH_PATHS = $(inherited) $(SRCROOT)/libwebp/src
