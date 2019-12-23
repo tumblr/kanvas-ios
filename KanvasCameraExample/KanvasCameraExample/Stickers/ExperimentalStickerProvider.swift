@@ -12,6 +12,8 @@ import KanvasCamera
 private struct Constants {
     static let resourceName: String = "stickers"
     static let resourceExtension: String = "json"
+    static let twoDigitsFormat: String = "%02d"
+    static let imageExtension: String = "png"
 }
 
 /// Class that obtains the stickers from the stickers file in the example app
@@ -48,7 +50,17 @@ public final class ExperimentalStickerProvider: StickerProvider {
                 let keyword = stickerItem["keyword"] as? String,
                 let thumbUrl = stickerItem["thumb_url"] as? String,
                 let count = stickerItem["count"] as? Int {
-                stickerTypes.append(ExperimentalStickerType(baseUrl: baseUrl, keyword: keyword, thumbUrl: thumbUrl, count: count))
+                
+                var stickers: [Sticker] = []
+                for number in 1...count {
+                    let imageUrl =  "\(baseUrl)\(keyword)/\(String(format: Constants.twoDigitsFormat, number)).\(Constants.imageExtension)"
+                    stickers.append(Sticker(imageUrl: imageUrl))
+                }
+                
+                let imageUrl = "\(baseUrl)\(keyword)/\(thumbUrl)"
+                let stickerType = StickerType(imageUrl: imageUrl, stickers: stickers)
+                
+                stickerTypes.append(stickerType)
             }
         }
         

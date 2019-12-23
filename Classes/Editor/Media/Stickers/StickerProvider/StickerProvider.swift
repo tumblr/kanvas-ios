@@ -13,9 +13,6 @@ public protocol StickerProviderDelegate: class {
 
 public protocol StickerProvider {
     
-    /// Designated initializer for the class.
-    init()
-    
     /// Starts an API call to fetch the sticker types.
     func getStickerTypes()
     

@@ -4,16 +4,25 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-public protocol StickerType {
+import Foundation
+import UIKit
+
+/// A representation of a sticker type in the media drawer
+public struct StickerType: Equatable {
     
-    /// Gets the url of the sticker image as a string.
-    func getImageUrl() -> String
+    let imageUrl: String
+    let stickers: [Sticker]
     
-    /// Gets the list of stickers for this sticker type.
-    func getStickers() -> [Sticker]
+    // MARK: - Initializers
     
-    /// Compares this object with another and returns true if they are equal.
-    ///
-    /// - Parameter stickerType: Object to compare this object with.
-    func isEqual(to stickerType: StickerType) -> Bool
+    public init(imageUrl: String, stickers: [Sticker]) {
+        self.imageUrl = imageUrl
+        self.stickers = stickers
+    }
+    
+    // MARK: - Equatable
+    
+    public static func == (lhs: StickerType, rhs: StickerType) -> Bool {
+        return lhs.imageUrl == rhs.imageUrl
+    }
 }

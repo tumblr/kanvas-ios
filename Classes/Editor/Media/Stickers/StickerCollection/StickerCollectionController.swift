@@ -53,7 +53,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     /// - Parameter stickerType: the selected sticker type
     func setType(_ stickerType: StickerType) {
         self.stickerType = stickerType
-        stickers = stickerType.getStickers()
+        stickers = stickerType.stickers
         resetCellSizes()
         scrollToTop()
         stickerCollectionView.collectionView.reloadData()
@@ -105,7 +105,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     }
     
     func didLoadImage(index: Int, type: StickerType, image: UIImage) {
-        guard let currentType = stickerType, type.isEqual(to: currentType) else { return }
+        guard let currentType = stickerType, type == currentType else { return }
         let currentSize = cellSizes[index]
         
         if currentSize != image.size {

@@ -26,23 +26,9 @@ final class StickerTypeCollectionCellTests: FBSnapshotTestCase {
     
     func testStickerTypeCollectionCell() {
         let cell = newCell()
-        let stickerType = StickerTypeStub()
+        let stickerType = StickerType(imageUrl: "imageUrl", stickers: [])
         
         cell.bindTo(stickerType)
         FBSnapshotVerifyView(cell)
-    }
-}
-
-private struct StickerTypeStub: StickerType {
-    func getImageUrl() -> String {
-        return "example"
-    }
-    
-    func getStickers() -> [Sticker] {
-        return []
-    }
-    
-    func isEqual(to stickerType: StickerType) -> Bool {
-        return false
     }
 }

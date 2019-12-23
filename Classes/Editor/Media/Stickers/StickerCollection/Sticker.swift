@@ -4,8 +4,17 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-public protocol Sticker {
+import Foundation
+import UIKit
+
+/// A representation of a sticker in the media drawer
+public struct Sticker {
     
-    /// Gets the url of the sticker image as a string.
-    func getImageUrl() -> String
+    let imageUrl: String
+    
+    // MARK: - Initializers
+    
+    public init(imageUrl: String) {
+        self.imageUrl = imageUrl
+    }
 }
