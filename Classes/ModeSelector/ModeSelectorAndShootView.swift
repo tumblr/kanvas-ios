@@ -134,7 +134,9 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        tooltip?.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
+        if let tooltip = tooltip, !tooltip.isVisible() {
+            tooltip.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
+        }
     }
     
     /// dismisses the tooltip below the mode selector
