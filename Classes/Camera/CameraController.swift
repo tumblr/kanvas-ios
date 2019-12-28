@@ -92,7 +92,13 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func cameraPermissionsChanged(hasFullAccess: Bool) {
+        if hasFullAccess {
+            cameraInputController.setupCaptureSession()
+        }
+    }
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -137,6 +143,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }()
     private lazy var cameraPermissionsViewController: CameraPermissionsViewController = {
         let controller = CameraPermissionsViewController()
+        controller.delegate = self
         return controller
     }()
 
@@ -867,6 +874,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer) {
         cameraZoomHandler.setZoom(gesture: gesture)
+    }
+
+    func cameraInputControllerHasFullAccess() -> Bool {
+        return cameraPermissionsViewController.hasFullAccess()
     }
     
     // MARK: - FilterSettingsControllerDelegate

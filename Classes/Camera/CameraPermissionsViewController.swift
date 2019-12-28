@@ -25,6 +25,10 @@ protocol CameraPermissionsViewable: class {
 
 }
 
+protocol CameraPermissionsViewControllerDelegate: class {
+    func cameraPermissionsChanged(hasFullAccess: Bool)
+}
+
 class CameraPermissionsView: UIView, CameraPermissionsViewable {
 
     private struct Constants {
@@ -215,6 +219,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable {
 
 class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDelegate {
 
+    var delegate: CameraPermissionsViewControllerDelegate?
+
     private var permissionsView: CameraPermissionsViewable? {
         return view as? CameraPermissionsViewable
     }
@@ -243,6 +249,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
             AVCaptureDevice.requestAccess(for: .video) { videoGranted in
                 performUIUpdate {
                     self.setupViewFromAccess()
+                    self.delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
                 }
             }
         case .restricted:
@@ -261,6 +268,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
             AVCaptureDevice.requestAccess(for: .audio) { audioGranted in
                 performUIUpdate {
                     self.setupViewFromAccess()
+                    self.delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
                 }
             }
         case .restricted:
