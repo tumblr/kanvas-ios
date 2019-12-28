@@ -135,6 +135,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         controller.delegate = self
         return controller
     }()
+    private lazy var cameraPermissionsViewController: CameraPermissionsViewController = {
+        let controller = CameraPermissionsViewController()
+        return controller
+    }()
 
     private lazy var segmentsHandler: SegmentsHandlerType = {
         return segmentsHandlerClass.init()
@@ -223,11 +227,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     ///
     /// - Parameter completion: boolean on whether access was granted
     public func requestAccess(_ completion: ((_ granted: Bool) -> ())?) {
-        AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { (videoGranted) -> Void in
+        AVCaptureDevice.requestAccess(for: AVMediaType.video) { videoGranted in
             performUIUpdate {
                 completion?(videoGranted)
             }
-        })
+        }
     }
     
     /// logs opening the camera
@@ -256,13 +260,17 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
         cameraView.addImagePreviewView(imagePreviewController.view)
+
+        addChild(cameraPermissionsViewController)
+        cameraView.addPermissionsView(cameraPermissionsViewController.view)
+
         bindMediaContentAvailable()
         PHPhotoLibrary.shared().register(self)
     }
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if delegate?.cameraShouldShowWelcomeTooltip() == true {
+        if delegate?.cameraShouldShowWelcomeTooltip() == true && cameraPermissionsViewController.hasFullAccess() {
             showWelcomeTooltip()
         }
     }
