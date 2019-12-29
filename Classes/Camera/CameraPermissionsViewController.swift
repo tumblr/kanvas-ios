@@ -296,9 +296,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                     self.delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
                 }
             }
-        case .restricted:
-            openAppSettings()
-        case .denied:
+        case .restricted, .denied:
             openAppSettings()
         case .authorized:
             assertionFailure()
@@ -315,13 +313,17 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                     self.delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
                 }
             }
-        case .restricted:
-            openAppSettings()
-        case .denied:
+        case .restricted, .denied:
             openAppSettings()
         case .authorized:
             assertionFailure()
             setupViewFromAccess()
+        }
+    }
+
+    func mediaPickerButtonPressed() {
+        delegate?.didTapMediaPickerButton {
+            self.permissionsView?.resetMediaPickerButton()
         }
     }
 
@@ -331,11 +333,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     private func hasCameraAccess() -> Bool {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .notDetermined:
-            return false
-        case .restricted:
-            return false
-        case .denied:
+        case .notDetermined, .restricted, .denied:
             return false
         case .authorized:
             return true
@@ -344,11 +342,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     private func hasMicrophoneAccess() -> Bool {
         switch AVCaptureDevice.authorizationStatus(for: .audio) {
-        case .notDetermined:
-            return false
-        case .restricted:
-            return false
-        case .denied:
+        case .notDetermined, .restricted, .denied:
             return false
         case .authorized:
             return true
