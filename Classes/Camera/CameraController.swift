@@ -639,7 +639,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didTapMediaPickerButton(completion: (() -> ())? = nil) {
         let imagePickerController = KanvasUIImagePickerViewController()
         imagePickerController.delegate = self
-        imagePickerController.sourceType = .savedPhotosAlbum
+        imagePickerController.sourceType = .photoLibrary
         imagePickerController.allowsEditing = false
         imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
         present(imagePickerController, animated: true) {
