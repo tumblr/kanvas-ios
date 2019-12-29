@@ -15,6 +15,8 @@ protocol CameraPermissionsViewDelegate: class {
 
     func microphoneAccessButtonPressed()
 
+    func mediaPickerButtonPressed()
+
 }
 
 protocol CameraPermissionsViewable: class {
@@ -23,13 +25,19 @@ protocol CameraPermissionsViewable: class {
 
     func updateMicrophoneAccess(hasAccess: Bool)
 
+    func resetMediaPickerButton()
+
 }
 
 protocol CameraPermissionsViewControllerDelegate: class {
+
     func cameraPermissionsChanged(hasFullAccess: Bool)
+
+    func didTapMediaPickerButton(completion: (() -> ())?)
+
 }
 
-class CameraPermissionsView: UIView, CameraPermissionsViewable {
+class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButtonViewDelegate {
 
     private struct Constants {
         static let borderWidth: CGFloat = 2
@@ -88,6 +96,15 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable {
         return button
     }()
 
+    private lazy var mediaPickerButton: MediaPickerButtonView = {
+        // TOOD: use actual settings
+        let settings = CameraSettings()
+        settings.features.mediaPicking = true
+        let button = MediaPickerButtonView(settings: settings).forAutoLayout()
+        button.delegate = self
+        return button
+    }()
+
     private lazy var checkImage: UIImage = {
         let checkLabel = UILabel()
         checkLabel.font = Constants.buttonFont
@@ -123,12 +140,14 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable {
         addSubview(descriptionLabel)
         addSubview(cameraAccessButton)
         addSubview(microphoneAccessButton)
+        addSubview(mediaPickerButton)
 
         setupContainerView()
         setupTitleView()
         setupDescriptionView()
         setupCameraAccessButton()
         setupMicrophoneAccessButton()
+        setupMediaPickerButton()
     }
 
     private func setupContainerView() {
@@ -167,6 +186,23 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable {
         NSLayoutConstraint.activate([
             microphoneAccessButton.topAnchor.constraint(equalTo: cameraAccessButton.bottomAnchor, constant: 15),
             microphoneAccessButton.centerXAnchor.constraint(equalTo: cameraAccessButton.centerXAnchor),
+        ])
+    }
+
+    private func setupMediaPickerButton() {
+        let guide = UILayoutGuide()
+        addLayoutGuide(guide)
+        NSLayoutConstraint.activate([
+            guide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -1 * (6 + 70 + 6 + 7)),
+            guide.heightAnchor.constraint(equalToConstant: 100),
+            guide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            guide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor, constant: -50),
+        ])
+        NSLayoutConstraint.activate([
+            mediaPickerButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+            mediaPickerButton.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
+            mediaPickerButton.widthAnchor.constraint(equalToConstant: 35),
+            mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
         ])
     }
 
@@ -213,6 +249,14 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable {
 
     @objc private func microphoneAccessButtonPressed() {
         delegate?.microphoneAccessButtonPressed()
+    }
+
+    func mediaPickerButtonDidPress() {
+        delegate?.mediaPickerButtonPressed()
+    }
+
+    func resetMediaPickerButton() {
+        mediaPickerButton.reset()
     }
 
 }

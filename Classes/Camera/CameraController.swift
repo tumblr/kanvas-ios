@@ -94,12 +94,6 @@ public protocol CameraControllerDelegate: class {
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
 public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    func cameraPermissionsChanged(hasFullAccess: Bool) {
-        if hasFullAccess {
-            cameraInputController.setupCaptureSession()
-        }
-    }
-
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
 
@@ -166,6 +160,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var mediaPickerThumbnailQueue = DispatchQueue(label: "kanvas.mediaPickerThumbnailQueue")
 
     private weak var overlayViewController: UIViewController?
+
+    private var didRegisterForPhotoLibraryChanges: Bool = false
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -272,7 +268,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraView.addPermissionsView(cameraPermissionsViewController.view)
 
         bindMediaContentAvailable()
-        PHPhotoLibrary.shared().register(self)
     }
     
     override public func viewDidAppear(_ animated: Bool) {
@@ -639,7 +634,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didDismissWelcomeTooltip()
     }
 
-    func didTapMediaPickerButton() {
+    func didTapMediaPickerButton(completion: (() -> ())? = nil) {
         let imagePickerController = KanvasUIImagePickerViewController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .savedPhotosAlbum
@@ -647,6 +642,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
         present(imagePickerController, animated: true) {
             self.modeAndShootController.resetMediaPickerButton()
+            completion?()
         }
         analyticsProvider?.logMediaPickerOpen()
     }
@@ -665,10 +661,25 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func fetchMostRecentPhotoLibraryImage(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+
+        guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+            performUIUpdate {
+                completion(nil)
+            }
+            return
+        }
+
+        // PHPhotoLibrary.register prompts for Photo Pibrary access, so ensure this line always happens after the PHPhotoLibrary.authorizationStatus check.
+        if !didRegisterForPhotoLibraryChanges {
+            PHPhotoLibrary.shared().register(self)
+            didRegisterForPhotoLibraryChanges = true
+        }
+
         mediaPickerThumbnailQueue.async {
             let fetchOptions = PHFetchOptions()
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             fetchOptions.fetchLimit = 1
+            // PHAsset.fetchAssets prompts for photo library access, so ensure this line always happens after the PHPhotoLibrary.authorizationStatus check.
             let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
             self.lastMediaPickerFetchResult = fetchResult
             if fetchResult.count > 0 {
@@ -906,6 +917,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         modeAndShootController.dismissTooltip()
     }
 
+    // MARK: - CameraPermissionsViewControllerDelegate
+
+    func cameraPermissionsChanged(hasFullAccess: Bool) {
+        if hasFullAccess {
+            cameraInputController.setupCaptureSession()
+        }
+    }
+
     /// Toggles the media picker
     /// This takes the current camera mode and filter selector visibility into account, as the media picker should
     /// only be shown in Normal mode when the filter selector is hidden.
@@ -995,7 +1014,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     public func cleanup() {
         resetState()
         cameraInputController.cleanup()
-        PHPhotoLibrary.shared().unregisterChangeObserver(self)
+        if didRegisterForPhotoLibraryChanges {
+            PHPhotoLibrary.shared().unregisterChangeObserver(self)
+        }
     }
 
 }
