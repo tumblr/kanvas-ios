@@ -123,7 +123,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     private lazy var cameraInputController: CameraInputController = {
         let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandler: self.segmentsHandler, delegate: self)
-        addChild(controller)
         return controller
     }()
     private lazy var imagePreviewController: ImagePreviewController = {
@@ -255,11 +254,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     override public func viewDidLoad() {
         super.viewDidLoad()
+
         if settings.features.cameraFilters {
             cameraView.addFiltersView(filterSettingsController.view)
         }
         cameraView.addModeView(modeAndShootController.view)
         cameraView.addClipsView(clipsController.view)
+
+        addChild(cameraInputController)
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
         cameraView.addImagePreviewView(imagePreviewController.view)
