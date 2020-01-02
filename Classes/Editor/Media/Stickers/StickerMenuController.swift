@@ -22,26 +22,29 @@ protocol StickerMenuControllerDelegate: class {
 /// A view controller that contains the sticker main collection and the sticker type collection
 final class StickerMenuController: UIViewController, StickerCollectionControllerDelegate, StickerTypeCollectionControllerDelegate {
     
-    private let stickerProviderClass: StickerProvider.Type
+    private let stickerProvider: StickerProvider?
     weak var delegate: StickerMenuControllerDelegate?
     private lazy var stickerMenuView: StickerMenuView = StickerMenuView()
     
     private lazy var stickerCollectionController: StickerCollectionController = {
-        let controller = StickerCollectionController(stickerProviderClass: self.stickerProviderClass)
+        let controller = StickerCollectionController()
         controller.delegate = self
         return controller
     }()
     
     private lazy var stickerTypeCollectionController: StickerTypeCollectionController = {
-        let controller = StickerTypeCollectionController(stickerProviderClass: self.stickerProviderClass)
+        let controller = StickerTypeCollectionController(stickerProvider: self.stickerProvider)
         controller.delegate = self
         return controller
     }()
     
     // MARK: - Initializers
     
-    init(stickerProviderClass: StickerProvider.Type) {
-        self.stickerProviderClass = stickerProviderClass
+    /// The designated initializer for the sticker menu controller
+    ///
+    /// - Parameter stickerProvider: Class that will provide the stickers from the API.
+    init(stickerProvider: StickerProvider?) {
+        self.stickerProvider = stickerProvider
         super.init(nibName: .none, bundle: .none)
     }
     

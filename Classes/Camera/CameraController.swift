@@ -153,7 +153,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var disposables: [NSKeyValueObservation] = []
     private var recorderClass: CameraRecordingProtocol.Type
     private var segmentsHandlerClass: SegmentsHandlerType.Type
-    private let stickerProviderClass: StickerProvider.Type
+    private let stickerProvider: StickerProvider?
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
     private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
@@ -168,13 +168,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// and export the result to the device, saving to the phone all in between information
     /// needed to attain the final output.
     ///
-    /// - Parameter settings: Settings to configure in which ways should the controller
+    /// - Parameters
+    ///   - settings: Settings to configure in which ways should the controller
     /// interact with the user, which options should the controller give the user
     /// and which should be the result of the interaction.
+    ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    ///   - stickerProvider: An class conforming to StickerProvider
-    convenience public init(settings: CameraSettings, stickerProviderClass: StickerProvider.Type,  analyticsProvider: KanvasCameraAnalyticsProvider?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProviderClass: stickerProviderClass, analyticsProvider: analyticsProvider)
+    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -187,11 +188,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     ///   - recorderClass: Class that will provide a recorder that defines how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
+    ///   - captureDeviceAuthorizer: Class responsible for authorizing access to capture devices.
+    ///   - stickerProvider: Class that will provide the stickers in the editor.
+    ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
     init(settings: CameraSettings,
          recorderClass: CameraRecordingProtocol.Type,
          segmentsHandlerClass: SegmentsHandlerType.Type,
          captureDeviceAuthorizer: CaptureDeviceAuthorizing,
-         stickerProviderClass: StickerProvider.Type,
+         stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         currentMode = settings.initialMode
@@ -199,7 +203,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
         self.captureDeviceAuthorizer = captureDeviceAuthorizer
-        self.stickerProviderClass = stickerProviderClass
+        self.stickerProvider = stickerProvider
         self.analyticsProvider = analyticsProvider
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
@@ -313,7 +317,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
-        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, stickerProviderClass: stickerProviderClass, cameraMode: currentMode, analyticsProvider: analyticsProvider)
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, cameraMode: currentMode, stickerProvider: stickerProvider, analyticsProvider: analyticsProvider)
         controller.delegate = self
         return controller
     }

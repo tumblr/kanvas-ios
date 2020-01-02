@@ -246,8 +246,8 @@ private extension KanvasDashboardController {
 
     func createCameraController() -> CameraController {
         let kanvasAnalyticsProvider = stateDelegate?.kanvasDashboardAnalyticsProvider
-        let stickerProviderClass = ExperimentalStickerProvider.self
-        let kanvasViewController = CameraController(settings: settings, stickerProviderClass: stickerProviderClass, analyticsProvider: kanvasAnalyticsProvider)
+        let stickerProvider = ExperimentalStickerProvider()
+        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider)
         kanvasViewController.delegate = self
         return kanvasViewController
     }

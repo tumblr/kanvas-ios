@@ -26,10 +26,7 @@ final class StickerTypeCollectionCellTests: FBSnapshotTestCase {
     
     func testStickerTypeCollectionCell() {
         let cell = newCell()
-        let stickerType = StickerType(baseUrl: "baseUrl/",
-                              keyword: "keyword",
-                              thumbUrl: "thumbUrl",
-                              count: 1)
+        let stickerType = StickerType(imageUrl: "imageUrl", stickers: [])
         
         cell.bindTo(stickerType)
         FBSnapshotVerifyView(cell)

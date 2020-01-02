@@ -7,27 +7,14 @@
 import Foundation
 import UIKit
 
-/// Constants for Sticker
-private struct Constants {
-    static let twoDigitsFormat: String = "%02d"
-}
-
-/// A representation for a sticker to be presented in the sticker collection
+/// A representation of a sticker in the media drawer
 public struct Sticker {
     
-    private let baseUrl: String
-    private let keyword: String
-    private let number: Int
-    private let imageExtension: String
+    let imageUrl: String
     
-    public var imageUrl: String {
-        return "\(baseUrl)\(keyword)/\(String(format: Constants.twoDigitsFormat, number)).\(imageExtension)"
-    }
+    // MARK: - Initializers
     
-    public init(baseUrl: String, keyword: String, number: Int, imageExtension: String = "png") {
-        self.baseUrl = baseUrl
-        self.keyword = keyword
-        self.number = number
-        self.imageExtension = imageExtension
+    public init(imageUrl: String) {
+        self.imageUrl = imageUrl
     }
 }
