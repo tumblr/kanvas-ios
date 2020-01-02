@@ -18,6 +18,8 @@ protocol MediaDrawerControllerDelegate: class {
     ///  - size: image view size
     func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
     
+    /// Callback for when a sticker type is selected
+    ///
     /// - Parameter stickerType: the selected sticker type
     func didSelectStickerType(_ stickerType: StickerType)
     
