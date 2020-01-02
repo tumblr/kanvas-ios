@@ -37,7 +37,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     }()
     
     private lazy var stickerMenuController: StickerMenuController = {
-        let controller = StickerMenuController(stickerProvider: self.stickerProvider)
+        let controller = StickerMenuController(stickerProvider: stickerProvider)
         controller.delegate = self
         return controller
     }()
