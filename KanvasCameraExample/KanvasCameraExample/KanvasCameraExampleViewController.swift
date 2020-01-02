@@ -302,6 +302,12 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
+    func openAppSettings(completion: ((Bool) -> ())?) {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url, options: [:], completionHandler: completion)
+        }
+    }
+
     func tagButtonPressed() {
         // Only supported in Orangina
     }
@@ -367,7 +373,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                 case .post:
                     self.dismissCamera()
                 case .save:
-                    // nothing to do
+                    break
                 }
 
             }

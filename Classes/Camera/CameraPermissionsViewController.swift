@@ -9,6 +9,14 @@ import UIKit
 import SharedUI
 import AVFoundation
 
+protocol CaptureDeviceAuthorizing: class {
+
+    func requestAccess(for mediaType: AVMediaType, completionHandler: @escaping (Bool) -> ())
+
+    func authorizationStatus(for mediaType: AVMediaType) -> AVAuthorizationStatus
+
+}
+
 protocol CameraPermissionsViewDelegate: class {
 
     func cameraAccessButtonPressed()
@@ -35,6 +43,7 @@ protocol CameraPermissionsViewControllerDelegate: class {
 
     func didTapMediaPickerButton(completion: (() -> ())?)
 
+    func openAppSettings(completion: ((Bool) -> ())?)
 }
 
 class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButtonViewDelegate {
@@ -51,8 +60,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         static let buttonAcceptedColor: UIColor = .black
         static let buttonBorderWidth: CGFloat = 1.5
     }
-
-    private var disposables: [NSKeyValueObservation] = []
 
     private lazy var containerView: UIView = {
         let view = UIView().forAutoLayout()
@@ -87,12 +94,14 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }()
 
     private lazy var cameraAccessButton: UIButton = {
-        let button = makeButton(title: "Allow access to camera", titleDisabled: "Camera access granted", action: #selector(cameraAccessButtonPressed)).forAutoLayout()
+        let button = CameraPermissionsView.makeButton(title: "Allow access to camera", titleDisabled: "Camera access granted").forAutoLayout()
+        button.addTarget(self, action: #selector(cameraAccessButtonPressed), for: .touchUpInside)
         return button
     }()
 
     private lazy var microphoneAccessButton: UIButton = {
-        let button = makeButton(title: "Allow access to microphone", titleDisabled: "Microphone access granted", action: #selector(microphoneAccessButtonPressed)).forAutoLayout()
+        let button = CameraPermissionsView.makeButton(title: "Allow access to microphone", titleDisabled: "Microphone access granted").forAutoLayout()
+        button.addTarget(self, action: #selector(microphoneAccessButtonPressed), for: .touchUpInside)
         return button
     }()
 
@@ -105,7 +114,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return button
     }()
 
-    private lazy var checkImage: UIImage = {
+    private static var checkImage: UIImage = {
         let checkLabel = UILabel()
         checkLabel.font = Constants.buttonFont
         checkLabel.text = "✓"
@@ -128,10 +137,12 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     func updateCameraAccess(hasAccess: Bool) {
         cameraAccessButton.isEnabled = !hasAccess
+        CameraPermissionsView.updateButton(button: cameraAccessButton)
     }
 
     func updateMicrophoneAccess(hasAccess: Bool) {
         microphoneAccessButton.isEnabled = !hasAccess
+        CameraPermissionsView.updateButton(button: microphoneAccessButton)
     }
 
     private func setupView() {
@@ -180,6 +191,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
             cameraAccessButton.topAnchor.constraint(equalTo: centerYAnchor),
             cameraAccessButton.centerXAnchor.constraint(equalTo: descriptionLabel.centerXAnchor),
         ])
+        cameraAccessButton.layoutIfNeeded()
+        CameraPermissionsView.updateButton(button: cameraAccessButton)
     }
 
     private func setupMicrophoneAccessButton() {
@@ -187,6 +200,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
             microphoneAccessButton.topAnchor.constraint(equalTo: cameraAccessButton.bottomAnchor, constant: 15),
             microphoneAccessButton.centerXAnchor.constraint(equalTo: cameraAccessButton.centerXAnchor),
         ])
+        microphoneAccessButton.layoutIfNeeded()
+        CameraPermissionsView.updateButton(button: microphoneAccessButton)
     }
 
     private func setupMediaPickerButton() {
@@ -206,7 +221,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         ])
     }
 
-    private func makeButton(title: String, titleDisabled: String, action: Selector) -> UIButton {
+    private static func makeButton(title: String, titleDisabled: String) -> UIButton {
         let button = UIButton()
         button.setTitle(title, for: .normal)
         button.setTitle(titleDisabled, for: .disabled)
@@ -216,24 +231,17 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         button.contentHorizontalAlignment = .center
         button.titleLabel?.font = Constants.buttonFont
         button.layer.borderWidth = Constants.borderWidth
-        disposables.append(button.observe(\.bounds) { object, _ in
-            object.layer.cornerRadius = object.bounds.height / 2.0
-            object.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: object.bounds.height / -4.0, bottom: 0.0, right: 0.0)
-            object.contentEdgeInsets = UIEdgeInsets(
-                top: object.bounds.height / 5.0,
-                left: object.bounds.height / 2.0,
-                bottom: object.bounds.height / 5.0,
-                right: object.bounds.height / 2.0)
-        })
-        disposables.append(button.observe(\.isEnabled) { object, _ in
-            self.updateButton(button: object)
-        })
-        updateButton(button: button)
-        button.addTarget(self, action: action, for: .touchUpInside)
         return button
     }
 
-    private func updateButton(button: UIButton) {
+    private static func updateButton(button: UIButton) {
+        button.layer.cornerRadius = button.bounds.height / 2.0
+        button.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: button.bounds.height / -4.0, bottom: 0.0, right: 0.0)
+        button.contentEdgeInsets = UIEdgeInsets(
+            top: button.bounds.height / 5.0,
+            left: button.bounds.height / 2.0,
+            bottom: button.bounds.height / 5.0,
+            right: button.bounds.height / 2.0)
         if button.isEnabled {
             button.backgroundColor = .clear
             button.layer.borderColor = Constants.buttonColor.cgColor
@@ -261,7 +269,21 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
 }
 
+class CaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
+
+    func requestAccess(for mediaType: AVMediaType, completionHandler: @escaping (Bool) -> ()) {
+        AVCaptureDevice.requestAccess(for: mediaType, completionHandler: completionHandler)
+    }
+
+    func authorizationStatus(for mediaType: AVMediaType) -> AVAuthorizationStatus {
+        return AVCaptureDevice.authorizationStatus(for: mediaType)
+    }
+
+}
+
 class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDelegate {
+
+    let captureDeviceAuthorizer: CaptureDeviceAuthorizing
 
     var delegate: CameraPermissionsViewControllerDelegate?
 
@@ -271,6 +293,15 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     private var ignoreTouchesView: IgnoreTouchesView? {
         return view as? IgnoreTouchesView
+    }
+
+    init(captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
+        self.captureDeviceAuthorizer = captureDeviceAuthorizer
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func loadView() {
@@ -288,9 +319,9 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
 
     func cameraAccessButtonPressed() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        switch captureDeviceAuthorizer.authorizationStatus(for: .video) {
         case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { videoGranted in
+            captureDeviceAuthorizer.requestAccess(for: .video) { videoGranted in
                 performUIUpdate {
                     self.setupViewFromAccess()
                     self.delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
@@ -301,13 +332,15 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         case .authorized:
             assertionFailure()
             setupViewFromAccess()
+        @unknown default:
+            assertionFailure()
         }
     }
 
     func microphoneAccessButtonPressed() {
-        switch AVCaptureDevice.authorizationStatus(for: .audio) {
+        switch captureDeviceAuthorizer.authorizationStatus(for: .audio) {
         case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .audio) { audioGranted in
+            captureDeviceAuthorizer.requestAccess(for: .audio) { audioGranted in
                 performUIUpdate {
                     self.setupViewFromAccess()
                     self.delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
@@ -318,6 +351,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         case .authorized:
             assertionFailure()
             setupViewFromAccess()
+        @unknown default:
+            assertionFailure()
         }
     }
 
@@ -332,29 +367,29 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
 
     private func hasCameraAccess() -> Bool {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        switch captureDeviceAuthorizer.authorizationStatus(for: .video) {
         case .notDetermined, .restricted, .denied:
             return false
         case .authorized:
             return true
+        @unknown default:
+            return false
         }
     }
 
     private func hasMicrophoneAccess() -> Bool {
-        switch AVCaptureDevice.authorizationStatus(for: .audio) {
+        switch captureDeviceAuthorizer.authorizationStatus(for: .audio) {
         case .notDetermined, .restricted, .denied:
             return false
         case .authorized:
             return true
+        @unknown default:
+            return false
         }
     }
 
     private func openAppSettings() {
-        if let url = URL(string: UIApplication.openSettingsURLString) {
-            UIApplication.shared.open(url, options: [:]) { success in
-                print("Opened settings")
-            }
-        }
+        delegate?.openAppSettings(completion: nil)
     }
 
     private func setupViewFromAccess() {

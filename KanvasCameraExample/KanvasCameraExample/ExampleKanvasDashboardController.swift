@@ -116,6 +116,12 @@ public class KanvasDashboardController: UIViewController {
 
 extension KanvasDashboardController: CameraControllerDelegate {
 
+    public func openAppSettings(completion: ((Bool) -> ())?) {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url, options: [:], completionHandler: completion)
+        }
+    }
+
     public func tagButtonPressed() {
         // Only supported in Orangina
     }
@@ -151,7 +157,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
                     self.kanvasViewController.resetState()
                     self.delegate?.kanvasDashboardCreatePostRequest()
                 case .save:
-                    // nothing to do since the media was saved already
+                    break
                 }
             }
         }
