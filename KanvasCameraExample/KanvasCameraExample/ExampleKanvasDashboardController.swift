@@ -11,6 +11,10 @@ import KanvasCamera
 import Photos
 import Utils
 
+private enum PhotoLibraryAccessError: Error {
+    case notDetermined, restricted, denied, add(Error)
+}
+
 /// Protocol for the KanvasDashboardController to delegate events to
 public protocol KanvasDashboardControllerDelegate: class {
 
@@ -130,21 +134,26 @@ extension KanvasDashboardController: CameraControllerDelegate {
             return
         }
 
-        save(media: media, moveFile: false)
-        print(media.info)
+        save(media: media, moveFile: false) { error in
+            DispatchQueue.main.async {
+                guard error == nil else {
+                    print("Error saving media to the photo library")
+                    return
+                }
 
-        switch exportAction {
-        case .previewConfirm:
-            assertionFailure("The Preview screen should never be shown from the Kanvas Dashboard")
-        case .confirm:
-            kanvasViewController.resetState()
-            delegate?.kanvasDashboardOpenComposeRequest()
-        case .post:
-            kanvasViewController.resetState()
-            delegate?.kanvasDashboardCreatePostRequest()
-        case .save:
-            // nothing to do since the media was saved already
-            break
+                switch exportAction {
+                case .previewConfirm:
+                    assertionFailure("The Preview screen should never be shown from the Kanvas Dashboard")
+                case .confirm:
+                    self.kanvasViewController.resetState()
+                    self.delegate?.kanvasDashboardOpenComposeRequest()
+                case .post:
+                    self.kanvasViewController.resetState()
+                    self.delegate?.kanvasDashboardCreatePostRequest()
+                case .save:
+                    // nothing to do since the media was saved already
+                }
+            }
         }
     }
 
@@ -188,41 +197,42 @@ extension KanvasDashboardController: CameraControllerDelegate {
         
     }
 
-    func save(media: KanvasCameraMedia, moveFile: Bool = true) {
+    func save(media: KanvasCameraMedia, moveFile: Bool = true, completion: @escaping (Error?) -> ()) {
+        let completionMainThread: (Error?) -> () = { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
         PHPhotoLibrary.requestAuthorization { authorizationStatus in
             switch authorizationStatus {
             case .notDetermined, .restricted, .denied:
-                return
+                completionMainThread(nil)
             case .authorized:
-                break
+                switch media {
+                case let .image(url, _):
+                    self.addToLibrary(url: url, resourceType: .photo, moveFile: moveFile, completion: completionMainThread)
+                case let .video(url, _):
+                    self.addToLibrary(url: url, resourceType: .video, moveFile: moveFile, completion: completionMainThread)
+                }
             @unknown default:
-                return
+                completionMainThread(nil)
             }
-        }
-        switch media {
-        case let .image(url, _):
-            addToLibrary(url: url, resourceType: .photo, moveFile: moveFile)
-        case let .video(url, _):
-            addToLibrary(url: url, resourceType: .video, moveFile: moveFile)
         }
     }
 
-    private func addToLibrary(url: URL, resourceType: PHAssetResourceType, moveFile: Bool) {
+    private func addToLibrary(url: URL, resourceType: PHAssetResourceType, moveFile: Bool, completion: @escaping (Error?) -> ()) {
         PHPhotoLibrary.shared().performChanges({
             let req = PHAssetCreationRequest.forAsset()
             let options = PHAssetResourceCreationOptions()
             options.shouldMoveFile = moveFile
             req.addResource(with: resourceType, fileURL: url, options: options)
-        }) { (success, error) in
-            if !success {
-                if let err = error {
-                    assertionFailure("Error saving media to the photo library: \(err)")
-                }
-                else {
-                    assertionFailure("Neither a success or failure!?")
-                }
+        }, completionHandler: { (success, error) in
+            if let error = error {
+                completion(PhotoLibraryAccessError.add(error))
+            } else {
+                completion(nil)
             }
-        }
+        })
     }
 }
 
