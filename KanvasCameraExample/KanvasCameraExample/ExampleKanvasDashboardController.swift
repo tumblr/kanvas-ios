@@ -235,7 +235,8 @@ extension KanvasDashboardController: CameraControllerDelegate {
         }, completionHandler: { (success, error) in
             if let error = error {
                 completion(PhotoLibraryAccessError.add(error))
-            } else {
+            }
+            else {
                 completion(nil)
             }
         })

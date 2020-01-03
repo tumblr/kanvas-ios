@@ -74,6 +74,15 @@ final class MockCameraPermissionsViewControllerDelegate: CameraPermissionsViewCo
     }
 }
 
+final class CaptureDeviceAuthorizerTests: XCTestCase {
+
+    func testForSakeOfJustHavingATest() {
+        let _ = CaptureDeviceAuthorizer()
+        XCTAssert(true)
+    }
+
+}
+
 final class CameraPermissionsViewControllerTests: XCTestCase {
 
     func testChangeCameraPermissions() {

@@ -82,7 +82,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = Constants.descriptionFont.pointSize * 0.5
         let attrString = NSMutableAttributedString(string: "Allow access so you can start taking photos and videos")
-        attrString.addAttribute(.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        attrString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
 
         label.attributedText = attrString
         label.font = Constants.descriptionFont
@@ -245,7 +245,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         if button.isEnabled {
             button.backgroundColor = .clear
             button.layer.borderColor = Constants.buttonColor.cgColor
-        } else {
+        }
+        else {
             button.backgroundColor = Constants.buttonAcceptedBackgroundColor
             button.layer.borderColor = Constants.buttonAcceptedBackgroundColor.cgColor
         }
@@ -311,10 +312,14 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
 
     override func viewDidLoad() {
+        super.viewDidLoad()
+
         setupViewFromAccess()
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         setupViewFromAccess()
     }
 

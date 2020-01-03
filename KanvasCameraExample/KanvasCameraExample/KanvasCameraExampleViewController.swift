@@ -424,7 +424,8 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         }, completionHandler: { (success, error) in
             if let error = error {
                 completion(PhotoLibraryAccessError.move(error))
-            } else {
+            }
+            else {
                 completion(nil)
             }
         })
