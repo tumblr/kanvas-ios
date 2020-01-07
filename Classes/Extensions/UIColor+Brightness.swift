@@ -21,14 +21,10 @@ extension UIColor {
     var isVisible: Bool {
         return rgbaComponents.alpha > 0
     }
-    
-    /// Whether the color is close to white or not.
-    var isAlmostWhite: Bool {
-        return brighterThan(Constants.brightnessThreshold)
-    }
-    
+
     /// Best matching color between black and white, based on the brightness of the current color.
     var matchingColor: UIColor {
+        let isAlmostWhite = brighterThan(Constants.brightnessThreshold)
         return isAlmostWhite ? .black : .white
     }
 }
