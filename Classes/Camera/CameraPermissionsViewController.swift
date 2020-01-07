@@ -71,7 +71,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel().forAutoLayout()
-        label.text = "Post to Tumblr"
+        label.text = NSLocalizedString("Post to Tumblr", comment: "Title of camera permissions screen")
         label.font = Constants.titleFont
         label.textColor = Constants.textColor
         label.textAlignment = .center
@@ -81,12 +81,13 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel().forAutoLayout()
 
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = Constants.descriptionFont.pointSize * 0.5
-        let attrString = NSMutableAttributedString(string: "Allow access so you can start taking photos and videos")
-        attrString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        let description = NSLocalizedString("Allow access so you can start taking photos and videos", comment: "Message on camera permissions screen to explain why the Tumblr app needs camera and microphone permissions")
+        let descriptionParagraphStyle = NSMutableParagraphStyle()
+        descriptionParagraphStyle.lineSpacing = Constants.descriptionFont.pointSize * 0.5
+        let descriptionAttributedString = NSMutableAttributedString(string: description)
+        descriptionAttributedString.addAttribute(.paragraphStyle, value: descriptionParagraphStyle, range: NSMakeRange(0, descriptionAttributedString.length))
 
-        label.attributedText = attrString
+        label.attributedText = descriptionAttributedString
         label.font = Constants.descriptionFont
         label.textColor = Constants.textColor
         label.alpha = Constants.descriptionOpacity
@@ -96,13 +97,17 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }()
 
     private lazy var cameraAccessButton: UIButton = {
-        let button = CameraPermissionsView.makeButton(title: "Allow access to camera", titleDisabled: "Camera access granted").forAutoLayout()
+        let title = NSLocalizedString("Allow access to camera", comment: "Button on camera permissions screen to initiate the sytem prompt for camera access")
+        let titleDisabled = NSLocalizedString("Camera access granted", comment: "Label on camera permissions screen to indicate camera access is granted")
+        let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled).forAutoLayout()
         button.addTarget(self, action: #selector(cameraAccessButtonPressed), for: .touchUpInside)
         return button
     }()
 
     private lazy var microphoneAccessButton: UIButton = {
-        let button = CameraPermissionsView.makeButton(title: "Allow access to microphone", titleDisabled: "Microphone access granted").forAutoLayout()
+        let title = NSLocalizedString("Allow access to microphone", comment: "Button on camera permissions screen to initiate the sytem prompt for microphone access")
+        let titleDisabled = NSLocalizedString("Microphone access granted", comment: "Label on camera permissions screen to indicate microphone access is granted")
+        let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled).forAutoLayout()
         button.addTarget(self, action: #selector(microphoneAccessButtonPressed), for: .touchUpInside)
         return button
     }()
