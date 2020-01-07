@@ -48,6 +48,8 @@ protocol CameraPermissionsViewControllerDelegate: class {
 
 class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButtonViewDelegate {
 
+    let showMediaPicker: Bool
+
     private struct Constants {
         static let borderWidth: CGFloat = 2
         static let titleFont: UIFont = .durianMedium()
@@ -106,9 +108,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }()
 
     private lazy var mediaPickerButton: MediaPickerButtonView = {
-        // TOOD: use actual settings
         let settings = CameraSettings()
-        settings.features.mediaPicking = true
+        settings.features.mediaPicking = showMediaPicker
         let button = MediaPickerButtonView(settings: settings).forAutoLayout()
         button.delegate = self
         return button
@@ -125,7 +126,17 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     var delegate: CameraPermissionsViewDelegate?
 
+    init(showMediaPicker: Bool, frame: CGRect = .zero) {
+        self.showMediaPicker = showMediaPicker
+
+        super.init(frame: frame)
+
+        setupView()
+    }
+
     override init(frame: CGRect) {
+        self.showMediaPicker = false
+
         super.init(frame: frame)
 
         setupView()
@@ -286,6 +297,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     let captureDeviceAuthorizer: CaptureDeviceAuthorizing
 
+    let shouldShowMediaPicker: Bool
+
     var delegate: CameraPermissionsViewControllerDelegate?
 
     private var permissionsView: CameraPermissionsViewable? {
@@ -296,8 +309,9 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         return view as? IgnoreTouchesView
     }
 
-    init(captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
+    init(shouldShowMediaPicker: Bool, captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
         self.captureDeviceAuthorizer = captureDeviceAuthorizer
+        self.shouldShowMediaPicker = shouldShowMediaPicker
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -306,7 +320,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
 
     override func loadView() {
-        let view = CameraPermissionsView()
+        let view = CameraPermissionsView(showMediaPicker: shouldShowMediaPicker, frame: .zero)
         view.delegate = self
         self.view = view
     }
