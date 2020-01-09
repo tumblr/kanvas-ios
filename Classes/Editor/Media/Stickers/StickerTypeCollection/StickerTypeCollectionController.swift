@@ -105,7 +105,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     
     // MARK: Sticker type selection
     
-    /// Selects a sticker
+    /// Selects a sticker type
     ///
     /// - Parameter index: position of the sticker type in the collection
     private func selectStickerType(index: Int) {

@@ -9,12 +9,14 @@ import UIKit
 
 /// A representation of a sticker in the media drawer
 public struct Sticker {
-    
+        
+    let id: String
     let imageUrl: String
     
     // MARK: - Initializers
     
-    public init(imageUrl: String) {
+    public init(id: String, imageUrl: String) {
+        self.id = id
         self.imageUrl = imageUrl
     }
 }
