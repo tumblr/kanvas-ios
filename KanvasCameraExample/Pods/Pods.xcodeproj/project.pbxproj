@@ -405,7 +405,6 @@
 		A284011A7E9F46C183FBB63EE24B44CD /* SDWebImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F671022DB6ECBDA9EB761A9B3C1ECFE /* SDWebImageDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2B00A2C5060ACFBC809A45BEF252B06 /* dec_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = A04E574507106AEEFB91249E44392F61 /* dec_sse2.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
 		A2D8B063AE285947D11069AEC2D5D0EF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C55034B711B088768CFC9FFD85042EA7 /* UIKit.framework */; };
-		A30C8675D68798A592F3839A8564817C /* UIColor+Brightness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B12B6178DCEB36824933E50ADF50CD /* UIColor+Brightness.swift */; };
 		A3FFC85723534636E28953A99E65D37A /* common_sse2.h in Headers */ = {isa = PBXBuildFile; fileRef = A93E43168069135490CA444A2D0F53F1 /* common_sse2.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		A44E31315A7DF77CB9611FEB54C6D170 /* HapticFeedbackGenerating.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED99763B6621B5901CA6E6E0DE414C55 /* HapticFeedbackGenerating.swift */; };
 		A44E60EDF4E2CB9B0CAEF5E9AB34AD83 /* CVPixelBuffer+sampleBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAEB46A078A96FABB274954F6706CA2 /* CVPixelBuffer+sampleBuffer.swift */; };
@@ -943,7 +942,6 @@
 		389ECC919AF3CCB2C95418FA1CCCC4B8 /* mux.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = mux.h; path = src/webp/mux.h; sourceTree = "<group>"; };
 		38D84B8DE5EB0FF1C39D4D7B903E1974 /* UIImage+GIF.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+GIF.m"; path = "SDWebImage/Core/UIImage+GIF.m"; sourceTree = "<group>"; };
 		396D3C671E1C54D4DF57BB5E735305F9 /* SDImageGraphics.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageGraphics.h; path = SDWebImage/Core/SDImageGraphics.h; sourceTree = "<group>"; };
-		39B12B6178DCEB36824933E50ADF50CD /* UIColor+Brightness.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIColor+Brightness.swift"; sourceTree = "<group>"; };
 		39BE11D47EFF1F782F2FC8BB9AF670FE /* StickerMenuView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerMenuView.swift; sourceTree = "<group>"; };
 		3B6D3F6EE7E4F641AFC12FF07A98194E /* SDAnimatedImage+Data.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "SDAnimatedImage+Data.swift"; path = "Classes/SDAnimatedImage+Data.swift"; sourceTree = "<group>"; };
 		3BE3193E521365DC785967122BB8DA2F /* Utils-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Utils-Info.plist"; sourceTree = "<group>"; };
@@ -1870,7 +1868,6 @@
 				60F6FF299BF74B79EE54346CCFF3FD26 /* NSURL+Media.swift */,
 				616A9F797AA695A49718013A1A7BB5BF /* String+UTF16Substring.swift */,
 				798A7CB004F1B0C9F6DA78DB055ABCFD /* UICollectionView+Cells.swift */,
-				39B12B6178DCEB36824933E50ADF50CD /* UIColor+Brightness.swift */,
 				79943C4828CFBC41E05F64D0767AE309 /* UIColor+Lerp.swift */,
 				3756688F54B4423AFF9705E667003EA3 /* UIFont+Fonts.swift */,
 				94CF293026900D16482814C532CCDF4D /* UIFont+Utils.swift */,
@@ -3646,7 +3643,6 @@
 				38F3BE8B8083CA4FDB292956D266020D /* ToonFilter.swift in Sources */,
 				F1081A1C81647A0D098947B1CD4163F4 /* TrashView.swift in Sources */,
 				EE02F13068DA75989715D633BF3095A6 /* UICollectionView+Cells.swift in Sources */,
-				A30C8675D68798A592F3839A8564817C /* UIColor+Brightness.swift in Sources */,
 				744EA57176294F3D72437208FFF8850B /* UIColor+Lerp.swift in Sources */,
 				05A6A70B15EF9AC0ED139DA4E10C4C01 /* UIFont+Fonts.swift in Sources */,
 				ABF656B3D3E77F4B7E5B4A137D877A29 /* UIFont+Utils.swift in Sources */,

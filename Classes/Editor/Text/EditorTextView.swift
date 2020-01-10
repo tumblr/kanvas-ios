@@ -130,7 +130,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     var highlightColor: UIColor? {
         get { return mainTextView.highlightColor }
         set {
-            guard let newColor = newValue, let image = KanvasCameraImages.highlightImage(for: newColor.isVisible) else { return }
+            guard let newColor = newValue, let image = KanvasCameraImages.highlightImage(for: newColor.isVisible()) else { return }
             highlightSelector.setImage(image, for: .normal)
             mainTextView.highlightColor = newColor
         }
