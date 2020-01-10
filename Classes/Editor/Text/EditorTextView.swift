@@ -141,7 +141,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         set {
             guard let newColor = newValue else { return }
             eyeDropper.backgroundColor = newColor
-            eyeDropper.tintColor = newColor.matchingColor
+            eyeDropper.tintColor = newColor.matchingColor()
         }
     }
     

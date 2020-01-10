@@ -611,7 +611,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter color: new color for the eye dropper
     func setEyeDropperColor(_ color: UIColor) {
-        eyeDropperButton.tintColor = color.matchingColor
+        eyeDropperButton.tintColor = color.matchingColor()
         eyeDropperButton.backgroundColor = color
     }
     
