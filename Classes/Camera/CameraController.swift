@@ -89,10 +89,12 @@ public protocol CameraControllerDelegate: class {
     
     /// Called when a drag interaction ends
     func didEndDragInteraction()
+
+    func openAppSettings(completion: ((Bool) -> ())?)
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -123,7 +125,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     private lazy var cameraInputController: CameraInputController = {
         let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandler: self.segmentsHandler, delegate: self)
-        addChild(controller)
         return controller
     }()
     private lazy var imagePreviewController: ImagePreviewController = {
@@ -132,6 +133,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }()
     private lazy var filterSettingsController: FilterSettingsController = {
         let controller = FilterSettingsController(settings: self.settings)
+        controller.delegate = self
+        return controller
+    }()
+    private lazy var cameraPermissionsViewController: CameraPermissionsViewController = {
+        let controller = CameraPermissionsViewController(shouldShowMediaPicker: settings.features.mediaPicking, captureDeviceAuthorizer: self.captureDeviceAuthorizer)
         controller.delegate = self
         return controller
     }()
@@ -150,9 +156,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let stickerProvider: StickerProvider?
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
+    private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private var mediaPickerThumbnailTargetSize: CGSize = CGSize(width: 0, height: 0)
     private var lastMediaPickerFetchResult: PHFetchResult<PHAsset>?
     private var mediaPickerThumbnailQueue = DispatchQueue(label: "kanvas.mediaPickerThumbnailQueue")
+    private var didRegisterForPhotoLibraryChanges: Bool = false
 
     private weak var overlayViewController: UIViewController?
 
@@ -167,7 +175,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
     convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, stickerProvider: stickerProvider, analyticsProvider: analyticsProvider)
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -180,11 +188,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     ///   - recorderClass: Class that will provide a recorder that defines how to record media.
     ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
     /// motion segments and constructing final input.
+    ///   - captureDeviceAuthorizer: Class responsible for authorizing access to capture devices.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
     init(settings: CameraSettings,
          recorderClass: CameraRecordingProtocol.Type,
          segmentsHandlerClass: SegmentsHandlerType.Type,
+         captureDeviceAuthorizer: CaptureDeviceAuthorizing,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
@@ -192,6 +202,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         isRecording = false
         self.recorderClass = recorderClass
         self.segmentsHandlerClass = segmentsHandlerClass
+        self.captureDeviceAuthorizer = captureDeviceAuthorizer
         self.stickerProvider = stickerProvider
         self.analyticsProvider = analyticsProvider
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
@@ -226,11 +237,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     ///
     /// - Parameter completion: boolean on whether access was granted
     public func requestAccess(_ completion: ((_ granted: Bool) -> ())?) {
-        AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { (videoGranted) -> Void in
+        captureDeviceAuthorizer.requestAccess(for: AVMediaType.video) { videoGranted in
             performUIUpdate {
                 completion?(videoGranted)
             }
-        })
+        }
     }
     
     /// logs opening the camera
@@ -251,21 +262,27 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     override public func viewDidLoad() {
         super.viewDidLoad()
+
         if settings.features.cameraFilters {
             cameraView.addFiltersView(filterSettingsController.view)
         }
         cameraView.addModeView(modeAndShootController.view)
         cameraView.addClipsView(clipsController.view)
+
+        addChild(cameraInputController)
         cameraView.addCameraInputView(cameraInputController.view)
         cameraView.addOptionsView(topOptionsController.view)
         cameraView.addImagePreviewView(imagePreviewController.view)
+
+        addChild(cameraPermissionsViewController)
+        cameraView.addPermissionsView(cameraPermissionsViewController.view)
+
         bindMediaContentAvailable()
-        PHPhotoLibrary.shared().register(self)
     }
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if delegate?.cameraShouldShowWelcomeTooltip() == true {
+        if delegate?.cameraShouldShowWelcomeTooltip() == true && cameraPermissionsViewController.hasFullAccess() {
             showWelcomeTooltip()
         }
     }
@@ -627,14 +644,15 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didDismissWelcomeTooltip()
     }
 
-    func didTapMediaPickerButton() {
+    func didTapMediaPickerButton(completion: (() -> ())? = nil) {
         let imagePickerController = KanvasUIImagePickerViewController()
         imagePickerController.delegate = self
-        imagePickerController.sourceType = .savedPhotosAlbum
+        imagePickerController.sourceType = .photoLibrary
         imagePickerController.allowsEditing = false
         imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
         present(imagePickerController, animated: true) {
             self.modeAndShootController.resetMediaPickerButton()
+            completion?()
         }
         analyticsProvider?.logMediaPickerOpen()
     }
@@ -653,10 +671,25 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     private func fetchMostRecentPhotoLibraryImage(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+
+        guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+            performUIUpdate {
+                completion(nil)
+            }
+            return
+        }
+
+        // PHPhotoLibrary.register prompts for Photo Pibrary access, so ensure this line always happens after the PHPhotoLibrary.authorizationStatus check.
+        if !didRegisterForPhotoLibraryChanges {
+            PHPhotoLibrary.shared().register(self)
+            didRegisterForPhotoLibraryChanges = true
+        }
+
         mediaPickerThumbnailQueue.async {
             let fetchOptions = PHFetchOptions()
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             fetchOptions.fetchLimit = 1
+            // PHAsset.fetchAssets prompts for photo library access, so ensure this line always happens after the PHPhotoLibrary.authorizationStatus check.
             let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
             self.lastMediaPickerFetchResult = fetchResult
             if fetchResult.count > 0 {
@@ -863,6 +896,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer) {
         cameraZoomHandler.setZoom(gesture: gesture)
     }
+
+    func cameraInputControllerHasFullAccess() -> Bool {
+        return cameraPermissionsViewController.hasFullAccess()
+    }
     
     // MARK: - FilterSettingsControllerDelegate
     
@@ -888,6 +925,18 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         modeAndShootController.enableShootButtonUserInteraction(!visible)
         toggleMediaPicker(visible: !visible)
         modeAndShootController.dismissTooltip()
+    }
+
+    // MARK: - CameraPermissionsViewControllerDelegate
+
+    func cameraPermissionsChanged(hasFullAccess: Bool) {
+        if hasFullAccess {
+            cameraInputController.setupCaptureSession()
+        }
+    }
+
+    func openAppSettings(completion: ((Bool) -> ())?) {
+        delegate?.openAppSettings(completion: completion)
     }
 
     /// Toggles the media picker
@@ -979,7 +1028,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     public func cleanup() {
         resetState()
         cameraInputController.cleanup()
-        PHPhotoLibrary.shared().unregisterChangeObserver(self)
+        if didRegisterForPhotoLibraryChanges {
+            PHPhotoLibrary.shared().unregisterChangeObserver(self)
+        }
     }
 
 }

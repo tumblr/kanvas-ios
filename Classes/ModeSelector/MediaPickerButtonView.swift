@@ -16,7 +16,7 @@ protocol MediaPickerButtonViewDelegate: class {
 }
 
 /// Media Picker Button
-final class MediaPickerButtonView: UIView {
+final class MediaPickerButtonView: IgnoreTouchesView {
 
     private struct Constants {
         static let borderWidth: CGFloat = 2
