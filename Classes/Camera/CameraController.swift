@@ -29,6 +29,7 @@ public enum KanvasExportAction {
     case confirm
     case post
     case save
+    case postOptions
 }
 
 // Error handling
@@ -810,7 +811,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         switch action {
         case .previewConfirm:
             analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: clipsCount, length: length)
-        case .confirm, .post, .save:
+        case .confirm, .post, .save, .postOptions:
             analyticsProvider?.logEditorCreatedMedia(clipsCount: clipsCount, length: length)
         }
     }

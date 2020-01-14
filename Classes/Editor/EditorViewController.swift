@@ -45,7 +45,15 @@ protocol EditorControllerDelegate: class {
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
-        let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
+        var mainActionMode: EditorView.MainActionMode = .confirm
+        if settings.features.editorPostOptions {
+            mainActionMode = .postOptions
+        }
+        else if settings.features.editorPosting {
+            mainActionMode = .post
+        }
+
+        let editorView = EditorView(mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor)
@@ -234,6 +242,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didTapConfirmButton() {
         startExporting(action: .confirm)
         analyticsProvider?.logOpenComposeFromDashboard()
+    }
+
+    func didTapPostOptionsButton() {
+        startExporting(action: .postOptions)
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {

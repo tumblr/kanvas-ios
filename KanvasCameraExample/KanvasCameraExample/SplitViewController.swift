@@ -131,6 +131,10 @@ extension SplitViewController: MockDashboardViewControllerDelegate {
 }
 
 extension SplitViewController: KanvasDashboardControllerDelegate {
+    func kanvasDashboardOpenPostingOptionsRequest() {
+        navigateFromKanvas()
+    }
+
     func kanvasDashboardOpenComposeRequest() {
         navigateFromKanvas()
     }

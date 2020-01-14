@@ -19,6 +19,7 @@ protocol EditorViewDelegate: class {
     func didTapPostButton()
     /// A function that is called when the save button is pressed
     func didTapSaveButton()
+    func didTapPostOptionsButton()
     /// A function that is called when a movable text is pressed
     func didTapText(options: TextOptions, transformations: ViewTransformations)
     /// Called when text is moved
@@ -62,6 +63,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     enum MainActionMode {
         case confirm
         case post
+        case postOptions
     }
     
     weak var playerView: MediaPlayerView?
@@ -121,6 +123,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
             setupConfirmButton()
         case .post:
             setupPostButton()
+        case .postOptions:
+            setupPostOptionsButton()
         }
         if showSaveButton {
             setupSaveButton()
@@ -197,6 +201,21 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         
+        NSLayoutConstraint.activate([
+            confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+            confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+            confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.confirmButtonVerticalMargin)
+        ])
+    }
+
+    private func setupPostOptionsButton() {
+        confirmButton.accessibilityLabel = "Post Options Button"
+        navigationContainer.addSubview(confirmButton)
+        confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        confirmButton.addTarget(self, action: #selector(postOptionsButtonPressed), for: .touchUpInside)
+        confirmButton.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
             confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
@@ -346,7 +365,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
 
     func confirmOrPostButton() -> UIButton {
         switch mainActionMode {
-        case .confirm:
+        case .confirm, .postOptions:
             return confirmButton
         case .post:
             return postButton
@@ -355,7 +374,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     
     func confirmOrPostButtonHorizontalMargin() -> CGFloat {
         switch mainActionMode {
-        case .confirm:
+        case .confirm, .postOptions:
             return EditorViewConstants.confirmButtonHorizontalMargin
         case .post:
             return EditorViewConstants.postButtonHorizontalMargin
@@ -381,6 +400,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
 
     @objc private func postButtonPressed() {
         delegate?.didTapPostButton()
+    }
+
+    @objc private func postOptionsButtonPressed() {
+        delegate?.didTapPostOptionsButton()
     }
     
     // MARK: - Public interface
@@ -446,7 +469,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
         switch mainActionMode {
-        case .confirm:
+        case .confirm, .postOptions:
             UIView.animate(withDuration: EditorViewConstants.animationDuration) {
                 self.confirmButton.alpha = show ? 1 : 0
             }

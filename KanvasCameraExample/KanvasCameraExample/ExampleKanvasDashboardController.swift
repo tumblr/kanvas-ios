@@ -25,6 +25,8 @@ public protocol KanvasDashboardControllerDelegate: class {
 
     /// Called to post
     func kanvasDashboardCreatePostRequest()
+
+    func kanvasDashboardOpenPostingOptionsRequest()
 }
 
 /// Protocol for the KanvasDashboardController to get state from
@@ -145,6 +147,8 @@ extension KanvasDashboardController: CameraControllerDelegate {
         case .save:
             // nothing to do since the media was saved already
             break
+        case .postOptions:
+            delegate?.kanvasDashboardOpenPostingOptionsRequest()
         }
     }
 
