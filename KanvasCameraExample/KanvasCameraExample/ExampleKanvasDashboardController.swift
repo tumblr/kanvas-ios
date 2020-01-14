@@ -161,7 +161,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
                 case .save:
                     break
                 case .postOptions:
-                    delegate?.kanvasDashboardOpenPostingOptionsRequest()
+                    self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
                 }
             }
         }

@@ -28,6 +28,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case mediaPicking(Bool)
         case editorSaving(Bool)
         case editorPosting(Bool)
+        case editorPostOptions(Bool)
         case newCameraModes(Bool)
 
         var name: String {
@@ -60,6 +61,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor Saving"
             case .newCameraModes(_):
                 return "New Camera Modes"
+            case .editorPostOptions(_):
+                return "Editor Post Options"
             }
         }
 
@@ -92,6 +95,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .editorPosting(let enabled):
                 return enabled
             case .newCameraModes(let enabled):
+                return enabled
+            case .editorPostOptions(let enabled):
                 return enabled
             }
         }
@@ -163,6 +168,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editorSaving(value)
         case .newCameraModes(_):
             featuresData[indexPath.row] = .newCameraModes(value)
+        case .editorPostOptions(_):
+            featuresData[indexPath.row] = .editorPostOptions(value)
         }
         delegate?.featureTableView(didUpdateFeature: featuresData[indexPath.row], withValue: value)
     }
