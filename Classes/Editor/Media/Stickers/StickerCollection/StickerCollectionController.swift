@@ -12,9 +12,10 @@ protocol StickerCollectionControllerDelegate: class {
     /// Callback for when a sticker is selected
     /// 
     /// - Parameters
+    ///  - id: the sticker id
     ///  - image: the sticker image
     ///  - size: image view size
-    func didSelectSticker(sticker: UIImage, with size: CGSize)
+    func didSelectSticker(id: String, image: UIImage, with size: CGSize)
 }
 
 /// Constants for StickerCollectionController
@@ -100,8 +101,8 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         
     // MARK: - StickerCollectionCellDelegate
     
-    func didSelect(sticker: UIImage, with size: CGSize) {
-        delegate?.didSelectSticker(sticker: sticker, with: size)
+    func didSelect(id: String, image: UIImage, with size: CGSize) {
+        delegate?.didSelectSticker(id: id, image: image, with: size)
     }
     
     func didLoadImage(index: Int, type: StickerType, image: UIImage) {

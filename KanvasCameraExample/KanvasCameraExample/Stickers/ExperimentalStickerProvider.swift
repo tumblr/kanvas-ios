@@ -53,12 +53,13 @@ public final class ExperimentalStickerProvider: StickerProvider {
                 
                 var stickers: [Sticker] = []
                 for number in 1...count {
+                    let id = "\(keyword)_\(number)"
                     let imageUrl =  "\(baseUrl)\(keyword)/\(String(format: Constants.twoDigitsFormat, number)).\(Constants.imageExtension)"
-                    stickers.append(Sticker(imageUrl: imageUrl))
+                    stickers.append(Sticker(id: id, imageUrl: imageUrl))
                 }
                 
                 let imageUrl = "\(baseUrl)\(keyword)/\(thumbUrl)"
-                let stickerType = StickerType(imageUrl: imageUrl, stickers: stickers)
+                let stickerType = StickerType(id: keyword, imageUrl: imageUrl, stickers: stickers)
                 
                 stickerTypes.append(stickerType)
             }

@@ -16,15 +16,21 @@ protocol StickerMenuControllerDelegate: class {
     ///  - transformations: transformations to be applied to the image view
     ///  - location: initial position of the image view in its parent view
     ///  - size: image view size
-    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    
+    /// Callback for when a sticker type is selected
+    ///
+    /// - Parameter stickerType: the selected sticker type
+    func didSelectStickerType(_ stickerType: StickerType)
 }
 
 /// A view controller that contains the sticker main collection and the sticker type collection
 final class StickerMenuController: UIViewController, StickerCollectionControllerDelegate, StickerTypeCollectionControllerDelegate {
     
-    private let stickerProvider: StickerProvider?
     weak var delegate: StickerMenuControllerDelegate?
+    
     private lazy var stickerMenuView: StickerMenuView = StickerMenuView()
+    private let stickerProvider: StickerProvider?
     
     private lazy var stickerCollectionController: StickerCollectionController = {
         let controller = StickerCollectionController()
@@ -73,8 +79,8 @@ final class StickerMenuController: UIViewController, StickerCollectionController
         
     // MARK: - StickerCollectionControllerDelegate
     
-    func didSelectSticker(sticker: UIImage, with size: CGSize) {
-        let imageView = StylableImageView(image: sticker)
+    func didSelectSticker(id: String, image: UIImage, with size: CGSize) {
+        let imageView = StylableImageView(id: id, image: image)
         delegate?.didSelectSticker(imageView: imageView, transformations: ViewTransformations(),
                                    location: UIScreen.main.bounds.center, size: size)
     }
@@ -82,6 +88,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     // MARK: - StickerTypeCollectionControllerDelegate
     
     func didSelectStickerType(_ stickerType: StickerType) {
+        delegate?.didSelectStickerType(stickerType)
         stickerCollectionController.setType(stickerType)
     }
 }

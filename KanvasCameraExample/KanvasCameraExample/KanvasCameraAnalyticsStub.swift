@@ -213,6 +213,34 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     public func logIconPresentedOnDashboard() {
         logString(string: "logIconPresentedOnDashboard")
     }
+    
+    public func logEditorMediaDrawerOpen() {
+        logString(string: "logEditorMediaDrawerOpen")
+    }
+    
+    public func logEditorMediaDrawerClosed() {
+        logString(string: "logEditorMediaDrawerClosed")
+    }
+    
+    public func logEditorMediaDrawerSelectStickers() {
+        logString(string: "logEditorMediaDrawerSelectStickers")
+    }
+    
+    public func logEditorStickerPackSelect(stickerPackId: String) {
+        logString(string: "logEditorStickerPackSelect stickerPackId: \(stickerPackId)")
+    }
+    
+    public func logEditorStickerAdd(stickerId: String) {
+        logString(string: "logEditorStickerAdd stickerId: \(stickerId)")
+    }
+    
+    public func logEditorStickerRemove(stickerId: String) {
+        logString(string: "logEditorStickerRemove stickerId: \(stickerId)")
+    }
+    
+    public func logEditorStickerMove(stickerId: String) {
+        logString(string: "logEditorStickerMove stickerId: \(stickerId)")
+    }
 
     func logString(string: String) {
         NSLog("\(self): \(string)")

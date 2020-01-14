@@ -25,7 +25,7 @@ final class StylableImageViewTests: FBSnapshotTestCase {
     
     func testImageViewWithExampleImage() {
         let view = newView()
-        let imageView = StylableImageView(image: KanvasCameraImages.gradientImage)
+        let imageView = StylableImageView(id: "id", image: KanvasCameraImages.gradientImage)
         imageView.add(into: view)
         FBSnapshotVerifyView(imageView)
     }

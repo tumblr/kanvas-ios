@@ -10,12 +10,14 @@ import UIKit
 /// A representation of a sticker type in the media drawer
 public struct StickerType: Equatable {
     
+    let id: String
     let imageUrl: String
     let stickers: [Sticker]
     
     // MARK: - Initializers
     
-    public init(imageUrl: String, stickers: [Sticker]) {
+    public init(id: String, imageUrl: String, stickers: [Sticker]) {
+        self.id = id
         self.imageUrl = imageUrl
         self.stickers = stickers
     }

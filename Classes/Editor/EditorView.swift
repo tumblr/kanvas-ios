@@ -20,6 +20,12 @@ protocol EditorViewDelegate: class {
     /// A function that is called when the save button is pressed
     func didTapSaveButton()
     func didTapPostOptionsButton()
+    /// Called when a touch event on a movable view begins
+    func didBeginTouchesOnText()
+    /// Called when the touch events on a movable view end
+    func didEndTouchesOnText()
+    /// A function that is called when the tag button is pressed
+    func didTapTagButton()
     /// A function that is called when a movable text is pressed
     func didTapText(options: TextOptions, transformations: ViewTransformations)
     /// Called when text is moved
@@ -27,15 +33,13 @@ protocol EditorViewDelegate: class {
     /// Called when text is removed
     func didRemoveText()
     /// Called when an image is moved
-    func didMoveImage()
+    ///
+    ///  - Parameter imageView:the image view that was moved
+    func didMoveImage(_ imageView: StylableImageView)
     /// Called when an image is removed
-    func didRemoveImage()
-    /// Called when a touch event on a movable view begins
-    func didBeginTouchesOnText()
-    /// Called when the touch events on a movable view end
-    func didEndTouchesOnText()
-    /// A function that is called when the tag button is pressed
-    func didTapTagButton()
+    ///
+    ///  - Parameter imageView:the image view that was removed
+    func didRemoveImage(_ imageView: StylableImageView)
 }
 
 /// Constants for EditorView
@@ -527,12 +531,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         delegate?.didMoveText()
     }
     
-    func didRemoveImage() {
-        delegate?.didRemoveImage()
+    func didRemoveImage(_ imageView: StylableImageView) {
+        delegate?.didRemoveImage(imageView)
     }
     
-    func didMoveImage() {
-        delegate?.didMoveImage()
+    func didMoveImage(_ imageView: StylableImageView) {
+        delegate?.didMoveImage(imageView)
     }
     
     func didBeginTouchesOnMovableView() {

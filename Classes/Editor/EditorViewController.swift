@@ -267,12 +267,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         analyticsProvider?.logEditorTextRemove()
     }
     
-    func didMoveImage() {
-        // TODO: Add analytics (https://jira.tumblr.net/browse/KANVAS-880)
+    func didMoveImage(_ imageView: StylableImageView) {
+        analyticsProvider?.logEditorStickerMove(stickerId: imageView.id)
     }
     
-    func didRemoveImage() {
-        // TODO: Add analytics (https://jira.tumblr.net/browse/KANVAS-880)
+    func didRemoveImage(_ imageView: StylableImageView) {
+        analyticsProvider?.logEditorStickerRemove(stickerId: imageView.id)
     }
 
     func didTapTagButton() {
@@ -391,7 +391,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
         case .media:
-            break
+            analyticsProvider?.logEditorMediaDrawerClosed()
         }
         
         collectionController.showView(true)
@@ -423,6 +423,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.drawingController.showConfirmButton(true)
             })
         case .media:
+            analyticsProvider?.logEditorMediaDrawerOpen()
             openMediaDrawer()
         }
     }
@@ -551,12 +552,21 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - MediaDrawerControllerDelegate
     
+    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
+        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+    }
+    
+    func didSelectStickerType(_ stickerType: StickerType) {
+        analyticsProvider?.logEditorStickerPackSelect(stickerPackId: stickerType.id)
+    }
+    
     func didDismissMediaDrawer() {
         confirmMenuButtonPressed()
     }
     
-    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
-        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+    func didSelectStickersTab() {
+        analyticsProvider?.logEditorMediaDrawerSelectStickers()
     }
     
     // MARK: - Media Drawer

@@ -157,12 +157,15 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        sessionQueue.sync {
-            self.createCaptureSession()
-        }
-        sessionQueue.async {
-            self.configureSession()
-            self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+        let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
+        if hasFullAccess {
+            sessionQueue.sync {
+                self.createCaptureSession()
+            }
+            sessionQueue.async {
+                self.configureSession()
+                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+            }
         }
         setupGestures()
 
@@ -191,20 +194,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         self.setupFilteredPreview()
-        self.setupPreviewBlur()
-        self.sessionQueue.async {
-            if self.captureSession == nil {
-                self.createCaptureSession()
-                self.configureSession()
-                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
-            }
-            self.captureSession?.startRunning()
-            performUIUpdate {
-                UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
-                    self.previewBlurView.effect = nil
-                }
-            }
-        }
+        setupCaptureSession()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -217,6 +207,26 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         filteredInputViewControllerInstance?.reset()
         previewBlurView.effect = CameraInputController.blurEffect()
+    }
+
+    func setupCaptureSession() {
+        self.setupPreviewBlur()
+        let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
+        self.sessionQueue.async {
+            if hasFullAccess {
+                if self.captureSession == nil {
+                    self.createCaptureSession()
+                    self.configureSession()
+                }
+                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+                self.captureSession?.startRunning()
+            }
+            performUIUpdate {
+                UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
+                    self.previewBlurView.effect = nil
+                }
+            }
+        }
     }
 
     func cleanup() {

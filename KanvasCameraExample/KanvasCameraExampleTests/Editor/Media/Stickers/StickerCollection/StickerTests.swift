@@ -13,8 +13,9 @@ import XCTest
 final class StickerTests: XCTestCase {
     
     func testStickers() {
+        let id = "id"
         let url = "imageUrl"
-        let sticker = Sticker(imageUrl: url)
+        let sticker = Sticker(id: id, imageUrl: url)
         XCTAssertEqual(sticker.imageUrl, url, "URL does not match")
     }
 }
