@@ -11,7 +11,7 @@ protocol ScrollHandlerDelegate: class {
     func indexPathAtSelectionCircle() -> IndexPath?
     func calculateDistanceFromSelectionCircle(cell: FilterCollectionCell) -> CGFloat
     func selectFilter(index: Int, animated: Bool)
-    func scrollToOptionAt(_ index: Int, animated: Bool)
+    func scrollToOption(at index: Int, animated: Bool)
 }
 
 final class ScrollHandler {
@@ -52,7 +52,7 @@ final class ScrollHandler {
         guard let delegate = delegate else { return }
         if velocity.x == 0 {
             if let indexPath = delegate.indexPathAtSelectionCircle() {
-                delegate.scrollToOptionAt(indexPath.item, animated: true)
+                delegate.scrollToOption(at: indexPath.item, animated: true)
             }
         }
         else {
@@ -71,15 +71,6 @@ final class ScrollHandler {
             changeSize(indexPath)
             resetSize(for: indexPath.previous())
             resetSize(for: indexPath.next())
-        }
-    }
-    
-    // When the collection is decelerating, but the user taps a cell to stop,
-    // the collection needs to set a cell inside the selection circle.
-    func collectionTapped() {
-        guard let delegate = delegate else { return }
-        if let indexPath = delegate.indexPathAtSelectionCircle() {
-            delegate.scrollToOptionAt(indexPath.item, animated: true)
         }
     }
 }
