@@ -47,8 +47,9 @@ protocol DrawingControllerDelegate: class {
 }
 
 /// Constants for Drawing Controller
-private struct DrawingControllerConstants {
+private struct Constants {
     static let animationDuration: TimeInterval = 0.25
+    static let defaultColor: UIColor = .tumblrBrightBlue
 }
 
 private enum DrawingMode {
@@ -132,11 +133,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         self.analyticsProvider = analyticsProvider
 
         drawingCollection = []
-        drawingColor = .tumblrBrightBlue
+        drawingColor = Constants.defaultColor
         mode = .draw
         lastDrawingPoint = .zero
         
         super.init(nibName: .none, bundle: .none)
+        setEyeDropperColor(Constants.defaultColor)
+        setStrokeCircleColor(Constants.defaultColor)
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -326,7 +329,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     ///
     /// - Parameter show: true to show, false to hide
     private func showDrawingLayer(_ show: Bool) {
-        UIView.animate(withDuration: DrawingControllerConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.drawingLayer?.opacity = show ? 1 : 0
         }
     }
@@ -540,7 +543,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: DrawingControllerConstants.animationDuration, animations: {
+        UIView.animate(withDuration: Constants.animationDuration, animations: {
             self.drawingView.alpha = show ? 1 : 0
         }, completion: { _ in
             if show && self.delegate?.editorShouldShowStrokeSelectorAnimation() == true {

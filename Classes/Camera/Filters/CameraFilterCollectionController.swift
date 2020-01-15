@@ -25,9 +25,9 @@ protocol CameraFilterCollectionControllerDelegate: class {
 }
 
 /// Constants for Collection Controller
-private struct CameraFilterCollectionControllerConstants {
+private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let initialCell: Int = 0
+    static let initialIndex: Int = 0
     static let section: Int = 0
 }
 
@@ -38,6 +38,7 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     private var filterItems: [FilterItem]
     private var selectedIndexPath: IndexPath
     private var scrollHandler: ScrollHandler?
+    private var unselectedCells: [CameraFilterCollectionCell] = []
     
     weak var delegate: CameraFilterCollectionControllerDelegate?
     
@@ -64,7 +65,8 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
                 FilterItem(type: .toon),
             ])
         }
-        selectedIndexPath = IndexPath(item: CameraFilterCollectionControllerConstants.initialCell, section: CameraFilterCollectionControllerConstants.section)
+        
+        selectedIndexPath = IndexPath(item: Constants.initialIndex, section: Constants.section)
         super.init(nibName: .none, bundle: .none)
         
         scrollHandler = ScrollHandler(collectionView: filterCollectionView.collectionView, cellWidth: CameraFilterCollectionCell.width, cellHeight: CameraFilterCollectionCell.minimumHeight)
@@ -93,24 +95,18 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         filterCollectionView.collectionView.delegate = self
         filterCollectionView.collectionView.dataSource = self
         setUpView()
-        setUpRecognizers()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollToOptionAt(CameraFilterCollectionControllerConstants.initialCell, animated: false)
+        scrollToOption(at: Constants.initialIndex, animated: false)
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
-        scrollHandler?.changeSize(IndexPath(item: CameraFilterCollectionControllerConstants.initialCell, section: CameraFilterCollectionControllerConstants.section))
+        scrollHandler?.changeSize(IndexPath(item: Constants.initialIndex, section: Constants.section))
     }
     
     private func setUpView() {
         filterCollectionView.alpha = 0
-    }
-    
-    private func setUpRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(collectionTapped))
-        filterCollectionView.collectionView.addGestureRecognizer(tapRecognizer)
     }
     
     // MARK: - Public interface
@@ -126,7 +122,7 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: CameraFilterCollectionControllerConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.filterCollectionView.alpha = show ? 1 : 0
         }
     }
@@ -135,8 +131,14 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     ///
     /// - Parameter isRecording: if the UI should reflect that the user is currently recording
     func updateUI(forRecording isRecording: Bool) {
-        filterCollectionView.collectionView.isUserInteractionEnabled = !isRecording
-        showUnselectedFilters(!isRecording)
+        if isRecording {
+            filterCollectionView.collectionView.isUserInteractionEnabled = false
+            hideUnselectedFilters()
+        }
+        else {
+            filterCollectionView.collectionView.isUserInteractionEnabled = true
+            showUnselectedFilters()
+        }
     }
     
     /// Returns the collection of filter items
@@ -193,11 +195,16 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     
     // MARK: - Scrolling
     
-    func scrollToOptionAt(_ index: Int, animated: Bool = true) {
+    func scrollToOption(at index: Int, animated: Bool = true) {
         guard filterCollectionView.collectionView.numberOfItems(inSection: 0) > index else { return }
-        let indexPath = IndexPath(item: index, section: CameraFilterCollectionControllerConstants.section)
+        let indexPath = IndexPath(item: index, section: Constants.section)
         filterCollectionView.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         selectFilter(index: indexPath.item, animated: animated)
+    }
+    
+    func scrollTo(_ cell: FilterCollectionCell, animated: Bool = true) {
+        guard let indexPath = filterCollectionView.collectionView.indexPath(for: cell) else { return }
+        scrollToOption(at: indexPath.item, animated: animated)
     }
     
     func indexPathAtSelectionCircle() -> IndexPath? {
@@ -207,7 +214,8 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         return filterCollectionView.collectionView.indexPathForItem(at: point)
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint,
+                                   targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         scrollHandler?.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
     }
     
@@ -215,26 +223,28 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         scrollHandler?.scrollViewDidScroll(scrollView)
     }
     
-    @objc func collectionTapped() {
-        scrollHandler?.collectionTapped()
-    }
-    
     // MARK: - Unselected filters
     
-    /// Shows or hides the unselected filters
-    ///
-    /// - Parameter show: true to show, false to hide
-    private func showUnselectedFilters(_ show: Bool) {
-        let unselectedCells = getUnselectedCells()
+    /// Hides the unselected filters
+    private func hideUnselectedFilters() {
+        unselectedCells = findUnselectedCells()
         unselectedCells.forEach { cell in
-            cell.show(show)
+            cell.show(false)
         }
+    }
+    
+    /// Shows the unselected filters
+    private func showUnselectedFilters() {
+        unselectedCells.forEach { cell in
+            cell.show(true)
+        }
+        unselectedCells = []
     }
     
     /// Gets all the visible cells that are not inside the shutter button
     ///
     /// - Returns: the collection of unselected cells
-    private func getUnselectedCells() -> [CameraFilterCollectionCell] {
+    private func findUnselectedCells() -> [CameraFilterCollectionCell] {
         let collectionView = filterCollectionView.collectionView
         guard let visibleCells = collectionView.visibleCells as? [CameraFilterCollectionCell] else { return [] }
         let unselectedCells = visibleCells.filter { cell in
@@ -250,7 +260,7 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
     ///
     /// - Parameter index: position of the filter in the collection
     func selectFilter(index: Int, animated: Bool) {
-        selectedIndexPath = IndexPath(item: index, section: CameraFilterCollectionControllerConstants.section)
+        selectedIndexPath = IndexPath(item: index, section: Constants.section)
         delegate?.didSelectFilter(filterItems[index], animated: animated)
     }
     
@@ -285,14 +295,37 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         if isSelectedCell(cell) {
             delegate?.didTapSelectedFilter(recognizer: recognizer)
         }
-        else if let indexPath = filterCollectionView.collectionView.indexPath(for: cell) {
-            scrollToOptionAt(indexPath.item)
-        }
+
+        scrollTo(cell)
     }
     
     func didLongPress(cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
         if isSelectedCell(cell) {
-            delegate?.didLongPressSelectedFilter(recognizer: recognizer)
+            didLongPressSelectedCell(cell, recognizer: recognizer)
         }
+        else {
+            didLongPressUnselectedCell(cell, recognizer: recognizer)
+        }
+    }
+    
+    /// Called when the cell inside the shutter button is long pressed
+    ///
+    /// - Parameter cell: the cell being long pressed
+    /// - Parameter recognizer: the long press gesture recognizer
+    private func didLongPressSelectedCell(_ cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
+        if recognizer.state == .began {
+            scrollTo(cell)
+        }
+        
+        delegate?.didLongPressSelectedFilter(recognizer: recognizer)
+    }
+    
+    /// Called when a cell outside the shutter button is long pressed
+    ///
+    /// - Parameter cell: the cell being long pressed
+    /// - Parameter recognizer: the long press gesture recognizer
+    private func didLongPressUnselectedCell(_ cell: FilterCollectionCell, recognizer: UILongPressGestureRecognizer) {
+        guard let indexPath = indexPathAtSelectionCircle(), recognizer.state == .ended else { return }
+        scrollToOption(at: indexPath.item)
     }
 }
