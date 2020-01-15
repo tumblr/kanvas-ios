@@ -40,9 +40,6 @@ public protocol KanvasDashboardStateDelegate: class {
     /// The EventBuffering for Kanvas Dashboard to use
     var kanvasDashboardAnalyticsProvider: KanvasCameraAnalyticsProvider { get }
 
-    /// The blog UUID for Kanvas Dashboard to post to
-    var kanvasDashboardBlogUUID: String? { get }
-
     var kanvasDashboardUnloadStrategy: KanvasDashboardController.UnloadStrategy { get }
 }
 

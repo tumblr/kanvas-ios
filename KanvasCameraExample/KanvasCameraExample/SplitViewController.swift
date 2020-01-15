@@ -157,10 +157,6 @@ extension SplitViewController: KanvasDashboardStateDelegate {
         return KanvasCameraAnalyticsStub()
     }
 
-    var kanvasDashboardBlogUUID: String? {
-        return nil
-    }
-
     var kanvasDashboardUnloadStrategy: KanvasDashboardController.UnloadStrategy {
         return .never
     }
