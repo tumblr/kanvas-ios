@@ -404,7 +404,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         onAfterConfirmingEditionMenu()
     }
     
-    /// Called after an edition menu was confirmed
+    /// Called to reset the editor state after confirming an edition menu
     private func onAfterConfirmingEditionMenu() {
         openedMenu = nil
         selectedCell = nil
@@ -442,14 +442,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         }
     }
     
-    /// Prepares the editor to show an edition menu that will appear in the form of a drawer
-    ///
-    /// - Parameter editionOption: the selected edition option
-    private func onBeforeShowingDrawerMenu(_ editionOption: EditionOption) {
-        openedMenu = editionOption
-    }
-    
-    /// Prepares the editor to show an edition menu that will replace the main UI
+    /// Prepares the editor state to show an edition menu
     ///
     /// - Parameters
     ///  - editionOption: the selected edition option
