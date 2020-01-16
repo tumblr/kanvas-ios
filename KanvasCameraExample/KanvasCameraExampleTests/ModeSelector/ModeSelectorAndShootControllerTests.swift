@@ -111,7 +111,7 @@ final class ModeSelectorAndShootDelegateStub: ModeSelectorAndShootControllerDele
         // Works on every mode
     }
 
-    func didTapMediaPickerButton() {
+    func didTapMediaPickerButton(completion: (() -> ())? = nil) {
         // Works on every mode
     }
 

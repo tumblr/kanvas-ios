@@ -27,13 +27,17 @@ protocol MovableViewDelegate: class {
     func didMoveTextView()
     
     /// Callback for when a movable view with an image is moved
-    func didMoveImageView()
+    ///
+    /// - Parameter imageView: the image view that was moved
+    func didMoveImageView(_ imageView: StylableImageView)
     
     /// Callback for when a movable view with text is removed
     func didRemoveTextView()
     
     /// Callback for when a movable view with an image is removed
-    func didRemoveImageView()
+    ///
+    /// - Parameter imageView: the image view that was removed
+    func didRemoveImageView(_ imageView: StylableImageView)
 }
 
 /// Constants for MovableTextView
@@ -167,8 +171,8 @@ final class MovableView: UIView {
         if let _ = innerView as? StylableTextView {
             delegate?.didMoveTextView()
         }
-        else if let _ = innerView as? StylableImageView {
-            delegate?.didMoveImageView()
+        else if let imageView = innerView as? StylableImageView {
+            delegate?.didMoveImageView(imageView)
         }
     }
     
@@ -177,8 +181,8 @@ final class MovableView: UIView {
         if let _ = innerView as? StylableTextView {
             delegate?.didRemoveTextView()
         }
-        else if let _ = innerView as? StylableImageView {
-            delegate?.didRemoveImageView()
+        else if let imageView = innerView as? StylableImageView {
+            delegate?.didRemoveImageView(imageView)
         }
     }
 }

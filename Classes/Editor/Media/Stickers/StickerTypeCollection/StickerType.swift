@@ -7,22 +7,24 @@
 import Foundation
 import UIKit
 
-/// A representation for a sticker type to be presented in the sticker type collection
+/// A representation of a sticker type in the media drawer
 public struct StickerType: Equatable {
     
-    public let baseUrl: String
-    public let keyword: String
-    public let thumbUrl: String
-    public let count: Int
+    let id: String
+    let imageUrl: String
+    let stickers: [Sticker]
     
-    public var imageUrl: String {
-        return "\(baseUrl)\(keyword)/\(thumbUrl)"
+    // MARK: - Initializers
+    
+    public init(id: String, imageUrl: String, stickers: [Sticker]) {
+        self.id = id
+        self.imageUrl = imageUrl
+        self.stickers = stickers
     }
     
-    public init(baseUrl: String, keyword: String, thumbUrl: String, count: Int) {
-        self.baseUrl = baseUrl
-        self.keyword = keyword
-        self.thumbUrl = thumbUrl
-        self.count = count
+    // MARK: - Equatable
+    
+    public static func == (lhs: StickerType, rhs: StickerType) -> Bool {
+        return lhs.imageUrl == rhs.imageUrl
     }
 }

@@ -79,7 +79,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }()
     
     private lazy var mediaDrawerController: MediaDrawerController = {
-        let controller = MediaDrawerController(stickerProviderClass: self.stickerProviderClass)
+        let controller = MediaDrawerController(stickerProvider: self.stickerProvider)
         controller.delegate = self
         return controller
     }()
@@ -91,7 +91,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let exporterClass: MediaExporting.Type
-    private let stickerProviderClass: StickerProvider.Type
+    private let stickerProvider: StickerProvider?
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
@@ -124,14 +124,16 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, stickerProviderClass: StickerProvider.Type, cameraMode: CameraMode?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    ///   - stickerProvider: Class that will provide the stickers in the editor.
+    ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
-        self.stickerProviderClass = stickerProviderClass
+        self.stickerProvider = stickerProvider
 
         self.player = MediaPlayer(renderer: Renderer())
         super.init(nibName: .none, bundle: .none)
@@ -253,12 +255,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         analyticsProvider?.logEditorTextRemove()
     }
     
-    func didMoveImage() {
-        // TODO: Add analytics (https://jira.tumblr.net/browse/KANVAS-880)
+    func didMoveImage(_ imageView: StylableImageView) {
+        analyticsProvider?.logEditorStickerMove(stickerId: imageView.id)
     }
     
-    func didRemoveImage() {
-        // TODO: Add analytics (https://jira.tumblr.net/browse/KANVAS-880)
+    func didRemoveImage(_ imageView: StylableImageView) {
+        analyticsProvider?.logEditorStickerRemove(stickerId: imageView.id)
     }
 
     func didTapTagButton() {
@@ -377,7 +379,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
         case .media:
-            break
+            analyticsProvider?.logEditorMediaDrawerClosed()
         }
         
         collectionController.showView(true)
@@ -409,6 +411,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.drawingController.showConfirmButton(true)
             })
         case .media:
+            analyticsProvider?.logEditorMediaDrawerOpen()
             openMediaDrawer()
         }
     }
@@ -537,12 +540,21 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - MediaDrawerControllerDelegate
     
+    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
+        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+    }
+    
+    func didSelectStickerType(_ stickerType: StickerType) {
+        analyticsProvider?.logEditorStickerPackSelect(stickerPackId: stickerType.id)
+    }
+    
     func didDismissMediaDrawer() {
         confirmMenuButtonPressed()
     }
     
-    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
-        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+    func didSelectStickersTab() {
+        analyticsProvider?.logEditorMediaDrawerSelectStickers()
     }
     
     // MARK: - Media Drawer

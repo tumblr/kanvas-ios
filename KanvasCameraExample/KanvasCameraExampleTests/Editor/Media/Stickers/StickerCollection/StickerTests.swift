@@ -12,12 +12,10 @@ import XCTest
 
 final class StickerTests: XCTestCase {
     
-    func testSticker() {
-        let imageUrl = "https://d1d7t1ygvx8siu.cloudfront.net/SDK-Assets/stamps.tistheseason/01.jpg"
-        let sticker = Sticker(baseUrl: "https://d1d7t1ygvx8siu.cloudfront.net/SDK-Assets/",
-                              keyword: "stamps.tistheseason",
-                              number: 1,
-                              imageExtension: "jpg")
-        XCTAssertEqual(sticker.imageUrl, imageUrl, "Image URL does not match")
+    func testStickers() {
+        let id = "id"
+        let url = "imageUrl"
+        let sticker = Sticker(id: id, imageUrl: url)
+        XCTAssertEqual(sticker.imageUrl, url, "URL does not match")
     }
 }

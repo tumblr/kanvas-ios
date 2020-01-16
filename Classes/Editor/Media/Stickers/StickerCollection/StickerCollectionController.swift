@@ -12,9 +12,10 @@ protocol StickerCollectionControllerDelegate: class {
     /// Callback for when a sticker is selected
     /// 
     /// - Parameters
+    ///  - id: the sticker id
     ///  - image: the sticker image
     ///  - size: image view size
-    func didSelectSticker(sticker: UIImage, with size: CGSize)
+    func didSelectSticker(id: String, image: UIImage, with size: CGSize)
 }
 
 /// Constants for StickerCollectionController
@@ -28,27 +29,9 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     weak var delegate: StickerCollectionControllerDelegate?
     
     private lazy var stickerCollectionView = StickerCollectionView()
-    private let stickerProvider: StickerProvider
     private var stickerType: StickerType? = nil
     private var stickers: [Sticker] = []
     private var cellSizes: [CGSize] = []
-    
-    // MARK: - Initializers
-    
-    init(stickerProviderClass: StickerProvider.Type) {
-        self.stickerProvider = stickerProviderClass.init()
-        super.init(nibName: .none, bundle: .none)
-    }
-    
-    @available(*, unavailable, message: "use init() instead")
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @available(*, unavailable, message: "use init() instead")
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        fatalError("init(nibName:bundle:) has not been implemented")
-    }
     
     // MARK: - View Life Cycle
     
@@ -66,14 +49,14 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
 
     // MARK: - Public interface
     
-    /// Loads a new collection for a new sticker type
+    /// Loads a new collection of stickers for a selected sticker type
     ///
-    /// - Parameter stickerType: the new sticker type
+    /// - Parameter stickerType: the selected sticker type
     func setType(_ stickerType: StickerType) {
         self.stickerType = stickerType
-        stickers = stickerProvider.getStickers(for: stickerType)
+        stickers = stickerType.stickers
         resetCellSizes()
-        stickerCollectionView.collectionView.setContentOffset(.zero, animated: false)
+        scrollToTop()
         stickerCollectionView.collectionView.reloadData()
     }
     
@@ -82,6 +65,12 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     private func resetCellSizes() {
         let cellWidth = stickerCollectionView.collectionViewLayout.itemWidth
         cellSizes = .init(repeating: CGSize(width: cellWidth, height: cellWidth), count: stickers.count)
+    }
+    
+    private func scrollToTop() {
+        let indexPath = IndexPath(item: 0, section: 0)
+        guard let _ = stickerCollectionView.collectionView.cellForItem(at: indexPath) else { return }
+        stickerCollectionView.collectionView.scrollToItem(at: indexPath, at: .top, animated: false)
     }
     
     // MARK: - StaggeredGridLayoutDelegate
@@ -112,8 +101,8 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
         
     // MARK: - StickerCollectionCellDelegate
     
-    func didSelect(sticker: UIImage, with size: CGSize) {
-        delegate?.didSelectSticker(sticker: sticker, with: size)
+    func didSelect(id: String, image: UIImage, with size: CGSize) {
+        delegate?.didSelectSticker(id: id, image: image, with: size)
     }
     
     func didLoadImage(index: Int, type: StickerType, image: UIImage) {

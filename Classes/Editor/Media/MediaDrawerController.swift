@@ -16,10 +16,18 @@ protocol MediaDrawerControllerDelegate: class {
     ///  - transformations: transformations to be applied to the image view
     ///  - location: initial position of the image view in its parent view
     ///  - size: image view size
-    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    
+    /// Callback for when a sticker type is selected
+    ///
+    /// - Parameter stickerType: the selected sticker type
+    func didSelectStickerType(_ stickerType: StickerType)
     
     /// Callback for when the media drawer is dismissed
     func didDismissMediaDrawer()
+    
+    /// Callback for when the stickers tab is selected
+    func didSelectStickersTab()
 }
 
 /// A view controller that contains the media drawer in text tools
@@ -28,7 +36,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     weak var delegate: MediaDrawerControllerDelegate?
     
     private var openedMenu: UIViewController?
-    private let stickerProviderClass: StickerProvider.Type
+    private let stickerProvider: StickerProvider?
     
     private lazy var drawerTabBarController: DrawerTabBarController = {
         let controller = DrawerTabBarController()
@@ -37,7 +45,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     }()
     
     private lazy var stickerMenuController: StickerMenuController = {
-        let controller = StickerMenuController(stickerProviderClass: self.stickerProviderClass)
+        let controller = StickerMenuController(stickerProvider: stickerProvider)
         controller.delegate = self
         return controller
     }()
@@ -46,8 +54,12 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     // MARK: - Initializers
     
-    init(stickerProviderClass: StickerProvider.Type) {
-        self.stickerProviderClass = stickerProviderClass
+    /// The designated initializer for the media drawer controller
+    ///
+    /// - Parameters
+    ///     - stickerProvider: Class that will provide the stickers in the stickers tab.
+    init(stickerProvider: StickerProvider?) {
+        self.stickerProvider = stickerProvider
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -86,6 +98,7 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
         
         switch option {
         case .stickers:
+            delegate?.didSelectStickersTab()
             newMenu = stickerMenuController
         }
         
@@ -96,8 +109,12 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     // MARK: - StickerMenuControllerDelegate
     
-    func didSelectSticker(imageView: UIImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         delegate?.didSelectSticker(imageView: imageView, transformations: transformations, location: location, size: size)
         dismiss(animated: true, completion: nil)
+    }
+    
+    func didSelectStickerType(_ stickerType: StickerType) {
+        delegate?.didSelectStickerType(stickerType)
     }
 }

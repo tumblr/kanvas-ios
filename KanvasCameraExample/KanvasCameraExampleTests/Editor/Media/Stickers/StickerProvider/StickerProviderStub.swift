@@ -8,12 +8,11 @@ import KanvasCamera
 import Foundation
 
 final class StickerProviderStub: StickerProvider {
-    
-    func getStickerTypes() -> [StickerType] {
-        return []
+    func getStickerTypes() {
+        
     }
     
-    func getStickers(for stickerType: StickerType) -> [Sticker] {
-        return []
+    func setDelegate(delegate: StickerProviderDelegate) {
+        
     }
 }
