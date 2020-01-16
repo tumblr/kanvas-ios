@@ -48,7 +48,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
-                                    showTagButton: settings.showTagButtonInEditor)
+                                    showTagButton: settings.showTagButtonInEditor,
+                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinater)
         editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
@@ -86,6 +87,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
 
+    private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
     private let segments: [CameraSegment]
@@ -126,7 +128,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - cameraMode: The camera mode that the preview was coming from, if any
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
@@ -134,6 +136,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
         self.stickerProvider = stickerProvider
+        self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
         self.player = MediaPlayer(renderer: Renderer())
         super.init(nibName: .none, bundle: .none)

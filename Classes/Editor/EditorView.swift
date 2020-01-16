@@ -57,6 +57,7 @@ private struct EditorViewConstants {
     static let saveButtonHorizontalMargin: CGFloat = 20
     static let fakeOptionCellMinSize: CGFloat = 36
     static let fakeOptionCellMaxSize: CGFloat = 45
+    static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -88,12 +89,17 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     let textMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
     let drawingCanvas = IgnoreTouchesView()
+    private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     
     lazy var movableViewCanvas: MovableViewCanvas = {
         let canvas = MovableViewCanvas()
         canvas.delegate = self
         return canvas
     }()
+
+    var avatarView: UIView? {
+        return quickBlogSelectorCoordinator?.avatarView(frame: EditorViewConstants.frame)
+    }
     
     weak var delegate: EditorViewDelegate?
     
@@ -102,11 +108,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool) {
+    init(mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
         self.showTagButton = showTagButton
         self.showCrossIcon = showCrossIcon
+        self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         super.init(frame: .zero)
         setupViews()
     }
@@ -302,11 +309,17 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         postButton.clipsToBounds = false
         postButton.layer.applyShadows()
         navigationContainer.addSubview(postButton)
-        postButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        if let avatarView = self.avatarView {
+            updatePostButton(avatarView: avatarView)
+        }
+        else {
+            postButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        }
         postButton.contentHorizontalAlignment = .fill
         postButton.contentVerticalAlignment = .fill
         postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
         postButton.translatesAutoresizingMaskIntoConstraints = false
+
         
         NSLayoutConstraint.activate([
             postButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
@@ -329,6 +342,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
             postLabel.centerXAnchor.constraint(equalTo: postButton.centerXAnchor),
             postLabel.topAnchor.constraint(equalTo: postButton.bottomAnchor, constant: EditorViewConstants.postButtonLabelMargin),
         ])
+
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(postButtonLongPressed(_:)))
+        longPressRecognizer.allowableMovement = 10.0
+        longPressRecognizer.minimumPressDuration = 0.4
+        postButton.addGestureRecognizer(longPressRecognizer)
     }
 
     func setupSaveButton() {
@@ -386,7 +404,28 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     @objc private func postButtonPressed() {
         delegate?.didTapPostButton()
     }
-    
+
+    @objc private func postButtonLongPressed(_ recognizer: UILongPressGestureRecognizer) {
+        guard let quickBlogSelectorCoordinator = quickBlogSelectorCoordinator else {
+            return
+        }
+        let state = recognizer.state
+        switch state {
+        case .began:
+            quickBlogSelectorCoordinator.present(presentingView: self, fromPoint: postButton.center)
+        case .ended, .cancelled, .failed:
+            quickBlogSelectorCoordinator.dismiss()
+            if let avatarView = self.avatarView {
+                updatePostButton(avatarView: avatarView)
+            }
+        case .changed:
+            let location = recognizer.location(in: self)
+            quickBlogSelectorCoordinator.touchDidMoveToPoint(location)
+        case .possible: break
+        @unknown default: break
+        }
+    }
+
     // MARK: - Public interface
     
     /// shows or hides the navigation container
@@ -492,6 +531,16 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.tagButton.alpha = show ? 1 : 0
         }
+    }
+
+    func updatePostButton(avatarView: UIView) {
+        postButton.addSubview(avatarView)
+        postButton.setImage(nil, for: .normal)
+        postButton.backgroundColor = .tumblrWhite65
+        postButton.clipsToBounds = true
+        postButton.layer.cornerRadius = EditorViewConstants.postButtonSize * 0.5
+        postButton.layer.borderColor = UIColor.tumblrWhite.cgColor
+        postButton.layer.borderWidth = CGFloat(2.0)
     }
     
     // MARK: - MovableViewCanvasDelegate

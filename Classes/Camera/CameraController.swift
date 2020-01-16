@@ -161,6 +161,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var lastMediaPickerFetchResult: PHFetchResult<PHAsset>?
     private var mediaPickerThumbnailQueue = DispatchQueue(label: "kanvas.mediaPickerThumbnailQueue")
     private var didRegisterForPhotoLibraryChanges: Bool = false
+    private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
 
     private weak var overlayViewController: UIViewController?
 
@@ -174,8 +175,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// and which should be the result of the interaction.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider)
+    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -196,7 +197,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
          segmentsHandlerClass: SegmentsHandlerType.Type,
          captureDeviceAuthorizer: CaptureDeviceAuthorizing,
          stickerProvider: StickerProvider?,
-         analyticsProvider: KanvasCameraAnalyticsProvider?) {
+         analyticsProvider: KanvasCameraAnalyticsProvider?,
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
@@ -205,6 +207,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.captureDeviceAuthorizer = captureDeviceAuthorizer
         self.stickerProvider = stickerProvider
         self.analyticsProvider = analyticsProvider
+        self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
@@ -317,7 +320,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     private func createEditorViewController(_ segments: [CameraSegment]) -> EditorViewController {
-        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, cameraMode: currentMode, stickerProvider: stickerProvider, analyticsProvider: analyticsProvider)
+        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, cameraMode: currentMode, stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator)
         controller.delegate = self
         return controller
     }
