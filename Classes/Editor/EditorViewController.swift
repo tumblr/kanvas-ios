@@ -253,7 +253,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         let cell = collectionController.textCell
-        onBeforeSelectingEditionOption(.text, cell: cell)
+        onBeforeShowingEditionMenu(.text, cell: cell)
         textController.showView(true, options: options, transformations: transformations)
         editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
             self.textController.showConfirmButton(true)
@@ -394,25 +394,30 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
         case .media:
-            analyticsProvider?.logEditorMediaDrawerClosed()
+            break
         }
         
         collectionController.showView(true)
         showConfirmButton(true)
         showCloseButton(true)
         showTagButton(true)
+        onAfterClosingMenu()
+    }
+    
+    private func onAfterClosingMenu() {
+        openedMenu = nil
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
-        onBeforeSelectingEditionOption(editionOption, cell: cell)
-        
         switch editionOption {
         case .filter:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
         case .text:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
@@ -420,6 +425,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.textController.showConfirmButton(true)
             })
         case .drawing:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
             editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: {
@@ -431,7 +437,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         }
     }
     
-    private func onBeforeSelectingEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
         selectedCell = cell
         openedMenu = editionOption
         collectionController.showView(false)
@@ -565,7 +571,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didDismissMediaDrawer() {
-        confirmMenuButtonPressed()
+        onAfterClosingMenu()
+        analyticsProvider?.logEditorMediaDrawerClosed()
     }
     
     func didSelectStickersTab() {
