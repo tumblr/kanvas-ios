@@ -317,9 +317,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         }
         postButton.contentHorizontalAlignment = .fill
         postButton.contentVerticalAlignment = .fill
-        postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
         postButton.translatesAutoresizingMaskIntoConstraints = false
 
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(postButtonPressed))
+        postButton.addGestureRecognizer(tapGestureRecognizer)
         
         NSLayoutConstraint.activate([
             postButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
@@ -401,16 +402,24 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
         delegate?.didTapSaveButton()
     }
 
-    @objc private func postButtonPressed() {
-        delegate?.didTapPostButton()
+    @objc private func postButtonPressed(_ recognizer: UITapGestureRecognizer) {
+        switch recognizer.state {
+        case .began: break
+        case .changed: break
+        case .ended:
+            delegate?.didTapPostButton()
+        case .cancelled: break
+        case .failed: break
+        case .possible: break
+        @unknown default: break
+        }
     }
 
     @objc private func postButtonLongPressed(_ recognizer: UILongPressGestureRecognizer) {
         guard let quickBlogSelectorCoordinator = quickBlogSelectorCoordinator else {
             return
         }
-        let state = recognizer.state
-        switch state {
+        switch recognizer.state {
         case .began:
             quickBlogSelectorCoordinator.present(presentingView: self, fromPoint: postButton.center)
         case .ended, .cancelled, .failed:
