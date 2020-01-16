@@ -436,7 +436,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.drawingController.showConfirmButton(true)
             })
         case .media:
-            onBeforeShowingEditionMenu(editionOption)
             analyticsProvider?.logEditorMediaDrawerOpen()
             openMediaDrawer()
         }
