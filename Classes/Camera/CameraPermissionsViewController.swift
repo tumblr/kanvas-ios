@@ -347,15 +347,14 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         case .notDetermined:
             captureDeviceAuthorizer.requestAccess(for: .video) { videoGranted in
                 performUIUpdate {
-                    self.setupViewFromAccess()
-                    self.delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
+                    self.setupViewFromAccessAndNotifyPermissionsChanged()
                 }
             }
         case .restricted, .denied:
             openAppSettings()
         case .authorized:
-            assertionFailure()
-            setupViewFromAccess()
+            assertionFailure("How was this button pressed if we're already authorized!?")
+            self.setupViewFromAccessAndNotifyPermissionsChanged()
         @unknown default:
             assertionFailure()
         }
@@ -366,15 +365,14 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         case .notDetermined:
             captureDeviceAuthorizer.requestAccess(for: .audio) { audioGranted in
                 performUIUpdate {
-                    self.setupViewFromAccess()
-                    self.delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
+                    self.setupViewFromAccessAndNotifyPermissionsChanged()
                 }
             }
         case .restricted, .denied:
             openAppSettings()
         case .authorized:
-            assertionFailure()
-            setupViewFromAccess()
+            assertionFailure("How was this button pressed if we're already authorized!?")
+            self.setupViewFromAccessAndNotifyPermissionsChanged()
         @unknown default:
             assertionFailure()
         }
@@ -414,6 +412,11 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     private func openAppSettings() {
         delegate?.openAppSettings(completion: nil)
+    }
+
+    private func setupViewFromAccessAndNotifyPermissionsChanged() {
+        setupViewFromAccess()
+        delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
     }
 
     private func setupViewFromAccess() {

@@ -41,7 +41,7 @@ protocol DrawingViewDelegate: class {
     
 }
 
-private struct DrawingViewConstants {
+private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     
     // Icon margins
@@ -71,8 +71,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     weak var delegate: DrawingViewDelegate?
     
-    static let horizontalSelectorPadding = DrawingViewConstants.horizontalSelectorPadding
-    static let verticalSelectorWidth = DrawingViewConstants.verticalSelectorWidth
+    static let horizontalSelectorPadding = Constants.horizontalSelectorPadding
+    static let verticalSelectorWidth = Constants.verticalSelectorWidth
     
     // Drawing views
     let drawingCanvas: DrawingCanvas
@@ -121,13 +121,13 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     init() {
         drawingCanvas = DrawingCanvas()
         temporalImageView = UIImageView()
-        topButtonContainer = ExtendedStackView(inset: DrawingViewConstants.stackViewInset)
+        topButtonContainer = ExtendedStackView(inset: Constants.stackViewInset)
         bottomPanelContainer = IgnoreTouchesView()
         bottomMenuContainer = IgnoreTouchesView()
         colorPickerContainer = IgnoreTouchesView()
-        confirmButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        undoButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
-        eraseButton = ExtendedButton(inset: DrawingViewConstants.stackViewInset)
+        confirmButton = ExtendedButton(inset: Constants.stackViewInset)
+        undoButton = ExtendedButton(inset: Constants.stackViewInset)
+        eraseButton = ExtendedButton(inset: Constants.stackViewInset)
         strokeSelectorContainer = IgnoreTouchesView()
         textureSelectorContainer = IgnoreTouchesView()
         closeColorPickerButton = CircularImageView()
@@ -235,13 +235,13 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         topButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topButtonContainer)
         
-        let topMargin = DrawingViewConstants.topMargin
-        let height = DrawingViewConstants.topButtonSize * 3 + DrawingViewConstants.topButtonSpacing * 2
+        let topMargin = Constants.topMargin
+        let height = Constants.topButtonSize * 3 + Constants.topButtonSpacing * 2
         NSLayoutConstraint.activate([
             topButtonContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topMargin),
-            topButtonContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -DrawingViewConstants.rightMargin),
+            topButtonContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
             topButtonContainer.heightAnchor.constraint(equalToConstant: height),
-            topButtonContainer.widthAnchor.constraint(equalToConstant: DrawingViewConstants.topButtonSize)
+            topButtonContainer.widthAnchor.constraint(equalToConstant: Constants.topButtonSize)
         ])
     }
     
@@ -250,7 +250,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         overlay.accessibilityIdentifier = "Editor Overlay"
         overlay.translatesAutoresizingMaskIntoConstraints = false
         overlay.clipsToBounds = true
-        overlay.backgroundColor = DrawingViewConstants.overlayColor
+        overlay.backgroundColor = Constants.overlayColor
         addSubview(overlay)
         
         NSLayoutConstraint.activate([
@@ -294,8 +294,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         NSLayoutConstraint.activate([
             bottomPanelContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             bottomPanelContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            bottomPanelContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -DrawingViewConstants.bottomMargin),
-            bottomPanelContainer.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
+            bottomPanelContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
+            bottomPanelContainer.heightAnchor.constraint(equalToConstant: Constants.verticalSelectorHeight),
         ])
     }
     
@@ -325,10 +325,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         bottomMenuContainer.addSubview(strokeSelectorContainer)
         
         NSLayoutConstraint.activate([
-            strokeSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: DrawingViewConstants.leftMargin),
+            strokeSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             strokeSelectorContainer.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
-            strokeSelectorContainer.heightAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorHeight),
-            strokeSelectorContainer.widthAnchor.constraint(equalToConstant: DrawingViewConstants.verticalSelectorWidth),
+            strokeSelectorContainer.heightAnchor.constraint(equalToConstant: Constants.verticalSelectorHeight),
+            strokeSelectorContainer.widthAnchor.constraint(equalToConstant: Constants.verticalSelectorWidth),
         ])
     }
     
@@ -341,7 +341,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         bottomMenuContainer.addSubview(textureSelectorContainer)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
-        let margin = DrawingViewConstants.leftMargin + cellSpace
+        let margin = Constants.leftMargin + cellSpace
         NSLayoutConstraint.activate([
             textureSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
             textureSelectorContainer.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
@@ -358,7 +358,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         bottomMenuContainer.addSubview(colorPickerButton)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
-        let margin = DrawingViewConstants.leftMargin + cellSpace * 2
+        let margin = Constants.leftMargin + cellSpace * 2
         NSLayoutConstraint.activate([
             colorPickerButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
             colorPickerButton.bottomAnchor.constraint(equalTo: bottomMenuContainer.bottomAnchor),
@@ -389,7 +389,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorPickerContainer.addSubview(closeColorPickerButton)
         
         NSLayoutConstraint.activate([
-            closeColorPickerButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: DrawingViewConstants.leftMargin),
+            closeColorPickerButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             closeColorPickerButton.bottomAnchor.constraint(equalTo: colorPickerContainer.bottomAnchor),
             closeColorPickerButton.heightAnchor.constraint(equalToConstant: CircularImageView.size),
             closeColorPickerButton.widthAnchor.constraint(equalToConstant: CircularImageView.size),
@@ -403,14 +403,12 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     /// Sets up the eye dropper button in the color picker menu
     private func setUpEyeDropper() {
         eyeDropperButton.image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
-        eyeDropperButton.tintColor = .white
         eyeDropperButton.contentMode = .center
-        eyeDropperButton.backgroundColor = .tumblrBrightBlue
         eyeDropperButton.accessibilityIdentifier = "Editor Eye Dropper Button"
         colorPickerContainer.addSubview(eyeDropperButton)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
-        let margin = DrawingViewConstants.leftMargin + cellSpace
+        let margin = Constants.leftMargin + cellSpace
         NSLayoutConstraint.activate([
             eyeDropperButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
             eyeDropperButton.bottomAnchor.constraint(equalTo: colorPickerContainer.bottomAnchor),
@@ -432,10 +430,10 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         colorPickerContainer.addSubview(colorPickerSelectorContainer)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
-        let margin = DrawingViewConstants.leftMargin + cellSpace * 2
+        let margin = Constants.leftMargin + cellSpace * 2
         NSLayoutConstraint.activate([
             colorPickerSelectorContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
-            colorPickerSelectorContainer.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -DrawingViewConstants.rightMargin),
+            colorPickerSelectorContainer.trailingAnchor.constraint(equalTo: colorPickerContainer.trailingAnchor, constant: -Constants.rightMargin),
             colorPickerSelectorContainer.bottomAnchor.constraint(equalTo: colorPickerContainer.bottomAnchor),
             colorPickerSelectorContainer.heightAnchor.constraint(equalToConstant: CircularImageView.size),
         ])
@@ -465,7 +463,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         bottomMenuContainer.addSubview(colorCollection)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2
-        let margin = DrawingViewConstants.leftMargin + cellSpace * 3 - CircularImageView.padding
+        let margin = Constants.leftMargin + cellSpace * 3 - CircularImageView.padding
         NSLayoutConstraint.activate([
             colorCollection.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: margin),
             colorCollection.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
@@ -519,7 +517,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     func changeEraseIcon(selected: Bool) {
         let image = selected ? KanvasCameraImages.eraserSelectedImage : KanvasCameraImages.eraserUnselectedImage
         
-        UIView.transition(with: eraseButton, duration: DrawingViewConstants.animationDuration, options: .transitionCrossDissolve, animations: {
+        UIView.transition(with: eraseButton, duration: Constants.animationDuration, options: .transitionCrossDissolve, animations: {
             self.eraseButton.setBackgroundImage(image, for: .normal)
         }, completion: nil)
     }
@@ -528,7 +526,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showBottomPanel(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.bottomPanelContainer.alpha = show ? 1 : 0
         }
     }
@@ -537,7 +535,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showColorPickerContainer(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.colorPickerContainer.alpha = show ? 1 : 0
         }
     }
@@ -546,7 +544,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showBottomMenu(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.bottomMenuContainer.alpha = show ? 1 : 0
         }
     }
@@ -555,7 +553,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showTopButtons(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.topButtonContainer.alpha = show ? 1 : 0
         }
     }
@@ -566,7 +564,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     /// - Parameter animate: whether the UI update is animated
     func showOverlay(_ show: Bool, animate: Bool = true) {
         if animate {
-            UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+            UIView.animate(withDuration: Constants.animationDuration) {
                 self.overlay.alpha = show ? 1 : 0
             }
         }
@@ -579,7 +577,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showCanvas(_ show: Bool) {
-        UIView.animate(withDuration: DrawingViewConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.drawingCanvas.alpha = show ? 1 : 0
             self.temporalImageView.alpha = show ? 1 : 0
         }
@@ -613,6 +611,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     ///
     /// - Parameter color: new color for the eye dropper
     func setEyeDropperColor(_ color: UIColor) {
+        eyeDropperButton.tintColor = color.matchingColor()
         eyeDropperButton.backgroundColor = color
     }
     

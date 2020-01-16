@@ -155,7 +155,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         
         fonts.rotate(to: options.font)
         alignments.rotate(to: options.alignment)
-        highlight = options.highlightColor?.isVisible
+        highlight = options.highlightColor?.isVisible()
         textView.eyeDropperColor = highlight == true ? options.highlightColor : options.color
     }
     
@@ -343,7 +343,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         textView.eyeDropperColor = color
         if highlight == true {
             textView.highlightColor = color
-            textView.textColor = color?.matchingColor
+            textView.textColor = color?.matchingColor()
         }
         else {
             textView.textColor = color
@@ -357,7 +357,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
         if highlight == true {
             guard let color = textView.textColor else { return }
             textView.highlightColor = color
-            textView.textColor = color.matchingColor
+            textView.textColor = color.matchingColor()
         }
         else {
             guard let color = textView.highlightColor else { return }

@@ -61,7 +61,7 @@ final class ScrollHandlerDelegateStub: ScrollHandlerDelegate {
         selectFilterCalled = true
     }
     
-    func scrollToOptionAt(_ index: Int, animated: Bool) {
+    func scrollToOption(at index: Int, animated: Bool) {
         scrollToOptionAtCalled = true
     }
 }
