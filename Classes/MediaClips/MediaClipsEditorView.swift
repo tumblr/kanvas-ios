@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 import TumblrTheme
 
-private struct MediaClipsEditorViewConstants {
+private struct Constants {
     static let animationDuration: TimeInterval = 0.5
     static let buttonHorizontalMargin: CGFloat = 16
     static let buttonRadius: CGFloat = 25
@@ -27,28 +27,29 @@ protocol MediaClipsEditorViewDelegate: class {
 final class MediaClipsEditorView: IgnoreTouchesView {
     
     static let height = MediaClipsCollectionView.height +
-                        MediaClipsEditorViewConstants.topPadding +
-                        MediaClipsEditorViewConstants.bottomPadding
-
-    let collectionContainer: IgnoreTouchesView
-    let nextButton: UIButton
+                        Constants.topPadding +
+                        Constants.bottomPadding
 
     weak var delegate: MediaClipsEditorViewDelegate?
+    
+    private let mainContainer: IgnoreTouchesView
+    private let nextButton: UIButton
+    let collectionContainer: IgnoreTouchesView
 
+    // MARK: - Initializers
+    
     init() {
+        mainContainer = IgnoreTouchesView()
+        mainContainer.backgroundColor = KanvasCameraColors.translucentBlack
+        
         collectionContainer = IgnoreTouchesView()
-        collectionContainer.backgroundColor = .clear
-        collectionContainer.accessibilityIdentifier = "Media Clips Collection Container"
-        collectionContainer.clipsToBounds = false
 
         nextButton = UIButton()
-        nextButton.accessibilityIdentifier = "Media Clips Next Button"
         super.init(frame: .zero)
         
         clipsToBounds = false
-        backgroundColor = KanvasCameraColors.translucentBlack
+        
         setUpViews()
-        nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -61,14 +62,72 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Layout
+    
+    private func setUpViews() {
+        setUpMainContainer()
+        setUpCollection()
+        setUpNextButton()
+    }
+    
+    private func setUpMainContainer() {
+        addSubview(mainContainer)
+        
+        mainContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            mainContainer.topAnchor.constraint(equalTo: topAnchor),
+            mainContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
+            mainContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            mainContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+        ])
+    }
+    
+    private func setUpCollection() {
+        mainContainer.addSubview(collectionContainer)
+        collectionContainer.accessibilityIdentifier = "Media Clips Collection Container"
+        collectionContainer.backgroundColor = .clear
+        collectionContainer.clipsToBounds = false
+        collectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        let trailingMargin = Constants.nextButtonSize + Constants.buttonHorizontalMargin * 1.5
+        NSLayoutConstraint.activate([
+            collectionContainer.leadingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.leadingAnchor),
+            collectionContainer.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
+            collectionContainer.bottomAnchor.constraint(equalTo: mainContainer.bottomAnchor, constant: -Constants.bottomPadding),
+            collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
+        ])
+    }
+    
+    private func setUpNextButton() {
+        mainContainer.addSubview(nextButton)
+        nextButton.accessibilityIdentifier = "Media Clips Next Button"
+        nextButton.accessibilityLabel = "Next Button"
+        nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            nextButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonHorizontalMargin),
+            nextButton.heightAnchor.constraint(equalToConstant: Constants.nextButtonSize),
+            nextButton.widthAnchor.constraint(equalToConstant: Constants.nextButtonSize),
+            nextButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor, constant: -Constants.nextButtonCenterYOffset)
+        ])
+    }
+    
+    // MARK: - Gesture recognizers
+    
+    @objc private func nextPressed() {
+        delegate?.nextButtonWasPressed()
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the complete view
     ///
     /// - Parameter show: true to show, false to hide
     func show(_ show: Bool) {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
-            self?.alpha = show ? 1 : 0
+        UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
+            self?.mainContainer.alpha = show ? 1 : 0
         }
     }
     
@@ -76,53 +135,8 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     ///
     /// - Parameter show: true to show, false to hide
     func showPreviewButton(_ show: Bool) {
-        UIView.animate(withDuration: MediaClipsEditorViewConstants.animationDuration) { [weak self] in
+        UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
             self?.nextButton.alpha = show ? 1 : 0
         }
-    }
-}
-
-// MARK: - UI Layout
-private extension MediaClipsEditorView {
-
-    func setUpViews() {
-        setUpCollection()
-        setUpNextButton()
-    }
-    
-    func setUpCollection() {
-        addSubview(collectionContainer)
-        collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let trailingMargin = MediaClipsEditorViewConstants.nextButtonSize + MediaClipsEditorViewConstants.buttonHorizontalMargin * 1.5
-        NSLayoutConstraint.activate([
-            collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
-            collectionContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -MediaClipsEditorViewConstants.bottomPadding),
-            collectionContainer.heightAnchor.constraint(equalToConstant: MediaClipsCollectionView.height)
-        ])
-    }
-    
-    func setUpNextButton() {
-        addSubview(nextButton)
-        nextButton.accessibilityLabel = "Next Button"
-        nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
-        nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
-        nextButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            nextButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -MediaClipsEditorViewConstants.buttonHorizontalMargin),
-            nextButton.heightAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.nextButtonSize),
-            nextButton.widthAnchor.constraint(equalToConstant: MediaClipsEditorViewConstants.nextButtonSize),
-            nextButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor, constant: -MediaClipsEditorViewConstants.nextButtonCenterYOffset)
-        ])
-    }
-
-}
-
-// MARK: - Button handling
-extension MediaClipsEditorView {
-
-    @objc func nextPressed() {
-        delegate?.nextButtonWasPressed()
     }
 }
