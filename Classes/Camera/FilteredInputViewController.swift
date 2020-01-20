@@ -46,7 +46,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .clear
         setupPreview()
 
         renderer.filterType = currentFilter
@@ -54,13 +54,13 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-
         super.viewDidDisappear(animated)
     }
     
     // MARK: - layout
     private func setupPreview() {
         let previewView = GLPixelBufferView(frame: .zero)
+        previewView.mediaContentMode = .scaleAspectFit
         previewView.add(into: view)
         self.previewView = previewView
     }

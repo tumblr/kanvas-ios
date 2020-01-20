@@ -14,9 +14,6 @@ void main()
 
     lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
     lowp vec4 textureOverlayColor = texture2D(textureOverlay, uv);
-    if (uv.x < 0. || uv.x >= 1.) {
-        textureOverlayColor = backgroundFillColor;
-    }
 
     lowp float alpha = 1.;
     gl_FragColor = vec4(mix(textureColor.rgb, textureOverlayColor.rgb, textureOverlayColor.a * alpha), textureColor.a);

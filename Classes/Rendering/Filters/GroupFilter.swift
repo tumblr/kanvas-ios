@@ -50,17 +50,9 @@ class GroupFilter: FilterProtocol {
     }
 
     func setupFormatDescription(from sampleBuffer: CMSampleBuffer, outputDimensions: CGSize) {
-        if outputFormatDescription == nil, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
-            setupFormatDescription(inputFormatDescription)
-        }
-    }
-
-    func setupFormatDescription(_ formatDescription: CMFormatDescription) {
-        var description = formatDescription
-        for filter in filters {
-            filter.setupFormatDescription(description)
-            if let outputFormatDescription = filter.outputFormatDescription {
-                description = outputFormatDescription
+        if outputFormatDescription == nil {
+            for filter in filters {
+                filter.setupFormatDescription(from: sampleBuffer, outputDimensions: outputDimensions)
             }
         }
     }

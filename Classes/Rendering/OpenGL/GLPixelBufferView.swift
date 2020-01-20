@@ -9,8 +9,15 @@ import CoreVideo
 import OpenGLES
 import GLKit
 
+protocol GLPixelBufferViewDelegate {
+    func didRenderRectChange(rect: CGRect)
+}
+
 /// OpenGL view for rendering a buffer of pixels.
 final class GLPixelBufferView: UIView {
+
+    var delegate: GLPixelBufferViewDelegate?
+
     private var renderShader: Shader?
     private var oglContext: EAGLContext?
     private var textureCache: CVOpenGLESTextureCache?
@@ -23,7 +30,23 @@ final class GLPixelBufferView: UIView {
     private var inputImageTexture: GLint = 0
     private var uniformTransform: GLint = 0
 
-    
+    var viewportRect: CGRect = .zero {
+        didSet {
+            if (viewportRect != oldValue) {
+                delegate?.didRenderRectChange(rect: viewportRect.applying(.init(scaleX: 1/contentScaleFactor, y: 1/contentScaleFactor)))
+            }
+        }
+    }
+
+    var mediaContentMode: UIView.ContentMode = .scaleAspectFill {
+        didSet {
+            guard mediaContentMode == .scaleAspectFill || mediaContentMode == .scaleAspectFit else {
+                assertionFailure("GLPixelBufferView.mediaContentMode only supports scaleAspectFill and scaleAspectFit")
+                return
+            }
+        }
+    }
+
     override class var layerClass: AnyClass {
         return CAEAGLLayer.self
     }
@@ -36,7 +59,7 @@ final class GLPixelBufferView: UIView {
         
         // Initialize OpenGL ES 3
         let eaglLayer = self.layer as? CAEAGLLayer
-        eaglLayer?.isOpaque = true
+        eaglLayer?.isOpaque = false
         eaglLayer?.drawableProperties = [kEAGLDrawablePropertyRetainedBacking: false,
                                          kEAGLDrawablePropertyColorFormat: kEAGLColorFormatRGBA8]
         
@@ -210,17 +233,34 @@ final class GLPixelBufferView: UIView {
             assertionFailure("CVOpenGLESTextureCacheCreateTextureFromImage failed to create texture")
             return
         }
-        
+
+        let screenSize = CGSize(width: width.g, height: height.g)
+        let pixelBufferSize = CGSize(width: frameWidth, height: frameHeight)
+
+        let viewportRect = { () -> CGRect in
+            switch mediaContentMode {
+            case .scaleAspectFit:
+                return fitSourceInsideTarget(sourceSize: pixelBufferSize, targetSize: screenSize)
+            case .scaleAspectFill:
+                return fillSourceInsideTarget(sourceSize: pixelBufferSize, targetSize: screenSize)
+            default:
+                assertionFailure("poop")
+                return .zero
+            }
+        }()
+
+        self.viewportRect = viewportRect
+
         // Set the view port to the entire view
         glBindFramebuffer(GL_FRAMEBUFFER.ui, frameBufferHandle)
-        glViewport(0, 0, width, height)
-        
+        glViewport(viewportRect.origin.x.i, viewportRect.origin.y.i, viewportRect.size.width.i, viewportRect.size.height.i)
+
         renderShader?.useProgram()
         glActiveTexture(GL_TEXTURE0.ui)
         glBindTexture(CVOpenGLESTextureGetTarget(texture), CVOpenGLESTextureGetName(texture))
         glUniform1i(inputImageTexture, 0)
 
-        let transformMatrix = self.transformMatrix(mediaDimensions: CGSize(width: frameWidth, height: frameHeight), renderDimensions: self.bounds.size)
+        let transformMatrix = GLKMatrix4Identity
         transformMatrix.unsafePointer { m in
             glUniformMatrix4fv(uniformTransform, 1, 0, m)
         }

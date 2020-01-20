@@ -33,6 +33,7 @@ final class MediaPlayerView: UIView {
         super.init(frame: frame)
 
         let pixelBufferView = GLPixelBufferView(frame: frame)
+        pixelBufferView.mediaContentMode = .scaleAspectFit
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
@@ -214,8 +215,7 @@ final class MediaPlayer {
             y = croppedSpace / 2 + point.y * visibleBufferHeight / CGFloat(Device.screenHeight)
             x = point.x * bufferWidth / CGFloat(Device.screenWidth)
         }
-        
-        
+
         let luma = int32Buffer[Int(y) * int32PerRow / heightFactor + Int(x)]
         let color = UIColor(hex: luma)
         CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
