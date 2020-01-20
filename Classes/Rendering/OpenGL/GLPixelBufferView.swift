@@ -27,7 +27,7 @@ final class GLPixelBufferView: UIView {
     private var frameBufferHandle: GLuint = 0
     private var colorBufferHandle: GLuint = 0
 
-    private var inputImageTexture: GLint = 0
+    private var uniformInputImageTexture: GLint = 0
     private var uniformTransform: GLint = 0
 
     var viewportRect: CGRect = .zero {
@@ -57,7 +57,7 @@ final class GLPixelBufferView: UIView {
         
         self.contentScaleFactor = UIScreen.main.nativeScale
         
-        // Initialize OpenGL ES 3
+        // Initialize OpenGLES 3
         let eaglLayer = self.layer as? CAEAGLLayer
         eaglLayer?.isOpaque = false
         eaglLayer?.drawableProperties = [kEAGLDrawablePropertyRetainedBacking: false,
@@ -113,8 +113,8 @@ final class GLPixelBufferView: UIView {
                     success = false
                     break bail
             }
-            let inputImageTexture = shader.getParameterLocation(name: "inputImageTexture")
-            guard inputImageTexture >= 0 else {
+            let uniformInputImageTexture = shader.getParameterLocation(name: "inputImageTexture")
+            guard uniformInputImageTexture >= 0 else {
                 assertionFailure("Failed to find inputImageTexture parameter")
                 success = false
                 break bail
@@ -125,8 +125,9 @@ final class GLPixelBufferView: UIView {
                     success = false
                     break bail
             }
+
             self.renderShader = shader
-            self.inputImageTexture = inputImageTexture
+            self.uniformInputImageTexture = uniformInputImageTexture
             self.uniformTransform = uniformTransform
         } while false
         if !success {
@@ -258,7 +259,7 @@ final class GLPixelBufferView: UIView {
         renderShader?.useProgram()
         glActiveTexture(GL_TEXTURE0.ui)
         glBindTexture(CVOpenGLESTextureGetTarget(texture), CVOpenGLESTextureGetName(texture))
-        glUniform1i(inputImageTexture, 0)
+        glUniform1i(uniformInputImageTexture, 0)
 
         let transformMatrix = GLKMatrix4Identity
         transformMatrix.unsafePointer { m in
