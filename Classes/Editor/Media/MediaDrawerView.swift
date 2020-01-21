@@ -126,8 +126,11 @@ final class MediaDrawerView: UIView {
         closeButton.accessibilityIdentifier = "Media Drawer Top Container Close Button"
         let image = KanvasCameraImages.closeImage?.withRenderingMode(.alwaysTemplate)
         closeButton.setImage(image, for: .normal)
-        closeButton.tintColor = .tumblrBlack85
+        closeButton.tintColor = .tumblrBlack25
+        closeButton.adjustsImageWhenHighlighted = false
         closeButton.contentMode = .scaleAspectFit
+        closeButton.contentVerticalAlignment = .center
+        closeButton.contentHorizontalAlignment = .center
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
