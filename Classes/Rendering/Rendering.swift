@@ -15,7 +15,6 @@ protocol Rendering: class {
     var mediaTransform: GLKMatrix4? { get set }
     var outputDimensions: CGSize { get set }
     var switchInputDimensions: Bool { get set }
-    var backgroundFillColor: CGColor { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func output(filteredPixelBuffer: CVPixelBuffer)
     func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?

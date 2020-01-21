@@ -43,9 +43,6 @@ final class Renderer: Rendering {
     /// Image overlays
     var imageOverlays: [CGImage] = []
 
-    /// Background fill color
-    var backgroundFillColor: CGColor = UIColor.clear.cgColor
-
     /// Transformation matrix that is used by filters to propertly render media
     var mediaTransform: GLKMatrix4? {
         didSet {
@@ -186,7 +183,7 @@ final class Renderer: Rendering {
     // MARK: - changing filters
     func refreshFilter() {
         synchronized(self) {
-            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() }, backgroundFillColor: backgroundFillColor)
+            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
             filter.transform = mediaTransform
             filter.switchInputDimensions = self.switchInputDimensions
         }

@@ -295,28 +295,6 @@ final class GLPixelBufferView: UIView {
         glBindTexture(GL_TEXTURE_2D.ui, 0)
     }
 
-    func transformMatrix(mediaDimensions: CGSize, renderDimensions: CGSize) -> GLKMatrix4 {
-        var scale = CGSize()
-        let screenScale = CGSize(width: renderDimensions.width / mediaDimensions.width, height: renderDimensions.height / mediaDimensions.height)
-        if screenScale.height > screenScale.width {
-            scale.width = renderDimensions.width / (mediaDimensions.width * screenScale.height)
-            scale.height = 1.0
-        }
-        else {
-            scale.width = 1.0
-            scale.height = renderDimensions.height / (mediaDimensions.height * screenScale.width)
-        }
-        // since base_render.vsh takes this transform and applies it from the center point,
-        // we don't need to translate anything.
-        let translate = CGSize(width: 0, height: 0)
-        return GLKMatrix4Make(
-            Float(scale.width), 0.0,                 0.0, Float(translate.width),
-            0.0,                Float(scale.height), 0.0, Float(translate.height),
-            0.0,                0.0,                 1.0, 0.0,
-            0.0,                0.0,                 0.0, 1.0
-        )
-    }
-
     /// Flushes the texture cache
     func flushPixelBufferCache() {
         if let textureCache = textureCache {

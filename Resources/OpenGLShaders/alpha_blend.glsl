@@ -4,7 +4,6 @@ uniform sampler2D inputImageTexture;
 uniform sampler2D textureOverlay;
 
 uniform lowp vec2 overlayScale;
-uniform lowp vec4 backgroundFillColor;
 
 void main()
 {

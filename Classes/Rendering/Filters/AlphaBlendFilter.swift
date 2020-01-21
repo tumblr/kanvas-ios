@@ -14,16 +14,13 @@ final class AlphaBlendFilter: Filter {
 
     private let pixelBuffer: CVPixelBuffer
     private let overlayDimensions: CGSize
-    private var backgroundFillColor: CGColor
 
     private var uniformTexture: GLint = 0
     private var uniformOverlayScale: GLint = 0
-    private var uniformBackgroundFillColor: GLint = 0
 
-    init(glContext: EAGLContext?, pixelBuffer: CVPixelBuffer, backgroundFillColor: CGColor) {
+    init(glContext: EAGLContext?, pixelBuffer: CVPixelBuffer) {
         self.pixelBuffer = pixelBuffer
         self.overlayDimensions = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
-        self.backgroundFillColor = backgroundFillColor
         super.init(glContext: glContext)
     }
 
@@ -33,7 +30,6 @@ final class AlphaBlendFilter: Filter {
             let shader = Shader(vertexShader: vertex, fragmentShader: fragment) {
             uniformTexture = GLU.getUniformLocation(shader.program, "textureOverlay")
             uniformOverlayScale = GLU.getUniformLocation(shader.program, "overlayScale")
-            uniformBackgroundFillColor = GLU.getUniformLocation(shader.program, "backgroundFillColor")
             self.shader = shader
         }
     }
@@ -71,10 +67,6 @@ final class AlphaBlendFilter: Filter {
 
         if let overlayScale = getOverlayScale() {
             glUniform2f(uniformOverlayScale, overlayScale.width.f, overlayScale.height.f)
-        }
-
-        if backgroundFillColor.numberOfComponents == 4, let c = backgroundFillColor.components {
-            glUniform4f(uniformBackgroundFillColor, c[0].f, c[1].f, c[2].f, c[3].f)
         }
     }
 
