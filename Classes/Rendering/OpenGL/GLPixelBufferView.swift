@@ -31,7 +31,7 @@ final class GLPixelBufferView: UIView {
 
     var viewportRect: CGRect = .zero {
         didSet {
-            if (viewportRect != oldValue) {
+            if viewportRect != oldValue {
                 delegate?.didRenderRectChange(rect: viewportRect.applying(.init(scaleX: 1/contentScaleFactor, y: 1/contentScaleFactor)))
             }
         }
