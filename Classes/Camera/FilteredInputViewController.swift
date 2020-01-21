@@ -69,7 +69,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
         renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime)
     }
     
-    // MARK: - GLRendererDelegate
+    // MARK: - RendererDelegate
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         self.previewView?.displayPixelBuffer(pixelBuffer)
     }

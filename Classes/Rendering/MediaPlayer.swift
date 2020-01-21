@@ -11,7 +11,7 @@ import VideoToolbox
 import OpenGLES
 import GLKit
 
-/// Callbacks for opengl player
+/// Delegate for MediaPlayer
 protocol MediaPlayerDelegate: class {
     /// Called then the first pixel buffer is shown
     /// - Parameter image: the first frame shown
@@ -112,7 +112,7 @@ final class MediaPlayer {
 
     weak var delegate: MediaPlayerDelegate?
 
-    /// The GLRendering instance for the player.
+    /// The Rendering instance for the player.
     let renderer: Rendering
 
     /// The MediaPlayerView that this controls.
@@ -142,7 +142,7 @@ final class MediaPlayer {
     }()
 
     /// Default initializer
-    /// - Parameter renderer: GLRendering instance for this player to use.
+    /// - Parameter renderer: Rendering instance for this player to use.
     init(renderer: Rendering?) {
         self.renderer = renderer ?? Renderer()
         self.renderer.delegate = self

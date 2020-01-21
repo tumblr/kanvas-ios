@@ -9,7 +9,10 @@ import CoreVideo
 import OpenGLES
 import GLKit
 
+/// Protocol for GLPixelBufferView
 protocol GLPixelBufferViewDelegate {
+
+    /// Called when the rendering rectangle changes
     func didRenderRectChange(rect: CGRect)
 }
 

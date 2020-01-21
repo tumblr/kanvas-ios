@@ -194,8 +194,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
         drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
-        
-        
+
         let startPoint = lastDrawingPoint
         let texture = textureSelectorController.texture
         let strokeSize = strokeSelectorController.getStrokeSize(minimum: texture.minimumStroke, maximum: texture.maximumStroke)
