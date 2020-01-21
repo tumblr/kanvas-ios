@@ -29,6 +29,8 @@ public protocol KanvasDashboardControllerDelegate: class {
 
     /// Called to post
     func kanvasDashboardCreatePostRequest()
+
+    func kanvasDashboardOpenPostingOptionsRequest()
 }
 
 /// Protocol for the KanvasDashboardController to get state from
@@ -37,9 +39,6 @@ public protocol KanvasDashboardStateDelegate: class {
 
     /// The EventBuffering for Kanvas Dashboard to use
     var kanvasDashboardAnalyticsProvider: KanvasCameraAnalyticsProvider { get }
-
-    /// The blog UUID for Kanvas Dashboard to post to
-    var kanvasDashboardBlogUUID: String? { get }
 
     var kanvasDashboardUnloadStrategy: KanvasDashboardController.UnloadStrategy { get }
 }
@@ -158,6 +157,8 @@ extension KanvasDashboardController: CameraControllerDelegate {
                     self.delegate?.kanvasDashboardCreatePostRequest()
                 case .save:
                     break
+                case .postOptions:
+                    self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
                 }
             }
         }
@@ -248,7 +249,7 @@ private extension KanvasDashboardController {
     func createCameraController() -> CameraController {
         let kanvasAnalyticsProvider = stateDelegate?.kanvasDashboardAnalyticsProvider
         let stickerProvider = ExperimentalStickerProvider()
-        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider)
+        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider, quickBlogSelectorCoordinator: nil)
         kanvasViewController.delegate = self
         return kanvasViewController
     }

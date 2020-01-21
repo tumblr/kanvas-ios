@@ -140,6 +140,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.mediaPicking = true
         settings.features.editorPosting = true
         settings.features.editorSaving = true
+        settings.features.editorPostOptions = false
         settings.features.newCameraModes = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
@@ -154,7 +155,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasCameraAnalyticsStub())
+        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasCameraAnalyticsStub(), quickBlogSelectorCoordinator: nil)
         controller.delegate = self
         controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
@@ -258,6 +259,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .mediaPicking(settings.features.mediaPicking),
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
+            .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
         ]
     }
@@ -294,6 +296,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.newCameraModes = value
             settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
+        case .editorPostOptions(_):
+            settings.features.editorPostOptions = value
         }
     }
 }
@@ -374,6 +378,8 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                     self.dismissCamera()
                 case .save:
                     break
+                case .postOptions:
+                    self.dismissCamera()
                 }
 
             }
