@@ -23,8 +23,9 @@ private struct Constants {
     static let backgroundColor: UIColor = .white
     static let bottomBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.8)
     static let tabBarHeight: CGFloat = DrawerTabBarView.height
-    static let closeButtonSize: CGFloat = 26.5
-    static let closeButtonHorizontalMargin: CGFloat = 15
+    static let closeButtonSize: CGFloat = 17
+    static let closeButtonHorizontalMargin: CGFloat = 18
+    static let closeButtonInset: CGFloat = -9
 }
 
 /// A UIView for the media drawer controller
@@ -47,7 +48,7 @@ final class MediaDrawerView: UIView {
     init() {
         topContainer = UIView()
         topContainerLine = UIView()
-        closeButton = UIButton()
+        closeButton = ExtendedButton(inset: Constants.closeButtonInset)
         tabBarContainer = UIView()
         childContainer = UIView()
         super.init(frame: .zero)
@@ -125,13 +126,13 @@ final class MediaDrawerView: UIView {
         closeButton.accessibilityIdentifier = "Media Drawer Top Container Close Button"
         let image = KanvasCameraImages.closeImage?.withRenderingMode(.alwaysTemplate)
         closeButton.setImage(image, for: .normal)
-        closeButton.tintColor = .tumblrBlack95
+        closeButton.tintColor = .tumblrBlack85
         closeButton.contentMode = .scaleAspectFit
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            closeButton.centerYAnchor.constraint(equalTo: topContainer.safeAreaLayoutGuide.centerYAnchor),
+            closeButton.centerYAnchor.constraint(equalTo: topContainer.centerYAnchor),
             closeButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.closeButtonHorizontalMargin),
             closeButton.heightAnchor.constraint(equalToConstant: Constants.closeButtonSize),
             closeButton.widthAnchor.constraint(equalToConstant: Constants.closeButtonSize),
