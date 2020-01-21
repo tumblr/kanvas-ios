@@ -487,13 +487,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         isRecording = event == .started
         cameraView.updateUI(forRecording: isRecording)
         filterSettingsController.updateUI(forRecording: isRecording)
+        toggleMediaPicker(visible: !isRecording)
         if isRecording {
             modeAndShootController.hideModeButton()
-            toggleMediaPicker(visible: false)
         }
-        else {
-            toggleMediaPicker(visible: true)
-            // If it finished recording, then there is at least one clip and button shouldn't be shown.
+        else if !isRecording && !clipsController.hasClips && settings.enabledModes.count > 1 {
+            modeAndShootController.showModeButton()
         }
     }
     
@@ -617,17 +616,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     if let url = url {
                         if mode.quantity == .single {
                             strongSelf.showPreviewWithSegments([CameraSegment.video(url, TumblrMediaInfo(source: .kanvas_camera))])
-                            strongSelf.updateRecordState(event: .ended)
-                            strongSelf.updateUI(forClipsPresent: false)
                         }
                         else if let image = AVURLAsset(url: url).thumbnail() {
                             strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
                                                                             overlayText: strongSelf.durationStringForAssetAtURL(url),
                                                                             lastFrame: strongSelf.getLastFrameFrom(url)))
-                            strongSelf.updateRecordState(event: .ended)
+                            
                         }
                     }
                     
+                    strongSelf.updateRecordState(event: .ended)
                     strongSelf.generateHapticFeedback()
                 }
             })
