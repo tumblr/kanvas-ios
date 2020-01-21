@@ -8,7 +8,6 @@ import AVFoundation
 import Foundation
 import UIKit
 
-
 struct FullViewConstraints {
     weak var view: UIView?
     let top: NSLayoutConstraint
