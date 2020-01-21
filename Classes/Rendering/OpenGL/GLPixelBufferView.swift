@@ -237,7 +237,7 @@ final class GLPixelBufferView: UIView {
             case .scaleAspectFill:
                 return fillSourceInsideTarget(sourceSize: pixelBufferSize, targetSize: screenSize)
             default:
-                assertionFailure("poop")
+                assertionFailure("Unsupported Media Content Mode \(mediaContentMode)")
                 return .zero
             }
         }()
