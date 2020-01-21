@@ -224,7 +224,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         let guide = UILayoutGuide()
         addLayoutGuide(guide)
         NSLayoutConstraint.activate([
-            guide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -1 * (6 + 70 + 6 + 7)),
+            guide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -1 * 89/* (6 + 70 + 6 + 7) */),
             guide.heightAnchor.constraint(equalToConstant: 100),
             guide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor, constant: -50),
