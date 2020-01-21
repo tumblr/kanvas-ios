@@ -28,7 +28,6 @@ final class GLPixelBufferView: UIView {
     private var colorBufferHandle: GLuint = 0
 
     private var uniformInputImageTexture: GLint = 0
-    private var uniformTransform: GLint = 0
 
     var viewportRect: CGRect = .zero {
         didSet {
@@ -119,16 +118,9 @@ final class GLPixelBufferView: UIView {
                 success = false
                 break bail
             }
-            let uniformTransform = shader.getParameterLocation(name: "transform")
-            guard uniformTransform >= 0 else {
-                    assertionFailure("Failed to find uniformTransform parameter")
-                    success = false
-                    break bail
-            }
 
             self.renderShader = shader
             self.uniformInputImageTexture = uniformInputImageTexture
-            self.uniformTransform = uniformTransform
         } while false
         if !success {
             self.reset()
@@ -261,10 +253,6 @@ final class GLPixelBufferView: UIView {
         glBindTexture(CVOpenGLESTextureGetTarget(texture), CVOpenGLESTextureGetName(texture))
         glUniform1i(uniformInputImageTexture, 0)
 
-        let transformMatrix = GLKMatrix4Identity
-        transformMatrix.unsafePointer { m in
-            glUniformMatrix4fv(uniformTransform, 1, 0, m)
-        }
 
         // Set texture parameters
         glTexParameteri(GL_TEXTURE_2D.ui, GL_TEXTURE_MIN_FILTER.ui, GL_LINEAR)

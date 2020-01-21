@@ -171,7 +171,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private func setUpView() {
         drawingView.alpha = 0
     }
-    
+
+    /// Tell the view that the rendering rectangle has changed.
+    func didRenderRectChange(rect: CGRect) {
+        drawingView.didRenderRectChange(rect: rect)
+    }
     
     // MARK: - Drawing
     
@@ -379,13 +383,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     // MARK: - DrawingViewDelegate
     
     func didTapDrawingCanvas(recognizer: UITapGestureRecognizer) {
-        let currentPoint = recognizer.location(in: view)
+        let currentPoint = recognizer.location(in: recognizer.view)
         drawPoint(on: currentPoint)
         logDraw(.tap)
     }
     
     func didPanDrawingCanvas(recognizer: UIPanGestureRecognizer) {
-        let currentPoint = recognizer.location(in: view)
+        let currentPoint = recognizer.location(in: recognizer.view)
         switch recognizer.state {
         case .began:
             prepareLine(on: currentPoint)

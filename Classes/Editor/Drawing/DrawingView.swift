@@ -76,7 +76,9 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     // Drawing views
     let drawingCanvas: DrawingCanvas
+    private var drawingCanvasConstraints: FullViewConstraints?
     let temporalImageView: UIImageView
+    private var temporalImageViewConstraints: FullViewConstraints?
     
     // Black traslucent overlay used for onboarding
     private let overlay: UIView
@@ -154,6 +156,12 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    /// Resize views based on a new rendering rect
+    func didRenderRectChange(rect: CGRect) {
+        drawingCanvasConstraints?.update(with: rect)
+        temporalImageViewConstraints?.update(with: rect)
+    }
     
     // MARK: - Layout
     
@@ -185,13 +193,14 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         temporalImageView.translatesAutoresizingMaskIntoConstraints = false
         temporalImageView.clipsToBounds = true
         addSubview(temporalImageView)
-        
-        NSLayoutConstraint.activate([
-            temporalImageView.topAnchor.constraint(equalTo: topAnchor),
-            temporalImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            temporalImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            temporalImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
+
+        temporalImageViewConstraints = FullViewConstraints(
+            view: temporalImageView,
+            top: temporalImageView.topAnchor.constraint(equalTo: topAnchor),
+            bottom: temporalImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            leading: temporalImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            trailing: temporalImageView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ).activate()
         
         temporalImageView.alpha = 0
     }
@@ -201,13 +210,14 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         drawingCanvas.translatesAutoresizingMaskIntoConstraints = false
         drawingCanvas.clipsToBounds = true
         addSubview(drawingCanvas)
-        
-        NSLayoutConstraint.activate([
-            drawingCanvas.topAnchor.constraint(equalTo: topAnchor),
-            drawingCanvas.bottomAnchor.constraint(equalTo: bottomAnchor),
-            drawingCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
-            drawingCanvas.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
+
+        drawingCanvasConstraints = FullViewConstraints(
+            view: drawingCanvas,
+            top: drawingCanvas.topAnchor.constraint(equalTo: topAnchor),
+            bottom: drawingCanvas.bottomAnchor.constraint(equalTo: bottomAnchor),
+            leading: drawingCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
+            trailing: drawingCanvas.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ).activate()
         
         let panRecognizer = UIPanGestureRecognizer()
         let longPressRecognizer = UILongPressGestureRecognizer()

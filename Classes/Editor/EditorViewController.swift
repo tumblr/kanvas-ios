@@ -290,6 +290,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didEndTouchesOnText() {
         showNavigationContainer(true)
     }
+
+    func didRenderRectChange(rect: CGRect) {
+        drawingController.didRenderRectChange(rect: rect)
+    }
     
     private func startExporting(action: KanvasExportAction) {
         player.stop()

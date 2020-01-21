@@ -18,6 +18,13 @@ protocol MediaPlayerDelegate: class {
     func didDisplayFirstFrame(_ image: UIImage)
 }
 
+/// Delegate for MediaPlayerView
+protocol MediaPlayerViewDelegate: class {
+    /// Called when the rendering rectangle changes
+    /// - Parameter rect: new rendering rectangle
+    func didRenderRectChange(rect: CGRect)
+}
+
 /// Types of media the player can play.
 enum MediaPlayerContent {
     case image(UIImage)
@@ -25,21 +32,30 @@ enum MediaPlayerContent {
 }
 
 /// View for rendering the player.
-final class MediaPlayerView: UIView {
+final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
     weak var pixelBufferView: GLPixelBufferView?
+
+    weak var delegate: MediaPlayerViewDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         let pixelBufferView = GLPixelBufferView(frame: frame)
         pixelBufferView.mediaContentMode = .scaleAspectFit
+        pixelBufferView.delegate = self
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - GLPixelBufferViewDelegate
+
+    func didRenderRectChange(rect: CGRect) {
+        delegate?.didRenderRectChange(rect: rect)
     }
 
 }
