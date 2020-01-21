@@ -7,17 +7,25 @@
 import Foundation
 import UIKit
 
+protocol MediaDrawerViewDelegate: class {
+    /// Called when the close button is tapped
+    func didTapCloseButton()
+}
+
 /// Constants for MediaDrawerView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let topContainerHeight: CGFloat = 52
     static let topContainerLineHeight: CGFloat = 5
     static let topContainerLineWidth: CGFloat = 36
-    static let topContainerLineRadius: CGFloat = 36
+    static let topContainerLineRadius: CGFloat = 2.5
     static let topContainerLineColor: UIColor = .black
     static let backgroundColor: UIColor = .white
     static let bottomBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.8)
     static let tabBarHeight: CGFloat = DrawerTabBarView.height
+    static let closeButtonSize: CGFloat = 17
+    static let closeButtonHorizontalMargin: CGFloat = 18
+    static let closeButtonInset: CGFloat = -9
 }
 
 /// A UIView for the media drawer controller
@@ -25,8 +33,11 @@ final class MediaDrawerView: UIView {
     
     static let tabBarHeight: CGFloat = Constants.tabBarHeight
     
+    weak var delegate: MediaDrawerViewDelegate?
+    
     private let topContainer: UIView
     private let topContainerLine: UIView
+    private let closeButton: UIButton
     
     // Containers
     let tabBarContainer: UIView
@@ -37,6 +48,7 @@ final class MediaDrawerView: UIView {
     init() {
         topContainer = UIView()
         topContainerLine = UIView()
+        closeButton = ExtendedButton(inset: Constants.closeButtonInset)
         tabBarContainer = UIView()
         childContainer = UIView()
         super.init(frame: .zero)
@@ -48,11 +60,14 @@ final class MediaDrawerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Layout
+    
     private func setupView() {
         backgroundColor = Constants.backgroundColor
         setupChildContainer()
         setupTopContainer()
         setupTopContainerLine()
+        setupCloseButton()
         setupTabBar()
     }
     
@@ -101,8 +116,30 @@ final class MediaDrawerView: UIView {
             topContainerLine.widthAnchor.constraint(equalToConstant: Constants.topContainerLineWidth),
         ])
         
-        topContainerLine.layer.cornerRadius = 2.5
+        topContainerLine.layer.cornerRadius = Constants.topContainerLineRadius
         topContainerLine.layer.masksToBounds = true
+    }
+    
+    /// Sets up the close button
+    private func setupCloseButton() {
+        addSubview(closeButton)
+        closeButton.accessibilityIdentifier = "Media Drawer Top Container Close Button"
+        let image = KanvasCameraImages.closeImage?.withRenderingMode(.alwaysTemplate)
+        closeButton.setImage(image, for: .normal)
+        closeButton.tintColor = .tumblrBlack25
+        closeButton.adjustsImageWhenHighlighted = false
+        closeButton.contentMode = .scaleAspectFit
+        closeButton.contentVerticalAlignment = .center
+        closeButton.contentHorizontalAlignment = .center
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            closeButton.centerYAnchor.constraint(equalTo: topContainer.centerYAnchor),
+            closeButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.closeButtonHorizontalMargin),
+            closeButton.heightAnchor.constraint(equalToConstant: Constants.closeButtonSize),
+            closeButton.widthAnchor.constraint(equalToConstant: Constants.closeButtonSize),
+        ])
     }
     
     /// Sets up the top tab bar
@@ -117,5 +154,11 @@ final class MediaDrawerView: UIView {
             tabBarContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             tabBarContainer.heightAnchor.constraint(equalToConstant: Constants.tabBarHeight),
         ])
+    }
+    
+    // MARK: - Gesture recognizers
+    
+    @objc private func closeButtonTapped() {
+        delegate?.didTapCloseButton()
     }
 }

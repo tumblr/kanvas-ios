@@ -31,7 +31,7 @@ protocol MediaDrawerControllerDelegate: class {
 }
 
 /// A view controller that contains the media drawer in text tools
-final class MediaDrawerController: UIViewController, DrawerTabBarControllerDelegate, StickerMenuControllerDelegate {
+final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, DrawerTabBarControllerDelegate, StickerMenuControllerDelegate {
     
     weak var delegate: MediaDrawerControllerDelegate?
     
@@ -50,7 +50,11 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
         return controller
     }()
     
-    private lazy var mediaDrawerView: MediaDrawerView = MediaDrawerView()
+    private lazy var mediaDrawerView: MediaDrawerView = {
+        let view = MediaDrawerView()
+        view.delegate = self
+        return view
+    }()
     
     // MARK: - Initializers
     
@@ -91,6 +95,12 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
         delegate?.didDismissMediaDrawer()
     }
         
+    // MARK: - MediaDrawerViewDelegate
+    
+    func didTapCloseButton() {
+        dismiss(animated: true, completion: nil)
+    }
+    
     // MARK: - DrawerTabBarControllerDelegate
     
     func didSelectOption(_ option: DrawerTabBarOption) {
