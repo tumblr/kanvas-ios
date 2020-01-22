@@ -9,10 +9,10 @@ import Foundation
 import UIKit
 import XCTest
 
-final class IgnoreTouchesStackViewTests: XCTestCase {
+final class IgnoreBackgroundTouchesStackViewTests: XCTestCase {
 
-    func newTouchesStackView() -> IgnoreTouchesStackView {
-        let view = IgnoreTouchesStackView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+    func newTouchesStackView() -> IgnoreBackgroundTouchesStackView {
+        let view = IgnoreBackgroundTouchesStackView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
         return view
     }
 

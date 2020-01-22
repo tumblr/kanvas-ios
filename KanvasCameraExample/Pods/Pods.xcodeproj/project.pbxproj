@@ -246,7 +246,7 @@
 		62283537A2A65F07040B4FEE354230BB /* RaveFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574FDE2A0DE4D6031AB5D1EEA6C095E3 /* RaveFilter.swift */; };
 		6343EAE22AB940AC0A12AE5A334994A7 /* KanvasCamera-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E76D3805B2BBC03BCE9AE441E8841C7A /* KanvasCamera-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		641FD39F369422E250E88003E8A74FA2 /* SDWebImageOptionsProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = A506EEE3D6E42D842ED119D3EA8F839E /* SDWebImageOptionsProcessor.m */; };
-		650AED0023D21D9200C6CC4D /* IgnoreTouchesStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650AECFF23D21D9200C6CC4D /* IgnoreTouchesStackView.swift */; };
+		650AED0023D21D9200C6CC4D /* IgnoreBackgroundTouchesStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650AECFF23D21D9200C6CC4D /* IgnoreBackgroundTouchesStackView.swift */; };
 		650C573AE399B80A4549FD86C9F67B33 /* huffman_encode_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = D37FB185DD43C710BD125D1583A45CA8 /* huffman_encode_utils.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		653043A343A328915B8D5C4E2D6F8A19 /* MainTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B698E9D39EF04C65812524A23A25200C /* MainTextView.swift */; };
 		6572D274615ECD47D67D8D834AE61E26 /* libwebp-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C04388A70716A4470CCE37CA39CDAC2 /* libwebp-dummy.m */; };
@@ -1080,7 +1080,7 @@
 		63662454DA3D0B46DFEC6C1C0511A80C /* idec_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = idec_dec.c; path = src/dec/idec_dec.c; sourceTree = "<group>"; };
 		6436688B09E9A32500DB250F764E3D1E /* alpha_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = alpha_enc.c; path = src/enc/alpha_enc.c; sourceTree = "<group>"; };
 		64C7E8C05877EBDCADCE605953EB8C69 /* lossless_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_mips_dsp_r2.c; path = src/dsp/lossless_mips_dsp_r2.c; sourceTree = "<group>"; };
-		650AECFF23D21D9200C6CC4D /* IgnoreTouchesStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoreTouchesStackView.swift; sourceTree = "<group>"; };
+		650AECFF23D21D9200C6CC4D /* IgnoreBackgroundTouchesStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoreBackgroundTouchesStackView.swift; sourceTree = "<group>"; };
 		651984AA4108A5330CC0C4DDECAA3474 /* UIView+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCache.m"; path = "SDWebImage/Core/UIView+WebCache.m"; sourceTree = "<group>"; };
 		655060DF6025BF08EE1D669ED6957B81 /* SDAnimatedImageRep.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDAnimatedImageRep.m; path = SDWebImage/Core/SDAnimatedImageRep.m; sourceTree = "<group>"; };
 		6701C98DE5C259CA6D497731EBF653F8 /* ScrollHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScrollHandler.swift; sourceTree = "<group>"; };
@@ -2073,7 +2073,7 @@
 			children = (
 				2F09F11AAA6F9B4324ED00773442171B /* IgnoreTouchesCollectionView.swift */,
 				B89837BDBD4E91595F5277237C172F5A /* IgnoreTouchesView.swift */,
-				650AECFF23D21D9200C6CC4D /* IgnoreTouchesStackView.swift */,
+				650AECFF23D21D9200C6CC4D /* IgnoreBackgroundTouchesStackView.swift */,
 			);
 			path = IgnoreTouches;
 			sourceTree = "<group>";
@@ -3795,7 +3795,7 @@
 				6DB156E47FADC67D618EF36B782735FD /* UIUpdate.swift in Sources */,
 				DCD212032417AEE697C65BCAED13C3D1 /* UIView+Image.swift in Sources */,
 				A5147863C7585FE126386342D40AFAC7 /* UIView+Layout.swift in Sources */,
-				650AED0023D21D9200C6CC4D /* IgnoreTouchesStackView.swift in Sources */,
+				650AED0023D21D9200C6CC4D /* IgnoreBackgroundTouchesStackView.swift in Sources */,
 				21E2CC167CE5DCD1072A9840244A6007 /* UIViewController+Load.swift in Sources */,
 				D225E09CFA9CA9D4EF72F36D50AA6E29 /* VideoCompositor.swift in Sources */,
 				287A3716512A87B19D6B9E578E778A19 /* VideoOutputHandler.swift in Sources */,
