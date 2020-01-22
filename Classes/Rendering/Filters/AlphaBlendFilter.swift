@@ -16,7 +16,6 @@ final class AlphaBlendFilter: Filter {
     private let overlayDimensions: CGSize
 
     private var uniformTexture: GLint = 0
-    private var uniformOverlayScale: GLint = 0
 
     init(glContext: EAGLContext?, pixelBuffer: CVPixelBuffer) {
         self.pixelBuffer = pixelBuffer
@@ -29,7 +28,6 @@ final class AlphaBlendFilter: Filter {
             let vertex = Shader.getSourceCode("base_filter", type: .vertex),
             let shader = Shader(vertexShader: vertex, fragmentShader: fragment) {
             uniformTexture = GLU.getUniformLocation(shader.program, "textureOverlay")
-            uniformOverlayScale = GLU.getUniformLocation(shader.program, "overlayScale")
             self.shader = shader
         }
     }
@@ -64,23 +62,5 @@ final class AlphaBlendFilter: Filter {
         glActiveTexture(GL_TEXTURE2.ui)
         glBindTexture(CVOpenGLESTextureGetTarget(sourceTexture), CVOpenGLESTextureGetName(sourceTexture))
         glUniform1i(uniformTexture, 2)
-
-        if let overlayScale = getOverlayScale() {
-            glUniform2f(uniformOverlayScale, overlayScale.width.f, overlayScale.height.f)
-        }
-    }
-
-    private func getOverlayScale() -> CGSize? {
-        var overlayScale = CGSize()
-        let cropScaleAmount = CGSize(width: overlayDimensions.width / outputDimensions.width, height: overlayDimensions.height / outputDimensions.height)
-        if cropScaleAmount.height > cropScaleAmount.width {
-            overlayScale.width = overlayDimensions.width / (outputDimensions.width * cropScaleAmount.height)
-            overlayScale.height = 1.0
-        }
-        else {
-            overlayScale.width = 1.0
-            overlayScale.height = overlayDimensions.height / (outputDimensions.height * cropScaleAmount.width)
-        }
-        return overlayScale
     }
 }
