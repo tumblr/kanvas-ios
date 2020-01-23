@@ -493,7 +493,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         if !textView.text.isEmpty {
             editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size)
             if let font = KanvasTextFont.from(font: textView.options.font), let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
-                analyticsProvider?.logEditorTextConfirm(new: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
+                analyticsProvider?.logEditorTextConfirm(isNew: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
             }
             else {
                 assertionFailure("Logging unknown stuff")
