@@ -55,9 +55,23 @@ struct FilterFactory {
     /// - Parameter glContext: The EAGLContext to bind this filter to.
     /// - Parameter overlays: Array of CVPixelBuffer instances to overlay.
     static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer]) -> FilterProtocol {
-        guard overlays.count > 0 else {
-            return FilterFactory.createFilter(type: type, glContext: glContext)
-        }
-        return GroupFilter(filters: [FilterFactory.createFilter(type: type, glContext: glContext)] + overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
+        let filters = createFilterList(type: type, glContext: glContext, overlays: overlays)
+        return createFilter(fromFilterList: filters, glContext: glContext)
+    }
+
+    private static func createFilterList(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer]) -> [FilterProtocol] {
+        var filters: [FilterProtocol] = []
+
+        // not sure if this is OK...
+        let f = Filter(glContext: glContext)
+        filters.append(f)
+
+        filters.append(createFilter(type: type, glContext: glContext))
+        filters.append(contentsOf: overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
+        return filters
+    }
+
+    private static func createFilter(fromFilterList filters: [FilterProtocol], glContext: EAGLContext?) -> FilterProtocol {
+        return filters.count > 1 ? GroupFilter(filters: filters) : filters.first ?? Filter(glContext: glContext)
     }
 }

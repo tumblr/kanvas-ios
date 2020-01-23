@@ -43,15 +43,13 @@ final class Renderer: Rendering {
     /// Image overlays
     var imageOverlays: [CGImage] = []
 
-    /// Transformation matrix that is used by filters to propertly render media
-    var mediaTransform: GLKMatrix4? {
-        didSet {
-            synchronized(self) {
-                self.filter.transform = self.mediaTransform
-            }
-        }
-    }
+    /// Current filter type
+    var filterType: FilterType = .passthrough
 
+    /// Transformation matrix that is used by filters to propertly render media
+    var mediaTransform: GLKMatrix4?
+
+    /// Indicates we should fip the dimensions of input media
     var switchInputDimensions: Bool {
         didSet {
             synchronized(self) {
@@ -59,14 +57,6 @@ final class Renderer: Rendering {
             }
         }
     }
-
-    /// Current filter type
-    var filterType: FilterType = .passthrough
-
-    /// Output dimensions for media
-    /// This may be different than the input dimensions, not just because of resolution differences,
-    /// but also because the `mediaTransform` may change the dimensions.
-    var outputDimensions: CGSize = .zero
 
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
@@ -80,27 +70,49 @@ final class Renderer: Rendering {
         glContext = EAGLContext(api: .openGLES3)
         filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
         switchInputDimensions = false
-        mediaTransform = nil
     }
 
     /// Processes a sample buffer, but swallows the completion
     ///
-    /// - Parameter sampleBuffer: the camera feed sample buffer
+    /// - Parameter sampleBuffer: the sample buffer to process
+    /// - Parameter time: the timestamp associated with the sample buffer
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval) {
-        processSampleBuffer(sampleBuffer, time: time) { (_, _) in }
+        processSampleBuffer(sampleBuffer, time: time, scaleToFillSize: nil)
+    }
+
+    /// Processes a sample buffer, but swallows the completion
+    ///
+    /// - Parameter sampleBuffer: the sample buffer to process
+    /// - Parameter time: the timestamp associated with the sample buffer
+    /// - Parameter scaleToFillSize: the size the sample buffer is intended to be rendered inside of
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, scaleToFillSize: CGSize?) {
+        processSampleBuffer(sampleBuffer, time: time, scaleToFillSize: scaleToFillSize) { (_, _) in }
+    }
+
+    /// Processes a sample buffer
+    ///
+    /// - Parameter sampleBuffer: the sample buffer to process
+    /// - Parameter time: the timestamp associated with the sample buffer
+    /// - Parameter completion: called when the sample buffer is processed
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, completion: (CVPixelBuffer, CMTime) -> Void) {
+        processSampleBuffer(sampleBuffer, time: time, scaleToFillSize: nil, completion: completion)
     }
     
     /// Call this method to process the sample buffer
     ///
     /// - Parameter sampleBuffer: the camera feed sample buffer
-    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, completion: (CVPixelBuffer, CMTime) -> Void) {
+    /// - Parameter time: the presentation time for the sample buffer
+    /// - Parameter scaleToFillSize: the size the sample buffer is intended to be rendered inside of
+    /// - Parameter completion: called when the sample buffer is processed
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, scaleToFillSize: CGSize?, completion: (CVPixelBuffer, CMTime) -> Void) {
         if processingImage {
             return
         }
         let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         let filterAlreadyInitialized: Bool = synchronized(self) {
             if filter.outputFormatDescription == nil {
-                filter.setupFormatDescription(from: sampleBuffer, outputDimensions: outputDimensions)
+                let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: scaleToFillSize)
+                filter.setupFormatDescription(from: sampleBuffer, transform: finalMediaTransform, outputDimensions: outputDimensions ?? .zero)
                 return false
             }
             return true
@@ -130,7 +142,7 @@ final class Renderer: Rendering {
     /// This keeps latency low by dropping frames that haven't been processeed by the delegate yet.
     /// For this to work, all access to filteredPixelBuffer should be locked, so this method should be called in
     /// a synchronized(self) block.
-    func output(filteredPixelBuffer: CVPixelBuffer) {
+    private func output(filteredPixelBuffer: CVPixelBuffer) {
         self.filteredPixelBuffer = filteredPixelBuffer
         callbackQueue.async {
             let pixelBuffer: CVPixelBuffer? = synchronized(self) {
@@ -150,7 +162,7 @@ final class Renderer: Rendering {
     ///
     /// - Parameter pixelBuffer: the input pixel buffer
     /// - Returns: the filtered pixel buffer
-    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer? {
+    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval, scaleToFillSize: CGSize?) -> CVPixelBuffer? {
         processingImage = true
         defer {
             processingImage = false
@@ -172,7 +184,8 @@ final class Renderer: Rendering {
         }
         
         if imageFilter.outputFormatDescription == nil {
-            imageFilter.setupFormatDescription(from: sampleBuffer, outputDimensions: outputDimensions)
+            let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: scaleToFillSize)
+            imageFilter.setupFormatDescription(from: sampleBuffer, transform: finalMediaTransform, outputDimensions: outputDimensions ?? .zero)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let filteredPixelBuffer = imageFilter.processPixelBuffer(sourcePixelBuffer, time: time)
@@ -180,11 +193,25 @@ final class Renderer: Rendering {
         return filteredPixelBuffer
     }
 
+    /// Configures the renderer to scale the input media to fill inside the provided outputDimensions
+    private func configureScaleToFill(sampleBuffer: CMSampleBuffer, size: CGSize?) -> (GLKMatrix4?, CGSize?) {
+        // If size is provided, setup the renderer to crop this sample buffer to size's aspect ratio.
+        if let scaleToFillSize = size, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
+            let dimensions = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
+            let inputDimensions = CGSize(width: CGFloat(dimensions.width), height: CGFloat(dimensions.height))
+            let outputDimensions = CGSize(width: inputDimensions.height * (scaleToFillSize.width / scaleToFillSize.height), height: inputDimensions.height)
+            let finalMediaTransform = GLKMatrix4Multiply(scaleWithMatrix(inputDimensions: inputDimensions, outputDimensions: outputDimensions), mediaTransform ?? GLKMatrix4Identity)
+            return (finalMediaTransform, outputDimensions)
+        }
+        return (mediaTransform ?? GLKMatrix4Identity, nil)
+    }
+
     // MARK: - changing filters
+
+    /// Refreshes a filter (used when changing the filter type)
     func refreshFilter() {
         synchronized(self) {
             filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
-            filter.transform = mediaTransform
             filter.switchInputDimensions = self.switchInputDimensions
         }
     }
@@ -192,6 +219,7 @@ final class Renderer: Rendering {
     /// Method to call reset on the camera filter
     func reset() {
         synchronized(self) {
+            filter.switchInputDimensions = self.switchInputDimensions
             filter.cleanup()
         }
     }

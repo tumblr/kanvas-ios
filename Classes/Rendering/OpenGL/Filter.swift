@@ -26,22 +26,22 @@ class Filter: FilterProtocol {
     var shader: Shader?
     
     /// The output format description from a CMSampleBuffer
-    var outputFormatDescription: CMFormatDescription?
+    private(set) var outputFormatDescription: CMFormatDescription?
 
     /// Time interval that the filter is running for
     var time: TimeInterval = 0
 
     /// Transformation matrix that should be used for this filter
-    var transform: GLKMatrix4?
+    private(set) var transform: GLKMatrix4?
 
     /// Input dimensions
-    var inputDimensions: CGSize = .zero
+    private(set) var inputDimensions: CGSize = .zero
 
     /// Output dimensions
-    var outputDimensions: CGSize = .zero
+    private(set) var outputDimensions: CGSize = .zero
 
-    /// Original output dimensions
-    var originalOutputDimensions: CGSize = .zero
+    /// Has already switched input dimensions
+    private var switchedInputDimensions: Bool = false
 
     /// Switch the input dimensions when determining output dimensions
     var switchInputDimensions: Bool = false
@@ -56,25 +56,27 @@ class Filter: FilterProtocol {
     /// Method to initialize the filter with the right output
     ///
     /// - Parameter sampleBuffer: the input sample buffer
-    func setupFormatDescription(from sampleBuffer: CMSampleBuffer, outputDimensions: CGSize) {
+    func setupFormatDescription(from sampleBuffer: CMSampleBuffer, transform: GLKMatrix4?, outputDimensions: CGSize) {
         if outputFormatDescription == nil, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
-            setupFormatDescription(inputFormatDescription)
+            let inputDimensionsCM = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
+            let inputDimensions = CGSize(width: inputDimensionsCM.width.g, height: inputDimensionsCM.height.g)
+            setupFormatDescription(inputDimensions: inputDimensions, transform: transform, outputDimensions: outputDimensions)
         }
     }
 
-    func setupFormatDescription(_ inputFormatDescription: CMFormatDescription) {
+    func setupFormatDescription(inputDimensions: CGSize, transform: GLKMatrix4?, outputDimensions: CGSize) {
         deleteBuffers()
-        let inputDimensionsCM = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
-        let inputDimensions = CGSize(width: inputDimensionsCM.width.g, height: inputDimensionsCM.height.g)
+
         var outputDimensionsNonZero = outputDimensions == .zero ? inputDimensions : outputDimensions
-        if originalOutputDimensions == .zero {
+        if !switchedInputDimensions {
             if switchInputDimensions {
                 outputDimensionsNonZero = CGSize(width: outputDimensionsNonZero.height, height: outputDimensionsNonZero.width)
             }
-            originalOutputDimensions = outputDimensionsNonZero
+            switchedInputDimensions = true
         }
         self.inputDimensions = inputDimensions
         self.outputDimensions = outputDimensionsNonZero
+        self.transform = transform
         guard initializeBuffers() else {
             assertionFailure("Problem initializing filter")
             return

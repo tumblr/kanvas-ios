@@ -157,6 +157,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        let frameSize = view.frame.size
         let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
         if hasFullAccess {
             sessionQueue.sync {
@@ -164,7 +165,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             }
             sessionQueue.async {
                 self.configureSession()
-                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+                self.setupRecorder(self.recorderType, frameSize: frameSize, segmentsHandler: self.segmentsHandler)
             }
         }
         setupGestures()
@@ -211,6 +212,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     func setupCaptureSession() {
         self.setupPreviewBlur()
+        let frameSize = view.frame.size
         let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
         self.sessionQueue.async {
             if hasFullAccess {
@@ -218,7 +220,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                     self.createCaptureSession()
                     self.configureSession()
                 }
-                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+                self.setupRecorder(self.recorderType, frameSize: frameSize, segmentsHandler: self.segmentsHandler)
                 self.captureSession?.startRunning()
             }
             performUIUpdate {
@@ -319,8 +321,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         flashMode = defaultOption
     }
 
-    private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, segmentsHandler: SegmentsHandlerType) {
-        let size = currentResolution()
+    private func setupRecorder(_ recorderClass: CameraRecordingProtocol.Type, frameSize: CGSize, segmentsHandler: SegmentsHandlerType) {
+        let size = recordingDimensions(frameSize: frameSize)
         self.recorder = recorderClass.init(size: size, photoOutput: photoOutput, videoOutput: videoDataOutput, audioOutput: audioDataOutput, recordingDelegate: self, segmentsHandler: segmentsHandler, settings: settings)
     }
 
@@ -335,10 +337,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 try? self.configureCurrentOutput()
             }
             self.captureSession?.startRunning()
-        }
 
-        // have to rebuild the filtered input display setup
-        filteredInputViewControllerInstance?.reset()
+            // have to rebuild the filtered input display setup
+            self.filteredInputViewControllerInstance?.reset()
+        }
     }
 
     /// Changes the current output modes corresponding to camera mode
@@ -521,14 +523,15 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         delegate?.cameraInputControllerPinched(gesture: gesture)
     }
 
-    private func currentResolution() -> CGSize {
-        var resolution = CGSize(width: 0, height: 0)
+    private func recordingDimensions(frameSize: CGSize) -> CGSize {
         if let formatDescription = currentDevice?.activeFormat.formatDescription {
-            let dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription)
-            resolution = CGSize(width: CGFloat(dimensions.height), height: CGFloat(dimensions.width))
+            let videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription)
+            var dimensions = CGSize(width: CGFloat(videoDimensions.height), height: CGFloat(videoDimensions.width))
+            // Make recording resolution have the same aspect ratio as the screen
+            dimensions.width = dimensions.height * (frameSize.width / frameSize.height)
+            return dimensions
         }
-
-        return resolution
+        return .zero
     }
 
     // MARK: - configuring session and devices
