@@ -198,6 +198,10 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "logPostFromDashboard")
     }
 
+    public func logChangeBlogForPostFromDashboard() {
+        logString(string: "logChangeBlogForPostFromDashboard")
+    }
+
     public func logSaveFromDashboard() {
         logString(string: "logSaveFromDashboard")
     }
