@@ -177,11 +177,10 @@ final class StrokeSelectorView: IgnoreTouchesView {
         if show {
             selectorBackground.alpha = 1
             selectorCircle.center = mainButton.center
+            self.mainButton.alpha = 0
+            self.selectorCircle.alpha = 1
             
-            selectorBackground.open(completion: {
-                self.mainButton.alpha = 0
-                self.selectorCircle.alpha = 1
-            })
+            selectorBackground.open()
         }
         else {
             mainButton.alpha = 1
