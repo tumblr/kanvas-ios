@@ -298,6 +298,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     // MARK: - navigation
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
+        modeAndShootController.dismissTooltip()
         cameraInputController.stopSession()
         let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
