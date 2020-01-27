@@ -59,17 +59,25 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
     // MARK: - Private utilities
     
     private func setCurrentTexture(_ textureType: KanvasBrushType) {
+        let newTexture: Texture
+        let newImage: UIImage?
+        
         switch textureType {
         case .pencil:
-            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.pencilImage)
-            texture = Pencil()
+            newTexture = Pencil()
+            newImage = KanvasCameraImages.pencilImage
         case .marker:
-            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.markerImage)
-            texture = Marker()
+            newTexture = Marker()
+            newImage = KanvasCameraImages.markerImage
         case .sharpie:
-            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.sharpieImage)
-            texture = Sharpie()
+            newTexture = Sharpie()
+            newImage = KanvasCameraImages.sharpieImage
         }
+        
+        textureSelectorView.changeMainButtonIcon(image: newImage)
+        textureSelectorView.arrangeOptions(selectedOption: textureType)
+        texture = newTexture
+        
         textureSelectorView.showSelectorBackground(false)
     }
     

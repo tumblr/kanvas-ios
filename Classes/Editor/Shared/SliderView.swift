@@ -101,30 +101,36 @@ final class SliderView: UIView {
     
     // MARK: - Public interface
     
-    func open(animated: Bool = true, animationDuration: TimeInterval = Constants.animationDuration, completion: (() -> Void)? = nil) {
+    func open(animated: Bool = true, animationDuration: TimeInterval = Constants.animationDuration,
+              animation: (() -> Void)? = nil, completion: (() -> Void)? = nil) {
         if animated {
             UIView.animate(withDuration: animationDuration, animations: {
                 self.moveUp()
+                animation?()
             }, completion: { _ in
                 completion?()
             })
         }
         else {
             moveUp()
+            animation?()
             completion?()
         }
     }
     
-    func close(animated: Bool = true, animationDuration: TimeInterval = Constants.animationDuration, completion: (() -> Void)? = nil) {
+    func close(animated: Bool = true, animationDuration: TimeInterval = Constants.animationDuration,
+               animation: (() -> Void)? = nil, completion: (() -> Void)? = nil) {
         if animated {
             UIView.animate(withDuration: animationDuration, animations: {
                 self.moveDown()
+                animation?()
             }, completion: { _ in
                 completion?()
             })
         }
         else {
             moveDown()
+            animation?()
             completion?()
         }
     }

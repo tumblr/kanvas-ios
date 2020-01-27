@@ -138,10 +138,6 @@ final class TextureSelectorView: IgnoreTouchesView {
         sharpieButton.addGestureRecognizer(sharpieButtonRecognizer)
         pencilButton.addGestureRecognizer(pencilButtonRecognizer)
         markerButton.addGestureRecognizer(markerButtonRecognizer)
-        
-        optionContainer.addArrangedSubview(sharpieButton)
-        optionContainer.addArrangedSubview(pencilButton)
-        optionContainer.addArrangedSubview(markerButton)
     }
     
     
@@ -194,6 +190,23 @@ final class TextureSelectorView: IgnoreTouchesView {
             selectorBackground.close(completion: {
                 self.selectorBackground.alpha = 0
             })
+        }
+    }
+    
+    func arrangeOptions(selectedOption: KanvasBrushType) {
+        switch selectedOption {
+        case .pencil:
+            optionContainer.addArrangedSubview(sharpieButton)
+            optionContainer.addArrangedSubview(markerButton)
+            optionContainer.addArrangedSubview(pencilButton)
+        case .marker:
+            optionContainer.addArrangedSubview(sharpieButton)
+            optionContainer.addArrangedSubview(pencilButton)
+            optionContainer.addArrangedSubview(markerButton)
+        case .sharpie:
+            optionContainer.addArrangedSubview(pencilButton)
+            optionContainer.addArrangedSubview(markerButton)
+            optionContainer.addArrangedSubview(sharpieButton)
         }
     }
 }

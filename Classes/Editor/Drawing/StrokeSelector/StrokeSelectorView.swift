@@ -75,11 +75,11 @@ final class StrokeSelectorView: IgnoreTouchesView {
     // MARK: - Layout
     
     private func setUpViews() {
-        setUpMainButtonCircle()
         setUpSelectorBackground()
         setUpSelectorPannableArea()
         setUpSelectorCircle()
         setUpMainButton()
+        setUpMainButtonCircle()
     }
     
     /// Sets up the button that opens the selector
@@ -176,18 +176,19 @@ final class StrokeSelectorView: IgnoreTouchesView {
     func showSelectorBackground(_ show: Bool) {
         if show {
             selectorBackground.alpha = 1
-            selectorCircle.center = mainButton.center
-            self.mainButton.alpha = 0
-            self.selectorCircle.alpha = 1
+            selectorCircle.center = convert(self.mainButton.center, to: self.selectorPannableArea)
+            mainButton.alpha = 0
+            selectorCircle.alpha = 1
             
             selectorBackground.open()
         }
         else {
-            mainButton.alpha = 1
-            selectorCircle.alpha = 0
-            
-            selectorBackground.close(completion: {
+            selectorBackground.close(animation: {
+                self.selectorCircle.center = self.convert(self.mainButton.center, to: self.selectorPannableArea)
+            }, completion: {
                 self.selectorBackground.alpha = 0
+                self.selectorCircle.alpha = 0
+                self.mainButton.alpha = 1
             })
         }
     }
