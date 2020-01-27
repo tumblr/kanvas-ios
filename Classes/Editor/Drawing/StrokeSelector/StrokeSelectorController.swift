@@ -115,8 +115,10 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     // MARK: - Private utilities
     
     private func selectorPanned(recognizer: UILongPressGestureRecognizer) {
+        print("L - selectorPanned")
         let point = getSelectedLocation(with: recognizer, in: strokeSelectorView.selectorPannableArea)
         if strokeSelectorView.selectorPannableArea.bounds.contains(point) {
+            print("L - selectorPanned if")
             strokeSelectorView.moveSelectorCircle(to: point)
             let percent = 100.0 - point.y
             setCircleSize(percent: percent)
