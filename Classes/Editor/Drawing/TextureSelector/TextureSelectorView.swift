@@ -23,7 +23,7 @@ protocol TextureSelectorViewDelegate: class {
 
 /// Constants for texture selector view
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
+    static let shortAnimationDuration: TimeInterval = 0.01
     
     static let stackViewInset: CGFloat = -10
     static let selectorHeight: CGFloat = 128
@@ -105,7 +105,6 @@ final class TextureSelectorView: IgnoreTouchesView {
     private func setUpSelectorBackground() {
         selectorBackground.accessibilityIdentifier = "Texture Selector Background"
         selectorBackground.add(into: self)
-        
         selectorBackground.alpha = 0
     }
     
@@ -159,6 +158,13 @@ final class TextureSelectorView: IgnoreTouchesView {
         delegate?.didTapMarkerButton()
     }
     
+    // MARK: - Private utilities
+    
+    private func showOptionContainer(_ show: Bool) {
+        UIView.animate(withDuration: Constants.shortAnimationDuration) {
+            self.optionContainer.alpha = show ? 1 : 0
+        }
+    }
     
     // MARK: - Public interface
     
@@ -166,9 +172,7 @@ final class TextureSelectorView: IgnoreTouchesView {
     ///
     /// - Parameter image: the new image for the icon
     func changeMainButtonIcon(image: UIImage?) {
-        UIView.animate(withDuration: Constants.animationDuration) {
-            self.mainButton.image = image
-        }
+        mainButton.image = image
     }
     
     /// shows or hides the selector
@@ -180,12 +184,12 @@ final class TextureSelectorView: IgnoreTouchesView {
             
             selectorBackground.open(completion: {
                 self.mainButton.alpha = 0
-                self.optionContainer.alpha = 1
+                self.showOptionContainer(true)
             })
         }
         else {
             mainButton.alpha = 1
-            optionContainer.alpha = 0
+            self.showOptionContainer(false)
             
             selectorBackground.close(completion: {
                 self.selectorBackground.alpha = 0
