@@ -71,7 +71,6 @@ final class StrokeSelectorView: IgnoreTouchesView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Layout
     
     private func setUpViews() {
