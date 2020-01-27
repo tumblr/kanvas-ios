@@ -19,7 +19,7 @@ private struct TextureSelectorControllerConstants {
 /// Controller for handling the texture selector on the drawing menu.
 final class TextureSelectorController: UIViewController, TextureSelectorViewDelegate {
     
-    var texture: Texture = Sharpie()
+    private(set) var texture: Texture = Sharpie()
     
     private lazy var textureSelectorView: TextureSelectorView = {
         let view = TextureSelectorView()
@@ -28,6 +28,8 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
     }()
 
     weak var delegate: TextureSelectorControllerDelegate?
+    
+    // MARK: - Initializers
     
     init() {
         super.init(nibName: .none, bundle: .none)
@@ -43,11 +45,32 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
         fatalError("init(nibName:bundle:) has not been implemented")
     }
     
-    // MARK: - View Life Cycle
+    // MARK: - View lifecycle
     
     override func loadView() {
         view = textureSelectorView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         setCurrentTexture(texture.textureType)
+    }
+    
+    // MARK: - Private utilities
+    
+    private func setCurrentTexture(_ textureType: KanvasBrushType) {
+        switch textureType {
+        case .pencil:
+            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.pencilImage)
+            texture = Pencil()
+        case .marker:
+            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.markerImage)
+            texture = Marker()
+        case .sharpie:
+            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.sharpieImage)
+            texture = Sharpie()
+        }
+        textureSelectorView.showSelectorBackground(false)
     }
     
     // MARK: - Public interface
@@ -79,20 +102,4 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
         setCurrentTexture(.marker)
         delegate?.didSelectTexture(textureType: .marker)
     }
-
-    func setCurrentTexture(_ textureType: KanvasBrushType) {
-        switch textureType {
-        case .pencil:
-            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.pencilImage)
-            texture = Pencil()
-        case .marker:
-            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.markerImage)
-            texture = Marker()
-        case .sharpie:
-            textureSelectorView.changeMainButtonIcon(image: KanvasCameraImages.sharpieImage)
-            texture = Sharpie()
-        }
-        textureSelectorView.showSelectorBackground(false)
-    }
-    
 }
