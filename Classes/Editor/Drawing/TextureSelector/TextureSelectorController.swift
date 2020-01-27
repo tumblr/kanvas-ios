@@ -12,7 +12,7 @@ protocol TextureSelectorControllerDelegate: class {
 }
 
 /// Constants for the texture selector
-private struct TextureSelectorControllerConstants {
+private struct Constants {
     static let animationDuration: TimeInterval = 0.25
 }
 
