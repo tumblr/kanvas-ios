@@ -22,7 +22,6 @@ final class MediaPickerButtonView: IgnoreTouchesView {
         static let borderWidth: CGFloat = 2
         static let cornerRadius: CGFloat = 5
         static let borderColor: CGColor = UIColor.white.cgColor
-        static let backgroundColor: UIColor = .white
         static let shadowColor: CGColor = UIColor.black.cgColor
         static let shadowOffset: CGSize = .zero
         static let shadowOpacity: Float = 0.5
@@ -50,10 +49,6 @@ final class MediaPickerButtonView: IgnoreTouchesView {
 
         if settings.features.mediaPicking {
             buttonView.accessibilityLabel = "Media Picker Button"
-            buttonView.backgroundColor = Constants.backgroundColor
-            buttonView.layer.borderColor = Constants.borderColor
-            buttonView.layer.borderWidth = Constants.borderWidth
-            buttonView.layer.cornerRadius = Constants.cornerRadius
             buttonView.layer.masksToBounds = true
             layer.shadowColor = Constants.shadowColor
             layer.shadowOffset = Constants.shadowOffset
@@ -67,6 +62,10 @@ final class MediaPickerButtonView: IgnoreTouchesView {
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchUpOutside)
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchCancel)
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchDragExit)
+            
+            if let defaultImage = KanvasCameraImages.imageThumbnail {
+                setBackgroundImage(defaultImage)
+            }
         }
     }
 
@@ -88,9 +87,8 @@ final class MediaPickerButtonView: IgnoreTouchesView {
     /// Sets the thumbnail of the button
     /// - parameter image: thumbnail
     func setThumbnail(_ image: UIImage) {
-        buttonView.setBackgroundImage(image, for: .normal)
-        buttonView.setBackgroundImage(image, for: .highlighted)
-        buttonView.setBackgroundImage(image, for: .selected)
+        setBorderStyle()
+        setBackgroundImage(image)
     }
 
     /// Resets the media picker button
@@ -99,7 +97,7 @@ final class MediaPickerButtonView: IgnoreTouchesView {
     }
 
     // MARK: Private API
-
+    
     @objc private func buttonTouchUpInside() {
         delegate?.mediaPickerButtonDidPress()
     }
@@ -153,5 +151,17 @@ final class MediaPickerButtonView: IgnoreTouchesView {
         glowView.layer.shadowOpacity = Constants.glowOpacity
 
         self.glowView = glowView
+    }
+    
+    private func setBorderStyle() {
+        buttonView.layer.borderColor = Constants.borderColor
+        buttonView.layer.borderWidth = Constants.borderWidth
+        buttonView.layer.cornerRadius = Constants.cornerRadius
+    }
+    
+    private func setBackgroundImage(_ image: UIImage) {
+        buttonView.setBackgroundImage(image, for: .normal)
+        buttonView.setBackgroundImage(image, for: .highlighted)
+        buttonView.setBackgroundImage(image, for: .selected)
     }
 }
