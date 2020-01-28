@@ -192,8 +192,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private func drawLine(to endPoint: CGPoint) {
         UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+
+        drawingView.temporalImageView.image?.draw(in: CGRect(origin: .zero, size: drawingView.drawingCanvas.frame.size))
 
         let startPoint = lastDrawingPoint
         let texture = textureSelectorController.texture
@@ -210,7 +210,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     /// Saves the drawing state and copies it to the layer
     private func endLineDrawing() {
         UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds, blendMode: .normal, alpha: 1.0)
+        drawingView.temporalImageView.image?.draw(in: CGRect(origin: .zero, size: drawingView.drawingCanvas.frame.size), blendMode: .normal, alpha: 1.0)
         if let image = UIGraphicsGetImageFromCurrentImageContext() {
             drawingCollection.append(image)
             drawingLayer?.contents = image.cgImage
@@ -222,8 +222,8 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private func drawPoint(on point: CGPoint) {
         UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+
+        drawingView.temporalImageView.image?.draw(in: CGRect(origin: .zero, size: drawingView.drawingCanvas.frame.size))
         
         let texture = textureSelectorController.texture
         let strokeSize = strokeSelectorController.getStrokeSize(minimum: texture.minimumStroke, maximum: texture.maximumStroke)
@@ -241,12 +241,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private func fillBackground() {
         UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+
+        drawingView.temporalImageView.image?.draw(in: CGRect(origin: .zero, size: drawingView.drawingCanvas.frame.size))
         
         context.setBlendMode(mode.blendMode)
         context.setFillColor(drawingColor.cgColor)
-        context.fill(drawingView.drawingCanvas.bounds)
+        context.fill(CGRect(origin: .zero, size: drawingView.drawingCanvas.frame.size))
         
         if let image = UIGraphicsGetImageFromCurrentImageContext() {
             drawingView.temporalImageView.image = image
