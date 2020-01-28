@@ -548,9 +548,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - MediaDrawerControllerDelegate
     
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+    func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
-        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+        editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(), location: editorView.movableViewCanvas.bounds.center, size: size)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {
