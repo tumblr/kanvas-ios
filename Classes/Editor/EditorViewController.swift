@@ -253,7 +253,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         let cell = collectionController.textCell
-        onBeforeSelectingEditionOption(.text, cell: cell)
+        onBeforeShowingEditionMenu(.text, cell: cell)
+        showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
         editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
             self.textController.showConfirmButton(true)
@@ -381,40 +382,48 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         delegate?.dismissButtonPressed()
     }
     
-    func confirmMenuButtonPressed() {
+    func confirmEditionMenu() {
         guard let editionOption = openedMenu else { return }
         
         switch editionOption {
         case .filter:
             filterController.showView(false)
+            showMainUI(true)
         case .text:
             editorView.animateReturnOfEditionOption(cell: selectedCell)
             textController.showView(false)
             textController.showConfirmButton(false)
+            showMainUI(true)
         case .drawing:
             editorView.animateReturnOfEditionOption(cell: selectedCell)
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
+            showMainUI(true)
         case .media:
             analyticsProvider?.logEditorMediaDrawerClosed()
         }
         
-        collectionController.showView(true)
-        showConfirmButton(true)
-        showCloseButton(true)
-        showTagButton(true)
+        onAfterConfirmingEditionMenu()
+    }
+    
+    /// Called to reset the editor state after confirming an edition menu
+    private func onAfterConfirmingEditionMenu() {
+        openedMenu = nil
+        selectedCell = nil
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
-        onBeforeSelectingEditionOption(editionOption, cell: cell)
+        onBeforeShowingEditionMenu(editionOption, cell: cell)
         
         switch editionOption {
         case .filter:
+            showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
         case .text:
+            showMainUI(false)
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
@@ -422,6 +431,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.textController.showConfirmButton(true)
             })
         case .drawing:
+            showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
             editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: {
@@ -433,19 +443,20 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         }
     }
     
-    private func onBeforeSelectingEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+    /// Prepares the editor state to show an edition menu
+    ///
+    /// - Parameters
+    ///  - editionOption: the selected edition option
+    ///  - cell: the cell of the selected edition option
+    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
         selectedCell = cell
         openedMenu = editionOption
-        collectionController.showView(false)
-        showConfirmButton(false)
-        showCloseButton(false)
-        showTagButton(false)
     }
     
     // MARK: - EditorFilterControllerDelegate
     
     func didConfirmFilters() {
-        confirmMenuButtonPressed()
+        confirmEditionMenu()
     }
     
     func didSelectFilter(_ filterItem: FilterItem) {
@@ -457,7 +468,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didConfirmDrawing() {
         analyticsProvider?.logEditorDrawingConfirm()
-        confirmMenuButtonPressed()
+        confirmEditionMenu()
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
@@ -481,7 +492,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 assertionFailure("Logging unknown stuff")
             }
         }
-        confirmMenuButtonPressed()
+        confirmEditionMenu()
     }
     
     func didMoveToolsUp() {
@@ -558,7 +569,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didDismissMediaDrawer() {
-        confirmMenuButtonPressed()
+        confirmEditionMenu()
     }
     
     func didSelectStickersTab() {
@@ -569,6 +580,18 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private func openMediaDrawer() {
         present(mediaDrawerController, animated: true, completion: .none)
+    }
+    
+    // MARK: - Private utilities
+    
+    /// shows or hides the main UI (edition options, tag button and back button)
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showMainUI(_ show: Bool) {
+        collectionController.showView(show)
+        showConfirmButton(show)
+        showCloseButton(show)
+        showTagButton(show)
     }
     
     // MARK: - Public interface

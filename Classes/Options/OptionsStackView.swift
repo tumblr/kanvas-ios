@@ -18,7 +18,7 @@ protocol OptionsStackViewDelegate: class {
 }
 
 /// A view for laying out option views in a stack
-final class OptionsStackView<Item>: UIView {
+final class OptionsStackView<Item>: IgnoreTouchesView {
 
     /// The stackView is an ExtendedStackView to allow for touch events beyond it's regular bounds.
     /// This is to allow for smaller frames for buttons in a stack view but still have them register touches correctly

@@ -309,6 +309,9 @@ import Foundation
     /// Logs when someone posts from Kanvas
     func logPostFromDashboard()
 
+    /// Logs when someone changes the blog to post to
+    func logChangeBlogForPostFromDashboard()
+
     /// Logs when someone only saves media from Kanvas
     func logSaveFromDashboard()
 

@@ -60,6 +60,7 @@
 		655163A42396E8A30043C01A /* stickers.json in Resources */ = {isa = PBXBuildFile; fileRef = 655163A32396E8A30043C01A /* stickers.json */; };
 		655C934F234CCA80008F26AF /* ColorSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655C934E234CCA80008F26AF /* ColorSelectorViewTests.swift */; };
 		655C9351234CCA99008F26AF /* ColorSelectorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655C9350234CCA99008F26AF /* ColorSelectorControllerTests.swift */; };
+		65752CE123D895ED0088BEBB /* IgnoreBackgroundTouchesStackViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65752CE023D895ED0088BEBB /* IgnoreBackgroundTouchesStackViewTests.swift */; };
 		6578F83A22E12098002B952C /* MMCQTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83822E12098002B952C /* MMCQTests.swift */; };
 		6578F83B22E12098002B952C /* ColorThiefTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83922E12098002B952C /* ColorThiefTests.swift */; };
 		6578F83E22E120BD002B952C /* CALayer+ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578F83C22E120BD002B952C /* CALayer+ColorTests.swift */; };
@@ -229,6 +230,7 @@
 		655163A32396E8A30043C01A /* stickers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stickers.json; sourceTree = "<group>"; };
 		655C934E234CCA80008F26AF /* ColorSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectorViewTests.swift; sourceTree = "<group>"; };
 		655C9350234CCA99008F26AF /* ColorSelectorControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectorControllerTests.swift; sourceTree = "<group>"; };
+		65752CE023D895ED0088BEBB /* IgnoreBackgroundTouchesStackViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IgnoreBackgroundTouchesStackViewTests.swift; sourceTree = "<group>"; };
 		6578F83822E12098002B952C /* MMCQTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMCQTests.swift; sourceTree = "<group>"; };
 		6578F83922E12098002B952C /* ColorThiefTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorThiefTests.swift; sourceTree = "<group>"; };
 		6578F83C22E120BD002B952C /* CALayer+ColorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+ColorTests.swift"; sourceTree = "<group>"; };
@@ -407,6 +409,16 @@
 				304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		650AED0523D2377400C6CC4D /* IgnoreTouches */ = {
+			isa = PBXGroup;
+			children = (
+				65752CE023D895ED0088BEBB /* IgnoreBackgroundTouchesStackViewTests.swift */,
+				ABE4991C2137307500379F7F /* IgnoreTouchesViewTests.swift */,
+				0E6450B821B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift */,
+			);
+			path = IgnoreTouches;
 			sourceTree = "<group>";
 		};
 		650B2A1C2326CFB800F3DAD4 /* Fonts */ = {
@@ -811,12 +823,11 @@
 		ABE4991B2137307500379F7F /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				650AED0523D2377400C6CC4D /* IgnoreTouches */,
 				6578F83722E12098002B952C /* ColorThief */,
 				653B045222E9143C005AAFCA /* HorizontalCollection */,
-				ABE4991C2137307500379F7F /* IgnoreTouchesViewTests.swift */,
 				ABE4991D2137307500379F7F /* QueueTests.swift */,
 				0E5CFADD219F283B00D8F6F5 /* DeviceTests.swift */,
-				0E6450B821B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift */,
 				6591EE47239E9EBC007C590B /* LoadingIndicatorViewTests.swift */,
 				651DEBA62209F17400476F22 /* ConicalGradientLayerTests.swift */,
 				651DEBA82209FC4300476F22 /* RGBATests.swift */,
@@ -1176,6 +1187,7 @@
 				653D062E22BD2C49007118C5 /* FilterCollectionTests.swift in Sources */,
 				651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */,
 				764AC467221D8485005C82EC /* FilteredInputViewControllerTests.swift in Sources */,
+				65752CE123D895ED0088BEBB /* IgnoreBackgroundTouchesStackViewTests.swift in Sources */,
 				653B044A22E911DB005AAFCA /* ColorCollectionCellTests.swift in Sources */,
 				658A32A0239FFD9B00EEC1D3 /* DrawerTabBarCell.swift in Sources */,
 				654910EE22EB5675006DE5A1 /* EditorFilterControllerTests.swift in Sources */,

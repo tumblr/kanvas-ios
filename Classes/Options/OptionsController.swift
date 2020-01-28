@@ -104,7 +104,7 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
     
     // Creates the stack view that will contain the other two
     private func createVerticalStackView() -> UIStackView {
-        let stackView = UIStackView(arrangedSubviews: optionsStackViews)
+        let stackView = IgnoreBackgroundTouchesStackView(arrangedSubviews: optionsStackViews)
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = CameraConstants.optionSpacing
