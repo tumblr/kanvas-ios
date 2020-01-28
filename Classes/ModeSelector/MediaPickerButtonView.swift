@@ -75,12 +75,13 @@ final class MediaPickerButtonView: IgnoreTouchesView {
 
     /// Shows or hides the button
     /// - parameter visible: Whether to make the button visible or not
-    func showButton(_ visible: Bool) {
+    /// - parameter animated: Whether to animate the transition
+    func showButton(_ visible: Bool, animated: Bool = true) {
         if visible {
-            showViews(shownViews: [buttonView], hiddenViews: [], animated: true)
+            showViews(shownViews: [buttonView], hiddenViews: [], animated: animated)
         }
         else {
-            showViews(shownViews: [], hiddenViews: [buttonView], animated: true)
+            showViews(shownViews: [], hiddenViews: [buttonView], animated: animated)
         }
     }
 

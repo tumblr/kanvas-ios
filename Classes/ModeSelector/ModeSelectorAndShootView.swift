@@ -182,8 +182,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.hideTrash()
     }
 
-    func toggleMediaPickerButton(_ visible: Bool) {
-        mediaPickerButton.showButton(visible)
+    func toggleMediaPickerButton(_ visible: Bool, animated: Bool = true) {
+        mediaPickerButton.showButton(visible, animated: animated)
     }
 
     func setMediaPickerButtonThumbnail(_ image: UIImage) {
