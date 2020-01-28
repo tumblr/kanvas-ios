@@ -34,6 +34,7 @@ final class EditorViewTests: FBSnapshotTestCase {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         let anotherView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 120))
+        anotherView.addSubview(view)
         let fsc = FullViewConstraints(view: view,
                                       top: view.topAnchor.constraint(equalTo: anotherView.topAnchor),
                                       bottom: view.bottomAnchor.constraint(equalTo: anotherView.bottomAnchor),
