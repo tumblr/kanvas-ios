@@ -22,6 +22,7 @@ final class MediaPickerButtonView: IgnoreTouchesView {
         static let borderWidth: CGFloat = 2
         static let cornerRadius: CGFloat = 5
         static let borderColor: CGColor = UIColor.white.cgColor
+        static let backgroundColor: UIColor = .white
         static let shadowColor: CGColor = UIColor.black.cgColor
         static let shadowOffset: CGSize = .zero
         static let shadowOpacity: Float = 0.5
@@ -158,6 +159,7 @@ final class MediaPickerButtonView: IgnoreTouchesView {
         buttonView.layer.borderColor = Constants.borderColor
         buttonView.layer.borderWidth = Constants.borderWidth
         buttonView.layer.cornerRadius = Constants.cornerRadius
+        buttonView.backgroundColor = Constants.backgroundColor
     }
     
     private func setBackgroundImage(_ image: UIImage) {
