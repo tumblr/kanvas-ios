@@ -62,6 +62,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 filteredInputViewControllerInstance = nil
             }
         }
+        filteredInputViewControllerInstance?.view.alpha = 0
         return filteredInputViewControllerInstance
     }
     private let previewLayer = AVCaptureVideoPreviewLayer()
@@ -157,16 +158,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
-        if hasFullAccess {
-            sessionQueue.sync {
-                self.createCaptureSession()
-            }
-            sessionQueue.async {
-                self.configureSession()
-                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
-            }
-        }
         setupGestures()
 
         if filteredInputViewController != nil {
@@ -189,44 +180,56 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         guard !isSimulator else {
-            self.previewBlurView.effect = nil
+            previewBlurView.effect = nil
             return
         }
 
-        self.setupFilteredPreview()
         setupCaptureSession()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
-        guard !isSimulator else { return }
+        guard !isSimulator else {
+            return
+        }
 
+        stopCaptureSession()
+    }
+
+    func setupCaptureSession() {
+        previewBlurView.effect = CameraInputController.blurEffect()
+        let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
+        guard hasFullAccess else {
+            return
+        }
+        sessionQueue.sync {
+            if self.captureSession == nil {
+                self.createCaptureSession()
+            }
+        }
+        sessionQueue.async {
+            self.configureSession()
+            self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+            self.captureSession?.startRunning()
+            performUIUpdate {
+                UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration * 1.5) {
+                    self.previewBlurView.effect = nil
+                }
+                UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
+                    self.filteredInputViewControllerInstance?.view.alpha = 1
+                }
+            }
+        }
+    }
+
+    func stopCaptureSession() {
+        previewBlurView.effect = CameraInputController.blurEffect()
+        filteredInputViewControllerInstance?.view.alpha = 0
         sessionQueue.async {
             self.captureSession?.stopRunning()
         }
         filteredInputViewControllerInstance?.reset()
-        previewBlurView.effect = CameraInputController.blurEffect()
-    }
-
-    func setupCaptureSession() {
-        self.setupPreviewBlur()
-        let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
-        self.sessionQueue.async {
-            if hasFullAccess {
-                if self.captureSession == nil {
-                    self.createCaptureSession()
-                    self.configureSession()
-                }
-                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
-                self.captureSession?.startRunning()
-            }
-            performUIUpdate {
-                UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
-                    self.previewBlurView.effect = nil
-                }
-            }
-        }
     }
 
     func cleanup() {
@@ -242,7 +245,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     private static func blurEffect() -> UIBlurEffect {
-        return UIBlurEffect(style: .light)
+        return UIBlurEffect(style: .regular)
     }
 
     private func configureSession() {
