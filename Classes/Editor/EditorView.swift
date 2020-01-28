@@ -21,10 +21,14 @@ struct FullViewConstraints {
     }
 
     func update(with rect: CGRect) {
+        guard let superRect = view?.superview?.bounds else {
+            assertionFailure("Could not update constraints")
+            return
+        }
         top.constant = rect.origin.y
-        bottom.constant = -rect.origin.y // hmm, not necessarily...
+        bottom.constant = -(superRect.height - (rect.origin.y + rect.height))
         leading.constant = rect.origin.x
-        trailing.constant = -rect.origin.x // hmm, not necessarily...
+        trailing.constant = -(superRect.width - (rect.origin.x + rect.width))
         view?.updateConstraints()
     }
 }

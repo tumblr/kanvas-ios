@@ -13,10 +13,8 @@ protocol MediaDrawerControllerDelegate: class {
     ///
     /// - Parameters
     ///  - imageView: an image view with the sticker
-    ///  - transformations: transformations to be applied to the image view
-    ///  - location: initial position of the image view in its parent view
     ///  - size: image view size
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    func didSelectSticker(imageView: StylableImageView, size: CGSize)
     
     /// Callback for when a sticker type is selected
     ///
@@ -119,8 +117,8 @@ final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, Dr
     
     // MARK: - StickerMenuControllerDelegate
     
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
-        delegate?.didSelectSticker(imageView: imageView, transformations: transformations, location: location, size: size)
+    func didSelectSticker(imageView: StylableImageView, size: CGSize) {
+        delegate?.didSelectSticker(imageView: imageView, size: size)
         dismiss(animated: true, completion: nil)
     }
     

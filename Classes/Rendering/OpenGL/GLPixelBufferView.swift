@@ -35,7 +35,10 @@ final class GLPixelBufferView: UIView {
     var viewportRect: CGRect = .zero {
         didSet {
             if viewportRect != oldValue {
-                delegate?.didRenderRectChange(rect: viewportRect.applying(.init(scaleX: 1/contentScaleFactor, y: 1/contentScaleFactor)))
+                var rect = viewportRect.applying(.init(scaleX: 1/contentScaleFactor, y: 1/contentScaleFactor))
+                // We need to round these values to prevent sub-pixel rounding errors.
+                rect = CGRect(x: round(rect.origin.x), y: round(rect.origin.y), width: round(rect.width), height: round(rect.height))
+                delegate?.didRenderRectChange(rect: rect)
             }
         }
     }
