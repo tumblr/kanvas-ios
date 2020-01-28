@@ -159,6 +159,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        // Initialize capture session so captureSession is ensured to be not nil when the view loads.
+        createCaptureSession()
+
+        // Create the recorder now, even though the session-based outputs are nil, this helps with testability.
+        setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+
         setupGestures()
 
         if filteredInputViewController != nil {
@@ -212,7 +218,6 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             }
             self?.captureSession?.startRunning()
             performUIUpdate { [weak self] in
-                self?.previewLayer.session = self?.captureSession
                 UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
                     self?.previewBlurView.effect = nil
                 }
@@ -281,7 +286,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     private func setupPreview() {
-        let previewLayer = self.previewLayer
+        previewLayer.session = captureSession
         previewLayer.frame = view.bounds
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         previewLayer.opacity = 0
@@ -540,7 +545,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     // MARK: - configuring session and devices
 
-    /// Creates a capture session. Must be called from the sessionQueue.
+    /// Creates a capture session.
     private func createCaptureSession() {
         guard captureSession == nil else {
             return
