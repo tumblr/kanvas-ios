@@ -198,19 +198,18 @@ final class TextureSelectorView: IgnoreTouchesView {
     }
     
     func arrangeOptions(selectedOption: KanvasBrushType) {
+        let buttons: [UIButton]
         switch selectedOption {
         case .pencil:
-            optionContainer.addArrangedSubview(sharpieButton)
-            optionContainer.addArrangedSubview(markerButton)
-            optionContainer.addArrangedSubview(pencilButton)
+            buttons = [sharpieButton, markerButton, pencilButton]
         case .marker:
-            optionContainer.addArrangedSubview(sharpieButton)
-            optionContainer.addArrangedSubview(pencilButton)
-            optionContainer.addArrangedSubview(markerButton)
+            buttons = [sharpieButton, pencilButton, markerButton]
         case .sharpie:
-            optionContainer.addArrangedSubview(pencilButton)
-            optionContainer.addArrangedSubview(markerButton)
-            optionContainer.addArrangedSubview(sharpieButton)
+            buttons = [pencilButton, markerButton, sharpieButton]
+        }
+        
+        buttons.forEach { button in
+            optionContainer.addArrangedSubview(button)
         }
     }
 }

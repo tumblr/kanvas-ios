@@ -7,10 +7,12 @@
 import Foundation
 import UIKit
 
+/// Constants for SliderView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
 }
 
+/// Circular view that opens and closes upwards
 final class SliderView: UIView {
     
     private let topCircle: CircularImageView
@@ -85,11 +87,13 @@ final class SliderView: UIView {
     
     // MARK: - Private utilities
     
+    /// Extends the slider upwards
     private func moveUp() {
         self.topCircle.transform = .identity
         self.rectangle.transform = .identity
     }
     
+    /// Shrinks the slider until it becomes a circle
     private func moveDown() {
         let circleTranslation = CGAffineTransform(translationX: 0, y: self.bottomCircle.center.y - self.topCircle.center.y)
         self.topCircle.transform = circleTranslation
@@ -101,6 +105,13 @@ final class SliderView: UIView {
     
     // MARK: - Public interface
     
+    /// Opens the slider
+    ///
+    /// - Parameters
+    ///   - animated: whether the view is animated or not
+    ///   - animationDuration: time interval for the animation
+    ///   - animation: additional animation that will occurr at the same time the slider opens
+    ///   - completion: block to execute as soon as the animation ends
     func open(animated: Bool = true, animationDuration: TimeInterval = Constants.animationDuration,
               animation: (() -> Void)? = nil, completion: (() -> Void)? = nil) {
         if animated {
@@ -118,6 +129,13 @@ final class SliderView: UIView {
         }
     }
     
+    /// Closes the slider
+    ///
+    /// - Parameters
+    ///   - animated: whether the view is animated or not
+    ///   - animationDuration: time interval for the animation
+    ///   - animation: additional animation that will occurr at the same time the slider closes
+    ///   - completion: block to execute as soon as the animation ends
     func close(animated: Bool = true, animationDuration: TimeInterval = Constants.animationDuration,
                animation: (() -> Void)? = nil, completion: (() -> Void)? = nil) {
         if animated {

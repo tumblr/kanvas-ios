@@ -173,9 +173,11 @@ final class StrokeSelectorView: IgnoreTouchesView {
     ///
     /// - Parameter show: true to show, false to hide
     func showSelectorBackground(_ show: Bool) {
+        let circleInitialPosition = convert(mainButton.center, to: selectorPannableArea)
+        
         if show {
             selectorBackground.alpha = 1
-            selectorCircle.center = convert(self.mainButton.center, to: self.selectorPannableArea)
+            selectorCircle.center = circleInitialPosition
             mainButton.alpha = 0
             selectorCircle.alpha = 1
             
@@ -183,7 +185,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
         }
         else {
             selectorBackground.close(animation: {
-                self.selectorCircle.center = self.convert(self.mainButton.center, to: self.selectorPannableArea)
+                self.selectorCircle.center = circleInitialPosition
             }, completion: {
                 self.selectorBackground.alpha = 0
                 self.selectorCircle.alpha = 0
