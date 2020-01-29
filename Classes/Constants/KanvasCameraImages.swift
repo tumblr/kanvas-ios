@@ -100,4 +100,7 @@ struct KanvasCameraImages {
     static func highlightImage(for selected: Bool) -> UIImage? {
         return selected ? highlightSelected : highlightUnselected
     }
+    
+    // MARK: - Media Picker
+    static let imageThumbnail = UIImage.imageFromCameraBundle(named: "imageThumbnail")
 }
