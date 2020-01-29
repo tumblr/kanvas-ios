@@ -158,6 +158,8 @@ extension KanvasDashboardController: CameraControllerDelegate {
                 case .save:
                     break
                 case .postOptions:
+                    let analyticsProvider = self.stateDelegate?.kanvasDashboardAnalyticsProvider
+                    analyticsProvider?.logAdvancedPostOptionsCreate()
                     self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
                 }
             }
