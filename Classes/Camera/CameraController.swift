@@ -291,10 +291,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    override public func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-    }
-
     // MARK: - navigation
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
@@ -935,6 +931,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func cameraPermissionsChanged(hasFullAccess: Bool) {
         if hasFullAccess {
             cameraInputController.setupCaptureSession()
+            toggleMediaPicker(visible: true, animated: false)
         }
     }
 
@@ -945,17 +942,21 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// Toggles the media picker
     /// This takes the current camera mode and filter selector visibility into account, as the media picker should
     /// only be shown in Normal mode when the filter selector is hidden.
-    private func toggleMediaPicker(visible: Bool) {
+    ///
+    /// - Parameters
+    ///   - visible: Whether to make the button visible or not.
+    ///   - animated: Whether to animate the transition.
+    private func toggleMediaPicker(visible: Bool, animated: Bool = true) {
         if visible {
-            if !filterSettingsController.isFilterSelectorVisible() {
-                modeAndShootController.showMediaPickerButton(basedOn: currentMode)
+            if !filterSettingsController.isFilterSelectorVisible() && cameraPermissionsViewController.hasFullAccess() {
+                modeAndShootController.showMediaPickerButton(basedOn: currentMode, animated: animated)
             }
             else {
-                modeAndShootController.toggleMediaPickerButton(false)
+                modeAndShootController.toggleMediaPickerButton(false, animated: animated)
             }
         }
         else {
-            modeAndShootController.toggleMediaPickerButton(false)
+            modeAndShootController.toggleMediaPickerButton(false, animated: animated)
         }
     }
 

@@ -223,8 +223,9 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private func setupMediaPickerButton() {
         let guide = UILayoutGuide()
         addLayoutGuide(guide)
+        let bottomMargin: CGFloat = Device.belongsToIPhoneXGroup ? 90 : 96
         NSLayoutConstraint.activate([
-            guide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -1 * 89/* (6 + 70 + 6 + 7) */),
+            guide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             guide.heightAnchor.constraint(equalToConstant: 100),
             guide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             guide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor, constant: -50),
