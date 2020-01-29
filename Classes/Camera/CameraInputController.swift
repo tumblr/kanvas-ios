@@ -14,7 +14,8 @@ private struct CameraInputConstants {
     static let videoQueue: String = "kanvas.camera.videoQueue"
     static let audioQueue: String = "kanvas.camera.audioQueue"
     static let flashColor = UIColor.white.withAlphaComponent(0.4)
-    static let previewBlurAnimationDuration = 0.4
+    static let previewBlurAnimationDuration = 0.6
+    static let previewVisibleAnimationDuration = 0.4
 }
 
 /// The class for controlling the device camera.
@@ -62,6 +63,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 filteredInputViewControllerInstance = nil
             }
         }
+        filteredInputViewControllerInstance?.view.alpha = 0
         return filteredInputViewControllerInstance
     }
     private let previewLayer = AVCaptureVideoPreviewLayer()
@@ -157,16 +159,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
-        if hasFullAccess {
-            sessionQueue.sync {
-                self.createCaptureSession()
-            }
-            sessionQueue.async {
-                self.configureSession()
-                self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
-            }
-        }
+        // Initialize capture session so captureSession is ensured to be not nil when the view loads.
+        createCaptureSession()
+
+        // Create the recorder now, even though the session-based outputs are nil, this helps with testability.
+        setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
+
         setupGestures()
 
         if filteredInputViewController != nil {
@@ -189,44 +187,56 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         guard !isSimulator else {
-            self.previewBlurView.effect = nil
+            previewBlurView.effect = nil
             return
         }
 
-        self.setupFilteredPreview()
         setupCaptureSession()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
-        guard !isSimulator else { return }
-
-        sessionQueue.async {
-            self.captureSession?.stopRunning()
+        guard !isSimulator else {
+            return
         }
-        filteredInputViewControllerInstance?.reset()
-        previewBlurView.effect = CameraInputController.blurEffect()
+
+        stopCaptureSession()
     }
 
     func setupCaptureSession() {
-        self.setupPreviewBlur()
+        previewBlurView.effect = CameraInputController.blurEffect()
         let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
-        self.sessionQueue.async {
-            if hasFullAccess {
-                if self.captureSession == nil {
-                    self.createCaptureSession()
-                    self.configureSession()
-                }
+        guard hasFullAccess else {
+            return
+        }
+        sessionQueue.async { [weak self] in
+            self?.createCaptureSession()
+            self?.configureSession()
+            if let self = self {
                 self.setupRecorder(self.recorderType, segmentsHandler: self.segmentsHandler)
-                self.captureSession?.startRunning()
             }
-            performUIUpdate {
+            self?.captureSession?.startRunning()
+            performUIUpdate { [weak self] in
                 UIView.animate(withDuration: CameraInputConstants.previewBlurAnimationDuration) {
-                    self.previewBlurView.effect = nil
+                    self?.previewBlurView.effect = nil
+                }
+                UIView.animate(withDuration: CameraInputConstants.previewVisibleAnimationDuration) {
+                    self?.filteredInputViewControllerInstance?.view.alpha = 1
+                    self?.previewLayer.opacity = 1
                 }
             }
         }
+    }
+
+    func stopCaptureSession() {
+        previewBlurView.effect = CameraInputController.blurEffect()
+        filteredInputViewControllerInstance?.view.alpha = 0
+        previewLayer.opacity = 0
+        sessionQueue.async { [weak self] in
+            self?.captureSession?.stopRunning()
+        }
+        filteredInputViewControllerInstance?.reset()
     }
 
     func cleanup() {
@@ -234,17 +244,18 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
         teardownFilteredPreview()
 
-        sessionQueue.async {
-            self.captureSession?.stopRunning()
-            self.removeSessionInputsAndOutputs()
-            self.captureSession = nil
+        sessionQueue.async { [weak self] in
+            self?.captureSession?.stopRunning()
+            self?.removeSessionInputsAndOutputs()
+            self?.captureSession = nil
         }
     }
 
     private static func blurEffect() -> UIBlurEffect {
-        return UIBlurEffect(style: .light)
+        return UIBlurEffect(style: .regular)
     }
 
+    /// Configures a capture session. Must be called from the sessionQueue.
     private func configureSession() {
         guard !isSimulator else {
             return
@@ -278,6 +289,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         previewLayer.session = captureSession
         previewLayer.frame = view.bounds
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        previewLayer.opacity = 0
         view.layer.addSublayer(previewLayer)
     }
 
@@ -328,13 +340,13 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     /// Switches between front and rear camera, if possible
     func switchCameras() {
-        sessionQueue.async {
-            self.captureSession?.stopRunning()
+        sessionQueue.async { [weak self] in
+            self?.captureSession?.stopRunning()
             do {
-                try? self.toggleFrontRearCameras()
-                try? self.configureCurrentOutput()
+                try? self?.toggleFrontRearCameras()
+                try? self?.configureCurrentOutput()
             }
-            self.captureSession?.startRunning()
+            self?.captureSession?.startRunning()
         }
 
         // have to rebuild the filtered input display setup
@@ -487,7 +499,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         filteredInputViewControllerInstance?.applyFilter(type: filterType)
     }
     
-    /// Starts the current audio session
+    /// Starts the current audio session. Must be called from the sessionQueue.
     func startAudioSession() {
         guard let captureSession = captureSession, let audioInput = currentMicInput else { return }
         if captureSession.canAddInput(audioInput) {
@@ -495,7 +507,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
     
-    /// Stops the current audio session
+    /// Stops the current audio session. Must be called from the sessionQueue.
     func stopAudioSession() {
         guard let captureSession = captureSession, let audioInput = currentMicInput else { return }
         captureSession.removeInput(audioInput)
@@ -532,8 +544,12 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
 
     // MARK: - configuring session and devices
-    
+
+    /// Creates a capture session.
     private func createCaptureSession() {
+        guard captureSession == nil else {
+            return
+        }
         captureSession = AVCaptureSession()
 
         /// if the capture mode is only photo, then the session preset should be photo
@@ -571,6 +587,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         microphone = microphoneSession.devices.first
     }
 
+    /// Configures Camera Inputs. Must be called from the sessionQueue.
     private func configureCameraInputs() throws {
         guard let captureSession = self.captureSession else { throw CameraInputError.captureSessionIsMissing }
 
@@ -587,6 +604,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
     }
 
+    /// Must be called from the sessionQueue.
     private func configurePhotoOutput() throws {
         guard let captureSession = self.captureSession else { throw CameraInputError.captureSessionIsMissing }
 
@@ -600,6 +618,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         else { throw CameraInputError.invalidOperation }
     }
 
+    /// Must be called from the sessionQueue.
     private func configureVideoDataOutput() throws {
         guard let captureSession = self.captureSession else { throw CameraInputError.captureSessionIsMissing }
 
