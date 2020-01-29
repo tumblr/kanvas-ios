@@ -348,4 +348,8 @@ import Foundation
     /// Logs when a sticker is moved through the canvas
     /// - Parameter stickerId: the ID of the sticker that was moved
     func logEditorStickerMove(stickerId: String)
+    
+    /// Logs when a the post options are shown
+    /// - Parameter page: page presenting the post options
+    func logAdvancedOptionsOpen(page: String)
 }
