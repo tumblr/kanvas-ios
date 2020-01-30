@@ -120,13 +120,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return button
     }()
 
-    private static var checkImage: UIImage = {
-        let checkLabel = UILabel()
-        checkLabel.font = Constants.buttonFont
-        checkLabel.text = "✓"
-        checkLabel.textColor = Constants.buttonAcceptedColor
-        checkLabel.sizeToFit()
-        return checkLabel.asImage()
+    private static var checkImage: UIImage? = {
+        return KanvasCameraImages.permissionCheckmark?.withRenderingMode(.alwaysTemplate)
     }()
 
     var delegate: CameraPermissionsViewDelegate?
@@ -243,6 +238,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         button.setTitle(title, for: .normal)
         button.setTitle(titleDisabled, for: .disabled)
         button.setImage(checkImage, for: .disabled)
+        button.tintColor = Constants.buttonAcceptedColor
         button.setTitleColor(Constants.buttonColor, for: .normal)
         button.setTitleColor(Constants.buttonAcceptedColor, for: .disabled)
         button.contentHorizontalAlignment = .center

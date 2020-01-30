@@ -103,4 +103,7 @@ struct KanvasCameraImages {
     
     // MARK: - Media Picker
     static let imageThumbnail = UIImage.imageFromCameraBundle(named: "imageThumbnail")
+    
+    // MARK: - Camera Permissions
+    static let permissionCheckmark = UIImage.imageFromCameraBundle(named: "checkmark")
 }
