@@ -31,6 +31,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     private weak var delegate: FilteredInputViewControllerDelegate?
     private(set) var currentFilter: FilterType = .passthrough
 
+    private var frameSize: CGSize = .zero
     private let startTime = Date.timeIntervalSinceReferenceDate
     
     init(delegate: FilteredInputViewControllerDelegate? = nil, settings: CameraSettings) {
@@ -46,7 +47,8 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .clear
+        frameSize = view.frame.size
         setupPreview()
 
         renderer.filterType = currentFilter
@@ -54,22 +56,26 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-
         super.viewDidDisappear(animated)
     }
     
     // MARK: - layout
     private func setupPreview() {
         let previewView = GLPixelBufferView(frame: .zero)
+        previewView.mediaContentMode = .scaleAspectFit
         previewView.add(into: view)
         self.previewView = previewView
     }
 
+    override func viewDidLayoutSubviews() {
+        frameSize = view.frame.size
+    }
+
     func filterSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
-        renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime)
+        renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime, scaleToFillSize: frameSize)
     }
     
-    // MARK: - GLRendererDelegate
+    // MARK: - RendererDelegate
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         self.previewView?.displayPixelBuffer(pixelBuffer)
     }
@@ -91,7 +97,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     // MARK: - filtering image
     func filterImageWithCurrentPipeline(image: UIImage?) -> UIImage? {
         if let uImage = image, let pixelBuffer = uImage.pixelBuffer() {
-            if let filteredPixelBuffer = renderer.processSingleImagePixelBuffer(pixelBuffer, time: Date.timeIntervalSinceReferenceDate - startTime) {
+            if let filteredPixelBuffer = renderer.processSingleImagePixelBuffer(pixelBuffer, time: Date.timeIntervalSinceReferenceDate - startTime, scaleToFillSize: frameSize) {
                 return UIImage(pixelBuffer: filteredPixelBuffer)
             }
         }

@@ -13,10 +13,8 @@ protocol StickerMenuControllerDelegate: class {
     ///
     /// - Parameters
     ///  - imageView: an image view with the sticker
-    ///  - transformations: transformations to be applied to the image view
-    ///  - location: initial position of the image view in its parent view
     ///  - size: image view size
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    func didSelectSticker(imageView: StylableImageView, size: CGSize)
     
     /// Callback for when a sticker type is selected
     ///
@@ -81,8 +79,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     
     func didSelectSticker(id: String, image: UIImage, with size: CGSize) {
         let imageView = StylableImageView(id: id, image: image)
-        delegate?.didSelectSticker(imageView: imageView, transformations: ViewTransformations(),
-                                   location: UIScreen.main.bounds.center, size: size)
+        delegate?.didSelectSticker(imageView: imageView, size: size)
     }
     
     // MARK: - StickerTypeCollectionControllerDelegate

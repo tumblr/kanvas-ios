@@ -15,8 +15,6 @@ class MediaPlayerTests: XCTestCase {
 
     class RendererMock: Rendering {
 
-        var backgroundFillColor: CGColor = UIColor.clear.cgColor
-
         var mediaTransform: GLKMatrix4?
 
         var outputDimensions: CGSize = .zero
@@ -38,15 +36,17 @@ class MediaPlayerTests: XCTestCase {
             processedSampleBuffer = sampleBuffer
         }
 
-        func output(filteredPixelBuffer: CVPixelBuffer) {
-
+        func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, scaleToFillSize: CGSize?) {
+            processedSampleBufferCallCount += 1
+            processedSampleBuffer = sampleBuffer
         }
 
-        func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer? {
+        func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval, scaleToFillSize: CGSize?) -> CVPixelBuffer? {
             return pixelBuffer
         }
 
         func refreshFilter() {
+            
         }
 
         func reset() {

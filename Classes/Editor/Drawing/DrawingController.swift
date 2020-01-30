@@ -41,9 +41,6 @@ protocol DrawingControllerDelegate: class {
     
     /// Called when the color selector is released
     func didEndColorSelection()
-
-    /// Called when the background is filled with a color
-    func didFillBackground(mode: CGBlendMode, color: CGColor)
 }
 
 /// Constants for Drawing Controller
@@ -174,7 +171,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private func setUpView() {
         drawingView.alpha = 0
     }
-    
+
+    /// Tell the view that the rendering rectangle has changed.
+    func didRenderRectChange(rect: CGRect) {
+        drawingView.didRenderRectChange(rect: rect)
+    }
     
     // MARK: - Drawing
     
@@ -189,12 +190,12 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     ///
     /// - Parameter point: location where the line ends
     private func drawLine(to endPoint: CGPoint) {
-        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        let rect = drawingView.drawingCanvas.bounds
+        UIGraphicsBeginImageContext(rect.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
-        
-        
+
+        drawingView.temporalImageView.image?.draw(in: rect)
+
         let startPoint = lastDrawingPoint
         let texture = textureSelectorController.texture
         let strokeSize = strokeSelectorController.getStrokeSize(minimum: texture.minimumStroke, maximum: texture.maximumStroke)
@@ -209,8 +210,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     /// Saves the drawing state and copies it to the layer
     private func endLineDrawing() {
-        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds, blendMode: .normal, alpha: 1.0)
+        let rect = drawingView.drawingCanvas.bounds
+        UIGraphicsBeginImageContext(rect.size)
+        drawingView.temporalImageView.image?.draw(in: rect, blendMode: .normal, alpha: 1.0)
         if let image = UIGraphicsGetImageFromCurrentImageContext() {
             drawingCollection.append(image)
             drawingLayer?.contents = image.cgImage
@@ -220,10 +222,11 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     /// Draws a point on a specified point
     private func drawPoint(on point: CGPoint) {
-        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        let rect = drawingView.drawingCanvas.bounds
+        UIGraphicsBeginImageContext(rect.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+
+        drawingView.temporalImageView.image?.draw(in: rect)
         
         let texture = textureSelectorController.texture
         let strokeSize = strokeSelectorController.getStrokeSize(minimum: texture.minimumStroke, maximum: texture.maximumStroke)
@@ -239,14 +242,15 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     /// Paints the complete background with a color
     private func fillBackground() {
-        UIGraphicsBeginImageContext(drawingView.drawingCanvas.frame.size)
+        let rect = drawingView.drawingCanvas.bounds
+        UIGraphicsBeginImageContext(rect.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        drawingView.temporalImageView.image?.draw(in: drawingView.drawingCanvas.bounds)
+
+        drawingView.temporalImageView.image?.draw(in: rect)
         
         context.setBlendMode(mode.blendMode)
         context.setFillColor(drawingColor.cgColor)
-        context.fill(drawingView.drawingCanvas.bounds)
+        context.fill(rect)
         
         if let image = UIGraphicsGetImageFromCurrentImageContext() {
             drawingView.temporalImageView.image = image
@@ -254,8 +258,6 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             drawingLayer?.contents = image.cgImage
         }
         UIGraphicsEndImageContext()
-
-        delegate?.didFillBackground(mode: mode.blendMode, color: drawingColor.cgColor)
     }
     
     /// Sets a new color for drawing
@@ -384,13 +386,13 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     // MARK: - DrawingViewDelegate
     
     func didTapDrawingCanvas(recognizer: UITapGestureRecognizer) {
-        let currentPoint = recognizer.location(in: view)
+        let currentPoint = recognizer.location(in: recognizer.view)
         drawPoint(on: currentPoint)
         logDraw(.tap)
     }
     
     func didPanDrawingCanvas(recognizer: UIPanGestureRecognizer) {
-        let currentPoint = recognizer.location(in: view)
+        let currentPoint = recognizer.location(in: recognizer.view)
         switch recognizer.state {
         case .began:
             prepareLine(on: currentPoint)

@@ -8,8 +8,32 @@ import AVFoundation
 import Foundation
 import UIKit
 
-/// protocol for closing the preview or confirming
+struct FullViewConstraints {
+    weak var view: UIView?
+    let top: NSLayoutConstraint
+    let bottom: NSLayoutConstraint
+    let leading: NSLayoutConstraint
+    let trailing: NSLayoutConstraint
 
+    @discardableResult func activate() -> FullViewConstraints {
+        NSLayoutConstraint.activate([top, bottom, leading, trailing])
+        return self
+    }
+
+    func update(with rect: CGRect) {
+        guard let superRect = view?.superview?.bounds else {
+            assertionFailure("Could not update constraints")
+            return
+        }
+        top.constant = rect.origin.y
+        bottom.constant = -(superRect.height - (rect.origin.y + rect.height))
+        leading.constant = rect.origin.x
+        trailing.constant = -(superRect.width - (rect.origin.x + rect.width))
+        view?.updateConstraints()
+    }
+}
+
+/// protocol for closing the preview or confirming
 protocol EditorViewDelegate: class {
     /// A function that is called when the confirm button is pressed
     func didTapConfirmButton()
@@ -40,6 +64,9 @@ protocol EditorViewDelegate: class {
     ///
     ///  - Parameter imageView:the image view that was removed
     func didRemoveImage(_ imageView: StylableImageView)
+    /// Called when the rendering rectangle has changed
+    /// - Parameter rect: the rendering rectangle
+    func didRenderRectChange(rect: CGRect)
 }
 
 /// Constants for EditorView
@@ -63,7 +90,13 @@ private struct EditorViewConstants {
 
 /// A UIView to preview the contents of segments without exporting
 
-final class EditorView: UIView, MovableViewCanvasDelegate {
+final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelegate {
+
+    func didRenderRectChange(rect: CGRect) {
+        drawingCanvasConstraints.update(with: rect)
+        movableViewCanvasConstraints.update(with: rect)
+        delegate?.didRenderRectChange(rect: rect)
+    }
 
     enum MainActionMode {
         case confirm
@@ -90,13 +123,34 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     let filterMenuContainer = IgnoreTouchesView()
     let textMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
-    let drawingCanvas = IgnoreTouchesView()
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
-    
+
+    let drawingCanvas = IgnoreTouchesView()
+
+    private lazy var drawingCanvasConstraints: FullViewConstraints = {
+        return FullViewConstraints(
+            view: drawingCanvas,
+            top: drawingCanvas.topAnchor.constraint(equalTo: topAnchor),
+            bottom: drawingCanvas.bottomAnchor.constraint(equalTo: bottomAnchor),
+            leading: drawingCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
+            trailing: drawingCanvas.trailingAnchor.constraint(equalTo: trailingAnchor)
+        )
+    }()
+
     lazy var movableViewCanvas: MovableViewCanvas = {
         let canvas = MovableViewCanvas()
         canvas.delegate = self
         return canvas
+    }()
+
+    private lazy var movableViewCanvasConstraints = {
+        return FullViewConstraints(
+            view: movableViewCanvas,
+            top: movableViewCanvas.topAnchor.constraint(equalTo: topAnchor),
+            bottom: movableViewCanvas.bottomAnchor.constraint(equalTo: bottomAnchor),
+            leading: movableViewCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
+            trailing: movableViewCanvas.trailingAnchor.constraint(equalTo: trailingAnchor)
+        )
     }()
 
     var avatarView: UIView? {
@@ -122,8 +176,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
     
     private func setupViews() {
         setupPlayer()
-        drawingCanvas.add(into: self)
-        movableViewCanvas.add(into: self)
+        setupDrawingCanvas()
+        setupMovableViewCanvas()
         setupNavigationContainer()
         setupCloseButton()
         if showTagButton {
@@ -151,8 +205,22 @@ final class EditorView: UIView, MovableViewCanvasDelegate {
 
     private func setupPlayer() {
         let playerView = MediaPlayerView()
+        playerView.delegate = self
         playerView.add(into: self)
         self.playerView = playerView
+    }
+
+    private func setupDrawingCanvas() {
+        drawingCanvas.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(drawingCanvas)
+        drawingCanvasConstraints.activate()
+    }
+
+    private func setupMovableViewCanvas() {
+        movableViewCanvas.translatesAutoresizingMaskIntoConstraints = false
+        movableViewCanvas.clipsToBounds = true
+        addSubview(movableViewCanvas)
+        movableViewCanvasConstraints.activate()
     }
     
     /// Container that holds the back button and the bottom menu

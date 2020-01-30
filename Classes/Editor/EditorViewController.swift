@@ -112,7 +112,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             player.filterType = filterType
         }
     }
-    private var backgroundFillColor: CGColor = UIColor.clear.cgColor
+
     private var editingNewText: Bool = true
 
     weak var delegate: EditorControllerDelegate?
@@ -291,6 +291,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didEndTouchesOnText() {
         showNavigationContainer(true)
     }
+
+    func didRenderRectChange(rect: CGRect) {
+        drawingController.didRenderRectChange(rect: rect)
+    }
     
     private func startExporting(action: KanvasExportAction) {
         player.stop()
@@ -320,7 +324,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private func createFinalVideo(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
-        exporter.backgroundFillColor = backgroundFillColor
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
             performUIUpdate {
@@ -338,7 +341,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private func createFinalImage(image: UIImage, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
-        exporter.backgroundFillColor = backgroundFillColor
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
@@ -477,15 +479,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didEndStrokeSelectorAnimation() {
         delegate?.didEndStrokeSelectorAnimation()
     }
-
-    func didFillBackground(mode: CGBlendMode, color: CGColor) {
-        if mode == .normal {
-            backgroundFillColor = color
-        }
-        else if mode == .clear {
-            backgroundFillColor = UIColor.clear.cgColor
-        }
-    }
     
     // MARK: - EditorTextControllerDelegate
     
@@ -566,9 +559,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - MediaDrawerControllerDelegate
     
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+    func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
-        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+        editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(), location: editorView.movableViewCanvas.bounds.center, size: size)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {
