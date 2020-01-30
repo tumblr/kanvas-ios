@@ -242,6 +242,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         button.setTitleColor(Constants.buttonColor, for: .normal)
         button.setTitleColor(Constants.buttonAcceptedColor, for: .disabled)
         button.contentHorizontalAlignment = .center
+        button.imageView?.contentMode = .scaleAspectFit
         button.titleLabel?.font = Constants.buttonFont
         button.layer.borderWidth = Constants.borderWidth
         return button
@@ -249,7 +250,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     private static func updateButton(button: UIButton) {
         button.layer.cornerRadius = button.bounds.height / 2.0
-        button.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: button.bounds.height / -4.0, bottom: 0.0, right: 0.0)
+        let verticalInset: CGFloat = 4.5
+        button.imageEdgeInsets = UIEdgeInsets(top: verticalInset, left: button.bounds.height / -4.0, bottom: verticalInset, right: 0.0)
         button.contentEdgeInsets = UIEdgeInsets(
             top: button.bounds.height / 5.0,
             left: button.bounds.height / 2.0,
