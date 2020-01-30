@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class TextureSelectorViewTests: FBSnapshotTestCase {
+final class SliderViewTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -19,16 +19,14 @@ final class TextureSelectorViewTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newView() -> TextureSelectorView {
-        let view = TextureSelectorView()
-        view.frame = CGRect(x: 0, y: 0,
-                            width: TextureSelectorView.selectorWidth,
-                            height: TextureSelectorView.selectorHeight)
-        return view
+    func newSliderView() -> SliderView {
+        let sliderView = SliderView()
+        sliderView.frame = CGRect(x: 0, y: 0, width: 34, height: 130)
+        return sliderView
     }
     
-    func testViewSetup() {
-        let view = newView()
-        FBSnapshotVerifyView(view)
+    func testSliderView() {
+        let sliderView = newSliderView()
+        FBSnapshotVerifyView(sliderView)
     }
 }
