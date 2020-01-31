@@ -12,7 +12,6 @@ import XCTest
 import Utils
 
 class MediaExporterStub: MediaExporting {
-    var backgroundFillColor: CGColor = UIColor.clear.cgColor
     var filterType: FilterType = .passthrough
     var imageOverlays: [CGImage] = []
 

@@ -48,7 +48,7 @@ final class VideoCompositor: NSObject, AVVideoCompositing {
         }
     }
 
-    /// The GLRendering object that should be used to process frames
+    /// The Rendering object that should be used to process frames
     let renderer: Rendering
 
     /// The FilterType used to process each frame

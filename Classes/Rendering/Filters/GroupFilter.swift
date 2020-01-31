@@ -22,21 +22,11 @@ class GroupFilter: FilterProtocol {
 
     /// Output format
     var outputFormatDescription: CMFormatDescription? {
-        get {
-            return filters.first?.outputFormatDescription
-        }
-        set {
-            filters.first?.outputFormatDescription = newValue
-        }
+        return filters.last?.outputFormatDescription
     }
 
     var transform: GLKMatrix4? {
-        get {
-            return filters.first?.transform
-        }
-        set {
-            filters.first?.transform = newValue
-        }
+        return filters.first?.transform
     }
 
     private var filters: [FilterProtocol] = []
@@ -49,18 +39,25 @@ class GroupFilter: FilterProtocol {
         cleanup()
     }
 
-    func setupFormatDescription(from sampleBuffer: CMSampleBuffer, outputDimensions: CGSize) {
+    func setupFormatDescription(from sampleBuffer: CMSampleBuffer, transform: GLKMatrix4?, outputDimensions: CGSize) {
         if outputFormatDescription == nil, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
-            setupFormatDescription(inputFormatDescription)
+            let inputDimensionsCM = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
+            let inputDimensions = CGSize(width: inputDimensionsCM.width.g, height: inputDimensionsCM.height.g)
+            setupFormatDescription(inputDimensions: inputDimensions, transform: transform, outputDimensions: outputDimensions)
         }
     }
 
-    func setupFormatDescription(_ formatDescription: CMFormatDescription) {
-        var description = formatDescription
+    func setupFormatDescription(inputDimensions: CGSize, transform: GLKMatrix4?, outputDimensions: CGSize) {
+        var inputDimensions = inputDimensions
+        var transform = transform
+        var outputDimensions = outputDimensions
         for filter in filters {
-            filter.setupFormatDescription(description)
-            if let outputFormatDescription = filter.outputFormatDescription {
-                description = outputFormatDescription
+            filter.setupFormatDescription(inputDimensions: inputDimensions, transform: transform, outputDimensions: outputDimensions)
+            transform = nil
+            outputDimensions = .zero
+            if let desc = filter.outputFormatDescription {
+                let dim = CMVideoFormatDescriptionGetDimensions(desc)
+                inputDimensions = CGSize(width: dim.width.d, height: dim.height.d)
             }
         }
     }

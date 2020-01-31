@@ -236,7 +236,6 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         setUpColorSelector()
     }
     
-    
     // MARK: - Views
     
     /// Sets up the main text view

@@ -291,13 +291,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    override public func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-    }
-
     // MARK: - navigation
     
     private func showPreviewWithSegments(_ segments: [CameraSegment]) {
+        modeAndShootController.dismissTooltip()
         cameraInputController.stopSession()
         let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
@@ -487,13 +484,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         isRecording = event == .started
         cameraView.updateUI(forRecording: isRecording)
         filterSettingsController.updateUI(forRecording: isRecording)
+        toggleMediaPicker(visible: !isRecording)
         if isRecording {
             modeAndShootController.hideModeButton()
-            toggleMediaPicker(visible: false)
         }
-        else {
-            toggleMediaPicker(visible: true)
-            // If it finished recording, then there is at least one clip and button shouldn't be shown.
+        else if !isRecording && !clipsController.hasClips && settings.enabledModes.count > 1 {
+            modeAndShootController.showModeButton()
         }
     }
     
@@ -617,17 +613,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     if let url = url {
                         if mode.quantity == .single {
                             strongSelf.showPreviewWithSegments([CameraSegment.video(url, TumblrMediaInfo(source: .kanvas_camera))])
-                            strongSelf.updateRecordState(event: .ended)
-                            strongSelf.updateUI(forClipsPresent: false)
                         }
                         else if let image = AVURLAsset(url: url).thumbnail() {
                             strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
                                                                             overlayText: strongSelf.durationStringForAssetAtURL(url),
                                                                             lastFrame: strongSelf.getLastFrameFrom(url)))
-                            strongSelf.updateRecordState(event: .ended)
+                            
                         }
                     }
                     
+                    strongSelf.updateRecordState(event: .ended)
                     strongSelf.generateHapticFeedback()
                 }
             })
@@ -936,6 +931,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func cameraPermissionsChanged(hasFullAccess: Bool) {
         if hasFullAccess {
             cameraInputController.setupCaptureSession()
+            toggleMediaPicker(visible: true, animated: false)
         }
     }
 
@@ -946,17 +942,21 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// Toggles the media picker
     /// This takes the current camera mode and filter selector visibility into account, as the media picker should
     /// only be shown in Normal mode when the filter selector is hidden.
-    private func toggleMediaPicker(visible: Bool) {
+    ///
+    /// - Parameters
+    ///   - visible: Whether to make the button visible or not.
+    ///   - animated: Whether to animate the transition.
+    private func toggleMediaPicker(visible: Bool, animated: Bool = true) {
         if visible {
-            if !filterSettingsController.isFilterSelectorVisible() {
-                modeAndShootController.showMediaPickerButton(basedOn: currentMode)
+            if !filterSettingsController.isFilterSelectorVisible() && cameraPermissionsViewController.hasFullAccess() {
+                modeAndShootController.showMediaPickerButton(basedOn: currentMode, animated: animated)
             }
             else {
-                modeAndShootController.toggleMediaPickerButton(false)
+                modeAndShootController.toggleMediaPickerButton(false, animated: animated)
             }
         }
         else {
-            modeAndShootController.toggleMediaPickerButton(false)
+            modeAndShootController.toggleMediaPickerButton(false, animated: animated)
         }
     }
 

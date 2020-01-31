@@ -31,12 +31,4 @@ final class StrokeSelectorViewTests: FBSnapshotTestCase {
         let view = newView()
         FBSnapshotVerifyView(view)
     }
-    
-    func testSelectorOpened() {
-        let view = newView()
-        UIView.setAnimationsEnabled(false)
-        view.showSelectorBackground(true)
-        UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
-    }
 }
