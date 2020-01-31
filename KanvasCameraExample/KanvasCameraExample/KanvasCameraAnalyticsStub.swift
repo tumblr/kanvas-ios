@@ -249,10 +249,6 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     public func logAdvancedOptionsOpen(page: String) {
         logString(string: "logAdvancedOptionsOpen Page: \(page)")
     }
-    
-    public func logAdvancedPostOptionsCreate() {
-        logString(string: "logAdvancedPostOptionsCreate")
-    }
 
     func logString(string: String) {
         NSLog("\(self): \(string)")
