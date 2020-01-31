@@ -352,7 +352,4 @@ import Foundation
     /// Logs when a the post options are shown
     /// - Parameter page: page presenting the post options
     func logAdvancedOptionsOpen(page: String)
-    
-    /// Logs when a the post options are shown in Create
-    func logAdvancedPostOptionsCreate()
 }
