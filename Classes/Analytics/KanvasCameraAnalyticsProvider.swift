@@ -349,7 +349,7 @@ import Foundation
     /// - Parameter stickerId: the ID of the sticker that was moved
     func logEditorStickerMove(stickerId: String)
     
-    /// Logs when a the post options are shown
+    /// Logs when the "next" button that opens APO is pressed in the Editor
     /// - Parameter page: page presenting the post options
     func logAdvancedOptionsOpen(page: String)
 }
