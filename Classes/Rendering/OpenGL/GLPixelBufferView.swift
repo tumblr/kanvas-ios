@@ -10,7 +10,7 @@ import OpenGLES
 import GLKit
 
 /// Protocol for GLPixelBufferView
-protocol GLPixelBufferViewDelegate {
+protocol GLPixelBufferViewDelegate: class {
 
     /// Called when the rendering rectangle changes
     func didRenderRectChange(rect: CGRect)
@@ -19,7 +19,7 @@ protocol GLPixelBufferViewDelegate {
 /// OpenGL view for rendering a buffer of pixels.
 final class GLPixelBufferView: UIView {
 
-    var delegate: GLPixelBufferViewDelegate?
+    weak var delegate: GLPixelBufferViewDelegate?
 
     private var renderShader: Shader?
     private var oglContext: EAGLContext?

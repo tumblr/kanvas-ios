@@ -124,7 +124,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return KanvasCameraImages.permissionCheckmark?.withRenderingMode(.alwaysTemplate)
     }()
 
-    var delegate: CameraPermissionsViewDelegate?
+    weak var delegate: CameraPermissionsViewDelegate?
 
     init(showMediaPicker: Bool, frame: CGRect = .zero) {
         self.showMediaPicker = showMediaPicker
@@ -303,7 +303,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     let shouldShowMediaPicker: Bool
 
-    var delegate: CameraPermissionsViewControllerDelegate?
+    weak var delegate: CameraPermissionsViewControllerDelegate?
 
     private var permissionsView: CameraPermissionsViewable? {
         return view as? CameraPermissionsViewable
