@@ -267,11 +267,11 @@ import Foundation
     func logEditorTextEdit()
 
     /// Logs an event when a text overlay is confirmed
-    /// - Parameter new: whether this text overlay is newly added or not
+    /// - Parameter isNew: whether this text overlay is newly added or not
     /// - Parameter font: the font
     /// - Parameter alignment: the text alignment
     /// - Parameter highlighted: whether the text is highlighted or not
-    func logEditorTextConfirm(new: Bool, font: KanvasTextFont, alignment: KanvasTextAlignment, highlighted: Bool)
+    func logEditorTextConfirm(isNew: Bool, font: KanvasTextFont, alignment: KanvasTextAlignment, highlighted: Bool)
 
     /// Logs an event when a text overlay is moved
     func logEditorTextMove()
@@ -308,6 +308,9 @@ import Foundation
 
     /// Logs when someone posts from Kanvas
     func logPostFromDashboard()
+
+    /// Logs when someone changes the blog to post to
+    func logChangeBlogForPostFromDashboard()
 
     /// Logs when someone only saves media from Kanvas
     func logSaveFromDashboard()

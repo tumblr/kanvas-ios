@@ -25,7 +25,6 @@ enum MediaExporterError: Error {
 protocol MediaExporting: class {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
-    var backgroundFillColor: CGColor { get set }
     init()
     func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
     func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void)
@@ -39,8 +38,6 @@ final class MediaExporter: MediaExporting {
 
     /// The image overlays to apply on top of each frame.
     var imageOverlays: [CGImage] = []
-
-    var backgroundFillColor: CGColor = UIColor.clear.cgColor
 
     var dimensions: CGSize = .zero
 
@@ -73,7 +70,6 @@ final class MediaExporter: MediaExporting {
             return
         }
         let renderer = Renderer()
-        renderer.backgroundFillColor = backgroundFillColor
         renderer.imageOverlays = imageOverlays
         renderer.filterType = filterType
         renderer.refreshFilter()
@@ -126,7 +122,6 @@ final class MediaExporter: MediaExporting {
         }
         videoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
         videoCompositor.renderer.mediaTransform = track.glPreferredTransform
-        videoCompositor.renderer.backgroundFillColor = backgroundFillColor
         videoCompositor.imageOverlays = imageOverlays
         videoCompositor.filterType = filterType
         videoCompositor.refreshFilter()

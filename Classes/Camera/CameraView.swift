@@ -42,7 +42,10 @@ final class CameraView: UIView {
     
     /// Layout guide for the filter settings
     private let filterSettingsLayoutGuide = UILayoutGuide()
-    
+
+    /// Layout guide for the camera permissions view
+    private let permissionsLayoutGuide = UILayoutGuide()
+
     /// the container for the camera input view
     private var cameraInputViewContainer: UIView?
 
@@ -57,6 +60,8 @@ final class CameraView: UIView {
     
     /// the container for the filter settings view
     private var filterSettingsViewContainer: UIView?
+
+    private var permissionsViewContainer: UIView?
     
     /// the container for the options (flash, flip camera)
     private var topOptionsContainer: UIView?
@@ -130,6 +135,7 @@ final class CameraView: UIView {
         setupOptionsGuide()
         setupImagePreviewGuide()
         setupFilterSettingsGuide()
+        setupPermissionsGuide()
     }
 
     private func setupCameraInputGuide() {
@@ -191,7 +197,17 @@ final class CameraView: UIView {
                                                           constant: -bottomMargin).isActive = true
         filterSettingsLayoutGuide.heightAnchor.constraint(equalToConstant: FilterSettingsView.height).isActive = true
     }
-    
+
+    private func setupPermissionsGuide() {
+        addLayoutGuide(permissionsLayoutGuide)
+        NSLayoutConstraint.activate([
+            permissionsLayoutGuide.topAnchor.constraint(equalTo: topAnchor),
+            permissionsLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor),
+            permissionsLayoutGuide.leadingAnchor.constraint(equalTo: leadingAnchor),
+            permissionsLayoutGuide.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+    }
+
     private func setUpViews() {
         setUpCloseButton()
     }
@@ -286,6 +302,12 @@ final class CameraView: UIView {
         filterSettingsViewContainer = view
         addViewWithGuide(view: view, guide: filterSettingsLayoutGuide)
     }
+
+    func addPermissionsView(_ view: UIView) {
+        guard permissionsViewContainer == nil else { return }
+        permissionsViewContainer = view
+        addViewWithGuide(view: view, guide: permissionsLayoutGuide)
+    }
     
     private func addViewWithGuide(view: UIView, guide: UILayoutGuide) {
         addSubview(view)
@@ -300,11 +322,12 @@ final class CameraView: UIView {
     private func reorderSubviews() {
         let orderedViews = [cameraInputViewContainer,
                             imagePreviewViewContainer,
-                            closeButton,
                             topOptionsContainer,
                             filterSettingsViewContainer,
                             modeAndShootContainer,
-                            clipsContainer]
+                            clipsContainer,
+                            permissionsViewContainer,
+                            closeButton]
         orderedViews.forEach { view in
             if let view = view {
                 addSubview(view)

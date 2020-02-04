@@ -29,7 +29,8 @@ public struct GLU {
             glGetShaderInfoLog(shader, length.i, &l, &infoLog)
             if l > 0 {
                 let message = String.init(utf8String: infoLog)
-                assertionFailure("Shader compile log: \(message ?? "No log")")
+                let shaderType = target == GL_FRAGMENT_SHADER ? "Fragment" : "Vertex"
+                assertionFailure("\(shaderType) shader compile: \(message ?? "No log")")
             }
         }
         #endif

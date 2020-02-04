@@ -20,7 +20,7 @@ protocol StrokeSelectorControllerDelegate: class {
 }
 
 /// Constants for the stroke selector
-private struct StrokeSelectorControllerConstants {
+private struct Constants {
     static let animationDuration: TimeInterval = 0.25
 }
 

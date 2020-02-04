@@ -78,7 +78,7 @@ extension UIView {
             let x = insets.left
             let y = insets.top
             let width = bounds.width - x - insets.right
-            let  height = bounds.height - y - insets.bottom
+            let height = bounds.height - y - insets.bottom
             frame = CGRect(x: x, y: y, width: width, height: height)
             
             containerView.addSubview(self)

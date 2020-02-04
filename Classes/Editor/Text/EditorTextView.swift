@@ -130,7 +130,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     var highlightColor: UIColor? {
         get { return mainTextView.highlightColor }
         set {
-            guard let newColor = newValue, let image = KanvasCameraImages.highlightImage(for: newColor.isVisible) else { return }
+            guard let newColor = newValue, let image = KanvasCameraImages.highlightImage(for: newColor.isVisible()) else { return }
             highlightSelector.setImage(image, for: .normal)
             mainTextView.highlightColor = newColor
         }
@@ -141,7 +141,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         set {
             guard let newColor = newValue else { return }
             eyeDropper.backgroundColor = newColor
-            eyeDropper.tintColor = newColor.matchingColor
+            eyeDropper.tintColor = newColor.matchingColor()
         }
     }
     
@@ -235,7 +235,6 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         setUpColorGradient()
         setUpColorSelector()
     }
-    
     
     // MARK: - Views
     

@@ -45,10 +45,19 @@ protocol EditorControllerDelegate: class {
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
-        let editorView = EditorView(mainActionMode: settings.features.editorPosting ? .post : .confirm,
+        var mainActionMode: EditorView.MainActionMode = .confirm
+        if settings.features.editorPostOptions {
+            mainActionMode = .postOptions
+        }
+        else if settings.features.editorPosting {
+            mainActionMode = .post
+        }
+
+        let editorView = EditorView(mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
-                                    showTagButton: settings.showTagButtonInEditor)
+                                    showTagButton: settings.showTagButtonInEditor,
+                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinater)
         editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
@@ -86,6 +95,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
 
+    private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
     private let segments: [CameraSegment]
@@ -102,7 +112,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
             player.filterType = filterType
         }
     }
-    private var backgroundFillColor: CGColor = UIColor.clear.cgColor
+
     private var editingNewText: Bool = true
 
     weak var delegate: EditorControllerDelegate?
@@ -126,7 +136,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - cameraMode: The camera mode that the preview was coming from, if any
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
@@ -134,6 +144,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
         self.stickerProvider = stickerProvider
+        self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
         self.player = MediaPlayer(renderer: Renderer())
         super.init(nibName: .none, bundle: .none)
@@ -235,10 +246,15 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         startExporting(action: .confirm)
         analyticsProvider?.logOpenComposeFromDashboard()
     }
+
+    func didTapPostOptionsButton() {
+        startExporting(action: .postOptions)
+    }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
         let cell = collectionController.textCell
-        onBeforeSelectingEditionOption(.text, cell: cell)
+        onBeforeShowingEditionMenu(.text, cell: cell)
+        showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
         editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
             self.textController.showConfirmButton(true)
@@ -275,6 +291,10 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didEndTouchesOnText() {
         showNavigationContainer(true)
     }
+
+    func didRenderRectChange(rect: CGRect) {
+        drawingController.didRenderRectChange(rect: rect)
+    }
     
     private func startExporting(action: KanvasExportAction) {
         player.stop()
@@ -304,7 +324,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private func createFinalVideo(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
-        exporter.backgroundFillColor = backgroundFillColor
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
             performUIUpdate {
@@ -322,7 +341,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     private func createFinalImage(image: UIImage, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
-        exporter.backgroundFillColor = backgroundFillColor
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
@@ -364,40 +382,48 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         delegate?.dismissButtonPressed()
     }
     
-    func confirmMenuButtonPressed() {
+    func confirmEditionMenu() {
         guard let editionOption = openedMenu else { return }
         
         switch editionOption {
         case .filter:
             filterController.showView(false)
+            showMainUI(true)
         case .text:
             editorView.animateReturnOfEditionOption(cell: selectedCell)
             textController.showView(false)
             textController.showConfirmButton(false)
+            showMainUI(true)
         case .drawing:
             editorView.animateReturnOfEditionOption(cell: selectedCell)
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
+            showMainUI(true)
         case .media:
             analyticsProvider?.logEditorMediaDrawerClosed()
         }
         
-        collectionController.showView(true)
-        showConfirmButton(true)
-        showCloseButton(true)
-        showTagButton(true)
+        onAfterConfirmingEditionMenu()
+    }
+    
+    /// Called to reset the editor state after confirming an edition menu
+    private func onAfterConfirmingEditionMenu() {
+        openedMenu = nil
+        selectedCell = nil
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
-        onBeforeSelectingEditionOption(editionOption, cell: cell)
+        onBeforeShowingEditionMenu(editionOption, cell: cell)
         
         switch editionOption {
         case .filter:
+            showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
         case .text:
+            showMainUI(false)
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
@@ -405,6 +431,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
                 self.textController.showConfirmButton(true)
             })
         case .drawing:
+            showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
             editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: {
@@ -416,19 +443,20 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         }
     }
     
-    private func onBeforeSelectingEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+    /// Prepares the editor state to show an edition menu
+    ///
+    /// - Parameters
+    ///  - editionOption: the selected edition option
+    ///  - cell: the cell of the selected edition option
+    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
         selectedCell = cell
         openedMenu = editionOption
-        collectionController.showView(false)
-        showConfirmButton(false)
-        showCloseButton(false)
-        showTagButton(false)
     }
     
     // MARK: - EditorFilterControllerDelegate
     
     func didConfirmFilters() {
-        confirmMenuButtonPressed()
+        confirmEditionMenu()
     }
     
     func didSelectFilter(_ filterItem: FilterItem) {
@@ -440,7 +468,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     func didConfirmDrawing() {
         analyticsProvider?.logEditorDrawingConfirm()
-        confirmMenuButtonPressed()
+        confirmEditionMenu()
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
@@ -451,15 +479,6 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     func didEndStrokeSelectorAnimation() {
         delegate?.didEndStrokeSelectorAnimation()
     }
-
-    func didFillBackground(mode: CGBlendMode, color: CGColor) {
-        if mode == .normal {
-            backgroundFillColor = color
-        }
-        else if mode == .clear {
-            backgroundFillColor = UIColor.clear.cgColor
-        }
-    }
     
     // MARK: - EditorTextControllerDelegate
     
@@ -467,13 +486,13 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         if !textView.text.isEmpty {
             editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size)
             if let font = KanvasTextFont.from(font: textView.options.font), let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
-                analyticsProvider?.logEditorTextConfirm(new: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
+                analyticsProvider?.logEditorTextConfirm(isNew: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
             }
             else {
                 assertionFailure("Logging unknown stuff")
             }
         }
-        confirmMenuButtonPressed()
+        confirmEditionMenu()
     }
     
     func didMoveToolsUp() {
@@ -540,9 +559,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     // MARK: - MediaDrawerControllerDelegate
     
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+    func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
-        editorView.movableViewCanvas.addView(view: imageView, transformations: transformations, location: location, size: size)
+        editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(), location: editorView.movableViewCanvas.bounds.center, size: size)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {
@@ -550,7 +569,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
     
     func didDismissMediaDrawer() {
-        confirmMenuButtonPressed()
+        confirmEditionMenu()
     }
     
     func didSelectStickersTab() {
@@ -561,6 +580,18 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private func openMediaDrawer() {
         present(mediaDrawerController, animated: true, completion: .none)
+    }
+    
+    // MARK: - Private utilities
+    
+    /// shows or hides the main UI (edition options, tag button and back button)
+    ///
+    /// - Parameter show: true to show, false to hide
+    private func showMainUI(_ show: Bool) {
+        collectionController.showView(show)
+        showConfirmButton(show)
+        showCloseButton(show)
+        showTagButton(show)
     }
     
     // MARK: - Public interface

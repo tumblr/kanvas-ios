@@ -134,7 +134,9 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        tooltip?.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
+        if let tooltip = tooltip, !tooltip.isVisible() {
+            tooltip.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
+        }
     }
     
     /// dismisses the tooltip below the mode selector
@@ -180,8 +182,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.hideTrash()
     }
 
-    func toggleMediaPickerButton(_ visible: Bool) {
-        mediaPickerButton.showButton(visible)
+    func toggleMediaPickerButton(_ visible: Bool, animated: Bool = true) {
+        mediaPickerButton.showButton(visible, animated: animated)
     }
 
     func setMediaPickerButtonThumbnail(_ image: UIImage) {

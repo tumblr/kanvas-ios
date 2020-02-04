@@ -21,8 +21,9 @@ protocol TextureSelectorViewDelegate: class {
     func didTapMarkerButton()
 }
 
-private struct TextureSelectorViewConstants {
-    static let animationDuration: TimeInterval = 0.25
+/// Constants for texture selector view
+private struct Constants {
+    static let shortAnimationDuration: TimeInterval = 0.01
     
     static let stackViewInset: CGFloat = -10
     static let selectorHeight: CGFloat = 128
@@ -33,13 +34,13 @@ private struct TextureSelectorViewConstants {
 /// View for TextureSelectorController
 final class TextureSelectorView: IgnoreTouchesView {
     
-    static let selectorHeight: CGFloat = TextureSelectorViewConstants.selectorHeight
-    static let selectorWidth: CGFloat = TextureSelectorViewConstants.selectorWidth
+    static let selectorHeight: CGFloat = Constants.selectorHeight
+    static let selectorWidth: CGFloat = Constants.selectorWidth
     
     weak var delegate: TextureSelectorViewDelegate?
     
     private let mainButton: CircularImageView
-    private let selectorBackground: CircularImageView
+    private let selectorBackground: SliderView
     private let optionContainer: UIStackView
     private let sharpieButton: UIButton
     private let pencilButton: UIButton
@@ -48,11 +49,11 @@ final class TextureSelectorView: IgnoreTouchesView {
     
     init() {
         mainButton = CircularImageView()
-        selectorBackground = CircularImageView()
-        optionContainer = ExtendedStackView(inset: TextureSelectorViewConstants.stackViewInset)
-        sharpieButton = ExtendedButton(inset: TextureSelectorViewConstants.stackViewInset)
-        pencilButton = ExtendedButton(inset: TextureSelectorViewConstants.stackViewInset)
-        markerButton = ExtendedButton(inset: TextureSelectorViewConstants.stackViewInset)
+        selectorBackground = SliderView()
+        optionContainer = ExtendedStackView(inset: Constants.stackViewInset)
+        sharpieButton = ExtendedButton(inset: Constants.stackViewInset)
+        pencilButton = ExtendedButton(inset: Constants.stackViewInset)
+        markerButton = ExtendedButton(inset: Constants.stackViewInset)
         
         super.init(frame: .zero)
         
@@ -74,10 +75,10 @@ final class TextureSelectorView: IgnoreTouchesView {
     // MARK: - Layout
     
     private func setUpViews() {
-        setUpMainButton()
         setUpSelectorBackground()
         setUpOptionContainer()
         setUpOptions()
+        setUpMainButton()
     }
     
     /// Sets up the button that opens the selector
@@ -103,9 +104,7 @@ final class TextureSelectorView: IgnoreTouchesView {
     /// Sets up the rounded white background for the selector
     private func setUpSelectorBackground() {
         selectorBackground.accessibilityIdentifier = "Texture Selector Background"
-        selectorBackground.backgroundColor = .white
         selectorBackground.add(into: self)
-        
         selectorBackground.alpha = 0
     }
     
@@ -120,8 +119,8 @@ final class TextureSelectorView: IgnoreTouchesView {
         NSLayoutConstraint.activate([
             optionContainer.leadingAnchor.constraint(equalTo: selectorBackground.leadingAnchor),
             optionContainer.trailingAnchor.constraint(equalTo: selectorBackground.trailingAnchor),
-            optionContainer.topAnchor.constraint(equalTo: selectorBackground.topAnchor, constant: TextureSelectorViewConstants.selectorPadding),
-            optionContainer.bottomAnchor.constraint(equalTo: selectorBackground.bottomAnchor, constant: -TextureSelectorViewConstants.selectorPadding),
+            optionContainer.topAnchor.constraint(equalTo: selectorBackground.topAnchor, constant: Constants.selectorPadding),
+            optionContainer.bottomAnchor.constraint(equalTo: selectorBackground.bottomAnchor, constant: -Constants.selectorPadding),
         ])
     }
     
@@ -138,10 +137,6 @@ final class TextureSelectorView: IgnoreTouchesView {
         sharpieButton.addGestureRecognizer(sharpieButtonRecognizer)
         pencilButton.addGestureRecognizer(pencilButtonRecognizer)
         markerButton.addGestureRecognizer(markerButtonRecognizer)
-        
-        optionContainer.addArrangedSubview(sharpieButton)
-        optionContainer.addArrangedSubview(pencilButton)
-        optionContainer.addArrangedSubview(markerButton)
     }
     
     
@@ -163,6 +158,13 @@ final class TextureSelectorView: IgnoreTouchesView {
         delegate?.didTapMarkerButton()
     }
     
+    // MARK: - Private utilities
+    
+    private func showOptionContainer(_ show: Bool) {
+        UIView.animate(withDuration: Constants.shortAnimationDuration) {
+            self.optionContainer.alpha = show ? 1 : 0
+        }
+    }
     
     // MARK: - Public interface
     
@@ -170,17 +172,44 @@ final class TextureSelectorView: IgnoreTouchesView {
     ///
     /// - Parameter image: the new image for the icon
     func changeMainButtonIcon(image: UIImage?) {
-        UIView.animate(withDuration: TextureSelectorViewConstants.animationDuration) {
-            self.mainButton.image = image
-        }
+        mainButton.image = image
     }
     
     /// shows or hides the selector
     ///
     /// - Parameter show: true to show, false to hide
     func showSelectorBackground(_ show: Bool) {
-        UIView.animate(withDuration: TextureSelectorViewConstants.animationDuration) {
-            self.selectorBackground.alpha = show ? 1 : 0
+        if show {
+            selectorBackground.alpha = 1
+            
+            selectorBackground.open(completion: {
+                self.mainButton.alpha = 0
+                self.showOptionContainer(true)
+            })
+        }
+        else {
+            mainButton.alpha = 1
+            self.showOptionContainer(false)
+            
+            selectorBackground.close(completion: {
+                self.selectorBackground.alpha = 0
+            })
+        }
+    }
+    
+    func arrangeOptions(selectedOption: KanvasBrushType) {
+        let buttons: [UIButton]
+        switch selectedOption {
+        case .pencil:
+            buttons = [sharpieButton, markerButton, pencilButton]
+        case .marker:
+            buttons = [sharpieButton, pencilButton, markerButton]
+        case .sharpie:
+            buttons = [pencilButton, markerButton, sharpieButton]
+        }
+        
+        buttons.forEach { button in
+            optionContainer.addArrangedSubview(button)
         }
     }
 }

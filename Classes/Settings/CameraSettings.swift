@@ -119,6 +119,8 @@ public struct CameraFeatures {
     /// This enables the UI to post media from the editor.
     public var editorPosting: Bool = false
 
+    public var editorPostOptions: Bool = false
+
     /// The Editor Saving feature
     /// This enables the UI to save media from the editor.
     public var editorSaving: Bool = false

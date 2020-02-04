@@ -16,4 +16,6 @@ protocol CameraInputControllerDelegate: class {
     /// - Parameters:
     ///   - gesture: the pinch gesture
     func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer)
+
+    func cameraInputControllerHasFullAccess() -> Bool
 }

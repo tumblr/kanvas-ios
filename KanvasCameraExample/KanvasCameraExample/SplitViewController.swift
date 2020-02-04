@@ -131,6 +131,10 @@ extension SplitViewController: MockDashboardViewControllerDelegate {
 }
 
 extension SplitViewController: KanvasDashboardControllerDelegate {
+    func kanvasDashboardOpenPostingOptionsRequest() {
+        navigateFromKanvas()
+    }
+
     func kanvasDashboardOpenComposeRequest() {
         navigateFromKanvas()
     }
@@ -151,10 +155,6 @@ extension SplitViewController: KanvasDashboardControllerDelegate {
 extension SplitViewController: KanvasDashboardStateDelegate {
     var kanvasDashboardAnalyticsProvider: KanvasCameraAnalyticsProvider {
         return KanvasCameraAnalyticsStub()
-    }
-
-    var kanvasDashboardBlogUUID: String? {
-        return nil
     }
 
     var kanvasDashboardUnloadStrategy: KanvasDashboardController.UnloadStrategy {

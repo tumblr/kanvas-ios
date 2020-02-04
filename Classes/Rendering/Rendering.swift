@@ -13,12 +13,10 @@ protocol Rendering: class {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     var mediaTransform: GLKMatrix4? { get set }
-    var outputDimensions: CGSize { get set }
     var switchInputDimensions: Bool { get set }
-    var backgroundFillColor: CGColor { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
-    func output(filteredPixelBuffer: CVPixelBuffer)
-    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval) -> CVPixelBuffer?
+    func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, scaleToFillSize: CGSize?)
+    func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval, scaleToFillSize: CGSize?) -> CVPixelBuffer?
     func refreshFilter()
     func reset()
 }

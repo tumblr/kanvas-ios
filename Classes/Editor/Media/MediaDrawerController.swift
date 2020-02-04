@@ -13,10 +13,8 @@ protocol MediaDrawerControllerDelegate: class {
     ///
     /// - Parameters
     ///  - imageView: an image view with the sticker
-    ///  - transformations: transformations to be applied to the image view
-    ///  - location: initial position of the image view in its parent view
     ///  - size: image view size
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize)
+    func didSelectSticker(imageView: StylableImageView, size: CGSize)
     
     /// Callback for when a sticker type is selected
     ///
@@ -31,7 +29,7 @@ protocol MediaDrawerControllerDelegate: class {
 }
 
 /// A view controller that contains the media drawer in text tools
-final class MediaDrawerController: UIViewController, DrawerTabBarControllerDelegate, StickerMenuControllerDelegate {
+final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, DrawerTabBarControllerDelegate, StickerMenuControllerDelegate {
     
     weak var delegate: MediaDrawerControllerDelegate?
     
@@ -50,7 +48,11 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
         return controller
     }()
     
-    private lazy var mediaDrawerView: MediaDrawerView = MediaDrawerView()
+    private lazy var mediaDrawerView: MediaDrawerView = {
+        let view = MediaDrawerView()
+        view.delegate = self
+        return view
+    }()
     
     // MARK: - Initializers
     
@@ -91,6 +93,12 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
         delegate?.didDismissMediaDrawer()
     }
         
+    // MARK: - MediaDrawerViewDelegate
+    
+    func didTapCloseButton() {
+        dismiss(animated: true, completion: nil)
+    }
+    
     // MARK: - DrawerTabBarControllerDelegate
     
     func didSelectOption(_ option: DrawerTabBarOption) {
@@ -109,8 +117,8 @@ final class MediaDrawerController: UIViewController, DrawerTabBarControllerDeleg
     
     // MARK: - StickerMenuControllerDelegate
     
-    func didSelectSticker(imageView: StylableImageView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
-        delegate?.didSelectSticker(imageView: imageView, transformations: transformations, location: location, size: size)
+    func didSelectSticker(imageView: StylableImageView, size: CGSize) {
+        delegate?.didSelectSticker(imageView: imageView, size: size)
         dismiss(animated: true, completion: nil)
     }
     

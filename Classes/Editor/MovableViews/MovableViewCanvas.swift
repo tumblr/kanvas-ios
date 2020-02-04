@@ -138,8 +138,8 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         NSLayoutConstraint.activate([
             movableView.heightAnchor.constraint(equalToConstant: size.height),
             movableView.widthAnchor.constraint(equalToConstant: size.width),
-            movableView.topAnchor.constraint(equalTo: topAnchor, constant: location.y - size.height / 2),
-            movableView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: location.x - size.width / 2)
+            movableView.topAnchor.constraint(equalTo: topAnchor, constant: location.y - (size.height / 2)),
+            movableView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: location.x - (size.width / 2))
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(movableViewTapped(recognizer:)))

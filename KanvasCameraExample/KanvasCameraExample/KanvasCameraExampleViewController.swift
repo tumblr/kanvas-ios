@@ -9,6 +9,10 @@ import Photos
 import UIKit
 import Utils
 
+private enum PhotoLibraryAccessError: Error {
+    case notDetermined, restricted, denied, move(Error)
+}
+
 /// This class contains a button that launches the camera module
 /// It is also the delegate for the camera, and handles saving the exported media
 /// The camera can be customized with CameraSettings
@@ -136,6 +140,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.mediaPicking = true
         settings.features.editorPosting = true
         settings.features.editorSaving = true
+        settings.features.editorPostOptions = false
         settings.features.newCameraModes = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
@@ -150,7 +155,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasCameraAnalyticsStub())
+        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasCameraAnalyticsStub(), quickBlogSelectorCoordinator: nil)
         controller.delegate = self
         controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
@@ -254,6 +259,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .mediaPicking(settings.features.mediaPicking),
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
+            .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
         ]
     }
@@ -290,6 +296,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.newCameraModes = value
             settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
+        case .editorPostOptions(_):
+            settings.features.editorPostOptions = value
         }
     }
 }
@@ -297,6 +305,12 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 // MARK: - CameraControllerDelegate
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
+
+    func openAppSettings(completion: ((Bool) -> ())?) {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url, options: [:], completionHandler: completion)
+        }
+    }
 
     func tagButtonPressed() {
         // Only supported in Orangina
@@ -339,14 +353,37 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     }
     
     func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
-        if let media = media {
-            save(media: media)
-            print(media.info)
+        if let error = error {
+            assertionFailure("Error creating Kanvas media: \(error)")
+            return
         }
-        else {
-            assertionFailure("Failed to create media")
+        guard let media = media else {
+            assertionFailure("No error, but no media!?")
+            return
         }
-        dismissCamera()
+
+        save(media: media) { err in
+            DispatchQueue.main.async {
+                guard err == nil else {
+                    assertionFailure("Error saving to photo library")
+                    return
+                }
+
+                switch exportAction {
+                case .previewConfirm:
+                    self.dismissCamera()
+                case .confirm:
+                    self.dismissCamera()
+                case .post:
+                    self.dismissCamera()
+                case .save:
+                    break
+                case .postOptions:
+                    self.dismissCamera()
+                }
+
+            }
+        }
     }
 
     func dismissButtonPressed() {
@@ -358,46 +395,46 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         completion(nil)
     }
 
-    private func save(media: KanvasCameraMedia) {
+    private func save(media: KanvasCameraMedia, completion: @escaping (Error?) -> ()) {
+        let completionMainThread: (Error?) -> () = { error in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
         PHPhotoLibrary.requestAuthorization { authorizationStatus in
             switch authorizationStatus {
             case .notDetermined:
-                print("Photo Library Authorization: Not Determined... not saving!!")
-                return
+                completionMainThread(PhotoLibraryAccessError.notDetermined)
             case .restricted:
-                print("Photo Library Authorization: Restricted... not saving!!")
-                return
+                completionMainThread(PhotoLibraryAccessError.restricted)
             case .denied:
-                print("Photo Library Authorization: Denied... not saving!!")
-                return
+                completionMainThread(PhotoLibraryAccessError.denied)
             case .authorized:
-                print("Photo Library Authorization: Authorized")
+                switch media {
+                case let .image(url, _):
+                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
+                case let .video(url, _):
+                    self.moveToLibrary(url: url, resourceType: .video, completion: completionMainThread)
+                }
             }
         }
-        switch media {
-        case let .image(url, _):
-            moveToLibrary(url: url, resourceType: .photo)
-        case let .video(url, _):
-            moveToLibrary(url: url, resourceType: .video)
-        }
+
     }
 
-    private func moveToLibrary(url: URL, resourceType: PHAssetResourceType) {
+    private func moveToLibrary(url: URL, resourceType: PHAssetResourceType, completion: @escaping (Error?) -> ()) {
         PHPhotoLibrary.shared().performChanges({
             let req = PHAssetCreationRequest.forAsset()
             let options = PHAssetResourceCreationOptions()
             options.shouldMoveFile = true
             req.addResource(with: resourceType, fileURL: url, options: options)
-        }) { (success, error) in
-            guard success else {
-                guard let err = error else {
-                    assertionFailure("Neigher a success or failure!")
-                    return
-                }
-                print("\(err)")
-                return
+        }, completionHandler: { (success, error) in
+            if let error = error {
+                completion(PhotoLibraryAccessError.move(error))
             }
-        }
+            else {
+                completion(nil)
+            }
+        })
     }
 
     private func dismissCamera() {

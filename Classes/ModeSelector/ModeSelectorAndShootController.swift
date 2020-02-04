@@ -40,7 +40,7 @@ protocol ModeSelectorAndShootControllerDelegate: class {
     /// Function called when the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
 
-    func didTapMediaPickerButton()
+    func didTapMediaPickerButton(completion: (() -> ())?)
 
     func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
 }
@@ -200,13 +200,13 @@ final class ModeSelectorAndShootController: UIViewController {
         modeView.hideTrash()
     }
 
-    func toggleMediaPickerButton(_ visible: Bool) {
-        modeView.toggleMediaPickerButton(visible)
+    func toggleMediaPickerButton(_ visible: Bool, animated: Bool = true) {
+        modeView.toggleMediaPickerButton(visible, animated: animated)
     }
 
-    func showMediaPickerButton(basedOn mode: CameraMode) {
+    func showMediaPickerButton(basedOn mode: CameraMode, animated: Bool = true) {
         let mediaPickerVisible = mode.quantity == .single && mode.group != .gif
-        toggleMediaPickerButton(mediaPickerVisible)
+        toggleMediaPickerButton(mediaPickerVisible, animated: animated)
     }
 
     func loadMediaPickerThumbnail() {
@@ -288,6 +288,8 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     }
 
     func mediaPickerButtonDidPress() {
-        delegate?.didTapMediaPickerButton()
+        delegate?.didTapMediaPickerButton {
+            self.modeView.resetMediaPickerButton()
+        }
     }
 }
