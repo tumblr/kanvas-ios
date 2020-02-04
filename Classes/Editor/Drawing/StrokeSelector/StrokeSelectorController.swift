@@ -124,7 +124,7 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     
     /// Gets the position of the user's finger in the selector.
     /// If the finger goes above or below the selector, the returned position
-    /// will be the highest or the lowest respectibly.
+    /// will be the highest or the lowest respectively.
     ///
     /// - Parameter recognizer: the gesture recognizer
     /// - Parameter view: the view that contains the circle
