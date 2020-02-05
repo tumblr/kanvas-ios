@@ -116,23 +116,25 @@ final class StrokeSelectorController: UIViewController, StrokeSelectorViewDelega
     
     private func selectorPanned(recognizer: UILongPressGestureRecognizer) {
         let point = getSelectedLocation(with: recognizer, in: strokeSelectorView.selectorPannableArea)
-        if strokeSelectorView.selectorPannableArea.bounds.contains(point) {
-            strokeSelectorView.moveSelectorCircle(to: point)
-            let percent = 100.0 - point.y
-            setCircleSize(percent: percent)
-            setStrokeSize(percent: percent)
-        }
+        strokeSelectorView.moveSelectorCircle(to: point)
+        let percent = 100.0 - point.y
+        setCircleSize(percent: percent)
+        setStrokeSize(percent: percent)
     }
     
-    /// Gets the position of the user's finger on screen,
-    /// but adjusts it to fit the horizontal center of the selector.
+    /// Gets the position of the user's finger in the selector.
+    /// If the finger goes above or below the selector, the returned position
+    /// will be the highest or the lowest respectively.
     ///
     /// - Parameter recognizer: the gesture recognizer
     /// - Parameter view: the view that contains the circle
     /// - Returns: location of the user's finger
     private func getSelectedLocation(with recognizer: UILongPressGestureRecognizer, in view: UIView) -> CGPoint {
         let x = StrokeSelectorView.selectorWidth / 2
-        let y = recognizer.location(in: view).y
+        let touchedY = recognizer.location(in: view).y
+        let pannableRange = 0...StrokeSelectorView.selectorPannableAreaHeight
+        let y = pannableRange.clamp(touchedY)
+        
         return CGPoint(x: x, y: y)
     }
     
