@@ -41,6 +41,10 @@ protocol EditorControllerDelegate: class {
     func tagButtonPressed()
 }
 
+private struct Constants {
+    static let pageName: String = "KanvasEditor"
+}
+
 /// A view controller to edit the segments
 final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
 
@@ -248,6 +252,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
 
     func didTapPostOptionsButton() {
+        analyticsProvider?.logAdvancedOptionsOpen(page: Constants.pageName)
         startExporting(action: .postOptions)
     }
     

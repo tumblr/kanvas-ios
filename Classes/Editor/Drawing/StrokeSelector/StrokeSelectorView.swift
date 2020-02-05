@@ -26,9 +26,13 @@ private struct Constants {
     static let selectorHeight: CGFloat = 128
     static let selectorWidth: CGFloat = 34
     
-    static let selectorPadding: CGFloat = 11
     static let circleMinSize: CGFloat = 11
     static let circleMaxSize: CGFloat = 18
+    static let selectorPadding: CGFloat = 11
+    static let selectorBottomPadding: CGFloat = selectorPadding
+    static let selectorTopPadding: CGFloat = selectorPadding + (circleMaxSize - circleMinSize) / 2
+    static let selectorPannableAreaHeight: CGFloat = selectorHeight - selectorTopPadding - selectorBottomPadding
+    
     static let circleDefaultColor: UIColor = .tumblrBrightBlue
 }
 
@@ -39,6 +43,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     static let selectorWidth: CGFloat = Constants.selectorWidth
     static let circleMinSize: CGFloat = Constants.circleMinSize
     static let circleMaxSize: CGFloat = Constants.circleMaxSize
+    static let selectorPannableAreaHeight: CGFloat = Constants.selectorPannableAreaHeight
     
     weak var delegate: StrokeSelectorViewDelegate?
     
@@ -137,8 +142,8 @@ final class StrokeSelectorView: IgnoreTouchesView {
         NSLayoutConstraint.activate([
             selectorPannableArea.leadingAnchor.constraint(equalTo: selectorBackground.leadingAnchor),
             selectorPannableArea.trailingAnchor.constraint(equalTo: selectorBackground.trailingAnchor),
-            selectorPannableArea.bottomAnchor.constraint(equalTo: selectorBackground.bottomAnchor, constant: -Constants.selectorPadding),
-            selectorPannableArea.topAnchor.constraint(equalTo: selectorBackground.topAnchor, constant: Constants.selectorPadding + (Constants.circleMaxSize - Constants.circleMinSize) / 2),
+            selectorPannableArea.bottomAnchor.constraint(equalTo: selectorBackground.bottomAnchor, constant: -Constants.selectorBottomPadding),
+            selectorPannableArea.topAnchor.constraint(equalTo: selectorBackground.topAnchor, constant: Constants.selectorTopPadding),
         ])
     }
     

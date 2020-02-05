@@ -9,7 +9,7 @@ import UIKit
 
 /// Constants for SliderView
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
+    static let animationDuration: TimeInterval = 0.15
 }
 
 /// Circular view that opens and closes upwards
