@@ -120,6 +120,8 @@ final class GifVideoOutputHandler: NSObject {
             return
         }
         if shouldUsePixelBuffers {
+            // TODO remove this `copy()` by not retaining all pixel buffers until recording is over.
+            // This copy is required so the pixel buffer pool it came from isn't full.
             guard let buffer = currentVideoPixelBuffer?.copy() else {
                 NSLog("returning because current video pixel buffer is nil")
                 return
