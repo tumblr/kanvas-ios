@@ -24,7 +24,7 @@ protocol CameraPreviewControllerDelegate: class {
 /// A view controller to preview the segments sequentially
 /// There are two AVPlayers to reduce loading times and the black screen when replacing player items
 
-final class CameraPreviewViewController: UIViewController {
+final class CameraPreviewViewController: UIViewController, MediaPlayerController {
 
     private lazy var cameraPreviewView: CameraPreviewView = {
         let previewView = CameraPreviewView()
@@ -226,6 +226,12 @@ final class CameraPreviewViewController: UIViewController {
     func hideLoading() {
         loadingView.removeFromSuperview()
         loadingView.stopLoading()
+    }
+    
+    // MARK: - MediaPlayerController
+    
+    func onPostingOptionsDismissed() {
+        // Does nothing
     }
 }
 
