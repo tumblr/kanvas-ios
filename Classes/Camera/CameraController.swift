@@ -333,6 +333,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func showWelcomeTooltip() {
         modeAndShootController.showTooltip()
     }
+
+    /// Shows a generic alert
+    private func showAlert(message: String, buttonMessage: String) {
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: buttonMessage, style: .default)
+        alertController.addAction(dismissAction)
+        present(alertController, animated: true, completion: nil)
+    }
     
     private func showDismissTooltip() {
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"), preferredStyle: .alert)
@@ -968,6 +976,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let mediaURLMaybe = info[.mediaURL] as? URL
 
         if let image = imageMaybe {
+            guard canPick(image: image) else {
+                let message = NSLocalizedString("That's too big, bud.", comment: "That's too big, bud.")
+                let buttonMessage = NSLocalizedString("Got it", comment: "Got it")
+                showAlert(message: message, buttonMessage: buttonMessage)
+                return
+            }
             pick(image: image, url: mediaURLMaybe)
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
         }
@@ -1024,6 +1038,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 }
             }
         }
+    }
+
+    private func canPick(image: UIImage) -> Bool {
+        // image pixels must be less than 100MB
+        return Double(image.sd_memoryCost) < 100000000.0
     }
 
     // MARK: - breakdown
