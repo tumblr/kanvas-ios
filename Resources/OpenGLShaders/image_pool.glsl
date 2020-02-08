@@ -34,7 +34,9 @@ void main() {
 
     gl_FragColor = vec4(color, 1.0);
 
-    vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+    float stongth = 0.3;
+    float waveu = sin((uv.y + time) * 20.0) * 0.5 * 0.05 * stongth;
+    vec4 textureColor = texture2D(inputImageTexture, uv + vec2(waveu, 0));
 
     gl_FragColor.r = (gl_FragColor.r + (textureColor.r * 1.3)) /2.;
     gl_FragColor.g = (gl_FragColor.g + (textureColor.g * 1.3)) /2.;
