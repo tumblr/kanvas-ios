@@ -13,13 +13,13 @@ import Utils
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
-    case image(URL, TumblrMediaInfo)
-    case video(URL, TumblrMediaInfo)
+    case image(URL, TumblrMediaInfo, CGSize)
+    case video(URL, TumblrMediaInfo, CGSize)
 
     public var info: TumblrMediaInfo {
         switch self {
-        case .image(_, let info): return info
-        case .video(_, let info): return info
+        case .image(_, let info, _): return info
+        case .video(_, let info, _): return info
         }
     }
 }
@@ -814,9 +814,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             let asset = AVURLAsset(url: url)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
-                if let self = self {
+                if let self = self, let videoSize = asset.screenSize {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: .video(url, info), exportAction: action, error: nil)
+                    self.delegate?.didCreateMedia(self, media: .video(url, info, videoSize), exportAction: action, error: nil)
                 }
             }
         }
@@ -834,9 +834,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
-                if let self = self {
+                if let self = self, let image = image {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: .image(url, info), exportAction: action, error: nil)
+                    self.delegate?.didCreateMedia(self, media: .image(url, info, image.size), exportAction: action, error: nil)
                 }
             }
         }
@@ -1087,5 +1087,15 @@ extension CameraController: PHPhotoLibraryChangeObserver {
         clipsController.removeAllClips()
         cameraInputController.deleteAllSegments()
         imagePreviewController.setImagePreview(nil)
+    }
+}
+
+extension AVAsset {
+    var screenSize: CGSize? {
+        if let track = tracks(withMediaType: .video).first {
+            let size = __CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform)
+            return CGSize(width: fabs(size.width), height: fabs(size.height))
+        }
+        return nil
     }
 }
