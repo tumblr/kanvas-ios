@@ -183,7 +183,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        print("L - itemsForBeginning")
         draggingClipIndex = indexPath
         draggingCell = collectionView.cellForItem(at: indexPath) as? MediaClipsCollectionCell
         let item = clips[indexPath.item]
