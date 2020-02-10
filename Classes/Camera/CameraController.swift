@@ -46,12 +46,12 @@ public protocol CameraControllerDelegate: class {
      - parameter media: KanvasCameraMedia - this is the media created in the controller (can be image, video, etc)
      - seealso: enum KanvasCameraMedia
      */
-    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
+    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
 
     /**
      A function that is called when the main camera dismiss button is pressed
      */
-    func dismissButtonPressed()
+    func dismissButtonPressed(_ cameraController: CameraController)
 
     /// Called when the tag button is pressed in the editor
     func tagButtonPressed()
@@ -563,7 +563,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func handleCloseButtonPressed() {
         performUIUpdate {
-            self.delegate?.dismissButtonPressed()
+            self.delegate?.dismissButtonPressed(self)
         }
     }
 
@@ -814,14 +814,18 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             let asset = AVURLAsset(url: url)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
-                self?.handleCloseSoon(action: action)
-                self?.delegate?.didCreateMedia(media: .video(url, info), exportAction: action, error: nil)
+                if let self = self {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: .video(url, info), exportAction: action, error: nil)
+                }
             }
         }
         else {
             performUIUpdate { [weak self] in
-                self?.handleCloseSoon(action: action)
-                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                if let self = self {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                }
             }
         }
     }
@@ -830,14 +834,18 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
-                self?.handleCloseSoon(action: action)
-                self?.delegate?.didCreateMedia(media: .image(url, info), exportAction: action, error: nil)
+                if let self = self {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: .image(url, info), exportAction: action, error: nil)
+                }
             }
         }
         else {
             performUIUpdate { [weak self] in
-                self?.handleCloseSoon(action: action)
-                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                if let self = self {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                }
             }
         }
     }
