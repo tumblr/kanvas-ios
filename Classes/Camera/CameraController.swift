@@ -814,7 +814,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             let asset = AVURLAsset(url: url)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
-                if let self = self, let videoSize = asset.screenSize {
+                if let self = self, let videoSize = asset.videoScreenSize {
                     self.handleCloseSoon(action: action)
                     self.delegate?.didCreateMedia(self, media: .video(url, info, videoSize), exportAction: action, error: nil)
                 }
@@ -1087,15 +1087,5 @@ extension CameraController: PHPhotoLibraryChangeObserver {
         clipsController.removeAllClips()
         cameraInputController.deleteAllSegments()
         imagePreviewController.setImagePreview(nil)
-    }
-}
-
-extension AVAsset {
-    var screenSize: CGSize? {
-        if let track = tracks(withMediaType: .video).first {
-            let size = __CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform)
-            return CGSize(width: fabs(size.width), height: fabs(size.height))
-        }
-        return nil
     }
 }
