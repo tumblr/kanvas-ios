@@ -5,28 +5,28 @@ PODS:
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
   - ImageLoader (0.1.0):
-    - SDWebImage (= 5.2.3)
-    - SDWebImageWebPCoder (= 0.2.5)
+    - SDWebImage (= 5.5.2)
+    - SDWebImageWebPCoder (= 0.5.0)
   - KanvasCamera (0.1.0):
     - ImageLoader
     - SharedUI
     - TumblrTheme
     - Utils
-  - libwebp (1.0.3):
-    - libwebp/demux (= 1.0.3)
-    - libwebp/mux (= 1.0.3)
-    - libwebp/webp (= 1.0.3)
-  - libwebp/demux (1.0.3):
+  - libwebp (1.1.0):
+    - libwebp/demux (= 1.1.0)
+    - libwebp/mux (= 1.1.0)
+    - libwebp/webp (= 1.1.0)
+  - libwebp/demux (1.1.0):
     - libwebp/webp
-  - libwebp/mux (1.0.3):
+  - libwebp/mux (1.1.0):
     - libwebp/demux
-  - libwebp/webp (1.0.3)
-  - SDWebImage (5.2.3):
-    - SDWebImage/Core (= 5.2.3)
-  - SDWebImage/Core (5.2.3)
-  - SDWebImageWebPCoder (0.2.5):
+  - libwebp/webp (1.1.0)
+  - SDWebImage (5.5.2):
+    - SDWebImage/Core (= 5.5.2)
+  - SDWebImage/Core (5.5.2)
+  - SDWebImageWebPCoder (0.5.0):
     - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.0)
+    - SDWebImage/Core (~> 5.5)
   - SharedUI (1.0.0):
     - TumblrTheme
   - TumblrTheme (1.0.0):
@@ -62,11 +62,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  ImageLoader: e2008cb20d9be7b1a5dc9cc3fd1dde909de28a80
+  ImageLoader: 46387056463b7cbd662d5a031cb214f556793cca
   KanvasCamera: 655b0d0f479e1baf87365c17957b32e88975d0e3
-  libwebp: 057912d6d0abfb6357d8bb05c0ea470301f5d61e
-  SDWebImage: 46a7f73228f84ce80990c786e4372cf4db5875ce
-  SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
+  libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
+  SDWebImageWebPCoder: e7ae855f058e3dcae99696920b6a5d134e9dcddf
   SharedUI: 4f52755920cdc9c21a910d013ebedebec3b0c95d
   TumblrTheme: 0d7d24e72e87184f0cfa2cb315e524701c09d436
   Utils: d6e32f8b5f9a5879632eb30001e336d97c8a43f2
