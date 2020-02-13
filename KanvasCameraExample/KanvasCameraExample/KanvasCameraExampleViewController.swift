@@ -352,7 +352,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         
     }
     
-    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
+    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let error = error {
             assertionFailure("Error creating Kanvas media: \(error)")
             return
@@ -386,7 +386,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         }
     }
 
-    func dismissButtonPressed() {
+    func dismissButtonPressed(_ cameraController: CameraController) {
         dismissCamera()
     }
 
@@ -411,9 +411,9 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                 completionMainThread(PhotoLibraryAccessError.denied)
             case .authorized:
                 switch media {
-                case let .image(url, _):
+                case let .image(url, _, _):
                     self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
-                case let .video(url, _):
+                case let .video(url, _, _):
                     self.moveToLibrary(url: url, resourceType: .video, completion: completionMainThread)
                 }
             }

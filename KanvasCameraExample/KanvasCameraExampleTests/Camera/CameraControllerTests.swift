@@ -362,16 +362,16 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     var creationError = false
     var creationEmpty = false
 
-    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
+    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         switch (media, error) {
         case (.none, .none): creationEmpty = true
         case (_, .some): creationError = true
         case (.some(.image(_)), _): imageCreatedCalled = true
-        case (.some(.video(let url, _)), _): videoURL = url
+        case (.some(.video(let url, _, _)), _): videoURL = url
         }
     }
 
-    func dismissButtonPressed() {
+    func dismissButtonPressed(_ cameraController: CameraController) {
         dismissCalled = true
     }
 
