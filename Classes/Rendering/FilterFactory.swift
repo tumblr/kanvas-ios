@@ -41,7 +41,7 @@ struct FilterFactory {
         case .lightLeaks:
             newFilter = LightLeaksFilter(glContext: glContext)
         case .wavePool:
-            newFilter = WavePoolFilter(glContext: glContext)
+            newFilter = ImagePoolFilter(glContext: glContext)
         case .manga:
             newFilter = MangaFilter(glContext: glContext)
         case .toon:

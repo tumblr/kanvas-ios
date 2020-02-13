@@ -23,28 +23,28 @@ public struct KanvasDevice {
     static let retinaScreenMinScale: CGFloat = 2.0
     
     // Device type
-    static let isIPad = UIDevice.current.userInterfaceIdiom == .pad
-    static let isIPhone = UIDevice.current.userInterfaceIdiom == .phone
+    static let isIPad: Bool = UIDevice.current.userInterfaceIdiom == .pad
+    static let isIPhone: Bool = UIDevice.current.userInterfaceIdiom == .phone
     
     // Width and height of current device
-    static let screenWidth = Int(UIScreen.main.bounds.size.width)
-    static let screenHeight = Int(UIScreen.main.bounds.size.height)
-    static let screenMaxLength = Int(max(screenWidth, screenHeight))
-    static let screenMinLength = Int(min(screenWidth, screenHeight))
+    static let screenWidth: Int = Int(UIScreen.main.bounds.size.width)
+    static let screenHeight: Int = Int(UIScreen.main.bounds.size.height)
+    static let screenMaxLength: Int = Int(max(screenWidth, screenHeight))
+    static let screenMinLength: Int = Int(min(screenWidth, screenHeight))
     
     // Device model
-    static let isIPhone5 = isIPhone && screenMaxLength == iPhone5ScreenHeight
-    static let isIPhone6 = isIPhone && screenMaxLength == iPhone6ScreenHeight
-    static let isIPhone6P = isIPhone && screenMaxLength == iPhone6PScreenHeight
-    static let isIPhoneX = isIPhone && screenMaxLength == iPhoneXScreenHeight
-    static let isIPhoneXS = isIPhone && screenMaxLength == iPhoneXSScreenHeight
-    static let isIPhoneXR = isIPhone && screenMaxLength == iPhoneXRScreenHeight
-    static let isIPhoneXSMax = isIPhone && screenMaxLength == iPhoneXSMaxScreenHeight
-    static let isIPhone11 = isIPhone && screenMaxLength == iPhone11ScreenHeight
-    static let isIPhone11Pro = isIPhone && screenMaxLength == iPhone11ProScreenHeight
-    static let isIPhone11ProMax = isIPhone && screenMaxLength == iPhone11ProMaxScreenHeight
+    static let isIPhone5: Bool = isIPhone && screenMaxLength == iPhone5ScreenHeight
+    static let isIPhone6: Bool = isIPhone && screenMaxLength == iPhone6ScreenHeight
+    static let isIPhone6P: Bool = isIPhone && screenMaxLength == iPhone6PScreenHeight
+    static let isIPhoneX: Bool = isIPhone && screenMaxLength == iPhoneXScreenHeight
+    static let isIPhoneXS: Bool = isIPhone && screenMaxLength == iPhoneXSScreenHeight
+    static let isIPhoneXR: Bool = isIPhone && screenMaxLength == iPhoneXRScreenHeight
+    static let isIPhoneXSMax: Bool = isIPhone && screenMaxLength == iPhoneXSMaxScreenHeight
+    static let isIPhone11: Bool = isIPhone && screenMaxLength == iPhone11ScreenHeight
+    static let isIPhone11Pro: Bool = isIPhone && screenMaxLength == iPhone11ProScreenHeight
+    static let isIPhone11ProMax: Bool = isIPhone && screenMaxLength == iPhone11ProMaxScreenHeight
     
     // Device group
     // This group represents all devices which have extra safe space at the top and the bottom, as well as rounded screen corners.
-    public static let belongsToIPhoneXGroup = isIPhoneX || isIPhoneXR || isIPhoneXS || isIPhoneXSMax || isIPhone11 || isIPhone11Pro || isIPhone11ProMax
+    public static let belongsToIPhoneXGroup: Bool = isIPhoneX || isIPhoneXR || isIPhoneXS || isIPhoneXSMax || isIPhone11 || isIPhone11Pro || isIPhone11ProMax
 }
