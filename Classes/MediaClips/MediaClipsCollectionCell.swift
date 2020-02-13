@@ -9,14 +9,6 @@ import Foundation
 import TumblrTheme
 import UIKit
 
-/// Delegate for touch events on this cell
-protocol MediaClipsCollectionCellDelegate: class {    
-    /// Callback method for dragging the cell
-    ///
-    /// - Parameter newDragState: The new state of the drag event
-    func didChangeState(newDragState: UICollectionViewCell.DragState)
-}
-
 private struct MediaClipsCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
     static let cellPadding: CGFloat = 2.9
@@ -67,8 +59,6 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         label.font = MediaClipsCollectionCellConstants.font
         return label
     }()
-    /// The touch delegate to be injected
-    weak var touchDelegate: MediaClipsCollectionCellDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -140,13 +130,5 @@ extension MediaClipsCollectionCell {
                                                constant: MediaClipsCollectionCellConstants.labelHorizontalPadding),
             clipLabel.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.labelHeight)
         ])
-    }
-    
-    /// This overrides the original function to to notify the drag delegate of the changed state
-    ///
-    /// - Parameter dragState: can be .lifting, .dragging, .none
-    override func dragStateDidChange(_ dragState: UICollectionViewCell.DragState) {
-        super.dragStateDidChange(dragState)
-        touchDelegate?.didChangeState(newDragState: dragState)
     }
 }
