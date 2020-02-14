@@ -146,7 +146,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private lazy var segmentsHandler: SegmentsHandlerType = {
         return segmentsHandlerClass.init()
     }()
-    
+        
     private let settings: CameraSettings
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private var currentMode: CameraMode
@@ -164,7 +164,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var didRegisterForPhotoLibraryChanges: Bool = false
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
 
-    private weak var overlayViewController: UIViewController?
+    private weak var mediaPlayerController: MediaPlayerController?
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -298,14 +298,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraInputController.stopSession()
         let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
-        overlayViewController = controller
+        mediaPlayerController = controller
         if controller is EditorViewController {
             analyticsProvider?.logEditorOpen()
         }
     }
     
-    private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
-        let controller: UIViewController
+    private func createNextStepViewController(_ segments: [CameraSegment]) -> MediaPlayerController {
+        let controller: MediaPlayerController
         if settings.features.editor {
             controller = createEditorViewController(segments)
         }
@@ -354,6 +354,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - Media Content Creation
+    
     class func saveImageToFile(_ image: UIImage?, info: TumblrMediaInfo) -> URL? {
         // TODO: Use NSURL.createNewImageURL rather than duplicate logic here
         // https://jira.tumblr.net/browse/KANVAS-575
@@ -528,7 +529,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePreviewController.setImagePreview(clipsController.getLastFrameFromLastClip())
     }
     
-    // MARK : - Private utilities
+    // MARK: - Private utilities
+    
     private func bindMediaContentAvailable() {
         disposables.append(clipsController.observe(\.hasClips) { [weak self] object, _ in
             performUIUpdate {
@@ -1063,7 +1065,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             PHPhotoLibrary.shared().unregisterChangeObserver(self)
         }
     }
-
+    
+    // MARK: - Post Options Interaction
+    
+    public func onPostOptionsDismissed() {
+        mediaPlayerController?.onPostingOptionsDismissed()
+    }
 }
 
 extension CameraController: PHPhotoLibraryChangeObserver {
@@ -1083,7 +1090,7 @@ extension CameraController: PHPhotoLibraryChangeObserver {
     }
 
     public func resetState() {
-        overlayViewController?.dismiss(animated: true, completion: nil)
+        mediaPlayerController?.dismiss(animated: true, completion: nil)
         clipsController.removeAllClips()
         cameraInputController.deleteAllSegments()
         imagePreviewController.setImagePreview(nil)

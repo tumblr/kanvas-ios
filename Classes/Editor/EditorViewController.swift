@@ -46,7 +46,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
+final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         var mainActionMode: EditorView.MainActionMode = .confirm
@@ -173,19 +173,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        let media: [MediaPlayerContent] = segments.compactMap {segment in
-            if let image = segment.image {
-                return .image(image)
-            }
-            else if let url = segment.videoURL {
-                return .video(url)
-            }
-            else {
-                return nil
-            }
-        }
-        player.play(media: media)
+        startPlayer()
     }
     
     override public func viewDidLoad() {
@@ -252,8 +240,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
 
     func didTapPostOptionsButton() {
-        analyticsProvider?.logAdvancedOptionsOpen(page: Constants.pageName)
         startExporting(action: .postOptions)
+        analyticsProvider?.logAdvancedOptionsOpen(page: Constants.pageName)
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
@@ -299,6 +287,22 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     func didRenderRectChange(rect: CGRect) {
         drawingController.didRenderRectChange(rect: rect)
+    }
+    
+    /// Loads the media into the player and starts it.
+    private func startPlayer() {
+        let media: [MediaPlayerContent] = segments.compactMap {segment in
+            if let image = segment.image {
+                return .image(image)
+            }
+            else if let url = segment.videoURL {
+                return .video(url)
+            }
+            else {
+                return nil
+            }
+        }
+        player.play(media: media)
     }
     
     private func startExporting(action: KanvasExportAction) {
@@ -585,6 +589,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private func openMediaDrawer() {
         present(mediaDrawerController, animated: true, completion: .none)
+    }
+    
+    // MARK: - MediaPlayerController
+    
+    func onPostingOptionsDismissed() {
+        startPlayer()
     }
     
     // MARK: - Private utilities
