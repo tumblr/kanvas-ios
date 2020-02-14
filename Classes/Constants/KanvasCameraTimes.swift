@@ -18,7 +18,8 @@ struct KanvasCameraTimes {
     static let gifTapRecordingTime: TimeInterval = 1
 
     /// gifHoldRecordingTime: the recording time for a GIF when holding the shutter (before reversing)
-    static let gifHoldRecordingTime: TimeInterval = 3
+    /// FIXME: on an iPhone 6, we limit this to 1 seconds due to memory issues. GIF recording should be made less memory intensive.
+    static let gifHoldRecordingTime: TimeInterval = Device.isIPhone6 || Device.isIPhone6P ? gifTapRecordingTime : 3
 
     /// Returns the recording time for the mode and whether the shutter is held or not
     /// - Parameter mode: camera mode
