@@ -353,6 +353,11 @@ final class EditorViewController: UIViewController, MediaPlayerController, Edito
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
+                guard TARGET_OS_SIMULATOR == 0 else {
+                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction)
+                    self.hideLoading()
+                    return
+                }
                 guard let image = exportedImage else {
                     self.hideLoading()
                     self.handleExportError()

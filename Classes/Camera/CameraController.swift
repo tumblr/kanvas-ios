@@ -447,7 +447,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                            ghostFrameEnabled: strongSelf.imagePreviewVisible(),
                                                            filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
-                if let image = image {
+                let simulatorImage = TARGET_OS_SIMULATOR != 0 ? UIImage() : nil
+                if let image = image ?? simulatorImage {
                     if strongSelf.currentMode.quantity == .single {
                         strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil, TumblrMediaInfo(source: .kanvas_camera))])
                     }
@@ -456,6 +457,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                                         overlayText: nil,
                                                                         lastFrame: image))
                     }
+                }
+                else {
+                    // TODO handle
                 }
             }
         })
