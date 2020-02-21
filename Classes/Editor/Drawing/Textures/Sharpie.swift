@@ -22,7 +22,7 @@ class Sharpie: Texture {
         roundedTexture.drawPoint(context: context, on: point, size: strokeSize, blendMode: blendMode, color: color)
     }
     
-    func drawLine(context: CGContext, from startPoint: CGPoint, to endPoint: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
-        roundedTexture.drawLine(context: context, from: startPoint, to: endPoint, size: strokeSize, blendMode: blendMode, color: color)
+    func drawLine(context: CGContext, points: [CGPoint], size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
+        roundedTexture.drawLine(context: context, points: points, size: strokeSize, blendMode: blendMode, color: color)
     }
 }
