@@ -245,6 +245,10 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
     public func logEditorStickerMove(stickerId: String) {
         logString(string: "logEditorStickerMove stickerId: \(stickerId)")
     }
+    
+    public func logAdvancedOptionsOpen(page: String) {
+        logString(string: "logAdvancedOptionsOpen Page: \(page)")
+    }
 
     func logString(string: String) {
         NSLog("\(self): \(string)")

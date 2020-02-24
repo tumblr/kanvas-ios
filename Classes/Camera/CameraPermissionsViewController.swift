@@ -124,7 +124,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return KanvasCameraImages.permissionCheckmark?.withRenderingMode(.alwaysTemplate)
     }()
 
-    var delegate: CameraPermissionsViewDelegate?
+    weak var delegate: CameraPermissionsViewDelegate?
 
     init(showMediaPicker: Bool, frame: CGRect = .zero) {
         self.showMediaPicker = showMediaPicker
@@ -218,7 +218,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private func setupMediaPickerButton() {
         let guide = UILayoutGuide()
         addLayoutGuide(guide)
-        let bottomMargin: CGFloat = Device.belongsToIPhoneXGroup ? 90 : 96
+        let bottomMargin: CGFloat = deviceDependentBottomMargin()
         NSLayoutConstraint.activate([
             guide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             guide.heightAnchor.constraint(equalToConstant: 100),
@@ -231,6 +231,15 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
             mediaPickerButton.widthAnchor.constraint(equalToConstant: 35),
             mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
         ])
+    }
+    
+    
+    private func deviceDependentBottomMargin() -> CGFloat {
+        guard Device.belongsToIPhoneXGroup == true else {
+            return CGFloat(floatLiteral: 96.0)
+        }
+        
+        return CGFloat(floatLiteral: 90.0)
     }
 
     private static func makeButton(title: String, titleDisabled: String) -> UIButton {
@@ -303,7 +312,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     let shouldShowMediaPicker: Bool
 
-    var delegate: CameraPermissionsViewControllerDelegate?
+    weak var delegate: CameraPermissionsViewControllerDelegate?
 
     private var permissionsView: CameraPermissionsViewable? {
         return view as? CameraPermissionsViewable

@@ -63,16 +63,10 @@ class FilterInstancesTests: XCTestCase {
     func testToonFilter() {
         _ = ToonFilter(glContext: glContext)
     }
-    func testWaveFilter() {
-        _ = WaveFilter(glContext: glContext)
-    }
-    func testWavePoolFilter() {
-        _ = WavePoolFilter(glContext: glContext)
-    }
     func testGroupFilter() {
         _ = GroupFilter(filters: [
-                WaveFilter(glContext: glContext),
-                ImagePoolFilter(glContext: glContext),
+                PlasmaFilter(glContext: glContext),
+                LegoFilter(glContext: glContext),
             ])
     }
     func testAlphaBlendFilter() {

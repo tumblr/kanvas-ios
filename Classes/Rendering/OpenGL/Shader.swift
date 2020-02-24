@@ -33,7 +33,7 @@ struct ShaderConstants {
     static let attribVertex: GLuint = 0
     static let attribTexturePosition: GLuint = 1
     static let numAttributes: GLuint = 2
-    static let retainedBufferCount = 8
+    static let retainedBufferCount = 4
     static let shaderDirectory = "OpenGLShaders"
 }
 
