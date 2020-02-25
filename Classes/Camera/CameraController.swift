@@ -815,7 +815,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         didFinishExportingImage(image: image, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm)
     }
 
-    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+    public func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction) {
         if let url = url, let info = info {
             let asset = AVURLAsset(url: url)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
@@ -836,7 +836,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+    public func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction) {
         if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
@@ -869,7 +869,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    func dismissButtonPressed() {
+    public func dismissButtonPressed() {
         if settings.features.editor {
             analyticsProvider?.logEditorBack()
         }
@@ -882,25 +882,25 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.editorDismissed()
     }
 
-    func tagButtonPressed() {
+    public func tagButtonPressed() {
         delegate?.tagButtonPressed()
     }
     
-    func editorShouldShowColorSelectorTooltip() -> Bool {
+    public func editorShouldShowColorSelectorTooltip() -> Bool {
         guard let delegate = delegate else { return false }
         return delegate.editorShouldShowColorSelectorTooltip()
     }
     
-    func didDismissColorSelectorTooltip() {
+    public func didDismissColorSelectorTooltip() {
         delegate?.didDismissColorSelectorTooltip()
     }
     
-    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+    public func editorShouldShowStrokeSelectorAnimation() -> Bool {
         guard let delegate = delegate else { return false }
         return delegate.editorShouldShowStrokeSelectorAnimation()
     }
     
-    func didEndStrokeSelectorAnimation() {
+    public func didEndStrokeSelectorAnimation() {
         delegate?.didEndStrokeSelectorAnimation()
     }
     

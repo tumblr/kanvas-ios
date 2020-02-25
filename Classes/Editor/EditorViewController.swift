@@ -11,7 +11,7 @@ import Utils
 
 /// Protocol for camera editor controller methods
 
-protocol EditorControllerDelegate: class {
+public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction)
     
@@ -46,7 +46,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         var mainActionMode: EditorView.MainActionMode = .confirm
@@ -119,7 +119,7 @@ final class EditorViewController: UIViewController, MediaPlayerController, Edito
 
     private var editingNewText: Bool = true
 
-    weak var delegate: EditorControllerDelegate?
+    public weak var delegate: EditorControllerDelegate?
     
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -131,6 +131,17 @@ final class EditorViewController: UIViewController, MediaPlayerController, Edito
         fatalError("init(nibName:bundle:) has not been implemented")
     }
     
+    public static func createEditor(for image: UIImage, settings: CameraSettings) -> EditorViewController {
+        EditorViewController(settings: settings,
+                             segments: [.image(image, nil, TumblrMediaInfo(source: .media_library))],
+                             assetsHandler: CameraSegmentHandler(),
+                             exporterClass: MediaExporter.self,
+                             cameraMode: nil,
+                             stickerProvider: nil,
+                             analyticsProvider: nil,
+                             quickBlogSelectorCoordinator: nil)
+    }
+    
     /// The designated initializer for the editor controller
     ///
     /// - Parameters:
@@ -140,7 +151,14 @@ final class EditorViewController: UIViewController, MediaPlayerController, Edito
     ///   - cameraMode: The camera mode that the preview was coming from, if any
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+    init(settings: CameraSettings,
+         segments: [CameraSegment],
+         assetsHandler: AssetsHandlerType,
+         exporterClass: MediaExporting.Type,
+         cameraMode: CameraMode?,
+         stickerProvider: StickerProvider?,
+         analyticsProvider: KanvasCameraAnalyticsProvider?,
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
@@ -171,7 +189,7 @@ final class EditorViewController: UIViewController, MediaPlayerController, Edito
         player.pause()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         startPlayer()
     }
@@ -193,7 +211,7 @@ final class EditorViewController: UIViewController, MediaPlayerController, Edito
         return .lightContent
     }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
 
