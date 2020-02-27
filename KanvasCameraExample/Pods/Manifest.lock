@@ -21,6 +21,7 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
+  - Reachability (3.2)
   - SDWebImage (5.5.2):
     - SDWebImage/Core (= 5.5.2)
   - SDWebImage/Core (5.5.2)
@@ -31,7 +32,8 @@ PODS:
     - TumblrTheme
   - TumblrTheme (1.0.0):
     - Utils
-  - Utils (1.0.0)
+  - Utils (1.0.0):
+    - Reachability (~> 3.2)
 
 DEPENDENCIES:
   - FBSnapshotTestCase (= 2.1.4)
@@ -45,6 +47,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - FBSnapshotTestCase
     - libwebp
+    - Reachability
     - SDWebImage
     - SDWebImageWebPCoder
 
@@ -65,11 +68,12 @@ SPEC CHECKSUMS:
   ImageLoader: 46387056463b7cbd662d5a031cb214f556793cca
   KanvasCamera: 655b0d0f479e1baf87365c17957b32e88975d0e3
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   SDWebImageWebPCoder: e7ae855f058e3dcae99696920b6a5d134e9dcddf
   SharedUI: 4f52755920cdc9c21a910d013ebedebec3b0c95d
   TumblrTheme: 0d7d24e72e87184f0cfa2cb315e524701c09d436
-  Utils: d6e32f8b5f9a5879632eb30001e336d97c8a43f2
+  Utils: 5895852d108b0ca6ad0d2742b5faafa4eb7c1fd6
 
 PODFILE CHECKSUM: 4c1f94d4691efc45799e4d5049b580eaa7c2887e
 
