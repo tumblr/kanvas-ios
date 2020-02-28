@@ -131,14 +131,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         fatalError("init(nibName:bundle:) has not been implemented")
     }
     
-    public static func createEditor(for image: UIImage, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
+    public static func createEditor(for image: UIImage,
+                                    settings: CameraSettings,
+                                    stickerProvider: StickerProvider,
+                                    analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
         EditorViewController(settings: settings,
                              segments: [.image(image, nil, TumblrMediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
-                             analyticsProvider: nil,
+                             analyticsProvider: analyticsProvider,
                              quickBlogSelectorCoordinator: nil)
     }
     
