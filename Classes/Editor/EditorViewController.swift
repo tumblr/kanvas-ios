@@ -142,6 +142,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              quickBlogSelectorCoordinator: nil)
     }
     
+    public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
+        EditorViewController(settings: settings,
+                             segments: [.video(videoURL, TumblrMediaInfo(source: .media_library))],
+                             assetsHandler: CameraSegmentHandler(),
+                             exporterClass: MediaExporter.self,
+                             cameraMode: nil,
+                             stickerProvider: stickerProvider,
+                             analyticsProvider: nil,
+                             quickBlogSelectorCoordinator: nil)
+    }
+    
     /// The designated initializer for the editor controller
     ///
     /// - Parameters:
