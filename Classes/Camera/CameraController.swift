@@ -13,13 +13,13 @@ import Utils
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
-    case image(URL, TumblrMediaInfo)
-    case video(URL, TumblrMediaInfo)
+    case image(URL, TumblrMediaInfo, CGSize)
+    case video(URL, TumblrMediaInfo, CGSize)
 
     public var info: TumblrMediaInfo {
         switch self {
-        case .image(_, let info): return info
-        case .video(_, let info): return info
+        case .image(_, let info, _): return info
+        case .video(_, let info, _): return info
         }
     }
 }
@@ -46,12 +46,12 @@ public protocol CameraControllerDelegate: class {
      - parameter media: KanvasCameraMedia - this is the media created in the controller (can be image, video, etc)
      - seealso: enum KanvasCameraMedia
      */
-    func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
+    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
 
     /**
      A function that is called when the main camera dismiss button is pressed
      */
-    func dismissButtonPressed()
+    func dismissButtonPressed(_ cameraController: CameraController)
 
     /// Called when the tag button is pressed in the editor
     func tagButtonPressed()
@@ -146,7 +146,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private lazy var segmentsHandler: SegmentsHandlerType = {
         return segmentsHandlerClass.init()
     }()
-    
+        
     private let settings: CameraSettings
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private var currentMode: CameraMode
@@ -164,7 +164,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var didRegisterForPhotoLibraryChanges: Bool = false
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
 
-    private weak var overlayViewController: UIViewController?
+    private weak var mediaPlayerController: MediaPlayerController?
 
     /// Constructs a CameraController that will record from the device camera
     /// and export the result to the device, saving to the phone all in between information
@@ -298,14 +298,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         cameraInputController.stopSession()
         let controller = createNextStepViewController(segments)
         self.present(controller, animated: true)
-        overlayViewController = controller
+        mediaPlayerController = controller
         if controller is EditorViewController {
             analyticsProvider?.logEditorOpen()
         }
     }
     
-    private func createNextStepViewController(_ segments: [CameraSegment]) -> UIViewController {
-        let controller: UIViewController
+    private func createNextStepViewController(_ segments: [CameraSegment]) -> MediaPlayerController {
+        let controller: MediaPlayerController
         if settings.features.editor {
             controller = createEditorViewController(segments)
         }
@@ -354,6 +354,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - Media Content Creation
+    
     class func saveImageToFile(_ image: UIImage?, info: TumblrMediaInfo) -> URL? {
         // TODO: Use NSURL.createNewImageURL rather than duplicate logic here
         // https://jira.tumblr.net/browse/KANVAS-575
@@ -446,7 +447,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                            ghostFrameEnabled: strongSelf.imagePreviewVisible(),
                                                            filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
             performUIUpdate {
-                if let image = image {
+                let simulatorImage = TARGET_OS_SIMULATOR != 0 ? UIImage() : nil
+                if let image = image ?? simulatorImage {
                     if strongSelf.currentMode.quantity == .single {
                         strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil, TumblrMediaInfo(source: .kanvas_camera))])
                     }
@@ -455,6 +457,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                                         overlayText: nil,
                                                                         lastFrame: image))
                     }
+                }
+                else {
+                    // TODO handle
                 }
             }
         })
@@ -528,7 +533,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePreviewController.setImagePreview(clipsController.getLastFrameFromLastClip())
     }
     
-    // MARK : - Private utilities
+    // MARK: - Private utilities
+    
     private func bindMediaContentAvailable() {
         disposables.append(clipsController.observe(\.hasClips) { [weak self] object, _ in
             performUIUpdate {
@@ -563,7 +569,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func handleCloseButtonPressed() {
         performUIUpdate {
-            self.delegate?.dismissButtonPressed()
+            self.delegate?.dismissButtonPressed(self)
         }
     }
 
@@ -809,35 +815,43 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         didFinishExportingImage(image: image, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm)
     }
 
-    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+    public func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction) {
         if let url = url, let info = info {
             let asset = AVURLAsset(url: url)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
-                self?.handleCloseSoon(action: action)
-                self?.delegate?.didCreateMedia(media: .video(url, info), exportAction: action, error: nil)
+                if let self = self, let videoSize = asset.videoScreenSize {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: .video(url, info, videoSize), exportAction: action, error: nil)
+                }
             }
         }
         else {
             performUIUpdate { [weak self] in
-                self?.handleCloseSoon(action: action)
-                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                if let self = self {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                }
             }
         }
     }
 
-    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+    public func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction) {
         if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
-                self?.handleCloseSoon(action: action)
-                self?.delegate?.didCreateMedia(media: .image(url, info), exportAction: action, error: nil)
+                if let self = self, let image = image {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: .image(url, info, image.size), exportAction: action, error: nil)
+                }
             }
         }
         else {
             performUIUpdate { [weak self] in
-                self?.handleCloseSoon(action: action)
-                self?.delegate?.didCreateMedia(media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                if let self = self {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                }
             }
         }
     }
@@ -855,7 +869,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    func dismissButtonPressed() {
+    public func dismissButtonPressed() {
         if settings.features.editor {
             analyticsProvider?.logEditorBack()
         }
@@ -868,25 +882,25 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.editorDismissed()
     }
 
-    func tagButtonPressed() {
+    public func tagButtonPressed() {
         delegate?.tagButtonPressed()
     }
     
-    func editorShouldShowColorSelectorTooltip() -> Bool {
+    public func editorShouldShowColorSelectorTooltip() -> Bool {
         guard let delegate = delegate else { return false }
         return delegate.editorShouldShowColorSelectorTooltip()
     }
     
-    func didDismissColorSelectorTooltip() {
+    public func didDismissColorSelectorTooltip() {
         delegate?.didDismissColorSelectorTooltip()
     }
     
-    func editorShouldShowStrokeSelectorAnimation() -> Bool {
+    public func editorShouldShowStrokeSelectorAnimation() -> Bool {
         guard let delegate = delegate else { return false }
         return delegate.editorShouldShowStrokeSelectorAnimation()
     }
     
-    func didEndStrokeSelectorAnimation() {
+    public func didEndStrokeSelectorAnimation() {
         delegate?.didEndStrokeSelectorAnimation()
     }
     
@@ -1055,7 +1069,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             PHPhotoLibrary.shared().unregisterChangeObserver(self)
         }
     }
-
+    
+    // MARK: - Post Options Interaction
+    
+    public func onPostOptionsDismissed() {
+        mediaPlayerController?.onPostingOptionsDismissed()
+    }
 }
 
 extension CameraController: PHPhotoLibraryChangeObserver {
@@ -1075,7 +1094,7 @@ extension CameraController: PHPhotoLibraryChangeObserver {
     }
 
     public func resetState() {
-        overlayViewController?.dismiss(animated: true, completion: nil)
+        mediaPlayerController?.dismiss(animated: true, completion: nil)
         clipsController.removeAllClips()
         cameraInputController.deleteAllSegments()
         imagePreviewController.setImagePreview(nil)

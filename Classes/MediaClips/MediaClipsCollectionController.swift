@@ -35,7 +35,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     private var clips: [MediaClip]
     private var draggingClipIndex: IndexPath?
     private weak var draggingCell: MediaClipsCollectionCell?
-    private var draggingState: UICollectionViewCell.DragState = .none
 
     weak var delegate: MediaClipsCollectionControllerDelegate?
 
@@ -137,7 +136,6 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaClipsCollectionCell.identifier, for: indexPath)
         if let mediaCell = cell as? MediaClipsCollectionCell {
             mediaCell.bindTo(clips[indexPath.item])
-            mediaCell.touchDelegate = self
         }
         return cell
     }
@@ -204,9 +202,11 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     
     func collectionView(_ collectionView: UICollectionView, dragSessionWillBegin session: UIDragSession) {
         draggingCell?.show(false)
+        delegate?.mediaClipStartedMoving()
     }
     
     func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        delegate?.mediaClipFinishedMoving()
         draggingCell?.show(true)
         draggingCell = .none
         draggingClipIndex = .none
@@ -241,22 +241,5 @@ extension MediaClipsCollectionController: UICollectionViewDropDelegate {
             parameters.visiblePath = UIBezierPath(rect: CGRect(x: cellSize.center.x, y: cellSize.center.y, width: 0, height: 0))
         }
         return parameters
-    }
-}
-
-// MARK: - MediaClipsCollectionCellDelegate
-extension MediaClipsCollectionController: MediaClipsCollectionCellDelegate {
-    
-    func didChangeState(newDragState: UICollectionViewCell.DragState) {
-        draggingState = newDragState
-        switch newDragState {
-        case .dragging: break
-        case .lifting:
-            delegate?.mediaClipStartedMoving()
-        case .none:
-            delegate?.mediaClipFinishedMoving()
-        @unknown default:
-            break
-        }
     }
 }

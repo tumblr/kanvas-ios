@@ -11,7 +11,7 @@ import Utils
 
 /// Protocol for camera editor controller methods
 
-protocol EditorControllerDelegate: class {
+public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction)
     
@@ -46,7 +46,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-final class EditorViewController: UIViewController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         var mainActionMode: EditorView.MainActionMode = .confirm
@@ -119,7 +119,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     private var editingNewText: Bool = true
 
-    weak var delegate: EditorControllerDelegate?
+    public weak var delegate: EditorControllerDelegate?
     
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -131,6 +131,20 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         fatalError("init(nibName:bundle:) has not been implemented")
     }
     
+    public static func createEditor(for image: UIImage,
+                                    settings: CameraSettings,
+                                    stickerProvider: StickerProvider,
+                                    analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
+        EditorViewController(settings: settings,
+                             segments: [.image(image, nil, TumblrMediaInfo(source: .media_library))],
+                             assetsHandler: CameraSegmentHandler(),
+                             exporterClass: MediaExporter.self,
+                             cameraMode: nil,
+                             stickerProvider: stickerProvider,
+                             analyticsProvider: analyticsProvider,
+                             quickBlogSelectorCoordinator: nil)
+    }
+    
     /// The designated initializer for the editor controller
     ///
     /// - Parameters:
@@ -140,7 +154,14 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     ///   - cameraMode: The camera mode that the preview was coming from, if any
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, exporterClass: MediaExporting.Type, cameraMode: CameraMode?, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+    init(settings: CameraSettings,
+         segments: [CameraSegment],
+         assetsHandler: AssetsHandlerType,
+         exporterClass: MediaExporting.Type,
+         cameraMode: CameraMode?,
+         stickerProvider: StickerProvider?,
+         analyticsProvider: KanvasCameraAnalyticsProvider?,
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
@@ -171,21 +192,9 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         player.pause()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        let media: [MediaPlayerContent] = segments.compactMap {segment in
-            if let image = segment.image {
-                return .image(image)
-            }
-            else if let url = segment.videoURL {
-                return .video(url)
-            }
-            else {
-                return nil
-            }
-        }
-        player.play(media: media)
+        startPlayer()
     }
     
     override public func viewDidLoad() {
@@ -205,7 +214,7 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         return .lightContent
     }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
 
@@ -252,8 +261,8 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     }
 
     func didTapPostOptionsButton() {
-        analyticsProvider?.logAdvancedOptionsOpen(page: Constants.pageName)
         startExporting(action: .postOptions)
+        analyticsProvider?.logAdvancedOptionsOpen(page: Constants.pageName)
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
@@ -299,6 +308,22 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
 
     func didRenderRectChange(rect: CGRect) {
         drawingController.didRenderRectChange(rect: rect)
+    }
+    
+    /// Loads the media into the player and starts it.
+    private func startPlayer() {
+        let media: [MediaPlayerContent] = segments.compactMap {segment in
+            if let image = segment.image {
+                return .image(image)
+            }
+            else if let url = segment.videoURL {
+                return .video(url)
+            }
+            else {
+                return nil
+            }
+        }
+        player.play(media: media)
     }
     
     private func startExporting(action: KanvasExportAction) {
@@ -349,6 +374,11 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
+                guard TARGET_OS_SIMULATOR == 0 else {
+                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction)
+                    self.hideLoading()
+                    return
+                }
                 guard let image = exportedImage else {
                     self.hideLoading()
                     self.handleExportError()
@@ -585,6 +615,12 @@ final class EditorViewController: UIViewController, EditorViewDelegate, EditionM
     
     private func openMediaDrawer() {
         present(mediaDrawerController, animated: true, completion: .none)
+    }
+    
+    // MARK: - MediaPlayerController
+    
+    func onPostingOptionsDismissed() {
+        startPlayer()
     }
     
     // MARK: - Private utilities

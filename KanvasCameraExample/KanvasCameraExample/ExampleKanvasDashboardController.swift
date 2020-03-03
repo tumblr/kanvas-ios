@@ -129,7 +129,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         // Only supported in Orangina
     }
 
-    public func didCreateMedia(media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
+    public func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let error = error {
             assertionFailure("Error creating Kanvas media: \(error)")
             return
@@ -164,7 +164,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         }
     }
 
-    public func dismissButtonPressed() {
+    public func dismissButtonPressed(_ cameraController: CameraController) {
         delegate?.kanvasDashboardDismissRequest()
     }
 
@@ -216,9 +216,9 @@ extension KanvasDashboardController: CameraControllerDelegate {
                 completionMainThread(nil)
             case .authorized:
                 switch media {
-                case let .image(url, _):
+                case let .image(url, _, _):
                     self.addToLibrary(url: url, resourceType: .photo, moveFile: moveFile, completion: completionMainThread)
-                case let .video(url, _):
+                case let .video(url, _, _):
                     self.addToLibrary(url: url, resourceType: .video, moveFile: moveFile, completion: completionMainThread)
                 }
             @unknown default:
