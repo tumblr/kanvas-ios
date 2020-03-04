@@ -47,6 +47,7 @@ protocol DrawingControllerDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let defaultColor: UIColor = .tumblrBrightBlue
+    static let numPointsPerLine: Int = 3
 }
 
 private enum DrawingMode {
@@ -114,7 +115,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private var drawingCollection: [UIImage]
     private var drawingColor: UIColor
     private var mode: DrawingMode
-    private var lastDrawingPoint: CGPoint
+    private var drawingPoints: [CGPoint]
     
     private var analyticsProvider: KanvasCameraAnalyticsProvider?
     private var currentStrokeSize: Float {
@@ -132,7 +133,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         drawingCollection = []
         drawingColor = Constants.defaultColor
         mode = .draw
-        lastDrawingPoint = .zero
+        drawingPoints = []
         
         super.init(nibName: .none, bundle: .none)
         setEyeDropperColor(Constants.defaultColor)
@@ -182,24 +183,31 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     /// Sets the initial point for a line
     ///
     /// - Parameter point: location from which the line will start
-    private func prepareLine(on point: CGPoint) {
-        lastDrawingPoint = point
+    private func startLineDrawing(on point: CGPoint) {
+        drawingPoints = [point]
     }
     
     /// Draws a line to a specified point
     ///
     /// - Parameter point: location where the line ends
-    private func drawLine(to endPoint: CGPoint) {
+    private func drawLine(to point: CGPoint) {
+        if drawingPoints.count >= Constants.numPointsPerLine {
+            drawingPoints.removeFirst(drawingPoints.count - (Constants.numPointsPerLine - 1))
+        }
+        drawingPoints.append(point)
+        guard drawingPoints.count == Constants.numPointsPerLine else {
+            return
+        }
+
         let rect = drawingView.drawingCanvas.bounds
         UIGraphicsBeginImageContext(rect.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
 
         drawingView.temporalImageView.image?.draw(in: rect)
 
-        let startPoint = lastDrawingPoint
         let texture = textureSelectorController.texture
         let strokeSize = strokeSelectorController.getStrokeSize(minimum: texture.minimumStroke, maximum: texture.maximumStroke)
-        texture.drawLine(context: context, from: startPoint, to: endPoint, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
+        texture.drawLine(context: context, points: drawingPoints, size: strokeSize, blendMode: mode.blendMode, color: drawingColor)
         
         if let image = UIGraphicsGetImageFromCurrentImageContext() {
             drawingView.temporalImageView.image = image
@@ -218,6 +226,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
             drawingLayer?.contents = image.cgImage
         }
         UIGraphicsEndImageContext()
+        drawingPoints = []
     }
     
     /// Draws a point on a specified point
@@ -395,10 +404,9 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         let currentPoint = recognizer.location(in: recognizer.view)
         switch recognizer.state {
         case .began:
-            prepareLine(on: currentPoint)
+            startLineDrawing(on: currentPoint)
         case .changed:
             drawLine(to: currentPoint)
-            prepareLine(on: currentPoint)
         case .ended:
             endLineDrawing()
             logDraw(.stroke)

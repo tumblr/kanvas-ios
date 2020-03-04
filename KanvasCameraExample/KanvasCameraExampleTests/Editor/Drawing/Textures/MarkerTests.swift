@@ -25,7 +25,7 @@ final class MarkerTests: FBSnapshotTestCase {
     
     func newImageView() -> UIImageView {
         let imageView = UIImageView()
-        imageView.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
+        imageView.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
         return imageView
     }
     
@@ -48,13 +48,16 @@ final class MarkerTests: FBSnapshotTestCase {
     
     func testDrawingLine() {
         let imageView = newImageView()
-        let startPoint = CGPoint(x: 100, y: 200)
-        let endPoint = CGPoint(x: 200, y: 200)
+        let points = [
+            CGPoint(x: 50, y: 200),
+            CGPoint(x: 150, y: 200),
+            CGPoint(x: 250, y: 200),
+        ]
         
         UIGraphicsBeginImageContext(imageView.frame.size)
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
-        texture.drawLine(context: context, from: startPoint, to: endPoint, size: strokeSize, blendMode: blendMode, color: drawingColor)
+        texture.drawLine(context: context, points: points, size: strokeSize, blendMode: blendMode, color: drawingColor)
         
         if let image = UIGraphicsGetImageFromCurrentImageContext() {
             imageView.image = image

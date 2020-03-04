@@ -17,14 +17,21 @@ final class Marker: Texture {
     let textureType: KanvasBrushType = .marker
     
     func drawPoint(context: CGContext, on point: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
-        let startPoint = CGPoint(x: point.x - 2, y: point.y)
-        let endPoint = CGPoint(x: point.x + 2, y: point.y)
-        drawLine(context: context, from: startPoint, to: endPoint, size: strokeSize, blendMode: blendMode, color: color)
+        let height = strokeSize / 2
+        let startPoint = CGPoint(x: point.x - height, y: point.y)
+        let endPoint = CGPoint(x: point.x + height, y: point.y)
+        drawLine(context: context, points: [startPoint, point, endPoint], size: strokeSize, blendMode: blendMode, color: color)
     }
     
-    func drawLine(context: CGContext, from startPoint: CGPoint, to endPoint: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
+    func drawLine(context: CGContext, points: [CGPoint], size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
+        guard points.count == 3, let firstPoint = points.object(at: 0), let secondPoint = points.object(at: 1), let thirdPoint = points.object(at: 2) else {
+            assertionFailure("Need three points to draw curve")
+            return
+        }
+        let startPoint = firstPoint.midPoint(to: secondPoint)
+        let endPoint = secondPoint.midPoint(to: thirdPoint)
+
         let height = strokeSize / 2
-        
         let angleXOffset = CGFloat(cos(Marker.strokeAngle)) * height / 2.0
         let angleYOffset = CGFloat(sin(Marker.strokeAngle)) * height / 2.0
         
@@ -39,17 +46,27 @@ final class Marker: Texture {
         let distanceXOffset = Marker.distanceCoefficient * cos(directionAngle)
         let distanceYOffset = Marker.distanceCoefficient * sin(directionAngle)
         
-        let points: [CGPoint] = [
-            CGPoint(x: startPoint.x + angleXOffset, y: startPoint.y - angleYOffset),
-            CGPoint(x: startPoint.x - angleXOffset, y: startPoint.y + angleYOffset),
-            CGPoint(x: endPoint.x - angleXOffset + distanceXOffset, y: endPoint.y + angleYOffset - distanceYOffset),
-            CGPoint(x: endPoint.x + angleXOffset + distanceXOffset, y: endPoint.y - angleYOffset - distanceYOffset)
-        ]
-        
+        let startPointTop = CGPoint(x: startPoint.x + angleXOffset, y: startPoint.y - angleYOffset)
+        let startPointBottom = CGPoint(x: startPoint.x - angleXOffset, y: startPoint.y + angleYOffset)
+        let controlPointBottom = CGPoint(x: secondPoint.x - angleXOffset, y: secondPoint.y + angleYOffset)
+        let endPointBottom = CGPoint(x: endPoint.x - angleXOffset + distanceXOffset, y: endPoint.y + angleYOffset - distanceYOffset)
+        let endPointTop = CGPoint(x: endPoint.x + angleXOffset + distanceXOffset, y: endPoint.y - angleYOffset - distanceYOffset)
+        let controlPointTop = CGPoint(x: secondPoint.x + angleXOffset + distanceXOffset, y: secondPoint.y - angleYOffset - distanceYOffset)
+
         context.setAlpha(Marker.alpha)
-        context.addLines(between: points)
+        context.move(to: startPointTop)
+        context.addLine(to: startPointBottom)
+        context.addQuadCurve(to: endPointBottom, control: controlPointBottom)
+        context.addLine(to: endPointTop)
+        context.addQuadCurve(to: startPointTop, control: controlPointTop)
         context.setBlendMode(blendMode)
         context.setFillColor(color.cgColor)
         context.fillPath()
+    }
+}
+
+fileprivate extension CGPoint {
+    func midPoint(to point: CGPoint) -> CGPoint {
+        return CGPoint(x: (self.x + point.x) * 0.5, y: (self.y + point.y) * 0.5)
     }
 }

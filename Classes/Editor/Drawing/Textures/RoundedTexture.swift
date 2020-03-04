@@ -30,12 +30,25 @@ class RoundedTexture: Texture {
         context.fillPath()
     }
     
-    func drawLine(context: CGContext, from startPoint: CGPoint, to endPoint: CGPoint, size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
-        context.addLines(between: [startPoint, endPoint])
+    func drawLine(context: CGContext, points: [CGPoint], size strokeSize: CGFloat, blendMode: CGBlendMode, color: UIColor) {
+        guard points.count == 3, let firstPoint = points.object(at: 0), let secondPoint = points.object(at: 1), let thirdPoint = points.object(at: 2) else {
+            assertionFailure("Need three points to draw curve")
+            return
+        }
+        let firstMidPoint = firstPoint.midPoint(to: secondPoint)
+        let secondMidPoint = secondPoint.midPoint(to: thirdPoint)
+        context.move(to: firstMidPoint)
+        context.addQuadCurve(to: secondMidPoint, control: secondPoint)
         context.setBlendMode(blendMode)
         context.setStrokeColor(color.cgColor)
         context.setLineWidth(strokeSize)
         context.setLineCap(.round)
         context.strokePath()
+    }
+}
+
+fileprivate extension CGPoint {
+    func midPoint(to point: CGPoint) -> CGPoint {
+        return CGPoint(x: (self.x + point.x) * 0.5, y: (self.y + point.y) * 0.5)
     }
 }
