@@ -17,5 +17,10 @@
   "frameworks": [
     "Foundation"
   ],
-  "source_files": "Source/**/*.{swift}"
+  "source_files": "Source/**/*.{swift}",
+  "dependencies": {
+    "Reachability": [
+      "~> 3.2"
+    ]
+  }
 }

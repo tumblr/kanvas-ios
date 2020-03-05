@@ -37,7 +37,7 @@ enum CameraSegment {
     }
 }
 
-/// A protocol to create gfinal output with all assets
+/// A protocol to create final output with all assets
 protocol AssetsHandlerType {
 
     /// concatenates all of the videos in the segments
