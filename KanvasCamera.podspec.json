@@ -20,7 +20,9 @@
     "UIKit"
   ],
   "source_files": "Classes/**/*.{h,m,swift,vsh,glsl}",
-  "resources": "Resources/*",
+  "resource_bundles": {
+    "KanvasCamera": ["Resources/*"]
+  },
   "user_target_xcconfig": {
     "GCC_PREPROCESSOR_DEFINITIONS": "GLES_SILENCE_DEPRECATION=1"
   },
