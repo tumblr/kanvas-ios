@@ -246,6 +246,7 @@ class Filter: FilterProtocol {
         if outputFormatDescription != nil {
             outputFormatDescription = nil
         }
+        switchedInputDimensions = false
         if oldContext !== glContext {
             _ = EAGLContext.setCurrent(oldContext)
         }
