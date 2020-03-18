@@ -1,5 +1,12 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'git@github.tumblr.net:TumblrMobile/Podspecs.git'
+source 'git@github.tumblr.net:TumblrMobile/ymobilelibs-pod-specs.git'
+install! 'cocoapods', :disable_input_output_paths => true
+
+use_modular_headers!
 platform :ios, '12.0'
-use_frameworks!
+
+project "KanvasCameraExample.xcodeproj"
 
 target 'KanvasCameraExample' do
     pod 'KanvasCamera', :path => '../'
@@ -7,9 +14,9 @@ target 'KanvasCameraExample' do
     pod 'SharedUI', :path => '../../SharedUI'
     pod 'Utils', :path => '../../Utils'
     pod 'ImageLoader', :path => '../../ImageLoader'
-end
-
-target 'KanvasCameraExampleTests' do
-    pod 'KanvasCamera', :path => '../'
-    pod 'FBSnapshotTestCase', '2.1.4'
+    
+    target 'KanvasCameraExampleTests' do
+        inherit! :search_paths
+        pod 'FBSnapshotTestCase', '2.1.4'
+    end
 end

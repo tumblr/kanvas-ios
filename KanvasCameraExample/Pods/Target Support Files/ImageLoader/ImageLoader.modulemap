@@ -1,4 +1,4 @@
-framework module ImageLoader {
+module ImageLoader {
   umbrella header "ImageLoader-umbrella.h"
 
   export *
