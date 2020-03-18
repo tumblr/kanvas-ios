@@ -168,7 +168,7 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
     }
 
     private func playVideo(url: URL) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
         if currentPlayer == firstPlayer {
             currentPlayer = secondPlayer
             cameraPreviewView.showSecondPlayer()
@@ -183,7 +183,7 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         }
         currentPlayer.play()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(playNextSegment), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(playNextSegment), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
 
     @objc private func queueNextSegment() {
