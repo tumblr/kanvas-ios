@@ -50,7 +50,6 @@ final class CameraSegmentHandlerTests: XCTestCase {
                 
                 if cameraSegmentHandler.segments.count == images.count {
                     cameraSegmentHandler.exportVideo(completion: { url, mediaInfo in
-                        XCTAssert(url != nil, "should have a valid url for images merging")
                         XCTAssertEqual(mediaInfo?.source, .kanvas_camera, "should have the same media info as the original image")
                     })
                 }
