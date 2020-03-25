@@ -16,7 +16,7 @@
   "source_files": "Classes/**/*",
   "dependencies": {
     "SDWebImage": [
-      "5.5.2"
+      "5.6.1"
     ],
     "SDWebImageWebPCoder": [
       "0.5.0"
