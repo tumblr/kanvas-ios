@@ -38,4 +38,8 @@ struct KanvasCameraStrings {
         case .gif: return gifModeName
         }
     }
+
+    static func bundlePath(for aClass: AnyClass) -> String? {
+        return Bundle(for: aClass).path(forResource: "KanvasCamera", ofType: "bundle")
+    }
 }
