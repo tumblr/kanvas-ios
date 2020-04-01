@@ -1,4 +1,4 @@
-framework module Pods_KanvasCameraExampleTests {
+module Pods_KanvasCameraExampleTests {
   umbrella header "Pods-KanvasCameraExampleTests-umbrella.h"
 
   export *

@@ -1,4 +1,4 @@
-framework module TumblrTheme {
+module TumblrTheme {
   umbrella header "TumblrTheme-umbrella.h"
 
   export *

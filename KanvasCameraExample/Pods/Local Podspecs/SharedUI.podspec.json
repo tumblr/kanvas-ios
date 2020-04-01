@@ -17,9 +17,11 @@
   "frameworks": [
     "UIKit"
   ],
-  "resources": [
-    "Resources/*"
-  ],
+  "resource_bundles": {
+    "SharedUI": [
+      "Resources/*"
+    ]
+  },
   "source_files": "Source/**/*.{swift,h,m}",
   "dependencies": {
     "TumblrTheme": [

@@ -1,4 +1,4 @@
-framework module KanvasCamera {
+module KanvasCamera {
   umbrella header "KanvasCamera-umbrella.h"
 
   export *

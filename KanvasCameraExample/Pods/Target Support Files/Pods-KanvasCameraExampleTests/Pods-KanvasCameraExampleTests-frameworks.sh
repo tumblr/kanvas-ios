@@ -161,27 +161,9 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/ImageLoader/ImageLoader.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImageWebPCoder/SDWebImageWebPCoder.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Utils/Utils.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/libwebp/libwebp.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/ImageLoader/ImageLoader.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/KanvasCamera/KanvasCamera.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImageWebPCoder/SDWebImageWebPCoder.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SharedUI/SharedUI.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/TumblrTheme/TumblrTheme.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Utils/Utils.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/libwebp/libwebp.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then

@@ -1,4 +1,4 @@
-framework module Utils {
+module Utils {
   umbrella header "Utils-umbrella.h"
 
   export *
