@@ -113,7 +113,13 @@ protocol SegmentsHandlerType: AssetsHandlerType {
 }
 
 private struct CameraSegmentHandlerConstants {
-    static let silentURL = Bundle(for: CameraSegmentHandler.self).url(forResource: "silence", withExtension: "aac")
+    static let silentURL: URL? = {
+        guard let bundlePath = KanvasCameraStrings.bundlePath(for: CameraSegmentHandler.self),
+            let bundle = Bundle(path: bundlePath) else {
+                return nil
+        }
+        return bundle.url(forResource: "silence", withExtension: "aac")
+    }()
 }
 
 /// A class to handle the various segments of a stop motion video, and also creates the final output
