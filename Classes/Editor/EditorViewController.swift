@@ -390,12 +390,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.hideLoading()
                     return
                 }
-                guard let image = exportedImage else {
+                guard let unwrappedImage = exportedImage else {
                     self.hideLoading()
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingImage(image: image, info: mediaInfo, action: exportAction)
+                self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, action: exportAction)
                 self.hideLoading()
             }
         }
