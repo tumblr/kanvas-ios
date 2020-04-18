@@ -357,6 +357,18 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
             }
         }
+        else if let group = cameraMode?.group, group == .gif, let segment = segments.first, let url = segment.videoURL {
+            // If one GIF/Loop video was captured, export it as a GIF
+            GIFEncoder().encodeVideoAsGIF(url: url, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { [weak self] gifURL in
+                guard let gifURL = gifURL else {
+                    self?.hideLoading()
+                    self?.handleExportError()
+                    return
+                }
+                self?.delegate?.didFinishExportingVideo(url: gifURL, info: segment.mediaInfo, action: action)
+                self?.hideLoading()
+            }
+        }
         else {
             assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
                 guard let url = url else {

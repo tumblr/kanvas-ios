@@ -820,9 +820,28 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             let asset = AVURLAsset(url: url)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
-                if let self = self, let videoSize = asset.videoScreenSize {
+                if let self = self {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: .video(url, info, videoSize), exportAction: action, error: nil)
+                    if let videoSize = asset.videoScreenSize {
+                        self.delegate?.didCreateMedia(self, media: .video(url, info, videoSize), exportAction: action, error: nil)
+                    } else {
+                        // FIXME hacking this in for GIFs
+                        let gifSize = { () -> CGSize in
+                            guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+                                return .zero
+                            }
+                            guard let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) else {
+                                return .zero
+                            }
+                            guard let width = (properties as NSDictionary)[kCGImagePropertyPixelWidth] as? Int,
+                                let height = (properties as NSDictionary)[kCGImagePropertyPixelHeight] as? Int
+                                else {
+                                    return .zero
+                            }
+                            return .init(width: width, height: height)
+                        }()
+                        self.delegate?.didCreateMedia(self, media: .image(url, info, gifSize), exportAction: action, error: nil)
+                    }
                 }
             }
         }
