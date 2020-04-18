@@ -7,6 +7,7 @@
 import Foundation
 import AVFoundation
 import CoreServices
+import CoreGraphics
 
 import GIFEncoder
 
@@ -16,6 +17,45 @@ class GIFEncoder {
         static let timeInterval: TimeInterval = 600.0
         static let tolerance = 0.01
         static let delayTime = 0.02
+    }
+
+    enum GIFSize {
+        case veryLow, low, medium, high, original
+
+        static let defaultSize = GIFSize.medium
+
+        init(size: CGSize) {
+            if size.width >= 1200 || size.height >= 1200 {
+                self = .veryLow
+            }
+            else if size.width >= 800 || size.height >= 800 {
+                self = .low
+            }
+            else if size.width >= 400 || size.height >= 400 {
+                self = .medium
+            }
+            else if size.width > 0 || size.height > 0 {
+                self = .high
+            }
+            else {
+                self = .original
+            }
+        }
+
+        var scale: CGFloat {
+            switch self {
+            case .veryLow:
+                return 2/10.0
+            case .low:
+                return 3/10.0
+            case .medium:
+                return 5/10.0
+            case .high:
+                return 7/10.0
+            case .original:
+                return 1.0
+            }
+        }
     }
 
     func encodeVideoAsGIF(url: URL, loopCount: Int, framesPerSecond: Int, completion: @escaping (URL?) -> ()) {
@@ -46,15 +86,12 @@ class GIFEncoder {
             }
 
             let asset = AVAsset(url: url)
+            let gifSize = GIFSize(size: asset.videoScreenSize ?? .zero)
 
-            // Get the length of the video in seconds
             let videoLength = Double(asset.duration.value) / Double(asset.duration.timescale)
             let frameCount = Int(videoLength * Double(framesPerSecond))
-
-            // How far along the video track we want to move, in seconds.
             let increment = videoLength / Double(frameCount);
 
-            // Add frames to the buffer
             var timePoints: [CMTime] = [];
             for currentFrame in 0..<frameCount {
                 let seconds = increment * Double(currentFrame)
@@ -81,16 +118,21 @@ class GIFEncoder {
 
             for time in timePoints {
                 do {
-                    let image = try generator.copyCGImage(at: time, actualTime: nil)
+                    // TODO maybe do this using generateCGImagesAsynchronously?
+                    var image = try generator.copyCGImage(at: time, actualTime: nil)
+                    if gifSize != .original {
+                        if let scaledImage = self.scale(image: image, withScale: gifSize.scale) {
+                            image = scaledImage
+                        }
+                    }
                     CGImageDestinationAddImage(destination, image, getFrameProperties(1.0 / Double(framesPerSecond)) as CFDictionary);
                 } catch {
-                    print("Error copying image: \(error)")
+                    print("Error copying GIF frame: \(error)")
                     completionMain(nil)
                     return
                 }
             }
 
-            // Finalize the GIF
             guard CGImageDestinationFinalize(destination) else {
                 print("Failed to finalize GIF destination")
                 completionMain(nil)
@@ -99,5 +141,22 @@ class GIFEncoder {
 
             completionMain(fileURL)
         }
+    }
+
+    private func scale(image: CGImage, withScale scale: CGFloat) -> CGImage? {
+        let newSize = CGSize(width: CGFloat(image.width) * (scale / UIScreen.main.scale), height: CGFloat(image.height) * (scale / UIScreen.main.scale))
+        let newRect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height).integral
+
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+
+        let context = UIGraphicsGetCurrentContext()
+        context?.interpolationQuality = .high
+        let flipVertical = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: newSize.height)
+        context?.concatenate(flipVertical)
+        context?.draw(image, in: newRect)
+        return context?.makeImage()
     }
 }
