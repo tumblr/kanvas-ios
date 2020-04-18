@@ -359,15 +359,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         else if let group = cameraMode?.group, group == .gif, let segment = segments.first, let url = segment.videoURL {
             // If one GIF/Loop video was captured, export it as a GIF
-            GIFEncoder().encodeVideoAsGIF(url: url, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { [weak self] gifURL in
-                guard let gifURL = gifURL else {
-                    self?.hideLoading()
-                    self?.handleExportError()
-                    return
-                }
-                self?.delegate?.didFinishExportingVideo(url: gifURL, info: segment.mediaInfo, action: action)
-                self?.hideLoading()
-            }
+            self.createFinalGIF(videoURL: url, mediaInfo: segment.mediaInfo, exportAction: action)
         }
         else {
             assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
@@ -377,6 +369,34 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     return
                 }
                 self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? TumblrMediaInfo(source: .media_library), exportAction: action)
+            }
+        }
+    }
+
+    private func createFinalGIF(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+        let exporter = exporterClass.init()
+        exporter.filterType = filterType ?? .passthrough
+        exporter.imageOverlays = imageOverlays()
+        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
+            guard let exportedVideoURL = exportedVideoURL else {
+                performUIUpdate {
+                    self.hideLoading()
+                    self.handleExportError()
+                }
+                return
+            }
+            GIFEncoder().encodeVideoAsGIF(url: exportedVideoURL, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { [weak self] gifURL in
+                guard let gifURL = gifURL else {
+                    performUIUpdate {
+                        self?.hideLoading()
+                        self?.handleExportError()
+                    }
+                    return
+                }
+                self?.delegate?.didFinishExportingVideo(url: gifURL, info: mediaInfo, action: exportAction)
+                performUIUpdate {
+                    self?.hideLoading()
+                }
             }
         }
     }
