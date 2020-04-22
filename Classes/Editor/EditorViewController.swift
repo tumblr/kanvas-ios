@@ -13,10 +13,10 @@ import Utils
 
 public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
-    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, hasEdited: Bool)
+    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when finished exporting image
-    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, hasEdited: Bool)
+    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -117,9 +117,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
     
-    private var hasEdited: Bool {
+    private var mediaChanged: Bool {
         let hasStickerOrText = !editorView.movableViewCanvas.isEmpty
-        let filterApplied = (filterType != nil && filterType != .passthrough)
+        let filterApplied = filterType?.filterApplied == true
         let hasDrawings = !drawingController.isEmpty
         return hasStickerOrText || filterApplied || hasDrawings
     }
@@ -380,7 +380,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction, hasEdited: self.hasEdited)
+                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 self.hideLoading()
             }
         }
@@ -393,7 +393,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
                 guard TARGET_OS_SIMULATOR == 0 else {
-                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction, hasEdited: self.hasEdited)
+                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                     self.hideLoading()
                     return
                 }
@@ -402,7 +402,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingImage(image: image, info: mediaInfo, action: exportAction, hasEdited: self.hasEdited)
+                self.delegate?.didFinishExportingImage(image: image, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 self.hideLoading()
             }
         }
