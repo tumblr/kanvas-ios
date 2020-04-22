@@ -13,10 +13,10 @@ import Utils
 
 public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
-    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction)
+    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, hasEdited: Bool)
     
     /// callback when finished exporting image
-    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction)
+    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, hasEdited: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -115,6 +115,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         didSet {
             player.filterType = filterType
         }
+    }
+    
+    private var hasEdited: Bool {
+        let hasStickerOrText = !editorView.movableViewCanvas.isEmpty
+        let filterApplied = (filterType != nil && filterType != .passthrough)
+        let hasDrawings = !drawingController.isEmpty
+        return hasStickerOrText || filterApplied || hasDrawings
     }
 
     private var editingNewText: Bool = true
@@ -373,7 +380,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction)
+                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction, hasEdited: self.hasEdited)
                 self.hideLoading()
             }
         }
@@ -386,7 +393,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
                 guard TARGET_OS_SIMULATOR == 0 else {
-                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction)
+                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction, hasEdited: self.hasEdited)
                     self.hideLoading()
                     return
                 }
@@ -395,7 +402,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingImage(image: image, info: mediaInfo, action: exportAction)
+                self.delegate?.didFinishExportingImage(image: image, info: mediaInfo, action: exportAction, hasEdited: self.hasEdited)
                 self.hideLoading()
             }
         }
@@ -415,7 +422,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func handleExportError() {
-        let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"), preferredStyle: .alert)
+        let alertController = UIAlertController(title: nil,
+                                                message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"),
+                                                preferredStyle: .alert)
         let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { _ in
             alertController.dismiss(animated: true, completion: .none)
         }
