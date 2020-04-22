@@ -66,4 +66,8 @@ import Foundation
             return nil
         }
     }
+    
+    public var filterApplied: Bool {
+        return self != .off && self != .passthrough
+    }
 }

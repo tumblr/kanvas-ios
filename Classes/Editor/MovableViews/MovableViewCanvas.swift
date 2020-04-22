@@ -67,6 +67,9 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     // Values from which the different gestures start
     private var originTransformations: ViewTransformations
     
+    var isEmpty: Bool {
+        return subviews.compactMap{ $0 as? MovableView }.count == 0
+    }
     
     init() {
         overlay = UIView()
