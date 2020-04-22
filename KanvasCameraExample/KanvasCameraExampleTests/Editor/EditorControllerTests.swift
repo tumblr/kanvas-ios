@@ -282,12 +282,12 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
     
-    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, hasEdited: Bool) {
         XCTAssertNotNil(url)
         videoExportCalled = true
     }
     
-    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction) {
+    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, hasEdited: Bool) {
         XCTAssertNotNil(image)
         imageExportCalled = true
     }
