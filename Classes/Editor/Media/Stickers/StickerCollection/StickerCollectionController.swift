@@ -33,6 +33,14 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     private var stickers: [Sticker] = []
     private var cellSizes: [CGSize] = []
     
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     // MARK: - View Life Cycle
     
     override func loadView() {

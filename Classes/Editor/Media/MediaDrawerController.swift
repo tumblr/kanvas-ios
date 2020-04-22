@@ -54,6 +54,14 @@ final class MediaDrawerController: UIViewController, MediaDrawerViewDelegate, Dr
         return view
     }()
     
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     // MARK: - Initializers
     
     /// The designated initializer for the media drawer controller
