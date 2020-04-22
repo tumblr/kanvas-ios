@@ -112,7 +112,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         mainView.addSubview(stickerView)
         stickerView.accessibilityIdentifier = "Sticker Type Collection Cell Sticker View"
         stickerView.translatesAutoresizingMaskIntoConstraints = false
-        stickerView.contentMode = .scaleAspectFill
+        stickerView.contentMode = .scaleAspectFit
         stickerView.clipsToBounds = true
         stickerView.layer.masksToBounds = true
         
@@ -159,7 +159,7 @@ final class StickerTypeCollectionCell: UICollectionViewCell {
         guard let url = URL(string: stickerType.imageUrl) else { return }
         loadingView.startLoading()
         
-        let completion: (UIImage?, Error?) -> (Void) = { [weak self] image, _ in
+        let completion: (UIImage?, Error?) -> (Void) = { [weak self] _, _ in
             performUIUpdate {
                 self?.loadingView.stopLoading()
             }
