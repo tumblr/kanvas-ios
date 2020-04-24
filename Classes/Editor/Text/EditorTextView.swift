@@ -49,9 +49,6 @@ private struct Constants {
     static let circularIconBorderColor: UIColor = .white
     static let circularIconCornerRadius: CGFloat = circularIconSize / 2
 
-    // Color collection width
-    static let colorCollectionWidth: CGFloat = circularIconSize * 3 + circularIconPadding * 6
-    
     // Confirm button
     static let confirmButtonSize: CGFloat = 36
     static let confirmButtonInset: CGFloat = -10
@@ -228,8 +225,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         setUpFontSelector()
         setUpAlignmentSelector()
         setUpHighlightSelector()
-        setUpColorCollection()
         setUpOpenColorPicker()
+        setUpColorCollection()
         setUpCloseColorPicker()
         setUpEyeDropper()
         setUpColorGradient()
@@ -371,22 +368,6 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         highlightSelector.addGestureRecognizer(tapRecognizer)
     }
     
-    /// Sets up the color carousel shown at the right of the main menu
-    private func setUpColorCollection() {
-        colorCollection.accessibilityIdentifier = "Editor Text Color Collection"
-        colorCollection.clipsToBounds = false
-        colorCollection.backgroundColor = .clear
-        colorCollection.translatesAutoresizingMaskIntoConstraints = false
-        mainMenuContainer.addSubview(colorCollection)
-        
-        NSLayoutConstraint.activate([
-            colorCollection.widthAnchor.constraint(equalToConstant: Constants.colorCollectionWidth),
-            colorCollection.trailingAnchor.constraint(equalTo: mainMenuContainer.trailingAnchor),
-            colorCollection.centerYAnchor.constraint(equalTo: mainMenuContainer.centerYAnchor),
-            colorCollection.heightAnchor.constraint(equalToConstant: Constants.circularIconSize)
-        ])
-    }
-    
     /// Sets up the gradient button that opens the color picker menu
     private func setUpOpenColorPicker() {
         openColorPicker.accessibilityIdentifier = "Editor Text Open Color Picker"
@@ -398,14 +379,30 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         mainMenuContainer.addSubview(openColorPicker)
         
         NSLayoutConstraint.activate([
-            openColorPicker.trailingAnchor.constraint(equalTo: colorCollection.leadingAnchor, constant: -Constants.circularIconPadding),
             openColorPicker.centerYAnchor.constraint(equalTo: mainMenuContainer.centerYAnchor),
+            openColorPicker.leadingAnchor.constraint(equalTo: highlightSelector.trailingAnchor, constant: Constants.customIconMargin),
             openColorPicker.heightAnchor.constraint(equalToConstant: Constants.circularIconSize),
-            openColorPicker.widthAnchor.constraint(equalToConstant: Constants.circularIconSize),
+            openColorPicker.widthAnchor.constraint(equalToConstant: Constants.circularIconSize)
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(openColorPickerTapped(recognizer:)))
         openColorPicker.addGestureRecognizer(tapRecognizer)
+    }
+    
+    /// Sets up the color carousel shown at the right of the main menu
+    private func setUpColorCollection() {
+        colorCollection.accessibilityIdentifier = "Editor Text Color Collection"
+        colorCollection.clipsToBounds = false
+        colorCollection.backgroundColor = .clear
+        colorCollection.translatesAutoresizingMaskIntoConstraints = false
+        mainMenuContainer.addSubview(colorCollection)
+        
+        NSLayoutConstraint.activate([
+            colorCollection.leadingAnchor.constraint(equalTo: openColorPicker.trailingAnchor, constant: Constants.circularIconPadding),
+            colorCollection.trailingAnchor.constraint(equalTo: mainMenuContainer.trailingAnchor),
+            colorCollection.centerYAnchor.constraint(equalTo: mainMenuContainer.centerYAnchor),
+            colorCollection.heightAnchor.constraint(equalToConstant: Constants.circularIconSize)
+        ])
     }
     
     /// Sets up the cross button to close the color picker menu
