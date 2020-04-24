@@ -9,8 +9,6 @@ import AVFoundation
 import CoreServices
 import CoreGraphics
 
-import GIFEncoder
-
 class GIFEncoder {
 
     private struct Constants {
