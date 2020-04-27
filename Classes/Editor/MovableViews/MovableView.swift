@@ -46,6 +46,7 @@ private struct Constants {
     static let deletionScale: CGFloat = 0.9
     static let opaqueAlpha: CGFloat = 1
     static let translucentAlpha: CGFloat = 0.8
+    static let additionalHitArea: CGFloat = 20
 }
 
 /// A wrapper for UIViews that can be rotated, moved and scaled
@@ -107,6 +108,7 @@ final class MovableView: UIView {
         super.layoutSubviews()
         innerView.contentScaleFactor = scale
     }
+    
 
     // MARK: - Transforms
     
@@ -184,5 +186,17 @@ final class MovableView: UIView {
         else if let imageView = innerView as? StylableImageView {
             delegate?.didRemoveImageView(imageView)
         }
+    }
+    
+    // MARK: - Extended hit area
+    
+    override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let relativeFrame = bounds
+        let hitTestEdgeInsets = UIEdgeInsets(top: -Constants.additionalHitArea,
+                                             left: -Constants.additionalHitArea,
+                                             bottom: -Constants.additionalHitArea,
+                                             right: -Constants.additionalHitArea)
+        let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
+        return hitFrame.contains(point)
     }
 }
