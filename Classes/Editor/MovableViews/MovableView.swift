@@ -46,7 +46,6 @@ private struct Constants {
     static let deletionScale: CGFloat = 0.9
     static let opaqueAlpha: CGFloat = 1
     static let translucentAlpha: CGFloat = 0.8
-    static let additionalHitArea: CGFloat = 20
 }
 
 /// A wrapper for UIViews that can be rotated, moved and scaled
@@ -54,6 +53,7 @@ final class MovableView: UIView {
     
     weak var delegate: MovableViewDelegate?
     private let innerView: UIView
+    private let additionalHitArea: CGFloat
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -80,11 +80,12 @@ final class MovableView: UIView {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
     }
     
-    init(view innerView: UIView, transformations: ViewTransformations) {
+    init(view innerView: UIView, transformations: ViewTransformations, additionalHitArea: CGFloat) {
         self.innerView = innerView
         self.position = transformations.position
         self.scale = transformations.scale
         self.rotation = transformations.rotation
+        self.additionalHitArea = additionalHitArea
         super.init(frame: .zero)
         
         setupInnerView()
@@ -192,10 +193,10 @@ final class MovableView: UIView {
     
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let relativeFrame = bounds
-        let hitTestEdgeInsets = UIEdgeInsets(top: -Constants.additionalHitArea,
-                                             left: -Constants.additionalHitArea,
-                                             bottom: -Constants.additionalHitArea,
-                                             right: -Constants.additionalHitArea)
+        let hitTestEdgeInsets = UIEdgeInsets(top: -additionalHitArea,
+                                             left: -additionalHitArea,
+                                             bottom: -additionalHitArea,
+                                             right: -additionalHitArea)
         let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
         return hitFrame.contains(point)
     }
