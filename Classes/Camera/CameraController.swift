@@ -989,6 +989,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let imageMaybe = info[.originalImage] as? UIImage
         let mediaURLMaybe = info[.mediaURL] as? URL
 
+        if let imageURL = info[.imageURL] as? URL {
+            let mediaInfo: TumblrMediaInfo = {
+                return TumblrMediaInfo(fromImage: imageURL) ?? TumblrMediaInfo(source: .media_library)
+            }()
+            GIFDecoder().decodeWithImageIO(imageURL: imageURL) { decodedFrames in
+                let segments = decodedFrames.frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, mediaInfo) }
+                self.showPreviewWithSegments(segments)
+            }
+        }
+
         if let image = imageMaybe {
             guard canPick(image: image) else {
                 let message = NSLocalizedString("That's too big, bud.", comment: "That's too big, bud.")
