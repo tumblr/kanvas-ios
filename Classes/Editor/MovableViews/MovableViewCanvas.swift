@@ -301,8 +301,11 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     }
     
     func didTapImageView(movableView: MovableView, imageView: StylableImageView) {
-        UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
-            self?.bringSubviewToFront(movableView)
+        if let frontView = subviews.last, frontView != movableView {
+            bringSubviewToFront(movableView)
+        }
+        else if let stickerImage = imageView.image {
+            imageView.image = stickerImage.withHorizontallyFlippedOrientation()
         }
     }
     
@@ -327,7 +330,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     /// shows or hides the overlay
     ///
     /// - Parameter show: true to show, false to hide
-    func showOverlay(_ show: Bool) {
+    private func showOverlay(_ show: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.overlay.alpha = show ? 1 : 0
         }
