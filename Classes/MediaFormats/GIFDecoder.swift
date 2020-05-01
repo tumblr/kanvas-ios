@@ -21,7 +21,11 @@ class GIFDecoder {
         completion(frames)
     }
 
-    func delayForImageAtIndex(source: CGImageSource, i: Int) -> Int {
+    func numberOfFrames(imageURL: URL) -> Int {
+        return CGImageSourceGetCount(CGImageSourceCreateWithURL(imageURL as CFURL, nil)!)
+    }
+
+    private func delayForImageAtIndex(source: CGImageSource, i: Int) -> Int {
         var delay: Int = 100
         guard let properties: CFDictionary = CGImageSourceCopyPropertiesAtIndex(source, i, nil) else {
             return delay
@@ -42,13 +46,13 @@ class GIFDecoder {
         return delay
     }
 
-    func createImagesAndDelays(source: CGImageSource, count: Int) -> ([CGImage], [Int]) {
+    private func createImagesAndDelays(source: CGImageSource, count: Int) -> ([CGImage], [Int]) {
         let images = (0..<count).map{ CGImageSourceCreateImageAtIndex(source, $0, nil)! }
         let delays = (0..<count).map{ delayForImageAtIndex(source: source, i: $0) }
         return (images, delays)
     }
 
-    func sum(_ count: Int, _ values: [Int]) -> Int {
+    private func sum(_ count: Int, _ values: [Int]) -> Int {
         var theSum = 0;
         for i in 0..<count {
             theSum += values[i]
@@ -56,7 +60,7 @@ class GIFDecoder {
         return theSum
     }
 
-    func pairGCD(_ a: Int, _ b: Int) -> Int {
+    private func pairGCD(_ a: Int, _ b: Int) -> Int {
         var aa = a;
         var bb = b;
         if (aa < bb) {
@@ -72,7 +76,7 @@ class GIFDecoder {
         }
     }
 
-    func vectorGCD(_ count: Int, _ values: [Int]) -> Int {
+    private func vectorGCD(_ count: Int, _ values: [Int]) -> Int {
         var gcd = values[0]
         for i in 1..<count {
             gcd = pairGCD(values[i], gcd);
@@ -80,7 +84,7 @@ class GIFDecoder {
         return gcd
     }
 
-    func frameArray(_ count: Int, _ images: [CGImage], _ delays: [Int], _ totalDuration: Int) -> [CGImage] {
+    private func frameArray(_ count: Int, _ images: [CGImage], _ delays: [Int], _ totalDuration: Int) -> [CGImage] {
         let gcd = vectorGCD(count, delays)
         let frameCount = totalDuration / gcd
         var i = 0
@@ -97,8 +101,11 @@ class GIFDecoder {
         return Array(frames[0..<frameCount])
     }
 
-    func animatedImage(withAnimatedGIFImageSource source: CGImageSource) -> GIFDecodeFrames {
+    private func animatedImage(withAnimatedGIFImageSource source: CGImageSource) -> GIFDecodeFrames {
         let count = CGImageSourceGetCount(source)
+        guard count > 1 else {
+            return (frames: [], interval: 0)
+        }
         let (images, delays) = createImagesAndDelays(source: source, count: count)
         let totalDuration = sum(count, delays)
         let frames = frameArray(count, images, delays, totalDuration)
@@ -114,11 +121,11 @@ class GIFDecoder {
         return (frames: decodedFrames, interval: TimeInterval(totalDuration / count))
     }
 
-    func animatedImage(withAnimatedGIFData data: Data) -> GIFDecodeFrames {
+    private func animatedImage(withAnimatedGIFData data: Data) -> GIFDecodeFrames {
         return animatedImage(withAnimatedGIFImageSource: CGImageSourceCreateWithData(data as CFData, nil)!)
     }
 
-    func animatedImage(withAnimatedGIFURL url: URL) -> GIFDecodeFrames {
+    private func animatedImage(withAnimatedGIFURL url: URL) -> GIFDecodeFrames {
         return animatedImage(withAnimatedGIFImageSource: CGImageSourceCreateWithURL(url as CFURL, nil)!)
     }
 

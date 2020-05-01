@@ -136,6 +136,8 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         return AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
     }
 
+    private let videoQueue = DispatchQueue(label: "kanvas.camerasegment")
+
     /// Appends an existing CameraSegment
     ///
     /// - Parameter segment: A camera segment with image or video
@@ -162,24 +164,16 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - size: size (resolution) of the video
     ///   - completion: completion handler, success bool and URL of video
     func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
-        guard let url = setupAssetWriter(size: size), let assetWriter = assetWriter, let input = assetWriterVideoInput else {
-            completion(false, nil)
-            return
-        }
-
-        let bufferAttributes: [String: Any] = [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA, String(kCVPixelBufferCGBitmapContextCompatibilityKey): true, String(kCVPixelBufferCGImageCompatibilityKey): true, String(kCVPixelBufferWidthKey): size.width, String(kCVPixelBufferHeightKey): size.height]
-        assetWriter.add(input)
-        let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: bufferAttributes)
-        createVideoFromImage(image: image, assetWriter: assetWriter, adaptor: adaptor, input: input, completion: { success in
-            if success {
+        createVideoFromImage(image: image) { url in
+            if let url = url {
                 let segment = CameraSegment.image(image, url, mediaInfo)
                 self.segments.append(segment)
-                completion(success, segment)
+                completion(true, segment)
             }
             else {
                 completion(false, nil)
             }
-        })
+        }
     }
 
     /// Deletes a segment and removes from local storage. When running tests, it should be false
@@ -272,8 +266,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         var insertTime = CMTime.zero
         let allImages = containsOnlyImages(segments: segments)
 
-        for segment in segments {
-            guard let segmentURL = segment.videoURL else { continue }
+        let addSegmentToComposition: (URL) -> Void = { segmentURL in
             let urlAsset = AVURLAsset(url: segmentURL, options: preciseOptions)
             var videoDuration: CMTime = CMTime.zero
 
@@ -283,10 +276,10 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 if allImages {
                     let endTime = CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
                     videoDuration = CMTimeCompare(videoTrack.timeRange.duration, endTime) == 1 ? endTime : videoTrack.timeRange.duration
-                    addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: CMTimeRangeMake(start: videoTrack.timeRange.start, duration: videoDuration))
+                    self.addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: CMTimeRangeMake(start: videoTrack.timeRange.start, duration: videoDuration))
                 }
                 else {
-                    addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
+                    self.addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
                     videoDuration = videoTrack.timeRange.duration
                     videoCompTrack?.preferredTransform = videoTrack.preferredTransform
                 }
@@ -297,20 +290,76 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 if CMTimeCompare(audioTrack.timeRange.duration, videoDuration) == 1 {
                     audioTimeRange = CMTimeRangeMake(start: audioTimeRange.start, duration: videoDuration); // crop audio to video range
                 }
-                addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
+                self.addTrack(assetTrack: audioTrack, compositionTrack: audioCompTrack, time: insertTime, timeRange: audioTimeRange)
             }
             else {
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
-                insertEmptyAudio(compositionTrack: audioCompTrack, duration: videoDuration, insertTime: insertTime)
+                self.insertEmptyAudio(compositionTrack: audioCompTrack, duration: videoDuration, insertTime: insertTime)
             }
             insertTime = mixComposition.duration
         }
-        exportComposition(segments: segments, composition: mixComposition, completion: completion)
+
+        ensureAllImagesHaveVideo(segments: segments) { newSegments in
+            for segment in newSegments {
+                guard let segmentURL = segment.videoURL else {
+                    assertionFailure("Missing video URL")
+                    continue
+                }
+                addSegmentToComposition(segmentURL)
+            }
+            self.exportComposition(segments: segments, composition: mixComposition, completion: completion)
+        }
+    }
+
+    func ensureAllImagesHaveVideo(segments: [CameraSegment], completion: @escaping ([CameraSegment]) -> ()) {
+        guard !allImagesHaveVideo(segments: segments) else {
+            completion(segments)
+            return
+        }
+        var newSegments: [CameraSegment] = []
+        let dispatchGroup = DispatchGroup()
+        for segment in segments {
+            if segment.videoURL != nil {
+                newSegments.append(segment)
+                continue
+            }
+            guard let segmentImage = segment.image else {
+                assertionFailure("No video and no image?")
+                continue
+            }
+            dispatchGroup.enter()
+            self.videoQueue.async {
+                self.createVideoFromImage(image: segmentImage) { url in
+                    guard let url = url else {
+                        DispatchQueue.main.async {
+                            dispatchGroup.leave()
+                        }
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        newSegments.append(.image(segmentImage, url, segment.mediaInfo))
+                        dispatchGroup.leave()
+                    }
+                }
+            }
+        }
+        dispatchGroup.notify(queue: DispatchQueue.main) {
+            completion(newSegments)
+        }
     }
     
     private func containsOnlyImages(segments: [CameraSegment]) -> Bool {
         for segment in segments {
             if segment.image == nil {
+                return false
+            }
+        }
+        return true
+    }
+
+    private func allImagesHaveVideo(segments: [CameraSegment]) -> Bool {
+        for segment in segments {
+            if segment.image != nil && segment.videoURL == nil {
                 return false
             }
         }
@@ -417,11 +466,22 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - adaptor: the pixel buffer adaptor
     ///   - input: asset writer input
     ///   - completion: returns success bool
-    private func createVideoFromImage(image: UIImage, assetWriter: AVAssetWriter, adaptor: AVAssetWriterInputPixelBufferAdaptor, input: AVAssetWriterInput, completion: @escaping (Bool) -> Void) {
-        guard let buffer = createNewPixelBuffer(from: image) else {
-            completion(false)
+    private func createVideoFromImage(image: UIImage, completion: @escaping (URL?) -> Void) {
+
+        guard let url = setupAssetWriter(size: image.size), let assetWriter = assetWriter, let input = assetWriterVideoInput else {
+            completion(nil)
             return
         }
+
+        let bufferAttributes: [String: Any] = [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA, String(kCVPixelBufferCGBitmapContextCompatibilityKey): true, String(kCVPixelBufferCGImageCompatibilityKey): true, String(kCVPixelBufferWidthKey): image.size.width, String(kCVPixelBufferHeightKey): image.size.height]
+        assetWriter.add(input)
+        let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: bufferAttributes)
+
+        guard let buffer = createNewPixelBuffer(from: image) else {
+            completion(nil)
+            return
+        }
+
         assetWriter.startWriting()
         assetWriter.startSession(atSourceTime: CMTime.zero)
         /// should also append a buffer at the end time
@@ -437,7 +497,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 assetWriter.endSession(atSourceTime: endTime)
                 adaptor.assetWriterInput.markAsFinished()
                 assetWriter.finishWriting() {
-                    completion(assetWriter.status == .completed)
+                    completion(assetWriter.status == .completed ? url : nil)
                 }
             }
         }

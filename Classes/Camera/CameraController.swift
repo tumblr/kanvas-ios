@@ -988,18 +988,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         picker.dismiss(animated: true, completion: nil)
         let imageMaybe = info[.originalImage] as? UIImage
         let mediaURLMaybe = info[.mediaURL] as? URL
+        let imageURLMaybe = info[.imageURL] as? URL
 
-        if let imageURL = info[.imageURL] as? URL {
-            let mediaInfo: TumblrMediaInfo = {
-                return TumblrMediaInfo(fromImage: imageURL) ?? TumblrMediaInfo(source: .media_library)
-            }()
-            GIFDecoder().decodeWithImageIO(imageURL: imageURL) { decodedFrames in
-                let segments = decodedFrames.frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, mediaInfo) }
-                self.showPreviewWithSegments(segments)
-            }
+        if let imageURL = imageURLMaybe, GIFDecoder().numberOfFrames(imageURL: imageURL) > 1 {
+            pick(frames: imageURL)
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
         }
-
-        if let image = imageMaybe {
+        else if let image = imageMaybe {
             guard canPick(image: image) else {
                 let message = NSLocalizedString("That's too big, bud.", comment: "That's too big, bud.")
                 let buttonMessage = NSLocalizedString("Got it", comment: "Got it")
@@ -1018,6 +1013,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
         analyticsProvider?.logMediaPickerDismiss()
+    }
+
+    private func pick(frames imageURL: URL) {
+        let mediaInfo: TumblrMediaInfo = {
+            return TumblrMediaInfo(fromImage: imageURL) ?? TumblrMediaInfo(source: .media_library)
+        }()
+        GIFDecoder().decodeWithImageIO(imageURL: imageURL) { decodedFrames in
+            let segments = decodedFrames.frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, mediaInfo) }
+            self.showPreviewWithSegments(segments)
+        }
     }
 
     private func pick(image: UIImage, url: URL?) {
