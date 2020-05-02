@@ -8,7 +8,7 @@ import Foundation
 
 typealias GIFDecodeFrame = (image: CGImage, interval: TimeInterval)
 
-typealias GIFDecodeFrames = (frames: [GIFDecodeFrame], interval: TimeInterval)
+typealias GIFDecodeFrames = [GIFDecodeFrame]
 
 class GIFDecoder {
 
@@ -26,7 +26,7 @@ class GIFDecoder {
     }
 
     private func delayForImageAtIndex(source: CGImageSource, i: Int) -> Int {
-        var delay: Int = 100
+        var delay = 100
         guard let properties: CFDictionary = CGImageSourceCopyPropertiesAtIndex(source, i, nil) else {
             return delay
         }
@@ -39,9 +39,6 @@ class GIFDecoder {
         }
         if let number = number {
             delay = Int(number.doubleValue * 1000)
-            if delay == 0 {
-                assertionFailure("Delay probably shouldn't be zero")
-            }
         }
         return delay
     }
@@ -104,21 +101,15 @@ class GIFDecoder {
     private func animatedImage(withAnimatedGIFImageSource source: CGImageSource) -> GIFDecodeFrames {
         let count = CGImageSourceGetCount(source)
         guard count > 1 else {
-            return (frames: [], interval: 0)
+            return []
         }
         let (images, delays) = createImagesAndDelays(source: source, count: count)
-        let totalDuration = sum(count, delays)
-        let frames = frameArray(count, images, delays, totalDuration)
         
         var decodedFrames: [GIFDecodeFrame] = []
-        //for i in 0..<images.count {
-            //decodedFrames.append((image: images[i], interval: TimeInterval(delays[i])))
-        //}
-        //return (frames: decodedFrames, interval: 0)
-        for i in 0..<frames.count {
-            decodedFrames.append((image: frames[i], interval: 0))
+        for i in 0..<images.count {
+            decodedFrames.append((image: images[i], interval: TimeInterval(Double(delays[i]) / 1000.0)))
         }
-        return (frames: decodedFrames, interval: TimeInterval(totalDuration / count))
+        return decodedFrames
     }
 
     private func animatedImage(withAnimatedGIFData data: Data) -> GIFDecodeFrames {

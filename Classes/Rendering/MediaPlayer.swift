@@ -27,7 +27,7 @@ protocol MediaPlayerViewDelegate: class {
 
 /// Types of media the player can play.
 enum MediaPlayerContent {
-    case image(UIImage)
+    case image(UIImage, TimeInterval?)
     case video(URL)
 }
 
@@ -63,19 +63,13 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 /// Controls the playback of many MediaPlayerContent
 final class MediaPlayer {
 
-    private struct Constants {
-        static let onlyImagesFrameDuration: CMTimeValue = 120
-        static let frameDuration: CMTimeValue = 300
-        static let timescale: CMTimeScale = 600
-    }
-
     private enum MediaPlayerContentLoaded {
-        case image(UIImage, CMSampleBuffer)
+        case image(UIImage, CMSampleBuffer, TimeInterval?)
         case video(URL, AVPlayerItem, AVPlayerItemVideoOutput)
 
         var sampleBuffer: CMSampleBuffer? {
             switch self {
-            case .image(_, let sampleBuffer):
+            case .image(_, let sampleBuffer, _):
                 return sampleBuffer
             default:
                 return nil
@@ -106,6 +100,15 @@ final class MediaPlayer {
                 return playerItemVideoOutput
             default:
                 return nil
+            }
+        }
+
+        var interval: TimeInterval? {
+            switch self {
+            case .image(_, _, let interval):
+                return interval
+            case .video(_, _, _):
+                return .zero
             }
         }
     }
@@ -245,7 +248,7 @@ final class MediaPlayer {
         guard playableMedia.count == 1, let onlyMedia = playableMedia.first else { return false }
         
         switch onlyMedia {
-        case .image(_, _):
+        case .image(_, _, _):
             return true
         case .video(_, _, _):
             return false
@@ -266,8 +269,8 @@ final class MediaPlayer {
 
     private static func loadMedia(media: MediaPlayerContent) -> MediaPlayerContentLoaded? {
         switch media {
-        case .image(let image):
-            return loadImageMedia(image: image)
+        case .image(let image, let interval):
+            return loadImageMedia(image: image, interval: interval)
         case .video(let url):
             return loadVideoMedia(url: url)
         }
@@ -280,11 +283,11 @@ final class MediaPlayer {
         return .video(url, playerItem, videoOutput)
     }
 
-    private static func loadImageMedia(image: UIImage) -> MediaPlayerContentLoaded? {
+    private static func loadImageMedia(image: UIImage, interval: TimeInterval? = nil) -> MediaPlayerContentLoaded? {
         guard let sampleBuffer = image.pixelBuffer()?.sampleBuffer() else {
             return nil
         }
-        return .image(image, sampleBuffer)
+        return .image(image, sampleBuffer, interval)
     }
 
     // MARK: - Playback
@@ -294,7 +297,7 @@ final class MediaPlayer {
             return
         }
         switch currentlyPlayingMedia {
-        case .image(_, _):
+        case .image(_, _, _):
             playStill()
         case .video(_, _, _):
             playVideo()
@@ -332,7 +335,7 @@ final class MediaPlayer {
         if nextImageTimer?.isValid ?? false {
             nextImageTimer?.invalidate()
         }
-        let displayTime = timeIntervalForImageSegments()
+        let displayTime = currentlyPlayingMedia?.interval ?? defaultTimeIntervalForImageSegments()
         nextImageTimer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
             self?.playNextMedia()
         })
@@ -400,16 +403,16 @@ final class MediaPlayer {
         }
     }
 
-    private func timeIntervalForImageSegments() -> TimeInterval {
+    private func defaultTimeIntervalForImageSegments() -> TimeInterval {
         for media in playableMedia {
             switch media {
-            case .image(_, _):
+            case .image(_, _, _):
                 break
             case .video(_, _, _):
-                return CMTimeGetSeconds(CMTimeMake(value: Constants.frameDuration, timescale: Constants.timescale))
+                return KanvasCameraTimes.stopMotionFrameTimeInterval
             }
         }
-        return CMTimeGetSeconds(CMTimeMake(value: Constants.onlyImagesFrameDuration, timescale: Constants.timescale))
+        return KanvasCameraTimes.onlyImagesFrameTimeInterval
     }
 
     private func refreshMediaAfterFilterChange() {
@@ -419,7 +422,7 @@ final class MediaPlayer {
             return
         }
         switch currentlyPlayingMedia {
-        case .image(_, _):
+        case .image(_, _, _):
             playCurrentMedia()
         default:
             break

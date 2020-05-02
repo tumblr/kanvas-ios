@@ -450,7 +450,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 let simulatorImage = TARGET_OS_SIMULATOR != 0 ? UIImage() : nil
                 if let image = image ?? simulatorImage {
                     if strongSelf.currentMode.quantity == .single {
-                        strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil, TumblrMediaInfo(source: .kanvas_camera))])
+                        strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil, nil, TumblrMediaInfo(source: .kanvas_camera))])
                     }
                     else {
                         strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
@@ -1020,7 +1020,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             return TumblrMediaInfo(fromImage: imageURL) ?? TumblrMediaInfo(source: .media_library)
         }()
         GIFDecoder().decodeWithImageIO(imageURL: imageURL) { decodedFrames in
-            let segments = decodedFrames.frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, mediaInfo) }
+            let segments = decodedFrames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
             self.showPreviewWithSegments(segments)
         }
     }
@@ -1032,7 +1032,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }()
         if currentMode.quantity == .single {
             performUIUpdate {
-                self.showPreviewWithSegments([CameraSegment.image(image, nil, mediaInfo)])
+                self.showPreviewWithSegments([CameraSegment.image(image, nil, nil, mediaInfo)])
             }
         }
         else {

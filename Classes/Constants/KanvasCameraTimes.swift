@@ -44,11 +44,15 @@ struct KanvasCameraTimes {
     /// StopMotionFrameTimescale: the timescale used for creating videos
     static let stopMotionFrameTimescale: CMTimeScale = 600
 
+    static let onlyImagesFrameTime: CMTime = CMTime(value: onlyImagesFrameDuration, timescale: stopMotionFrameTimescale)
+
     /// StopMotionFrameTime: the CMTime for each frame composed from the duration and timescale
     static let stopMotionFrameTime: CMTime = CMTime(value: singlePhotoWithVideoFrameDuration, timescale: stopMotionFrameTimescale)
 
     /// StopMotionFrameTimeInterval: the equivalent amount of seconds for each frame time
     static let stopMotionFrameTimeInterval: TimeInterval = CMTimeGetSeconds(stopMotionFrameTime)
+
+    static let onlyImagesFrameTimeInterval: TimeInterval = CMTimeGetSeconds(onlyImagesFrameTime)
 
     // MARK: - Gif
 
@@ -60,10 +64,5 @@ struct KanvasCameraTimes {
 
     /// gifHoldNumberOfFrames: the number of frames to record when holding the shutter in GIF mode
     static let gifHoldNumberOfFrames = Int(KanvasCameraTimes.gifHoldRecordingTime * Double(KanvasCameraTimes.gifPreferredFramesPerSecond))
-
-    // MARK: - Other
-
-    /// the wait time for threads
-    static let sleepTime: TimeInterval = 0.1
 
 }

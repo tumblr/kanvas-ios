@@ -11,26 +11,33 @@ import Utils
 /// A container for segments
 enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
-    case image(UIImage, URL?, TumblrMediaInfo)
+    case image(UIImage, URL?, TimeInterval?, TumblrMediaInfo)
     case video(URL, TumblrMediaInfo?)
 
     var image: UIImage? {
         switch self {
-        case .image(let image, _, _): return image
+        case .image(let image, _, _, _): return image
         case .video: return nil
         }
     }
 
     var videoURL: URL? {
         switch self {
-        case .image(_, let url,_): return url
+        case .image(_, let url, _, _): return url
         case .video(let url, _): return url
+        }
+    }
+
+    var timeInterval: TimeInterval? {
+        switch self {
+        case .image(_, _, let interval, _): return interval
+        case .video: return .zero
         }
     }
 
     var mediaInfo: TumblrMediaInfo {
         switch self {
-        case .image(_, _, let mediaInfo): return mediaInfo
+        case .image(_, _, _, let mediaInfo): return mediaInfo
         case .video(let url, let mediaInfo):
             return mediaInfo ?? TumblrMediaInfo(fromVideoURL: url) ?? TumblrMediaInfo(source: .media_library)
         }
@@ -164,9 +171,9 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - size: size (resolution) of the video
     ///   - completion: completion handler, success bool and URL of video
     func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
-        createVideoFromImage(image: image) { url in
+        createVideoFromImage(image: image, duration: nil) { url in
             if let url = url {
-                let segment = CameraSegment.image(image, url, mediaInfo)
+                let segment = CameraSegment.image(image, url, nil, mediaInfo)
                 self.segments.append(segment)
                 completion(true, segment)
             }
@@ -217,13 +224,25 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Returns: seconds of total recorded video + photos
     func currentTotalDuration() -> TimeInterval {
         var totalDuration: CMTime = CMTime.zero
+        let allImages = containsOnlyImages(segments: segments)
         for segment in segments {
             if let segmentURL = segment.videoURL {
                 let asset = AVURLAsset(url: segmentURL)
                 totalDuration = CMTimeAdd(totalDuration, asset.duration)
             }
             else if segment.image != nil {
-                totalDuration = CMTimeAdd(totalDuration, KanvasCameraTimes.stopMotionFrameTime)
+                let duration: CMTime = {
+                    if let timeInterval = segment.timeInterval {
+                        return CMTime(seconds: timeInterval, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                    }
+                    else if allImages {
+                        return KanvasCameraTimes.onlyImagesFrameTime
+                    }
+                    else {
+                        return KanvasCameraTimes.stopMotionFrameTime
+                    }
+                }()
+                totalDuration = CMTimeAdd(totalDuration, duration)
             }
         }
         return CMTimeGetSeconds(totalDuration)
@@ -266,23 +285,28 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         var insertTime = CMTime.zero
         let allImages = containsOnlyImages(segments: segments)
 
-        let addSegmentToComposition: (URL) -> Void = { segmentURL in
+        let addSegmentToComposition: (URL, TimeInterval?) -> Void = { (segmentURL, segmentDuration) in
             let urlAsset = AVURLAsset(url: segmentURL, options: preciseOptions)
             var videoDuration: CMTime = CMTime.zero
 
             if let videoTrack = urlAsset.tracks(withMediaType: .video).first {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
-                /// If all of the segments are photos, then the individual frame times are shorter
-                if allImages {
-                    let endTime = CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
-                    videoDuration = CMTimeCompare(videoTrack.timeRange.duration, endTime) == 1 ? endTime : videoTrack.timeRange.duration
-                    self.addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: CMTimeRangeMake(start: videoTrack.timeRange.start, duration: videoDuration))
-                }
-                else {
-                    self.addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: videoTrack.timeRange)
-                    videoDuration = videoTrack.timeRange.duration
-                    videoCompTrack?.preferredTransform = videoTrack.preferredTransform
-                }
+                videoDuration = {
+                    if let segmentDuration = segmentDuration {
+                        return CMTime(seconds: segmentDuration, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                    }
+                    /// If all of the segments are photos, then the individual frame times are shorter
+                    else if allImages {
+                        let endTime = CMTime(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                        return CMTimeCompare(videoTrack.timeRange.duration, endTime) == 1 ? endTime : videoTrack.timeRange.duration
+                    }
+                    else {
+                        return videoTrack.timeRange.duration
+                    }
+                }()
+                let timeRange = CMTimeRange(start: videoTrack.timeRange.start, duration: videoDuration)
+                self.addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: timeRange)
+                videoCompTrack?.preferredTransform = videoTrack.preferredTransform
             }
             if let audioTrack = urlAsset.tracks(withMediaType: .audio).first {
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
@@ -305,7 +329,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                     assertionFailure("Missing video URL")
                     continue
                 }
-                addSegmentToComposition(segmentURL)
+                addSegmentToComposition(segmentURL, segment.timeInterval)
             }
             self.exportComposition(segments: segments, composition: mixComposition, completion: completion)
         }
@@ -328,16 +352,15 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 continue
             }
             dispatchGroup.enter()
+
             self.videoQueue.async {
-                self.createVideoFromImage(image: segmentImage) { url in
+                self.createVideoFromImage(image: segmentImage, duration: segment.timeInterval) { url in
                     guard let url = url else {
-                        DispatchQueue.main.async {
-                            dispatchGroup.leave()
-                        }
+                        dispatchGroup.leave()
                         return
                     }
                     DispatchQueue.main.async {
-                        newSegments.append(.image(segmentImage, url, segment.mediaInfo))
+                        newSegments.append(.image(segmentImage, url, segment.timeInterval, segment.mediaInfo))
                         dispatchGroup.leave()
                     }
                 }
@@ -466,7 +489,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - adaptor: the pixel buffer adaptor
     ///   - input: asset writer input
     ///   - completion: returns success bool
-    private func createVideoFromImage(image: UIImage, completion: @escaping (URL?) -> Void) {
+    private func createVideoFromImage(image: UIImage, duration: TimeInterval?, completion: @escaping (URL?) -> Void) {
 
         guard let url = setupAssetWriter(size: image.size), let assetWriter = assetWriter, let input = assetWriterVideoInput else {
             completion(nil)
@@ -492,7 +515,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 firstBufferAppended = true
             }
             else {
-                let endTime = KanvasCameraTimes.stopMotionFrameTime
+                let endTime = CMTime(seconds: duration ?? KanvasCameraTimes.stopMotionFrameTimeInterval, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
                 adaptor.append(buffer, withPresentationTime: endTime)
                 assetWriter.endSession(atSourceTime: endTime)
                 adaptor.assetWriterInput.markAsFinished()
