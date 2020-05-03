@@ -104,12 +104,26 @@ class GIFDecoder {
             return []
         }
         let (images, delays) = createImagesAndDelays(source: source, count: count)
-        
         var decodedFrames: [GIFDecodeFrame] = []
         for i in 0..<images.count {
             decodedFrames.append((image: images[i], interval: TimeInterval(Double(delays[i]) / 1000.0)))
         }
         return decodedFrames
+    }
+
+    private func animateImageUniformDelay(withAnimatedGIFImageSource source: CGImageSource) -> (frames: [CGImage], interval: TimeInterval) {
+        let count = CGImageSourceGetCount(source)
+        guard count > 1 else {
+            return (frames: [], interval: 0)
+        }
+        let (images, delays) = createImagesAndDelays(source: source, count: count)
+        let totalDuration = sum(count, delays)
+        let frames = frameArray(count, images, delays, totalDuration)
+        var decodedFrames: [CGImage] = []
+        for i in 0..<frames.count {
+            decodedFrames.append(frames[i])
+        }
+        return (frames: decodedFrames, interval: TimeInterval(Double(totalDuration / count) / 1000.0))
     }
 
     private func animatedImage(withAnimatedGIFData data: Data) -> GIFDecodeFrames {
