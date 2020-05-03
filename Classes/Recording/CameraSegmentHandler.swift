@@ -31,7 +31,7 @@ enum CameraSegment {
     var timeInterval: TimeInterval? {
         switch self {
         case .image(_, _, let interval, _): return interval
-        case .video: return .zero
+        case .video: return nil
         }
     }
 
