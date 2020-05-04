@@ -14,8 +14,6 @@ typealias GIFDecodeFramesUniformDelay = (frames: [CGImage], interval: TimeInterv
 
 enum GIFDecoderType {
     case imageIO
-    case mobileCustomGIFEncoder
-    case sdWebImage
 }
 
 protocol GIFDecoder {
@@ -24,16 +22,10 @@ protocol GIFDecoder {
 }
 
 class GIFDecoderFactory {
-    static func create(type: GIFDecoderType) -> GIFDecoder! {
+    static func create(type: GIFDecoderType) -> GIFDecoder {
         switch type {
         case .imageIO:
             return GIFDecoderImageIO()
-        case .mobileCustomGIFEncoder:
-            assertionFailure("mobileCustomGIFEncoder not supported yet")
-            return nil
-        case .sdWebImage:
-            assertionFailure("sdWebImage not supported yet")
-            return nil
         }
     }
 
@@ -49,13 +41,19 @@ class GIFDecoderImageIO: GIFDecoder {
     }
 
     func decode(image url: URL, completion: @escaping (GIFDecodeFrames) -> Void) {
-        let source = CGImageSourceCreateWithURL(url as CFURL, nil)!
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+            completion([])
+            return
+        }
         let frames: GIFDecodeFrames = getFrames(from: source)
         completion(frames)
     }
 
     func numberOfFrames(in url: URL) -> Int {
-        return CGImageSourceGetCount(CGImageSourceCreateWithURL(url as CFURL, nil)!)
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+            return 0
+        }
+        return CGImageSourceGetCount(source)
     }
 
     private func getFrames(from source: CGImageSource) -> GIFDecodeFramesUniformDelay {
@@ -78,7 +76,11 @@ class GIFDecoderImageIO: GIFDecoder {
 
     private func getImagesAndDelays(for source: CGImageSource) -> ([CGImage], [Int]) {
         let count = CGImageSourceGetCount(source)
-        let images = (0..<count).map { CGImageSourceCreateImageAtIndex(source, $0, nil)! }
+        let images = (0..<count).compactMap { CGImageSourceCreateImageAtIndex(source, $0, nil) }
+        guard images.count == count else {
+            assertionFailure("Failed to get a frame from an animated image")
+            return ([], [])
+        }
         let delays = (0..<count).map { delay(for: source, at: $0) }
         return (images, delays)
     }
