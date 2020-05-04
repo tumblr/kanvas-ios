@@ -10,22 +10,80 @@ typealias GIFDecodeFrame = (image: CGImage, interval: TimeInterval)
 
 typealias GIFDecodeFrames = [GIFDecodeFrame]
 
-class GIFDecoder {
+typealias GIFDecodeFramesUniformDelay = (frames: [CGImage], interval: TimeInterval)
 
-    func decodeWithSDWebImage() {
+enum GIFDecoderType {
+    case imageIO
+    case mobileCustomGIFEncoder
+    case sdWebImage
+}
+
+protocol GIFDecoder {
+    func decode(image url: URL, completion: @escaping (GIFDecodeFrames) -> Void)
+    func numberOfFrames(in url: URL) -> Int
+}
+
+class GIFDecoderFactory {
+    static func create(type: GIFDecoderType) -> GIFDecoder! {
+        switch type {
+        case .imageIO:
+            return GIFDecoderImageIO()
+        case .mobileCustomGIFEncoder:
+            assertionFailure("mobileCustomGIFEncoder not supported yet")
+            return nil
+        case .sdWebImage:
+            assertionFailure("sdWebImage not supported yet")
+            return nil
+        }
+    }
+
+    static func main() -> GIFDecoder {
+        return create(type: .imageIO)
+    }
+}
+
+class GIFDecoderImageIO: GIFDecoder {
+
+    fileprivate init() {
 
     }
 
-    func decodeWithImageIO(imageURL: URL, completion: @escaping (GIFDecodeFrames) -> Void) {
-        let frames = animatedImage(withAnimatedGIFURL: imageURL)
+    func decode(image url: URL, completion: @escaping (GIFDecodeFrames) -> Void) {
+        let source = CGImageSourceCreateWithURL(url as CFURL, nil)!
+        let frames: GIFDecodeFrames = getFrames(from: source)
         completion(frames)
     }
 
-    func numberOfFrames(imageURL: URL) -> Int {
-        return CGImageSourceGetCount(CGImageSourceCreateWithURL(imageURL as CFURL, nil)!)
+    func numberOfFrames(in url: URL) -> Int {
+        return CGImageSourceGetCount(CGImageSourceCreateWithURL(url as CFURL, nil)!)
     }
 
-    private func delayForImageAtIndex(source: CGImageSource, i: Int) -> Int {
+    private func getFrames(from source: CGImageSource) -> GIFDecodeFramesUniformDelay {
+        let (images, delays) = getImagesAndDelays(for: source)
+        guard images.count > 1 else {
+            return (frames: [], interval: 0)
+        }
+        let (frames, uniformDelay) = getFramesWithConstantDelay(images: images, delays: delays)
+        return (frames: frames, interval: TimeInterval(Double(uniformDelay) / 1000.0))
+    }
+
+    private func getFrames(from source: CGImageSource) -> GIFDecodeFrames {
+        let (images, delays) = getImagesAndDelays(for: source)
+        guard images.count > 1 else {
+            return []
+        }
+        let frames = (0..<images.count).map{ (image: images[$0], interval: TimeInterval(Double(delays[$0]) / 1000.0)) }
+        return frames
+    }
+
+    private func getImagesAndDelays(for source: CGImageSource) -> ([CGImage], [Int]) {
+        let count = CGImageSourceGetCount(source)
+        let images = (0..<count).map { CGImageSourceCreateImageAtIndex(source, $0, nil)! }
+        let delays = (0..<count).map { delay(for: source, at: $0) }
+        return (images, delays)
+    }
+
+    private func delay(for source: CGImageSource, at i: Int) -> Int {
         var delay = 100
         guard let properties: CFDictionary = CGImageSourceCopyPropertiesAtIndex(source, i, nil) else {
             return delay
@@ -43,45 +101,13 @@ class GIFDecoder {
         return delay
     }
 
-    private func createImagesAndDelays(source: CGImageSource, count: Int) -> ([CGImage], [Int]) {
-        let images = (0..<count).map{ CGImageSourceCreateImageAtIndex(source, $0, nil)! }
-        let delays = (0..<count).map{ delayForImageAtIndex(source: source, i: $0) }
-        return (images, delays)
-    }
-
-    private func sum(_ count: Int, _ values: [Int]) -> Int {
-        var theSum = 0;
-        for i in 0..<count {
-            theSum += values[i]
+    private func getFramesWithConstantDelay(images: [CGImage], delays: [Int]) -> ([CGImage], Int) {
+        guard images.count == delays.count else {
+            assertionFailure("images and delays must be the same size")
+            return ([], 0)
         }
-        return theSum
-    }
-
-    private func pairGCD(_ a: Int, _ b: Int) -> Int {
-        var aa = a;
-        var bb = b;
-        if (aa < bb) {
-            return pairGCD(bb, aa)
-        }
-        while (true) {
-            let r = aa % bb
-            if r == 0 {
-                return bb
-            }
-            aa = b
-            bb = r
-        }
-    }
-
-    private func vectorGCD(_ count: Int, _ values: [Int]) -> Int {
-        var gcd = values[0]
-        for i in 1..<count {
-            gcd = pairGCD(values[i], gcd);
-        }
-        return gcd
-    }
-
-    private func frameArray(_ count: Int, _ images: [CGImage], _ delays: [Int], _ totalDuration: Int) -> [CGImage] {
+        let count = delays.count
+        let totalDuration = sum(count, delays)
         let gcd = vectorGCD(count, delays)
         let frameCount = totalDuration / gcd
         var i = 0
@@ -95,43 +121,7 @@ class GIFDecoder {
             }
             i += 1
         }
-        return Array(frames[0..<frameCount])
-    }
-
-    private func animatedImage(withAnimatedGIFImageSource source: CGImageSource) -> GIFDecodeFrames {
-        let count = CGImageSourceGetCount(source)
-        guard count > 1 else {
-            return []
-        }
-        let (images, delays) = createImagesAndDelays(source: source, count: count)
-        var decodedFrames: [GIFDecodeFrame] = []
-        for i in 0..<images.count {
-            decodedFrames.append((image: images[i], interval: TimeInterval(Double(delays[i]) / 1000.0)))
-        }
-        return decodedFrames
-    }
-
-    private func animateImageUniformDelay(withAnimatedGIFImageSource source: CGImageSource) -> (frames: [CGImage], interval: TimeInterval) {
-        let count = CGImageSourceGetCount(source)
-        guard count > 1 else {
-            return (frames: [], interval: 0)
-        }
-        let (images, delays) = createImagesAndDelays(source: source, count: count)
-        let totalDuration = sum(count, delays)
-        let frames = frameArray(count, images, delays, totalDuration)
-        var decodedFrames: [CGImage] = []
-        for i in 0..<frames.count {
-            decodedFrames.append(frames[i])
-        }
-        return (frames: decodedFrames, interval: TimeInterval(Double(totalDuration / count) / 1000.0))
-    }
-
-    private func animatedImage(withAnimatedGIFData data: Data) -> GIFDecodeFrames {
-        return animatedImage(withAnimatedGIFImageSource: CGImageSourceCreateWithData(data as CFData, nil)!)
-    }
-
-    private func animatedImage(withAnimatedGIFURL url: URL) -> GIFDecodeFrames {
-        return animatedImage(withAnimatedGIFImageSource: CGImageSourceCreateWithURL(url as CFURL, nil)!)
+        return (Array(frames[0..<frameCount]), totalDuration / count)
     }
 
 }

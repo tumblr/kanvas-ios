@@ -990,7 +990,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let mediaURLMaybe = info[.mediaURL] as? URL
         let imageURLMaybe = info[.imageURL] as? URL
 
-        if let imageURL = imageURLMaybe, GIFDecoder().numberOfFrames(imageURL: imageURL) > 1 {
+        if let imageURL = imageURLMaybe, GIFDecoderFactory.main().numberOfFrames(in: imageURL) > 1 {
             pick(frames: imageURL)
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
         }
@@ -1019,8 +1019,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let mediaInfo: TumblrMediaInfo = {
             return TumblrMediaInfo(fromImage: imageURL) ?? TumblrMediaInfo(source: .media_library)
         }()
-        GIFDecoder().decodeWithImageIO(imageURL: imageURL) { decodedFrames in
-            let segments = decodedFrames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
+        GIFDecoderFactory.main().decode(image: imageURL) { frames in
+            let segments = frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
             self.showPreviewWithSegments(segments)
         }
     }
