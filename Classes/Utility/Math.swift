@@ -15,12 +15,12 @@ func sum(_ count: Int, _ values: [Int]) -> Int {
 }
 
 func pairGCD(_ a: Int, _ b: Int) -> Int {
-    var aa = a;
-    var bb = b;
-    if (aa < bb) {
+    var aa = a
+    var bb = b
+    if aa < bb {
         return pairGCD(bb, aa)
     }
-    while (true) {
+    while true {
         let r = aa % bb
         if r == 0 {
             return bb
@@ -33,7 +33,7 @@ func pairGCD(_ a: Int, _ b: Int) -> Int {
 func vectorGCD(_ count: Int, _ values: [Int]) -> Int {
     var gcd = values[0]
     for i in 1..<count {
-        gcd = pairGCD(values[i], gcd);
+        gcd = pairGCD(values[i], gcd)
     }
     return gcd
 }
