@@ -254,7 +254,7 @@ class Filter: FilterProtocol {
     
     // MARK: - filters get rendered to a backing CVPixelBuffer
     func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?, time: TimeInterval) -> CVPixelBuffer? {
-        guard let shader = shader, let pixelBuffer = pixelBuffer, let textureCache = textureCache, let outputFormatDescription = outputFormatDescription, let bufferPool = bufferPool, let renderTextureCache = renderTextureCache else {
+        guard let shader = shader, let pixelBuffer = pixelBuffer, let textureCache = textureCache, let bufferPool = bufferPool, let renderTextureCache = renderTextureCache else {
             return nil
         }
         let oldContext = EAGLContext.current()

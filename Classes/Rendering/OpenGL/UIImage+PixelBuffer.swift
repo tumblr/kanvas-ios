@@ -25,6 +25,9 @@ extension UIImage {
     ///
     /// - Returns: An optional pixel buffer, can be nil if failed to create
     func pixelBuffer() -> CVPixelBuffer? {
+        guard cgImage != nil else {
+            return nil
+        }
         let width = Int(size.width)
         let height = Int(size.height)
         var initialBuffer: CVPixelBuffer?

@@ -110,6 +110,10 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
         return drawingView.confirmButtonLocation
     }
     
+    var isEmpty: Bool {
+        return drawingCollection.isEmpty
+    }
+    
     // Drawing
     var drawingLayer: CALayer?
     private var drawingCollection: [UIImage]
