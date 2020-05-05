@@ -990,7 +990,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let mediaURLMaybe = info[.mediaURL] as? URL
         let imageURLMaybe = info[.imageURL] as? URL
 
-        if let imageURL = imageURLMaybe, GIFDecoderFactory.main().numberOfFrames(in: imageURL) > 1 {
+        if settings.features.gifs,
+            let imageURL = imageURLMaybe,
+            GIFDecoderFactory.main().numberOfFrames(in: imageURL) > 1
+        {
             pick(frames: imageURL)
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
         }

@@ -30,6 +30,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case editorPosting(Bool)
         case editorPostOptions(Bool)
         case newCameraModes(Bool)
+        case gifs(Bool)
 
         var name: String {
             switch self {
@@ -63,6 +64,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "New Camera Modes"
             case .editorPostOptions(_):
                 return "Editor Post Options"
+            case .gifs(_):
+                return "GIF support"
             }
         }
 
@@ -97,6 +100,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .newCameraModes(let enabled):
                 return enabled
             case .editorPostOptions(let enabled):
+                return enabled
+            case .gifs(let enabled):
                 return enabled
             }
         }
@@ -170,6 +175,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .newCameraModes(value)
         case .editorPostOptions(_):
             featuresData[indexPath.row] = .editorPostOptions(value)
+        case .gifs(_):
+            featuresData[indexPath.row] = .gifs(value)
         }
         delegate?.featureTableView(didUpdateFeature: featuresData[indexPath.row], withValue: value)
     }

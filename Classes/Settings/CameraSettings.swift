@@ -128,6 +128,10 @@ public struct CameraFeatures {
     /// The New Camera Modes
     /// This replaces Capture, Photo and Loop modes with Normal, Stitch and GIF modes
     public var newCameraModes = false
+
+    /// GIF support
+    /// This enables GIFs to be picked from the media picker, and exported from the Editor.
+    public var gifs = false
 }
 
 // A class that defines the settings for the Kanvas Camera
