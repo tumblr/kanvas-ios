@@ -32,7 +32,8 @@ final class GIFDecoderTests: FBSnapshotTestCase {
         }
 
         // These are the frame delays in colors.gif.
-        // These are all the same, but
+        // Yes, they're all the same, but since GIF delays are per-frame,
+        // just list each frame's delay.
         let expectedIntervals = [
             0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15
         ]
