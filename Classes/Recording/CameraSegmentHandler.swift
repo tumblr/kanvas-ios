@@ -79,7 +79,8 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     ///
     /// - Parameters:
     ///   - image: UIImage
-    ///   - size: size (resolution) of the video
+    ///   - size: dimensions of the image
+    ///   - mediaInfo: metadata about the segment
     ///   - completion: completion handler, success bool and URL of video
     func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void)
 
@@ -87,9 +88,12 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     ///
     /// - Parameters:
     ///   - index: the index of the segment to be deleted
-    ///   - removeFromDisk: a bool that determines whether to remove the file from local storage, defaults to true.
+    ///   - removeFromDisk: a bool that determines whether to remove the file from local storage
     func deleteSegment(at index: Int, removeFromDisk: Bool)
 
+    /// Deletes all segments
+    /// - Parameters:
+    ///   - removeFromDisk: removes the segments from disk
     func deleteAllSegments(removeFromDisk: Bool)
 
     /// Moves one segment to a new position
@@ -485,10 +489,8 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///
     /// - Parameters:
     ///   - image: UIImage
-    ///   - assetWriter: AVAssetWriter
-    ///   - adaptor: the pixel buffer adaptor
-    ///   - input: asset writer input
-    ///   - completion: returns success bool
+    ///   - duration: The TimeInterval for the video to be created
+    ///   - completion: returns URL of video
     private func createVideoFromImage(image: UIImage, duration: TimeInterval?, completion: @escaping (URL?) -> Void) {
 
         guard let url = setupAssetWriter(size: image.size), let assetWriter = assetWriter, let input = assetWriterVideoInput else {
