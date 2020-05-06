@@ -6,12 +6,12 @@
 
 import Foundation
 
-func sum(_ count: Int, _ values: [Int]) -> Int {
-    var theSum = 0
-    for i in 0..<count {
-        theSum += values[i]
+func sum(_ values: [Int]) -> Int {
+    var result = 0
+    for i in 0..<values.count {
+        result += values[i]
     }
-    return theSum
+    return result
 }
 
 func pairGCD(_ a: Int, _ b: Int) -> Int {
@@ -30,9 +30,9 @@ func pairGCD(_ a: Int, _ b: Int) -> Int {
     }
 }
 
-func vectorGCD(_ count: Int, _ values: [Int]) -> Int {
+func vectorGCD(_ values: [Int]) -> Int {
     var gcd = values[0]
-    for i in 1..<count {
+    for i in 1..<values.count {
         gcd = pairGCD(values[i], gcd)
     }
     return gcd

@@ -108,13 +108,12 @@ class GIFDecoderImageIO: GIFDecoder {
             assertionFailure("images and delays must be the same size")
             return ([], 0)
         }
-        let count = delays.count
-        let totalDuration = sum(count, delays)
-        let gcd = vectorGCD(count, delays)
+        let totalDuration = sum(delays)
+        let gcd = vectorGCD(delays)
         let frameCount = totalDuration / gcd
         var i = 0
         var frames: [CGImage] = []
-        while i < count {
+        while i < delays.count {
             let frame = images[i]
             var j = delays[i] / gcd
             while j > 0 {
@@ -123,7 +122,7 @@ class GIFDecoderImageIO: GIFDecoder {
             }
             i += 1
         }
-        return (Array(frames[0..<frameCount]), totalDuration / count)
+        return (Array(frames[0..<frameCount]), totalDuration / delays.count)
     }
 
 }
