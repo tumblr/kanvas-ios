@@ -5,6 +5,7 @@
 //
 
 enum EditionOption: Int {
+    case gif
     case filter
     case text
     case media

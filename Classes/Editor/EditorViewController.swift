@@ -441,6 +441,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         guard let editionOption = openedMenu else { return }
         
         switch editionOption {
+        case .gif:
+            // TODO: Hide GifController
+            showMainUI(true)
         case .filter:
             filterController.showView(false)
             showMainUI(true)
@@ -473,6 +476,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         
         switch editionOption {
+        case .gif:
+            showMainUI(false)
+            // TODO: Show GifController
         case .filter:
             showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()

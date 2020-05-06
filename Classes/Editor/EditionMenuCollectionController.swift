@@ -36,6 +36,10 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     init(settings: CameraSettings) {
         editionOptions = []
         
+        if settings.features.editorGif {
+            editionOptions.append(.gif)
+        }
+        
         if settings.features.editorFilters {
             editionOptions.append(.filter)
         }

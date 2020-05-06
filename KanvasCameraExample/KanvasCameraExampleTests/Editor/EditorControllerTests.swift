@@ -44,6 +44,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
     func getCameraSettings() -> CameraSettings {
         let settings = CameraSettings()
         settings.features.editor = true
+        settings.features.editorGif = true
         settings.features.editorFilters = true
         settings.features.editorText = true
         settings.features.editorMedia = true
