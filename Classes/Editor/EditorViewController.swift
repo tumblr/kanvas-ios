@@ -43,7 +43,6 @@ public protocol EditorControllerDelegate: class {
 
 private struct Constants {
     static let pageName: String = "KanvasEditor"
-    static let stickerHitAreaOffset: CGFloat = 100
 }
 
 /// A view controller to edit the segments
@@ -618,8 +617,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
         editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(),
-                                             location: editorView.movableViewCanvas.bounds.center,
-                                             size: size, additionalHitArea: Constants.stickerHitAreaOffset)
+                                             location: editorView.movableViewCanvas.bounds.center, size: size,
+                                             ignoreTouchesOutsideShape: true)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {

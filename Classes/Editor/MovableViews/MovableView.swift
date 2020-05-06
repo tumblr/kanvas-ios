@@ -44,6 +44,7 @@ protocol MovableViewDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.35
     static let deletionScale: CGFloat = 0.9
+    static let minimumSize: CGFloat = 50
     static let opaqueAlpha: CGFloat = 1
     static let translucentAlpha: CGFloat = 0.8
 }
@@ -53,7 +54,7 @@ final class MovableView: UIView {
     
     weak var delegate: MovableViewDelegate?
     private let innerView: UIView
-    private let additionalHitArea: CGFloat
+    private let ignoreTouchesOutsideShape: Bool
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -80,12 +81,13 @@ final class MovableView: UIView {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
     }
     
-    init(view innerView: UIView, transformations: ViewTransformations, additionalHitArea: CGFloat) {
+    init(view innerView: UIView, transformations: ViewTransformations,
+         ignoreTouchesOutsideShape: Bool) {
         self.innerView = innerView
         self.position = transformations.position
         self.scale = transformations.scale
         self.rotation = transformations.rotation
-        self.additionalHitArea = additionalHitArea
+        self.ignoreTouchesOutsideShape = ignoreTouchesOutsideShape
         super.init(frame: .zero)
         
         setupInnerView()
@@ -191,6 +193,18 @@ final class MovableView: UIView {
     
     // MARK: - Extended hit area
     
+    /// Gets the largest size of the view
+    private func getSize() -> CGFloat {
+        return max(bounds.height, bounds.width) * scale
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitTest = super.hitTest(point, with: event)
+        let touchIsInsideImage = layer.getColor(from: point).isVisible()
+        let smallSize = getSize() < Constants.minimumSize
+        return !ignoreTouchesOutsideShape || touchIsInsideImage || smallSize ? hitTest : nil
+    }
+    
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let offset = calculateHitAreaOffset()
         let relativeFrame = bounds
@@ -206,9 +220,10 @@ final class MovableView: UIView {
     /// when its size is modified.
     private func calculateHitAreaOffset() -> CGFloat {
         let offset: CGFloat
+        let size = getSize()
         
-        if scale < 1.0 {
-            offset = (1 - scale) * additionalHitArea
+        if size < Constants.minimumSize {
+            offset = Constants.minimumSize - size
         }
         else {
             offset = 0
