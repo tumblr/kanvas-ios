@@ -193,7 +193,7 @@ final class MovableView: UIView {
     
     // MARK: - Extended hit area
     
-    /// Gets the largest size of the view
+    /// Gets the largest side of the view
     private func getSize() -> CGFloat {
         return max(bounds.height, bounds.width) * scale
     }
