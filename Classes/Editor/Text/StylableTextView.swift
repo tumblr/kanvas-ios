@@ -13,7 +13,7 @@ private struct Constants {
 }
 
 /// TextView that can be customized with TextOptions
-class StylableTextView: UITextView, UITextViewDelegate {
+class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement {
     
     // Color rectangles behind the text
     private var highlightViews: [UIView]
@@ -187,6 +187,14 @@ class StylableTextView: UITextView, UITextViewDelegate {
         let scaleFactorForDevice = scaleFactor * UIScreen.main.nativeScale
         for subview in textInputView.subviews {
             subview.contentScaleFactor = scaleFactorForDevice
+        }
+    }
+    
+    // MARK: - MovableViewInnerElement
+    
+    func hitInsideShape(point: CGPoint) -> Bool {
+        return highlightViews.contains { view in
+            return view.frame.contains(point)
         }
     }
 }

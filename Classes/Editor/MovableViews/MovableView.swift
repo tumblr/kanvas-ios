@@ -53,8 +53,7 @@ private struct Constants {
 final class MovableView: UIView {
     
     weak var delegate: MovableViewDelegate?
-    private let innerView: UIView
-    private let ignoreTouchesOutsideShape: Bool
+    private let innerView: MovableViewInnerElement
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -81,13 +80,11 @@ final class MovableView: UIView {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
     }
     
-    init(view innerView: UIView, transformations: ViewTransformations,
-         ignoreTouchesOutsideShape: Bool) {
+    init(view innerView: MovableViewInnerElement, transformations: ViewTransformations) {
         self.innerView = innerView
         self.position = transformations.position
         self.scale = transformations.scale
         self.rotation = transformations.rotation
-        self.ignoreTouchesOutsideShape = ignoreTouchesOutsideShape
         super.init(frame: .zero)
         
         setupInnerView()
@@ -200,9 +197,9 @@ final class MovableView: UIView {
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitTest = super.hitTest(point, with: event)
-        let touchIsInsideImage = layer.getColor(from: point).isVisible()
+        let hitInsideShape = innerView.hitInsideShape(point: point)
         let smallSize = getSize() < Constants.minimumSize
-        return !ignoreTouchesOutsideShape || touchIsInsideImage || smallSize ? hitTest : nil
+        return hitInsideShape || smallSize ? hitTest : nil
     }
     
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {

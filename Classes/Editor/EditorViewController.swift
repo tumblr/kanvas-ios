@@ -617,8 +617,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
         editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(),
-                                             location: editorView.movableViewCanvas.bounds.center, size: size,
-                                             ignoreTouchesOutsideShape: true)
+                                             location: editorView.movableViewCanvas.bounds.center, size: size)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {

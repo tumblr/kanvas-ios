@@ -43,7 +43,7 @@ final class MovableViewCanvasTests: FBSnapshotTestCase {
         let transformations =  ViewTransformations(position: CGPoint(x: 0, y: 300),
                                                    scale: 1.4,
                                                    rotation: 1.2)
-        let movableView = MovableView(view: textView, transformations: transformations, ignoreTouchesOutsideShape: false)
+        let movableView = MovableView(view: textView, transformations: transformations)
         movableView.frame = CGRect(x: 0, y: 0, width: 250, height: 100)
         view.addSubview(movableView)
         movableView.moveToDefinedPosition()

@@ -129,11 +129,8 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     ///  - transformations: transformations for the view
     ///  - location: location of the view before transformations
     ///  - size: size of the view
-    ///  - ignoreTouchesOutsideShape: whether to ignore the first touch if it's done on an empty space of the view
-    func addView(view: UIView, transformations: ViewTransformations, location: CGPoint, size: CGSize,
-                 ignoreTouchesOutsideShape: Bool = false) {
-        let movableView = MovableView(view: view, transformations: transformations,
-                                      ignoreTouchesOutsideShape: ignoreTouchesOutsideShape)
+    func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+        let movableView = MovableView(view: view, transformations: transformations)
         movableView.delegate = self
         movableView.isUserInteractionEnabled = true
         movableView.isExclusiveTouch = true

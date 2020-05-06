@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Image view that increases its image quality when its contentScaleFactor is modified
-final class StylableImageView: UIImageView {
+final class StylableImageView: UIImageView, MovableViewInnerElement {
     
     let id: String
     
@@ -43,5 +43,11 @@ final class StylableImageView: UIImageView {
         for subview in subviews {
             subview.contentScaleFactor = scaleFactorForDevice
         }
+    }
+    
+    // MARK: - MovableViewInnerElement
+    
+    func hitInsideShape(point: CGPoint) -> Bool {
+        return layer.getColor(from: point).isVisible()
     }
 }
