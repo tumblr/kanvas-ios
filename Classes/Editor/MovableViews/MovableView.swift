@@ -192,12 +192,28 @@ final class MovableView: UIView {
     // MARK: - Extended hit area
     
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let offset = calculateHitAreaOffset()
         let relativeFrame = bounds
-        let hitTestEdgeInsets = UIEdgeInsets(top: -additionalHitArea,
-                                             left: -additionalHitArea,
-                                             bottom: -additionalHitArea,
-                                             right: -additionalHitArea)
+        let hitTestEdgeInsets = UIEdgeInsets(top: -offset,
+                                             left: -offset,
+                                             bottom: -offset,
+                                             right: -offset)
         let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
         return hitFrame.contains(point)
+    }
+    
+    /// Calculates the hit area increment that the view will include
+    /// when its size is modified.
+    private func calculateHitAreaOffset() -> CGFloat {
+        let offset: CGFloat
+        
+        if scale < 1.0 {
+            offset = (1 - scale) * additionalHitArea
+        }
+        else {
+            offset = 0
+        }
+        
+        return offset
     }
 }
