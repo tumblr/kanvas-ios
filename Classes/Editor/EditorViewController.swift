@@ -43,7 +43,7 @@ public protocol EditorControllerDelegate: class {
 
 private struct Constants {
     static let pageName: String = "KanvasEditor"
-    static let stickerHitAreaOffset: CGFloat = 20
+    static let stickerHitAreaOffset: CGFloat = 10
 }
 
 /// A view controller to edit the segments
