@@ -47,6 +47,10 @@ final class StylableImageView: UIImageView, MovableViewInnerElement {
     
     // MARK: - MovableViewInnerElement
     
+    /// Checks whether the hit is done inside the shape of the view
+    ///
+    /// - Parameter point: location where the view was touched
+    /// - Returns: true if the touch was inside, false if not
     func hitInsideShape(point: CGPoint) -> Bool {
         return layer.getColor(from: point).isVisible()
     }

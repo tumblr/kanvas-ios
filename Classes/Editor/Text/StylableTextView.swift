@@ -192,8 +192,12 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
     
     // MARK: - MovableViewInnerElement
     
+    /// Checks if the view was touched on its letters or on the space between lines
+    ///
+    /// - Parameter point: location where the view was touched
+    /// - Returns: true if the touch was inside, false if not
     func hitInsideShape(point: CGPoint) -> Bool {
-        var result = false
+        var hitInside = false
         
         for (i, view) in highlightViews.enumerated() {
             let insideView = view.frame.contains(point)
@@ -211,10 +215,10 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
                 inNextSpace = false
             }
             
-            result = result || insideView || inNextSpace
+            hitInside = hitInside || insideView || inNextSpace
         }
         
-        return result
+        return hitInside
     }
     
     /// Checks if a polygon contains a specific point
