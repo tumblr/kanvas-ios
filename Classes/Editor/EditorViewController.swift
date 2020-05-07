@@ -46,7 +46,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerControllerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         var mainActionMode: EditorView.MainActionMode = .confirm
@@ -93,6 +93,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private lazy var mediaDrawerController: MediaDrawerController = {
         let controller = MediaDrawerController(stickerProvider: self.stickerProvider)
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var gifMakerController: GifMakerController = {
+        let controller = GifMakerController()
         controller.delegate = self
         return controller
     }()
@@ -226,6 +232,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         load(childViewController: filterController, into: editorView.filterMenuContainer)
         load(childViewController: textController, into: editorView.textMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
+        load(childViewController: gifMakerController, into: editorView.gifMakerMenuContainer)
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {
@@ -442,7 +449,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         
         switch editionOption {
         case .gif:
-            // TODO: Hide GifController
+            gifMakerController.showView(false)
             showMainUI(true)
         case .filter:
             filterController.showView(false)
@@ -478,7 +485,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         switch editionOption {
         case .gif:
             showMainUI(false)
-            // TODO: Show GifController
+            gifMakerController.showView(true)
         case .filter:
             showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()

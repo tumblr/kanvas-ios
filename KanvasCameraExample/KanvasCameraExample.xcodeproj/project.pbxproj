@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -25,6 +25,8 @@
 		0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */; };
 		0EDE7A3B216425BD009DB00F /* ExtendedStackViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3A216425BD009DB00F /* ExtendedStackViewTests.swift */; };
 		0EDE7A3D216425C5009DB00F /* ExtendedButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */; };
+		650A833F24646A350071BF9D /* GifMakerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A833E24646A350071BF9D /* GifMakerControllerTests.swift */; };
+		650A834124646A3E0071BF9D /* GifMakerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A834024646A3E0071BF9D /* GifMakerViewTests.swift */; };
 		650B2A1E2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf in Resources */ = {isa = PBXBuildFile; fileRef = 650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */; };
 		6512C1B723DF5DB500FDE2BD /* SliderViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6512C1B623DF5DB500FDE2BD /* SliderViewTests.swift */; };
 		651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */; };
@@ -198,6 +200,8 @@
 		0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedButtonTests.swift; sourceTree = "<group>"; };
 		2EC304E18F061B65C309EA19 /* libPods-KanvasCameraExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasCameraExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExampleUITests/Pods-KanvasCameraExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
+		650A833E24646A350071BF9D /* GifMakerControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerControllerTests.swift; sourceTree = "<group>"; };
+		650A834024646A3E0071BF9D /* GifMakerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerViewTests.swift; sourceTree = "<group>"; };
 		650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Fairwater Script Regular_Tumblr.otf"; path = "../../../../../Assets/Fonts/Fairwater/Fairwater Script Regular_Tumblr.otf"; sourceTree = "<group>"; };
 		6512C1B623DF5DB500FDE2BD /* SliderViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderViewTests.swift; sourceTree = "<group>"; };
 		651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularImageViewTests.swift; sourceTree = "<group>"; };
@@ -411,6 +415,15 @@
 				304EF2CB1E9D5F1928A6D805 /* Pods-KanvasCameraExampleUITests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		650A833D246469ED0071BF9D /* GIFMaker */ = {
+			isa = PBXGroup;
+			children = (
+				650A833E24646A350071BF9D /* GifMakerControllerTests.swift */,
+				650A834024646A3E0071BF9D /* GifMakerViewTests.swift */,
+			);
+			path = GIFMaker;
 			sourceTree = "<group>";
 		};
 		650AED0523D2377400C6CC4D /* IgnoreTouches */ = {
@@ -652,6 +665,7 @@
 			children = (
 				651D4B5B22CE67A5004AB75C /* Drawing */,
 				65E46B9922BD22DE004FD226 /* Filters */,
+				650A833D246469ED0071BF9D /* GIFMaker */,
 				658A327D239FFD9B00EEC1D3 /* Media */,
 				65507D95239F381700087014 /* MovableViews */,
 				65507D97239F381700087014 /* Text */,
@@ -1090,6 +1104,7 @@
 				76ED1DD022BF31AA00E6AF79 /* MediaExporterTests.swift in Sources */,
 				76FFF24022D4EF53000A0D04 /* KanvasUIImagePickerViewControllerTests.swift in Sources */,
 				0EAE0C9921399C86004CD7FF /* CameraViewTests.swift in Sources */,
+				650A833F24646A350071BF9D /* GifMakerControllerTests.swift in Sources */,
 				0EAE0C8E2139895A004CD7FF /* CameraInputControllerTests.swift in Sources */,
 				0EAE0C8221387DE3004CD7FF /* ModeSelectorAndShootViewTests.swift in Sources */,
 				65507DB1239F381700087014 /* EditorTextViewTests.swift in Sources */,
@@ -1121,6 +1136,7 @@
 				0EAE0CB62139D4F2004CD7FF /* CameraControllerTests.swift in Sources */,
 				653B045622E9143C005AAFCA /* HorizontalCollectionViewTests.swift in Sources */,
 				764AC4822223E3CF005C82EC /* FilterFactoryTests.swift in Sources */,
+				650A834124646A3E0071BF9D /* GifMakerViewTests.swift in Sources */,
 				65E46B9422BD22CA004FD226 /* FilterSettingsViewTests.swift in Sources */,
 				658A32A2239FFD9B00EEC1D3 /* DrawerTabBarOptionTests.swift in Sources */,
 				654AE16422E8B8E900C8C0E4 /* TextureSelectorControllerTests.swift in Sources */,

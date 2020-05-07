@@ -123,6 +123,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     let filterMenuContainer = IgnoreTouchesView()
     let textMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
+    let gifMakerMenuContainer = IgnoreTouchesView()
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
 
     let drawingCanvas = IgnoreTouchesView()
@@ -198,6 +199,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupFilterMenu()
         setupTextMenu()
         setupDrawingMenu()
+        setupGifMakerMenu()
         setupFakeOptionCell()
     }
     
@@ -372,6 +374,21 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             drawingMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             drawingMenuContainer.topAnchor.constraint(equalTo: topAnchor),
             drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+    
+    private func setupGifMakerMenu() {
+        gifMakerMenuContainer.backgroundColor = .clear
+        gifMakerMenuContainer.accessibilityIdentifier = "GIF Maker Menu Container"
+        gifMakerMenuContainer.clipsToBounds = false
+        
+        addSubview(gifMakerMenuContainer)
+        gifMakerMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            gifMakerMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            gifMakerMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            gifMakerMenuContainer.topAnchor.constraint(equalTo: topAnchor),
+            gifMakerMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     

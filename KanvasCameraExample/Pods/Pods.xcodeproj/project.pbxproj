@@ -254,6 +254,8 @@
 		61E73CE8D355C3B872E57FD8D7C60629 /* filters_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = F0EF6666D53171D31CAE55DD494ED907 /* filters_sse2.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
 		623F1AEA151D4CD482BCFCA6C85FDD6D /* yuv_sse41.c in Sources */ = {isa = PBXBuildFile; fileRef = 1D3D97190BB651B09CF585B6FB8B3787 /* yuv_sse41.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
 		62F73F74B1DFCBF6294C3E90B2266C80 /* SDImageWebPCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 87EB0074E36D53976AE98B0CD8AFC402 /* SDImageWebPCoder.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		650A833A2464660F0071BF9D /* GifMakerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A83392464660F0071BF9D /* GifMakerController.swift */; };
+		650A833C2464661C0071BF9D /* GifMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A833B2464661C0071BF9D /* GifMakerView.swift */; };
 		654246A5EC676CAF887090308DBBBA9D /* cost_enc.c in Sources */ = {isa = PBXBuildFile; fileRef = A1EC882BBB21C4E8960829E90C74B633 /* cost_enc.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
 		654BA3E8BFDADC69B2C75B236013A660 /* BackgroundFillOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FDFA7BE23128A34C6F4BB7711D8404 /* BackgroundFillOperation.swift */; };
 		6575D3503321F4CC87B7B6309D3AAAE7 /* LegoFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292F372CC72FBECC5B7D7989E4412C8A /* LegoFilter.swift */; };
@@ -807,29 +809,29 @@
 		02CC865BF211C6408628DAAEF1B462DD /* StickerCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerCollectionView.swift; sourceTree = "<group>"; };
 		03D364835C33ED399F5ADE3B2C5E5581 /* RoundedTexture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RoundedTexture.swift; sourceTree = "<group>"; };
 		03E8ACCB67EEC07D1228F5FFE8B9EC1F /* TagsViewEditCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsViewEditCell.swift; sourceTree = "<group>"; };
-		03EF4776F8F0FBD121C7191F51184789 /* alpha_processing_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; name = alpha_processing_sse41.c; path = src/dsp/alpha_processing_sse41.c; sourceTree = "<group>"; };
+		03EF4776F8F0FBD121C7191F51184789 /* alpha_processing_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = alpha_processing_sse41.c; path = src/dsp/alpha_processing_sse41.c; sourceTree = "<group>"; };
 		04B60630FF13CB3F2FFD94D887E2EDAC /* UIViewController+Orientation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIViewController+Orientation.swift"; path = "Source/UIViewController+Orientation.swift"; sourceTree = "<group>"; };
-		055728ECDF769AED5054EA1A6052ABE7 /* huffman_encode_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = huffman_encode_utils.c; path = src/utils/huffman_encode_utils.c; sourceTree = "<group>"; };
+		055728ECDF769AED5054EA1A6052ABE7 /* huffman_encode_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = huffman_encode_utils.c; path = src/utils/huffman_encode_utils.c; sourceTree = "<group>"; };
 		059056DDF303837CFA63025F4531F2AE /* SDWebImageWebPCoder.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SDWebImageWebPCoder.modulemap; sourceTree = "<group>"; };
 		06274EE61C08105DB55954FF617F3A44 /* Shader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shader.swift; sourceTree = "<group>"; };
 		06CBAE1B0A806307ABFC19BA244BB26F /* ContentTypeDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContentTypeDetector.swift; path = Source/ContentTypeDetector.swift; sourceTree = "<group>"; };
-		089144BD9926E0F2FE6023FCAD3E89B1 /* quant_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = quant_dec.c; path = src/dec/quant_dec.c; sourceTree = "<group>"; };
+		089144BD9926E0F2FE6023FCAD3E89B1 /* quant_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = quant_dec.c; path = src/dec/quant_dec.c; sourceTree = "<group>"; };
 		08DF20D965F84AC774A14F4C84322580 /* FilterCollectionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionCell.swift; sourceTree = "<group>"; };
-		095685D3F006D357A3DD40D822C8E8A4 /* filters_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = filters_utils.c; path = src/utils/filters_utils.c; sourceTree = "<group>"; };
-		09C18680EB89CBF07B365D4E15BEDE58 /* lossless_enc_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_enc_mips_dsp_r2.c; path = src/dsp/lossless_enc_mips_dsp_r2.c; sourceTree = "<group>"; };
-		09E381C85BB6D78C184133C38E8B8D09 /* rescaler_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = rescaler_neon.c; path = src/dsp/rescaler_neon.c; sourceTree = "<group>"; };
+		095685D3F006D357A3DD40D822C8E8A4 /* filters_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = filters_utils.c; path = src/utils/filters_utils.c; sourceTree = "<group>"; };
+		09C18680EB89CBF07B365D4E15BEDE58 /* lossless_enc_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_enc_mips_dsp_r2.c; path = src/dsp/lossless_enc_mips_dsp_r2.c; sourceTree = "<group>"; };
+		09E381C85BB6D78C184133C38E8B8D09 /* rescaler_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = rescaler_neon.c; path = src/dsp/rescaler_neon.c; sourceTree = "<group>"; };
 		0A2ED504050EBC35435013D97D72E3D9 /* Pods-KanvasCameraExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-KanvasCameraExample-umbrella.h"; sourceTree = "<group>"; };
 		0A541B5F5ED21602313FEF6A33946E63 /* SDImageGraphics.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageGraphics.m; path = SDWebImage/Core/SDImageGraphics.m; sourceTree = "<group>"; };
-		0A966F8CC02AF6C9C4D66DDF06B58364 /* libPods-KanvasCameraExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-KanvasCameraExample.a"; path = "libPods-KanvasCameraExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A966F8CC02AF6C9C4D66DDF06B58364 /* libPods-KanvasCameraExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasCameraExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ABC2DC5DB5F7FD13BE404AA80A84B2E /* KanvasCamera-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KanvasCamera-umbrella.h"; sourceTree = "<group>"; };
-		0AE39BC88209CA6747DA13A8E3250CC8 /* lossless_enc_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_enc_msa.c; path = src/dsp/lossless_enc_msa.c; sourceTree = "<group>"; };
+		0AE39BC88209CA6747DA13A8E3250CC8 /* lossless_enc_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_enc_msa.c; path = src/dsp/lossless_enc_msa.c; sourceTree = "<group>"; };
 		0B6CA18D4637D6CE5A230421A9F25B44 /* SDWebImageDownloaderOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloaderOperation.m; path = SDWebImage/Core/SDWebImageDownloaderOperation.m; sourceTree = "<group>"; };
 		0C4EB43073E2E44B70EDA2E8A0AA24D2 /* MediaClipsCollectionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaClipsCollectionCell.swift; sourceTree = "<group>"; };
 		0D0E0FBD82BC7D5E1F7D3F736D98E5D5 /* UIFont+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+Orangina.swift"; path = "Source/UIFont+Orangina.swift"; sourceTree = "<group>"; };
 		0D4F762A931A7E04DFEFDF6A9C978F3F /* SDImageAPNGCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageAPNGCoder.h; path = SDWebImage/Core/SDImageAPNGCoder.h; sourceTree = "<group>"; };
 		0DAE6361CDC622195378A68D486386AF /* libwebp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = libwebp.release.xcconfig; sourceTree = "<group>"; };
-		0DBC2718DA812341FFB80EBA4386523A /* quant_levels_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = quant_levels_utils.c; path = src/utils/quant_levels_utils.c; sourceTree = "<group>"; };
-		0E0A0B7445346A292A9EA1A19FD0043D /* filters_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = filters_neon.c; path = src/dsp/filters_neon.c; sourceTree = "<group>"; };
+		0DBC2718DA812341FFB80EBA4386523A /* quant_levels_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = quant_levels_utils.c; path = src/utils/quant_levels_utils.c; sourceTree = "<group>"; };
+		0E0A0B7445346A292A9EA1A19FD0043D /* filters_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = filters_neon.c; path = src/dsp/filters_neon.c; sourceTree = "<group>"; };
 		0E9630EE3311FDD55FDB847786352B63 /* Texture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		0EC581634E92833C21334215B3C4FA6C /* UIView+Layout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		0EE733A03690A28D811D7AAFC372D70B /* UIImage+SDAnimatedImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImage+SDAnimatedImage.swift"; path = "Classes/UIImage+SDAnimatedImage.swift"; sourceTree = "<group>"; };
@@ -846,15 +848,15 @@
 		145D3ACD637AD8A399A118005E40E060 /* UIImage+PixelBuffer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+PixelBuffer.swift"; sourceTree = "<group>"; };
 		14798918D74F22D3CAF641665A571CF2 /* EditorViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		14BCB59F10BA7BA000674D0DBC9D687C /* EditionOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditionOption.swift; sourceTree = "<group>"; };
-		155F57CF41C3FBBA4788196427921D51 /* lossless_enc_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_enc_mips32.c; path = src/dsp/lossless_enc_mips32.c; sourceTree = "<group>"; };
+		155F57CF41C3FBBA4788196427921D51 /* lossless_enc_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_enc_mips32.c; path = src/dsp/lossless_enc_mips32.c; sourceTree = "<group>"; };
 		16D5E433F10F05D1D8A87068E97EE49C /* EditorFilterCollectionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorFilterCollectionCell.swift; sourceTree = "<group>"; };
 		1718F4889DA82BCE2B8866CB4528D079 /* ColorDrop.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorDrop.swift; sourceTree = "<group>"; };
 		178B26FD648301CF2ACD1AF92B6A9FDA /* ColorCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorCollectionView.swift; sourceTree = "<group>"; };
 		1824F3A2DC7D49D374CD97004D11C7D3 /* FBSnapshotTestCase.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FBSnapshotTestCase.h; path = FBSnapshotTestCase/FBSnapshotTestCase.h; sourceTree = "<group>"; };
-		18C1805D414919062F8C797CFBF2E842 /* ssim_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = ssim_sse2.c; path = src/dsp/ssim_sse2.c; sourceTree = "<group>"; };
-		190C045EF3BA2E3928B14FA753CA3FA3 /* filters.c */ = {isa = PBXFileReference; includeInIndex = 1; name = filters.c; path = src/dsp/filters.c; sourceTree = "<group>"; };
-		1934F6B1D275CE2D7B408A9F0A28874A /* cost_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cost_mips32.c; path = src/dsp/cost_mips32.c; sourceTree = "<group>"; };
-		197F741FB5ECDCD24DD0E2B31CC76516 /* muxinternal.c */ = {isa = PBXFileReference; includeInIndex = 1; name = muxinternal.c; path = src/mux/muxinternal.c; sourceTree = "<group>"; };
+		18C1805D414919062F8C797CFBF2E842 /* ssim_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = ssim_sse2.c; path = src/dsp/ssim_sse2.c; sourceTree = "<group>"; };
+		190C045EF3BA2E3928B14FA753CA3FA3 /* filters.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = filters.c; path = src/dsp/filters.c; sourceTree = "<group>"; };
+		1934F6B1D275CE2D7B408A9F0A28874A /* cost_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = cost_mips32.c; path = src/dsp/cost_mips32.c; sourceTree = "<group>"; };
+		197F741FB5ECDCD24DD0E2B31CC76516 /* muxinternal.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = muxinternal.c; path = src/mux/muxinternal.c; sourceTree = "<group>"; };
 		1A07B65A866C0F0503D79D325D59ABD4 /* vp8i_enc.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = vp8i_enc.h; path = src/enc/vp8i_enc.h; sourceTree = "<group>"; };
 		1A20902121C43C1FDC84D628FF1694E3 /* ToonFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToonFilter.swift; sourceTree = "<group>"; };
 		1A3ED453C46100C90217671329FB27D7 /* UIView+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+WebCache.m"; path = "SDWebImage/Core/UIView+WebCache.m"; sourceTree = "<group>"; };
@@ -866,17 +868,17 @@
 		1CEE4C47043FCDD185056E0AEB2F3CBA /* Pods-KanvasCameraExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-KanvasCameraExample-dummy.m"; sourceTree = "<group>"; };
 		1D2D8F4EB0C01120F40AF3E897E8A75D /* ColorPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		1D34AC70D2BEE3FC569FF876B1E9E088 /* cost_enc.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = cost_enc.h; path = src/enc/cost_enc.h; sourceTree = "<group>"; };
-		1D3D97190BB651B09CF585B6FB8B3787 /* yuv_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; name = yuv_sse41.c; path = src/dsp/yuv_sse41.c; sourceTree = "<group>"; };
+		1D3D97190BB651B09CF585B6FB8B3787 /* yuv_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = yuv_sse41.c; path = src/dsp/yuv_sse41.c; sourceTree = "<group>"; };
 		1D7AAA39E8A2605E6773AB7B7046ECC9 /* SDWebImageDownloaderResponseModifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloaderResponseModifier.m; path = SDWebImage/Core/SDWebImageDownloaderResponseModifier.m; sourceTree = "<group>"; };
 		1D8E8B2716D57FECAA672F2E038BAC9E /* SDWebImageOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageOperation.h; path = SDWebImage/Core/SDWebImageOperation.h; sourceTree = "<group>"; };
-		1DF61DA1F9AC397EF265A9EC75BF3AE1 /* libSharedUI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libSharedUI.a; path = libSharedUI.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DF61DA1F9AC397EF265A9EC75BF3AE1 /* libSharedUI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSharedUI.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E4484BC72C76452E3826FEC3E7D43EA /* UIView+Shadows.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIView+Shadows.swift"; path = "Source/UIView+Shadows.swift"; sourceTree = "<group>"; };
 		1E4F98128C0FCD4D15C91B02F719D0AF /* SDImageGIFCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageGIFCoder.m; path = SDWebImage/Core/SDImageGIFCoder.m; sourceTree = "<group>"; };
 		1E6837B748092BE3B43B9E00246E87F2 /* TagsOptionsModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsOptionsModel.swift; sourceTree = "<group>"; };
 		1E77228A7E19EC9FCF982067F6C9F091 /* UIImage+Compare.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+Compare.h"; path = "FBSnapshotTestCase/Categories/UIImage+Compare.h"; sourceTree = "<group>"; };
-		1E9ECF432E1932ED9354C9A44E7A959E /* enc_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; name = enc_msa.c; path = src/dsp/enc_msa.c; sourceTree = "<group>"; };
+		1E9ECF432E1932ED9354C9A44E7A959E /* enc_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = enc_msa.c; path = src/dsp/enc_msa.c; sourceTree = "<group>"; };
 		1EB0184E55F852ED8165F3AAA5B3DC56 /* ImageLoader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ImageLoader.release.xcconfig; sourceTree = "<group>"; };
-		1EC521FC8E1766A609E38F91491EA7EA /* alpha_processing_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = alpha_processing_sse2.c; path = src/dsp/alpha_processing_sse2.c; sourceTree = "<group>"; };
+		1EC521FC8E1766A609E38F91491EA7EA /* alpha_processing_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = alpha_processing_sse2.c; path = src/dsp/alpha_processing_sse2.c; sourceTree = "<group>"; };
 		202AAF7335C816191AA80C3A8A8DA6E3 /* NSImage+Compatibility.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSImage+Compatibility.m"; path = "SDWebImage/Core/NSImage+Compatibility.m"; sourceTree = "<group>"; };
 		20624676187CF3AC9029EDDF19F8AC39 /* ImageType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageType.swift; path = Classes/ImageType.swift; sourceTree = "<group>"; };
 		20A9241C4799FF96FD89491004B3ACB1 /* NavigationBarStyleDefining.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationBarStyleDefining.swift; path = Source/NavigationBarStyleDefining.swift; sourceTree = "<group>"; };
@@ -887,10 +889,10 @@
 		22C988DC141FA2849BF1F8EF6C839CD9 /* EMInterferenceFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EMInterferenceFilter.swift; sourceTree = "<group>"; };
 		22D2E0343CF38208EF1A79DB7237673A /* EditorFilterController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorFilterController.swift; sourceTree = "<group>"; };
 		2312A1D83B9517C63DAB554652F68587 /* TimelineContaining.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TimelineContaining.swift; path = Source/TimelineContaining.swift; sourceTree = "<group>"; };
-		234F6A6F01095A225EC8C563404CA163 /* picture_csp_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = picture_csp_enc.c; path = src/enc/picture_csp_enc.c; sourceTree = "<group>"; };
+		234F6A6F01095A225EC8C563404CA163 /* picture_csp_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = picture_csp_enc.c; path = src/enc/picture_csp_enc.c; sourceTree = "<group>"; };
 		23783BCF47F402AA10EB8DB8578A5B0A /* ImageLoader.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = ImageLoader.modulemap; sourceTree = "<group>"; };
-		2383078A6D28DE6A15E11489708BA4FD /* libPods-KanvasCameraExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-KanvasCameraExampleTests.a"; path = "libPods-KanvasCameraExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		23B4C56A7855EA1A15EB09CF0D86FC58 /* bit_writer_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = bit_writer_utils.c; path = src/utils/bit_writer_utils.c; sourceTree = "<group>"; };
+		2383078A6D28DE6A15E11489708BA4FD /* libPods-KanvasCameraExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasCameraExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		23B4C56A7855EA1A15EB09CF0D86FC58 /* bit_writer_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = bit_writer_utils.c; path = src/utils/bit_writer_utils.c; sourceTree = "<group>"; };
 		23CCD078DF1B7D86A43CE2D99E4686AB /* HapticFeedbackGenerating.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HapticFeedbackGenerating.swift; path = Source/HapticFeedbackGenerating.swift; sourceTree = "<group>"; };
 		2407A4841291453D765D8AEFAD7AF699 /* UIImageView+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+WebCache.h"; path = "SDWebImage/Core/UIImageView+WebCache.h"; sourceTree = "<group>"; };
 		243B19D5FEEB10FE1DE7C1882FC68873 /* SDWebImageDownloaderOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloaderOperation.h; path = SDWebImage/Core/SDWebImageDownloaderOperation.h; sourceTree = "<group>"; };
@@ -899,7 +901,7 @@
 		26740FC68BEAE560222B8DE6205CF10A /* SuggestedTagsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SuggestedTagsView.swift; sourceTree = "<group>"; };
 		2681E01832AE2EDA05EB801F53C51E6A /* random_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = random_utils.h; path = src/utils/random_utils.h; sourceTree = "<group>"; };
 		2695B9E607CEB5707923B1A3F60BA944 /* KanvasCameraAnalyticsProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraAnalyticsProvider.swift; sourceTree = "<group>"; };
-		26DCCC5005589A6D0217B61DF30F6B79 /* vp8l_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = vp8l_dec.c; path = src/dec/vp8l_dec.c; sourceTree = "<group>"; };
+		26DCCC5005589A6D0217B61DF30F6B79 /* vp8l_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = vp8l_dec.c; path = src/dec/vp8l_dec.c; sourceTree = "<group>"; };
 		285FD35C83D058B496B3E4F537ECFF26 /* CameraInputOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputOutput.swift; sourceTree = "<group>"; };
 		28B56CA266DFB9F59327D0A3E05E3565 /* SDWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImage.h; path = WebImage/SDWebImage.h; sourceTree = "<group>"; };
 		28EF07F27821952A4B38CD6497D2D9AE /* DrawerTabBarController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawerTabBarController.swift; sourceTree = "<group>"; };
@@ -920,7 +922,7 @@
 		2D88E68E53446651E9C7CAE2DF6914C2 /* StickerMenuView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerMenuView.swift; sourceTree = "<group>"; };
 		2D9DB3E58C73423E5524528D11E0F9FF /* SDWebImageCacheSerializer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCacheSerializer.h; path = SDWebImage/Core/SDWebImageCacheSerializer.h; sourceTree = "<group>"; };
 		2DC80A553989C50E83A168323DD45BB2 /* CameraZoomHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraZoomHandler.swift; sourceTree = "<group>"; };
-		2DFAF3C145EC508BB1C3C58D272FE180 /* yuv.c */ = {isa = PBXFileReference; includeInIndex = 1; name = yuv.c; path = src/dsp/yuv.c; sourceTree = "<group>"; };
+		2DFAF3C145EC508BB1C3C58D272FE180 /* yuv.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = yuv.c; path = src/dsp/yuv.c; sourceTree = "<group>"; };
 		2EA37EE03F8C9BF11548C91E9DDD7C36 /* MediaClipsCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaClipsCollectionView.swift; sourceTree = "<group>"; };
 		2ECAFB33B3C190956FAB22BA3C0E1568 /* String+HexColor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "String+HexColor.swift"; path = "Source/String+HexColor.swift"; sourceTree = "<group>"; };
 		2EEFB46CCCB2D2D38940C87A6B85C7E3 /* alphai_dec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = alphai_dec.h; path = src/dec/alphai_dec.h; sourceTree = "<group>"; };
@@ -934,39 +936,39 @@
 		30FEBAEFB574B05039531F6326199C4D /* NSDate+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSDate+Orangina.swift"; path = "Source/NSDate+Orangina.swift"; sourceTree = "<group>"; };
 		311611285381BC111A88B5E017264014 /* CameraFilterCollectionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraFilterCollectionCell.swift; sourceTree = "<group>"; };
 		32BB93E9A409EECDCBBBF2021ED7A52A /* AlphaBlendFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AlphaBlendFilter.swift; sourceTree = "<group>"; };
-		32E8DB467D165639A9BAAA2F7337CF8A /* rescaler_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = rescaler_sse2.c; path = src/dsp/rescaler_sse2.c; sourceTree = "<group>"; };
+		32E8DB467D165639A9BAAA2F7337CF8A /* rescaler_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = rescaler_sse2.c; path = src/dsp/rescaler_sse2.c; sourceTree = "<group>"; };
 		330399C4385908229645BAE0D5B0855C /* backward_references_enc.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = backward_references_enc.h; path = src/enc/backward_references_enc.h; sourceTree = "<group>"; };
 		330E46BD37EBD4599199DFF173F2055F /* ImageLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageLoader.swift; path = Classes/ImageLoader.swift; sourceTree = "<group>"; };
 		334AA8F368E4B71C429B850312E48166 /* ReachabilityDeterminer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReachabilityDeterminer.swift; path = Source/ReachabilityDeterminer.swift; sourceTree = "<group>"; };
-		33D3E328E22BB4E6B893CA7EF5AB1A33 /* lossless_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_sse2.c; path = src/dsp/lossless_sse2.c; sourceTree = "<group>"; };
+		33D3E328E22BB4E6B893CA7EF5AB1A33 /* lossless_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_sse2.c; path = src/dsp/lossless_sse2.c; sourceTree = "<group>"; };
 		33DBA00AA922682E8CEFDC67F883A273 /* CircularImageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CircularImageView.swift; sourceTree = "<group>"; };
 		33E83D02943A5199B83C8316F27EF2F6 /* SDWebImageDownloaderRequestModifier.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloaderRequestModifier.h; path = SDWebImage/Core/SDWebImageDownloaderRequestModifier.h; sourceTree = "<group>"; };
 		341A51AF64D5BE1F01C6D2AFD7584D93 /* StylableImageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StylableImageView.swift; sourceTree = "<group>"; };
 		343BD2BF8B9702A1D98E960A1E213693 /* dsp.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = dsp.h; path = src/dsp/dsp.h; sourceTree = "<group>"; };
 		345DA4D1233DB6E7758F1832006D9B12 /* FilterItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
-		348478F3E836421ABA683E41EC9A0855 /* webp_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = webp_dec.c; path = src/dec/webp_dec.c; sourceTree = "<group>"; };
+		348478F3E836421ABA683E41EC9A0855 /* webp_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = webp_dec.c; path = src/dec/webp_dec.c; sourceTree = "<group>"; };
 		34936877CBA4C2D31D8B2305B20F9D56 /* KanvasCameraTimes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraTimes.swift; sourceTree = "<group>"; };
 		349AF76D32E41290C0197FFEFFE0EE74 /* SDImageCodersManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageCodersManager.m; path = SDWebImage/Core/SDImageCodersManager.m; sourceTree = "<group>"; };
 		34F90715EA8E9CAA0664DF0C01582092 /* UIGestureRecognizer+Active.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIGestureRecognizer+Active.swift"; sourceTree = "<group>"; };
-		34FC5F9480968C533A41ACD7CAD30977 /* iterator_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = iterator_enc.c; path = src/enc/iterator_enc.c; sourceTree = "<group>"; };
-		3503C780FB93E94BB900EFC3FA6F4040 /* filter_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = filter_enc.c; path = src/enc/filter_enc.c; sourceTree = "<group>"; };
+		34FC5F9480968C533A41ACD7CAD30977 /* iterator_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = iterator_enc.c; path = src/enc/iterator_enc.c; sourceTree = "<group>"; };
+		3503C780FB93E94BB900EFC3FA6F4040 /* filter_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = filter_enc.c; path = src/enc/filter_enc.c; sourceTree = "<group>"; };
 		353FA578793F9CFE71144569112B3B22 /* ReachabilityObserver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReachabilityObserver.swift; path = Source/ReachabilityObserver.swift; sourceTree = "<group>"; };
-		355271E3AFD00F46A4974A8D91486574 /* demux.c */ = {isa = PBXFileReference; includeInIndex = 1; name = demux.c; path = src/demux/demux.c; sourceTree = "<group>"; };
-		35C784A7FEE6609DB37B7FE4BF27982F /* yuv_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = yuv_mips_dsp_r2.c; path = src/dsp/yuv_mips_dsp_r2.c; sourceTree = "<group>"; };
-		35FAA27E04BC4AD46679D3A52565FFBB /* io_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = io_dec.c; path = src/dec/io_dec.c; sourceTree = "<group>"; };
+		355271E3AFD00F46A4974A8D91486574 /* demux.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = demux.c; path = src/demux/demux.c; sourceTree = "<group>"; };
+		35C784A7FEE6609DB37B7FE4BF27982F /* yuv_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = yuv_mips_dsp_r2.c; path = src/dsp/yuv_mips_dsp_r2.c; sourceTree = "<group>"; };
+		35FAA27E04BC4AD46679D3A52565FFBB /* io_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = io_dec.c; path = src/dec/io_dec.c; sourceTree = "<group>"; };
 		36448CE7A0888818E02519265282BFCA /* SDImageFrame.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageFrame.h; path = SDWebImage/Core/SDImageFrame.h; sourceTree = "<group>"; };
 		36F44228D41305DC8F02423CAA60D573 /* ImagePreviewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImagePreviewController.swift; sourceTree = "<group>"; };
 		37A50B3E9B92A7749032DEDFE6B45165 /* Utils.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Utils.release.xcconfig; sourceTree = "<group>"; };
-		3819D576B1FBE0B1DB9AE9EFDDF669C4 /* cpu.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cpu.c; path = src/dsp/cpu.c; sourceTree = "<group>"; };
+		3819D576B1FBE0B1DB9AE9EFDDF669C4 /* cpu.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = cpu.c; path = src/dsp/cpu.c; sourceTree = "<group>"; };
 		3838F9F988E1A06E8E3A2EF7714EEAB3 /* Utils.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Utils.modulemap; sourceTree = "<group>"; };
-		39287ABDDF684533914320C610C48421 /* yuv_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; name = yuv_mips32.c; path = src/dsp/yuv_mips32.c; sourceTree = "<group>"; };
+		39287ABDDF684533914320C610C48421 /* yuv_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = yuv_mips32.c; path = src/dsp/yuv_mips32.c; sourceTree = "<group>"; };
 		394F890090063D56546D7D0D4191671B /* UIFont+Fonts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Fonts.swift"; sourceTree = "<group>"; };
 		39AD5DFD47DCFD855838BFF9872D8D3D /* CameraPreviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 		39BD791512602BBA9BCB31ED3D845D42 /* FilmFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilmFilter.swift; sourceTree = "<group>"; };
 		39ECD99DAA87ADA84ACD1231F64A3426 /* SDAnimatedImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDAnimatedImage.h; path = SDWebImage/Core/SDAnimatedImage.h; sourceTree = "<group>"; };
-		3A42466E8787A05854BF483A71834898 /* anim_encode.c */ = {isa = PBXFileReference; includeInIndex = 1; name = anim_encode.c; path = src/mux/anim_encode.c; sourceTree = "<group>"; };
+		3A42466E8787A05854BF483A71834898 /* anim_encode.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = anim_encode.c; path = src/mux/anim_encode.c; sourceTree = "<group>"; };
 		3ACF4FF6A314C74A927D422005221CCB /* Queue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
-		3B0A7445DCB09FF1386FADA30045D311 /* enc_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = enc_mips_dsp_r2.c; path = src/dsp/enc_mips_dsp_r2.c; sourceTree = "<group>"; };
+		3B0A7445DCB09FF1386FADA30045D311 /* enc_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = enc_mips_dsp_r2.c; path = src/dsp/enc_mips_dsp_r2.c; sourceTree = "<group>"; };
 		3B496F095F55FA668681DBE410AB08EE /* TMUserInterfaceIdiom.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TMUserInterfaceIdiom.swift; path = Source/TMUserInterfaceIdiom.swift; sourceTree = "<group>"; };
 		3BF22C084B65717272690D933B327C0C /* SDWebImageDownloaderConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloaderConfig.h; path = SDWebImage/Core/SDWebImageDownloaderConfig.h; sourceTree = "<group>"; };
 		3CA7286266118F2114D28E07BB6820E0 /* libwebp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = libwebp.debug.xcconfig; sourceTree = "<group>"; };
@@ -978,7 +980,7 @@
 		3EF0838ADD3295D6CD9D5899BF06BAEF /* TumblrTheme.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TumblrTheme.debug.xcconfig; sourceTree = "<group>"; };
 		3FA38E2F9B327C34C0CCA2550A813179 /* SDImageCacheConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageCacheConfig.m; path = SDWebImage/Core/SDImageCacheConfig.m; sourceTree = "<group>"; };
 		3FBD76C7A368B2396695BDA0D9B92DF8 /* SDImageHEICCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageHEICCoder.h; path = SDWebImage/Core/SDImageHEICCoder.h; sourceTree = "<group>"; };
-		400FF55D0451E7A8F33A3D0D3E11C1B9 /* libReachability.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libReachability.a; path = libReachability.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		400FF55D0451E7A8F33A3D0D3E11C1B9 /* libReachability.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libReachability.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4043564F17E02F1DEE88D52FBCD23FE6 /* RaveFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RaveFilter.swift; sourceTree = "<group>"; };
 		406E8136E40FB1D4476A1452C5155F1B /* TumblrMediaInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TumblrMediaInfo.swift; path = Source/TumblrMediaInfo.swift; sourceTree = "<group>"; };
 		40A5B3F19BDB6F7D04AF93B3E496389D /* SDWebImageImageLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SDWebImageImageLoader.swift; path = Classes/SDWebImageImageLoader.swift; sourceTree = "<group>"; };
@@ -996,25 +998,25 @@
 		442307259AD59471DE258300E0B4DE02 /* MovableView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MovableView.swift; sourceTree = "<group>"; };
 		449B00CC2182E39C51DF48CD499D27A6 /* color_cache_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = color_cache_utils.h; path = src/utils/color_cache_utils.h; sourceTree = "<group>"; };
 		44EFB04E271CBA70641028C6E652174E /* Cancelable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Cancelable.swift; path = Classes/Cancelable.swift; sourceTree = "<group>"; };
-		45B6E7C793EBA368B54EF7D1A7C4C835 /* upsampling_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = upsampling_sse2.c; path = src/dsp/upsampling_sse2.c; sourceTree = "<group>"; };
+		45B6E7C793EBA368B54EF7D1A7C4C835 /* upsampling_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = upsampling_sse2.c; path = src/dsp/upsampling_sse2.c; sourceTree = "<group>"; };
 		45CC2502D69AB0A8E02A81FFF9FCD65B /* quant_levels_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = quant_levels_utils.h; path = src/utils/quant_levels_utils.h; sourceTree = "<group>"; };
 		45DD5AD717C77B9E1F48D29621A1A03E /* ColorPickerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ColorPickerViewController.swift; path = Source/ColorPickerViewController.swift; sourceTree = "<group>"; };
-		4656F2B1DF342AA541245854B038804E /* upsampling_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = upsampling_mips_dsp_r2.c; path = src/dsp/upsampling_mips_dsp_r2.c; sourceTree = "<group>"; };
+		4656F2B1DF342AA541245854B038804E /* upsampling_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = upsampling_mips_dsp_r2.c; path = src/dsp/upsampling_mips_dsp_r2.c; sourceTree = "<group>"; };
 		46DB8B3C32AD262D226D034BD4A62B7A /* UIImage+Diff.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Diff.m"; path = "FBSnapshotTestCase/Categories/UIImage+Diff.m"; sourceTree = "<group>"; };
 		4789206E020A4BAD6D766C65C0A0D17F /* Utils-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Utils-dummy.m"; sourceTree = "<group>"; };
 		47D85D12557E7E90F2186AC69D535B88 /* SDAssociatedObject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDAssociatedObject.m; path = SDWebImage/Private/SDAssociatedObject.m; sourceTree = "<group>"; };
 		47E4221F78ED674A7AA7EE09841B88B3 /* CVPixelBuffer+sampleBuffer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+sampleBuffer.swift"; sourceTree = "<group>"; };
 		47FDAB7AF6A68C6009D84123E54D69B5 /* GLError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GLError.swift; sourceTree = "<group>"; };
-		4840B80F1A08D2916E80577EF37CC129 /* upsampling_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = upsampling_neon.c; path = src/dsp/upsampling_neon.c; sourceTree = "<group>"; };
+		4840B80F1A08D2916E80577EF37CC129 /* upsampling_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = upsampling_neon.c; path = src/dsp/upsampling_neon.c; sourceTree = "<group>"; };
 		49020B207ACBF0E2470B5DE2A9677B30 /* ImagePoolFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImagePoolFilter.swift; sourceTree = "<group>"; };
 		499DFBA48D4803ABFDB0399B808A22B7 /* CameraInputController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputController.swift; sourceTree = "<group>"; };
 		49D845F6080555EFA9972B63AAFC1258 /* KanvasUIImagePickerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasUIImagePickerViewController.swift; sourceTree = "<group>"; };
 		4A4F6B7596ED0DE75FC4CD4F0ECB2DD9 /* SDDisplayLink.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDDisplayLink.h; path = SDWebImage/Private/SDDisplayLink.h; sourceTree = "<group>"; };
 		4B58393C8725A7F672DE99510CDD4B4D /* common_sse2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = common_sse2.h; path = src/dsp/common_sse2.h; sourceTree = "<group>"; };
 		4BEBA464A790CAEE723B4DC4AAC05D0E /* Array+Object.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Array+Object.swift"; sourceTree = "<group>"; };
-		4C9A9D866ECDBE4DC7CFFD6B5DE7098B /* frame_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = frame_dec.c; path = src/dec/frame_dec.c; sourceTree = "<group>"; };
+		4C9A9D866ECDBE4DC7CFFD6B5DE7098B /* frame_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = frame_dec.c; path = src/dec/frame_dec.c; sourceTree = "<group>"; };
 		4D0C354396389E5229FFE8D0C4322773 /* SDImageCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageCache.m; path = SDWebImage/Core/SDImageCache.m; sourceTree = "<group>"; };
-		4D3A406C5E74B1AE0D60B2D5962E9551 /* idec_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = idec_dec.c; path = src/dec/idec_dec.c; sourceTree = "<group>"; };
+		4D3A406C5E74B1AE0D60B2D5962E9551 /* idec_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = idec_dec.c; path = src/dec/idec_dec.c; sourceTree = "<group>"; };
 		4D61222325ACE16D9D08217A9184798B /* MediaClipsCollectionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaClipsCollectionController.swift; sourceTree = "<group>"; };
 		4E4E5185292C49F25ACDB6B67301B21A /* ColorThief.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorThief.swift; sourceTree = "<group>"; };
 		4EC8592395F8D1293077547F789232BA /* ImageLoaderError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageLoaderError.swift; path = Classes/ImageLoaderError.swift; sourceTree = "<group>"; };
@@ -1022,12 +1024,12 @@
 		4F765C2B10B06BE9F827F6B6EFED0647 /* SDImageFrame.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageFrame.m; path = SDWebImage/Core/SDImageFrame.m; sourceTree = "<group>"; };
 		4F8CE3F52BEDC9F8BD2FF9ECCC887D70 /* AVAsset+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "AVAsset+Utils.swift"; path = "Source/AVAsset+Utils.swift"; sourceTree = "<group>"; };
 		4F9625AC5523519BF50AB199DB60EAF2 /* NSLayoutConstraint+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Utils.swift"; path = "Source/NSLayoutConstraint+Utils.swift"; sourceTree = "<group>"; };
-		4F971E9A26DC30B7311BFCA0378E629E /* histogram_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = histogram_enc.c; path = src/enc/histogram_enc.c; sourceTree = "<group>"; };
+		4F971E9A26DC30B7311BFCA0378E629E /* histogram_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = histogram_enc.c; path = src/enc/histogram_enc.c; sourceTree = "<group>"; };
 		5008AC3FFAF6C924BDADB53F7500EEE1 /* UIImage+Snapshot.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+Snapshot.h"; path = "FBSnapshotTestCase/Categories/UIImage+Snapshot.h"; sourceTree = "<group>"; };
 		5161E0BA193584E69ABF32453867A5F5 /* SDImageCodersManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCodersManager.h; path = SDWebImage/Core/SDImageCodersManager.h; sourceTree = "<group>"; };
-		5172D2A16DE0755A78E95B9DDCBC614E /* KanvasCamera.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = KanvasCamera.bundle; path = "KanvasCamera-KanvasCamera.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
-		523EAA3534E69A5993A08C61D8EBAC58 /* color_cache_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = color_cache_utils.c; path = src/utils/color_cache_utils.c; sourceTree = "<group>"; };
-		52AD75A3A25FD9F89C37F9EA0B25B9E2 /* random_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = random_utils.c; path = src/utils/random_utils.c; sourceTree = "<group>"; };
+		5172D2A16DE0755A78E95B9DDCBC614E /* KanvasCamera.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KanvasCamera.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		523EAA3534E69A5993A08C61D8EBAC58 /* color_cache_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = color_cache_utils.c; path = src/utils/color_cache_utils.c; sourceTree = "<group>"; };
+		52AD75A3A25FD9F89C37F9EA0B25B9E2 /* random_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = random_utils.c; path = src/utils/random_utils.c; sourceTree = "<group>"; };
 		5335E62A47CF2DAB289BA87AFAA7E85E /* FBSnapshotTestCase-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FBSnapshotTestCase-prefix.pch"; sourceTree = "<group>"; };
 		53B41CA6ECD4F8B1772BC6F4FC3B7A25 /* ColorCollectionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorCollectionController.swift; sourceTree = "<group>"; };
 		543796D34F425936AC62F381A8AEF21E /* UIImage+GIF.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+GIF.m"; path = "SDWebImage/Core/UIImage+GIF.m"; sourceTree = "<group>"; };
@@ -1036,47 +1038,49 @@
 		557028F2A22059FA8A35D6893117DDE0 /* UIImage+Transform.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+Transform.h"; path = "SDWebImage/Core/UIImage+Transform.h"; sourceTree = "<group>"; };
 		55C8591104A2CFE35AAE0E475C3482D9 /* EditTagsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditTagsView.swift; sourceTree = "<group>"; };
 		55E47C3CCA41ACD0FB1F80E9503CC5B1 /* FilterFactory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterFactory.swift; sourceTree = "<group>"; };
-		56FFA30183F182277D154B9F3EB5C9DB /* tree_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = tree_dec.c; path = src/dec/tree_dec.c; sourceTree = "<group>"; };
+		56FFA30183F182277D154B9F3EB5C9DB /* tree_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = tree_dec.c; path = src/dec/tree_dec.c; sourceTree = "<group>"; };
 		573DA3488A541E286988927C85812A97 /* Reachability.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Reachability.modulemap; sourceTree = "<group>"; };
 		578BD62042A5E97910D27D02A09CEF9E /* ImageLoader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ImageLoader.debug.xcconfig; sourceTree = "<group>"; };
-		57D83A17D0E39130B84917678BE439CA /* token_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = token_enc.c; path = src/enc/token_enc.c; sourceTree = "<group>"; };
+		57D83A17D0E39130B84917678BE439CA /* token_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = token_enc.c; path = src/enc/token_enc.c; sourceTree = "<group>"; };
 		58076539D4E3FB899AA891A976364B4F /* DrawingCanvas.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawingCanvas.swift; sourceTree = "<group>"; };
 		581C67E84FEC87595BA9B648CF5F3CB9 /* EditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		584838C8EB7A8CF6902DBC2D87985D9D /* libwebp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "libwebp-umbrella.h"; sourceTree = "<group>"; };
 		59667922C2A44BB8DBA89F18A81F9E65 /* UIView+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIView+Utils.swift"; path = "Source/UIView+Utils.swift"; sourceTree = "<group>"; };
 		597476E1EC0BCF5782BB847CAF467650 /* msa_macro.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = msa_macro.h; path = src/dsp/msa_macro.h; sourceTree = "<group>"; };
 		59E25692037A4266570EEB101F0EF5A0 /* EditorTextController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorTextController.swift; sourceTree = "<group>"; };
-		5A87F8737E0F346A20DB3C219AAFDD2A /* picture_tools_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = picture_tools_enc.c; path = src/enc/picture_tools_enc.c; sourceTree = "<group>"; };
+		5A87F8737E0F346A20DB3C219AAFDD2A /* picture_tools_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = picture_tools_enc.c; path = src/enc/picture_tools_enc.c; sourceTree = "<group>"; };
 		5B737EF75791B03FEEE52BCF98B373BD /* Pods-KanvasCameraExample-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-KanvasCameraExample-acknowledgements.markdown"; sourceTree = "<group>"; };
 		5B73D47EBB955E30C4C8EE7D3178B8F5 /* AppColorSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppColorSource.swift; path = Source/AppColorSource.swift; sourceTree = "<group>"; };
 		5B915EB0DEDBBA2A740877FE167E6964 /* SDMemoryCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDMemoryCache.h; path = SDWebImage/Core/SDMemoryCache.h; sourceTree = "<group>"; };
 		5B93053595F66B9E47DF164A3918EA27 /* SDWebImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SDWebImage-prefix.pch"; sourceTree = "<group>"; };
 		5BE82E6CB65C00253741A8459F1B387C /* SDDiskCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDDiskCache.m; path = SDWebImage/Core/SDDiskCache.m; sourceTree = "<group>"; };
-		5C4F31330DFA99D699E4BDC8C3573D73 /* libFBSnapshotTestCase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libFBSnapshotTestCase.a; path = libFBSnapshotTestCase.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C4F31330DFA99D699E4BDC8C3573D73 /* libFBSnapshotTestCase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFBSnapshotTestCase.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C6E926B11450C0E09F39DAC493E44BE /* SDImageCachesManagerOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCachesManagerOperation.h; path = SDWebImage/Private/SDImageCachesManagerOperation.h; sourceTree = "<group>"; };
 		5CD2C32CC59EF928066B012F7C0AB637 /* CGPoint+Operators.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGPoint+Operators.swift"; sourceTree = "<group>"; };
 		5CE0F0BCEE91571C41734EED2D2A59FF /* Reachability.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Reachability.debug.xcconfig; sourceTree = "<group>"; };
-		5D450FDD0460F89FDBBA541A517530E1 /* TumblrTheme.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = TumblrTheme.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		5D450FDD0460F89FDBBA541A517530E1 /* TumblrTheme.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = TumblrTheme.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		5E028EFD120A2C9F90997418663149C7 /* UIApplication+StrictKeyWindow.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIApplication+StrictKeyWindow.h"; path = "FBSnapshotTestCase/Categories/UIApplication+StrictKeyWindow.h"; sourceTree = "<group>"; };
-		5E4674603A5D5B9215FFA0F8E69F8B71 /* liblibwebp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = liblibwebp.a; path = liblibwebp.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E4674603A5D5B9215FFA0F8E69F8B71 /* liblibwebp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibwebp.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EED1906B8B42FBC9DA913B145959646 /* CGSize+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CGSize+Utils.swift"; path = "Source/CGSize+Utils.swift"; sourceTree = "<group>"; };
 		5F38C66F88A7C1050A1B14A85A05E19B /* PostFormKeyboardTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PostFormKeyboardTracker.swift; path = Source/PostFormKeyboardTracker.swift; sourceTree = "<group>"; };
 		5F58476E023605BA3BB9493F2488922D /* FilterCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionView.swift; sourceTree = "<group>"; };
 		5FABF373786738DEB15F23AA2840215F /* GLUtilities.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GLUtilities.swift; sourceTree = "<group>"; };
 		5FB7E60D1685E9D9504E7673CC2C2BBE /* TumblrTheme-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TumblrTheme-umbrella.h"; sourceTree = "<group>"; };
-		6046EAFE87D015357840C011B1BC3AA4 /* enc_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = enc_sse2.c; path = src/dsp/enc_sse2.c; sourceTree = "<group>"; };
+		6046EAFE87D015357840C011B1BC3AA4 /* enc_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = enc_sse2.c; path = src/dsp/enc_sse2.c; sourceTree = "<group>"; };
 		6072E65CD8EF270CDBBDC69EF01AC700 /* UIImageView+HighlightedWebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+HighlightedWebCache.m"; path = "SDWebImage/Core/UIImageView+HighlightedWebCache.m"; sourceTree = "<group>"; };
-		6103315B49D12299EE0E7830D5376ED6 /* frame_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = frame_enc.c; path = src/enc/frame_enc.c; sourceTree = "<group>"; };
-		6105497F85D2559E64941CB0F1786765 /* upsampling.c */ = {isa = PBXFileReference; includeInIndex = 1; name = upsampling.c; path = src/dsp/upsampling.c; sourceTree = "<group>"; };
+		6103315B49D12299EE0E7830D5376ED6 /* frame_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = frame_enc.c; path = src/enc/frame_enc.c; sourceTree = "<group>"; };
+		6105497F85D2559E64941CB0F1786765 /* upsampling.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = upsampling.c; path = src/dsp/upsampling.c; sourceTree = "<group>"; };
 		61330F84A7759DFFB34FB3D14D0E7B20 /* SDWebImageCacheKeyFilter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCacheKeyFilter.m; path = SDWebImage/Core/SDWebImageCacheKeyFilter.m; sourceTree = "<group>"; };
 		615A599A5F96D7883F672A7E6B512DC2 /* CameraRecordingProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraRecordingProtocol.swift; sourceTree = "<group>"; };
 		615B23346F91BCEDFF38DFA49AD039C8 /* IgnoreTouchesCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IgnoreTouchesCollectionView.swift; sourceTree = "<group>"; };
 		621F2337EC216AFB8291D5D941F63E16 /* StickerType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerType.swift; sourceTree = "<group>"; };
-		62707D64B5DB586E01C60343BC59398C /* dec_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dec_msa.c; path = src/dsp/dec_msa.c; sourceTree = "<group>"; };
+		62707D64B5DB586E01C60343BC59398C /* dec_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = dec_msa.c; path = src/dsp/dec_msa.c; sourceTree = "<group>"; };
 		630B8998A5C69B937ECEEBCB0E155572 /* Reachability-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Reachability-umbrella.h"; sourceTree = "<group>"; };
-		644C9DFB24FDCCB7FB37FE933D40BE1D /* backward_references_cost_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = backward_references_cost_enc.c; path = src/enc/backward_references_cost_enc.c; sourceTree = "<group>"; };
+		644C9DFB24FDCCB7FB37FE933D40BE1D /* backward_references_cost_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = backward_references_cost_enc.c; path = src/enc/backward_references_cost_enc.c; sourceTree = "<group>"; };
 		647A554441B29BCEEB8A85DC331B870D /* SharedUI.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SharedUI.modulemap; sourceTree = "<group>"; };
-		64F79BE3487AAF4AD397742EC3B17A08 /* lossless_enc_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_enc_sse41.c; path = src/dsp/lossless_enc_sse41.c; sourceTree = "<group>"; };
+		64F79BE3487AAF4AD397742EC3B17A08 /* lossless_enc_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_enc_sse41.c; path = src/dsp/lossless_enc_sse41.c; sourceTree = "<group>"; };
+		650A83392464660F0071BF9D /* GifMakerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerController.swift; sourceTree = "<group>"; };
+		650A833B2464661C0071BF9D /* GifMakerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerView.swift; sourceTree = "<group>"; };
 		65374338913D1436C96A828064B431A0 /* AppColorPalette.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppColorPalette.swift; path = Source/AppColorPalette.swift; sourceTree = "<group>"; };
 		653A57EDDFE771469846380C36E81F4F /* SDWebImageTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageTransition.m; path = SDWebImage/Core/SDWebImageTransition.m; sourceTree = "<group>"; };
 		658A0804ACCFF358B5D639F894C31520 /* TagsViewCollectionViewLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsViewCollectionViewLayout.swift; sourceTree = "<group>"; };
@@ -1105,18 +1109,18 @@
 		6C1401AAEEB5F104191878969FCA2854 /* UIImage+Metadata.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+Metadata.h"; path = "SDWebImage/Core/UIImage+Metadata.h"; sourceTree = "<group>"; };
 		6C38125C154BE29352F60B6656406968 /* NumTypes+Conversion.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NumTypes+Conversion.swift"; sourceTree = "<group>"; };
 		6C56B07E5DBB8DA7D7A86AC700D777AF /* TumblrTheme.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = TumblrTheme.modulemap; sourceTree = "<group>"; };
-		6C774472519040078AD2F50D8FF064F6 /* filters_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = filters_mips_dsp_r2.c; path = src/dsp/filters_mips_dsp_r2.c; sourceTree = "<group>"; };
+		6C774472519040078AD2F50D8FF064F6 /* filters_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = filters_mips_dsp_r2.c; path = src/dsp/filters_mips_dsp_r2.c; sourceTree = "<group>"; };
 		6C83D089A9512F14E73C3433272D36F7 /* AVURLAsset+Thumbnail.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVURLAsset+Thumbnail.swift"; sourceTree = "<group>"; };
 		6D0D5D670502C88DD42B54E7289AA9C5 /* ImageOperation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageOperation.swift; sourceTree = "<group>"; };
-		6D243D8AF6CB9DF1F49C54B72FEBAB5A /* lossless.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless.c; path = src/dsp/lossless.c; sourceTree = "<group>"; };
+		6D243D8AF6CB9DF1F49C54B72FEBAB5A /* lossless.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless.c; path = src/dsp/lossless.c; sourceTree = "<group>"; };
 		6D35CB7BE26B185DBBFB1B4E7430A647 /* UIImage+Compare.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Compare.m"; path = "FBSnapshotTestCase/Categories/UIImage+Compare.m"; sourceTree = "<group>"; };
 		6E4B45A1189BBC0563EC1CF0F92DEE4C /* Rendering.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Rendering.swift; sourceTree = "<group>"; };
 		6EC75366F74642DB13DA1E327784B0B0 /* vp8li_enc.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = vp8li_enc.h; path = src/enc/vp8li_enc.h; sourceTree = "<group>"; };
-		6F630426EE550B8E662A9A4C0B01BD32 /* predictor_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = predictor_enc.c; path = src/enc/predictor_enc.c; sourceTree = "<group>"; };
+		6F630426EE550B8E662A9A4C0B01BD32 /* predictor_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = predictor_enc.c; path = src/enc/predictor_enc.c; sourceTree = "<group>"; };
 		70052E755082C37141EBFE5E5C4574CD /* mux.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = mux.h; path = src/webp/mux.h; sourceTree = "<group>"; };
 		701DA5A03AF6EC2E0005F604A192E3B2 /* SDWeakProxy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWeakProxy.h; path = SDWebImage/Private/SDWeakProxy.h; sourceTree = "<group>"; };
 		7036CC36B246D265148518E5F6EACB30 /* HapticFeedbackGenerator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HapticFeedbackGenerator.swift; path = Source/HapticFeedbackGenerator.swift; sourceTree = "<group>"; };
-		7053D1B5D28863D7590BBC8E85047316 /* picture_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = picture_enc.c; path = src/enc/picture_enc.c; sourceTree = "<group>"; };
+		7053D1B5D28863D7590BBC8E85047316 /* picture_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = picture_enc.c; path = src/enc/picture_enc.c; sourceTree = "<group>"; };
 		70C2C87D68995E56751439EF02404A7E /* NSData+ImageContentType.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSData+ImageContentType.h"; path = "SDWebImage/Core/NSData+ImageContentType.h"; sourceTree = "<group>"; };
 		71ECF14FF0D7DE70B212F5FB3DD0F4DA /* TMPageViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TMPageViewController.swift; path = Source/TMPageViewController.swift; sourceTree = "<group>"; };
 		729A48FA825134C06755FB5F19354CD7 /* SDWebImageManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageManager.m; path = SDWebImage/Core/SDWebImageManager.m; sourceTree = "<group>"; };
@@ -1127,10 +1131,10 @@
 		73E3560CABC8C4E14E7DFF95759E5F11 /* ImageLoader-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ImageLoader-dummy.m"; sourceTree = "<group>"; };
 		7426D96554792717B4D18192CB830C57 /* KanvasCameraStrings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraStrings.swift; sourceTree = "<group>"; };
 		745F0B812D1A2EBACC6BADFBB906BC7F /* SharedUI-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SharedUI-dummy.m"; sourceTree = "<group>"; };
-		753DC105A446C390E2860AE4DA82EC27 /* yuv_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = yuv_neon.c; path = src/dsp/yuv_neon.c; sourceTree = "<group>"; };
+		753DC105A446C390E2860AE4DA82EC27 /* yuv_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = yuv_neon.c; path = src/dsp/yuv_neon.c; sourceTree = "<group>"; };
 		7553FB6FEBA378BD5FE5A4C8FAA6165A /* MediaPlayerController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaPlayerController.swift; sourceTree = "<group>"; };
 		756BDDD32BB2518BE01BE22626B46339 /* histogram_enc.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = histogram_enc.h; path = src/enc/histogram_enc.h; sourceTree = "<group>"; };
-		75BFF17E0CF94691ED1B24E9EAB53437 /* cost_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cost_mips_dsp_r2.c; path = src/dsp/cost_mips_dsp_r2.c; sourceTree = "<group>"; };
+		75BFF17E0CF94691ED1B24E9EAB53437 /* cost_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = cost_mips_dsp_r2.c; path = src/dsp/cost_mips_dsp_r2.c; sourceTree = "<group>"; };
 		761C64B59BF11A7BB666209EEA5D9F14 /* Utils.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Utils.debug.xcconfig; sourceTree = "<group>"; };
 		7624BC906DB07891FF18A1E31A6C8107 /* Array+Rotate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Array+Rotate.swift"; sourceTree = "<group>"; };
 		76A77C9ACC34511CC665A8D7EBCBB4B2 /* EditionMenuCollectionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionController.swift; sourceTree = "<group>"; };
@@ -1139,7 +1143,7 @@
 		77A11E6938025F5E55CFCFD3652FBCF0 /* ColorCollectionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorCollectionCell.swift; sourceTree = "<group>"; };
 		78510590A0B547A62001C9C1B54D7522 /* MainTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTextView.swift; sourceTree = "<group>"; };
 		79201DAD15852297EADB74541F8D2C75 /* DrawerTabBarOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawerTabBarOption.swift; sourceTree = "<group>"; };
-		7A21164C0612B9E7FDCA28216C46D0DC /* rescaler_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = rescaler_utils.c; path = src/utils/rescaler_utils.c; sourceTree = "<group>"; };
+		7A21164C0612B9E7FDCA28216C46D0DC /* rescaler_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = rescaler_utils.c; path = src/utils/rescaler_utils.c; sourceTree = "<group>"; };
 		7A2D951D5BE3000FDA623F0E853FF6C1 /* ViewTransformations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ViewTransformations.swift; sourceTree = "<group>"; };
 		7A53A5FDCF1D8E8C389E19F36E386F85 /* DrawerController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawerController.swift; sourceTree = "<group>"; };
 		7B2C495C50D7D70665E6F609953B8796 /* UIFont+PostFonts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+PostFonts.swift"; path = "Source/UIFont+PostFonts.swift"; sourceTree = "<group>"; };
@@ -1148,11 +1152,11 @@
 		7CAF677E7DFC78E8F8D5024E3C4EB43F /* CameraPermissionsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPermissionsViewController.swift; sourceTree = "<group>"; };
 		7DEDF469170F07EE6EF1EB3D1490CDC2 /* Pencil.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Pencil.swift; sourceTree = "<group>"; };
 		7E3EC6F0ABCA2B4CA4D483787468A8B2 /* CameraRecorder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraRecorder.swift; sourceTree = "<group>"; };
-		7E487752E0646B4311E94CECC62D53F9 /* vp8l_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = vp8l_enc.c; path = src/enc/vp8l_enc.c; sourceTree = "<group>"; };
+		7E487752E0646B4311E94CECC62D53F9 /* vp8l_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = vp8l_enc.c; path = src/enc/vp8l_enc.c; sourceTree = "<group>"; };
 		7E65EFD95CF92D8AA54581969936EEAB /* SDImageTransformer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageTransformer.h; path = SDWebImage/Core/SDImageTransformer.h; sourceTree = "<group>"; };
 		7EBC51AC343C31E22BD0C4C667A3FBF1 /* SDImageIOCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageIOCoder.h; path = SDWebImage/Core/SDImageIOCoder.h; sourceTree = "<group>"; };
 		7F2707755D8BA16283DAB7907AF1B0DF /* SDImageCachesManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCachesManager.h; path = SDWebImage/Core/SDImageCachesManager.h; sourceTree = "<group>"; };
-		7F97A76D905DB402F27038E9EF3FE5C7 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		7F97A76D905DB402F27038E9EF3FE5C7 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		802A2EEA02EC537294EA37E8E21B95B8 /* OptionsStackView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionsStackView.swift; sourceTree = "<group>"; };
 		80BFFF5E53AE0E29FB98FB0AF8E5A5FC /* ComposeNavigationBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ComposeNavigationBar.swift; path = Source/ComposeNavigationBar.swift; sourceTree = "<group>"; };
 		80F11358F841F5E7EFE604CCB8B9A939 /* FilterCollectionInnerCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterCollectionInnerCell.swift; sourceTree = "<group>"; };
@@ -1162,7 +1166,7 @@
 		81C2EEC177125354EEA3E9533C19B44F /* CameraOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraOption.swift; sourceTree = "<group>"; };
 		81D2E3DE6746F68304DE337C5F4BF361 /* SDImageWebPCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageWebPCoder.m; path = SDWebImageWebPCoder/Classes/SDImageWebPCoder.m; sourceTree = "<group>"; };
 		8220CDA2E2E9361268E048CDF62B7FE9 /* IgnoreBackgroundTouchesStackView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IgnoreBackgroundTouchesStackView.swift; sourceTree = "<group>"; };
-		8223D9AEE258C1A37A07A096111867A8 /* lossless_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_enc.c; path = src/dsp/lossless_enc.c; sourceTree = "<group>"; };
+		8223D9AEE258C1A37A07A096111867A8 /* lossless_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_enc.c; path = src/dsp/lossless_enc.c; sourceTree = "<group>"; };
 		829E211496EB547DCC4BD20FC68460BD /* Sticker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
 		82B79EDF5668E8B073D433F04AF90E0B /* MediaDrawerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaDrawerView.swift; sourceTree = "<group>"; };
 		82E3FD2FF7038CDB9AB02DAFB51FF4C8 /* UIImage+ForceDecode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+ForceDecode.h"; path = "SDWebImage/Core/UIImage+ForceDecode.h"; sourceTree = "<group>"; };
@@ -1183,15 +1187,15 @@
 		88AEB7BBDC45882E958D01E17B16A6EB /* UIButton+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIButton+WebCache.m"; path = "SDWebImage/Core/UIButton+WebCache.m"; sourceTree = "<group>"; };
 		88D722CB7FC43B63377F1C698EBDC179 /* FilterType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterType.swift; sourceTree = "<group>"; };
 		892659B2817C2DD8E79DF428D7C293D9 /* KanvasQuickBlogSelectorCoordinating.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasQuickBlogSelectorCoordinating.swift; sourceTree = "<group>"; };
-		8928CA9177260A46C894F8BF29FA9139 /* Utils.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Utils.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		8928CA9177260A46C894F8BF29FA9139 /* Utils.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Utils.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		895C02606C7BB0D987F567BC5F0074CC /* IndexPath+Order.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "IndexPath+Order.swift"; sourceTree = "<group>"; };
 		8A104DDF77C5F91D5BEDEF0345EA5EC7 /* SDWebImageWebPCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageWebPCoder.h; path = SDWebImageWebPCoder/Module/SDWebImageWebPCoder.h; sourceTree = "<group>"; };
-		8A228F963CC9F56777C747E06F648344 /* libTumblrTheme.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libTumblrTheme.a; path = libTumblrTheme.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A228F963CC9F56777C747E06F648344 /* libTumblrTheme.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTumblrTheme.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A8E2C6D943D074D7991EF94AC8DAF4B /* Filter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
-		8AAB7F6090F864F938FF97A9EC0F7A7B /* dec_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dec_mips_dsp_r2.c; path = src/dsp/dec_mips_dsp_r2.c; sourceTree = "<group>"; };
-		8BA1350A6430977A25E99B598CBE5010 /* buffer_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = buffer_dec.c; path = src/dec/buffer_dec.c; sourceTree = "<group>"; };
+		8AAB7F6090F864F938FF97A9EC0F7A7B /* dec_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = dec_mips_dsp_r2.c; path = src/dsp/dec_mips_dsp_r2.c; sourceTree = "<group>"; };
+		8BA1350A6430977A25E99B598CBE5010 /* buffer_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = buffer_dec.c; path = src/dec/buffer_dec.c; sourceTree = "<group>"; };
 		8BABD1BD657E44AAE2955E5F4DA7A2F1 /* MediaPickerButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaPickerButtonView.swift; sourceTree = "<group>"; };
-		8BED1850464650F4364EC700501AB818 /* quant_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = quant_enc.c; path = src/enc/quant_enc.c; sourceTree = "<group>"; };
+		8BED1850464650F4364EC700501AB818 /* quant_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = quant_enc.c; path = src/enc/quant_enc.c; sourceTree = "<group>"; };
 		8C42D89DC50F9DCFE1700DEF6DFD2DA9 /* libwebp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = libwebp.modulemap; sourceTree = "<group>"; };
 		8CF4A9684AC8F9606E770BF5DE779BEC /* CameraController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		8DEEFAEFC8DD3D28C4C5B30B1401ADA3 /* SDWebImageManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageManager.h; path = SDWebImage/Core/SDWebImageManager.h; sourceTree = "<group>"; };
@@ -1199,7 +1203,7 @@
 		8F5C1075B9AD3228C468FD2EB1D27700 /* NSData+ImageContentType.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSData+ImageContentType.m"; path = "SDWebImage/Core/NSData+ImageContentType.m"; sourceTree = "<group>"; };
 		901DEEC19CCCA62A2E51F471DAF6877D /* SDImageCoderHelper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCoderHelper.h; path = SDWebImage/Core/SDImageCoderHelper.h; sourceTree = "<group>"; };
 		90AC54EE6C87FCF8E16BBC6E9E386B2F /* StylableTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StylableTextView.swift; sourceTree = "<group>"; };
-		911985EF8D4354160564A03AD795AD21 /* ssim.c */ = {isa = PBXFileReference; includeInIndex = 1; name = ssim.c; path = src/dsp/ssim.c; sourceTree = "<group>"; };
+		911985EF8D4354160564A03AD795AD21 /* ssim.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = ssim.c; path = src/dsp/ssim.c; sourceTree = "<group>"; };
 		9124A3D3B2591A4D508506DDEEFDF217 /* EditorTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
 		919960E867F9FB28B2BD0422931889F9 /* ShootButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShootButtonView.swift; sourceTree = "<group>"; };
 		925DE5223E631DA8F064C8C8293594A2 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
@@ -1209,54 +1213,54 @@
 		94417A77A830ED27FC2A7F19E0DABB9B /* CameraPreviewViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPreviewViewController.swift; sourceTree = "<group>"; };
 		945327AB5A1722D63CDCEA632A5AA1ED /* CancelationToken.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CancelationToken.swift; path = Classes/CancelationToken.swift; sourceTree = "<group>"; };
 		94C6DC1C36AD5156988C1011F90D43A2 /* SDAnimatedImageView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDAnimatedImageView.h; path = SDWebImage/Core/SDAnimatedImageView.h; sourceTree = "<group>"; };
-		95636A787B3FD666C4CE3EB0C33E6FC3 /* lossless_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_msa.c; path = src/dsp/lossless_msa.c; sourceTree = "<group>"; };
-		95C9AA1F7C4334AC2BC62C10DEDBA5EF /* cost_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cost_neon.c; path = src/dsp/cost_neon.c; sourceTree = "<group>"; };
+		95636A787B3FD666C4CE3EB0C33E6FC3 /* lossless_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_msa.c; path = src/dsp/lossless_msa.c; sourceTree = "<group>"; };
+		95C9AA1F7C4334AC2BC62C10DEDBA5EF /* cost_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = cost_neon.c; path = src/dsp/cost_neon.c; sourceTree = "<group>"; };
 		95D1F79085A359156532D723AA2E3B53 /* UIColor+SDHexString.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+SDHexString.h"; path = "SDWebImage/Private/UIColor+SDHexString.h"; sourceTree = "<group>"; };
 		960E67F9991197717CC7DB78597C8169 /* SDWebImageCacheSerializer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCacheSerializer.m; path = SDWebImage/Core/SDWebImageCacheSerializer.m; sourceTree = "<group>"; };
 		96450FA1FE1E8EAE5C903DB409160C47 /* mux_types.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = mux_types.h; path = src/webp/mux_types.h; sourceTree = "<group>"; };
 		96D6FC4E57EC6424E288D69B959C95A5 /* SDWebImageIndicator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageIndicator.h; path = SDWebImage/Core/SDWebImageIndicator.h; sourceTree = "<group>"; };
 		97629972917100A720663B1768536BD3 /* SDWebImageDownloaderDecryptor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloaderDecryptor.h; path = SDWebImage/Core/SDWebImageDownloaderDecryptor.h; sourceTree = "<group>"; };
 		97BB7C24F11AA0BD8C8202D62B6FA227 /* SDWebImageDefine.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDefine.m; path = SDWebImage/Core/SDWebImageDefine.m; sourceTree = "<group>"; };
-		9831168340B63F19B1956AF98D1535F7 /* libKanvasCamera.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libKanvasCamera.a; path = libKanvasCamera.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9831168340B63F19B1956AF98D1535F7 /* libKanvasCamera.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKanvasCamera.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		983C87F7CFB7ACA87AB846C3C9F30486 /* quant.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = quant.h; path = src/dsp/quant.h; sourceTree = "<group>"; };
 		984B0B1D21B91E63D3431B5CB627E242 /* FBSnapshotTestCase-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FBSnapshotTestCase-dummy.m"; sourceTree = "<group>"; };
 		9896D0D8B01DE7A6D981D902CA643BCA /* CameraInputControllerDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputControllerDelegate.swift; sourceTree = "<group>"; };
 		9A4E349C2A0AA090CEC340159D6CEF73 /* FBSnapshotTestCasePlatform.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSnapshotTestCasePlatform.m; path = FBSnapshotTestCase/FBSnapshotTestCasePlatform.m; sourceTree = "<group>"; };
 		9A76F860C49D7DE49F1717BEA61D3206 /* FilterSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterSettingsView.swift; sourceTree = "<group>"; };
 		9B517E6A0870BABE91142F564727845B /* FBSnapshotTestCase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FBSnapshotTestCase.release.xcconfig; sourceTree = "<group>"; };
-		9BB34B96A87A5B5940F749D9DD8C1895 /* picture_rescale_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = picture_rescale_enc.c; path = src/enc/picture_rescale_enc.c; sourceTree = "<group>"; };
+		9BB34B96A87A5B5940F749D9DD8C1895 /* picture_rescale_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = picture_rescale_enc.c; path = src/enc/picture_rescale_enc.c; sourceTree = "<group>"; };
 		9BF9E6FBC53FB7E47E40F849F346655C /* utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = utils.h; path = src/utils/utils.h; sourceTree = "<group>"; };
 		9C9E8C942AEE2C207C70425B9CE240CA /* UIView+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCache.h"; path = "SDWebImage/Core/UIView+WebCache.h"; sourceTree = "<group>"; };
 		9CC5720018013172E73306FD7677914C /* ImageLoaderURLSessionMetricsDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageLoaderURLSessionMetricsDelegate.swift; path = Classes/ImageLoaderURLSessionMetricsDelegate.swift; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9E70F0FC1E23624A9784FF7DFB43C2DF /* FilterSettingsController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterSettingsController.swift; sourceTree = "<group>"; };
 		9ECFCA2593A08DC33F2D3030ABE98BDA /* SDGraphicsImageRenderer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDGraphicsImageRenderer.h; path = SDWebImage/Core/SDGraphicsImageRenderer.h; sourceTree = "<group>"; };
 		9EDCB14F250B9538F680ECDEDCDD67E1 /* SDImageTransformer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageTransformer.m; path = SDWebImage/Core/SDImageTransformer.m; sourceTree = "<group>"; };
 		9F116F6EB852167F113A775CD96B4B9C /* SDAnimatedImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDAnimatedImage.m; path = SDWebImage/Core/SDAnimatedImage.m; sourceTree = "<group>"; };
-		A0243489F351AED614672FC8DEBD9BBD /* thread_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = thread_utils.c; path = src/utils/thread_utils.c; sourceTree = "<group>"; };
+		A0243489F351AED614672FC8DEBD9BBD /* thread_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = thread_utils.c; path = src/utils/thread_utils.c; sourceTree = "<group>"; };
 		A0DCB2B7E590420C9922F680B8902DCF /* SDImageCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCache.h; path = SDWebImage/Core/SDImageCache.h; sourceTree = "<group>"; };
 		A13EC794C186D728AAA202FDAEADCA87 /* Reachability-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Reachability-prefix.pch"; sourceTree = "<group>"; };
 		A1709D534C16886D7C06E3A6D14696F2 /* SDAnimatedImagePlayer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDAnimatedImagePlayer.h; path = SDWebImage/Core/SDAnimatedImagePlayer.h; sourceTree = "<group>"; };
-		A1EC882BBB21C4E8960829E90C74B633 /* cost_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cost_enc.c; path = src/enc/cost_enc.c; sourceTree = "<group>"; };
+		A1EC882BBB21C4E8960829E90C74B633 /* cost_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = cost_enc.c; path = src/enc/cost_enc.c; sourceTree = "<group>"; };
 		A299189110A75081C395013255EA3C2A /* SDImageCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageCoder.m; path = SDWebImage/Core/SDImageCoder.m; sourceTree = "<group>"; };
 		A29F7A670B6A8B37EF8F7049CCD007B8 /* StickerProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerProvider.swift; sourceTree = "<group>"; };
 		A333E8B5A74B1EC4F66E2E7945AC8AB2 /* UIColor+SharedColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIColor+SharedColors.swift"; path = "Source/UIColor+SharedColors.swift"; sourceTree = "<group>"; };
-		A35DF3B06B70BD04936AEB939C303373 /* enc_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; name = enc_sse41.c; path = src/dsp/enc_sse41.c; sourceTree = "<group>"; };
+		A35DF3B06B70BD04936AEB939C303373 /* enc_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = enc_sse41.c; path = src/dsp/enc_sse41.c; sourceTree = "<group>"; };
 		A3AD68A6E3AC1DFDBCD173CCA7EE713E /* UIImage+Effects.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImage+Effects.swift"; path = "Classes/UIImage+Effects.swift"; sourceTree = "<group>"; };
 		A3CA67516DD1EB1B6A8E7CC46FF97B55 /* ConicalGradientLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayer.swift; sourceTree = "<group>"; };
-		A452686A95DD9CF8AAE1F09F43EF1E60 /* near_lossless_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = near_lossless_enc.c; path = src/enc/near_lossless_enc.c; sourceTree = "<group>"; };
-		A487E0CD825D8CCA727D36A85FAD1431 /* libImageLoader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libImageLoader.a; path = libImageLoader.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A452686A95DD9CF8AAE1F09F43EF1E60 /* near_lossless_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = near_lossless_enc.c; path = src/enc/near_lossless_enc.c; sourceTree = "<group>"; };
+		A487E0CD825D8CCA727D36A85FAD1431 /* libImageLoader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libImageLoader.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A2D8A1186538674845B274D8DBFE22 /* ClosedRange+Clamp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "ClosedRange+Clamp.swift"; sourceTree = "<group>"; };
 		A4C72A689D5AF8ED5331CA65CC4D1741 /* Pods-KanvasCameraExampleTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasCameraExampleTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		A573ED1BAAC5EEC68D6AFA48BD54C79D /* Pods-KanvasCameraExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-KanvasCameraExample.release.xcconfig"; sourceTree = "<group>"; };
 		A59F01B68CF9150FB9A497071EE8C72D /* SDImageGIFCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageGIFCoder.h; path = SDWebImage/Core/SDImageGIFCoder.h; sourceTree = "<group>"; };
 		A61D7356D9D991EC21C46ED65CFD599E /* SDWebImageDownloaderConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloaderConfig.m; path = SDWebImage/Core/SDWebImageDownloaderConfig.m; sourceTree = "<group>"; };
 		A67B63D0929CD51286464B99803FB459 /* StrokeSelectorController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StrokeSelectorController.swift; sourceTree = "<group>"; };
-		A6CA40F45D4FCCC4238C1380C1D35694 /* lossless_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_neon.c; path = src/dsp/lossless_neon.c; sourceTree = "<group>"; };
+		A6CA40F45D4FCCC4238C1380C1D35694 /* lossless_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_neon.c; path = src/dsp/lossless_neon.c; sourceTree = "<group>"; };
 		A7603CEAC4AACE4D5DFCE0990B6BC2DB /* ModeSelectorAndShootController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeSelectorAndShootController.swift; sourceTree = "<group>"; };
 		A7A5C4C4D00E8A65A59DEE34E2F17D5E /* format_constants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = format_constants.h; path = src/webp/format_constants.h; sourceTree = "<group>"; };
 		A874978AF6AC76E1AE1AFD291B6334E9 /* DimensionsHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DimensionsHelper.swift; sourceTree = "<group>"; };
-		A8FA529CFDB0679A31CB7DD328BCB215 /* dec_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dec_sse41.c; path = src/dsp/dec_sse41.c; sourceTree = "<group>"; };
+		A8FA529CFDB0679A31CB7DD328BCB215 /* dec_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = dec_sse41.c; path = src/dsp/dec_sse41.c; sourceTree = "<group>"; };
 		A96EDFD5658679AEFF7962C7A2843A34 /* TextureSelectorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextureSelectorView.swift; sourceTree = "<group>"; };
 		AA26573581E3BC75A9B280965ED24AE0 /* SDWebImageError.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageError.m; path = SDWebImage/Core/SDWebImageError.m; sourceTree = "<group>"; };
 		AA639B951CF412BAC1EBFC8CAA275140 /* Utils-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Utils-umbrella.h"; sourceTree = "<group>"; };
@@ -1273,18 +1277,18 @@
 		AF896914B2C165199C4E7FBAE361F764 /* SDAsyncBlockOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDAsyncBlockOperation.m; path = SDWebImage/Private/SDAsyncBlockOperation.m; sourceTree = "<group>"; };
 		AFB3C30D02C32A44ED9F27AE3607F12C /* ToastPresentationStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToastPresentationStyle.swift; path = Source/ToastPresentationStyle.swift; sourceTree = "<group>"; };
 		B01EE05B0D9DDAAF48F85B61C6F55576 /* TagsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsView.swift; sourceTree = "<group>"; };
-		B0B214D775196BA7CA8E17E53048A493 /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libSDWebImage.a; path = libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0B214D775196BA7CA8E17E53048A493 /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10A9BE39F1FE322F8AC6C5ACB98720D /* HorizontalCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HorizontalCollectionView.swift; sourceTree = "<group>"; };
 		B11510771FA1E7D097C0F0ACC7E4D5ED /* yuv.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = yuv.h; path = src/dsp/yuv.h; sourceTree = "<group>"; };
 		B14690770BA4D7DBE999C3527917243D /* UIImage+WebP.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+WebP.h"; path = "SDWebImageWebPCoder/Classes/UIImage+WebP.h"; sourceTree = "<group>"; };
 		B29A2ACA7E2F6BE40E0000BA1A497CB8 /* Utils-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Utils-prefix.pch"; sourceTree = "<group>"; };
-		B321C73955714AFB57F9DB8F1090071D /* libUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libUtils.a; path = libUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B321C73955714AFB57F9DB8F1090071D /* libUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B33F4872F4B5AF22ECB55212C04C0214 /* MediaClipsEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaClipsEditorView.swift; sourceTree = "<group>"; };
 		B3CF84624A6CD466163FBBB3524CAC04 /* NSButton+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSButton+WebCache.m"; path = "SDWebImage/Core/NSButton+WebCache.m"; sourceTree = "<group>"; };
 		B4227AD9AB326D2CB667687C2B1FC164 /* PostOptionsTagsDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PostOptionsTagsDelegate.swift; sourceTree = "<group>"; };
 		B46ADDBB498F5EF6CE6630F1842F0C58 /* PhotoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoOutputHandler.swift; sourceTree = "<group>"; };
 		B622D5D2C8F4D98CDEBBCA0AB5494DAF /* SDImageIOAnimatedCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageIOAnimatedCoder.m; path = SDWebImage/Core/SDImageIOAnimatedCoder.m; sourceTree = "<group>"; };
-		B70F2FC8E25D5CFE44D45DFEB4632D73 /* filters_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; name = filters_msa.c; path = src/dsp/filters_msa.c; sourceTree = "<group>"; };
+		B70F2FC8E25D5CFE44D45DFEB4632D73 /* filters_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = filters_msa.c; path = src/dsp/filters_msa.c; sourceTree = "<group>"; };
 		B719A4A6D90A9BCE602B1C6EB5CE5C0E /* TextOptions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextOptions.swift; sourceTree = "<group>"; };
 		B73BCB6CD0B725845C5418B7BB8CD7BE /* TagsViewTagCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsViewTagCell.swift; sourceTree = "<group>"; };
 		B750B36A1C4A17CBA8F07910FCBDB242 /* UIFont+ComposeFonts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+ComposeFonts.swift"; path = "Source/UIFont+ComposeFonts.swift"; sourceTree = "<group>"; };
@@ -1295,11 +1299,11 @@
 		B9DF1630A4FE8F7B68B2E7EA293BCADF /* SDImageLoadersManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageLoadersManager.h; path = SDWebImage/Core/SDImageLoadersManager.h; sourceTree = "<group>"; };
 		BA3CB5D05203030EB862795145A35281 /* SDWebImageCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCompat.h; path = SDWebImage/Core/SDWebImageCompat.h; sourceTree = "<group>"; };
 		BA3FCC9E1DD83721516B845F8A26E26C /* SDWebImageDefine.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDefine.h; path = SDWebImage/Core/SDWebImageDefine.h; sourceTree = "<group>"; };
-		BAE5B311A6511E14F3FBB809778720D5 /* dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dec.c; path = src/dsp/dec.c; sourceTree = "<group>"; };
+		BAE5B311A6511E14F3FBB809778720D5 /* dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = dec.c; path = src/dsp/dec.c; sourceTree = "<group>"; };
 		BB3C1B54A314EE1F48A94B9F81A340E1 /* PostOptionsConstants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PostOptionsConstants.swift; sourceTree = "<group>"; };
-		BB4682DC8AFA5622F700184B4B68C189 /* alpha_processing_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = alpha_processing_neon.c; path = src/dsp/alpha_processing_neon.c; sourceTree = "<group>"; };
-		BB4868028CA72968142CB39675B700F6 /* enc_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = enc_neon.c; path = src/dsp/enc_neon.c; sourceTree = "<group>"; };
-		BC96AA2861D6562E1193DC930CF12F56 /* yuv_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = yuv_sse2.c; path = src/dsp/yuv_sse2.c; sourceTree = "<group>"; };
+		BB4682DC8AFA5622F700184B4B68C189 /* alpha_processing_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = alpha_processing_neon.c; path = src/dsp/alpha_processing_neon.c; sourceTree = "<group>"; };
+		BB4868028CA72968142CB39675B700F6 /* enc_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = enc_neon.c; path = src/dsp/enc_neon.c; sourceTree = "<group>"; };
+		BC96AA2861D6562E1193DC930CF12F56 /* yuv_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = yuv_sse2.c; path = src/dsp/yuv_sse2.c; sourceTree = "<group>"; };
 		BCC23B60DBCAC5AC296A62FD1D049DCD /* Pods-KanvasCameraExample.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-KanvasCameraExample.modulemap"; sourceTree = "<group>"; };
 		BD0B28CF433371E948581725AFADDEF1 /* FilteredInputViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilteredInputViewController.swift; sourceTree = "<group>"; };
 		BD8C0194F0929D5009B1D043CA55E168 /* Dictionary+Copy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Dictionary+Copy.swift"; path = "Source/Dictionary+Copy.swift"; sourceTree = "<group>"; };
@@ -1307,42 +1311,42 @@
 		BE41C8E83BC91C2A4B2C0ACFDC092716 /* SDInternalMacros.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDInternalMacros.m; path = SDWebImage/Private/SDInternalMacros.m; sourceTree = "<group>"; };
 		BE52BA40544CBAD0A476E93653677A2C /* Reachability.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		BE90C716E81D10696458D60DDA1EB437 /* SliderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
-		BEDDFD91A7F75931BCA242C1B9BC75A6 /* webp_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = webp_enc.c; path = src/enc/webp_enc.c; sourceTree = "<group>"; };
+		BEDDFD91A7F75931BCA242C1B9BC75A6 /* webp_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = webp_enc.c; path = src/enc/webp_enc.c; sourceTree = "<group>"; };
 		BFC144A03ECB6FA4586B6644643EBB58 /* Pods-KanvasCameraExampleTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-KanvasCameraExampleTests-umbrella.h"; sourceTree = "<group>"; };
 		C03A5EDA3CA59C77C62F18180595E627 /* webpi_dec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = webpi_dec.h; path = src/dec/webpi_dec.h; sourceTree = "<group>"; };
 		C1CCB376A4D466E5D1799535EB952B31 /* UIColor+Adaptive.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIColor+Adaptive.swift"; path = "Source/UIColor+Adaptive.swift"; sourceTree = "<group>"; };
-		C24287D8482BB16718DEADCF22D66AD1 /* silence.aac */ = {isa = PBXFileReference; includeInIndex = 1; name = silence.aac; path = Resources/silence.aac; sourceTree = "<group>"; };
+		C24287D8482BB16718DEADCF22D66AD1 /* silence.aac */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; name = silence.aac; path = Resources/silence.aac; sourceTree = "<group>"; };
 		C29AA7B5AD5284F50CB652AE20F2A0B0 /* ResourceBundle-KanvasCamera-KanvasCamera-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ResourceBundle-KanvasCamera-KanvasCamera-Info.plist"; sourceTree = "<group>"; };
 		C337EFDB55E597D83E95CEAF8959390B /* KanvasCamera.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = KanvasCamera.modulemap; sourceTree = "<group>"; };
-		C37687947B1A6DB79BC8231425CE8D1A /* lossless_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_mips_dsp_r2.c; path = src/dsp/lossless_mips_dsp_r2.c; sourceTree = "<group>"; };
-		C38081118E5D736FF565BC7BFBCF53ED /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
+		C37687947B1A6DB79BC8231425CE8D1A /* lossless_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_mips_dsp_r2.c; path = src/dsp/lossless_mips_dsp_r2.c; sourceTree = "<group>"; };
+		C38081118E5D736FF565BC7BFBCF53ED /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
 		C3E6563592ADD0B0ACE181CC0F62E50D /* SDInternalMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDInternalMacros.h; path = SDWebImage/Private/SDInternalMacros.h; sourceTree = "<group>"; };
 		C3EAEDBA0F2C2A38D7CC36BAF437BA67 /* SDWebImageWebPCoder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SDWebImageWebPCoder.debug.xcconfig; sourceTree = "<group>"; };
 		C4172FE205B46728E04DA5594077EB1A /* HashCodeBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HashCodeBuilder.swift; path = Source/HashCodeBuilder.swift; sourceTree = "<group>"; };
 		C42CA9EF7C3A39CDCB3000E56A025DFC /* MockImageLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MockImageLoader.swift; path = Classes/MockImageLoader.swift; sourceTree = "<group>"; };
 		C44E6DC68D10B15D20C874254E02C895 /* NSBezierPath+SDRoundedCorners.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSBezierPath+SDRoundedCorners.h"; path = "SDWebImage/Private/NSBezierPath+SDRoundedCorners.h"; sourceTree = "<group>"; };
-		C472695D06ADFCDCBBE7DE8D6F3C603D /* cost.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cost.c; path = src/dsp/cost.c; sourceTree = "<group>"; };
+		C472695D06ADFCDCBBE7DE8D6F3C603D /* cost.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = cost.c; path = src/dsp/cost.c; sourceTree = "<group>"; };
 		C496F8F15089F73286F58D85ABDE963C /* SDWebImage.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SDWebImage.release.xcconfig; sourceTree = "<group>"; };
 		C4D46806EBAE597AC5996B274337F186 /* StickerTypeCollectionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerTypeCollectionCell.swift; sourceTree = "<group>"; };
 		C4EF8C26B472961B9EF6B1AC60A1AC2B /* ExtendedButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtendedButton.swift; sourceTree = "<group>"; };
-		C4F42F4CB487923A5BE629388BC918BE /* picture_psnr_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = picture_psnr_enc.c; path = src/enc/picture_psnr_enc.c; sourceTree = "<group>"; };
+		C4F42F4CB487923A5BE629388BC918BE /* picture_psnr_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = picture_psnr_enc.c; path = src/enc/picture_psnr_enc.c; sourceTree = "<group>"; };
 		C516D4EF141EF7DFF1F668412DDC72B0 /* Array+Safety.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Array+Safety.swift"; path = "Source/Array+Safety.swift"; sourceTree = "<group>"; };
 		C555995986D200DE7D24A638E97BE49A /* UIUpdate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UIUpdate.swift; sourceTree = "<group>"; };
 		C56223D4CE22AC8824C983F780E832CF /* Synchronized.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
 		C5A261F37CF53A8010CCA0C2EB017147 /* UIImage+MultiFormat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+MultiFormat.h"; path = "SDWebImage/Core/UIImage+MultiFormat.h"; sourceTree = "<group>"; };
-		C61B54FA3C5663DF49DBF53A3C56C2A6 /* dec_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dec_sse2.c; path = src/dsp/dec_sse2.c; sourceTree = "<group>"; };
+		C61B54FA3C5663DF49DBF53A3C56C2A6 /* dec_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = dec_sse2.c; path = src/dsp/dec_sse2.c; sourceTree = "<group>"; };
 		C650E2FAA04537FDBF1C5A90C219AB4B /* CameraSettings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
 		C654CF1963A9E4D7DF95C2AF363A7CB9 /* StatusBarStyleDefining.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StatusBarStyleDefining.swift; path = Source/StatusBarStyleDefining.swift; sourceTree = "<group>"; };
-		C6A26C72E1CB1559EE221506E7581198 /* lossless_enc_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_enc_sse2.c; path = src/dsp/lossless_enc_sse2.c; sourceTree = "<group>"; };
+		C6A26C72E1CB1559EE221506E7581198 /* lossless_enc_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_enc_sse2.c; path = src/dsp/lossless_enc_sse2.c; sourceTree = "<group>"; };
 		C6DA57700D9CA9C1BB32CAE5D6AB43E5 /* CALayer+CGImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CALayer+CGImage.swift"; sourceTree = "<group>"; };
 		C6F6466732D62D9047DB394F869DE6B5 /* FBSnapshotTestCase.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = FBSnapshotTestCase.modulemap; sourceTree = "<group>"; };
 		C6FB198160A93FA4F39675521E46462A /* CALayer+Color.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CALayer+Color.swift"; sourceTree = "<group>"; };
-		C7CD558B7C6E82406A23D31995CA5B41 /* OpenGLShaders */ = {isa = PBXFileReference; includeInIndex = 1; name = OpenGLShaders; path = Resources/OpenGLShaders; sourceTree = "<group>"; };
+		C7CD558B7C6E82406A23D31995CA5B41 /* OpenGLShaders */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = OpenGLShaders; path = Resources/OpenGLShaders; sourceTree = "<group>"; };
 		C869EC08FB845761CB3734B6226A9D9B /* ColorSelectorController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorSelectorController.swift; sourceTree = "<group>"; };
 		C91B86F15788B806B7802B5473D7ADFC /* SDImageLoader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageLoader.m; path = SDWebImage/Core/SDImageLoader.m; sourceTree = "<group>"; };
 		C95F037EBFCEA99332D3B0B3931637E6 /* Pods-KanvasCameraExample-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-KanvasCameraExample-resources.sh"; sourceTree = "<group>"; };
 		CA0D3B6857415715D88937D71471C226 /* UIApplication+StrictKeyWindow.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIApplication+StrictKeyWindow.m"; path = "FBSnapshotTestCase/Categories/UIApplication+StrictKeyWindow.m"; sourceTree = "<group>"; };
-		CA867DF895243C36DF9DDC2D7372EBAF /* dec_clip_tables.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dec_clip_tables.c; path = src/dsp/dec_clip_tables.c; sourceTree = "<group>"; };
+		CA867DF895243C36DF9DDC2D7372EBAF /* dec_clip_tables.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = dec_clip_tables.c; path = src/dsp/dec_clip_tables.c; sourceTree = "<group>"; };
 		CADD8E1505F33DAFD46FD238D597E3B9 /* EditionMenuCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionView.swift; sourceTree = "<group>"; };
 		CAF8B8EC8EB5A5DCFA83F6C329B1F618 /* FilterProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FilterProtocol.swift; sourceTree = "<group>"; };
 		CB27E689EB479D2A64F7BFCF20CF5C91 /* SDDeviceHelper.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDDeviceHelper.m; path = SDWebImage/Private/SDDeviceHelper.m; sourceTree = "<group>"; };
@@ -1351,10 +1355,10 @@
 		CC84FB1AF659A281CBD4EDEB7DE7C6B3 /* MangaFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MangaFilter.swift; sourceTree = "<group>"; };
 		CCB7E96567C293A70C66BC754CECC9B7 /* AvatarClearingHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvatarClearingHelper.swift; path = Classes/AvatarClearingHelper.swift; sourceTree = "<group>"; };
 		CCF40ADA1950F33AB1718D0C8F78BA5E /* PlasmaFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlasmaFilter.swift; sourceTree = "<group>"; };
-		CD0AA837CFA7A5E03211B3A0E7F74DE8 /* huffman_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = huffman_utils.c; path = src/utils/huffman_utils.c; sourceTree = "<group>"; };
-		CD438F479D0A6179C74CE7AB05F70A37 /* config_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = config_enc.c; path = src/enc/config_enc.c; sourceTree = "<group>"; };
+		CD0AA837CFA7A5E03211B3A0E7F74DE8 /* huffman_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = huffman_utils.c; path = src/utils/huffman_utils.c; sourceTree = "<group>"; };
+		CD438F479D0A6179C74CE7AB05F70A37 /* config_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = config_enc.c; path = src/enc/config_enc.c; sourceTree = "<group>"; };
 		CD89412B820919BA9368AF2D004A1D60 /* UIImage+MemoryCacheCost.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MemoryCacheCost.m"; path = "SDWebImage/Core/UIImage+MemoryCacheCost.m"; sourceTree = "<group>"; };
-		CDCBF642CC00B3075D16FD8AF21AFBBF /* alpha_processing_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = alpha_processing_mips_dsp_r2.c; path = src/dsp/alpha_processing_mips_dsp_r2.c; sourceTree = "<group>"; };
+		CDCBF642CC00B3075D16FD8AF21AFBBF /* alpha_processing_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = alpha_processing_mips_dsp_r2.c; path = src/dsp/alpha_processing_mips_dsp_r2.c; sourceTree = "<group>"; };
 		CDEE2EF27BDF97AD4AA2386E61BD9863 /* Array+Convenience.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Array+Convenience.swift"; path = "Source/Array+Convenience.swift"; sourceTree = "<group>"; };
 		CEEEBF9EA00108093D26593E0BA3A348 /* FBSnapshotTestCase-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FBSnapshotTestCase-umbrella.h"; sourceTree = "<group>"; };
 		CF4BDE7288832FCEB068A8D3FA41192F /* ColorSelectorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorSelectorView.swift; sourceTree = "<group>"; };
@@ -1366,20 +1370,20 @@
 		D0A7D1A9CB847356C7121DC3EE330CB4 /* FBSnapshotTestCase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FBSnapshotTestCase.debug.xcconfig; sourceTree = "<group>"; };
 		D0D9FFBCBB5515B43E8495FFC1D99321 /* vp8li_dec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = vp8li_dec.h; path = src/dec/vp8li_dec.h; sourceTree = "<group>"; };
 		D1740D6FCCBDE43BF580931D4CB7435F /* UIFont+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Utils.swift"; sourceTree = "<group>"; };
-		D1C7F24DC12DA2649125906F7F05095F /* muxread.c */ = {isa = PBXFileReference; includeInIndex = 1; name = muxread.c; path = src/mux/muxread.c; sourceTree = "<group>"; };
+		D1C7F24DC12DA2649125906F7F05095F /* muxread.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = muxread.c; path = src/mux/muxread.c; sourceTree = "<group>"; };
 		D1F996C445A564F4EC8DF6823266298B /* Device.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		D271408FE4C0D6C22C096C960ACE6C82 /* NSButton+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSButton+WebCache.h"; path = "SDWebImage/Core/NSButton+WebCache.h"; sourceTree = "<group>"; };
-		D2EA18211B7B9FC26E5845C69D1FADC8 /* alpha_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = alpha_enc.c; path = src/enc/alpha_enc.c; sourceTree = "<group>"; };
+		D2EA18211B7B9FC26E5845C69D1FADC8 /* alpha_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = alpha_enc.c; path = src/enc/alpha_enc.c; sourceTree = "<group>"; };
 		D30234201F9DA8D6FB0B5DAC59508AAA /* DrawingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
 		D310F67A1C73366D31000E43960E7BAA /* Reachability.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		D3BCC1232CE410CAB68F144C0C45030E /* cost_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cost_sse2.c; path = src/dsp/cost_sse2.c; sourceTree = "<group>"; };
+		D3BCC1232CE410CAB68F144C0C45030E /* cost_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = cost_sse2.c; path = src/dsp/cost_sse2.c; sourceTree = "<group>"; };
 		D3E364FC0AC0CCE0AA40C8F4B8AF98EF /* CALayer+Shadows.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CALayer+Shadows.swift"; sourceTree = "<group>"; };
 		D40E40FD891530C87E2DBA3C9CDE7334 /* UIFont+TumblrTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIFont+TumblrTheme.swift"; path = "Source/UIFont+TumblrTheme.swift"; sourceTree = "<group>"; };
 		D40FF65E625420BD595FAD056D9A1E4C /* SDWebImageDownloaderRequestModifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageDownloaderRequestModifier.m; path = SDWebImage/Core/SDWebImageDownloaderRequestModifier.m; sourceTree = "<group>"; };
 		D415B6D7E7DA8ECEF3A497507D4EAD46 /* UIImage+SharedUIAssets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImage+SharedUIAssets.swift"; path = "Source/UIImage+SharedUIAssets.swift"; sourceTree = "<group>"; };
 		D44C5EDCBCC74B662AB03DCD21A35A1B /* decode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = decode.h; path = src/webp/decode.h; sourceTree = "<group>"; };
 		D48D4CE33DE5C1779458542AA94243D8 /* NSURL+Media.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSURL+Media.swift"; sourceTree = "<group>"; };
-		D59154F927C4C24738ACDC734BAE1D9F /* analysis_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = analysis_enc.c; path = src/enc/analysis_enc.c; sourceTree = "<group>"; };
+		D59154F927C4C24738ACDC734BAE1D9F /* analysis_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = analysis_enc.c; path = src/enc/analysis_enc.c; sourceTree = "<group>"; };
 		D5BDC03E173DB2CB10497AC687B0EF23 /* SDWebImagePrefetcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImagePrefetcher.h; path = SDWebImage/Core/SDWebImagePrefetcher.h; sourceTree = "<group>"; };
 		D5D37201B66208725A0B7E21C2A2655F /* bit_reader_inl_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = bit_reader_inl_utils.h; path = src/utils/bit_reader_inl_utils.h; sourceTree = "<group>"; };
 		D64D94EE263A6F7919C58E6494D07DB1 /* SharedUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SharedUI.release.xcconfig; sourceTree = "<group>"; };
@@ -1392,7 +1396,7 @@
 		D8ACC2347B66E522A5E8F812C745C01F /* SDWebImageDownloader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloader.h; path = SDWebImage/Core/SDWebImageDownloader.h; sourceTree = "<group>"; };
 		D8BCEB1E4B65A9D488A4ABAC8B45B6B3 /* UIImage+Camera.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Camera.swift"; sourceTree = "<group>"; };
 		DA060B79909CDD2B92B794C568F5FB6D /* UIView+Image.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Image.swift"; sourceTree = "<group>"; };
-		DA240AC50622BB3186DECDC0290D521E /* SharedUI.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = SharedUI.bundle; path = "SharedUI-SharedUI.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA240AC50622BB3186DECDC0290D521E /* SharedUI.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharedUI.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA78C24577A8DB78EAF751B956024BBA /* SDImageHEICCoderInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageHEICCoderInternal.h; path = SDWebImage/Private/SDImageHEICCoderInternal.h; sourceTree = "<group>"; };
 		DAB2FF842523B31491F4BFC8699A2E76 /* ModeButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ModeButtonView.swift; sourceTree = "<group>"; };
 		DAE33608C4285497C7B00B37E99A0C96 /* SDImageIOAnimatedCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageIOAnimatedCoder.h; path = SDWebImage/Core/SDImageIOAnimatedCoder.h; sourceTree = "<group>"; };
@@ -1402,26 +1406,26 @@
 		DD17311B291F557A4C7DD378E60B2BCB /* SDImageCacheDefine.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageCacheDefine.m; path = SDWebImage/Core/SDImageCacheDefine.m; sourceTree = "<group>"; };
 		DD479C85261827558E8142DA224911FA /* filters_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = filters_utils.h; path = src/utils/filters_utils.h; sourceTree = "<group>"; };
 		DD988128F2BBFA11A53AD61523E09575 /* SDImageAssetManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageAssetManager.h; path = SDWebImage/Private/SDImageAssetManager.h; sourceTree = "<group>"; };
-		DE5881ECE5DB0461060A2737A5E4494D /* anim_decode.c */ = {isa = PBXFileReference; includeInIndex = 1; name = anim_decode.c; path = src/demux/anim_decode.c; sourceTree = "<group>"; };
+		DE5881ECE5DB0461060A2737A5E4494D /* anim_decode.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = anim_decode.c; path = src/demux/anim_decode.c; sourceTree = "<group>"; };
 		DE73A3C79CF935D3345102972A49EB42 /* SDAnimatedImageRep.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDAnimatedImageRep.m; path = SDWebImage/Core/SDAnimatedImageRep.m; sourceTree = "<group>"; };
 		DEEC843BC6E6AAA9AB6522853476D901 /* SharedUI-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SharedUI-prefix.pch"; sourceTree = "<group>"; };
 		DEEE2E30854EFAAC57F4377DDC58AB01 /* StaggeredGridLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StaggeredGridLayout.swift; sourceTree = "<group>"; };
-		DF12F1FA0CB114E1834A26F18552EFF1 /* ImageLoader.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = ImageLoader.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		DF12F1FA0CB114E1834A26F18552EFF1 /* ImageLoader.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = ImageLoader.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		DF4564078C10AF5B1F06F2CA41392199 /* UIImage+ExtendedCacheData.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+ExtendedCacheData.h"; path = "SDWebImage/Core/UIImage+ExtendedCacheData.h"; sourceTree = "<group>"; };
 		DF79C05C9A8EDCED77648B84BAE4DC12 /* SDImageIOAnimatedCoderInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageIOAnimatedCoderInternal.h; path = SDWebImage/Private/SDImageIOAnimatedCoderInternal.h; sourceTree = "<group>"; };
-		DFC59AF8A1FB4335ACE6318412105097 /* alpha_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = alpha_dec.c; path = src/dec/alpha_dec.c; sourceTree = "<group>"; };
+		DFC59AF8A1FB4335ACE6318412105097 /* alpha_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = alpha_dec.c; path = src/dec/alpha_dec.c; sourceTree = "<group>"; };
 		DFD0B619DEDF61C47859B4D93B15569B /* UIColor+Util.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIColor+Util.swift"; path = "Source/UIColor+Util.swift"; sourceTree = "<group>"; };
-		DFE4C4D4D0C1844A74390175107CDEBE /* dec_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dec_neon.c; path = src/dsp/dec_neon.c; sourceTree = "<group>"; };
+		DFE4C4D4D0C1844A74390175107CDEBE /* dec_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = dec_neon.c; path = src/dsp/dec_neon.c; sourceTree = "<group>"; };
 		E06AD1231F5D7B2ABC1B94E5112A5BE2 /* Pods-KanvasCameraExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasCameraExample-acknowledgements.plist"; sourceTree = "<group>"; };
 		E097034CC5E7594BE93F7B29F205B83D /* lossless_common.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = lossless_common.h; path = src/dsp/lossless_common.h; sourceTree = "<group>"; };
 		E0ADF2B458BE0BBA3B6FC5427F63C7B9 /* vp8_dec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = vp8_dec.h; path = src/dec/vp8_dec.h; sourceTree = "<group>"; };
-		E0E079F8164CB0FAEB14C89C6CCD0AD1 /* SharedUI.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = SharedUI.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		E0E079F8164CB0FAEB14C89C6CCD0AD1 /* SharedUI.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = SharedUI.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E11448148DFEB8577ED3B128E956EB13 /* SDWebImageCompat.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCompat.m; path = SDWebImage/Core/SDWebImageCompat.m; sourceTree = "<group>"; };
-		E13AC2A9B65E8F6AE070390E5D4D99E1 /* rescaler_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = rescaler_mips_dsp_r2.c; path = src/dsp/rescaler_mips_dsp_r2.c; sourceTree = "<group>"; };
-		E14023A76C7F8CC896D040CAFC1D5319 /* upsampling_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; name = upsampling_sse41.c; path = src/dsp/upsampling_sse41.c; sourceTree = "<group>"; };
+		E13AC2A9B65E8F6AE070390E5D4D99E1 /* rescaler_mips_dsp_r2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = rescaler_mips_dsp_r2.c; path = src/dsp/rescaler_mips_dsp_r2.c; sourceTree = "<group>"; };
+		E14023A76C7F8CC896D040CAFC1D5319 /* upsampling_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = upsampling_sse41.c; path = src/dsp/upsampling_sse41.c; sourceTree = "<group>"; };
 		E1914AD7777F616B8113E43B652289A6 /* TrashView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 		E19E91AB6EF293A078E66F0124DF7D0D /* VideoOutputHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VideoOutputHandler.swift; sourceTree = "<group>"; };
-		E1B6FAA92460FEBCB998565BB15A23B9 /* vp8_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; name = vp8_dec.c; path = src/dec/vp8_dec.c; sourceTree = "<group>"; };
+		E1B6FAA92460FEBCB998565BB15A23B9 /* vp8_dec.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = vp8_dec.c; path = src/dec/vp8_dec.c; sourceTree = "<group>"; };
 		E24C2040C69387C7C85C97DC2120376D /* SDDeviceHelper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDDeviceHelper.h; path = SDWebImage/Private/SDDeviceHelper.h; sourceTree = "<group>"; };
 		E2EC080699989E592FEBEF55A354D947 /* DrawerTabBarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawerTabBarView.swift; sourceTree = "<group>"; };
 		E3FBCEC4084E7D200859E4E4B449AF60 /* SDGraphicsImageRenderer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDGraphicsImageRenderer.m; path = SDWebImage/Core/SDGraphicsImageRenderer.m; sourceTree = "<group>"; };
@@ -1436,63 +1440,63 @@
 		E95F38DA2D863DBB7028F8F8CAA3F397 /* KanvasCameraColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasCameraColors.swift; sourceTree = "<group>"; };
 		E966F98DA7545FF7BA1CC38EE02F743A /* types.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = types.h; path = src/webp/types.h; sourceTree = "<group>"; };
 		E9FDFA7BE23128A34C6F4BB7711D8404 /* BackgroundFillOperation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundFillOperation.swift; sourceTree = "<group>"; };
-		EA1AFDBD04B34A20724BCCBDAACFBBCE /* alpha_processing.c */ = {isa = PBXFileReference; includeInIndex = 1; name = alpha_processing.c; path = src/dsp/alpha_processing.c; sourceTree = "<group>"; };
-		EA493A5931CF8997654B8D4D300DD9CB /* quant_levels_dec_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = quant_levels_dec_utils.c; path = src/utils/quant_levels_dec_utils.c; sourceTree = "<group>"; };
-		EA923913E4C37ED7F324BA891DD99CB3 /* muxedit.c */ = {isa = PBXFileReference; includeInIndex = 1; name = muxedit.c; path = src/mux/muxedit.c; sourceTree = "<group>"; };
+		EA1AFDBD04B34A20724BCCBDAACFBBCE /* alpha_processing.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = alpha_processing.c; path = src/dsp/alpha_processing.c; sourceTree = "<group>"; };
+		EA493A5931CF8997654B8D4D300DD9CB /* quant_levels_dec_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = quant_levels_dec_utils.c; path = src/utils/quant_levels_dec_utils.c; sourceTree = "<group>"; };
+		EA923913E4C37ED7F324BA891DD99CB3 /* muxedit.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = muxedit.c; path = src/mux/muxedit.c; sourceTree = "<group>"; };
 		EACF78C2419AD69DF9475EF5350E9644 /* common_sse41.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = common_sse41.h; path = src/dsp/common_sse41.h; sourceTree = "<group>"; };
 		EB24071CA82DC6D89922B89022EAA660 /* thread_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = thread_utils.h; path = src/utils/thread_utils.h; sourceTree = "<group>"; };
 		EB4F73C14787B3C4C7B6C513CA1B7E64 /* KanvasCamera-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KanvasCamera-prefix.pch"; sourceTree = "<group>"; };
 		EB57BF4E4E5C3FCBC6270877BF1B67E9 /* ReachabilityObserving.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReachabilityObserving.swift; path = Source/ReachabilityObserving.swift; sourceTree = "<group>"; };
 		EB849E05D8DED9687F3CCECF75949A40 /* ChromaFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChromaFilter.swift; sourceTree = "<group>"; };
-		EBE367B526E0AAE6E73A300B8EDC3BC3 /* enc_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; name = enc_mips32.c; path = src/dsp/enc_mips32.c; sourceTree = "<group>"; };
+		EBE367B526E0AAE6E73A300B8EDC3BC3 /* enc_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = enc_mips32.c; path = src/dsp/enc_mips32.c; sourceTree = "<group>"; };
 		EC5F576CD015A28D6961E3C7926457D8 /* UIColor+SDHexString.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+SDHexString.m"; path = "SDWebImage/Private/UIColor+SDHexString.m"; sourceTree = "<group>"; };
 		ECB0137E0936107390D0CA6FF12C5E8D /* SDFileAttributeHelper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDFileAttributeHelper.h; path = SDWebImage/Private/SDFileAttributeHelper.h; sourceTree = "<group>"; };
-		ECE2B7CA97FB0A7FA4DD8A27E5F2BF6A /* upsampling_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; name = upsampling_msa.c; path = src/dsp/upsampling_msa.c; sourceTree = "<group>"; };
+		ECE2B7CA97FB0A7FA4DD8A27E5F2BF6A /* upsampling_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = upsampling_msa.c; path = src/dsp/upsampling_msa.c; sourceTree = "<group>"; };
 		ED3DE0B755050BBA1A0286B2CB058DA6 /* SDWebImageWebPCoder-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SDWebImageWebPCoder-prefix.pch"; sourceTree = "<group>"; };
 		ED59D082A596D960D946B98B102C62AC /* HorizontalCollectionLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HorizontalCollectionLayout.swift; sourceTree = "<group>"; };
-		ED9D2326378AE835B65649D80852BA66 /* dec_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dec_mips32.c; path = src/dsp/dec_mips32.c; sourceTree = "<group>"; };
+		ED9D2326378AE835B65649D80852BA66 /* dec_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = dec_mips32.c; path = src/dsp/dec_mips32.c; sourceTree = "<group>"; };
 		EDC629845F60CD645AE8AEC35DAD03FA /* mips_macro.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = mips_macro.h; path = src/dsp/mips_macro.h; sourceTree = "<group>"; };
 		EDD774A8E1747592AC0F919CA6708C09 /* SDDiskCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDDiskCache.h; path = SDWebImage/Core/SDDiskCache.h; sourceTree = "<group>"; };
 		EED3BD1EA65E546C56D15C3379DEF883 /* SDWebImageWebPCoder-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SDWebImageWebPCoder-dummy.m"; sourceTree = "<group>"; };
 		EF19CBC9A80AE6E392F719ED82701CE3 /* MirrorTwoFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MirrorTwoFilter.swift; sourceTree = "<group>"; };
 		EF5533CB1B4B3CB39F42EFBD1878F034 /* OptionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
 		F04DC0EDAF967E7B20FE9BCF8C9140B8 /* SDAnimatedImageView+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "SDAnimatedImageView+WebCache.h"; path = "SDWebImage/Core/SDAnimatedImageView+WebCache.h"; sourceTree = "<group>"; };
-		F0EF6666D53171D31CAE55DD494ED907 /* filters_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; name = filters_sse2.c; path = src/dsp/filters_sse2.c; sourceTree = "<group>"; };
-		F29D64D4BFCB0FF28971BED71E1FC618 /* utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = utils.c; path = src/utils/utils.c; sourceTree = "<group>"; };
+		F0EF6666D53171D31CAE55DD494ED907 /* filters_sse2.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = filters_sse2.c; path = src/dsp/filters_sse2.c; sourceTree = "<group>"; };
+		F29D64D4BFCB0FF28971BED71E1FC618 /* utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = utils.c; path = src/utils/utils.c; sourceTree = "<group>"; };
 		F2D768ECAA3AD68AB517DB3BF811A12F /* SDWeakProxy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWeakProxy.m; path = SDWebImage/Private/SDWeakProxy.m; sourceTree = "<group>"; };
 		F44F90FA3FDAC9637D8127A9727F0443 /* CGRect+Center.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGRect+Center.swift"; sourceTree = "<group>"; };
 		F500E363E140541FB51764EC889915B0 /* MediaPlayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaPlayer.swift; sourceTree = "<group>"; };
-		F505EC959F780B5DEFFFECFB2401ACBA /* tree_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = tree_enc.c; path = src/enc/tree_enc.c; sourceTree = "<group>"; };
+		F505EC959F780B5DEFFFECFB2401ACBA /* tree_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = tree_enc.c; path = src/enc/tree_enc.c; sourceTree = "<group>"; };
 		F588FAA9D82C224A741132FE780FA5AE /* FBSnapshotTestCasePlatform.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FBSnapshotTestCasePlatform.h; path = FBSnapshotTestCase/FBSnapshotTestCasePlatform.h; sourceTree = "<group>"; };
 		F6321EA556FBDA064D1F5A12FE680D49 /* SDmetamacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDmetamacros.h; path = SDWebImage/Private/SDmetamacros.h; sourceTree = "<group>"; };
-		F671AC4249C1E295772C72966CA1B954 /* rescaler_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; name = rescaler_mips32.c; path = src/dsp/rescaler_mips32.c; sourceTree = "<group>"; };
-		F7254A8C85A8F9982B68944F38720396 /* enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = enc.c; path = src/dsp/enc.c; sourceTree = "<group>"; };
+		F671AC4249C1E295772C72966CA1B954 /* rescaler_mips32.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = rescaler_mips32.c; path = src/dsp/rescaler_mips32.c; sourceTree = "<group>"; };
+		F7254A8C85A8F9982B68944F38720396 /* enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = enc.c; path = src/dsp/enc.c; sourceTree = "<group>"; };
 		F73730A255151B82B1DFD323C8B55A93 /* OptionsController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		F775C354FBD562CBBD4DD7D84E7AC596 /* DrawerTabBarCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawerTabBarCell.swift; sourceTree = "<group>"; };
 		F830F0DF36C114907F001E8B4B977509 /* Marker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		F871881E211CC7FA50E004B050BD38F5 /* NSBundle+Orangina.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSBundle+Orangina.swift"; path = "Source/NSBundle+Orangina.swift"; sourceTree = "<group>"; };
 		F899B7FE06DD68FCE5E2BB911AEB7B93 /* CVPixelBuffer+copy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+copy.swift"; sourceTree = "<group>"; };
 		F8FCA7F413510DAE4C13926BA5C72762 /* DrawingController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawingController.swift; sourceTree = "<group>"; };
-		F929E21F185B15F6BF827D195D929335 /* bit_reader_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; name = bit_reader_utils.c; path = src/utils/bit_reader_utils.c; sourceTree = "<group>"; };
-		F94BAF20744042986B11B270C4EA1298 /* rescaler_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; name = rescaler_msa.c; path = src/dsp/rescaler_msa.c; sourceTree = "<group>"; };
-		F97AED05AF4474A53CBB66789A61F6EB /* rescaler.c */ = {isa = PBXFileReference; includeInIndex = 1; name = rescaler.c; path = src/dsp/rescaler.c; sourceTree = "<group>"; };
+		F929E21F185B15F6BF827D195D929335 /* bit_reader_utils.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = bit_reader_utils.c; path = src/utils/bit_reader_utils.c; sourceTree = "<group>"; };
+		F94BAF20744042986B11B270C4EA1298 /* rescaler_msa.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = rescaler_msa.c; path = src/dsp/rescaler_msa.c; sourceTree = "<group>"; };
+		F97AED05AF4474A53CBB66789A61F6EB /* rescaler.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = rescaler.c; path = src/dsp/rescaler.c; sourceTree = "<group>"; };
 		F99B11E92893538C299AED4867BBB63F /* SDAnimatedImageView+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "SDAnimatedImageView+WebCache.m"; path = "SDWebImage/Core/SDAnimatedImageView+WebCache.m"; sourceTree = "<group>"; };
 		FA527EF20F47A41041E4BC9930F8D9A0 /* MMCQ.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MMCQ.swift; sourceTree = "<group>"; };
 		FA63C6EB3489FA8ACC3CA04D6813EC8A /* SDWebImageOptionsProcessor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageOptionsProcessor.h; path = SDWebImage/Core/SDWebImageOptionsProcessor.h; sourceTree = "<group>"; };
-		FA96F22F7015F81A087C5A5CEDEF9A5D /* backward_references_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = backward_references_enc.c; path = src/enc/backward_references_enc.c; sourceTree = "<group>"; };
+		FA96F22F7015F81A087C5A5CEDEF9A5D /* backward_references_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = backward_references_enc.c; path = src/enc/backward_references_enc.c; sourceTree = "<group>"; };
 		FAA8EE0D4E0FAB584A95ECCE4BABD69B /* UIImage+ForceDecode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ForceDecode.m"; path = "SDWebImage/Core/UIImage+ForceDecode.m"; sourceTree = "<group>"; };
 		FB56C23DC586955415D6D7649511B3EF /* Sharpie.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Sharpie.swift; sourceTree = "<group>"; };
 		FBE88AD706451BDDC3E0ECFF0FD6A4AA /* SDImageLoadersManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageLoadersManager.m; path = SDWebImage/Core/SDImageLoadersManager.m; sourceTree = "<group>"; };
 		FC2D68604E18C9F490EE9069C64AEBF7 /* Dictionary+Additions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Dictionary+Additions.swift"; path = "Source/Dictionary+Additions.swift"; sourceTree = "<group>"; };
 		FC73A5B352EFE249446C8FE0D2D288F4 /* bit_reader_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = bit_reader_utils.h; path = src/utils/bit_reader_utils.h; sourceTree = "<group>"; };
-		FC77E7179F1E4140374B3171EAB79E1A /* lossless_enc_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; name = lossless_enc_neon.c; path = src/dsp/lossless_enc_neon.c; sourceTree = "<group>"; };
-		FCF61D9B2B75054A9A3185DDC609B7FF /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libSDWebImageWebPCoder.a; path = libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC77E7179F1E4140374B3171EAB79E1A /* lossless_enc_neon.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_enc_neon.c; path = src/dsp/lossless_enc_neon.c; sourceTree = "<group>"; };
+		FCF61D9B2B75054A9A3185DDC609B7FF /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FDA2ABE23975C19FDC44FBC15B77E89F /* libwebp-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "libwebp-dummy.m"; sourceTree = "<group>"; };
 		FDF9881EB619C1EB0C3FC6A26F4C7D48 /* encode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = encode.h; path = src/webp/encode.h; sourceTree = "<group>"; };
 		FE2EFB3A2D5108AA55C584A4D2DDFE06 /* SDImageCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCoder.h; path = SDWebImage/Core/SDImageCoder.h; sourceTree = "<group>"; };
 		FECD7827616E4A7DD47EB94D7E809A65 /* UIImage+MultiFormat.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MultiFormat.m"; path = "SDWebImage/Core/UIImage+MultiFormat.m"; sourceTree = "<group>"; };
 		FF16FD5E58C79036E153154BB83838FA /* UIImage+Transform.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Transform.m"; path = "SDWebImage/Core/UIImage+Transform.m"; sourceTree = "<group>"; };
-		FF43EB9B75C785C2D7AACFFD3FC1615F /* syntax_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; name = syntax_enc.c; path = src/enc/syntax_enc.c; sourceTree = "<group>"; };
+		FF43EB9B75C785C2D7AACFFD3FC1615F /* syntax_enc.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = syntax_enc.c; path = src/enc/syntax_enc.c; sourceTree = "<group>"; };
 		FF557FFA0BEC388A7CD2E97616FB2E14 /* huffman_encode_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = huffman_encode_utils.h; path = src/utils/huffman_encode_utils.h; sourceTree = "<group>"; };
 		FFE3A6EA452CBAD965D5163ED7A2337C /* vp8i_dec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = vp8i_dec.h; path = src/dec/vp8i_dec.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1628,7 +1632,6 @@
 				590D0997E02AD01B6206369A4EAC10A7 /* Textures */,
 				E08B94FEA8285403CED26EB19A91A861 /* TextureSelector */,
 			);
-			name = Drawing;
 			path = Drawing;
 			sourceTree = "<group>";
 		};
@@ -1643,7 +1646,6 @@
 				06274EE61C08105DB55954FF617F3A44 /* Shader.swift */,
 				145D3ACD637AD8A399A118005E40E060 /* UIImage+PixelBuffer.swift */,
 			);
-			name = OpenGL;
 			path = OpenGL;
 			sourceTree = "<group>";
 		};
@@ -1655,7 +1657,6 @@
 				9E70F0FC1E23624A9784FF7DFB43C2DF /* FilterSettingsController.swift */,
 				9A76F860C49D7DE49F1717BEA61D3206 /* FilterSettingsView.swift */,
 			);
-			name = Filters;
 			path = Filters;
 			sourceTree = "<group>";
 		};
@@ -1677,7 +1678,6 @@
 				69CF9F04FAB2E7A3E0AF121556A40290 /* UIImage+WebP.m */,
 				181283F0F8755B4ABECE59B81E24838E /* Support Files */,
 			);
-			name = SDWebImageWebPCoder;
 			path = SDWebImageWebPCoder;
 			sourceTree = "<group>";
 		};
@@ -1689,7 +1689,6 @@
 				10F78F8926282E6C9462B082B6B38918 /* StickerTypeCollectionController.swift */,
 				DBF384CAEBEF2F4B8B1BAA670EDA6B60 /* StickerTypeCollectionView.swift */,
 			);
-			name = StickerTypeCollection;
 			path = StickerTypeCollection;
 			sourceTree = "<group>";
 		};
@@ -1804,7 +1803,6 @@
 				79201DAD15852297EADB74541F8D2C75 /* DrawerTabBarOption.swift */,
 				E2EC080699989E592FEBEF55A354D947 /* DrawerTabBarView.swift */,
 			);
-			name = TabBar;
 			path = TabBar;
 			sourceTree = "<group>";
 		};
@@ -1814,7 +1812,6 @@
 				7BAD12376FFD303FAB7BA70DB5193449 /* Core */,
 				84DB470F5EF61429EFB12C496FD8B13F /* Support Files */,
 			);
-			name = SDWebImage;
 			path = SDWebImage;
 			sourceTree = "<group>";
 		};
@@ -1826,7 +1823,6 @@
 				EEBDB0511954FA5E1CDFFBE35F50E8DC /* Stickers */,
 				34B4DEDD36A53F423E274B7931822D99 /* TabBar */,
 			);
-			name = Media;
 			path = Media;
 			sourceTree = "<group>";
 		};
@@ -1965,7 +1961,6 @@
 				FB56C23DC586955415D6D7649511B3EF /* Sharpie.swift */,
 				0E9630EE3311FDD55FDB847786352B63 /* Texture.swift */,
 			);
-			name = Textures;
 			path = Textures;
 			sourceTree = "<group>";
 		};
@@ -1989,7 +1984,6 @@
 				3DA84B18530AEA2D9384B18E7675EB07 /* RGBFilter.swift */,
 				1A20902121C43C1FDC84D628FF1694E3 /* ToonFilter.swift */,
 			);
-			name = Filters;
 			path = Filters;
 			sourceTree = "<group>";
 		};
@@ -2000,7 +1994,6 @@
 				D310F67A1C73366D31000E43960E7BAA /* Reachability.m */,
 				A84AE6917DBA3EAA05666CD9B46851FD /* Support Files */,
 			);
-			name = Reachability;
 			path = Reachability;
 			sourceTree = "<group>";
 		};
@@ -2041,8 +2034,16 @@
 				70C17A6E5223CF5F1D02BA08EDCDBCDE /* Support Files */,
 				6EC80EA65C0BD235A7645058FB43966D /* webp */,
 			);
-			name = libwebp;
 			path = libwebp;
+			sourceTree = "<group>";
+		};
+		650A8338246465D90071BF9D /* GIFMaker */ = {
+			isa = PBXGroup;
+			children = (
+				650A83392464660F0071BF9D /* GifMakerController.swift */,
+				650A833B2464661C0071BF9D /* GifMakerView.swift */,
+			);
+			path = GIFMaker;
 			sourceTree = "<group>";
 		};
 		6D9CE1A178F333798368F2E4B0B89C84 /* KanvasCamera */ = {
@@ -2423,7 +2424,6 @@
 				90AC54EE6C87FCF8E16BBC6E9E386B2F /* StylableTextView.swift */,
 				B719A4A6D90A9BCE602B1C6EB5CE5C0E /* TextOptions.swift */,
 			);
-			name = Text;
 			path = Text;
 			sourceTree = "<group>";
 		};
@@ -2443,7 +2443,6 @@
 				48D8D5CEC28D3B1E8C724F8E1CA31107 /* Support Files */,
 				241D90AC9265C212C0E9897221FDCBD0 /* SwiftSupport */,
 			);
-			name = FBSnapshotTestCase;
 			path = FBSnapshotTestCase;
 			sourceTree = "<group>";
 		};
@@ -2485,7 +2484,6 @@
 				ED59D082A596D960D946B98B102C62AC /* HorizontalCollectionLayout.swift */,
 				B10A9BE39F1FE322F8AC6C5ACB98720D /* HorizontalCollectionView.swift */,
 			);
-			name = HorizontalCollectionView;
 			path = HorizontalCollectionView;
 			sourceTree = "<group>";
 		};
@@ -2508,7 +2506,6 @@
 			children = (
 				A29F7A670B6A8B37EF8F7049CCD007B8 /* StickerProvider.swift */,
 			);
-			name = StickerProvider;
 			path = StickerProvider;
 			sourceTree = "<group>";
 		};
@@ -2519,7 +2516,6 @@
 				615B23346F91BCEDFF38DFA49AD039C8 /* IgnoreTouchesCollectionView.swift */,
 				1AE48348073DD5D617CFFF5D42371EA2 /* IgnoreTouchesView.swift */,
 			);
-			name = IgnoreTouches;
 			path = IgnoreTouches;
 			sourceTree = "<group>";
 		};
@@ -2544,7 +2540,6 @@
 				8F3E538EF9541A86358066440FE50EC7 /* StickerCollectionController.swift */,
 				02CC865BF211C6408628DAAEF1B462DD /* StickerCollectionView.swift */,
 			);
-			name = StickerCollection;
 			path = StickerCollection;
 			sourceTree = "<group>";
 		};
@@ -2587,7 +2582,6 @@
 				22D2E0343CF38208EF1A79DB7237673A /* EditorFilterController.swift */,
 				2B9D42C3A45AD6C383393C42E5609408 /* EditorFilterView.swift */,
 			);
-			name = Filters;
 			path = Filters;
 			sourceTree = "<group>";
 		};
@@ -2598,7 +2592,6 @@
 				6A63429C8AFCEE1B5E9CC4362E254EA6 /* MovableViewCanvas.swift */,
 				7A2D951D5BE3000FDA623F0E853FF6C1 /* ViewTransformations.swift */,
 			);
-			name = MovableViews;
 			path = MovableViews;
 			sourceTree = "<group>";
 		};
@@ -2608,7 +2601,6 @@
 				A67B63D0929CD51286464B99803FB459 /* StrokeSelectorController.swift */,
 				6979B99B94E3A0592FE7165A6839A8BA /* StrokeSelectorView.swift */,
 			);
-			name = StrokeSelector;
 			path = StrokeSelector;
 			sourceTree = "<group>";
 		};
@@ -2705,7 +2697,6 @@
 				C869EC08FB845761CB3734B6226A9D9B /* ColorSelectorController.swift */,
 				CF4BDE7288832FCEB068A8D3FA41192F /* ColorSelectorView.swift */,
 			);
-			name = ColorSelector;
 			path = ColorSelector;
 			sourceTree = "<group>";
 		};
@@ -2814,7 +2805,6 @@
 				4E4E5185292C49F25ACDB6B67301B21A /* ColorThief.swift */,
 				FA527EF20F47A41041E4BC9930F8D9A0 /* MMCQ.swift */,
 			);
-			name = ColorThief;
 			path = ColorThief;
 			sourceTree = "<group>";
 		};
@@ -2831,6 +2821,7 @@
 				7553FB6FEBA378BD5FE5A4C8FAA6165A /* MediaPlayerController.swift */,
 				0BAED3A9AD7021B5430E529258426A3C /* Drawing */,
 				96F0058916CF476D614E953109F6F9C2 /* Filters */,
+				650A8338246465D90071BF9D /* GIFMaker */,
 				43697551315AB5A093E5D25298650B3F /* Media */,
 				9A01BEF86C7D7901B6F5A88F27B80F57 /* MovableViews */,
 				EFE965022B5C171C0F7249EE82211F22 /* Shared */,
@@ -2881,7 +2872,6 @@
 				AD9224E7A890AACE0EC7BFE732E2B03D /* TextureSelectorController.swift */,
 				A96EDFD5658679AEFF7962C7A2843A34 /* TextureSelectorView.swift */,
 			);
-			name = TextureSelector;
 			path = TextureSelector;
 			sourceTree = "<group>";
 		};
@@ -2895,7 +2885,6 @@
 				871DDC2C0C5E86A09D9328CF1D3BEDBE /* StickerProvider */,
 				1584A8F376367C2FAD7D80ED8F0732EC /* StickerTypeCollection */,
 			);
-			name = Stickers;
 			path = Stickers;
 			sourceTree = "<group>";
 		};
@@ -2929,7 +2918,6 @@
 				FD74531F05596C6FB77991BB86AE01C0 /* ColorPicker */,
 				C34FC905DB64FCA34FE5F8338CB82A86 /* ColorSelector */,
 			);
-			name = Shared;
 			path = Shared;
 			sourceTree = "<group>";
 		};
@@ -2954,7 +2942,6 @@
 				53B41CA6ECD4F8B1772BC6F4FC3B7A25 /* ColorCollectionController.swift */,
 				178B26FD648301CF2ACD1AF92B6A9FDA /* ColorCollectionView.swift */,
 			);
-			name = ColorCollection;
 			path = ColorCollection;
 			sourceTree = "<group>";
 		};
@@ -2997,7 +2984,6 @@
 				7365E3961484FD04B94C43D398A012CA /* ColorPickerController.swift */,
 				1D2D8F4EB0C01120F40AF3E897E8A75D /* ColorPickerView.swift */,
 			);
-			name = ColorPicker;
 			path = ColorPicker;
 			sourceTree = "<group>";
 		};
@@ -3952,6 +3938,7 @@
 				E0A11D608F7BBED24907F8EB867F647B /* FilterSettingsController.swift in Sources */,
 				A1DE7E49F8052979C516CCBFAA6F3EBB /* FilterSettingsView.swift in Sources */,
 				FB05D0240A1BD28DDD4ABECCD90060B5 /* FilterType.swift in Sources */,
+				650A833C2464661C0071BF9D /* GifMakerView.swift in Sources */,
 				BB59DEF4A557EF7B5F4AF2C9789CBF1D /* GifVideoOutputHandler.swift in Sources */,
 				40F6A9FC6EF548B758E5F506A10F8A9B /* GLError.swift in Sources */,
 				79FBA75E7966269F9763CF0DADA8CB47 /* GLKMatrix4+Unsafe.swift in Sources */,
@@ -4011,6 +3998,7 @@
 				A40C4F92B5930FEB25E1D4395F491B67 /* PlasmaFilter.swift in Sources */,
 				22FBD148C638667458ACA40DE20D5F3F /* Queue.swift in Sources */,
 				4E88610FA33E615C8DBF499FC9A589AD /* RaveFilter.swift in Sources */,
+				650A833A2464660F0071BF9D /* GifMakerController.swift in Sources */,
 				EADAB6E91BF45557BC383468C96CE782 /* Renderer.swift in Sources */,
 				57D4D64672C73C2FC3649FF82ABABC9E /* Rendering.swift in Sources */,
 				EB5582BDDF9BA9D520B0D35B760DCFF7 /* RGBA.swift in Sources */,
