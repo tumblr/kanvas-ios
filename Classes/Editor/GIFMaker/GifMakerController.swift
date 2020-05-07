@@ -10,11 +10,13 @@ import UIKit
 /// Protocol for editing GIFs
 protocol GifMakerControllerDelegate: class {
     
+    /// Called after the confirm button is tapped
+    func didConfirmGif()
 }
 
 /// Constants for GifMakerController
 private struct Constants {
-    
+    // TODO: Add constants
 }
 
 /// A view controller that contains the GIF maker menu
@@ -27,6 +29,11 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate {
         view.delegate = self
         return view
     }()
+    
+    /// Confirm button location expressed in screen coordinates
+    var confirmButtonLocation: CGPoint {
+        return gifMakerView.confirmButtonLocation
+    }
     
     // MARK: - Initializers
     
@@ -63,7 +70,9 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate {
     
     // MARK: - GifMakerViewDelegate
     
-    // Add methods
+    func didTapConfirmButton() {
+        delegate?.didConfirmGif()
+    }
     
     // MARK: - Public interface
     
@@ -72,6 +81,13 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate {
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
         gifMakerView.showView(show)
+    }
+    
+    /// shows or hides the confirm button
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showConfirmButton(_ show: Bool) {
+        gifMakerView.showConfirmButton(show)
     }
 
 }

@@ -449,7 +449,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         
         switch editionOption {
         case .gif:
+            editorView.animateReturnOfEditionOption(cell: selectedCell)
             gifMakerController.showView(false)
+            gifMakerController.showConfirmButton(false)
             showMainUI(true)
         case .filter:
             filterController.showView(false)
@@ -486,6 +488,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             showMainUI(false)
             gifMakerController.showView(true)
+            editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
+                self.gifMakerController.showConfirmButton(true)
+            })
         case .filter:
             showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()
@@ -519,6 +524,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
         selectedCell = cell
         openedMenu = editionOption
+    }
+    
+    // MARK: - GifMakerControllerDelegate
+    
+    func didConfirmGif() {
+        confirmEditionMenu()
     }
     
     // MARK: - EditorFilterControllerDelegate
