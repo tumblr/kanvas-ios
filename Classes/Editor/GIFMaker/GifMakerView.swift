@@ -63,9 +63,9 @@ final class GifMakerView: UIView {
         setUpConfirmButton()
     }
     
-    /// Sets up the confirmation button with a check mark
+    /// Sets up the container for the top buttons
     private func setUpTopButtonsContainer() {
-        topButtonsContainer.accessibilityIdentifier = "Editor Text Top Buttons Container"
+        topButtonsContainer.accessibilityIdentifier = "GIF Maker Top Buttons Container"
         topButtonsContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topButtonsContainer)
         
@@ -79,7 +79,7 @@ final class GifMakerView: UIView {
     
     /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
-        confirmButton.accessibilityIdentifier = "Editor Text Confirm Button"
+        confirmButton.accessibilityIdentifier = "GIF Maker Confirm Button"
         confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
@@ -91,15 +91,14 @@ final class GifMakerView: UIView {
             confirmButton.widthAnchor.constraint(equalToConstant: Constants.confirmButtonSize)
         ])
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
-        confirmButton.addGestureRecognizer(tapRecognizer)
+        confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         
         confirmButton.alpha = 0
     }
     
     // MARK: - Gesture recognizers
     
-    @objc private func confirmButtonTapped(recognizer: UITapGestureRecognizer) {
+    @objc private func confirmButtonTapped() {
         delegate?.didTapConfirmButton()
     }
     
