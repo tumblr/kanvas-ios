@@ -29,6 +29,7 @@ final class GifMakerControllerTests: FBSnapshotTestCase {
         let controller = newViewController()
         UIView.setAnimationsEnabled(false)
         controller.showView(true)
+        controller.showConfirmButton(true)
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }
