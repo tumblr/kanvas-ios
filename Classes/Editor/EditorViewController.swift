@@ -143,7 +143,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     stickerProvider: StickerProvider,
                                     analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
         EditorViewController(settings: settings,
-                             segments: [.image(image, nil, TumblrMediaInfo(source: .media_library))],
+                             segments: [.image(image, nil, nil, TumblrMediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
                              cameraMode: nil,
@@ -332,7 +332,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func startPlayer() {
         let media: [MediaPlayerContent] = segments.compactMap {segment in
             if let image = segment.image {
-                return .image(image)
+                return .image(image, segment.timeInterval)
             }
             else if let url = segment.videoURL {
                 return .video(url)
@@ -397,12 +397,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.hideLoading()
                     return
                 }
-                guard let image = exportedImage else {
+                guard let unwrappedImage = exportedImage else {
                     self.hideLoading()
                     self.handleExportError()
                     return
                 }
-                self.delegate?.didFinishExportingImage(image: image, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 self.hideLoading()
             }
         }

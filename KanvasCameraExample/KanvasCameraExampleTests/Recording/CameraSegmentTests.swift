@@ -14,7 +14,7 @@ final class CameraSegmentTests: XCTestCase {
     func testImageSegment() {
         if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
             let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
-            let segment = CameraSegment.image(image, nil, mediaInfo)
+            let segment = CameraSegment.image(image, nil, nil, mediaInfo)
             XCTAssert(segment.image != nil, "CameraSegment was not initialized properly")
         }
         else {

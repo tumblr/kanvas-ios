@@ -35,7 +35,7 @@ struct KanvasCameraTimes {
 
     // MARK: - Stop motion
 
-    /// OnlyImagesFrameDuration: the duration value of each photo clip in a video if there are ONLY videos
+    /// OnlyImagesFrameDuration: the duration value of each photo clip in a video if there are ONLY photos
     static let onlyImagesFrameDuration: CMTimeValue = 120
     
     /// SinglePhotoWithVideoFrameDuration: the duration value of a single photo exported as a video. Also applies to photos exported with video
@@ -44,8 +44,14 @@ struct KanvasCameraTimes {
     /// StopMotionFrameTimescale: the timescale used for creating videos
     static let stopMotionFrameTimescale: CMTimeScale = 600
 
-    /// StopMotionFrameTime: the CMTime for each frame composed from the duration and timescale
+    /// OnlyImagesFrameTime: the CMTime for each frame when there are only photo clips
+    static let onlyImagesFrameTime: CMTime = CMTime(value: onlyImagesFrameDuration, timescale: stopMotionFrameTimescale)
+
+    /// StopMotionFrameTime: the CMTime for each frame
     static let stopMotionFrameTime: CMTime = CMTime(value: singlePhotoWithVideoFrameDuration, timescale: stopMotionFrameTimescale)
+
+    /// OnlyImagesFrameTimeInterval: the equavalent amount of seconds for each frame when there are only photo clips
+    static let onlyImagesFrameTimeInterval: TimeInterval = CMTimeGetSeconds(onlyImagesFrameTime)
 
     /// StopMotionFrameTimeInterval: the equivalent amount of seconds for each frame time
     static let stopMotionFrameTimeInterval: TimeInterval = CMTimeGetSeconds(stopMotionFrameTime)
@@ -60,10 +66,5 @@ struct KanvasCameraTimes {
 
     /// gifHoldNumberOfFrames: the number of frames to record when holding the shutter in GIF mode
     static let gifHoldNumberOfFrames = Int(KanvasCameraTimes.gifHoldRecordingTime * Double(KanvasCameraTimes.gifPreferredFramesPerSecond))
-
-    // MARK: - Other
-
-    /// the wait time for threads
-    static let sleepTime: TimeInterval = 0.1
 
 }
