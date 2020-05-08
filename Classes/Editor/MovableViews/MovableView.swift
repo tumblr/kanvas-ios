@@ -227,7 +227,7 @@ final class MovableView: UIView {
     
     /// Calculates the hit area increment that the view will include
     /// on each side when its scale is modified.
-    private func calculateHitAreaOffset() -> CGSize {
+    func calculateHitAreaOffset() -> CGSize {
         let size = getSize()
         let width = max(Constants.minimumSize - size.width, 0)
         let height = max(Constants.minimumSize - size.height, 0)

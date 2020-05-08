@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -90,6 +90,7 @@
 		65B39A6323B12EC800589F9A /* StickerTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B39A6223B12EC800589F9A /* StickerTypeTests.swift */; };
 		65B980D8231EB6AF00D3E9F0 /* TrashViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B980D7231EB6AF00D3E9F0 /* TrashViewTests.swift */; };
 		65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */; };
+		65CA0EF82465B75400822C1A /* MovableViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA0EF72465B75400822C1A /* MovableViewTests.swift */; };
 		65E46B9322BD22CA004FD226 /* FilterSettingsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */; };
 		65E46B9422BD22CA004FD226 /* FilterSettingsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */; };
 		65E46B9522BD22CA004FD226 /* CameraFilterCollectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E46B9022BD22CA004FD226 /* CameraFilterCollectionControllerTests.swift */; };
@@ -266,6 +267,7 @@
 		65B39A6223B12EC800589F9A /* StickerTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerTypeTests.swift; sourceTree = "<group>"; };
 		65B980D7231EB6AF00D3E9F0 /* TrashViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashViewTests.swift; sourceTree = "<group>"; };
 		65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewControllerTests.swift; sourceTree = "<group>"; };
+		65CA0EF72465B75400822C1A /* MovableViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovableViewTests.swift; sourceTree = "<group>"; };
 		65E46B8E22BD22CA004FD226 /* FilterSettingsControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsControllerTests.swift; sourceTree = "<group>"; };
 		65E46B8F22BD22CA004FD226 /* FilterSettingsViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterSettingsViewTests.swift; sourceTree = "<group>"; };
 		65E46B9022BD22CA004FD226 /* CameraFilterCollectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFilterCollectionControllerTests.swift; sourceTree = "<group>"; };
@@ -509,6 +511,7 @@
 			isa = PBXGroup;
 			children = (
 				65507D96239F381700087014 /* MovableViewCanvasTests.swift */,
+				65CA0EF72465B75400822C1A /* MovableViewTests.swift */,
 			);
 			path = MovableViews;
 			sourceTree = "<group>";
@@ -1199,6 +1202,7 @@
 				651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */,
 				658A32A4239FFD9B00EEC1D3 /* MediaDrawerViewTests.swift in Sources */,
 				ABE4991E2137307500379F7F /* IgnoreTouchesViewTests.swift in Sources */,
+				65CA0EF82465B75400822C1A /* MovableViewTests.swift in Sources */,
 				ABE49908213712E100379F7F /* OptionViewTests.swift in Sources */,
 				65E46BAB22BD22DE004FD226 /* EditionMenuCollectionViewTests.swift in Sources */,
 				ABE4990021370FAB00379F7F /* MediaClipsEditorViewControllerTests.swift in Sources */,

@@ -29,4 +29,20 @@ final class StylableImageViewTests: FBSnapshotTestCase {
         imageView.add(into: view)
         FBSnapshotVerifyView(imageView)
     }
+    
+    func testHitInsideShape() {
+        let imageView = StylableImageView(id: "id", image: KanvasCameraImages.gradientImage)
+        imageView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        let point = imageView.bounds.center
+        let wasHitInside = imageView.hitInsideShape(point: point)
+        XCTAssertTrue(wasHitInside, "The method should return true since the hit was done in a visible area of the image.")
+    }
+    
+    func testHitOutsideShape() {
+        let imageView = StylableImageView(id: "id", image: KanvasCameraImages.gradientImage)
+        imageView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        let point = CGPoint(x: 190, y: 190)
+        let wasHitInside = imageView.hitInsideShape(point: point)
+        XCTAssertFalse(wasHitInside, "The method should return false since the hit was done in an empty area of the image.")
+    }
 }
