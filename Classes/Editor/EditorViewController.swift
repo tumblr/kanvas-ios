@@ -388,7 +388,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 }
                 return
             }
-            GIFEncoder().encodeVideoAsGIF(url: exportedVideoURL, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { [weak self] gifURL in
+            GIFEncoderFactory.create(type: .imageIO).encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { [weak self] gifURL in
                 guard let self = self else { return }
                 guard let gifURL = gifURL else {
                     performUIUpdate {
