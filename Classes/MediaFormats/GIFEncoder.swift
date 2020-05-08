@@ -88,9 +88,9 @@ class GIFEncoder {
 
             let videoLength = Double(asset.duration.value) / Double(asset.duration.timescale)
             let frameCount = Int(videoLength * Double(framesPerSecond))
-            let increment = videoLength / Double(frameCount);
+            let increment = videoLength / Double(frameCount)
 
-            var timePoints: [CMTime] = [];
+            var timePoints: [CMTime] = []
             for currentFrame in 0..<frameCount {
                 let seconds = increment * Double(currentFrame)
                 let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(Constants.timeInterval))
@@ -123,7 +123,7 @@ class GIFEncoder {
                             image = scaledImage
                         }
                     }
-                    CGImageDestinationAddImage(destination, image, getFrameProperties(1.0 / Double(framesPerSecond)) as CFDictionary);
+                    CGImageDestinationAddImage(destination, image, getFrameProperties(1.0 / Double(framesPerSecond)) as CFDictionary)
                 } catch {
                     print("Error copying GIF frame: \(error)")
                     completionMain(nil)

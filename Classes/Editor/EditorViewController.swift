@@ -396,7 +396,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     }
                     return
                 }
-                self?.delegate?.didFinishExportingVideo(url: gifURL, info: mediaInfo, action: exportAction)
+                self?.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self?.hideLoading()
                 }
