@@ -94,7 +94,6 @@ class GIFEncoderImageIO: GIFEncoder {
     private struct Constants {
         static let timeScale: CMTimeScale = CMTimeScale(600)
         static let tolerance = 0.01
-        static let delayTime = 0.02
     }
 
     fileprivate init() {
