@@ -389,16 +389,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 return
             }
             GIFEncoder().encodeVideoAsGIF(url: exportedVideoURL, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { [weak self] gifURL in
+                guard let self = self else { return }
                 guard let gifURL = gifURL else {
                     performUIUpdate {
-                        self?.hideLoading()
-                        self?.handleExportError()
+                        self.hideLoading()
+                        self.handleExportError()
                     }
                     return
                 }
-                self?.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
-                    self?.hideLoading()
+                    self.hideLoading()
                 }
             }
         }

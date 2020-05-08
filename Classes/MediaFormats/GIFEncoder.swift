@@ -12,7 +12,7 @@ import CoreGraphics
 class GIFEncoder {
 
     private struct Constants {
-        static let timeInterval: TimeInterval = 600.0
+        static let timeScale: CMTimeScale = CMTimeScale(600)
         static let tolerance = 0.01
         static let delayTime = 0.02
     }
@@ -93,7 +93,7 @@ class GIFEncoder {
             var timePoints: [CMTime] = []
             for currentFrame in 0..<frameCount {
                 let seconds = increment * Double(currentFrame)
-                let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(Constants.timeInterval))
+                let time = CMTime(seconds: seconds, preferredTimescale: Constants.timeScale)
                 timePoints.append(time)
             }
 
@@ -110,7 +110,7 @@ class GIFEncoder {
             let generator = AVAssetImageGenerator(asset: asset)
             generator.appliesPreferredTrackTransform = true
 
-            let tol = CMTime(seconds: Constants.tolerance, preferredTimescale: CMTimeScale(Constants.timeInterval))
+            let tol = CMTime(seconds: Constants.tolerance, preferredTimescale: Constants.timeScale)
             generator.requestedTimeToleranceBefore = tol
             generator.requestedTimeToleranceAfter = tol
 
