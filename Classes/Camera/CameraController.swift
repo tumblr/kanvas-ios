@@ -817,6 +817,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         didFinishExportingImage(image: image, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
     }
 
+    func didFinishExportingFrames(url: URL?) {
+        didFinishExportingFrames(url: url, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
+    }
+
     public func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         if let url = url, let info = info {
             let asset = AVURLAsset(url: url)
