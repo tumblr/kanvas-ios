@@ -190,13 +190,17 @@ final class MovableView: UIView {
     
     // MARK: - Extended hit area
     
-    /// Gets the largest side of the view
-    private func getSize() -> CGFloat {
-        return max(bounds.height, bounds.width) * scale
+    /// Gets the size of the view
+    private func getSize() -> CGSize {
+        return CGSize(width: bounds.width * scale,
+                      height: bounds.height * scale)
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if getSize() < Constants.minimumSize {
+        let size = getSize()
+        let smallSize = size.width < Constants.minimumSize || size.height < Constants.minimumSize
+        
+        if smallSize {
             return super.hitTest(point, with: event)
         }
         else if innerView.hitInsideShape(point: point) {
@@ -209,28 +213,25 @@ final class MovableView: UIView {
     
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let offset = calculateHitAreaOffset()
+        let verticalOffset = offset.height / 2
+        let horizontalOffset = offset.width / 2
+        
         let relativeFrame = bounds
-        let hitTestEdgeInsets = UIEdgeInsets(top: -offset,
-                                             left: -offset,
-                                             bottom: -offset,
-                                             right: -offset)
+        let hitTestEdgeInsets = UIEdgeInsets(top: -verticalOffset,
+                                             left: -horizontalOffset,
+                                             bottom: -verticalOffset,
+                                             right: -horizontalOffset)
         let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
         return hitFrame.contains(point)
     }
     
     /// Calculates the hit area increment that the view will include
-    /// when its size is modified.
-    private func calculateHitAreaOffset() -> CGFloat {
-        let offset: CGFloat
+    /// on each side when its scale is modified.
+    private func calculateHitAreaOffset() -> CGSize {
         let size = getSize()
+        let width = max(Constants.minimumSize - size.width, 0)
+        let height = max(Constants.minimumSize - size.height, 0)
         
-        if size < Constants.minimumSize {
-            offset = Constants.minimumSize - size
-        }
-        else {
-            offset = 0
-        }
-        
-        return offset
+        return CGSize(width: width, height: height)
     }
 }
