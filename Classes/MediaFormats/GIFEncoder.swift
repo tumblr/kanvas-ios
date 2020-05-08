@@ -89,7 +89,7 @@ enum GIFSize {
     }
 }
 
-class GIFEncoderImageIO : GIFEncoder {
+class GIFEncoderImageIO: GIFEncoder {
 
     private struct Constants {
         static let timeScale: CMTimeScale = CMTimeScale(600)
