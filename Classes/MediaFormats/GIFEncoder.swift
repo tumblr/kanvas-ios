@@ -154,13 +154,19 @@ class GIFEncoderImageIO: GIFEncoder {
             let generator = AVAssetImageGenerator(asset: asset)
             generator.appliesPreferredTrackTransform = true
 
+            // https://jira.tumblr.net/browse/KANVAS-1081
+            // Should consider setting this to kCMTimeZero so that we get
+            // the exact frame, even though it will cause a bit more of
+            // a decoding delay.
             let tol = CMTime(seconds: Constants.tolerance, preferredTimescale: Constants.timeScale)
             generator.requestedTimeToleranceBefore = tol
             generator.requestedTimeToleranceAfter = tol
 
+            // AVAssetImageGenerator.generateCGImagesAsynchronously would be a more
+            // efficient alternative to looping through all the times and calling
+            // AVAssetImageGenerator.copyCGImage.
             for time in timePoints {
                 do {
-                    // TODO maybe do this using generateCGImagesAsynchronously?
                     var image = try generator.copyCGImage(at: time, actualTime: nil)
                     image = gifSize.scale(image: image) ?? image
                     CGImageDestinationAddImage(destination, image, getFrameProperties(1.0 / Double(framesPerSecond)) as CFDictionary)
