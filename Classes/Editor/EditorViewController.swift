@@ -14,9 +14,12 @@ import Utils
 public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
-    
+
     /// callback when finished exporting image
     func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+
+    /// callback when finished exporting frames
+    func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
