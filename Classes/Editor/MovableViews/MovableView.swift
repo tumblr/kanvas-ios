@@ -196,10 +196,15 @@ final class MovableView: UIView {
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let hitTest = super.hitTest(point, with: event)
-        let hitInsideShape = innerView.hitInsideShape(point: point)
-        let smallSize = getSize() < Constants.minimumSize
-        return hitInsideShape || smallSize ? hitTest : nil
+        if getSize() < Constants.minimumSize {
+            return super.hitTest(point, with: event)
+        }
+        else if innerView.hitInsideShape(point: point) {
+            return self
+        }
+        else {
+            return nil
+        }
     }
     
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
