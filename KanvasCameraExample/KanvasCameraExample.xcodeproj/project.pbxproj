@@ -166,6 +166,7 @@
 		BF5AD6652460C7B50077481B /* GIFDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */; };
 		BF5AD6682460DA6F0077481B /* colors.gif in Resources */ = {isa = PBXBuildFile; fileRef = BF5AD6662460CB290077481B /* colors.gif */; };
 		BF5AD6692460DA720077481B /* colors.gif in Resources */ = {isa = PBXBuildFile; fileRef = BF5AD6662460CB290077481B /* colors.gif */; };
+		BF5AD66B24652CB70077481B /* GIFEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5AD66A24652CB70077481B /* GIFEncoderTests.swift */; };
 		BF8C80F623BE6971001D29A0 /* CameraPermissionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C80F523BE6971001D29A0 /* CameraPermissionsTests.swift */; };
 		FECCC46BFCBD5D4DF20954D7 /* libPods-KanvasCameraExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A15411C557452BAE33C70F12 /* libPods-KanvasCameraExampleTests.a */; };
 /* End PBXBuildFile section */
@@ -346,6 +347,7 @@
 		BF428954238637F900D51A07 /* String+UTF16SubstringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UTF16SubstringTests.swift"; sourceTree = "<group>"; };
 		BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFDecoderTests.swift; sourceTree = "<group>"; };
 		BF5AD6662460CB290077481B /* colors.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = colors.gif; sourceTree = "<group>"; };
+		BF5AD66A24652CB70077481B /* GIFEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFEncoderTests.swift; sourceTree = "<group>"; };
 		BF8C80F523BE6971001D29A0 /* CameraPermissionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionsTests.swift; sourceTree = "<group>"; };
 		F1F6839B40675658A9EB1A05 /* Pods-KanvasCameraExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.release.xcconfig"; sourceTree = "<group>"; };
 		F67459CFA8681ADB0C29FF28 /* Pods-KanvasCameraExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -875,6 +877,7 @@
 			isa = PBXGroup;
 			children = (
 				BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */,
+				BF5AD66A24652CB70077481B /* GIFEncoderTests.swift */,
 			);
 			path = MediaFormats;
 			sourceTree = "<group>";
@@ -1198,6 +1201,7 @@
 				653B045522E9143C005AAFCA /* HorizontalCollectionLayoutTests.swift in Sources */,
 				651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */,
 				658A32A4239FFD9B00EEC1D3 /* MediaDrawerViewTests.swift in Sources */,
+				BF5AD66B24652CB70077481B /* GIFEncoderTests.swift in Sources */,
 				ABE4991E2137307500379F7F /* IgnoreTouchesViewTests.swift in Sources */,
 				ABE49908213712E100379F7F /* OptionViewTests.swift in Sources */,
 				65E46BAB22BD22DE004FD226 /* EditionMenuCollectionViewTests.swift in Sources */,
