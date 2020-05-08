@@ -86,7 +86,7 @@ final class GIFEncoderTests: FBSnapshotTestCase {
                 let actualFrameCount = CGImageSourceGetCount(source)
                 XCTAssertEqual(expectedFrameCount, actualFrameCount)
 
-                let someFirstCGImage = CGImageSourceCreateImageAtIndex(source, 0, nil)
+                let someFirstCGImage = CGImageSourceCreateImageAtIndex(source, 0 + Int(Double(gifFramesPerSecond) / 2.0), nil)
                 XCTAssertNotNil(someFirstCGImage)
                 guard let firstCGImage = someFirstCGImage else {
                     expectation.fulfill()
@@ -99,7 +99,7 @@ final class GIFEncoderTests: FBSnapshotTestCase {
                 view.image = image
                 self.FBSnapshotVerifyView(view, identifier: "first")
 
-                let someLastCGImage = CGImageSourceCreateImageAtIndex(source, actualFrameCount - 1, nil)
+                let someLastCGImage = CGImageSourceCreateImageAtIndex(source, actualFrameCount - Int(Double(gifFramesPerSecond) / 2.0), nil)
                 XCTAssertNotNil(someLastCGImage)
                 guard let lastCGImage = someLastCGImage else {
                     expectation.fulfill()
