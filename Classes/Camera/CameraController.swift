@@ -830,23 +830,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     self.handleCloseSoon(action: action)
                     if let videoSize = asset.videoScreenSize {
                         self.delegate?.didCreateMedia(self, media: .video(url, info, videoSize), exportAction: action, error: nil)
-                    } else {
-                        // FIXME hacking this in for GIFs
-                        let gifSize = { () -> CGSize in
-                            guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
-                                return .zero
-                            }
-                            guard let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) else {
-                                return .zero
-                            }
-                            guard let width = (properties as NSDictionary)[kCGImagePropertyPixelWidth] as? Int,
-                                let height = (properties as NSDictionary)[kCGImagePropertyPixelHeight] as? Int
-                                else {
-                                    return .zero
-                            }
-                            return .init(width: width, height: height)
-                        }()
-                        self.delegate?.didCreateMedia(self, media: .image(url, info, gifSize), exportAction: action, error: nil)
                     }
                 }
             }
@@ -891,7 +874,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             return
         }
 
-        // FIXME hacking this in for GIFs
         let size = { () -> CGSize in
             guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
                 return .zero
