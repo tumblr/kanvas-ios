@@ -361,7 +361,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else if settings.features.gifs,
-            let group = cameraMode?.group, group == .gif, let segment = segments.first, let url = segment.videoURL {
+            let group = cameraMode?.group, group == .gif, segments.count == 1, let segment = segments.first, let url = segment.videoURL {
             // If GIF support is enabled and one GIF/Loop video was captured, export it as a GIF
             self.createFinalGIF(videoURL: url, mediaInfo: segment.mediaInfo, exportAction: action)
         }

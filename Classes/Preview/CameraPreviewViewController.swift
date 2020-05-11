@@ -261,7 +261,7 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
             }
         }
         else if settings.features.gifs,
-            let group = cameraMode?.group, group == .gif, let segment = segments.first, let url = segment.videoURL {
+            let group = cameraMode?.group, group == .gif, segments.count == 1, let segment = segments.first, let url = segment.videoURL {
             // If one GIF/Loop video was captured, export it as a GIF
             GIFEncoderFactory.create(type: .imageIO).encode(video: url, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { gifURL in
                 performUIUpdate {
