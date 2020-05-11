@@ -360,8 +360,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
             }
         }
-        else if let group = cameraMode?.group, group == .gif, let segment = segments.first, let url = segment.videoURL {
-            // If one GIF/Loop video was captured, export it as a GIF
+        else if settings.features.gifs,
+            let group = cameraMode?.group, group == .gif, let segment = segments.first, let url = segment.videoURL {
+            // If GIF support is enabled and one GIF/Loop video was captured, export it as a GIF
             self.createFinalGIF(videoURL: url, mediaInfo: segment.mediaInfo, exportAction: action)
         }
         else {
