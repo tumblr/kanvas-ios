@@ -95,13 +95,13 @@ public struct CameraFeatures {
     /// This replaces the Preview screen with the Editor.
     public var editor: Bool = false
     
-    /// The Editor GIF maker feature
-    /// This enables the UI to use the GIF maker in the editor.
+    /// The Editor GIF feature
+    /// This enables the UI to show the GIF button as a toggle.
     public var editorGif: Bool = false
     
-    /// The Editor GIF maker as a toggle
-    /// This makes the GIF button act as a toggle.
-    public var editorGifToggle: Bool = false
+    /// The Editor GIF maker menu
+    /// This makes the GIF button open the GIF tools.
+    public var editorGifTools: Bool = false
     
     /// The Editor Filters feature
     /// This enables the UI to select filters in the editor.

@@ -134,7 +134,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.cameraFilters = true
         settings.features.editor = true
         settings.features.editorGif = true
-        settings.features.editorGifToggle = true
+        settings.features.editorGifTools = true
         settings.features.editorFilters = true
         settings.features.editorText = true
         settings.features.editorMedia = true
@@ -255,7 +255,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .experimentalCameraFilters(settings.features.experimentalCameraFilters),
             .editor(settings.features.editor),
             .editorGif(settings.features.editorGif),
-            .editorGifToggle(settings.features.editorGifToggle),
+            .editorGifTools(settings.features.editorGifTools),
             .editorFilters(settings.features.editorFilters),
             .editorText(settings.features.editorText),
             .editorMedia(settings.features.editorMedia),
@@ -284,8 +284,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.editor = value
         case .editorGif(_):
             settings.features.editorGif = value
-        case .editorGifToggle(_):
-            settings.features.editorGifToggle = value
+        case .editorGifTools(_):
+            settings.features.editorGifTools = value
         case .editorFilters(_):
             settings.features.editorFilters = value
         case .editorText(_):

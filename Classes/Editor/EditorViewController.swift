@@ -493,18 +493,18 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
         switch editionOption {
         case .gif:
-            if settings.features.editorGifToggle {
-                gifEnabled.toggle()
-                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: gifEnabled)
-                cell.setImage(image)
-            }
-            else {
+            if settings.features.editorGifTools {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
                 showMainUI(false)
                 gifMakerController.showView(true)
                 editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
                     self.gifMakerController.showConfirmButton(true)
                 })
+            }
+            else {
+                gifEnabled.toggle()
+                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: gifEnabled)
+                cell.setImage(image)
             }
         case .filter:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
