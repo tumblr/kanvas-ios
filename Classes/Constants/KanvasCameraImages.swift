@@ -73,7 +73,7 @@ struct KanvasCameraImages {
     static func editionOptionTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {
         switch option {
         case .gif:
-            return enabled ? UIImage.imageFromCameraBundle(named: "editorGifOn") : UIImage.imageFromCameraBundle(named: "editorGifOff")
+            return enabled ? UIImage.imageFromCameraBundle(named: "circleIcon") : UIImage.imageFromCameraBundle(named: "editorGifOff")
         case .filter:
             return UIImage.imageFromCameraBundle(named: "editorFilters")
         case .text:
