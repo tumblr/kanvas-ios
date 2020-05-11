@@ -93,7 +93,6 @@ class GIFEncoderImageIO: GIFEncoder {
 
     private struct Constants {
         static let timeScale: CMTimeScale = CMTimeScale(600)
-        static let tolerance = 0.01
     }
 
     fileprivate init() {
@@ -153,14 +152,8 @@ class GIFEncoderImageIO: GIFEncoder {
 
             let generator = AVAssetImageGenerator(asset: asset)
             generator.appliesPreferredTrackTransform = true
-
-            // https://jira.tumblr.net/browse/KANVAS-1081
-            // Should consider setting this to kCMTimeZero so that we get
-            // the exact frame, even though it will cause a bit more of
-            // a decoding delay.
-            let tol = CMTime(seconds: Constants.tolerance, preferredTimescale: Constants.timeScale)
-            generator.requestedTimeToleranceBefore = tol
-            generator.requestedTimeToleranceAfter = tol
+            generator.requestedTimeToleranceBefore = .zero
+            generator.requestedTimeToleranceAfter = .zero
 
             // AVAssetImageGenerator.generateCGImagesAsynchronously would be a more
             // efficient alternative to looping through all the times and calling
