@@ -30,15 +30,14 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     private var editionOptions: [EditionOption]
     private(set) var textCell: EditionMenuCollectionCell?
     
-    /// Whether the GIF toggle in on or off.
-    var gifEnabled: Bool
+    var gifToggle: Bool
     
     weak var delegate: EditionMenuCollectionControllerDelegate?
     
     /// Initializes the option collection
     init(settings: CameraSettings) {
         editionOptions = []
-        gifEnabled = false
+        gifToggle = false
         
         if settings.features.editorGif {
             editionOptions.append(.gif)
@@ -117,7 +116,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditionMenuCollectionCell.identifier, for: indexPath)
         if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
-            cell.bindTo(option, enabled: gifEnabled)
+            cell.bindTo(option, enabled: gifToggle)
             cell.delegate = self
             if option == .text {
                 textCell = cell

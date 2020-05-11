@@ -116,12 +116,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
     
-    private var gifEnabled: Bool {
+    private var gifToggle: Bool {
         set {
-            collectionController.gifEnabled = newValue
+            collectionController.gifToggle = newValue
         }
         get {
-            return collectionController.gifEnabled
+            return collectionController.gifToggle
         }
     }
 
@@ -502,8 +502,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 })
             }
             else {
-                gifEnabled.toggle()
-                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: gifEnabled)
+                gifToggle.toggle()
+                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: gifToggle)
                 cell.setImage(image)
             }
         case .filter:
