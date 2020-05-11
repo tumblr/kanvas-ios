@@ -17,9 +17,11 @@ protocol EditionMenuCollectionCellDelegate: class {
     func didTap(cell: EditionMenuCollectionCell, recognizer: UITapGestureRecognizer)
 }
 
-private struct EditionMenuCollectionCellConstants {
+private struct Constants {
     static let circleDiameter: CGFloat = 50
     static let padding: CGFloat = 8
+    
+    static let animationDuration: TimeInterval = 0.25
     
     static var height: CGFloat {
         return circleDiameter
@@ -33,8 +35,8 @@ private struct EditionMenuCollectionCellConstants {
 /// The cell in EditionMenuCollectionView to display an individual option
 final class EditionMenuCollectionCell: UICollectionViewCell {
     
-    static let height = EditionMenuCollectionCellConstants.height
-    static let width = EditionMenuCollectionCellConstants.width
+    static let height = Constants.height
+    static let width = Constants.width
     
     let circleView = UIImageView()
     
@@ -55,8 +57,8 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     /// Updates the cell according to EditionOption properties
     ///
     /// - Parameter item: The EditionMenu to display
-    func bindTo(_ option: EditionOption) {
-        circleView.image = KanvasCameraImages.editionOptionTypes[option] ?? nil
+    func bindTo(_ option: EditionOption, enabled: Bool) {
+        circleView.image = KanvasCameraImages.editionOptionTypes(option: option, enabled: enabled)
     }
     
     
@@ -80,8 +82,8 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
             circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            circleView.heightAnchor.constraint(equalToConstant: EditionMenuCollectionCellConstants.circleDiameter),
-            circleView.widthAnchor.constraint(equalToConstant: EditionMenuCollectionCellConstants.circleDiameter)
+            circleView.heightAnchor.constraint(equalToConstant: Constants.circleDiameter),
+            circleView.widthAnchor.constraint(equalToConstant: Constants.circleDiameter)
         ])
         
     }
@@ -96,5 +98,19 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
         delegate?.didTap(cell: self, recognizer: recognizer)
+    }
+    
+    // MARK: - Public interface
+    
+    func setImage(_ image: UIImage?) {
+        let animation: (() -> Void) = { [weak self] in
+            self?.circleView.image = image
+        }
+        
+        UIView.transition(with: circleView,
+                          duration: Constants.animationDuration,
+                          options: .transitionCrossDissolve,
+                          animations: animation,
+                          completion: nil)
     }
 }

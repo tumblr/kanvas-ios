@@ -115,6 +115,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
+    
+    private var gifEnabled: Bool {
+        set {
+            collectionController.gifEnabled = newValue
+        }
+        get {
+            return collectionController.gifEnabled
+        }
+    }
 
     private let player: MediaPlayer
     private var filterType: FilterType? {
@@ -482,20 +491,28 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - EditionMenuCollectionControllerDelegate
     
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
-        onBeforeShowingEditionMenu(editionOption, cell: cell)
-        
         switch editionOption {
         case .gif:
-            showMainUI(false)
-            gifMakerController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
-                self.gifMakerController.showConfirmButton(true)
-            })
+            if settings.features.editorGifToggle {
+                gifEnabled.toggle()
+                let image = KanvasCameraImages.editionOptionTypes(option: editionOption, enabled: gifEnabled)
+                cell.setImage(image)
+            }
+            else {
+                onBeforeShowingEditionMenu(editionOption, cell: cell)
+                showMainUI(false)
+                gifMakerController.showView(true)
+                editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
+                    self.gifMakerController.showConfirmButton(true)
+                })
+            }
         case .filter:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
             showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
         case .text:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
             showMainUI(false)
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
@@ -504,6 +521,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 self.textController.showConfirmButton(true)
             })
         case .drawing:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
             showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
@@ -511,6 +529,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 self.drawingController.showConfirmButton(true)
             })
         case .media:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorMediaDrawerOpen()
             openMediaDrawer()
         }

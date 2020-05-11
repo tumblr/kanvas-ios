@@ -69,13 +69,21 @@ struct KanvasCameraImages {
     
     // MARK: - Editor
     static let editorConfirmImage = UIImage.imageFromCameraBundle(named: "editorConfirm")
-    static let editionOptionTypes: [EditionOption: UIImage?] = [
-        .gif: UIImage.imageFromCameraBundle(named: "editorGif"),
-        .filter: UIImage.imageFromCameraBundle(named: "editorFilters"),
-        .text: UIImage.imageFromCameraBundle(named: "editorText"),
-        .media: UIImage.imageFromCameraBundle(named: "editorMedia"),
-        .drawing: UIImage.imageFromCameraBundle(named: "editorDraw"),
-    ]
+    
+    static func editionOptionTypes(option: EditionOption, enabled: Bool) -> UIImage? {
+        switch option {
+        case .gif:
+            return enabled ? UIImage.imageFromCameraBundle(named: "editorGifOn") : UIImage.imageFromCameraBundle(named: "editorGifOff")
+        case .filter:
+            return UIImage.imageFromCameraBundle(named: "editorFilters")
+        case .text:
+            return UIImage.imageFromCameraBundle(named: "editorText")
+        case .media:
+            return UIImage.imageFromCameraBundle(named: "editorMedia")
+        case .drawing:
+            return UIImage.imageFromCameraBundle(named: "editorDraw")
+        }
+    }
     
     // MARK: - Draw
     static let undoImage = UIImage.imageFromCameraBundle(named: "undo")

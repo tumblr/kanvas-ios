@@ -48,7 +48,7 @@ final class EditionMenuCollectionViewTests: FBSnapshotTestCase, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditionMenuCollectionCell.identifier, for: indexPath)
         if let editionMenuCell = cell as? EditionMenuCollectionCell {
-            editionMenuCell.bindTo(editionOptions[indexPath.item])
+            editionMenuCell.bindTo(editionOptions[indexPath.item], enabled: false)
         }
         return cell
     }

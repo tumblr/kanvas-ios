@@ -99,6 +99,10 @@ public struct CameraFeatures {
     /// This enables the UI to use the GIF maker in the editor.
     public var editorGif: Bool = false
     
+    /// The Editor GIF maker as a toggle
+    /// This makes the GIF button act as a toggle.
+    public var editorGifToggle: Bool = false
+    
     /// The Editor Filters feature
     /// This enables the UI to select filters in the editor.
     public var editorFilters: Bool = false

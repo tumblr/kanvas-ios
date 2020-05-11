@@ -29,12 +29,14 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     private lazy var editionMenuCollectionView = EditionMenuCollectionView()
     private var editionOptions: [EditionOption]
     private(set) var textCell: EditionMenuCollectionCell?
+    var gifEnabled: Bool
     
     weak var delegate: EditionMenuCollectionControllerDelegate?
     
     /// Initializes the option collection
     init(settings: CameraSettings) {
         editionOptions = []
+        gifEnabled = false
         
         if settings.features.editorGif {
             editionOptions.append(.gif)
@@ -113,7 +115,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditionMenuCollectionCell.identifier, for: indexPath)
         if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
-            cell.bindTo(option)
+            cell.bindTo(option, enabled: gifEnabled)
             cell.delegate = self
             if option == .text {
                 textCell = cell

@@ -22,6 +22,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case experimentalCameraFilters(Bool)
         case editor(Bool)
         case editorGif(Bool)
+        case editorGifToggle(Bool)
         case editorFilters(Bool)
         case editorText(Bool)
         case editorMedia(Bool)
@@ -46,8 +47,10 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Camera Filters (experimental)"
             case .editor(_):
                 return "Editor"
-                case .editorGif(_):
+            case .editorGif(_):
                 return "Editor GIF"
+            case .editorGifToggle(_):
+                return "Editor GIF as Toggle"
             case .editorFilters(_):
                 return "Editor Filters"
             case .editorText(_):
@@ -84,6 +87,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .editor(let enabled):
                 return enabled
             case .editorGif(let enabled):
+                return enabled
+            case .editorGifToggle(let enabled):
                 return enabled
             case .editorFilters(let enabled):
                 return enabled
@@ -159,6 +164,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editor(value)
         case .editorGif(_):
             featuresData[indexPath.row] = .editorGif(value)
+        case .editorGifToggle(_):
+            featuresData[indexPath.row] = .editorGifToggle(value)
         case .editorFilters(_):
             featuresData[indexPath.row] = .editorFilters(value)
         case .editorText(_):
