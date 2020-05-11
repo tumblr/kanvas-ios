@@ -29,6 +29,8 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     private lazy var editionMenuCollectionView = EditionMenuCollectionView()
     private var editionOptions: [EditionOption]
     private(set) var textCell: EditionMenuCollectionCell?
+    
+    /// Whether the GIF toggle in on or off.
     var gifEnabled: Bool
     
     weak var delegate: EditionMenuCollectionControllerDelegate?

@@ -56,9 +56,11 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     
     /// Updates the cell according to EditionOption properties
     ///
-    /// - Parameter item: The EditionMenu to display
+    /// - Parameters
+    ///  - option: The edition menu to display
+    ///  - enabled: Whether the option is on or off.
     func bindTo(_ option: EditionOption, enabled: Bool) {
-        circleView.image = KanvasCameraImages.editionOptionTypes(option: option, enabled: enabled)
+        circleView.image = KanvasCameraImages.editionOptionTypes(option, enabled: enabled)
     }
     
     
@@ -102,6 +104,9 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     
     // MARK: - Public interface
     
+    /// Changes the image with an animation
+    ///
+    /// - Parameter image: the new image for the button
     func setImage(_ image: UIImage?) {
         let animation: (() -> Void) = { [weak self] in
             self?.circleView.image = image

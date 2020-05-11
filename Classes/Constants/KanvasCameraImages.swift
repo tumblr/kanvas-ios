@@ -70,7 +70,7 @@ struct KanvasCameraImages {
     // MARK: - Editor
     static let editorConfirmImage = UIImage.imageFromCameraBundle(named: "editorConfirm")
     
-    static func editionOptionTypes(option: EditionOption, enabled: Bool) -> UIImage? {
+    static func editionOptionTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {
         switch option {
         case .gif:
             return enabled ? UIImage.imageFromCameraBundle(named: "editorGifOn") : UIImage.imageFromCameraBundle(named: "editorGifOff")

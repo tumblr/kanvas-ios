@@ -495,7 +495,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             if settings.features.editorGifToggle {
                 gifEnabled.toggle()
-                let image = KanvasCameraImages.editionOptionTypes(option: editionOption, enabled: gifEnabled)
+                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: gifEnabled)
                 cell.setImage(image)
             }
             else {
