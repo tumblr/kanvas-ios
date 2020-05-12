@@ -282,6 +282,7 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     private(set) var closeCalled = false
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
+    private(set) var framesExportCalled = false
     
     func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(url)
@@ -291,6 +292,11 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(image)
         imageExportCalled = true
+    }
+
+    func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+        XCTAssertNotNil(url)
+        framesExportCalled = true
     }
     
     func dismissButtonPressed() {
