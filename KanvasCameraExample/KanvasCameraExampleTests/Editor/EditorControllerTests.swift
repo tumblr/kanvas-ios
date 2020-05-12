@@ -57,9 +57,9 @@ final class EditorControllerTests: FBSnapshotTestCase {
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL, mediaInfo),
+                CameraSegment.image(image, videoURL, nil, mediaInfo),
                 CameraSegment.video(videoURL, mediaInfo),
-                CameraSegment.image(image, videoURL, mediaInfo),
+                CameraSegment.image(image, videoURL, nil, mediaInfo),
                 CameraSegment.video(videoURL, mediaInfo)
             ]
         }
@@ -82,7 +82,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL, mediaInfo)
+                CameraSegment.image(image, videoURL, nil, mediaInfo)
             ]
         }
         return []
@@ -93,8 +93,8 @@ final class EditorControllerTests: FBSnapshotTestCase {
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL, mediaInfo),
-                CameraSegment.image(image, videoURL, mediaInfo)
+                CameraSegment.image(image, videoURL, nil, mediaInfo),
+                CameraSegment.image(image, videoURL, nil, mediaInfo)
             ]
         }
         return []

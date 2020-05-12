@@ -144,6 +144,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorSaving = true
         settings.features.editorPostOptions = false
         settings.features.newCameraModes = true
+        settings.features.gifs = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         return settings
@@ -265,6 +266,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
+            .gifs(settings.features.gifs),
         ]
     }
 
@@ -306,6 +308,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         case .editorPostOptions(_):
             settings.features.editorPostOptions = value
+        case .gifs(_):
+            settings.features.gifs = value
         }
     }
 }

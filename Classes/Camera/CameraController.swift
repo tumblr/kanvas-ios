@@ -450,7 +450,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 let simulatorImage = TARGET_OS_SIMULATOR != 0 ? UIImage() : nil
                 if let image = image ?? simulatorImage {
                     if strongSelf.currentMode.quantity == .single {
-                        strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil, TumblrMediaInfo(source: .kanvas_camera))])
+                        strongSelf.showPreviewWithSegments([CameraSegment.image(image, nil, nil, TumblrMediaInfo(source: .kanvas_camera))])
                     }
                     else {
                         strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
@@ -988,8 +988,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         picker.dismiss(animated: true, completion: nil)
         let imageMaybe = info[.originalImage] as? UIImage
         let mediaURLMaybe = info[.mediaURL] as? URL
+        let imageURLMaybe = info[.imageURL] as? URL
 
-        if let image = imageMaybe {
+        if settings.features.gifs,
+            let imageURL = imageURLMaybe,
+            GIFDecoderFactory.main().numberOfFrames(in: imageURL) > 1
+        {
+            pick(frames: imageURL)
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
+        }
+        else if let image = imageMaybe {
             guard canPick(image: image) else {
                 let message = NSLocalizedString("That's too big, bud.", comment: "That's too big, bud.")
                 let buttonMessage = NSLocalizedString("Got it", comment: "Got it")
@@ -1010,6 +1018,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         analyticsProvider?.logMediaPickerDismiss()
     }
 
+    private func pick(frames imageURL: URL) {
+        let mediaInfo: TumblrMediaInfo = {
+            return TumblrMediaInfo(fromImage: imageURL) ?? TumblrMediaInfo(source: .media_library)
+        }()
+        GIFDecoderFactory.main().decode(image: imageURL) { frames in
+            let segments = frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
+            self.showPreviewWithSegments(segments)
+        }
+    }
+
     private func pick(image: UIImage, url: URL?) {
         let mediaInfo: TumblrMediaInfo = {
             guard let url = url else { return TumblrMediaInfo(source: .media_library) }
@@ -1017,7 +1035,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }()
         if currentMode.quantity == .single {
             performUIUpdate {
-                self.showPreviewWithSegments([CameraSegment.image(image, nil, mediaInfo)])
+                self.showPreviewWithSegments([CameraSegment.image(image, nil, nil, mediaInfo)])
             }
         }
         else {

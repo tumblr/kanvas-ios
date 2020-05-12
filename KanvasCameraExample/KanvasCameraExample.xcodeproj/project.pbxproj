@@ -165,6 +165,9 @@
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
 		BF428955238637F900D51A07 /* String+UTF16SubstringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF428954238637F900D51A07 /* String+UTF16SubstringTests.swift */; };
+		BF5AD6652460C7B50077481B /* GIFDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */; };
+		BF5AD6682460DA6F0077481B /* colors.gif in Resources */ = {isa = PBXBuildFile; fileRef = BF5AD6662460CB290077481B /* colors.gif */; };
+		BF5AD6692460DA720077481B /* colors.gif in Resources */ = {isa = PBXBuildFile; fileRef = BF5AD6662460CB290077481B /* colors.gif */; };
 		BF8C80F623BE6971001D29A0 /* CameraPermissionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C80F523BE6971001D29A0 /* CameraPermissionsTests.swift */; };
 		FECCC46BFCBD5D4DF20954D7 /* libPods-KanvasCameraExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A15411C557452BAE33C70F12 /* libPods-KanvasCameraExampleTests.a */; };
 /* End PBXBuildFile section */
@@ -345,6 +348,8 @@
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
 		BF428954238637F900D51A07 /* String+UTF16SubstringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UTF16SubstringTests.swift"; sourceTree = "<group>"; };
+		BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFDecoderTests.swift; sourceTree = "<group>"; };
+		BF5AD6662460CB290077481B /* colors.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = colors.gif; sourceTree = "<group>"; };
 		BF8C80F523BE6971001D29A0 /* CameraPermissionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionsTests.swift; sourceTree = "<group>"; };
 		F1F6839B40675658A9EB1A05 /* Pods-KanvasCameraExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.release.xcconfig"; sourceTree = "<group>"; };
 		F67459CFA8681ADB0C29FF28 /* Pods-KanvasCameraExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -771,6 +776,7 @@
 		AB7F29452121F02A00B8D599 /* KanvasCameraExample */ = {
 			isa = PBXGroup;
 			children = (
+				BF5AD6662460CB290077481B /* colors.gif */,
 				ABFBDE25212CCDE400E1044C /* sample.mp4 */,
 				ABFBDE26212CCDE500E1044C /* sample.png */,
 				AB7F29462121F02A00B8D599 /* AppDelegate.swift */,
@@ -802,6 +808,7 @@
 				ABE4991B2137307500379F7F /* Utility */,
 				ABE49902213712E100379F7F /* Options */,
 				ABE498F521370DFD00379F7F /* MediaClips */,
+				BF5AD6632460C7990077481B /* MediaFormats */,
 				AB7263ED212CCBB30044ED96 /* Recording */,
 				AB7263E4212CC83B0044ED96 /* Constants */,
 				0EBE144C2123726B00E9D0C8 /* Settings */,
@@ -876,6 +883,14 @@
 				764AC469221D84B5005C82EC /* FilterTests.swift */,
 			);
 			path = OpenGL;
+			sourceTree = "<group>";
+		};
+		BF5AD6632460C7990077481B /* MediaFormats */ = {
+			isa = PBXGroup;
+			children = (
+				BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */,
+			);
+			path = MediaFormats;
 			sourceTree = "<group>";
 		};
 		C15AF1B8DCB328EAA7285428 /* Frameworks */ = {
@@ -975,6 +990,7 @@
 				AB7F29512121F02C00B8D599 /* LaunchScreen.storyboard in Resources */,
 				AB7F294E2121F02C00B8D599 /* Assets.xcassets in Resources */,
 				650B2A1E2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf in Resources */,
+				BF5AD6692460DA720077481B /* colors.gif in Resources */,
 				ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */,
 				ABFBDE28212CCDE500E1044C /* sample.png in Resources */,
 				655163A42396E8A30043C01A /* stickers.json in Resources */,
@@ -987,6 +1003,7 @@
 			files = (
 				AB997EEB212CD07800A346A2 /* sample.mp4 in Resources */,
 				AB997EEC212CD07A00A346A2 /* sample.png in Resources */,
+				BF5AD6682460DA6F0077481B /* colors.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1168,6 +1185,7 @@
 				65E46B9322BD22CA004FD226 /* FilterSettingsControllerTests.swift in Sources */,
 				658A329F239FFD9B00EEC1D3 /* DrawerTabBarControllerTests.swift in Sources */,
 				65E46BA822BD22DE004FD226 /* EditionMenuCollectionCellTests.swift in Sources */,
+				BF5AD6652460C7B50077481B /* GIFDecoderTests.swift in Sources */,
 				65507DB3239F381700087014 /* EditorTextControllerTests.swift in Sources */,
 				76826A0E2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift in Sources */,
 				654AE16022E8B8CD00C8C0E4 /* StrokeSelectorControllerTests.swift in Sources */,
