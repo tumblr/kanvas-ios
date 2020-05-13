@@ -15,11 +15,13 @@ import Utils
 public enum KanvasCameraMedia {
     case image(URL, TumblrMediaInfo, CGSize)
     case video(URL, TumblrMediaInfo, CGSize)
+    case frames(URL, TumblrMediaInfo, CGSize)
 
     public var info: TumblrMediaInfo {
         switch self {
         case .image(_, let info, _): return info
         case .video(_, let info, _): return info
+        case .frames(_, let info, _): return info
         }
     }
 }
@@ -815,6 +817,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         didFinishExportingImage(image: image, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
     }
 
+    func didFinishExportingFrames(url: URL?) {
+        didFinishExportingFrames(url: url, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
+    }
+
     public func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         if let url = url, let info = info {
             let asset = AVURLAsset(url: url)
@@ -853,6 +859,45 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
                 }
             }
+        }
+    }
+
+    public func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+
+        guard let url = url, let info = info else {
+            performUIUpdate {
+                self.handleCloseSoon(action: action)
+                self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+            }
+            return
+        }
+
+        let size = { () -> CGSize in
+            guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+                return .zero
+            }
+            guard let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) else {
+                return .zero
+            }
+            guard let width = (properties as NSDictionary)[kCGImagePropertyPixelWidth] as? Int,
+                let height = (properties as NSDictionary)[kCGImagePropertyPixelHeight] as? Int
+                else {
+                    return .zero
+            }
+            return .init(width: width, height: height)
+        }()
+
+        guard size != .zero else {
+            performUIUpdate {
+                self.handleCloseSoon(action: action)
+                self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+            }
+            return
+        }
+
+        performUIUpdate {
+            self.handleCloseSoon(action: action)
+            self.delegate?.didCreateMedia(self, media: .frames(url, info, size), exportAction: action, error: nil)
         }
     }
 

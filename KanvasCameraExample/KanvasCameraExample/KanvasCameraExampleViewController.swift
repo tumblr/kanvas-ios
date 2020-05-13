@@ -421,6 +421,8 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                     self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
                 case let .video(url, _, _):
                     self.moveToLibrary(url: url, resourceType: .video, completion: completionMainThread)
+                case let .frames(url, _, _):
+                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
                 }
             }
         }
