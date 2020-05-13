@@ -41,6 +41,7 @@ final class GifMakerView: UIView {
     private let confirmButton: UIButton
     private let trimButton: UIButton
     private let topButtonsContainer: UIView
+    let trimMenuContainer: IgnoreTouchesView
     
     /// Confirm button location expressed in screen coordinates
     var confirmButtonLocation: CGPoint {
@@ -53,6 +54,7 @@ final class GifMakerView: UIView {
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
         trimButton = ExtendedButton(inset: Constants.confirmButtonInset)
         topButtonsContainer = IgnoreTouchesView()
+        trimMenuContainer = IgnoreTouchesView()
         super.init(frame: .zero)
         setupViews()
     }
@@ -68,6 +70,7 @@ final class GifMakerView: UIView {
         setUpTopButtonsContainer()
         setUpConfirmButton()
         setUpTrimButton()
+        setupTrimMenuContainer()
     }
     
     /// Sets up the container for the top buttons
@@ -120,6 +123,21 @@ final class GifMakerView: UIView {
         ])
         
         trimButton.addTarget(self, action: #selector(trimButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setupTrimMenuContainer() {
+        trimMenuContainer.backgroundColor = .clear
+        trimMenuContainer.accessibilityIdentifier = "GIF Maker Trim Menu Container"
+        trimMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        trimMenuContainer.clipsToBounds = false
+        
+        addSubview(trimMenuContainer)
+        NSLayoutConstraint.activate([
+            trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
+            trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            trimMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
+            trimMenuContainer.heightAnchor.constraint(equalToConstant: TrimView.height),
+        ])
     }
     
     // MARK: - Gesture recognizers

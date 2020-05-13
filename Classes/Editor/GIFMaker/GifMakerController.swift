@@ -20,7 +20,7 @@ private struct Constants {
 }
 
 /// A view controller that contains the GIF maker menu
-final class GifMakerController: UIViewController, GifMakerViewDelegate {
+final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimControllerDelegate {
     
     weak var delegate: GifMakerControllerDelegate?
         
@@ -30,6 +30,13 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate {
         return view
     }()
     
+    private lazy var trimController: TrimController = {
+        let controller = TrimController()
+        controller.delegate = self
+        return controller
+    }()
+
+    
     /// Confirm button location expressed in screen coordinates
     var confirmButtonLocation: CGPoint {
         return gifMakerView.confirmButtonLocation
@@ -38,6 +45,7 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate {
     private var trimEnabled: Bool {
         willSet {
             gifMakerView.changeTrimButton(newValue)
+            trimController.showView(newValue)
         }
     }
     
@@ -67,6 +75,8 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate {
     override public func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
+        
+        load(childViewController: trimController, into: gifMakerView.trimMenuContainer)
     }
     
     // MARK: - Layout
