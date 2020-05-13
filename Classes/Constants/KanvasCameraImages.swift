@@ -113,6 +113,10 @@ struct KanvasCameraImages {
     // MARK: - Media Picker
     static let imageThumbnail = UIImage.imageFromCameraBundle(named: "imageThumbnail")
     
+    // MARK: - GIF Maker
+    static let trimOff = UIImage.imageFromCameraBundle(named: "trimOff")
+    static let trimOn = UIImage.imageFromCameraBundle(named: "trimOn")
+    
     // MARK: - Camera Permissions
     static let permissionCheckmark = UIImage.imageFromCameraBundle(named: "checkmark")
 }

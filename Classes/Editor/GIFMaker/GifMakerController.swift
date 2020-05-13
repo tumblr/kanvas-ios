@@ -35,9 +35,16 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate {
         return gifMakerView.confirmButtonLocation
     }
     
+    private var trimEnabled: Bool {
+        willSet {
+            gifMakerView.changeTrimButton(newValue)
+        }
+    }
+    
     // MARK: - Initializers
     
     init() {
+        trimEnabled = false
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -72,6 +79,10 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate {
     
     func didTapConfirmButton() {
         delegate?.didConfirmGif()
+    }
+    
+    func didTapTrimButton() {
+        trimEnabled.toggle()
     }
     
     // MARK: - Public interface
