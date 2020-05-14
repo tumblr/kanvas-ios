@@ -220,6 +220,8 @@ extension KanvasDashboardController: CameraControllerDelegate {
                     self.addToLibrary(url: url, resourceType: .photo, moveFile: moveFile, completion: completionMainThread)
                 case let .video(url, _, _):
                     self.addToLibrary(url: url, resourceType: .video, moveFile: moveFile, completion: completionMainThread)
+                case let .frames(url, _, _):
+                    self.addToLibrary(url: url, resourceType: .photo, moveFile: moveFile, completion: completionMainThread)
                 }
             @unknown default:
                 completionMainThread(nil)
