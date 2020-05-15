@@ -154,11 +154,13 @@ final class GifMakerView: UIView {
     
     /// shows or hides the view
     ///
-    /// - Parameter show: true to show, false to hide
-    func showView(_ show: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
+    /// - Parameters
+    ///  - show: true to show, false to hide.
+    ///  - completion: optional closure to execute after the animation.
+    func showView(_ show: Bool, completion: ((Bool) -> Void)? = nil) {
+        UIView.animate(withDuration: Constants.animationDuration, animations: { [weak self] in
             self?.alpha = show ? 1 : 0
-        }
+        }, completion: completion)
     }
     
     

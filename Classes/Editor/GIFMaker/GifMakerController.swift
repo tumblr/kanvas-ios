@@ -92,7 +92,6 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     // MARK: - GifMakerViewDelegate
     
     func didTapConfirmButton() {
-        trimEnabled = false
         delegate?.didConfirmGif()
     }
     
@@ -120,7 +119,9 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        gifMakerView.showView(show)
+        gifMakerView.showView(show, completion: { [weak self] _ in
+            self?.trimEnabled = false
+        })
     }
     
     /// shows or hides the confirm button
