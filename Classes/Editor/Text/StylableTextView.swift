@@ -13,7 +13,7 @@ private struct Constants {
 }
 
 /// TextView that can be customized with TextOptions
-class StylableTextView: UITextView, UITextViewDelegate {
+class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement {
     
     // Color rectangles behind the text
     private var highlightViews: [UIView]
@@ -188,6 +188,59 @@ class StylableTextView: UITextView, UITextViewDelegate {
         for subview in textInputView.subviews {
             subview.contentScaleFactor = scaleFactorForDevice
         }
+    }
+    
+    // MARK: - MovableViewInnerElement
+    
+    /// Checks if the view was touched on its letters or on the space between lines
+    ///
+    /// - Parameter point: location where the view was touched
+    /// - Returns: true if the touch was inside, false if not
+    func hitInsideShape(point: CGPoint) -> Bool {
+        var hitInside = false
+        
+        for (i, view) in highlightViews.enumerated() {
+            let insideView = view.frame.contains(point)
+            
+            let inNextSpace: Bool
+            if let nextView = highlightViews.object(at: i+1) {
+                let spaceBetweenLines = [CGPoint(x: view.frame.minX, y: view.frame.maxY),
+                                         CGPoint(x: view.frame.maxX, y: view.frame.maxY),
+                                         CGPoint(x: nextView.frame.maxX, y: nextView.frame.minY),
+                                         CGPoint(x: nextView.frame.minX, y: nextView.frame.minY),]
+                
+                inNextSpace = contains(polygon: spaceBetweenLines, point: point)
+            }
+            else {
+                inNextSpace = false
+            }
+            
+            hitInside = hitInside || insideView || inNextSpace
+        }
+        
+        return hitInside
+    }
+    
+    /// Checks if a polygon contains a specific point
+    ///
+    /// - Parameters:
+    ///   - polygon: list of points to create the shape
+    ///   - point: point to be tested
+    private func contains(polygon: [CGPoint], point: CGPoint) -> Bool {
+        guard polygon.count > 1 else { return false }
+
+        let p = UIBezierPath()
+        let firstPoint = polygon[0]
+
+        p.move(to: firstPoint)
+
+        for index in 1...polygon.count-1 {
+            p.addLine(to: polygon[index])
+        }
+
+        p.close()
+
+       return p.contains(point)
     }
 }
 

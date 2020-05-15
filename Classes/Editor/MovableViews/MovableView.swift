@@ -44,6 +44,7 @@ protocol MovableViewDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.35
     static let deletionScale: CGFloat = 0.9
+    static let minimumSize: CGFloat = 50
     static let opaqueAlpha: CGFloat = 1
     static let translucentAlpha: CGFloat = 0.8
 }
@@ -52,7 +53,7 @@ private struct Constants {
 final class MovableView: UIView {
     
     weak var delegate: MovableViewDelegate?
-    private let innerView: UIView
+    private let innerView: MovableViewInnerElement
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -79,7 +80,7 @@ final class MovableView: UIView {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
     }
     
-    init(view innerView: UIView, transformations: ViewTransformations) {
+    init(view innerView: MovableViewInnerElement, transformations: ViewTransformations) {
         self.innerView = innerView
         self.position = transformations.position
         self.scale = transformations.scale
@@ -107,6 +108,7 @@ final class MovableView: UIView {
         super.layoutSubviews()
         innerView.contentScaleFactor = scale
     }
+    
 
     // MARK: - Transforms
     
@@ -184,5 +186,52 @@ final class MovableView: UIView {
         else if let imageView = innerView as? StylableImageView {
             delegate?.didRemoveImageView(imageView)
         }
+    }
+    
+    // MARK: - Extended hit area
+    
+    /// Gets the size of the view
+    private func getSize() -> CGSize {
+        return CGSize(width: bounds.width * scale,
+                      height: bounds.height * scale)
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let size = getSize()
+        let smallSize = size.width < Constants.minimumSize || size.height < Constants.minimumSize
+        
+        if smallSize {
+            return super.hitTest(point, with: event)
+        }
+        else if innerView.hitInsideShape(point: point) {
+            return self
+        }
+        else {
+            return nil
+        }
+    }
+    
+    override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let offset = calculateHitAreaOffset()
+        let verticalOffset = offset.height / 2
+        let horizontalOffset = offset.width / 2
+        
+        let relativeFrame = bounds
+        let hitTestEdgeInsets = UIEdgeInsets(top: -verticalOffset,
+                                             left: -horizontalOffset,
+                                             bottom: -verticalOffset,
+                                             right: -horizontalOffset)
+        let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
+        return hitFrame.contains(point)
+    }
+    
+    /// Calculates the hit area increment that the view will include
+    /// on each side when its scale is modified.
+    func calculateHitAreaOffset() -> CGSize {
+        let size = getSize()
+        let width = max(Constants.minimumSize - size.width, 0)
+        let height = max(Constants.minimumSize - size.height, 0)
+        
+        return CGSize(width: width, height: height)
     }
 }

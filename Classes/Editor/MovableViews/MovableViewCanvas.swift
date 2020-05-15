@@ -129,7 +129,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     ///  - transformations: transformations for the view
     ///  - location: location of the view before transformations
     ///  - size: size of the view
-    func addView(view: UIView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+    func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         let movableView = MovableView(view: view, transformations: transformations)
         movableView.delegate = self
         movableView.isUserInteractionEnabled = true

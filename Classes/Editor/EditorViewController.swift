@@ -530,7 +530,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
         switch editionOption {
         case .gif:
-            if settings.features.editorGifTools {
+            if settings.features.editorGIFMaker {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
                 showMainUI(false)
                 gifMakerController.showView(true)
@@ -696,7 +696,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
-        editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(), location: editorView.movableViewCanvas.bounds.center, size: size)
+        editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(),
+                                             location: editorView.movableViewCanvas.bounds.center, size: size)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {

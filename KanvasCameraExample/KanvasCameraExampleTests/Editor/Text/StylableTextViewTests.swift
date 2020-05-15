@@ -33,4 +33,30 @@ final class StylableTextViewTests: FBSnapshotTestCase {
         textView.font = .fairwater(fontSize: 48)
         FBSnapshotVerifyView(textView)
     }
+    
+    func testHitInsideShape() {
+        let view = newView()
+        let textView = StylableTextView()
+        textView.add(into: view)
+        textView.text = "Example"
+        textView.textAlignment = .left
+        textView.font = .fairwater(fontSize: 48)
+        // Text will be at the top-left corner.
+        let point = CGPoint(x: 30, y: 30)
+        let wasHitInside = textView.hitInsideShape(point: point)
+        XCTAssertTrue(wasHitInside, "The method should return true since the hit was done on the text.")
+    }
+    
+    func testHitOutsideShape() {
+        let view = newView()
+        let textView = StylableTextView()
+        textView.add(into: view)
+        textView.text = "Example"
+        // Text will be at the top-left corner.
+        textView.textAlignment = .left
+        textView.font = .fairwater(fontSize: 48)
+        let point = CGPoint(x: 320, y: 320)
+        let wasHitInside = textView.hitInsideShape(point: point)
+        XCTAssertFalse(wasHitInside, "The method should return false since the hit was done in an empty area of the image.")
+    }
 }
