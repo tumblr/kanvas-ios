@@ -21,8 +21,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case cameraFilters(Bool)
         case experimentalCameraFilters(Bool)
         case editor(Bool)
-        case editorGif(Bool)
-        case editorGifTools(Bool)
+        case editorGIFMaker(Bool)
         case editorFilters(Bool)
         case editorText(Bool)
         case editorMedia(Bool)
@@ -48,10 +47,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Camera Filters (experimental)"
             case .editor(_):
                 return "Editor"
-            case .editorGif(_):
-                return "Editor GIF"
-            case .editorGifTools(_):
-                return "Editor GIF Tools"
+            case .editorGIFMaker(_):
+                return "Editor GIF Maker"
             case .editorFilters(_):
                 return "Editor Filters"
             case .editorText(_):
@@ -89,9 +86,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return enabled
             case .editor(let enabled):
                 return enabled
-            case .editorGif(let enabled):
-                return enabled
-            case .editorGifTools(let enabled):
+            case .editorGIFMaker(let enabled):
                 return enabled
             case .editorFilters(let enabled):
                 return enabled
@@ -167,10 +162,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .experimentalCameraFilters(value)
         case .editor(_):
             featuresData[indexPath.row] = .editor(value)
-        case .editorGif(_):
-            featuresData[indexPath.row] = .editorGif(value)
-        case .editorGifTools(_):
-            featuresData[indexPath.row] = .editorGifTools(value)
+        case .editorGIFMaker(_):
+            featuresData[indexPath.row] = .editorGIFMaker(value)
         case .editorFilters(_):
             featuresData[indexPath.row] = .editorFilters(value)
         case .editorText(_):

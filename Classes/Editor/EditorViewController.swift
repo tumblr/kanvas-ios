@@ -530,7 +530,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
         switch editionOption {
         case .gif:
-            if settings.features.editorGifTools {
+            if settings.features.editorGIFMaker {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
                 showMainUI(false)
                 gifMakerController.showView(true)
