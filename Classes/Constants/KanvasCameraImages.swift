@@ -73,7 +73,7 @@ struct KanvasCameraImages {
     static let editIcons: [EditionOption: [UIImage?]] = [
         .gif: [
             UIImage.imageFromCameraBundle(named: "editorGifOff"),
-            UIImage.imageFromCameraBundle(named: "editorGifOff")?.invert()?.overlayOnTopOf(UIImage.imageFromCameraBundle(named: "circleIcon"))
+            UIImage.imageFromCameraBundle(named: "editorGifOn"),
         ],
         .filter: [UIImage.imageFromCameraBundle(named: "editorFilters")],
         .text: [UIImage.imageFromCameraBundle(named: "editorText")],
