@@ -71,7 +71,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
     
     private lazy var collectionController: EditionMenuCollectionController = {
-        let controller = EditionMenuCollectionController(settings: self.settings)
+        let controller = EditionMenuCollectionController(settings: self.settings,
+                                                         gifButtonEnabled: shouldEnableGIFButton(),
+                                                         gifToggleInitialValue: shouldExportAsGIFByDefault())
         controller.delegate = self
         return controller
     }()
@@ -362,6 +364,28 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         player.play(media: media)
     }
+
+    private func shouldEnableGIFButton() -> Bool {
+        return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
+    }
+
+    private func shouldExportAsGIFByDefault() -> Bool {
+        guard settings.features.gifs else {
+            return false
+        }
+
+        // Media captured from the GIF mode should export as a GIF by default
+        if segments.count == 1 && segments.first?.videoURL != nil && cameraMode?.group == .gif {
+            return true
+        }
+
+        // Media captured from the Stitch mode with only images (but at least two) should export as a GIF by default
+        if segments.count > 1 && assetsHandler.containsOnlyImages(segments: segments) {
+            return true
+        }
+
+        return false
+    }
     
     private func startExporting(action: KanvasExportAction) {
         player.stop()
@@ -376,10 +400,26 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
             }
         }
-        else if settings.features.gifs,
-            let group = cameraMode?.group, group == .gif, segments.count == 1, let segment = segments.first, let url = segment.videoURL {
-            // If GIF support is enabled and one GIF/Loop video was captured, export it as a GIF
-            self.createFinalGIF(videoURL: url, mediaInfo: segment.mediaInfo, exportAction: action)
+        else if gifToggle {
+            if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
+                self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
+            }
+            else {
+                // Maybe try to avoid making this a video first and just make a GIF out of the frames...
+                // This is not straight-forward right now because the media exporter only works on videos or images
+                assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+                    guard let self = self else {
+                        return
+                    }
+                    guard let url = url, let mediaInfo = mediaInfo else {
+                        self.hideLoading()
+                        self.handleExportError()
+                        return
+                    }
+                    let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale).seconds / KanvasCameraTimes.onlyImagesFrameTime.seconds)
+                    self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
+                }
+            }
         }
         else {
             assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
@@ -393,7 +433,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalGIF(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
@@ -405,7 +445,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 }
                 return
             }
-            GIFEncoderFactory.create(type: .imageIO).encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { [weak self] gifURL in
+            GIFEncoderFactory.create(type: .imageIO).encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { [weak self] gifURL in
                 guard let self = self else { return }
                 guard let gifURL = gifURL else {
                     performUIUpdate {

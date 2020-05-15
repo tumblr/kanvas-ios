@@ -22,4 +22,34 @@ extension UIImage {
 
         return UIImage(named: named, in: bundle, compatibleWith: nil)
     }
+
+    func invert() -> UIImage? {
+        guard let cgImage = cgImage else {
+            return nil
+        }
+        let image = CIImage(cgImage: cgImage)
+        guard let filter = CIFilter(name: "CIColorInvert") else {
+            return nil
+        }
+        filter.setDefaults()
+        filter.setValue(image, forKey: kCIInputImageKey)
+        let context = CIContext(options: nil)
+        guard let newCGImage = context.createCGImage(filter.outputImage!, from: image.extent) else {
+            return nil
+        }
+        return UIImage(cgImage: newCGImage)
+    }
+
+    func overlayOnTopOf(_ image: UIImage?) -> UIImage? {
+        guard let image = image else {
+            return self
+        }
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+        image.draw(in: CGRect(origin: .zero, size: size))
+        draw(in: CGRect(origin: .zero, size: size))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
 }

@@ -54,6 +54,12 @@ protocol AssetsHandlerType {
     ///   - completion: returns a local video URL if merged successfully
     func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, TumblrMediaInfo?) -> Void)
 
+    /// Detects if this is an image-only segment
+    ///
+    /// - Parameters:
+    ///   - segments: the CameraSegments
+    /// - Returns: true if all images, false otherwise
+    func containsOnlyImages(segments: [CameraSegment]) -> Bool
 }
 
 /// A protocol to handle the various segments of a stop motion video, and also creates the final output
@@ -375,7 +381,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         }
     }
     
-    private func containsOnlyImages(segments: [CameraSegment]) -> Bool {
+    func containsOnlyImages(segments: [CameraSegment]) -> Bool {
         for segment in segments {
             if segment.image == nil {
                 return false
