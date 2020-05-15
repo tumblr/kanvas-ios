@@ -691,6 +691,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didDisplayFirstFrame(_ image: UIImage) {
         addCarouselDefaultColors(image)
     }
+    
+    // MARK: - GifMakerControllerDelegate
+    
+    func didStartTrimming() {
+        
+    }
+    
+    func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat) {
+        print("L - \(startingPercentage) - \(finalPercentage)")
+    }
+    
+    func didEndTrimming() {
+        
+    }
 
     // MARK: - MediaDrawerControllerDelegate
     

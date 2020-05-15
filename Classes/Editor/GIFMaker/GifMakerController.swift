@@ -12,6 +12,10 @@ protocol GifMakerControllerDelegate: class {
     
     /// Called after the confirm button is tapped
     func didConfirmGif()
+    
+    func didStartTrimming()
+    func didEndTrimming()
+    func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat)
 }
 
 /// Constants for GifMakerController
@@ -88,11 +92,26 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     // MARK: - GifMakerViewDelegate
     
     func didTapConfirmButton() {
+        trimEnabled = false
         delegate?.didConfirmGif()
     }
     
     func didTapTrimButton() {
         trimEnabled.toggle()
+    }
+    
+    // MARK: - TrimControllerDelegate
+    
+    func didStartTrimming() {
+        delegate?.didStartTrimming()
+    }
+    
+    func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat) {
+        delegate?.didTrim(from: startingPercentage, to: finalPercentage)
+    }
+    
+    func didEndTrimming() {
+        delegate?.didEndTrimming()
     }
     
     // MARK: - Public interface

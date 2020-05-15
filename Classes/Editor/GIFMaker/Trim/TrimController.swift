@@ -9,7 +9,9 @@ import UIKit
 
 /// Protocol for the trim controller
 protocol TrimControllerDelegate: class {
-    
+    func didStartTrimming()
+    func didEndTrimming()
+    func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat)
 }
 
 /// Constants for TrimController
@@ -63,8 +65,16 @@ final class TrimController: UIViewController, TrimViewDelegate {
     
     // MARK: - TrimViewDelegate
     
+    func didStartMovingTrimArea() {
+        delegate?.didStartTrimming()
+    }
+    
     func didMoveTrimArea(from startingPercentage: CGFloat, to finalPercentage: CGFloat) {
-        print("L - start \(startingPercentage) - end \(finalPercentage)")
+        delegate?.didTrim(from: startingPercentage, to: finalPercentage)
+    }
+    
+    func didEndMovingTrimArea() {
+        delegate?.didEndTrimming()
     }
     
     // MARK: - Public interface

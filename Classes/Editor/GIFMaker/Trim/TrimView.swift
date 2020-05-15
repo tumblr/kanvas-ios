@@ -9,6 +9,8 @@ import UIKit
 
 /// Protocol for trimming
 protocol TrimViewDelegate: class {
+    func didStartMovingTrimArea()
+    func didEndMovingTrimArea()
     func didMoveTrimArea(from startingPercentage: CGFloat, to finalPercentage: CGFloat)
 }
 
@@ -17,6 +19,12 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let height: CGFloat = 71
     static let cornerRadius: CGFloat = 8
+    static let backgroundColor: UIColor = .black
+}
+
+private enum MovingSide {
+    case left
+    case right
 }
 
 /// A UIView for the trim tool
@@ -26,6 +34,7 @@ final class TrimView: UIView {
     
     weak var delegate: TrimViewDelegate?
     private let trimArea: TrimArea
+    private var currentlyMovingSide: MovingSide? = nil
     
     var leadingConstraint: NSLayoutConstraint
     var trailingConstraint: NSLayoutConstraint
@@ -38,6 +47,7 @@ final class TrimView: UIView {
         trailingConstraint = NSLayoutConstraint()
         super.init(frame: .zero)
         
+        backgroundColor = Constants.backgroundColor
         layer.cornerRadius = Constants.cornerRadius
         setupViews()
         setupGestureRecognizers()
@@ -78,23 +88,59 @@ final class TrimView: UIView {
         addGestureRecognizer(longPressRecognizer)
     }
     
-    @objc private func trimAreaTouched(recognizer: UILongPressGestureRecognizer) {
+    @objc private func trimAreaTouched(recognizer: UIGestureRecognizer) {
         let location = recognizer.location(in: self).x
+        
+        switch recognizer.state {
+        case .began:
+            delegate?.didStartMovingTrimArea()
+            currentlyMovingSide = closestSide(from: location)
+            trimAreaMoved(location: location)
+        case .changed:
+            trimAreaMoved(location: location)
+        case .ended:
+            trimAreaMoved(location: location)
+            currentlyMovingSide = nil
+            delegate?.didEndMovingTrimArea()
+        default:
+            break
+        }
+    }
+    
+    private func closestSide(from location: CGFloat) -> MovingSide {
         let leftSide = trimArea.frame.origin.x
         let rightSide = trimArea.frame.origin.x + trimArea.frame.width
         
         let distanceToLeftSide = abs(location - leftSide)
         let distanceToRightSide = abs(rightSide - location)
         
-        if distanceToLeftSide < distanceToRightSide && location >= 0 {
-            leadingConstraint.constant = location
+        return distanceToLeftSide < distanceToRightSide ? .left : .right
+    }
+    
+    private func trimAreaMoved(location: CGFloat) {
+        let closestSideToTouch = closestSide(from: location)
+        
+        if closestSideToTouch == .left && currentlyMovingSide != .right {
+            
+            if location >= TrimArea.selectorWidth {
+                leadingConstraint.constant = location - TrimArea.selectorWidth
+            }
+            else {
+                leadingConstraint.constant = 0
+            }
         }
-        else if distanceToLeftSide > distanceToRightSide && location <= bounds.width {
-            trailingConstraint.constant = location - bounds.width
+        else if closestSideToTouch == .right && currentlyMovingSide != .left {
+            
+            if location <= bounds.width - TrimArea.selectorWidth {
+                trailingConstraint.constant = location - bounds.width + TrimArea.selectorWidth
+            }
+            else {
+                trailingConstraint.constant = 0
+            }
         }
         
-        let start = trimArea.frame.origin.x * 100 / bounds.width
-        let end = 100 - ((bounds.width - trimArea.frame.origin.x - trimArea.frame.size.width) * 100 / bounds.width)
+        let start = (trimArea.frame.origin.x) * 100 / (bounds.width - TrimArea.selectorWidth * 2)
+        let end = 100 - ((bounds.width - trimArea.frame.origin.x - trimArea.frame.size.width) * 100 / (bounds.width - TrimArea.selectorWidth * 2))
         delegate?.didMoveTrimArea(from: start, to: end)
     }
 
