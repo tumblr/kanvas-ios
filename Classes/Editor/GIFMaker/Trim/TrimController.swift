@@ -29,10 +29,13 @@ final class TrimController: UIViewController, TrimViewDelegate {
         view.delegate = self
         return view
     }()
-
+    
+    private let thumbnailController: ThumbnailCollectionController
+    
     // MARK: - Initializers
     
     init() {
+        thumbnailController = ThumbnailCollectionController()
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -55,6 +58,8 @@ final class TrimController: UIViewController, TrimViewDelegate {
     override public func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
+        
+        load(childViewController: thumbnailController, into: trimView.thumbnailContainer)
     }
     
     // MARK: - Layout
@@ -86,4 +91,7 @@ final class TrimController: UIViewController, TrimViewDelegate {
         trimView.showView(show)
     }
     
+    func setThumbnails(_ thumbnails: [UIImage]) {
+        thumbnailController.setThumbnails(thumbnails)
+    }
 }

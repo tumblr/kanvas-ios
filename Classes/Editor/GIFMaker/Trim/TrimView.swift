@@ -33,6 +33,8 @@ final class TrimView: UIView {
     static let height: CGFloat = Constants.height
     
     weak var delegate: TrimViewDelegate?
+    
+    let thumbnailContainer: IgnoreTouchesView
     private let trimArea: TrimArea
     private var currentlyMovingSide: MovingSide? = nil
     
@@ -42,13 +44,12 @@ final class TrimView: UIView {
     // MARK: - Initializers
     
     init() {
+        thumbnailContainer = IgnoreTouchesView()
         trimArea = TrimArea()
         leadingConstraint = NSLayoutConstraint()
         trailingConstraint = NSLayoutConstraint()
         super.init(frame: .zero)
         
-        backgroundColor = Constants.backgroundColor
-        layer.cornerRadius = Constants.cornerRadius
         setupViews()
         setupGestureRecognizers()
     }
@@ -61,7 +62,23 @@ final class TrimView: UIView {
     // MARK: - Layout
     
     private func setupViews() {
+        setupThumbnailContainer()
         setupTrimArea()
+    }
+    
+    private func setupThumbnailContainer() {
+        thumbnailContainer.accessibilityIdentifier = "GIF Maker Thumbnail Container"
+        thumbnailContainer.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailContainer.backgroundColor = Constants.backgroundColor
+        thumbnailContainer.layer.cornerRadius = Constants.cornerRadius
+        addSubview(thumbnailContainer)
+        
+        NSLayoutConstraint.activate([
+            thumbnailContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            thumbnailContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            thumbnailContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            thumbnailContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+        ])
     }
     
     private func setupTrimArea() {
@@ -120,7 +137,7 @@ final class TrimView: UIView {
     private func trimAreaMoved(location: CGFloat) {
         let closestSideToTouch = closestSide(from: location)
         
-        if closestSideToTouch == .left && currentlyMovingSide != .right {
+        if closestSideToTouch == .left &&  currentlyMovingSide != .right {
             
             if location >= TrimArea.selectorWidth {
                 leadingConstraint.constant = location - TrimArea.selectorWidth
