@@ -174,13 +174,34 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         segments.append(segment)
     }
 
-    /// Creates a video from a UIImage representation and appends as a CameraSegment
+    /// Creates a video from a UIImage representation and appends as a CameraSegment.
     ///
     /// - Parameters:
     ///   - image: UIImage
     ///   - size: size (resolution) of the video
+    ///   - mediaInfo: media info metadata
     ///   - completion: completion handler, success bool and URL of video
     func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
+        addNewImageSegment(image: image, size: size, mediaInfo: mediaInfo, createVideoClip: false, completion: completion)
+    }
+
+    /// Creates a video from a UIImage, will optionally also create a video clip with the `createVideoClip` flag, and appends as a CameraSegment.
+    ///
+    /// - Parameters:
+    ///   - image: UIImage
+    ///   - size: size (resolution) of the video
+    ///   - mediaInfo: media info metadata
+    ///   - createVideoClip: an optimization flag for creating a video clip from the image, for later use in making stitch video
+    ///   - completion: completion handler, success bool and URL of video
+    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, createVideoClip: Bool, completion: @escaping (Bool, CameraSegment?) -> Void) {
+
+        guard createVideoClip else {
+            let segment = CameraSegment.image(image, nil, nil, mediaInfo)
+            self.segments.append(segment)
+            completion(true, segment)
+            return
+        }
+
         createVideoFromImage(image: image, duration: nil) { url in
             if let url = url {
                 let segment = CameraSegment.image(image, url, nil, mediaInfo)
