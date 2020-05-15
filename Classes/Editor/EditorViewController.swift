@@ -495,10 +495,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         
         switch editionOption {
         case .gif:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
-            gifMakerController.showView(false)
-            gifMakerController.showConfirmButton(false)
-            showMainUI(true)
+            if settings.features.editorGifTools {
+                editorView.animateReturnOfEditionOption(cell: selectedCell)
+                gifMakerController.showView(false)
+                gifMakerController.showConfirmButton(false)
+                showMainUI(true)
+            }
         case .filter:
             filterController.showView(false)
             showMainUI(true)
