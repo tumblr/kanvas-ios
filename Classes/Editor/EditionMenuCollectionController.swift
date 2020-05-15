@@ -39,7 +39,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         editionOptions = []
         gifToggle = false
         
-        if settings.features.editorGif {
+        if settings.features.gifs {
             editionOptions.append(.gif)
         }
         

@@ -95,13 +95,9 @@ public struct CameraFeatures {
     /// This replaces the Preview screen with the Editor.
     public var editor: Bool = false
     
-    /// The Editor GIF feature
-    /// This enables the UI to show the GIF button as a toggle.
-    public var editorGif: Bool = false
-    
     /// The Editor GIF maker menu
     /// This makes the GIF button open the GIF tools.
-    public var editorGifTools: Bool = false
+    public var editorGIFMaker: Bool = false
     
     /// The Editor Filters feature
     /// This enables the UI to select filters in the editor.
@@ -136,6 +132,10 @@ public struct CameraFeatures {
     /// The New Camera Modes
     /// This replaces Capture, Photo and Loop modes with Normal, Stitch and GIF modes
     public var newCameraModes = false
+
+    /// GIF support
+    /// This enables GIFs to be picked from the media picker, and exported from the Editor.
+    public var gifs = false
 }
 
 // A class that defines the settings for the Kanvas Camera

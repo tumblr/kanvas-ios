@@ -133,8 +133,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.openGLCapture = true
         settings.features.cameraFilters = true
         settings.features.editor = true
-        settings.features.editorGif = true
-        settings.features.editorGifTools = true
+        settings.features.editorGIFMaker = true
         settings.features.editorFilters = true
         settings.features.editorText = true
         settings.features.editorMedia = true
@@ -144,6 +143,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorSaving = true
         settings.features.editorPostOptions = false
         settings.features.newCameraModes = true
+        settings.features.gifs = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         return settings
@@ -254,8 +254,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .cameraFilters(settings.features.cameraFilters),
             .experimentalCameraFilters(settings.features.experimentalCameraFilters),
             .editor(settings.features.editor),
-            .editorGif(settings.features.editorGif),
-            .editorGifTools(settings.features.editorGifTools),
+            .editorGIFMaker(settings.features.editorGIFMaker),
             .editorFilters(settings.features.editorFilters),
             .editorText(settings.features.editorText),
             .editorMedia(settings.features.editorMedia),
@@ -265,6 +264,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
+            .gifs(settings.features.gifs),
         ]
     }
 
@@ -282,10 +282,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.experimentalCameraFilters = value
         case .editor(_):
             settings.features.editor = value
-        case .editorGif(_):
-            settings.features.editorGif = value
-        case .editorGifTools(_):
-            settings.features.editorGifTools = value
+        case .editorGIFMaker(_):
+            settings.features.editorGIFMaker = value
         case .editorFilters(_):
             settings.features.editorFilters = value
         case .editorText(_):
@@ -306,6 +304,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         case .editorPostOptions(_):
             settings.features.editorPostOptions = value
+        case .gifs(_):
+            settings.features.gifs = value
         }
     }
 }
@@ -425,6 +425,8 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                     self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
                 case let .video(url, _, _):
                     self.moveToLibrary(url: url, resourceType: .video, completion: completionMainThread)
+                case let .frames(url, _, _):
+                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
                 }
             }
         }
