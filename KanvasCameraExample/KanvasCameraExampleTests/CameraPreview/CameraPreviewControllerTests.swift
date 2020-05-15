@@ -24,9 +24,9 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
            let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL, mediaInfo),
+                CameraSegment.image(image, videoURL, nil, mediaInfo),
                 CameraSegment.video(videoURL, mediaInfo),
-                CameraSegment.image(image, videoURL, mediaInfo),
+                CameraSegment.image(image, videoURL, nil, mediaInfo),
                 CameraSegment.video(videoURL, mediaInfo)
             ]
         }
@@ -49,7 +49,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL, mediaInfo)
+                CameraSegment.image(image, videoURL, nil, mediaInfo)
             ]
         }
         return []
@@ -60,8 +60,8 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
             return [
-                CameraSegment.image(image, videoURL, mediaInfo),
-                CameraSegment.image(image, videoURL, mediaInfo)
+                CameraSegment.image(image, videoURL, nil, mediaInfo),
+                CameraSegment.image(image, videoURL, nil, mediaInfo)
             ]
         }
         return []
@@ -204,6 +204,7 @@ final class CameraPreviewControllerDelegateStub: CameraPreviewControllerDelegate
     private(set) var closeCalled = false
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
+    private(set) var framesExportCalled = false
 
     func didFinishExportingVideo(url: URL?) {
         XCTAssertNotNil(url)
@@ -213,6 +214,11 @@ final class CameraPreviewControllerDelegateStub: CameraPreviewControllerDelegate
     func didFinishExportingImage(image: UIImage?) {
         XCTAssertNotNil(image)
         imageExportCalled = true
+    }
+
+    func didFinishExportingFrames(url: URL?) {
+        XCTAssertNotNil(url)
+        framesExportCalled = true
     }
 
     func dismissButtonPressed() {

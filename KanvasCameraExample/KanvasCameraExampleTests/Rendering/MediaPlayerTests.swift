@@ -69,7 +69,7 @@ class MediaPlayerTests: XCTestCase {
         }
         let renderer = mockRenderer()
         let player = MediaPlayer(renderer: renderer)
-        player.play(media: [.image(image)])
+        player.play(media: [.image(image, nil)])
         XCTAssertEqual(renderer.processedSampleBufferCallCount, 2, "Expected processSampleBuffer to be called twice")
         XCTAssertNotNil(renderer.processedSampleBuffer, "Expected processSampleBuffer to be called")
     }

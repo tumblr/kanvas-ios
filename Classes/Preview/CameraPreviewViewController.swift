@@ -17,6 +17,9 @@ protocol CameraPreviewControllerDelegate: class {
     /// callback when finished exporting image
     func didFinishExportingImage(image: UIImage?)
 
+    /// callback when finished exporting frames
+    func didFinishExportingFrames(url: URL?)
+
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
 }
@@ -133,7 +136,7 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         }
         let segment = segments[currentSegmentIndex]
         if let image = segment.image {
-            playImage(image: image)
+            playImage(image: image, duration: segment.timeInterval)
         }
         else if segment.videoURL != nil {
             currentPlayer.play()
@@ -142,7 +145,7 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
 
     private func playSegment(segment: CameraSegment) {
         if let image = segment.image {
-            playImage(image: image)
+            playImage(image: image, duration: segment.timeInterval)
         }
         else if let url = segment.videoURL {
             playVideo(url: url)
@@ -150,21 +153,21 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         queueNextSegment()
     }
 
-    private func playImage(image: UIImage) {
+    private func playImage(image: UIImage, duration: TimeInterval?) {
         cameraPreviewView.setImage(image: image)
-        let displayTime = timeIntervalForImageSegments(segments)
+        let displayTime = duration ?? CameraPreviewViewController.defaultTimeIntervalForImageSegments(segments)
         timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
             self?.playNextSegment()
         })
     }
     
-    private func timeIntervalForImageSegments(_ segments: [CameraSegment]) -> TimeInterval {
+    private static func defaultTimeIntervalForImageSegments(_ segments: [CameraSegment]) -> TimeInterval {
         for segment in segments {
             if segment.image == nil {
                 return KanvasCameraTimes.stopMotionFrameTimeInterval
             }
         }
-        return CMTimeGetSeconds(CMTimeMake(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale))
+        return KanvasCameraTimes.onlyImagesFrameTimeInterval
     }
 
     private func playVideo(url: URL) {
@@ -253,6 +256,16 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
             else {
                 performUIUpdate {
                     self.delegate?.didFinishExportingImage(image: image)
+                    self.hideLoading()
+                }
+            }
+        }
+        else if settings.features.gifs,
+            let group = cameraMode?.group, group == .gif, segments.count == 1, let segment = segments.first, let url = segment.videoURL {
+            // If one GIF/Loop video was captured, export it as a GIF
+            GIFEncoderFactory.create(type: .imageIO).encode(video: url, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { gifURL in
+                performUIUpdate {
+                    self.delegate?.didFinishExportingFrames(url: gifURL)
                     self.hideLoading()
                 }
             }

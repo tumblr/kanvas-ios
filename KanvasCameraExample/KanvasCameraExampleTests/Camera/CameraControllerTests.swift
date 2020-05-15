@@ -358,6 +358,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     
     var dismissCalled = false
     var videoURL: URL? = nil
+    var framesURL: URL? = nil
     var imageCreatedCalled = false
     var creationError = false
     var creationEmpty = false
@@ -366,8 +367,9 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         switch (media, error) {
         case (.none, .none): creationEmpty = true
         case (_, .some): creationError = true
-        case (.some(.image(_)), _): imageCreatedCalled = true
+        case (.some(.image(_, _, _)), _): imageCreatedCalled = true
         case (.some(.video(let url, _, _)), _): videoURL = url
+        case (.some(.frames(let url, _, _)), _): framesURL = url
         }
     }
 

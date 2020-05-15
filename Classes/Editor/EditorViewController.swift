@@ -14,9 +14,12 @@ import Utils
 public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
-    
+
     /// callback when finished exporting image
     func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+
+    /// callback when finished exporting frames
+    func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -158,7 +161,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     stickerProvider: StickerProvider,
                                     analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
         EditorViewController(settings: settings,
-                             segments: [.image(image, nil, TumblrMediaInfo(source: .media_library))],
+                             segments: [.image(image, nil, nil, TumblrMediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
                              cameraMode: nil,
@@ -348,7 +351,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func startPlayer() {
         let media: [MediaPlayerContent] = segments.compactMap {segment in
             if let image = segment.image {
-                return .image(image)
+                return .image(image, segment.timeInterval)
             }
             else if let url = segment.videoURL {
                 return .video(url)
@@ -373,6 +376,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
             }
         }
+        else if settings.features.gifs,
+            let group = cameraMode?.group, group == .gif, segments.count == 1, let segment = segments.first, let url = segment.videoURL {
+            // If GIF support is enabled and one GIF/Loop video was captured, export it as a GIF
+            self.createFinalGIF(videoURL: url, mediaInfo: segment.mediaInfo, exportAction: action)
+        }
         else {
             assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
                 guard let url = url else {
@@ -381,6 +389,35 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     return
                 }
                 self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? TumblrMediaInfo(source: .media_library), exportAction: action)
+            }
+        }
+    }
+
+    private func createFinalGIF(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+        let exporter = exporterClass.init()
+        exporter.filterType = filterType ?? .passthrough
+        exporter.imageOverlays = imageOverlays()
+        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
+            guard let exportedVideoURL = exportedVideoURL else {
+                performUIUpdate {
+                    self.hideLoading()
+                    self.handleExportError()
+                }
+                return
+            }
+            GIFEncoderFactory.create(type: .imageIO).encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { [weak self] gifURL in
+                guard let self = self else { return }
+                guard let gifURL = gifURL else {
+                    performUIUpdate {
+                        self.hideLoading()
+                        self.handleExportError()
+                    }
+                    return
+                }
+                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                performUIUpdate {
+                    self.hideLoading()
+                }
             }
         }
     }
@@ -659,7 +696,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
-        editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(), location: editorView.movableViewCanvas.bounds.center, size: size)
+        editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(),
+                                             location: editorView.movableViewCanvas.bounds.center, size: size)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {

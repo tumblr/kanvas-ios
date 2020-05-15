@@ -28,7 +28,7 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
 
     func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
         guard let url = videoURL else { return }
-        let segment = CameraSegment.image(image, url, mediaInfo)
+        let segment = CameraSegment.image(image, url, nil, mediaInfo)
         segments.append(segment)
         completion(true, segment)
     }
