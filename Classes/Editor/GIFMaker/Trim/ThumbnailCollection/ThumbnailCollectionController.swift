@@ -19,6 +19,11 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         super.init(nibName: .none, bundle: .none)
     }
     
+    init(thumbnails: [UIImage]) {
+        self.thumbnails = thumbnails
+        super.init(nibName: .none, bundle: .none)
+    }
+    
     @available(*, unavailable, message: "use init() instead")
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
