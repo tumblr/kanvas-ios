@@ -29,7 +29,7 @@ private struct Constants {
     
     // Top options
     static let topButtonSize: CGFloat = 36
-    static let confirmButtonInset: CGFloat = -10
+    static let topButtonInset: CGFloat = -10
     static let topButtonsInterspace: CGFloat = 30
 }
 
@@ -51,8 +51,8 @@ final class GifMakerView: UIView {
     // MARK: - Initializers
     
     init() {
-        confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
-        trimButton = ExtendedButton(inset: Constants.confirmButtonInset)
+        confirmButton = ExtendedButton(inset: Constants.topButtonInset)
+        trimButton = ExtendedButton(inset: Constants.topButtonInset)
         topButtonsContainer = IgnoreTouchesView()
         trimMenuContainer = IgnoreTouchesView()
         super.init(frame: .zero)
@@ -125,6 +125,7 @@ final class GifMakerView: UIView {
         trimButton.addTarget(self, action: #selector(trimButtonTapped), for: .touchUpInside)
     }
     
+    /// Sets up the container for the trim menu
     private func setupTrimMenuContainer() {
         trimMenuContainer.backgroundColor = .clear
         trimMenuContainer.accessibilityIdentifier = "GIF Maker Trim Menu Container"
