@@ -104,7 +104,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
             XCTAssertNotNil(cameraSegmentHandler.segments[0].videoURL)
             XCTAssertNil(cameraSegmentHandler.segments[0].image)
             XCTAssertNotNil(cameraSegmentHandler.segments[1].image)
-            XCTAssertNotNil(cameraSegmentHandler.segments[1].videoURL)
+            XCTAssertNil(cameraSegmentHandler.segments[1].videoURL)
             expectation.fulfill()
         })
         wait(for: [expectation], timeout: 5.0)
