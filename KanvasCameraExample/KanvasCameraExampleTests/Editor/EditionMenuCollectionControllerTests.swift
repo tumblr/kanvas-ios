@@ -27,7 +27,7 @@ final class EditionMenuCollectionControllerTests: FBSnapshotTestCase {
     
     func newViewController() -> EditionMenuCollectionController {
         let settings = newCameraSettings()
-        let controller = EditionMenuCollectionController(settings: settings)
+        let controller = EditionMenuCollectionController(settings: settings, shouldExportMediaAsGIF: false)
         controller.view.frame = CGRect(x: 0, y: 0, width: 600, height: 600)
         controller.view.setNeedsDisplay()
         return controller

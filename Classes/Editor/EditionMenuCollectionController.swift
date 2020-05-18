@@ -30,16 +30,18 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     private var editionOptions: [EditionOption]
     private(set) var textCell: EditionMenuCollectionCell?
     
-    var gifToggle: Bool
+    var shouldExportMediaAsGIF: Bool
     
     weak var delegate: EditionMenuCollectionControllerDelegate?
     
     /// Initializes the option collection
-    init(settings: CameraSettings, gifButtonEnabled: Bool, gifToggleInitialValue: Bool = false) {
+    /// - Parameter settings: Camera settings
+    /// - Parameter shouldExportMediaAsGIF: inital value for GIF export toggle button. `nil` means the button is disabled.
+    init(settings: CameraSettings, shouldExportMediaAsGIF: Bool?) {
         editionOptions = []
-        gifToggle = gifToggleInitialValue
-        
-        if settings.features.gifs && gifButtonEnabled {
+        self.shouldExportMediaAsGIF = shouldExportMediaAsGIF ?? false
+
+        if settings.features.gifs && shouldExportMediaAsGIF != nil {
             editionOptions.append(.gif)
         }
         
@@ -116,7 +118,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditionMenuCollectionCell.identifier, for: indexPath)
         if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
-            cell.bindTo(option, enabled: option == .gif ? gifToggle : false)
+            cell.bindTo(option, enabled: option == .gif ? shouldExportMediaAsGIF : false)
             cell.delegate = self
             if option == .text {
                 textCell = cell

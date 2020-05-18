@@ -72,8 +72,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private lazy var collectionController: EditionMenuCollectionController = {
         let controller = EditionMenuCollectionController(settings: self.settings,
-                                                         gifButtonEnabled: shouldEnableGIFButton(),
-                                                         gifToggleInitialValue: shouldExportAsGIFByDefault())
+                                                         shouldExportMediaAsGIF: shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil)
         controller.delegate = self
         return controller
     }()
@@ -121,12 +120,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
     
-    private var gifToggle: Bool {
-        set {
-            collectionController.gifToggle = newValue
-        }
+    private var shouldExportMediaAsGIF: Bool {
         get {
-            return collectionController.gifToggle
+            return collectionController.shouldExportMediaAsGIF
+        }
+        set {
+            collectionController.shouldExportMediaAsGIF = newValue
         }
     }
 
@@ -400,7 +399,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
             }
         }
-        else if gifToggle {
+        else if shouldExportMediaAsGIF {
             if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
                 self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
             }
@@ -579,8 +578,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 })
             }
             else {
-                gifToggle.toggle()
-                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: gifToggle)
+                shouldExportMediaAsGIF.toggle()
+                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: shouldExportMediaAsGIF)
                 cell.setImage(image)
             }
         case .filter:
