@@ -700,11 +700,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         
     }
     
-    func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat) {
-
+    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
+        
     }
     
-    func didEndTrimming() {
+    func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
         
     }
     

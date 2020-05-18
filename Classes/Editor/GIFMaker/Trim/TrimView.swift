@@ -12,15 +12,19 @@ protocol TrimViewDelegate: class {
     /// Called after a trimming movement starts
     func didStartMovingTrimArea()
     
-    /// Called after a trimming movement ends
-    func didEndMovingTrimArea()
-    
     /// Called after the trim range changes
     ///
-    /// - Parameters
+    /// - Parameters:
     ///  - startingPercentage: trimming starting moment expressed as a percentage.
     ///  - endingPercentage: trimming starting moment expressed as a percentage.
     func didMoveTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
+    
+    /// Called after a trimming movement ends
+    ///
+    /// - Parameters:
+    ///  - startingPercentage: trimming starting moment expressed as a percentage.
+    ///  - endingPercentage: trimming starting moment expressed as a percentage.
+    func didEndMovingTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
 }
 
 /// Constants for Trim view
@@ -124,34 +128,24 @@ final class TrimView: UIView {
         
         switch recognizer.state {
         case .began:
-            delegate?.didStartMovingTrimArea()
-            currentlyMovingSide = closestSide(from: location)
-            trimAreaMoved(location: location)
+            trimAreaStartedMoving(on: location)
+            trimAreaMoved(to: location)
         case .changed:
-            trimAreaMoved(location: location)
+            trimAreaMoved(to: location)
         case .ended:
-            trimAreaMoved(location: location)
-            currentlyMovingSide = nil
-            delegate?.didEndMovingTrimArea()
+            trimAreaMoved(to: location)
+            trimAreaEndedMoving(on: location)
         default:
             break
         }
     }
     
-    // MARK: - Private utilities
-    
-    /// Calculates which is the closest side of the range to a given location.
-    private func closestSide(from location: CGFloat) -> MovingSide {
-        let leftSide = trimArea.frame.origin.x
-        let rightSide = trimArea.frame.origin.x + trimArea.frame.width
-        
-        let distanceToLeftSide = abs(location - leftSide)
-        let distanceToRightSide = abs(rightSide - location)
-        
-        return distanceToLeftSide < distanceToRightSide ? .left : .right
+    private func trimAreaStartedMoving(on location: CGFloat) {
+        currentlyMovingSide = closestSide(from: location)
+        delegate?.didStartMovingTrimArea()
     }
     
-    private func trimAreaMoved(location: CGFloat) {
+    private func trimAreaMoved(to location: CGFloat) {
         let closestSideToTouch = closestSide(from: location)
         
         if closestSideToTouch == .left &&  currentlyMovingSide != .right {
@@ -173,11 +167,39 @@ final class TrimView: UIView {
             }
         }
         
-        let start = (trimArea.frame.origin.x) * 100 / (bounds.width - TrimArea.selectorWidth * 2)
-        let end = 100 - ((bounds.width - trimArea.frame.origin.x - trimArea.frame.size.width) * 100 / (bounds.width - TrimArea.selectorWidth * 2))
+        let start = getStartingPercentage()
+        let end = getEndingPercentage()
         delegate?.didMoveTrimArea(from: start, to: end)
     }
-
+    
+    private func trimAreaEndedMoving(on location: CGFloat) {
+        currentlyMovingSide = nil
+        let start = getStartingPercentage()
+        let end = getEndingPercentage()
+        delegate?.didEndMovingTrimArea(from: start, to: end)
+    }
+    
+    // MARK: - Private utilities
+    
+    /// Calculates which is the closest side of the range to a given location.
+    private func closestSide(from location: CGFloat) -> MovingSide {
+        let leftSide = trimArea.frame.origin.x
+        let rightSide = trimArea.frame.origin.x + trimArea.frame.width
+        
+        let distanceToLeftSide = abs(location - leftSide)
+        let distanceToRightSide = abs(rightSide - location)
+        
+        return distanceToLeftSide < distanceToRightSide ? .left : .right
+    }
+    
+    private func getStartingPercentage() -> CGFloat {
+        return trimArea.frame.origin.x * 100 / (bounds.width - TrimArea.selectorWidth * 2)
+    }
+    
+    private func getEndingPercentage() -> CGFloat {
+        return 100 - ((bounds.width - trimArea.frame.origin.x - trimArea.frame.size.width) * 100 / (bounds.width - TrimArea.selectorWidth * 2))
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the view

@@ -12,15 +12,19 @@ protocol TrimControllerDelegate: class {
     /// Called after a trimming movement starts
     func didStartTrimming()
     
-    /// Called after a trimming movement ends
-    func didEndTrimming()
-    
     /// Called after the trim range changes
     ///
-    /// - Parameters
+    /// - Parameters:
     ///  - startingPercentage: trimming starting moment expressed as a percentage.
     ///  - endingPercentage: trimming starting moment expressed as a percentage.
-    func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat)
+    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
+    
+    /// Called after a trimming movement ends
+    ///
+    /// - Parameters:
+    ///  - startingPercentage: trimming starting moment expressed as a percentage.
+    ///  - endingPercentage: trimming starting moment expressed as a percentage.
+    func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
 }
 
 /// A view controller that contains the trim menu
@@ -82,8 +86,8 @@ final class TrimController: UIViewController, TrimViewDelegate {
         delegate?.didTrim(from: startingPercentage, to: endingPercentage)
     }
     
-    func didEndMovingTrimArea() {
-        delegate?.didEndTrimming()
+    func didEndMovingTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
+        delegate?.didEndTrimming(from: startingPercentage, to: endingPercentage)
     }
     
     // MARK: - Public interface
