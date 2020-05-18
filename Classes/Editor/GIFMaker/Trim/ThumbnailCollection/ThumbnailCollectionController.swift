@@ -19,19 +19,11 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     private lazy var thumbnailCollectionView = ThumbnailCollectionView()
     
     private var thumbnails: [UIImage]
-    private var cellWidth: CGFloat
     
     // MARK: - Initializers
     
     init() {
         thumbnails = []
-        cellWidth = 0
-        super.init(nibName: .none, bundle: .none)
-    }
-    
-    init(thumbnails: [UIImage], cellWidth: CGFloat) {
-        self.thumbnails = thumbnails
-        self.cellWidth = cellWidth
         super.init(nibName: .none, bundle: .none)
     }
     

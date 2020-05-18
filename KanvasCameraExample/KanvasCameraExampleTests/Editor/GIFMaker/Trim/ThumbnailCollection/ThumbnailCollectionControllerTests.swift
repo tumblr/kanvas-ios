@@ -23,9 +23,10 @@ final class ThumbnailCollectionControllerTests: FBSnapshotTestCase {
             XCTFail("Example image not found")
             return
         }
-        let controller = ThumbnailCollectionController(thumbnails: [exampleImage, exampleImage, exampleImage])
+        let controller = ThumbnailCollectionController()
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimView.height)
         controller.view.setNeedsDisplay()
+        controller.setThumbnails([exampleImage, exampleImage, exampleImage])
         
         FBSnapshotVerifyView(controller.view)
     }
