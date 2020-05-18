@@ -9,9 +9,18 @@ import UIKit
 
 /// Protocol for trimming
 protocol TrimViewDelegate: class {
+    /// Called after a trimming movement starts
     func didStartMovingTrimArea()
+    
+    /// Called after a trimming movement ends
     func didEndMovingTrimArea()
-    func didMoveTrimArea(from startingPercentage: CGFloat, to finalPercentage: CGFloat)
+    
+    /// Called after the trim range changes
+    ///
+    /// - Parameters
+    ///  - startingPercentage: trimming starting moment expressed as a percentage.
+    ///  - endingPercentage: trimming starting moment expressed as a percentage.
+    func didMoveTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
 }
 
 /// Constants for Trim view
@@ -36,10 +45,12 @@ final class TrimView: UIView {
     
     let thumbnailContainer: IgnoreTouchesView
     private let trimArea: TrimArea
+    
+    // Indicates which is the side of the range that is currently moving.
     private var currentlyMovingSide: MovingSide? = nil
     
-    var leadingConstraint: NSLayoutConstraint
-    var trailingConstraint: NSLayoutConstraint
+    private var leadingConstraint: NSLayoutConstraint
+    private var trailingConstraint: NSLayoutConstraint
     
     // MARK: - Initializers
     
@@ -66,6 +77,7 @@ final class TrimView: UIView {
         setupTrimArea()
     }
     
+    /// Sets up the container for the thumbnail collection
     private func setupThumbnailContainer() {
         thumbnailContainer.accessibilityIdentifier = "GIF Maker Thumbnail Container"
         thumbnailContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -81,6 +93,7 @@ final class TrimView: UIView {
         ])
     }
     
+    /// Sets up the trim area view.
     private func setupTrimArea() {
         trimArea.accessibilityIdentifier = "GIF Maker Trim Area"
         trimArea.translatesAutoresizingMaskIntoConstraints = false
@@ -124,6 +137,9 @@ final class TrimView: UIView {
         }
     }
     
+    // MARK: - Private utilities
+    
+    /// Calculates which is the closest side of the range to a given location.
     private func closestSide(from location: CGFloat) -> MovingSide {
         let leftSide = trimArea.frame.origin.x
         let rightSide = trimArea.frame.origin.x + trimArea.frame.width

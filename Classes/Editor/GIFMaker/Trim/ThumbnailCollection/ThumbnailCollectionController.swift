@@ -59,16 +59,9 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? ThumbnailCollectionCell, let stickerType = thumbnails.object(at: indexPath.item) {
-            cell.bindTo(stickerType)
+        if let cell = cell as? ThumbnailCollectionCell, let thumbnail = thumbnails.object(at: indexPath.item) {
+            cell.bindTo(thumbnail)
         }
         return cell
-    }
-    
-    // MARK: - Public interface
-    
-    func setThumbnails(_ thumbnails: [UIImage]) {
-        self.thumbnails = thumbnails
-        thumbnailCollectionView.collectionView.reloadData()
-    }
+    }    
 }

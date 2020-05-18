@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// Constants for StickerTypeCollectionCell
+/// Constants for ThumbnailCollectionCell
 private struct Constants {
     static let imageHeight: CGFloat = 50
     static let imageWidth: CGFloat = 50
@@ -43,7 +43,6 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
         setUpMainView()
     }
     
-    /// Sets up the container that changes its color depending on whether the cell is selected or not
     private func setUpMainView() {
         contentView.addSubview(mainView)
         mainView.accessibilityIdentifier = "Thumbnail Collection Cell Main View"
@@ -56,6 +55,7 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
             mainView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)
         ])
     }
+    
     
     // MARK: - Public interface
     

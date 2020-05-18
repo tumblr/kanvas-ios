@@ -9,14 +9,18 @@ import UIKit
 
 /// Protocol for the trim controller
 protocol TrimControllerDelegate: class {
+    /// Called after a trimming movement starts
     func didStartTrimming()
+    
+    /// Called after a trimming movement ends
     func didEndTrimming()
+    
+    /// Called after the trim range changes
+    ///
+    /// - Parameters
+    ///  - startingPercentage: trimming starting moment expressed as a percentage.
+    ///  - endingPercentage: trimming starting moment expressed as a percentage.
     func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat)
-}
-
-/// Constants for TrimController
-private struct Constants {
-    // TODO: Add constants
 }
 
 /// A view controller that contains the trim menu
@@ -74,8 +78,8 @@ final class TrimController: UIViewController, TrimViewDelegate {
         delegate?.didStartTrimming()
     }
     
-    func didMoveTrimArea(from startingPercentage: CGFloat, to finalPercentage: CGFloat) {
-        delegate?.didTrim(from: startingPercentage, to: finalPercentage)
+    func didMoveTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
+        delegate?.didTrim(from: startingPercentage, to: endingPercentage)
     }
     
     func didEndMovingTrimArea() {
@@ -89,9 +93,5 @@ final class TrimController: UIViewController, TrimViewDelegate {
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
         trimView.showView(show)
-    }
-    
-    func setThumbnails(_ thumbnails: [UIImage]) {
-        thumbnailController.setThumbnails(thumbnails)
     }
 }

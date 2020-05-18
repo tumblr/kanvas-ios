@@ -13,9 +13,18 @@ protocol GifMakerControllerDelegate: class {
     /// Called after the confirm button is tapped
     func didConfirmGif()
     
+    /// Called after a trimming movement starts
     func didStartTrimming()
+    
+    /// Called after a trimming movement ends
     func didEndTrimming()
-    func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat)
+    
+    /// Called after the trim range changes
+    ///
+    /// - Parameters
+    ///  - startingPercentage: trimming starting moment expressed as a percentage.
+    ///  - endingPercentage: trimming starting moment expressed as a percentage.
+    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
 }
 
 /// Constants for GifMakerController
@@ -105,8 +114,8 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         delegate?.didStartTrimming()
     }
     
-    func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat) {
-        delegate?.didTrim(from: startingPercentage, to: finalPercentage)
+    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
+        delegate?.didTrim(from: startingPercentage, to: endingPercentage)
     }
     
     func didEndTrimming() {
@@ -129,9 +138,5 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
         gifMakerView.showConfirmButton(show)
-    }
-    
-    func setThumbnails(_ thumbnails: [UIImage]) {
-        trimController.setThumbnails(thumbnails)
     }
 }

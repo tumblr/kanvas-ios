@@ -42,7 +42,6 @@ final class TrimArea: UIView {
         topView = UIView()
         bottomView = UIView()
         super.init(frame: .zero)
-        layer.cornerRadius = Constants.cornerRadius
         setupViews()
     }
     

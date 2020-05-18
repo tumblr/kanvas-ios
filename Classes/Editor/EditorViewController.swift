@@ -692,13 +692,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didDisplayFirstFrame(_ image: UIImage) {
         addCarouselDefaultColors(image)
-        gifMakerController.setThumbnails([KanvasCameraImages.confirmImage!,
-                                          KanvasCameraImages.confirmImage!,
-                                          KanvasCameraImages.confirmImage!,
-                                          KanvasCameraImages.confirmImage!,
-                                          KanvasCameraImages.confirmImage!,
-                                          KanvasCameraImages.confirmImage!,
-                                          KanvasCameraImages.confirmImage!,])
     }
     
     // MARK: - GifMakerControllerDelegate
@@ -708,7 +701,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didTrim(from startingPercentage: CGFloat, to finalPercentage: CGFloat) {
-        print("L - \(startingPercentage) - \(finalPercentage)")
+
     }
     
     func didEndTrimming() {

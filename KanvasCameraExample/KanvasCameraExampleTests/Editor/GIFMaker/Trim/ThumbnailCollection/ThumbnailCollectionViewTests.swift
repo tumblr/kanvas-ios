@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDelegate, UICollectionViewDataSource {
+final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
     
     private var thumbnails: [UIImage] {
         guard let sampleImage = KanvasCameraImages.gradientImage else { return [] }
@@ -27,7 +27,6 @@ final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDe
         let view = ThumbnailCollectionView()
         view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimView.height)
         view.collectionView.register(cell: ThumbnailCollectionCell.self)
-        view.collectionView.delegate = self
         view.collectionView.dataSource = self
         return view
     }
@@ -37,7 +36,7 @@ final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDe
         FBSnapshotVerifyView(view)
     }
     
-    // MARK: - UICollectionView
+    // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return thumbnails.count

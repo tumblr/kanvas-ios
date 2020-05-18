@@ -14,7 +14,7 @@ final class ThumbnailCollectionView: UIView {
     
     init() {
         collectionView = ThumbnailInnerCollectionView(frame: .zero, collectionViewLayout: ThumbnailCollectionViewLayout())
-        collectionView.accessibilityIdentifier = "Sticker Collection View"
+        collectionView.accessibilityIdentifier = "Thumbnail Collection View"
         collectionView.backgroundColor = .clear
         
         super.init(frame: .zero)
