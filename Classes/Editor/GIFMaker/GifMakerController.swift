@@ -139,4 +139,11 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     func showConfirmButton(_ show: Bool) {
         gifMakerView.showConfirmButton(show)
     }
+    
+    /// Sets the thumbnails at the background of the trim tool
+    ///
+    /// - Parameter thumbnails: images to be shown
+    func setThumbnails(_ thumbnails: [UIImage]) {
+        trimController.setThumbnails(thumbnails)
+    }
 }

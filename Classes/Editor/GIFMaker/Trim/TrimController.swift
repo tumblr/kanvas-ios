@@ -94,4 +94,11 @@ final class TrimController: UIViewController, TrimViewDelegate {
     func showView(_ show: Bool) {
         trimView.showView(show)
     }
+    
+    /// Sets the thumbnails at the background of the trim tool
+    ///
+    /// - Parameter thumbnails: images to be shown
+    func setThumbnails(_ thumbnails: [UIImage]) {
+        thumbnailController.setThumbnails(thumbnails)
+    }
 }

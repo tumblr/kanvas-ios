@@ -83,6 +83,7 @@ final class TrimView: UIView {
         thumbnailContainer.translatesAutoresizingMaskIntoConstraints = false
         thumbnailContainer.backgroundColor = Constants.backgroundColor
         thumbnailContainer.layer.cornerRadius = Constants.cornerRadius
+        thumbnailContainer.clipsToBounds = true
         addSubview(thumbnailContainer)
         
         NSLayoutConstraint.activate([

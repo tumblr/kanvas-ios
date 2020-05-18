@@ -707,7 +707,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didEndTrimming() {
         
     }
-
+    
     // MARK: - MediaDrawerControllerDelegate
     
     func didSelectSticker(imageView: StylableImageView, size: CGSize) {
@@ -750,6 +750,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         showConfirmButton(show)
         showCloseButton(show)
         showTagButton(show)
+    }
+    
+    /// Sets the thumbnails at the background of the trim tool
+    ///
+    /// - Parameter thumbnails: images to be shown
+    private func setThumbnails(_ thumbnails: [UIImage]) {
+        gifMakerController.setThumbnails(thumbnails)
     }
     
     // MARK: - Public interface

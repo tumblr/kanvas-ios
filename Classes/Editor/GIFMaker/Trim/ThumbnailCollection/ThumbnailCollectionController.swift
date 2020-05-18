@@ -7,20 +7,31 @@
 import Foundation
 import UIKit
 
+private struct Constants {
+    static let defaultCollectionSize: Int = 10
+}
+
 /// Controller for handling the thumbnail collection in the trim menu.
 final class ThumbnailCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-        
+    
+    static let defaultCollectionSize: Int = Constants.defaultCollectionSize
+    
     private lazy var thumbnailCollectionView = ThumbnailCollectionView()
-    private var thumbnails: [UIImage] = []
+    
+    private var thumbnails: [UIImage]
+    private var cellWidth: CGFloat
     
     // MARK: - Initializers
     
     init() {
+        thumbnails = []
+        cellWidth = 0
         super.init(nibName: .none, bundle: .none)
     }
     
-    init(thumbnails: [UIImage]) {
+    init(thumbnails: [UIImage], cellWidth: CGFloat) {
         self.thumbnails = thumbnails
+        self.cellWidth = cellWidth
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -63,5 +74,18 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
             cell.bindTo(thumbnail)
         }
         return cell
-    }    
+    }
+    
+    // MARK: - Public interface
+    
+    /// Sets the thumbnails at the background of the trim tool
+    ///
+    /// - Parameter thumbnails: images to be shown
+    func setThumbnails(_ thumbnails: [UIImage]) {
+        let newCellWidth = thumbnailCollectionView.bounds.width / CGFloat(thumbnails.count)
+        ThumbnailCollectionCell.cellWidth = newCellWidth
+        thumbnailCollectionView.cellWidth = newCellWidth
+        self.thumbnails = thumbnails
+        thumbnailCollectionView.collectionView.reloadData()
+    }
 }

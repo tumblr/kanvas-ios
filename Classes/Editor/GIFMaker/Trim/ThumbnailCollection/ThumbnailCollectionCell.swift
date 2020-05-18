@@ -9,7 +9,7 @@ import UIKit
 
 /// Constants for ThumbnailCollectionCell
 private struct Constants {
-    static let imageHeight: CGFloat = 50
+    static let imageHeight: CGFloat = TrimView.height
     static let imageWidth: CGFloat = 50
 }
 
@@ -17,7 +17,7 @@ private struct Constants {
 final class ThumbnailCollectionCell: UICollectionViewCell {
     
     static let cellHeight = Constants.imageHeight
-    static let cellWidth = Constants.imageWidth
+    static var cellWidth = Constants.imageWidth
     
     private let mainView = UIImageView()
         
@@ -47,12 +47,13 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
         contentView.addSubview(mainView)
         mainView.accessibilityIdentifier = "Thumbnail Collection Cell Main View"
         mainView.translatesAutoresizingMaskIntoConstraints = false
+        mainView.contentMode = .scaleAspectFill
         
         NSLayoutConstraint.activate([
             mainView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             mainView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            mainView.heightAnchor.constraint(equalToConstant: Constants.imageHeight),
-            mainView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)
+            mainView.heightAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellHeight),
+            mainView.widthAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellWidth)
         ])
     }
     
