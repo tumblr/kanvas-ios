@@ -9,25 +9,9 @@ import AVFoundation
 import CoreServices
 import CoreGraphics
 
-enum GIFEncoderType {
-    case imageIO
-}
-
 protocol GIFEncoder {
+    init()
     func encode(video url: URL, loopCount: Int, framesPerSecond: Int, completion: @escaping (URL?) -> Void)
-}
-
-class GIFEncoderFactory {
-    static func create(type: GIFEncoderType) -> GIFEncoder {
-        switch type {
-        case .imageIO:
-            return GIFEncoderImageIO()
-        }
-    }
-
-    static func main() -> GIFEncoder {
-        return create(type: .imageIO)
-    }
 }
 
 enum GIFSize {
@@ -89,13 +73,13 @@ enum GIFSize {
     }
 }
 
-class GIFEncoderImageIO: GIFEncoder {
+final class GIFEncoderImageIO: GIFEncoder {
 
     private struct Constants {
         static let timeScale: CMTimeScale = CMTimeScale(600)
     }
 
-    fileprivate init() {
+    init() {
 
     }
 

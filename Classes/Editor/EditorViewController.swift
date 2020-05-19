@@ -115,6 +115,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let exporterClass: MediaExporting.Type
+    private var gifEncoderClass: GIFEncoder.Type
     private let stickerProvider: StickerProvider?
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
@@ -165,6 +166,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              segments: [.image(image, nil, nil, TumblrMediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
+                             gifEncoderClass: GIFEncoderImageIO.self,
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: analyticsProvider,
@@ -176,6 +178,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              segments: [.video(videoURL, TumblrMediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
+                             gifEncoderClass: GIFEncoderImageIO.self,
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: nil,
@@ -195,6 +198,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          segments: [CameraSegment],
          assetsHandler: AssetsHandlerType,
          exporterClass: MediaExporting.Type,
+         gifEncoderClass: GIFEncoder.Type,
          cameraMode: CameraMode?,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?,
@@ -205,6 +209,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.cameraMode = cameraMode
         self.analyticsProvider = analyticsProvider
         self.exporterClass = exporterClass
+        self.gifEncoderClass = gifEncoderClass
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
@@ -444,7 +449,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 }
                 return
             }
-            GIFEncoderFactory.create(type: .imageIO).encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { [weak self] gifURL in
+            self.gifEncoderClass.init().encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { [weak self] gifURL in
                 guard let self = self else { return }
                 guard let gifURL = gifURL else {
                     performUIUpdate {

@@ -33,6 +33,16 @@ class MediaExporterStub: MediaExporting {
     }
 }
 
+final class GIFEncoderStub: GIFEncoder {
+
+    var encodeGIFCalled = false
+
+    func encode(video url: URL, loopCount: Int, framesPerSecond: Int, completion: @escaping (URL?) -> Void) {
+        encodeGIFCalled = true
+        completion(url)
+    }
+}
+
 final class EditorControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
@@ -104,7 +114,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let cameraSettings = settings ?? getCameraSettings()
         let handler = assetsHandler ?? AssetsHandlerStub()
         let analytics = analyticsProvider ?? KanvasCameraAnalyticsStub()
-        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, exporterClass: MediaExporterStub.self, cameraMode: cameraMode, stickerProvider: StickerProviderStub(), analyticsProvider: analytics, quickBlogSelectorCoordinator: nil)
+        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, exporterClass: MediaExporterStub.self, gifEncoderClass: GIFEncoderStub.self, cameraMode: cameraMode, stickerProvider: StickerProviderStub(), analyticsProvider: analytics, quickBlogSelectorCoordinator: nil)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
@@ -168,7 +178,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
-        XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
+        XCTAssert(delegate.framesExportCalled, "Delegate frames export function not called")
     }
     
     func testConfirmPhotoAsVideoInStopMotionMode() {
