@@ -133,7 +133,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.openGLCapture = true
         settings.features.cameraFilters = true
         settings.features.editor = true
-        settings.features.editorGIFMaker = true
+        settings.features.editorGIFMaker = false
         settings.features.editorFilters = true
         settings.features.editorText = true
         settings.features.editorMedia = true
@@ -254,6 +254,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .cameraFilters(settings.features.cameraFilters),
             .experimentalCameraFilters(settings.features.experimentalCameraFilters),
             .editor(settings.features.editor),
+            .gifs(settings.features.gifs),
             .editorGIFMaker(settings.features.editorGIFMaker),
             .editorFilters(settings.features.editorFilters),
             .editorText(settings.features.editorText),
@@ -264,7 +265,6 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
-            .gifs(settings.features.gifs),
         ]
     }
 

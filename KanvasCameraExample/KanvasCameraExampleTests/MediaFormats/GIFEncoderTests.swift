@@ -55,15 +55,7 @@ final class GIFEncoderTests: FBSnapshotTestCase {
             /// Act
             ///
 
-            guard let encoder = GIFEncoderFactory.create(type: .imageIO) as? GIFEncoderImageIO else {
-                XCTFail("Expected encoder to be of type GIFEncoderImageIO")
-                return
-            }
-
-            // Doing this to directly test GIFEncoderImageIO so our testing tools
-            // know GIFEncoderImageIO is being tested.
-            let encode = GIFEncoderImageIO.encode(encoder)
-            encode(url, loopCount, gifFramesPerSecond) { gifURL in
+            GIFEncoderImageIO().encode(video: url, loopCount: loopCount, framesPerSecond: gifFramesPerSecond) { gifURL in
 
                 ///
                 /// Assert

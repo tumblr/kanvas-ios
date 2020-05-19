@@ -11,6 +11,7 @@ import UIKit
 import Utils
 
 final class CameraSegmentHandlerStub: SegmentsHandlerType {
+
     var segments: [CameraSegment] = []
 
     let videoURL = Bundle(for: CameraSegmentHandlerStub.self).url(forResource: "sample", withExtension: "mp4")
