@@ -372,7 +372,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
         save(media: media) { err in
             DispatchQueue.main.async {
-                if TARGET_OS_SIMULATOR == 0 {
+                if KanvasDevice.isRunningInSimulator == false {
                     guard err == nil else {
                         assertionFailure("Error saving to photo library")
                         return
