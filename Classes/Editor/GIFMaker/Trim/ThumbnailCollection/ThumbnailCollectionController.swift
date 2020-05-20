@@ -7,14 +7,8 @@
 import Foundation
 import UIKit
 
-private struct Constants {
-    static let defaultCollectionSize: Int = 10
-}
-
 /// Controller for handling the thumbnail collection in the trim menu.
 final class ThumbnailCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
-    static let defaultCollectionSize: Int = Constants.defaultCollectionSize
     
     private lazy var thumbnailCollectionView = ThumbnailCollectionView()
     
@@ -74,9 +68,6 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     ///
     /// - Parameter thumbnails: images to be shown
     func setThumbnails(_ thumbnails: [UIImage]) {
-        let newCellWidth = thumbnailCollectionView.bounds.width / CGFloat(thumbnails.count)
-        ThumbnailCollectionCell.cellWidth = newCellWidth
-        thumbnailCollectionView.cellWidth = newCellWidth
         self.thumbnails = thumbnails
         thumbnailCollectionView.collectionView.reloadData()
     }

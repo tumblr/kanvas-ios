@@ -736,6 +736,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didDisplayFirstFrame(_ image: UIImage) {
         addCarouselDefaultColors(image)
+        gifMakerController.setThumbnails([image,image,image,image,image,image,image,image,image,image,image,image,image,image,
+                                          image,image,image,image,image,image,image,image,image,image,image,image,image,image,])
     }
     
     // MARK: - GifMakerControllerDelegate
@@ -749,7 +751,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        
+        print("L - \(startingPercentage) - \(endingPercentage)")
     }
     
     // MARK: - MediaDrawerControllerDelegate
@@ -794,13 +796,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         showConfirmButton(show)
         showCloseButton(show)
         showTagButton(show)
-    }
-    
-    /// Sets the thumbnails at the background of the trim tool
-    ///
-    /// - Parameter thumbnails: images to be shown
-    private func setThumbnails(_ thumbnails: [UIImage]) {
-        gifMakerController.setThumbnails(thumbnails)
     }
     
     // MARK: - Public interface

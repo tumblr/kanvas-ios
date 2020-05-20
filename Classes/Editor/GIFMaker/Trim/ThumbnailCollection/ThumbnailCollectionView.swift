@@ -66,13 +66,16 @@ private class ThumbnailInnerCollectionView: UICollectionView {
     }
     
     private func configure() {
-        isScrollEnabled = false
+        isScrollEnabled = true
         allowsSelection = false
-        bounces = false
+        bounces = true
+        alwaysBounceHorizontal = true
+        alwaysBounceVertical = false
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         autoresizesSubviews = true
         contentInset = .zero
+        decelerationRate = UIScrollView.DecelerationRate.fast
         dragInteractionEnabled = false
     }
 }

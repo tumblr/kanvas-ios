@@ -7,8 +7,16 @@
 import Foundation
 import UIKit
 
+/// Protocol for changes in the trimming range
+protocol TrimAreaDelegate: class {
+    func didMoveLeftSide(recognizer: UIGestureRecognizer)
+    func didMoveRightSide(recognizer: UIGestureRecognizer)
+}
+
 /// Constants for Trim area
 private struct Constants {
+    static let selectorInset: CGFloat = -20
+    
     static let cornerRadius: CGFloat = 8
     
     static let selectorColor: UIColor = .tumblrBrightBlue
@@ -21,23 +29,33 @@ private struct Constants {
     static let selectorLineColor: UIColor = .white
 }
 
-final class TrimArea: UIView {
+final class TrimArea: IgnoreTouchesView {
+    
+    weak var delegate: TrimAreaDelegate?
     
     static let selectorWidth = Constants.selectorSideWidth
     
-    private let leftView: UIView
+    private let leftSelector: TrimAreaSelector
+    private let rightSelector: TrimAreaSelector
     private let leftLine: UIView
-    private let rightView: UIView
     private let rightLine: UIView
     private let topView: UIView
     private let bottomView: UIView
     
+    var leftSelectorLocation: CGFloat {
+        return convert(leftSelector.center, to: superview).x + Constants.selectorSideWidth / 2
+    }
+    
+    var rightSelectorLocation: CGFloat {
+        return convert(rightSelector.center, to: superview).x - Constants.selectorSideWidth / 2
+    }
+    
     // MARK: - Initializers
     
     init() {
-        leftView = UIView()
+        leftSelector = TrimAreaSelector()
+        rightSelector = TrimAreaSelector()
         leftLine = UIView()
-        rightView = UIView()
         rightLine = UIView()
         topView = UIView()
         bottomView = UIView()
@@ -52,44 +70,52 @@ final class TrimArea: UIView {
     // MARK: - Layout
     
     private func setupViews() {
-        setupLeftView()
+        setupLeftSelector()
         setupLeftLine()
-        setupRightView()
+        setupRightSelector()
         setupRightLine()
         setupTopView()
         setupBottomView()
     }
     
-    private func setupLeftView() {
-        leftView.accessibilityIdentifier = "Trim Area Left View"
-        leftView.translatesAutoresizingMaskIntoConstraints = false
-        leftView.backgroundColor = Constants.selectorColor
-        leftView.layer.cornerRadius = Constants.cornerRadius
-        leftView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-        addSubview(leftView)
+    private func setupLeftSelector() {
+        leftSelector.accessibilityIdentifier = "Trim Area Left View"
+        leftSelector.translatesAutoresizingMaskIntoConstraints = false
+        leftSelector.backgroundColor = Constants.selectorColor
+        leftSelector.layer.cornerRadius = Constants.cornerRadius
+        leftSelector.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        addSubview(leftSelector)
         
         NSLayoutConstraint.activate([
-            leftView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            leftView.widthAnchor.constraint(equalToConstant: Constants.selectorSideWidth),
-            leftView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            leftView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            leftSelector.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            leftSelector.widthAnchor.constraint(equalToConstant: Constants.selectorSideWidth),
+            leftSelector.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            leftSelector.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
         ])
+        
+        let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(leftViewTouched(recognizer:)))
+        recognizer.minimumPressDuration = 0
+        leftSelector.addGestureRecognizer(recognizer)
     }
     
-    private func setupRightView() {
-        rightView.accessibilityIdentifier = "Trim Area Right View"
-        rightView.translatesAutoresizingMaskIntoConstraints = false
-        rightView.backgroundColor = Constants.selectorColor
-        rightView.layer.cornerRadius = Constants.cornerRadius
-        rightView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-        addSubview(rightView)
+    private func setupRightSelector() {
+        rightSelector.accessibilityIdentifier = "Trim Area Right View"
+        rightSelector.translatesAutoresizingMaskIntoConstraints = false
+        rightSelector.backgroundColor = Constants.selectorColor
+        rightSelector.layer.cornerRadius = Constants.cornerRadius
+        rightSelector.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        addSubview(rightSelector)
         
         NSLayoutConstraint.activate([
-            rightView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            rightView.widthAnchor.constraint(equalToConstant: Constants.selectorSideWidth),
-            rightView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            rightView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            rightSelector.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            rightSelector.widthAnchor.constraint(equalToConstant: Constants.selectorSideWidth),
+            rightSelector.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            rightSelector.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
         ])
+        
+        let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(rightViewTouched(recognizer:)))
+        recognizer.minimumPressDuration = 0
+        rightSelector.addGestureRecognizer(recognizer)
     }
     
     private func setupLeftLine() {
@@ -97,11 +123,11 @@ final class TrimArea: UIView {
         leftLine.translatesAutoresizingMaskIntoConstraints = false
         leftLine.backgroundColor = Constants.selectorLineColor
         leftLine.layer.cornerRadius = Constants.selectorLineCornerRadius
-        leftView.addSubview(leftLine)
+        leftSelector.addSubview(leftLine)
         
         NSLayoutConstraint.activate([
-            leftLine.centerXAnchor.constraint(equalTo: leftView.centerXAnchor),
-            leftLine.centerYAnchor.constraint(equalTo: leftView.centerYAnchor),
+            leftLine.centerXAnchor.constraint(equalTo: leftSelector.centerXAnchor),
+            leftLine.centerYAnchor.constraint(equalTo: leftSelector.centerYAnchor),
             leftLine.heightAnchor.constraint(equalToConstant: Constants.selectorLineHeight),
             leftLine.widthAnchor.constraint(equalToConstant: Constants.selectorLineWidth),
         ])
@@ -112,11 +138,11 @@ final class TrimArea: UIView {
         rightLine.translatesAutoresizingMaskIntoConstraints = false
         rightLine.backgroundColor = Constants.selectorLineColor
         rightLine.layer.cornerRadius = Constants.selectorLineCornerRadius
-        rightView.addSubview(rightLine)
+        rightSelector.addSubview(rightLine)
         
         NSLayoutConstraint.activate([
-            rightLine.centerXAnchor.constraint(equalTo: rightView.centerXAnchor),
-            rightLine.centerYAnchor.constraint(equalTo: rightView.centerYAnchor),
+            rightLine.centerXAnchor.constraint(equalTo: rightSelector.centerXAnchor),
+            rightLine.centerYAnchor.constraint(equalTo: rightSelector.centerYAnchor),
             rightLine.heightAnchor.constraint(equalToConstant: Constants.selectorLineHeight),
             rightLine.widthAnchor.constraint(equalToConstant: Constants.selectorLineWidth),
         ])
@@ -150,5 +176,44 @@ final class TrimArea: UIView {
             bottomView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             bottomView.heightAnchor.constraint(equalToConstant: Constants.selectorBorderHeight),
         ])
+    }
+    
+    // MARK: - Gesture recognizers
+    
+    @objc private func leftViewTouched(recognizer: UIGestureRecognizer) {
+        delegate?.didMoveLeftSide(recognizer: recognizer)
+    }
+    
+    @objc private func rightViewTouched(recognizer: UIGestureRecognizer) {
+        delegate?.didMoveRightSide(recognizer: recognizer)
+    }
+    
+    // MARK: - Touches
+    
+    override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let relativeFrame = bounds
+        let hitTestEdgeInsets = UIEdgeInsets(top: 0, left: Constants.selectorInset, bottom: 0, right: Constants.selectorInset)
+        let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
+        return hitFrame.contains(point)
+    }
+    
+}
+
+
+private class TrimAreaSelector: UIView {
+    
+    init() {
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let relativeFrame = bounds
+        let hitTestEdgeInsets = UIEdgeInsets(top: 0, left: Constants.selectorInset, bottom: 0, right: Constants.selectorInset)
+        let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
+        return hitFrame.contains(point)
     }
 }

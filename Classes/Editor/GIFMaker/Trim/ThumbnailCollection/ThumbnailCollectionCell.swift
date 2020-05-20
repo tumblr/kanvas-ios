@@ -52,8 +52,8 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             mainView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             mainView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            mainView.heightAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellHeight),
-            mainView.widthAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellWidth)
+            mainView.heightAnchor.constraint(equalToConstant: Constants.imageHeight),
+            mainView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)
         ])
     }
     

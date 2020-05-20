@@ -33,40 +33,35 @@ private struct Constants {
     static let height: CGFloat = 71
     static let cornerRadius: CGFloat = 8
     static let backgroundColor: UIColor = .black
-}
-
-private enum MovingSide {
-    case left
-    case right
+    static let selectorInset: CGFloat = -20
 }
 
 /// A UIView for the trim tool
-final class TrimView: UIView {
+final class TrimView: UIView, TrimAreaDelegate {
     
     static let height: CGFloat = Constants.height
     
     weak var delegate: TrimViewDelegate?
     
-    let thumbnailContainer: IgnoreTouchesView
-    private let trimArea: TrimArea
+    let thumbnailContainer: UIView
+    private lazy var trimArea: TrimArea = {
+        let view = TrimArea()
+        view.delegate = self
+        return view
+    }()
     
-    // Indicates which is the side of the range that is currently moving.
-    private var currentlyMovingSide: MovingSide? = nil
-    
-    private var leadingConstraint: NSLayoutConstraint
-    private var trailingConstraint: NSLayoutConstraint
+    private var trimAreaLeadingConstraint: NSLayoutConstraint
+    private var trimAreaTrailingConstraint: NSLayoutConstraint
     
     // MARK: - Initializers
     
     init() {
-        thumbnailContainer = IgnoreTouchesView()
-        trimArea = TrimArea()
-        leadingConstraint = NSLayoutConstraint()
-        trailingConstraint = NSLayoutConstraint()
+        thumbnailContainer = UIView()
+        trimAreaLeadingConstraint = NSLayoutConstraint()
+        trimAreaTrailingConstraint = NSLayoutConstraint()
         super.init(frame: .zero)
         
         setupViews()
-        setupGestureRecognizers()
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -104,67 +99,75 @@ final class TrimView: UIView {
         trimArea.translatesAutoresizingMaskIntoConstraints = false
         addSubview(trimArea)
         
-        leadingConstraint = trimArea.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
-        trailingConstraint = trimArea.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+        trimAreaLeadingConstraint = trimArea.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
+        trimAreaTrailingConstraint = trimArea.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
         
         NSLayoutConstraint.activate([
             trimArea.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
             trimArea.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
-            leadingConstraint,
-            trailingConstraint
+            trimAreaLeadingConstraint,
+            trimAreaTrailingConstraint
         ])
     }
     
-    // MARK: - Gesture recognizers
+    // MARK: - TrimAreaDelegate
     
-    private func setupGestureRecognizers() {
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(trimAreaTouched(recognizer:)))
-        longPressRecognizer.minimumPressDuration = 0
-        addGestureRecognizer(longPressRecognizer)
-    }
-    
-    @objc private func trimAreaTouched(recognizer: UIGestureRecognizer) {
+    func didMoveLeftSide(recognizer: UIGestureRecognizer) {
         let location = recognizer.location(in: self).x
         
         switch recognizer.state {
         case .began:
-            trimAreaStartedMoving(on: location)
-            trimAreaMoved(to: location)
+            trimAreaStartedMoving()
+            leftSideMoved(to: location)
         case .changed:
-            trimAreaMoved(to: location)
+            leftSideMoved(to: location)
         case .ended:
-            trimAreaMoved(to: location)
-            trimAreaEndedMoving(on: location)
+            leftSideMoved(to: location)
+            trimAreaEndedMoving()
         default:
             break
         }
     }
     
-    private func trimAreaStartedMoving(on location: CGFloat) {
-        currentlyMovingSide = closestSide(from: location)
-        delegate?.didStartMovingTrimArea()
+    func didMoveRightSide(recognizer: UIGestureRecognizer) {
+        let location = recognizer.location(in: self).x
+        
+        switch recognizer.state {
+        case .began:
+            trimAreaStartedMoving()
+            rightSideMoved(to: location)
+        case .changed:
+            rightSideMoved(to: location)
+        case .ended:
+            rightSideMoved(to: location)
+            trimAreaEndedMoving()
+        default:
+            break
+        }
     }
     
-    private func trimAreaMoved(to location: CGFloat) {
-        let closestSideToTouch = closestSide(from: location)
-        
-        if closestSideToTouch == .left &&  currentlyMovingSide != .right {
-            
-            if location >= TrimArea.selectorWidth {
-                leadingConstraint.constant = location - TrimArea.selectorWidth
-            }
-            else {
-                leadingConstraint.constant = 0
-            }
+    // MARK: - Gesture recognizers
+    
+    private func leftSideMoved(to location: CGFloat) {
+        if location <= 0 {
+            trimAreaLeadingConstraint.constant = 0
         }
-        else if closestSideToTouch == .right && currentlyMovingSide != .left {
-            
-            if location <= bounds.width - TrimArea.selectorWidth {
-                trailingConstraint.constant = location - bounds.width + TrimArea.selectorWidth
-            }
-            else {
-                trailingConstraint.constant = 0
-            }
+        else if location + TrimArea.selectorWidth <= trimArea.rightSelectorLocation {
+            trimAreaLeadingConstraint.constant = location
+        }
+        
+        
+        let start = getStartingPercentage()
+        let end = getEndingPercentage()
+        delegate?.didMoveTrimArea(from: start, to: end)
+    }
+    
+    private func rightSideMoved(to location: CGFloat) {
+        if location + TrimArea.selectorWidth >= bounds.width {
+            trimAreaTrailingConstraint.constant = 0
+        }
+        else if location >= trimArea.leftSelectorLocation {
+            trimAreaTrailingConstraint.constant = location + TrimArea.selectorWidth - bounds.width
         }
         
         let start = getStartingPercentage()
@@ -172,32 +175,26 @@ final class TrimView: UIView {
         delegate?.didMoveTrimArea(from: start, to: end)
     }
     
-    private func trimAreaEndedMoving(on location: CGFloat) {
-        currentlyMovingSide = nil
-        let start = getStartingPercentage()
-        let end = getEndingPercentage()
-        delegate?.didEndMovingTrimArea(from: start, to: end)
-    }
-    
     // MARK: - Private utilities
     
-    /// Calculates which is the closest side of the range to a given location.
-    private func closestSide(from location: CGFloat) -> MovingSide {
-        let leftSide = trimArea.frame.origin.x
-        let rightSide = trimArea.frame.origin.x + trimArea.frame.width
-        
-        let distanceToLeftSide = abs(location - leftSide)
-        let distanceToRightSide = abs(rightSide - location)
-        
-        return distanceToLeftSide < distanceToRightSide ? .left : .right
-    }
-    
     private func getStartingPercentage() -> CGFloat {
-        return trimArea.frame.origin.x * 100 / (bounds.width - TrimArea.selectorWidth * 2)
+        let totalWidth = bounds.width - TrimArea.selectorWidth * 2
+        return (trimArea.leftSelectorLocation - TrimArea.selectorWidth) * 100 / totalWidth
     }
     
     private func getEndingPercentage() -> CGFloat {
-        return 100 - ((bounds.width - trimArea.frame.origin.x - trimArea.frame.size.width) * 100 / (bounds.width - TrimArea.selectorWidth * 2))
+        let totalWidth = bounds.width - TrimArea.selectorWidth * 2
+        return 100 - (bounds.width - TrimArea.selectorWidth - trimArea.rightSelectorLocation) * 100 / totalWidth
+    }
+    
+    private func trimAreaStartedMoving() {
+        delegate?.didStartMovingTrimArea()
+    }
+    
+    private func trimAreaEndedMoving() {
+        let start = getStartingPercentage()
+        let end = getEndingPercentage()
+        delegate?.didEndMovingTrimArea(from: start, to: end)
     }
     
     // MARK: - Public interface

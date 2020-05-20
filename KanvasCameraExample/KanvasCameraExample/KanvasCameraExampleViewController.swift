@@ -144,6 +144,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorPostOptions = false
         settings.features.newCameraModes = true
         settings.features.gifs = true
+        settings.features.editorGIFMaker = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         return settings
