@@ -60,6 +60,9 @@ final class TrimArea: IgnoreTouchesView {
         topView = UIView()
         bottomView = UIView()
         super.init(frame: .zero)
+        
+        layer.cornerRadius = Constants.cornerRadius
+        clipsToBounds = true
         setupViews()
     }
     
@@ -82,8 +85,6 @@ final class TrimArea: IgnoreTouchesView {
         leftSelector.accessibilityIdentifier = "Trim Area Left View"
         leftSelector.translatesAutoresizingMaskIntoConstraints = false
         leftSelector.backgroundColor = Constants.selectorColor
-        leftSelector.layer.cornerRadius = Constants.cornerRadius
-        leftSelector.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         addSubview(leftSelector)
         
         NSLayoutConstraint.activate([
@@ -102,8 +103,6 @@ final class TrimArea: IgnoreTouchesView {
         rightSelector.accessibilityIdentifier = "Trim Area Right View"
         rightSelector.translatesAutoresizingMaskIntoConstraints = false
         rightSelector.backgroundColor = Constants.selectorColor
-        rightSelector.layer.cornerRadius = Constants.cornerRadius
-        rightSelector.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         addSubview(rightSelector)
         
         NSLayoutConstraint.activate([

@@ -10,21 +10,10 @@ import UIKit
 /// Collection view for ThumbnailCollectionController
 final class ThumbnailCollectionView: UIView {
     
-    private let layout: ThumbnailCollectionViewLayout
     let collectionView: UICollectionView
     
-    var cellWidth: CGFloat {
-        set {
-            layout.estimatedItemSize.width = newValue
-        }
-        get {
-            layout.estimatedItemSize.width
-        }
-    }
-    
     init() {
-        layout = ThumbnailCollectionViewLayout()
-        collectionView = ThumbnailInnerCollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView = ThumbnailInnerCollectionView(frame: .zero, collectionViewLayout: ThumbnailCollectionViewLayout())
         collectionView.accessibilityIdentifier = "Thumbnail Collection View"
         collectionView.backgroundColor = .clear
         

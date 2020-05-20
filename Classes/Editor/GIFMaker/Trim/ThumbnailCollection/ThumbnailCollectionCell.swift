@@ -17,7 +17,7 @@ private struct Constants {
 final class ThumbnailCollectionCell: UICollectionViewCell {
     
     static let cellHeight = Constants.imageHeight
-    static var cellWidth = Constants.imageWidth
+    static let cellWidth = Constants.imageWidth
     
     private let mainView = UIImageView()
         
@@ -48,6 +48,7 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
         mainView.accessibilityIdentifier = "Thumbnail Collection Cell Main View"
         mainView.translatesAutoresizingMaskIntoConstraints = false
         mainView.contentMode = .scaleAspectFill
+        mainView.clipsToBounds = true
         
         NSLayoutConstraint.activate([
             mainView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),

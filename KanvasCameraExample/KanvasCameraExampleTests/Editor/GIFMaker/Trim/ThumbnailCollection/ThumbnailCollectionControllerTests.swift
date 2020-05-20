@@ -25,8 +25,8 @@ final class ThumbnailCollectionControllerTests: FBSnapshotTestCase {
         }
         let controller = ThumbnailCollectionController()
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimView.height)
-        controller.view.setNeedsDisplay()
         controller.setThumbnails([exampleImage, exampleImage, exampleImage])
+        controller.view.setNeedsDisplay()
         
         FBSnapshotVerifyView(controller.view)
     }
