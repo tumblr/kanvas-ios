@@ -751,7 +751,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        print("L - \(startingPercentage) - \(endingPercentage)")
+        
     }
     
     // MARK: - MediaDrawerControllerDelegate

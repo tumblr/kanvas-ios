@@ -156,7 +156,6 @@ final class TrimView: UIView, TrimAreaDelegate {
             trimAreaLeadingConstraint.constant = location
         }
         
-        
         let start = getStartingPercentage()
         let end = getEndingPercentage()
         delegate?.didMoveTrimArea(from: start, to: end)
