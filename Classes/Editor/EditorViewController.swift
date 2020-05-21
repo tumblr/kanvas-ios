@@ -245,7 +245,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         view.backgroundColor = .black
         editorView.add(into: view)
         drawingController.drawingLayer = editorView.drawingCanvas.layer
-        gifMakerController.setThumbnails(count: 20)
         
         load(childViewController: collectionController, into: editorView.collectionContainer)
         load(childViewController: filterController, into: editorView.filterMenuContainer)
