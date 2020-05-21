@@ -7,6 +7,15 @@
 import Foundation
 import UIKit
 
+/// Protocol for obtaining images.
+protocol ThumbnailCollectionCellDelegate: class {
+    
+    /// Obtains a thumbnail for the background of the trimming tool
+    ///
+    /// - Parameter index: the index of the requested image.
+    func getThumbnail(at index: Int) -> UIImage?
+}
+
 /// Constants for ThumbnailCollectionCell
 private struct Constants {
     static let imageHeight: CGFloat = TrimView.height
@@ -19,8 +28,12 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
     static let cellHeight = Constants.imageHeight
     static let cellWidth = Constants.imageWidth
     
+    weak var delegate: ThumbnailCollectionCellDelegate?
     private let mainView = UIImageView()
-        
+    private var imageRequest: DispatchWorkItem?
+    
+    // MARK: - Initializers
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
@@ -34,6 +47,7 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageRequest?.cancel()
         mainView.image = nil
     }
     
@@ -64,7 +78,14 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
     /// Updates the cell with an image
     ///
     /// - Parameter image: The image to display
-    func bindTo(_ image: UIImage) {
-        mainView.image = image
+    func bindTo(_ index: Int) {
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let strongSelf = self, let delegate = strongSelf.delegate else { return }
+            guard let image = delegate.getThumbnail(at: index) else { return }
+            strongSelf.mainView.image = image
+        }
+        
+        imageRequest = workItem
+        DispatchQueue.main.async(execute: workItem)
     }
 }

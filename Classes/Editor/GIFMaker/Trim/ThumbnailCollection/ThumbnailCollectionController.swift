@@ -7,17 +7,27 @@
 import Foundation
 import UIKit
 
-/// Controller for handling the thumbnail collection in the trim menu.
-final class ThumbnailCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+/// Protocol for obtaining images.
+protocol ThumbnailCollectionControllerDelegate: class {
     
+    /// Obtains a thumbnail for the background of the trimming tool
+    ///
+    /// - Parameter index: the index of the requested image.
+    func getThumbnail(at index: Int) -> UIImage?
+}
+
+/// Controller for handling the thumbnail collection in the trim menu.
+final class ThumbnailCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ThumbnailCollectionCellDelegate {
+    
+    weak var delegate: ThumbnailCollectionControllerDelegate?
     private lazy var thumbnailCollectionView = ThumbnailCollectionView()
     
-    private var thumbnails: [UIImage]
+    private var itemCount: Int
     
     // MARK: - Initializers
     
     init() {
-        thumbnails = []
+        itemCount = 0
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -51,24 +61,31 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return thumbnails.count
+        return itemCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? ThumbnailCollectionCell, let thumbnail = thumbnails.object(at: indexPath.item) {
-            cell.bindTo(thumbnail)
+        if let cell = cell as? ThumbnailCollectionCell {
+            cell.delegate = self
+            cell.bindTo(indexPath.item)
         }
         return cell
     }
     
+    // MARK: - ThumbnailCollectionCellDelegate
+    
+    func getThumbnail(at index: Int) -> UIImage? {
+        return delegate?.getThumbnail(at: index)
+    }
+    
     // MARK: - Public interface
     
-    /// Sets the thumbnails at the background of the trim tool
+    /// Sets the size of the thumbnail collection
     ///
-    /// - Parameter thumbnails: images to be shown
-    func setThumbnails(_ thumbnails: [UIImage]) {
-        self.thumbnails = thumbnails
+    /// - Parameter count: the new size
+    func setThumbnails(count: Int) {
+        self.itemCount = count
         thumbnailCollectionView.collectionView.reloadData()
     }
 }

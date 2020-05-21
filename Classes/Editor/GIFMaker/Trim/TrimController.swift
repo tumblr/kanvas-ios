@@ -25,10 +25,15 @@ protocol TrimControllerDelegate: class {
     ///  - startingPercentage: trimming starting moment expressed as a percentage.
     ///  - endingPercentage: trimming starting moment expressed as a percentage.
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
+    
+    /// Obtains a thumbnail for the background of the trimming tool
+    ///
+    /// - Parameter index: the index of the requested image.
+    func getThumbnail(at index: Int) -> UIImage?
 }
 
 /// A view controller that contains the trim menu
-final class TrimController: UIViewController, TrimViewDelegate {
+final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollectionControllerDelegate {
     
     weak var delegate: TrimControllerDelegate?
         
@@ -38,12 +43,15 @@ final class TrimController: UIViewController, TrimViewDelegate {
         return view
     }()
     
-    private let thumbnailController: ThumbnailCollectionController
+    private lazy var thumbnailController: ThumbnailCollectionController = {
+        let controller = ThumbnailCollectionController()
+        controller.delegate = self
+        return controller
+    }()
     
     // MARK: - Initializers
     
     init() {
-        thumbnailController = ThumbnailCollectionController()
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -90,6 +98,12 @@ final class TrimController: UIViewController, TrimViewDelegate {
         delegate?.didEndTrimming(from: startingPercentage, to: endingPercentage)
     }
     
+    // MARK: - ThumbnailCollectionControllerDelegate
+    
+    func getThumbnail(at index: Int) -> UIImage? {
+        return delegate?.getThumbnail(at: index)
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the trim menu
@@ -99,10 +113,10 @@ final class TrimController: UIViewController, TrimViewDelegate {
         trimView.showView(show)
     }
     
-    /// Sets the thumbnails at the background of the trim tool
+    /// Sets the size of the thumbnail collection
     ///
-    /// - Parameter thumbnails: images to be shown
-    func setThumbnails(_ thumbnails: [UIImage]) {
-        thumbnailController.setThumbnails(thumbnails)
+    /// - Parameter count: the new size
+    func setThumbnails(count: Int) {
+        thumbnailController.setThumbnails(count: count)
     }
 }

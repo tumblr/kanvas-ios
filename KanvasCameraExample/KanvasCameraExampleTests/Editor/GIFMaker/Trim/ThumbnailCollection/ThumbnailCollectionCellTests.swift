@@ -26,12 +26,7 @@ final class ThumbnailCollectionCellTests: FBSnapshotTestCase {
     }
     
     func testThumbnailCollectionCell() {
-        guard let exampleImage = KanvasCameraImages.gradientImage else {
-            XCTFail("Example image not found")
-            return
-        }
         let cell = newCell()
-        cell.bindTo(exampleImage)
         FBSnapshotVerifyView(cell)
     }
 }

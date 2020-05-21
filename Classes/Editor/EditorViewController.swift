@@ -245,6 +245,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         view.backgroundColor = .black
         editorView.add(into: view)
         drawingController.drawingLayer = editorView.drawingCanvas.layer
+        gifMakerController.setThumbnails(count: 20)
         
         load(childViewController: collectionController, into: editorView.collectionContainer)
         load(childViewController: filterController, into: editorView.filterMenuContainer)
@@ -634,6 +635,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         confirmEditionMenu()
     }
     
+    func getThumbnail(at index: Int) -> UIImage? {
+        // TODO: Get correct image.
+        return KanvasCameraImages.confirmImage
+    }
+    
     // MARK: - EditorFilterControllerDelegate
     
     func didConfirmFilters() {
@@ -736,8 +742,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didDisplayFirstFrame(_ image: UIImage) {
         addCarouselDefaultColors(image)
-        gifMakerController.setThumbnails([image,image,image,image,image,image,image,image,image,image,image,image,image,image,
-                                          image,image,image,image,image,image,image,image,image,image,image,image,image,image,])
     }
     
     // MARK: - GifMakerControllerDelegate

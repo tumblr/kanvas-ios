@@ -19,13 +19,9 @@ final class ThumbnailCollectionControllerTests: FBSnapshotTestCase {
     }
     
     func testThumbnailCollectionControllerView() {
-        guard let exampleImage = KanvasCameraImages.gradientImage else {
-            XCTFail("Example image not found")
-            return
-        }
+        
         let controller = ThumbnailCollectionController()
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimView.height)
-        controller.setThumbnails([exampleImage, exampleImage, exampleImage])
         controller.view.setNeedsDisplay()
         
         FBSnapshotVerifyView(controller.view)

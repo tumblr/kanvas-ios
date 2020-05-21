@@ -29,6 +29,12 @@ protocol GifMakerControllerDelegate: class {
     ///  - startingPercentage: trimming starting moment expressed as a percentage.
     ///  - endingPercentage: trimming starting moment expressed as a percentage.
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
+    
+    
+    /// Obtains a thumbnail for the background of the trimming tool
+    ///
+    /// - Parameter index: the index of the requested image.
+    func getThumbnail(at index: Int) -> UIImage?
 }
 
 /// Constants for GifMakerController
@@ -126,6 +132,10 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         delegate?.didEndTrimming(from: startingPercentage, to: endingPercentage)
     }
     
+    func getThumbnail(at index: Int) -> UIImage? {
+        delegate?.getThumbnail(at: index)
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the GIF maker menu
@@ -144,10 +154,10 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         gifMakerView.showConfirmButton(show)
     }
     
-    /// Sets the thumbnails at the background of the trim tool
+    /// Sets the size of the thumbnail collection
     ///
-    /// - Parameter thumbnails: images to be shown
-    func setThumbnails(_ thumbnails: [UIImage]) {
-        trimController.setThumbnails(thumbnails)
+    /// - Parameter count: the new size
+    func setThumbnails(count: Int) {
+        trimController.setThumbnails(count: count)
     }
 }

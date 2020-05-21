@@ -12,10 +12,7 @@ import XCTest
 
 final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
     
-    private var thumbnails: [UIImage] {
-        guard let sampleImage = KanvasCameraImages.gradientImage else { return [] }
-        return [sampleImage, sampleImage, sampleImage]
-    }
+    private let thumbnailCount: Int = 4
     
     override func setUp() {
         super.setUp()
@@ -39,13 +36,13 @@ final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDa
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return thumbnails.count
+        return thumbnailCount
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? ThumbnailCollectionCell, let stickerType = thumbnails.object(at: indexPath.item) {
-            cell.bindTo(stickerType)
+        if let cell = cell as? ThumbnailCollectionCell {
+            cell.bindTo(indexPath.item)
         }
         return cell
     }
