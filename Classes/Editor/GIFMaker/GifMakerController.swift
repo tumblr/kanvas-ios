@@ -133,7 +133,7 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     }
     
     func getThumbnail(at index: Int) -> UIImage? {
-        delegate?.getThumbnail(at: index)
+        return delegate?.getThumbnail(at: index)
     }
     
     // MARK: - Public interface
