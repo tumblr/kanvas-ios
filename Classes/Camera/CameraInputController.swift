@@ -72,7 +72,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     private let sessionQueue = DispatchQueue(label: CameraInputConstants.sessionQueue)
     private let videoQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.videoQueue, attributes: [], target: DispatchQueue.global(qos: .userInteractive))
     private let audioQueue: DispatchQueue = DispatchQueue(label: CameraInputConstants.audioQueue, attributes: [])
-    private let isSimulator = TARGET_OS_SIMULATOR != 0
+    private let isSimulator = Device.isRunningInSimulator
 
     private var settings: CameraSettings
     private var recorderType: CameraRecordingProtocol.Type
