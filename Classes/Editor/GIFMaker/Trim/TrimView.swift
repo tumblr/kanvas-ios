@@ -53,6 +53,8 @@ final class TrimView: UIView, TrimAreaDelegate {
     private var trimAreaLeadingConstraint: NSLayoutConstraint
     private var trimAreaTrailingConstraint: NSLayoutConstraint
     
+    // Queue to provide mutual exclusion
+    private let dispatchQueue: DispatchQueue
     private var movingLeftSelector: Bool
     private var movingRightSelector: Bool
     
@@ -64,6 +66,7 @@ final class TrimView: UIView, TrimAreaDelegate {
         trimAreaTrailingConstraint = NSLayoutConstraint()
         movingLeftSelector = false
         movingRightSelector = false
+        dispatchQueue = DispatchQueue(label: "trimmer.serialQueue")
         super.init(frame: .zero)
         
         setupViews()
@@ -122,15 +125,19 @@ final class TrimView: UIView, TrimAreaDelegate {
         
         switch recognizer.state {
         case .began:
-            trimAreaStartedMoving()
-            movingLeftSelector = true
+            dispatchQueue.sync {
+                trimAreaStartedMoving()
+                movingLeftSelector = true
+            }
             leftSideMoved(to: location)
         case .changed:
             leftSideMoved(to: location)
         case .ended:
             leftSideMoved(to: location)
-            movingLeftSelector = false
-            trimAreaEndedMoving()
+            dispatchQueue.sync {
+                movingLeftSelector = false
+                trimAreaEndedMoving()
+            }
         default:
             break
         }
@@ -141,15 +148,19 @@ final class TrimView: UIView, TrimAreaDelegate {
         
         switch recognizer.state {
         case .began:
-            trimAreaStartedMoving()
-            movingRightSelector = true
+            dispatchQueue.sync {
+                trimAreaStartedMoving()
+                movingRightSelector = true
+            }
             rightSideMoved(to: location)
         case .changed:
             rightSideMoved(to: location)
         case .ended:
             rightSideMoved(to: location)
-            movingRightSelector = false
-            trimAreaEndedMoving()
+            dispatchQueue.sync {
+                movingRightSelector = false
+                trimAreaEndedMoving()
+            }
         default:
             break
         }
