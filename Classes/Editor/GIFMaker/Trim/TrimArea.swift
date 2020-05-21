@@ -15,14 +15,18 @@ protocol TrimAreaDelegate: class {
 
 /// Constants for Trim area
 private struct Constants {
+    // General
     static let selectorInset: CGFloat = -20
-    
     static let cornerRadius: CGFloat = 8
+    static let backgroundColor: UIColor = .tumblrBrightBlue
     
-    static let selectorColor: UIColor = .tumblrBrightBlue
+    // Top and bottom borders
     static let selectorBorderHeight: CGFloat = 5
+    
+    // Selectors
     static let selectorSideWidth: CGFloat = 16
     
+    // Selector inner line
     static let selectorLineHeight: CGFloat = 35
     static let selectorLineWidth: CGFloat = 4
     static let selectorLineCornerRadius: CGFloat = 4
@@ -37,10 +41,8 @@ final class TrimArea: IgnoreTouchesView {
     
     private let leftSelector: TrimAreaSelector
     private let rightSelector: TrimAreaSelector
-    private let leftLine: UIView
-    private let rightLine: UIView
-    private let topView: UIView
-    private let bottomView: UIView
+    private let topBorder: UIView
+    private let bottomBorder: UIView
     
     var leftSelectorLocation: CGFloat {
         return convert(leftSelector.center, to: superview).x + Constants.selectorSideWidth / 2
@@ -55,10 +57,8 @@ final class TrimArea: IgnoreTouchesView {
     init() {
         leftSelector = TrimAreaSelector()
         rightSelector = TrimAreaSelector()
-        leftLine = UIView()
-        rightLine = UIView()
-        topView = UIView()
-        bottomView = UIView()
+        topBorder = UIView()
+        bottomBorder = UIView()
         super.init(frame: .zero)
         
         layer.cornerRadius = Constants.cornerRadius
@@ -74,17 +74,15 @@ final class TrimArea: IgnoreTouchesView {
     
     private func setupViews() {
         setupLeftSelector()
-        setupLeftLine()
         setupRightSelector()
-        setupRightLine()
-        setupTopView()
-        setupBottomView()
+        setupTopBorder()
+        setupBottomBorder()
     }
     
     private func setupLeftSelector() {
-        leftSelector.accessibilityIdentifier = "Trim Area Left View"
+        leftSelector.accessibilityIdentifier = "Trim Area Left Selector"
         leftSelector.translatesAutoresizingMaskIntoConstraints = false
-        leftSelector.backgroundColor = Constants.selectorColor
+        leftSelector.backgroundColor = Constants.backgroundColor
         addSubview(leftSelector)
         
         NSLayoutConstraint.activate([
@@ -100,9 +98,9 @@ final class TrimArea: IgnoreTouchesView {
     }
     
     private func setupRightSelector() {
-        rightSelector.accessibilityIdentifier = "Trim Area Right View"
+        rightSelector.accessibilityIdentifier = "Trim Area Right Selector"
         rightSelector.translatesAutoresizingMaskIntoConstraints = false
-        rightSelector.backgroundColor = Constants.selectorColor
+        rightSelector.backgroundColor = Constants.backgroundColor
         addSubview(rightSelector)
         
         NSLayoutConstraint.activate([
@@ -117,63 +115,33 @@ final class TrimArea: IgnoreTouchesView {
         rightSelector.addGestureRecognizer(recognizer)
     }
     
-    private func setupLeftLine() {
-        leftLine.accessibilityIdentifier = "Trim Area Left Line"
-        leftLine.translatesAutoresizingMaskIntoConstraints = false
-        leftLine.backgroundColor = Constants.selectorLineColor
-        leftLine.layer.cornerRadius = Constants.selectorLineCornerRadius
-        leftSelector.addSubview(leftLine)
+    private func setupTopBorder() {
+        topBorder.accessibilityIdentifier = "Trim Area Top View"
+        topBorder.translatesAutoresizingMaskIntoConstraints = false
+        topBorder.backgroundColor = Constants.backgroundColor
+        topBorder.layer.cornerRadius = Constants.cornerRadius
+        addSubview(topBorder)
         
         NSLayoutConstraint.activate([
-            leftLine.centerXAnchor.constraint(equalTo: leftSelector.centerXAnchor),
-            leftLine.centerYAnchor.constraint(equalTo: leftSelector.centerYAnchor),
-            leftLine.heightAnchor.constraint(equalToConstant: Constants.selectorLineHeight),
-            leftLine.widthAnchor.constraint(equalToConstant: Constants.selectorLineWidth),
+            topBorder.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            topBorder.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            topBorder.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            topBorder.heightAnchor.constraint(equalToConstant: Constants.selectorBorderHeight),
         ])
     }
     
-    private func setupRightLine() {
-        rightLine.accessibilityIdentifier = "Trim Area Right Line"
-        rightLine.translatesAutoresizingMaskIntoConstraints = false
-        rightLine.backgroundColor = Constants.selectorLineColor
-        rightLine.layer.cornerRadius = Constants.selectorLineCornerRadius
-        rightSelector.addSubview(rightLine)
+    private func setupBottomBorder() {
+        bottomBorder.accessibilityIdentifier = "Trim Area Bottom View"
+        bottomBorder.translatesAutoresizingMaskIntoConstraints = false
+        bottomBorder.backgroundColor = Constants.backgroundColor
+        bottomBorder.layer.cornerRadius = Constants.cornerRadius
+        addSubview(bottomBorder)
         
         NSLayoutConstraint.activate([
-            rightLine.centerXAnchor.constraint(equalTo: rightSelector.centerXAnchor),
-            rightLine.centerYAnchor.constraint(equalTo: rightSelector.centerYAnchor),
-            rightLine.heightAnchor.constraint(equalToConstant: Constants.selectorLineHeight),
-            rightLine.widthAnchor.constraint(equalToConstant: Constants.selectorLineWidth),
-        ])
-    }
-    
-    private func setupTopView() {
-        topView.accessibilityIdentifier = "Trim Area Top View"
-        topView.translatesAutoresizingMaskIntoConstraints = false
-        topView.backgroundColor = Constants.selectorColor
-        topView.layer.cornerRadius = Constants.cornerRadius
-        addSubview(topView)
-        
-        NSLayoutConstraint.activate([
-            topView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            topView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            topView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            topView.heightAnchor.constraint(equalToConstant: Constants.selectorBorderHeight),
-        ])
-    }
-    
-    private func setupBottomView() {
-        bottomView.accessibilityIdentifier = "Trim Area Bottom View"
-        bottomView.translatesAutoresizingMaskIntoConstraints = false
-        bottomView.backgroundColor = Constants.selectorColor
-        bottomView.layer.cornerRadius = Constants.cornerRadius
-        addSubview(bottomView)
-        
-        NSLayoutConstraint.activate([
-            bottomView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            bottomView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            bottomView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            bottomView.heightAnchor.constraint(equalToConstant: Constants.selectorBorderHeight),
+            bottomBorder.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            bottomBorder.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            bottomBorder.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            bottomBorder.heightAnchor.constraint(equalToConstant: Constants.selectorBorderHeight),
         ])
     }
     
@@ -198,16 +166,44 @@ final class TrimArea: IgnoreTouchesView {
     
 }
 
-
 private class TrimAreaSelector: UIView {
     
+    private let innerLine: UIView
+    
+    // MARK: - Initializers
+    
     init() {
+        innerLine = UIView()
         super.init(frame: .zero)
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Layout
+    
+    private func setupViews() {
+        setupInnerLine()
+    }
+    
+    private func setupInnerLine() {
+        innerLine.accessibilityIdentifier = "Trim Area Left Selector Line"
+        innerLine.translatesAutoresizingMaskIntoConstraints = false
+        innerLine.backgroundColor = Constants.selectorLineColor
+        innerLine.layer.cornerRadius = Constants.selectorLineCornerRadius
+        addSubview(innerLine)
+        
+        NSLayoutConstraint.activate([
+            innerLine.centerXAnchor.constraint(equalTo: centerXAnchor),
+            innerLine.centerYAnchor.constraint(equalTo: centerYAnchor),
+            innerLine.heightAnchor.constraint(equalToConstant: Constants.selectorLineHeight),
+            innerLine.widthAnchor.constraint(equalToConstant: Constants.selectorLineWidth),
+        ])
+    }
+    
+    // MARK: - Touch
     
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let relativeFrame = bounds
