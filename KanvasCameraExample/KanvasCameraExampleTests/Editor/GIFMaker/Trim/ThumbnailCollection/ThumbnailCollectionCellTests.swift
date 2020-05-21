@@ -27,6 +27,8 @@ final class ThumbnailCollectionCellTests: FBSnapshotTestCase {
     
     func testThumbnailCollectionCell() {
         let cell = newCell()
+        cell.backgroundColor = .black
+        cell.bindTo(0)
         FBSnapshotVerifyView(cell)
     }
 }

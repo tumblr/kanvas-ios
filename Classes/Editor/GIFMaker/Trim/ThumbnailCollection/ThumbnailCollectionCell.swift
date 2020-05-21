@@ -20,6 +20,8 @@ protocol ThumbnailCollectionCellDelegate: class {
 private struct Constants {
     static let imageHeight: CGFloat = TrimView.height
     static let imageWidth: CGFloat = 50
+    static let loadingViewBackgroundColor: UIColor = .clear
+    static let loadingViewColor: UIColor = .lightGray
 }
 
 /// The cell in ThumbnailCollectionView to display
@@ -30,6 +32,7 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
     
     weak var delegate: ThumbnailCollectionCellDelegate?
     private let mainView = UIImageView()
+    private let loadingView = LoadingIndicatorView()
     private var imageRequest: DispatchWorkItem?
     
     // MARK: - Initializers
@@ -55,6 +58,7 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
     
     private func setUpView() {
         setUpMainView()
+        setUpLoadingView()
     }
     
     private func setUpMainView() {
@@ -72,6 +76,12 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
         ])
     }
     
+    /// Sets up the loading spinner
+    private func setUpLoadingView() {
+        loadingView.add(into: mainView)
+        loadingView.backgroundColor = Constants.loadingViewBackgroundColor
+        loadingView.indicatorColor = Constants.loadingViewColor
+    }
     
     // MARK: - Public interface
     
@@ -79,9 +89,11 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter image: The image to display
     func bindTo(_ index: Int) {
+        loadingView.startLoading()
         let workItem = DispatchWorkItem { [weak self] in
             guard let strongSelf = self, let delegate = strongSelf.delegate else { return }
-            guard let image = delegate.getThumbnail(at: index) else { return }
+            let image = delegate.getThumbnail(at: index)
+            strongSelf.loadingView.stopLoading()
             strongSelf.mainView.image = image
         }
         
