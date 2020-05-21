@@ -637,7 +637,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func getThumbnail(at index: Int) -> UIImage? {
         // TODO: Get correct image.
-        return KanvasCameraImages.confirmImage
+        return KanvasCameraImages.flashOnImage
     }
     
     // MARK: - EditorFilterControllerDelegate
@@ -747,7 +747,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - GifMakerControllerDelegate
     
     func didStartTrimming() {
-        
+        print("L - start")
     }
     
     func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
@@ -755,7 +755,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        
+        print("L - end")
     }
     
     // MARK: - MediaDrawerControllerDelegate

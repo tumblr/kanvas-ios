@@ -53,12 +53,17 @@ final class TrimView: UIView, TrimAreaDelegate {
     private var trimAreaLeadingConstraint: NSLayoutConstraint
     private var trimAreaTrailingConstraint: NSLayoutConstraint
     
+    private var movingLeftSelector: Bool
+    private var movingRightSelector: Bool
+    
     // MARK: - Initializers
     
     init() {
         thumbnailContainer = UIView()
         trimAreaLeadingConstraint = NSLayoutConstraint()
         trimAreaTrailingConstraint = NSLayoutConstraint()
+        movingLeftSelector = false
+        movingRightSelector = false
         super.init(frame: .zero)
         
         setupViews()
@@ -118,11 +123,13 @@ final class TrimView: UIView, TrimAreaDelegate {
         switch recognizer.state {
         case .began:
             trimAreaStartedMoving()
+            movingLeftSelector = true
             leftSideMoved(to: location)
         case .changed:
             leftSideMoved(to: location)
         case .ended:
             leftSideMoved(to: location)
+            movingLeftSelector = false
             trimAreaEndedMoving()
         default:
             break
@@ -135,11 +142,13 @@ final class TrimView: UIView, TrimAreaDelegate {
         switch recognizer.state {
         case .began:
             trimAreaStartedMoving()
+            movingRightSelector = true
             rightSideMoved(to: location)
         case .changed:
             rightSideMoved(to: location)
         case .ended:
             rightSideMoved(to: location)
+            movingRightSelector = false
             trimAreaEndedMoving()
         default:
             break
@@ -187,10 +196,12 @@ final class TrimView: UIView, TrimAreaDelegate {
     }
     
     private func trimAreaStartedMoving() {
+        guard !movingLeftSelector, !movingRightSelector else { return }
         delegate?.didStartMovingTrimArea()
     }
     
     private func trimAreaEndedMoving() {
+        guard !movingLeftSelector, !movingRightSelector else { return }
         let start = getStartingPercentage()
         let end = getEndingPercentage()
         delegate?.didEndMovingTrimArea(from: start, to: end)
