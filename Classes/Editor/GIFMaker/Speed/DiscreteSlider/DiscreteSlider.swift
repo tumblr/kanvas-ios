@@ -17,8 +17,8 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     
     weak var delegate: DiscreteSliderDelegate?
     private let items: [Float]
-    private var selectedCell: DiscreteSliderCollectionCell?
-    private let initialIndex: Int
+    private let initialIndexPath: IndexPath
+    private var selectedIndexPath: IndexPath
     
     private lazy var discreteSliderView: DiscreteSliderView = {
         let view = DiscreteSliderView()
@@ -30,7 +30,8 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     
     init(items: [Float], initialIndex: Int = 0) {
         self.items = items
-        self.initialIndex = initialIndex
+        self.initialIndexPath = IndexPath(item: initialIndex, section: 0)
+        self.selectedIndexPath = IndexPath.init(item: initialIndex, section: 0)
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -61,7 +62,7 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
         super.viewDidLayoutSubviews()
         let newWidth = discreteSliderView.bounds.width / CGFloat(items.count)
         discreteSliderView.setCellWidth(newWidth)
-        discreteSliderView.setSelector(at: initialIndex)
+        discreteSliderView.setSelector(at: initialIndexPath.item)
     }
 
     // MARK: - UICollectionViewDataSource
@@ -75,22 +76,43 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiscreteSliderCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? DiscreteSliderCollectionCell, let item = items.object(at: indexPath.item) {
-            cell.backgroundColor = [UIColor.blue, UIColor.red, UIColor.yellow][indexPath.item % 3]
-            cell.bindTo(item)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiscreteSliderCollectionCell.identifier, for: indexPath) as? DiscreteSliderCollectionCell,
+        let item = items.object(at: indexPath.item)
+            else { return UICollectionViewCell() }
+        
+        let leftActive: Bool
+        let rightActive: Bool
+        
+        if selectedIndexPath > initialIndexPath {
+            leftActive = indexPath <= selectedIndexPath
+            rightActive = indexPath < selectedIndexPath
         }
+        else if selectedIndexPath < initialIndexPath {
+            leftActive = indexPath > selectedIndexPath
+            rightActive = indexPath >= selectedIndexPath
+        }
+        else {
+            leftActive = false
+            rightActive = false
+        }
+        
+        cell.bindTo(item)
+        cell.setProgress(start: indexPath.item == 0,
+                         end: indexPath.item == items.count - 1,
+                         leftActive: leftActive,
+                         rightActive: rightActive)
+        
         return cell
     }
     
     // MARK: - DiscreteSliderViewDelegate
     
     func didSelectCell(at indexPath: IndexPath) {
-        guard let cell = discreteSliderView.collectionView.cellForItem(at: indexPath) as? DiscreteSliderCollectionCell,
-            cell != selectedCell,
+        guard indexPath != selectedIndexPath,
             let item = items.object(at: indexPath.item) else { return }
         
-        selectedCell = cell
+        selectedIndexPath = indexPath
         delegate?.didSelect(item: item)
+        discreteSliderView.collectionView.reloadData()
     }
 }

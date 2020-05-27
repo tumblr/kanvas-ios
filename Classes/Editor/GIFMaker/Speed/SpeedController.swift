@@ -13,7 +13,7 @@ protocol SpeedControllerDelegate: class {
 }
 
 private struct Constants {
-    static let sliderValues: [Float] = [0.5, 1, 2, 3, 4]
+    static let sliderValues: [Float] = [0.5, 1, 1.5, 2, 3, 4]
     static let sliderInitialIndex: Int = 1
 }
 

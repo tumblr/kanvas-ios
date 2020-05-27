@@ -12,9 +12,9 @@ protocol DiscreteSliderViewDelegate: class {
 }
 
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.1
     static let selectorSize: CGFloat = DiscreteSliderCollectionCell.cellHeight
     static let selectorBorderWidth: CGFloat = 3
+    static let selectionBounds: CGFloat = 10
 }
 
 /// View for the discrete slider
@@ -85,26 +85,16 @@ final class DiscreteSliderView: UIView {
     @objc private func selectorTouched(recognizer: UIGestureRecognizer) {
         let location = calculateLocation(with: recognizer)
         guard let indexPath = collectionView.indexPathForItem(at: location),
-            let cell = collectionView.cellForItem(at: indexPath) else { return }
-        let newLocation = location.x - Constants.selectorSize/2
+            let cell = collectionView.cellForItem(at: indexPath),
+            location.x.distance(to: cell.center.x) < Constants.selectionBounds else { return }
         
-        switch recognizer.state {
-        case .began:
-            moveSelector(to: newLocation, animated: false)
-        case .changed:
-            moveSelector(to: newLocation, animated: false)
-        case .ended, .cancelled, .failed:
-            let cellLocation = cell.center.x - Constants.selectorSize/2
-            moveSelector(to: cellLocation, animated: true)
-        default:
-            break
-        }
-        
+        let cellLocation = cell.center.x - Constants.selectorSize / 2
+        moveSelector(to: cellLocation)
         delegate?.didSelectCell(at: indexPath)
     }
     
     private func calculateLocation(with recognizer: UIGestureRecognizer) -> CGPoint {
-        let bouncingFactor: CGFloat = 0.7
+        let bouncingFactor: CGFloat = 0.5
         let leftLimit = Constants.selectorSize * bouncingFactor
         let rightLimit = bounds.width - Constants.selectorSize * bouncingFactor
         let location = recognizer.location(in: self)
@@ -113,17 +103,8 @@ final class DiscreteSliderView: UIView {
         return CGPoint(x: x, y: y)
     }
     
-    private func moveSelector(to location: CGFloat, animated: Bool) {
-        let action: () -> Void = { [weak self] in
-            self?.selector.transform = CGAffineTransform(translationX: location, y: 0)
-        }
-        
-        if animated {
-            UIView.animate(withDuration: Constants.animationDuration, animations: action)
-        }
-        else {
-            action()
-        }
+    private func moveSelector(to location: CGFloat) {
+        selector.transform = CGAffineTransform(translationX: location, y: 0)
     }
     
     // MARK: - Public interface
@@ -135,7 +116,7 @@ final class DiscreteSliderView: UIView {
     func setSelector(at index: Int) {
         let cellWidth = layout.estimatedItemSize.width
         let location = cellWidth * CGFloat(index) + (cellWidth - Constants.selectorSize) / 2
-        moveSelector(to: location, animated: false)
+        moveSelector(to: location)
     }
 }
 
