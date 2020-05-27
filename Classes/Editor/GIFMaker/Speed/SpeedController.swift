@@ -9,15 +9,32 @@ import UIKit
 
 /// Protocol for the speed controller
 protocol SpeedControllerDelegate: class {
+    func didSelectSpeed(_ speed: Float)
+}
 
+private struct Constants {
+    static let sliderValues: [Float] = [0.5, 1, 2, 3, 4]
+    static let sliderInitialIndex: Int = 1
 }
 
 /// A view controller that contains the speed tools menu
-final class SpeedController: UIViewController {
+final class SpeedController: UIViewController, DiscreteSliderDelegate {
     
     weak var delegate: SpeedControllerDelegate?
-    
     private lazy var speedView: SpeedView = SpeedView()
+    
+    private lazy var speedSlider: DiscreteSlider = {
+        let controller = DiscreteSlider(items: Constants.sliderValues, initialIndex: Constants.sliderInitialIndex)
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.usesSignificantDigits = true
+        formatter.decimalSeparator = "."
+        return formatter
+    }()
     
     // MARK: - Initializers
     
@@ -44,14 +61,33 @@ final class SpeedController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
+        
+        load(childViewController: speedSlider, into: speedView.slider)
     }
     
     // MARK: - Layout
     
     private func setUpView() {
         speedView.alpha = 0
-    }
         
+        let initialSpeed = Constants.sliderValues[Constants.sliderInitialIndex]
+        setLabelText(initialSpeed)
+    }
+    
+    // MARK: - DiscreteSliderDelegate
+    
+    func didSelect(item: Float) {
+        setLabelText(item)
+        delegate?.didSelectSpeed(item)
+    }
+    
+    // MARK: - Private utilities
+    
+    private func setLabelText(_ speed: Float) {
+        guard let speedText = numberFormatter.string(from: NSNumber(value: speed)) else { return }
+        speedView.setLabelText("\(speedText)x")
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the speed tools menu

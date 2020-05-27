@@ -35,6 +35,8 @@ protocol GifMakerControllerDelegate: class {
     ///
     /// - Parameter index: the index of the requested image.
     func getThumbnail(at index: Int) -> UIImage?
+    
+    func didSelectSpeed(_ speed: Float)
 }
 
 /// A view controller that contains the GIF maker menu
@@ -153,7 +155,9 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     
     // MARK: - SpeedControllerDelegate
     
-    // TODO: Add delegate methods
+    func didSelectSpeed(_ speed: Float) {
+        delegate?.didSelectSpeed(speed)
+    }
     
     // MARK: - Public interface
     

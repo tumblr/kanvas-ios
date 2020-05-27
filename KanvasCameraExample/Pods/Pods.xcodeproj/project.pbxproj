@@ -269,6 +269,9 @@
 		6541B6982472E4F700149C0C /* ThumbnailCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6541B6922472E4F600149C0C /* ThumbnailCollectionView.swift */; };
 		654246A5EC676CAF887090308DBBBA9D /* cost_enc.c in Sources */ = {isa = PBXBuildFile; fileRef = A1EC882BBB21C4E8960829E90C74B633 /* cost_enc.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
 		654BA3E8BFDADC69B2C75B236013A660 /* BackgroundFillOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59509496732884FF34636210C52229DF /* BackgroundFillOperation.swift */; };
+		659478DF247D6CF60017833A /* DiscreteSliderCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659478DE247D6CF60017833A /* DiscreteSliderCollectionCell.swift */; };
+		6595E55C247844A800480E59 /* DiscreteSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6595E55B247844A800480E59 /* DiscreteSliderView.swift */; };
+		6595E55E247844B500480E59 /* DiscreteSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6595E55D247844B500480E59 /* DiscreteSlider.swift */; };
 		65A5C707F428EA70792DDCE00C63FCB8 /* cost_mips_dsp_r2.c in Sources */ = {isa = PBXBuildFile; fileRef = 75BFF17E0CF94691ED1B24E9EAB53437 /* cost_mips_dsp_r2.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
 		65D7C480CFA87DFF5BE8F6565D2D9AF8 /* cost_neon.c in Sources */ = {isa = PBXBuildFile; fileRef = 95C9AA1F7C4334AC2BC62C10DEDBA5EF /* cost_neon.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
 		661953E281904D0FD24176D36BE271EA /* KanvasQuickBlogSelectorCoordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3618464F59DC2F4C5D69F044D0EDE3E9 /* KanvasQuickBlogSelectorCoordinating.swift */; };
@@ -1099,6 +1102,9 @@
 		6541B6912472E4F600149C0C /* ThumbnailCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThumbnailCollectionCell.swift; sourceTree = "<group>"; };
 		6541B6922472E4F600149C0C /* ThumbnailCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThumbnailCollectionView.swift; sourceTree = "<group>"; };
 		654FE81FC1D69340C9BCBF43439DF82B /* PlasmaFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlasmaFilter.swift; sourceTree = "<group>"; };
+		659478DE247D6CF60017833A /* DiscreteSliderCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteSliderCollectionCell.swift; sourceTree = "<group>"; };
+		6595E55B247844A800480E59 /* DiscreteSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteSliderView.swift; sourceTree = "<group>"; };
+		6595E55D247844B500480E59 /* DiscreteSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreteSlider.swift; sourceTree = "<group>"; };
 		65EF42B31D173866FFDB6D62F5B57025 /* Texture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		66060355ECFA400CA363448B19B49E79 /* UIImage+GIF.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+GIF.h"; path = "SDWebImage/Core/UIImage+GIF.h"; sourceTree = "<group>"; };
 		661D8774EFABECB9AC050B44C5AA22CF /* SDWebImageError.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageError.h; path = SDWebImage/Core/SDWebImageError.h; sourceTree = "<group>"; };
@@ -2095,6 +2101,7 @@
 		650647FA24781D700052C175 /* Speed */ = {
 			isa = PBXGroup;
 			children = (
+				6595E55A2478448F00480E59 /* DiscreteSlider */,
 				650647FB24781DE90052C175 /* SpeedController.swift */,
 				650647FD24781E010052C175 /* SpeedView.swift */,
 			);
@@ -2120,6 +2127,16 @@
 				6541B6922472E4F600149C0C /* ThumbnailCollectionView.swift */,
 			);
 			path = ThumbnailCollection;
+			sourceTree = "<group>";
+		};
+		6595E55A2478448F00480E59 /* DiscreteSlider */ = {
+			isa = PBXGroup;
+			children = (
+				6595E55B247844A800480E59 /* DiscreteSliderView.swift */,
+				6595E55D247844B500480E59 /* DiscreteSlider.swift */,
+				659478DE247D6CF60017833A /* DiscreteSliderCollectionCell.swift */,
+			);
+			path = DiscreteSlider;
 			sourceTree = "<group>";
 		};
 		6B2E1F99C22B0C34491649F67483F7F8 /* Stickers */ = {
@@ -4039,6 +4056,7 @@
 				157477BD6022CF9310A2B2D504A62AC1 /* CameraRecorder.swift in Sources */,
 				F5B7F396A17F1C14183C38A66DF8DEF1 /* CameraRecordingProtocol.swift in Sources */,
 				3A217DF265DEBFCD9301EE138721233D /* CameraSegmentHandler.swift in Sources */,
+				659478DF247D6CF60017833A /* DiscreteSliderCollectionCell.swift in Sources */,
 				6F57E456D4F98A66AA4D42E5FE438957 /* CameraSettings.swift in Sources */,
 				6C65EDBBC411BC338D2A2BF08B78D826 /* CameraView.swift in Sources */,
 				D2BEFF1044D6C0BBFB0A966595133879 /* CameraZoomHandler.swift in Sources */,
@@ -4138,6 +4156,7 @@
 				D24D23C907F3220920913B5CE024A728 /* MediaClipsEditorView.swift in Sources */,
 				F9A1F480F616C2E38146BEAA7249158A /* MediaClipsEditorViewController.swift in Sources */,
 				74B4D4E4BD61F7FD2F026B32DCD0B19E /* MediaDrawerController.swift in Sources */,
+				6595E55C247844A800480E59 /* DiscreteSliderView.swift in Sources */,
 				E58AB638190145DF267619FB3CB8549E /* MediaDrawerView.swift in Sources */,
 				9554F310437022DE726CAF1F7C809027 /* MediaExporter.swift in Sources */,
 				2E6DC1B3B2989CA9DD60E03A3604017F /* MediaPickerButtonView.swift in Sources */,
@@ -4183,6 +4202,7 @@
 				1AE480E3A0CCB59C546423C3EF111268 /* StickerMenuView.swift in Sources */,
 				12FA14F1489E30F12171BB1F5A5667FA /* StickerProvider.swift in Sources */,
 				1A108A8FEBCE4E504AB242212B403E02 /* StickerType.swift in Sources */,
+				6595E55E247844B500480E59 /* DiscreteSlider.swift in Sources */,
 				05EF81C89B703CE36E9F245BA847BBD2 /* StickerTypeCollectionCell.swift in Sources */,
 				7F26EC5AB294C155C68827A2A6F3E078 /* StickerTypeCollectionController.swift in Sources */,
 				2447C7DC97A260CE6EC86F2537E1E83F /* StickerTypeCollectionView.swift in Sources */,
