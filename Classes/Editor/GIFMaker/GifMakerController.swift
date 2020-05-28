@@ -36,6 +36,9 @@ protocol GifMakerControllerDelegate: class {
     /// - Parameter index: the index of the requested image.
     func getThumbnail(at index: Int) -> UIImage?
     
+    /// Called when a new speed is selected.
+    ///
+    /// - Parameter speed: the selected speed.
     func didSelectSpeed(_ speed: Float)
 }
 

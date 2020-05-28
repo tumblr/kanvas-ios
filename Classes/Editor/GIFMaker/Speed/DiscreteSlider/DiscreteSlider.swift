@@ -9,6 +9,9 @@ import UIKit
 
 /// Protocol for selecting items.
 protocol DiscreteSliderDelegate: class {
+    /// Called when a new value is selected.
+    ///
+    /// - Parameter item: the selected item.
     func didSelect(item: Float)
 }
 
@@ -76,31 +79,11 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiscreteSliderCollectionCell.identifier, for: indexPath) as? DiscreteSliderCollectionCell,
-        let item = items.object(at: indexPath.item)
-            else { return UICollectionViewCell() }
-        
-        let leftActive: Bool
-        let rightActive: Bool
-        
-        if selectedIndexPath > initialIndexPath {
-            leftActive = indexPath <= selectedIndexPath
-            rightActive = indexPath < selectedIndexPath
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiscreteSliderCollectionCell.identifier, for: indexPath)
+        if let cell = cell as? DiscreteSliderCollectionCell, let item = items.object(at: indexPath.item) {
+            cell.bindTo(item)
+            cell.setPosition(isStart: indexPath.item == 0, isEnd: indexPath.item == items.count - 1)
         }
-        else if selectedIndexPath < initialIndexPath {
-            leftActive = indexPath > selectedIndexPath
-            rightActive = indexPath >= selectedIndexPath
-        }
-        else {
-            leftActive = false
-            rightActive = false
-        }
-        
-        cell.bindTo(item)
-        cell.setProgress(start: indexPath.item == 0,
-                         end: indexPath.item == items.count - 1,
-                         leftActive: leftActive,
-                         rightActive: rightActive)
         
         return cell
     }

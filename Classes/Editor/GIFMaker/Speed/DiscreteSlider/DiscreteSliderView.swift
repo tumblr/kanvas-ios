@@ -7,10 +7,16 @@
 import Foundation
 import UIKit
 
+/// Protocol for selecting cells.
 protocol DiscreteSliderViewDelegate: class {
+    
+    /// Called when a cell is selected.
+    ///
+    /// - Parameter indexPath: the index path of the cell.
     func didSelectCell(at indexPath: IndexPath)
 }
 
+/// Constants for DiscreteSliderView
 private struct Constants {
     static let selectorSize: CGFloat = DiscreteSliderCollectionCell.cellHeight
     static let selectorBorderWidth: CGFloat = 3
@@ -25,6 +31,8 @@ final class DiscreteSliderView: UIView {
     let collectionView: UICollectionView
     private let layout: DiscreteSliderCollectionViewLayout
     private let selector: Selector
+    
+    // MARK: - Initializers
     
     init() {
         layout = DiscreteSliderCollectionViewLayout()
@@ -53,6 +61,7 @@ final class DiscreteSliderView: UIView {
         setupSelector()
     }
     
+    /// Sets up the collection with items.
     private func setupCollection() {
         collectionView.accessibilityIdentifier = "Discrete Slider Collection View"
         collectionView.backgroundColor = .clear
@@ -60,6 +69,7 @@ final class DiscreteSliderView: UIView {
         collectionView.add(into: self)
     }
     
+    /// Sets up the circular selector.
     private func setupSelector() {
         selector.accessibilityIdentifier = "Discrete Slider Selector"
         selector.image = KanvasCameraImages.circleImage
@@ -76,6 +86,7 @@ final class DiscreteSliderView: UIView {
     
     // MARK: - Gesture recognizers
     
+    /// Adds the gesture recognizers to the views.
     private func setupGestureRecognizers() {
         let recognizer = UILongPressGestureRecognizer.init(target: self, action: #selector(selectorTouched(recognizer:)))
         recognizer.minimumPressDuration = 0
@@ -103,16 +114,25 @@ final class DiscreteSliderView: UIView {
         return CGPoint(x: x, y: y)
     }
     
+    /// Moves the selector to a new location.
+    ///
+    /// - Parameter location: the new location.
     private func moveSelector(to location: CGFloat) {
         selector.transform = CGAffineTransform(translationX: location, y: 0)
     }
     
     // MARK: - Public interface
     
+    /// Changes the cell width in the collection.
+    ///
+    /// - Parameter width: the new width.
     func setCellWidth(_ width: CGFloat) {
         layout.estimatedItemSize.width = width
     }
     
+    /// Moves the selector to a cell.
+    ///
+    /// - Parameter index: the index of the cell.
     func setSelector(at index: Int) {
         let cellWidth = layout.estimatedItemSize.width
         let location = cellWidth * CGFloat(index) + (cellWidth - Constants.selectorSize) / 2
@@ -168,6 +188,7 @@ private class DiscreteSliderCollectionViewLayout: UICollectionViewFlowLayout {
     }
 }
 
+/// The circular selector in the slider.
 private class Selector: UIImageView {
     
     private let innerCircle: UIImageView

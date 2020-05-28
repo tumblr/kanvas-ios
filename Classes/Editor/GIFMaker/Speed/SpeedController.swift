@@ -9,9 +9,14 @@ import UIKit
 
 /// Protocol for the speed controller
 protocol SpeedControllerDelegate: class {
+    
+    /// Called when a new speed is selected.
+    ///
+    /// - Parameter speed: the selected speed.
     func didSelectSpeed(_ speed: Float)
 }
 
+/// Constants for SpeedController
 private struct Constants {
     static let sliderValues: [Float] = [0.5, 1, 1.5, 2, 3, 4]
     static let sliderInitialIndex: Int = 1
@@ -62,7 +67,7 @@ final class SpeedController: UIViewController, DiscreteSliderDelegate {
         super.viewDidLoad()
         setUpView()
         
-        load(childViewController: speedSlider, into: speedView.slider)
+        load(childViewController: speedSlider, into: speedView.sliderContainer)
     }
     
     // MARK: - Layout
@@ -83,6 +88,9 @@ final class SpeedController: UIViewController, DiscreteSliderDelegate {
     
     // MARK: - Private utilities
     
+    /// Sets a new formatted text in the label
+    ///
+    /// - Parameter speed: the new speed value
     private func setLabelText(_ speed: Float) {
         guard let speedText = numberFormatter.string(from: NSNumber(value: speed)) else { return }
         speedView.setLabelText("\(speedText)x")

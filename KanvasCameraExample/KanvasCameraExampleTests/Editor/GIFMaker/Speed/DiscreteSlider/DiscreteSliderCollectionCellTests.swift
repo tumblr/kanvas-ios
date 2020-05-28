@@ -28,7 +28,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setProgress(start: true, end: false,
+        cell.setProgress(isStart: true, end: false,
                          leftActive: false, rightActive: false)
         FBSnapshotVerifyView(cell)
     }
@@ -37,7 +37,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setProgress(start: false, end: true,
+        cell.setProgress(isStart: false, end: true,
                          leftActive: false, rightActive: false)
         FBSnapshotVerifyView(cell)
     }
@@ -46,7 +46,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setProgress(start: false, end: false,
+        cell.setProgress(isStart: false, end: false,
                          leftActive: true, rightActive: false)
         FBSnapshotVerifyView(cell)
     }
@@ -55,7 +55,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setProgress(start: false, end: false,
+        cell.setProgress(isStart: false, end: false,
                          leftActive: false, rightActive: true)
         FBSnapshotVerifyView(cell)
     }
@@ -64,7 +64,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setProgress(start: false, end: false,
+        cell.setProgress(isStart: false, end: false,
                          leftActive: false, rightActive: false)
         FBSnapshotVerifyView(cell)
     }
@@ -73,7 +73,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setProgress(start: false, end: false,
+        cell.setProgress(isStart: false, end: false,
                          leftActive: true, rightActive: true)
         FBSnapshotVerifyView(cell)
     }

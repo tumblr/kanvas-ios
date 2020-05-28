@@ -24,12 +24,12 @@ final class SpeedView: UIView {
     static let height: CGFloat = Constants.height
     
     private let speedLabel: UILabel
-    let slider: UIView
+    let sliderContainer: UIView
     
     // MARK: - Initializers
     
     init() {
-        slider = UIView()
+        sliderContainer = UIView()
         speedLabel = UILabel()
         super.init(frame: .zero)
         setupViews()
@@ -49,18 +49,19 @@ final class SpeedView: UIView {
     
     /// Sets up the container for the speed slider
     private func setupSliderContainer() {
-        slider.accessibilityIdentifier = "Speed Menu Slider Container"
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(slider)
+        sliderContainer.accessibilityIdentifier = "Speed Menu Slider Container"
+        sliderContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(sliderContainer)
         
         NSLayoutConstraint.activate([
-            slider.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            slider.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.labelWidth),
-            slider.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            slider.heightAnchor.constraint(equalToConstant: SpeedView.height),
+            sliderContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            sliderContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.labelWidth),
+            sliderContainer.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+            sliderContainer.heightAnchor.constraint(equalToConstant: SpeedView.height),
         ])
     }
     
+    /// Sets up the label that shows the speed
     private func setupSpeedLabel() {
         speedLabel.accessibilityIdentifier = "Speed Menu Slider Container"
         speedLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -92,6 +93,9 @@ final class SpeedView: UIView {
         }
     }
     
+    /// changes the text for the speed label
+    ///
+    /// - Parameter text: the new text
     func setLabelText(_ text: String) {
         speedLabel.text = text
     }

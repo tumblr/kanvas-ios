@@ -18,7 +18,7 @@ private struct Constants {
     static let lineCornerRadius: CGFloat = 2
 }
 
-/// The cell in DiscreteSliderCollectionView to display
+/// The cell inside the discrete slider.
 final class DiscreteSliderCollectionCell: UICollectionViewCell {
     
     static let cellHeight = Constants.imageHeight
@@ -82,16 +82,19 @@ final class DiscreteSliderCollectionCell: UICollectionViewCell {
     
     // MARK: - Public interface
     
-    /// Updates the cell with an image
+    /// Binds the cell to a specific value.
     ///
-    /// - Parameter image: The image to display
+    /// - Parameter value: the new value.
     func bindTo(_ value: Float) {
         self.value = value
     }
     
-    func setProgress(start: Bool, end: Bool, leftActive: Bool, rightActive: Bool) {
-        leftLine.alpha = start ? 0 : 1
-        rightLine.alpha = end ? 0 : 1
+    func setPosition(isStart: Bool, isEnd: Bool) {
+        leftLine.alpha = isStart ? 0 : 1
+        rightLine.alpha = isEnd ? 0 : 1
+    }
+    
+    func setProgress(leftActive: Bool, rightActive: Bool) {
         leftLine.backgroundColor = leftActive ? Constants.lineActiveColor : Constants.lineInactiveColor
         rightLine.backgroundColor = rightActive ? Constants.lineActiveColor : Constants.lineInactiveColor
     }
