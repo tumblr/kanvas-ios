@@ -28,7 +28,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isStart: true, isEnd: false)
+        cell.setPosition(isCenter: false, isStart: true, isEnd: false)
         FBSnapshotVerifyView(cell)
     }
     
@@ -36,7 +36,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isStart: false, isEnd: true)
+        cell.setPosition(isCenter: false, isStart: false, isEnd: true)
         FBSnapshotVerifyView(cell)
     }
     
@@ -44,7 +44,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isStart: false, isEnd: false)
+        cell.setPosition(isCenter: false, isStart: false, isEnd: false)
         cell.setProgress(leftActive: true, rightActive: false)
         FBSnapshotVerifyView(cell)
     }
@@ -53,7 +53,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isStart: false, isEnd: false)
+        cell.setPosition(isCenter: false, isStart: false, isEnd: false)
         cell.setProgress(leftActive: false, rightActive: true)
         FBSnapshotVerifyView(cell)
     }
@@ -62,7 +62,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isStart: false, isEnd: false)
+        cell.setPosition(isCenter: false, isStart: false, isEnd: false)
         cell.setProgress(leftActive: false, rightActive: false)
         FBSnapshotVerifyView(cell)
     }
@@ -71,8 +71,17 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isStart: false, isEnd: false)
+        cell.setPosition(isCenter: false, isStart: false, isEnd: false)
         cell.setProgress(leftActive: true, rightActive: true)
+        FBSnapshotVerifyView(cell)
+    }
+    
+    func testCircle() {
+        let cell = newCell()
+        cell.backgroundColor = .darkGray
+        cell.bindTo(0)
+        cell.setPosition(isCenter: true, isStart: false, isEnd: false)
+        cell.setProgress(leftActive: false, rightActive: false)
         FBSnapshotVerifyView(cell)
     }
 }

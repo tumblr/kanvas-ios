@@ -34,7 +34,7 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     init(items: [Float], initialIndex: Int = 0) {
         self.items = items
         self.initialIndexPath = IndexPath(item: initialIndex, section: 0)
-        self.selectedIndexPath = IndexPath.init(item: initialIndex, section: 0)
+        self.selectedIndexPath = IndexPath(item: initialIndex, section: 0)
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -64,7 +64,7 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let newWidth = discreteSliderView.bounds.width / CGFloat(items.count)
-        discreteSliderView.setCellWidth(newWidth)
+        discreteSliderView.cellWidth = newWidth
         discreteSliderView.setSelector(at: initialIndexPath.item)
     }
 
@@ -80,9 +80,18 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiscreteSliderCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? DiscreteSliderCollectionCell, let item = items.object(at: indexPath.item) {
+        let initialPosition = discreteSliderView.cellWidth * CGFloat(initialIndexPath.item) + (discreteSliderView.cellWidth - DiscreteSliderView.selectorSize) / 2
+        let selectorPosition = discreteSliderView.selectorPosition.x
+        let activeRange = initialPosition < selectorPosition ? initialPosition..<selectorPosition : selectorPosition..<initialPosition
+        
+        if let cell = cell as? DiscreteSliderCollectionCell,
+            let item = items.object(at: indexPath.item) {
             cell.bindTo(item)
-            cell.setPosition(isStart: indexPath.item == 0, isEnd: indexPath.item == items.count - 1)
+            cell.setPosition(isCenter: indexPath == initialIndexPath,
+                             isStart: indexPath.item == 0,
+                             isEnd: indexPath.item == items.count - 1)
+            cell.setProgress(leftActive: activeRange.contains(cell.frame.origin.x),
+                             rightActive: activeRange.contains(cell.frame.origin.x + cell.frame.width))
         }
         
         return cell

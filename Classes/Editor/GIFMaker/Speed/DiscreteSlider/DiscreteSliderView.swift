@@ -26,11 +26,25 @@ private struct Constants {
 /// View for the discrete slider
 final class DiscreteSliderView: UIView {
     
-    weak var delegate: DiscreteSliderViewDelegate?
+    static let selectorSize: CGFloat = Constants.selectorSize
     
-    let collectionView: UICollectionView
+    weak var delegate: DiscreteSliderViewDelegate?
     private let layout: DiscreteSliderCollectionViewLayout
     private let selector: Selector
+    let collectionView: UICollectionView
+    
+    var selectorPosition: CGPoint {
+        return selector.frame.center
+    }
+    
+    var cellWidth: CGFloat {
+        set {
+            layout.estimatedItemSize.width = newValue
+        }
+        get {
+            return layout.estimatedItemSize.width
+        }
+    }
     
     // MARK: - Initializers
     
@@ -122,13 +136,6 @@ final class DiscreteSliderView: UIView {
     }
     
     // MARK: - Public interface
-    
-    /// Changes the cell width in the collection.
-    ///
-    /// - Parameter width: the new width.
-    func setCellWidth(_ width: CGFloat) {
-        layout.estimatedItemSize.width = width
-    }
     
     /// Moves the selector to a cell.
     ///
