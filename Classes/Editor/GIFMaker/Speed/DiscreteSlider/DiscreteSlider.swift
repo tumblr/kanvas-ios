@@ -31,6 +31,11 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     
     // MARK: - Initializers
     
+    /// Initializer for the slider
+    ///
+    /// - Parameters:
+    ///  - items: the list of values for the slider.
+    ///  - initialIndex: the position of the selected value at startup.
     init(items: [Float], initialIndex: Int = 0) {
         self.items = items
         self.initialIndexPath = IndexPath(item: initialIndex, section: 0)
@@ -80,18 +85,17 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiscreteSliderCollectionCell.identifier, for: indexPath)
-        let initialPosition = discreteSliderView.cellWidth * CGFloat(initialIndexPath.item) + (discreteSliderView.cellWidth - DiscreteSliderView.selectorSize) / 2
-        let selectorPosition = discreteSliderView.selectorPosition.x
-        let activeRange = initialPosition < selectorPosition ? initialPosition..<selectorPosition : selectorPosition..<initialPosition
         
         if let cell = cell as? DiscreteSliderCollectionCell,
             let item = items.object(at: indexPath.item) {
             cell.bindTo(item)
-            cell.setPosition(isCenter: indexPath == initialIndexPath,
-                             isStart: indexPath.item == 0,
-                             isEnd: indexPath.item == items.count - 1)
-            cell.setProgress(leftActive: activeRange.contains(cell.frame.origin.x),
-                             rightActive: activeRange.contains(cell.frame.origin.x + cell.frame.width))
+            cell.setStyle(isCenter: indexPath == initialIndexPath,
+                          isFirst: indexPath.item == 0,
+                          isLast: indexPath.item == items.count - 1)
+            
+            let activeRange = getActiveRange()
+            cell.setProgress(leftLineActive: activeRange.contains(cell.frame.minX),
+                             rightLineActive: activeRange.contains(cell.frame.maxX))
         }
         
         return cell
@@ -106,5 +110,25 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
         selectedIndexPath = indexPath
         delegate?.didSelect(item: item)
         discreteSliderView.collectionView.reloadData()
+    }
+    
+    // MARK: - Private utilities
+    
+    /// Calculates the range of X coordinates between the initial position of the selector and its current position.
+    ///
+    /// - Returns:the range of X coordinates.
+    private func getActiveRange() -> Range<CGFloat> {
+        let initialPosition = getInitialLocation()
+        let currentPosition = discreteSliderView.selectorPosition
+        
+        return initialPosition < currentPosition ? initialPosition..<currentPosition : currentPosition..<initialPosition
+    }
+    
+    /// Calculates the initial location of the selector.
+    ///
+    /// - Returns: the intial location.
+    private func getInitialLocation() -> CGFloat {
+        return discreteSliderView.cellWidth * CGFloat(initialIndexPath.item)
+            + (discreteSliderView.cellWidth - DiscreteSliderView.selectorSize) / 2
     }
 }

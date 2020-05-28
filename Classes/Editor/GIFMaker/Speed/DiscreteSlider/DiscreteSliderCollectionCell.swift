@@ -108,14 +108,25 @@ final class DiscreteSliderCollectionCell: UICollectionViewCell {
         self.value = value
     }
     
-    func setPosition(isCenter: Bool, isStart: Bool, isEnd: Bool) {
+    /// Sets the style of the cell according to its position in the collection.
+    ///
+    /// - Parameters:
+    ///  - isCenter: Whether the cell is the center of the range.
+    ///  - isFirst: Whether the cell is the first of the collection.
+    ///  - isLast: Whether the cell is the last of the collection.
+    func setStyle(isCenter: Bool, isFirst: Bool, isLast: Bool) {
         circle.alpha = isCenter ? 1 : 0
-        leftLine.alpha = isStart ? 0 : 1
-        rightLine.alpha = isEnd ? 0 : 1
+        leftLine.alpha = isFirst ? 0 : 1
+        rightLine.alpha = isLast ? 0 : 1
     }
     
-    func setProgress(leftActive: Bool, rightActive: Bool) {
-        leftLine.backgroundColor = leftActive ? Constants.activeColor : Constants.inactiveColor
-        rightLine.backgroundColor = rightActive ? Constants.activeColor : Constants.inactiveColor
+    /// Changes the colors of the lines in the cell.
+    ///
+    /// - Parameters:
+    ///  - leftLineActive: Whether the left line should be coloured or not.
+    ///  - rightLineActive: Whether the right line should be coloured or not.
+    func setProgress(leftLineActive: Bool, rightLineActive: Bool) {
+        leftLine.backgroundColor = leftLineActive ? Constants.activeColor : Constants.inactiveColor
+        rightLine.backgroundColor = rightLineActive ? Constants.activeColor : Constants.inactiveColor
     }
 }

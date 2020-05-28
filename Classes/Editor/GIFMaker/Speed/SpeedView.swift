@@ -63,7 +63,7 @@ final class SpeedView: UIView {
     
     /// Sets up the label that shows the speed
     private func setupSpeedLabel() {
-        speedLabel.accessibilityIdentifier = "Speed Menu Slider Container"
+        speedLabel.accessibilityIdentifier = "Speed Menu Speed Label"
         speedLabel.translatesAutoresizingMaskIntoConstraints = false
         speedLabel.backgroundColor = Constants.labelBackgroundColor
         speedLabel.layer.cornerRadius = Constants.labelCornerRadius
@@ -93,7 +93,7 @@ final class SpeedView: UIView {
         }
     }
     
-    /// changes the text for the speed label
+    /// changes the text of the speed label
     ///
     /// - Parameter text: the new text
     func setLabelText(_ text: String) {

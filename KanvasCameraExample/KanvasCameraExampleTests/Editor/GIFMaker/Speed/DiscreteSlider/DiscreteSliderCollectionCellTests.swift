@@ -28,7 +28,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isCenter: false, isStart: true, isEnd: false)
+        cell.setStyle(isCenter: false, isFirst: true, isLast: false)
         FBSnapshotVerifyView(cell)
     }
     
@@ -36,7 +36,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isCenter: false, isStart: false, isEnd: true)
+        cell.setStyle(isCenter: false, isFirst: false, isLast: true)
         FBSnapshotVerifyView(cell)
     }
     
@@ -44,8 +44,8 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isCenter: false, isStart: false, isEnd: false)
-        cell.setProgress(leftActive: true, rightActive: false)
+        cell.setStyle(isCenter: false, isFirst: false, isLast: false)
+        cell.setProgress(leftLineActive: true, rightLineActive: false)
         FBSnapshotVerifyView(cell)
     }
     
@@ -53,8 +53,8 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isCenter: false, isStart: false, isEnd: false)
-        cell.setProgress(leftActive: false, rightActive: true)
+        cell.setStyle(isCenter: false, isFirst: false, isLast: false)
+        cell.setProgress(leftLineActive: false, rightLineActive: true)
         FBSnapshotVerifyView(cell)
     }
     
@@ -62,8 +62,8 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isCenter: false, isStart: false, isEnd: false)
-        cell.setProgress(leftActive: false, rightActive: false)
+        cell.setStyle(isCenter: false, isFirst: false, isLast: false)
+        cell.setProgress(leftLineActive: false, rightLineActive: false)
         FBSnapshotVerifyView(cell)
     }
     
@@ -71,8 +71,8 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isCenter: false, isStart: false, isEnd: false)
-        cell.setProgress(leftActive: true, rightActive: true)
+        cell.setStyle(isCenter: false, isFirst: false, isLast: false)
+        cell.setProgress(leftLineActive: true, rightLineActive: true)
         FBSnapshotVerifyView(cell)
     }
     
@@ -80,8 +80,8 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
-        cell.setPosition(isCenter: true, isStart: false, isEnd: false)
-        cell.setProgress(leftActive: false, rightActive: false)
+        cell.setStyle(isCenter: true, isFirst: false, isLast: false)
+        cell.setProgress(leftLineActive: false, rightLineActive: false)
         FBSnapshotVerifyView(cell)
     }
 }
