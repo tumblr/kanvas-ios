@@ -61,7 +61,7 @@ final class SpeedView: UIView {
         ])
     }
     
-    func setupSpeedLabel() {
+    private func setupSpeedLabel() {
         speedLabel.accessibilityIdentifier = "Speed Menu Slider Container"
         speedLabel.translatesAutoresizingMaskIntoConstraints = false
         speedLabel.backgroundColor = Constants.labelBackgroundColor

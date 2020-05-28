@@ -18,7 +18,7 @@ final class SpeedViewTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newView() -> SpeedView {
+    private func newView() -> SpeedView {
         let view = SpeedView()
         view.frame = CGRect(x: 0, y: 0, width: 320, height: SpeedView.height)
         return view
@@ -26,6 +26,7 @@ final class SpeedViewTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let view = newView()
+        view.setLabelText("1x")
         FBSnapshotVerifyView(view)
     }
 }

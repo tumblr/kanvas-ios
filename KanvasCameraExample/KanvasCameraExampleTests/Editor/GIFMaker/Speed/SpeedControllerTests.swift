@@ -18,7 +18,7 @@ final class SpeedControllerTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newViewController() -> SpeedController {
+    private func newViewController() -> SpeedController {
         let controller = SpeedController()
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: SpeedView.height)
         controller.view.setNeedsDisplay()
