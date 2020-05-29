@@ -48,6 +48,7 @@ final class GifMakerView: UIView {
     private let topButtonsContainer: UIView
     let trimMenuContainer: IgnoreTouchesView
     let speedMenuContainer: IgnoreTouchesView
+    let playbackMenuContainer: IgnoreTouchesView
     
     /// Confirm button location expressed in screen coordinates
     var confirmButtonLocation: CGPoint {
@@ -63,6 +64,7 @@ final class GifMakerView: UIView {
         topButtonsContainer = IgnoreTouchesView()
         trimMenuContainer = IgnoreTouchesView()
         speedMenuContainer = IgnoreTouchesView()
+        playbackMenuContainer = IgnoreTouchesView()
         super.init(frame: .zero)
         setupViews()
     }
@@ -81,6 +83,7 @@ final class GifMakerView: UIView {
         setupTrimMenuContainer()
         setUpSpeedButton()
         setupSpeedMenuContainer()
+        setupPlaybackMenuContainer()
     }
     
     /// Sets up the container for the top buttons
@@ -186,6 +189,22 @@ final class GifMakerView: UIView {
             speedMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
             speedMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
             speedMenuContainer.heightAnchor.constraint(equalToConstant: SpeedView.height),
+        ])
+    }
+    
+    /// Sets up the container for the playback tools menu
+    private func setupPlaybackMenuContainer() {
+        playbackMenuContainer.backgroundColor = .clear
+        playbackMenuContainer.accessibilityIdentifier = "GIF Maker Playback Menu Container"
+        playbackMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        playbackMenuContainer.clipsToBounds = false
+        addSubview(playbackMenuContainer)
+        
+        NSLayoutConstraint.activate([
+            playbackMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
+            playbackMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            playbackMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
+            playbackMenuContainer.heightAnchor.constraint(equalToConstant: PlaybackView.height),
         ])
     }
     

@@ -655,6 +655,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         
     }
     
+    func didSelectPlayback(_ option: PlaybackOption) {
+        print("L - \(option.text)")
+    }
+    
     // MARK: - EditorFilterControllerDelegate
     
     func didConfirmFilters() {

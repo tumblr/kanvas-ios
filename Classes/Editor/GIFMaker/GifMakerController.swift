@@ -40,10 +40,12 @@ protocol GifMakerControllerDelegate: class {
     ///
     /// - Parameter speed: the selected speed.
     func didSelectSpeed(_ speed: Float)
+    
+    func didSelectPlayback(_ option: PlaybackOption)
 }
 
 /// A view controller that contains the GIF maker menu
-final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimControllerDelegate, SpeedControllerDelegate {
+final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimControllerDelegate, SpeedControllerDelegate, PlaybackControllerDelegate {
     
     weak var delegate: GifMakerControllerDelegate?
         
@@ -61,6 +63,12 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
 
     private lazy var speedController: SpeedController = {
         let controller = SpeedController()
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var playbackController: PlaybackController = {
+        let controller = PlaybackController()
         controller.delegate = self
         return controller
     }()
@@ -114,6 +122,7 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         
         load(childViewController: trimController, into: gifMakerView.trimMenuContainer)
         load(childViewController: speedController, into: gifMakerView.speedMenuContainer)
+        load(childViewController: playbackController, into: gifMakerView.playbackMenuContainer)
     }
     
     // MARK: - Layout
@@ -160,6 +169,13 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     
     func didSelectSpeed(_ speed: Float) {
         delegate?.didSelectSpeed(speed)
+    }
+    
+    // MARK: - PlaybackControllerDelegate
+    
+    
+    func didSelect(option: PlaybackOption) {
+        delegate?.didSelectPlayback(option)
     }
     
     // MARK: - Public interface
