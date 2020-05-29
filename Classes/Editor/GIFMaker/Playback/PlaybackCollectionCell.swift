@@ -19,7 +19,7 @@ private struct Constants {
     static let cornerRadius: CGFloat = 18
     static let backgroundColorActive: UIColor = .white
     static let backgroundColorInactive: UIColor = .clear
-    static let fontColorActive: UIColor = .clear
+    static let fontColorActive: UIColor = .black
     static let fontColorInactive: UIColor = .white
     static let font: UIFont = .guavaMedium()
 }
@@ -31,6 +31,19 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     static var width: CGFloat = Constants.width
     weak var delegate: PlaybackCollectionCellDelegate?
     private let button = UIButton()
+    
+    override var isSelected: Bool {
+        willSet {
+            if newValue {
+                button.backgroundColor = Constants.backgroundColorActive
+                button.setTitleColor(Constants.fontColorActive, for: .normal)
+            }
+            else {
+                button.backgroundColor = Constants.backgroundColorInactive
+                button.setTitleColor(Constants.fontColorInactive, for: .normal)
+            }
+        }
+    }
     
     // MARK: - Initializers
     
@@ -61,7 +74,7 @@ final class PlaybackCollectionCell: UICollectionViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = Constants.cornerRadius
         button.titleLabel?.font = Constants.font
-        button.titleLabel?.textColor = Constants.fontColorInactive
+        button.setTitleColor(Constants.fontColorInactive, for: .normal)
         button.backgroundColor = Constants.backgroundColorInactive
         
         NSLayoutConstraint.activate([
@@ -84,16 +97,5 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     
     func bindTo(_ item: PlaybackOption) {
         button.setTitle(item.text, for: .normal)
-    }
-    
-    func setSelected(_ selected: Bool) {
-        if selected {
-            button.backgroundColor = Constants.backgroundColorActive
-            button.titleLabel?.textColor = Constants.fontColorActive
-        }
-        else {
-            button.backgroundColor = Constants.backgroundColorInactive
-            button.titleLabel?.textColor = Constants.fontColorInactive
-        }
     }
 }

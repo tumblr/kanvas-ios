@@ -19,6 +19,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     private let playbackView = PlaybackView()
     
     private var options: [PlaybackOption]
+    private var selectedCell: PlaybackCollectionCell?
     
     // MARK: - Initializers
     
@@ -52,8 +53,9 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        PlaybackCollectionCell.width = calculateCellWidth()
-        playbackView.cellWidth = calculateCellWidth()
+        let cellWidth = calculateCellWidth()
+        PlaybackCollectionCell.width = cellWidth
+        playbackView.cellWidth = cellWidth
     }
 
     // MARK: - UICollectionViewDataSource
@@ -79,7 +81,12 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     
     func didTap(cell: PlaybackCollectionCell) {
         guard let indexPath = playbackView.collectionView.indexPath(for: cell),
-            let option = options.object(at: indexPath.item) else { return }
+            let option = options.object(at: indexPath.item),
+            selectedCell != cell else { return }
+        
+        selectedCell?.isSelected = false
+        selectedCell = cell
+        selectedCell?.isSelected = true
         
         delegate?.didSelect(option: option)
     }
