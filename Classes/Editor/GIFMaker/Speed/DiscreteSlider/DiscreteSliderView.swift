@@ -33,6 +33,7 @@ final class DiscreteSliderView: UIView {
     
     let collectionView: UICollectionView
     private let selector: Selector
+    private var initialSelectorTransform: CGAffineTransform?
     private let layout: DiscreteSliderCollectionViewLayout
 
     var selectorPosition: CGFloat {
@@ -109,20 +110,40 @@ final class DiscreteSliderView: UIView {
     }
     
     @objc private func selectorTouched(recognizer: UIGestureRecognizer) {
-        let location = calculateLocation(with: recognizer)
-        guard let indexPath = collectionView.indexPathForItem(at: location),
-            let cell = collectionView.cellForItem(at: indexPath),
-            location.x.distance(to: cell.center.x) < Constants.selectionBounds else { return }
-        
-        moveSelector(to: cell.center.x)
-        delegate?.didSelectCell(at: indexPath)
+        switch recognizer.state {
+        case .possible:
+            break
+        case .began:
+            initialSelectorTransform = selector.transform
+            let location = calculateLocation(with: recognizer)
+            moveSelector(to: location.x)
+        case .changed:
+            let location = calculateLocation(with: recognizer)
+            moveSelector(to: location.x)
+        case .ended:
+            initialSelectorTransform = nil
+            let location = calculateLocation(with: recognizer)
+            if let indexPath = collectionView.indexPathForItem(at: location),
+                let cell = collectionView.cellForItem(at: indexPath) {
+                moveSelector(to: cell.center.x)
+                delegate?.didSelectCell(at: indexPath)
+            }
+        case .cancelled, .failed:
+            if let initialSelectorTransform = initialSelectorTransform {
+                UIView.animate(withDuration: 0.1) {
+                    self.selector.transform = initialSelectorTransform
+                }
+            }
+        }
+
     }
     
     // MARK: - Private utilities
     
     private func calculateLocation(with recognizer: UIGestureRecognizer) -> CGPoint {
         let location = recognizer.location(in: self)
-        let x = (bounds.minX...bounds.maxX).clamp(location.x)
+        let offset = Constants.selectorSize / 2
+        let x = ((bounds.minX + offset)...(bounds.maxX - offset)).clamp(location.x)
         let y = bounds.midY
         return CGPoint(x: x, y: y)
     }
@@ -132,7 +153,9 @@ final class DiscreteSliderView: UIView {
     /// - Parameter location: the new location.
     private func moveSelector(to location: CGFloat) {
         let offset = Constants.selectorSize / 2
-        selector.transform = CGAffineTransform(translationX: location - offset, y: 0)
+        UIView.animate(withDuration: 0.1) {
+            self.selector.transform = CGAffineTransform(translationX: location - offset, y: 0)
+        }
     }
     
     // MARK: - Public interface
