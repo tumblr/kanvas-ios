@@ -7,8 +7,9 @@
 import Foundation
 import UIKit
 
-/// Protocol for selecting a cell.
+/// Protocol for tapping a cell.
 protocol PlaybackCollectionCellDelegate: class {
+    
     /// Called when a cell is tapped
     ///
     /// - Parameter cell: the tapped cell
@@ -27,7 +28,7 @@ private struct Constants {
     static let font: UIFont = .guavaMedium()
 }
 
-/// The cell in ThumbnailCollectionView to display
+/// The cell in PlaybackController
 final class PlaybackCollectionCell: UICollectionViewCell {
     
     static let height: CGFloat = Constants.height
@@ -62,6 +63,7 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
+        button.isSelected = false
         button.setTitle(nil, for: .normal)
     }
     
@@ -98,7 +100,7 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     
     // MARK: - Public interface
     
-    /// Adds the name of the option to a cell.
+    /// Adds the name of an option to a cell.
     ///
     /// - Parameter option: the option to take the name from.
     func bindTo(_ option: PlaybackOption) {

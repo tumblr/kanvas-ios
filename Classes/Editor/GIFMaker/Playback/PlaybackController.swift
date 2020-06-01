@@ -9,6 +9,7 @@ import UIKit
 
 /// Protocol for selecting an option.
 protocol PlaybackControllerDelegate: class {
+    
     /// Called when a playback option is selected
     ///
     /// - Parameter option: the selected option.
@@ -20,7 +21,7 @@ private struct Constants {
     static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
 }
 
-/// Controller for handling the playback options.
+/// Controller for handling the playback menu.
 final class PlaybackController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PlaybackCollectionCellDelegate {
     
     weak var delegate: PlaybackControllerDelegate?

@@ -41,7 +41,7 @@ protocol GifMakerControllerDelegate: class {
     /// - Parameter speed: the selected speed.
     func didSelectSpeed(_ speed: Float)
     
-    /// Called when a playback option is selected
+    /// Called when a playback option is selected.
     ///
     /// - Parameter option: the selected option.
     func didSelectPlayback(_ option: PlaybackOption)

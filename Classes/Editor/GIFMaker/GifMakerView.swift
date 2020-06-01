@@ -196,7 +196,7 @@ final class GifMakerView: UIView {
         ])
     }
     
-    /// Sets up the container for the playback tools menu
+    /// Sets up the container for the playback menu
     private func setupPlaybackMenuContainer() {
         playbackMenuContainer.backgroundColor = .clear
         playbackMenuContainer.accessibilityIdentifier = "GIF Maker Playback Menu Container"
