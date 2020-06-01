@@ -9,6 +9,9 @@ import UIKit
 
 /// Protocol for selecting an option.
 protocol PlaybackControllerDelegate: class {
+    /// Called when a playback option is selected
+    ///
+    /// - Parameter option: the selected option.
     func didSelect(option: PlaybackOption)
 }
 
