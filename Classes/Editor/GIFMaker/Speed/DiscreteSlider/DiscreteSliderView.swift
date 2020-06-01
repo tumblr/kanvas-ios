@@ -33,7 +33,7 @@ final class DiscreteSliderView: UIView {
     
     let collectionView: UICollectionView
     private let selector: Selector
-    private var initialSelectorTransform: CGAffineTransform?
+    private var previousSelectorPosition: CGFloat?
     private let layout: DiscreteSliderCollectionViewLayout
 
     var selectorPosition: CGFloat {
@@ -114,14 +114,14 @@ final class DiscreteSliderView: UIView {
         case .possible:
             break
         case .began:
-            initialSelectorTransform = selector.transform
+            setPreviousSelectorPosition()
             let location = calculateLocation(with: recognizer)
             moveSelector(to: location.x)
         case .changed:
             let location = calculateLocation(with: recognizer)
             moveSelector(to: location.x)
         case .ended:
-            initialSelectorTransform = nil
+            clearPreviousSelectorPosition()
             let location = calculateLocation(with: recognizer)
             if let indexPath = collectionView.indexPathForItem(at: location),
                 let cell = collectionView.cellForItem(at: indexPath) {
@@ -129,11 +129,7 @@ final class DiscreteSliderView: UIView {
                 delegate?.didSelectCell(at: indexPath)
             }
         case .cancelled, .failed:
-            if let initialSelectorTransform = initialSelectorTransform {
-                UIView.animate(withDuration: 0.1) {
-                    self.selector.transform = initialSelectorTransform
-                }
-            }
+            resetSelectorPosition()
         }
 
     }
@@ -151,11 +147,25 @@ final class DiscreteSliderView: UIView {
     /// Moves the selector to a new location.
     ///
     /// - Parameter location: the new location.
-    private func moveSelector(to location: CGFloat) {
-        let offset = Constants.selectorSize / 2
+    private func moveSelector(to location: CGFloat, offset: CGFloat = Constants.selectorSize / 2) {
         UIView.animate(withDuration: 0.1) {
             self.selector.transform = CGAffineTransform(translationX: location - offset, y: 0)
         }
+    }
+
+    private func setPreviousSelectorPosition() {
+        previousSelectorPosition = selector.transform.tx
+    }
+
+    private func resetSelectorPosition() {
+        if let previousSelectorPosition = previousSelectorPosition {
+            self.previousSelectorPosition = nil
+            moveSelector(to: previousSelectorPosition, offset: 0)
+        }
+    }
+
+    private func clearPreviousSelectorPosition() {
+        previousSelectorPosition = nil
     }
     
     // MARK: - Public interface
