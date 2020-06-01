@@ -29,6 +29,8 @@ private struct Constants {
     static let bottomMargin: CGFloat = 16
     static let leftMargin: CGFloat = 20
     static let rightMargin: CGFloat = 20
+    static let trimMenuMargin: CGFloat = 16
+    static let speedMenuMargin: CGFloat = 34
     
     // Top options
     static let topButtonSize: CGFloat = 36
@@ -80,8 +82,8 @@ final class GifMakerView: UIView {
         setUpTopButtonsContainer()
         setUpConfirmButton()
         setUpTrimButton()
-        setupTrimMenuContainer()
         setUpSpeedButton()
+        setupTrimMenuContainer()
         setupSpeedMenuContainer()
         setupPlaybackMenuContainer()
     }
@@ -141,22 +143,6 @@ final class GifMakerView: UIView {
         trimButton.addTarget(self, action: #selector(trimButtonTapped), for: .touchUpInside)
     }
     
-    /// Sets up the container for the trim menu
-    private func setupTrimMenuContainer() {
-        trimMenuContainer.backgroundColor = .clear
-        trimMenuContainer.accessibilityIdentifier = "GIF Maker Trim Menu Container"
-        trimMenuContainer.translatesAutoresizingMaskIntoConstraints = false
-        trimMenuContainer.clipsToBounds = false
-        addSubview(trimMenuContainer)
-        
-        NSLayoutConstraint.activate([
-            trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
-            trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
-            trimMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
-            trimMenuContainer.heightAnchor.constraint(equalToConstant: TrimView.height),
-        ])
-    }
-    
     /// Sets up the speed tools button in the top options
     private func setUpSpeedButton() {
         speedButton.accessibilityIdentifier = "GIF Maker Speed Button"
@@ -176,6 +162,23 @@ final class GifMakerView: UIView {
         speedButton.addTarget(self, action: #selector(speedButtonTapped), for: .touchUpInside)
     }
     
+    /// Sets up the container for the trim menu
+    private func setupTrimMenuContainer() {
+        trimMenuContainer.backgroundColor = .clear
+        trimMenuContainer.accessibilityIdentifier = "GIF Maker Trim Menu Container"
+        trimMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        trimMenuContainer.clipsToBounds = false
+        addSubview(trimMenuContainer)
+        
+        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.trimMenuMargin
+        NSLayoutConstraint.activate([
+            trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
+            trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            trimMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
+            trimMenuContainer.heightAnchor.constraint(equalToConstant: TrimView.height),
+        ])
+    }
+    
     /// Sets up the container for the speed tools menu
     private func setupSpeedMenuContainer() {
         speedMenuContainer.backgroundColor = .clear
@@ -184,10 +187,11 @@ final class GifMakerView: UIView {
         speedMenuContainer.clipsToBounds = false
         addSubview(speedMenuContainer)
         
+        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.speedMenuMargin
         NSLayoutConstraint.activate([
             speedMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             speedMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
-            speedMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
+            speedMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             speedMenuContainer.heightAnchor.constraint(equalToConstant: SpeedView.height),
         ])
     }

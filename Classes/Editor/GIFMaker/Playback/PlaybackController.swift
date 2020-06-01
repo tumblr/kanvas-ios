@@ -12,6 +12,10 @@ protocol PlaybackControllerDelegate: class {
     func didSelect(option: PlaybackOption)
 }
 
+private struct Constants {
+    static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
+}
+
 /// Controller for handling the playback options.
 final class PlaybackController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PlaybackCollectionCellDelegate {
     
@@ -19,12 +23,13 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     private let playbackView = PlaybackView()
     
     private var options: [PlaybackOption]
-    private var selectedCell: PlaybackCollectionCell?
+    private var selectedIndexPath: IndexPath
     
     // MARK: - Initializers
     
     init() {
         options = [.loop, .rebound, .reverse]
+        selectedIndexPath = Constants.initialIndexPath
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -69,11 +74,15 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaybackCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? PlaybackCollectionCell, let option = options.object(at: indexPath.item) {
-            cell.delegate = self
-            cell.bindTo(option)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaybackCollectionCell.identifier, for: indexPath) as? PlaybackCollectionCell, let option = options.object(at: indexPath.item) else { return UICollectionViewCell() }
+        
+        cell.delegate = self
+        cell.bindTo(option)
+        
+        if indexPath == selectedIndexPath {
+            cell.isSelected = true
         }
+        
         return cell
     }
     
@@ -81,12 +90,13 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     
     func didTap(cell: PlaybackCollectionCell) {
         guard let indexPath = playbackView.collectionView.indexPath(for: cell),
+            let selectedCell = playbackView.collectionView.cellForItem(at: selectedIndexPath),
             let option = options.object(at: indexPath.item),
-            selectedCell != cell else { return }
+            selectedIndexPath != indexPath else { return }
         
-        selectedCell?.isSelected = false
-        selectedCell = cell
-        selectedCell?.isSelected = true
+        selectedCell.isSelected = false
+        cell.isSelected = true
+        selectedIndexPath = indexPath
         
         delegate?.didSelect(option: option)
     }
