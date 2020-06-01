@@ -153,10 +153,12 @@ final class DiscreteSliderView: UIView {
         }
     }
 
+    /// Sets the previous selector position to the current position of the selector
     private func setPreviousSelectorPosition() {
         previousSelectorPosition = selector.transform.tx
     }
 
+    /// Resets the selector position, and forgets the previous selector position
     private func resetSelectorPosition() {
         if let previousSelectorPosition = previousSelectorPosition {
             self.previousSelectorPosition = nil
@@ -164,6 +166,7 @@ final class DiscreteSliderView: UIView {
         }
     }
 
+    /// Clears the previous selector position
     private func clearPreviousSelectorPosition() {
         previousSelectorPosition = nil
     }
