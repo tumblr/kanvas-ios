@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// A representation of a playback option to be presented in PlaybackController
 enum PlaybackOption: String {
     case loop
     case rebound

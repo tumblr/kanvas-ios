@@ -12,6 +12,7 @@ protocol PlaybackControllerDelegate: class {
     func didSelect(option: PlaybackOption)
 }
 
+/// Constants for PlaybackController
 private struct Constants {
     static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
 }

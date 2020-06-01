@@ -7,6 +7,7 @@
 import Foundation
 import UIKit
 
+/// Constants for PlaybackView
 private struct Constants {
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.65)
     static let cornerRadius: CGFloat = 18

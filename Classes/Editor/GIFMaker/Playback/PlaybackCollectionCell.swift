@@ -9,10 +9,13 @@ import UIKit
 
 /// Protocol for selecting a cell.
 protocol PlaybackCollectionCellDelegate: class {
-    
+    /// Called when a cell is tapped
+    ///
+    /// - Parameter cell: the tapped cell
     func didTap(cell: PlaybackCollectionCell)
 }
 
+/// Constants for PlaybackCollectionCell
 private struct Constants {
     static let height: CGFloat = 36
     static let width: CGFloat = 100
@@ -95,7 +98,10 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     
     // MARK: - Public interface
     
-    func bindTo(_ item: PlaybackOption) {
-        button.setTitle(item.text, for: .normal)
+    /// Adds the name of the option to a cell.
+    ///
+    /// - Parameter option: the option to take the name from.
+    func bindTo(_ option: PlaybackOption) {
+        button.setTitle(option.text, for: .normal)
     }
 }

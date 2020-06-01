@@ -173,7 +173,6 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     
     // MARK: - PlaybackControllerDelegate
     
-    
     func didSelect(option: PlaybackOption) {
         delegate?.didSelectPlayback(option)
     }
