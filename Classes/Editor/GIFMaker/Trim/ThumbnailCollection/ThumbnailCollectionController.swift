@@ -54,7 +54,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         thumbnailCollectionView.collectionView.dataSource = self
     }
 
-    // MARK: - UICollectionViewDataSource
+    // MARK: - UICollectionView
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -71,6 +71,10 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
             cell.bindTo(indexPath.item)
         }
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: TrimView.selectorHorizontalMargin, bottom: 0, right: TrimView.selectorHorizontalMargin)
     }
     
     // MARK: - ThumbnailCollectionCellDelegate

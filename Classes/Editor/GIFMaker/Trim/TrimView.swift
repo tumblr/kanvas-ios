@@ -31,15 +31,15 @@ protocol TrimViewDelegate: class {
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let height: CGFloat = 71
-    static let cornerRadius: CGFloat = 8
-    static let backgroundColor: UIColor = .black
     static let selectorInset: CGFloat = -20
+    static let selectorMargin: CGFloat = 20
 }
 
 /// A UIView for the trim tool
 final class TrimView: UIView, TrimAreaDelegate {
     
     static let height: CGFloat = Constants.height
+    static let selectorHorizontalMargin = Constants.selectorMargin
     
     weak var delegate: TrimViewDelegate?
     
@@ -88,8 +88,6 @@ final class TrimView: UIView, TrimAreaDelegate {
     private func setupThumbnailContainer() {
         thumbnailContainer.accessibilityIdentifier = "GIF Maker Thumbnail Container"
         thumbnailContainer.translatesAutoresizingMaskIntoConstraints = false
-        thumbnailContainer.backgroundColor = Constants.backgroundColor
-        thumbnailContainer.layer.cornerRadius = Constants.cornerRadius
         thumbnailContainer.clipsToBounds = true
         addSubview(thumbnailContainer)
         
@@ -107,8 +105,10 @@ final class TrimView: UIView, TrimAreaDelegate {
         trimArea.translatesAutoresizingMaskIntoConstraints = false
         addSubview(trimArea)
         
-        trimAreaLeadingConstraint = trimArea.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
-        trimAreaTrailingConstraint = trimArea.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+        trimAreaLeadingConstraint = trimArea.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor,
+                                                                      constant: Constants.selectorMargin)
+        trimAreaTrailingConstraint = trimArea.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
+                                                                        constant: -Constants.selectorMargin)
         
         NSLayoutConstraint.activate([
             trimArea.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
@@ -169,8 +169,8 @@ final class TrimView: UIView, TrimAreaDelegate {
     // MARK: - Gesture recognizers
     
     private func leftSideMoved(to location: CGFloat) {
-        if location <= 0 {
-            trimAreaLeadingConstraint.constant = 0
+        if location <= Constants.selectorMargin {
+            trimAreaLeadingConstraint.constant = Constants.selectorMargin
         }
         else if location + TrimArea.selectorWidth <= trimArea.rightSelectorLocation {
             trimAreaLeadingConstraint.constant = location
@@ -182,8 +182,8 @@ final class TrimView: UIView, TrimAreaDelegate {
     }
     
     private func rightSideMoved(to location: CGFloat) {
-        if location + TrimArea.selectorWidth >= bounds.width {
-            trimAreaTrailingConstraint.constant = 0
+        if location + TrimArea.selectorWidth >= bounds.width - Constants.selectorMargin {
+            trimAreaTrailingConstraint.constant = -Constants.selectorMargin
         }
         else if location >= trimArea.leftSelectorLocation {
             trimAreaTrailingConstraint.constant = location + TrimArea.selectorWidth - bounds.width
@@ -197,13 +197,13 @@ final class TrimView: UIView, TrimAreaDelegate {
     // MARK: - Private utilities
     
     private func getStartingPercentage() -> CGFloat {
-        let totalWidth = bounds.width - TrimArea.selectorWidth * 2
-        return (trimArea.leftSelectorLocation - TrimArea.selectorWidth) * 100 / totalWidth
+        let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
+        return (trimArea.leftSelectorLocation - TrimArea.selectorWidth - Constants.selectorMargin) * 100 / totalWidth
     }
     
     private func getEndingPercentage() -> CGFloat {
-        let totalWidth = bounds.width - TrimArea.selectorWidth * 2
-        return 100 - (bounds.width - TrimArea.selectorWidth - trimArea.rightSelectorLocation) * 100 / totalWidth
+        let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
+        return 100 - (bounds.width - TrimArea.selectorWidth - trimArea.rightSelectorLocation - Constants.selectorMargin) * 100 / totalWidth
     }
     
     private func trimAreaStartedMoving() {

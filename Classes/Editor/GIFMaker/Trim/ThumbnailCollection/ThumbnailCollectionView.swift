@@ -14,9 +14,6 @@ final class ThumbnailCollectionView: UIView {
     
     init() {
         collectionView = ThumbnailInnerCollectionView(frame: .zero, collectionViewLayout: ThumbnailCollectionViewLayout())
-        collectionView.accessibilityIdentifier = "Thumbnail Collection View"
-        collectionView.backgroundColor = .clear
-        
         super.init(frame: .zero)
         
         clipsToBounds = true
@@ -37,7 +34,9 @@ final class ThumbnailCollectionView: UIView {
     
     private func setUpViews() {
         collectionView.add(into: self)
+        collectionView.accessibilityIdentifier = "Thumbnail Collection View"
         collectionView.clipsToBounds = true
+        collectionView.backgroundColor = .clear
     }
 }
 
