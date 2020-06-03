@@ -22,7 +22,7 @@ final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDa
     
     func newView() -> ThumbnailCollectionView {
         let view = ThumbnailCollectionView()
-        view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimView.height)
+        view.frame = CGRect(x: 0, y: 0, width: 320, height: ThumbnailCollectionCell.cellHeight)
         view.backgroundColor = .black
         view.collectionView.register(cell: ThumbnailCollectionCell.self)
         view.collectionView.dataSource = self

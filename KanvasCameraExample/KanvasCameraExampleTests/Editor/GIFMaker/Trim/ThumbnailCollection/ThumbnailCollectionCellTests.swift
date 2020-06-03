@@ -19,9 +19,9 @@ final class ThumbnailCollectionCellTests: FBSnapshotTestCase {
     }
     
     func newCell() -> ThumbnailCollectionCell {
-        let size = TrimView.height
         let frame = CGRect(origin: CGPoint.zero,
-                           size: CGSize(width: size, height: size))
+                           size: CGSize(width: ThumbnailCollectionCell.cellWidth,
+                                        height: ThumbnailCollectionCell.cellHeight))
         return ThumbnailCollectionCell(frame: frame)
     }
     

@@ -20,7 +20,7 @@ final class TrimAreaTests: FBSnapshotTestCase {
     
     func newView() -> TrimArea {
         let view = TrimArea()
-        view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimView.height)
+        view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimArea.height)
         return view
     }
     
