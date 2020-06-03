@@ -18,7 +18,7 @@ protocol ThumbnailCollectionCellDelegate: class {
 
 /// Constants for ThumbnailCollectionCell
 private struct Constants {
-    static let imageHeight: CGFloat = TrimView.height
+    static let imageHeight: CGFloat = 63
     static let imageWidth: CGFloat = 50
     static let loadingViewBackgroundColor: UIColor = .clear
     static let loadingViewColor: UIColor = .lightGray

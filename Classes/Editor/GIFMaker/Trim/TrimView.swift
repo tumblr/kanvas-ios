@@ -80,8 +80,8 @@ final class TrimView: UIView, TrimAreaDelegate {
         addSubview(thumbnailContainer)
         
         NSLayoutConstraint.activate([
-            thumbnailContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            thumbnailContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            thumbnailContainer.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+            thumbnailContainer.heightAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellHeight),
             thumbnailContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             thumbnailContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
         ])
