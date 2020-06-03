@@ -259,6 +259,7 @@
 		63077F52286749E26410054AEE6C009A /* PhotoOutputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E8C06427EDDAC36738DAA3EC85941 /* PhotoOutputHandler.swift */; };
 		6320D0D339B24DC12FDBAC1F113AD14F /* OpenGLShaders in Resources */ = {isa = PBXBuildFile; fileRef = DFD4CAC394F7BCA0A7AA142CD480211A /* OpenGLShaders */; };
 		6470666069FE81BEDFFF7F08C511EE99 /* DrawingCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = C909D9AC38CE0C7D0100686E01249F7E /* DrawingCanvas.swift */; };
+		6515A24A248821B200267A88 /* TimeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515A249248821B200267A88 /* TimeIndicator.swift */; };
 		6541B6932472E4F700149C0C /* TrimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6541B68C2472E4F600149C0C /* TrimView.swift */; };
 		6541B6942472E4F700149C0C /* TrimController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6541B68D2472E4F600149C0C /* TrimController.swift */; };
 		6541B6952472E4F700149C0C /* TrimArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6541B68E2472E4F600149C0C /* TrimArea.swift */; };
@@ -1087,6 +1088,7 @@
 		6497FFB7CB48FA380C11A7DE8B9AF304 /* RGBA.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RGBA.swift; sourceTree = "<group>"; };
 		64D472290C22D72CA7B4881CFD79C6F8 /* ImageRequestAuthHeaderProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageRequestAuthHeaderProvider.swift; path = Classes/ImageRequestAuthHeaderProvider.swift; sourceTree = "<group>"; };
 		64F79BE3487AAF4AD397742EC3B17A08 /* lossless_enc_sse41.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = lossless_enc_sse41.c; path = src/dsp/lossless_enc_sse41.c; sourceTree = "<group>"; };
+		6515A249248821B200267A88 /* TimeIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIndicator.swift; sourceTree = "<group>"; };
 		653A57EDDFE771469846380C36E81F4F /* SDWebImageTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageTransition.m; path = SDWebImage/Core/SDWebImageTransition.m; sourceTree = "<group>"; };
 		6541B68C2472E4F600149C0C /* TrimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrimView.swift; sourceTree = "<group>"; };
 		6541B68D2472E4F600149C0C /* TrimController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrimController.swift; sourceTree = "<group>"; };
@@ -2091,6 +2093,7 @@
 		6541B68B2472E4F600149C0C /* Trim */ = {
 			isa = PBXGroup;
 			children = (
+				6515A249248821B200267A88 /* TimeIndicator.swift */,
 				6541B68C2472E4F600149C0C /* TrimView.swift */,
 				6541B68D2472E4F600149C0C /* TrimController.swift */,
 				6541B68E2472E4F600149C0C /* TrimArea.swift */,
@@ -4116,6 +4119,7 @@
 				85E185D447A7B494CDA106A732CB4AA5 /* MangaFilter.swift in Sources */,
 				F8226D9C5D9FA3880F635DE314C3D7E6 /* Marker.swift in Sources */,
 				4B5D0E668D90A257DD095E56F7B05F19 /* Math.swift in Sources */,
+				6515A24A248821B200267A88 /* TimeIndicator.swift in Sources */,
 				DF63D6C474D3BDD62E9AC7A322CAAFD6 /* MediaClip.swift in Sources */,
 				CFAA0E59EFC3DA63928292A0654DC937 /* MediaClipsCollectionCell.swift in Sources */,
 				FE8302B364EAD15602C2CBB94CFE6E8C /* MediaClipsCollectionController.swift in Sources */,

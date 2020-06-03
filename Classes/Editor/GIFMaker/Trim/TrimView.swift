@@ -17,13 +17,20 @@ protocol TrimViewDelegate: class {
     
     /// Called after a trimming movement ends
     func didEndMovingTrimArea()
+    
+    /// Obtains the text for the left time indicator
+    func getLeftTimeIndicatorText() -> String
+    
+    /// Obtains the text for the right time indicator
+    func getRightTimeIndicatorText() -> String
 }
 
 /// Constants for Trim view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let height: CGFloat = 71
+    static let timeIndicatorMargin: CGFloat = 8
     static let selectorMargin: CGFloat = 20
+    static let height: CGFloat = TrimArea.height + timeIndicatorMargin + TimeIndicator.height
 }
 
 /// A UIView for the trim tool
@@ -34,12 +41,15 @@ final class TrimView: UIView, TrimAreaDelegate {
     
     weak var delegate: TrimViewDelegate?
     
-    let thumbnailContainer: UIView
     private lazy var trimArea: TrimArea = {
         let view = TrimArea()
         view.delegate = self
         return view
     }()
+    
+    let thumbnailContainer: UIView
+    let leftTimeIndicator: TimeIndicator
+    let rightTimeIndicator: TimeIndicator
     
     private var trimAreaLeadingConstraint: NSLayoutConstraint
     private var trimAreaTrailingConstraint: NSLayoutConstraint
@@ -51,6 +61,8 @@ final class TrimView: UIView, TrimAreaDelegate {
     
     init() {
         thumbnailContainer = UIView()
+        leftTimeIndicator = TimeIndicator()
+        rightTimeIndicator = TimeIndicator()
         trimAreaLeadingConstraint = NSLayoutConstraint()
         trimAreaTrailingConstraint = NSLayoutConstraint()
         movingLeftSelector = false
@@ -70,6 +82,8 @@ final class TrimView: UIView, TrimAreaDelegate {
     private func setupViews() {
         setupThumbnailContainer()
         setupTrimArea()
+        setupLeftTimeIndicator()
+        setupRightTimeIndicator()
     }
     
     /// Sets up the container for the thumbnail collection
@@ -79,8 +93,9 @@ final class TrimView: UIView, TrimAreaDelegate {
         thumbnailContainer.clipsToBounds = true
         addSubview(thumbnailContainer)
         
+        let bottomMargin = (TrimArea.height - ThumbnailCollectionCell.cellHeight) / 2
         NSLayoutConstraint.activate([
-            thumbnailContainer.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+            thumbnailContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             thumbnailContainer.heightAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellHeight),
             thumbnailContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             thumbnailContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
@@ -99,27 +114,62 @@ final class TrimView: UIView, TrimAreaDelegate {
                                                                         constant: -Constants.selectorMargin)
         
         NSLayoutConstraint.activate([
-            trimArea.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            trimArea.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
+            trimArea.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            trimArea.heightAnchor.constraint(equalToConstant: TrimArea.height),
             trimAreaLeadingConstraint,
             trimAreaTrailingConstraint
         ])
+    }
+    
+    private func setupLeftTimeIndicator() {
+        leftTimeIndicator.accessibilityIdentifier = "GIF Maker Left Time Indicator"
+        leftTimeIndicator.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(leftTimeIndicator)
+        
+        let bottomMargin = TrimArea.height + Constants.timeIndicatorMargin
+        NSLayoutConstraint.activate([
+            leftTimeIndicator.heightAnchor.constraint(equalToConstant: TimeIndicator.height),
+            leftTimeIndicator.widthAnchor.constraint(equalToConstant: TimeIndicator.width),
+            leftTimeIndicator.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
+            leftTimeIndicator.centerXAnchor.constraint(equalTo: trimArea.leadingAnchor, constant: TrimArea.selectorWidth / 2)
+        ])
+        
+        leftTimeIndicator.alpha = 0
+    }
+    
+    private func setupRightTimeIndicator() {
+        rightTimeIndicator.accessibilityIdentifier = "GIF Maker Right Time Indicator"
+        rightTimeIndicator.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(rightTimeIndicator)
+        
+        let bottomMargin = TrimArea.height + Constants.timeIndicatorMargin
+        NSLayoutConstraint.activate([
+            rightTimeIndicator.heightAnchor.constraint(equalToConstant: TimeIndicator.height),
+            rightTimeIndicator.widthAnchor.constraint(equalToConstant: TimeIndicator.width),
+            rightTimeIndicator.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
+            rightTimeIndicator.centerXAnchor.constraint(equalTo: trimArea.trailingAnchor, constant: -TrimArea.selectorWidth / 2)
+        ])
+        
+        rightTimeIndicator.alpha = 0
     }
     
     // MARK: - TrimAreaDelegate
     
     func didMoveLeftSide(recognizer: UIGestureRecognizer) {
         let location = recognizer.location(in: self).x
+        leftTimeIndicator.text = delegate?.getLeftTimeIndicatorText()
         
         switch recognizer.state {
         case .began:
             trimAreaStartedMoving()
             movingLeftSelector = true
+            leftTimeIndicator.showView(true)
             leftSideMoved(to: location)
         case .changed:
             leftSideMoved(to: location)
         case .ended:
             leftSideMoved(to: location)
+            leftTimeIndicator.showView(false)
             movingLeftSelector = false
             trimAreaEndedMoving()
         default:
@@ -129,16 +179,19 @@ final class TrimView: UIView, TrimAreaDelegate {
     
     func didMoveRightSide(recognizer: UIGestureRecognizer) {
         let location = recognizer.location(in: self).x
+        rightTimeIndicator.text = delegate?.getRightTimeIndicatorText()
         
         switch recognizer.state {
         case .began:
             trimAreaStartedMoving()
             movingRightSelector = true
+            rightTimeIndicator.showView(true)
             rightSideMoved(to: location)
         case .changed:
             rightSideMoved(to: location)
         case .ended:
             rightSideMoved(to: location)
+            rightTimeIndicator.showView(false)
             movingRightSelector = false
             trimAreaEndedMoving()
         default:

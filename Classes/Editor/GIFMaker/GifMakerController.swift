@@ -37,11 +37,6 @@ protocol GifMakerControllerDelegate: class {
     func getThumbnail(at index: Int) -> UIImage?
 }
 
-/// Constants for GifMakerController
-private struct Constants {
-    // TODO: Add constants
-}
-
 /// A view controller that contains the GIF maker menu
 final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimControllerDelegate {
     

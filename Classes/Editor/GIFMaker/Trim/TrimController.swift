@@ -103,6 +103,14 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
         trimEnded()
     }
     
+    func getLeftTimeIndicatorText() -> String {
+        return "0:00"
+    }
+    
+    func getRightTimeIndicatorText() -> String {
+        return "0:00"
+    }
+    
     // MARK: - ThumbnailCollectionControllerDelegate
     
     func didBeginScrolling() {

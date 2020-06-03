@@ -16,6 +16,7 @@ protocol TrimAreaDelegate: class {
 /// Constants for Trim area
 private struct Constants {
     // General
+    static let height: CGFloat = 71
     static let selectorInset: CGFloat = -20
     static let cornerRadius: CGFloat = 8
     static let backgroundColor: UIColor = .tumblrBrightBlue
@@ -37,6 +38,7 @@ final class TrimArea: IgnoreTouchesView {
     
     weak var delegate: TrimAreaDelegate?
     
+    static let height: CGFloat = Constants.height
     static let selectorWidth = Constants.selectorSideWidth
     
     private let leftSelector: TrimAreaSelector
