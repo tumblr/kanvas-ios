@@ -84,7 +84,6 @@ final class TrimArea: IgnoreTouchesView {
     private func setupLeftSelector() {
         leftSelector.accessibilityIdentifier = "Trim Area Left Selector"
         leftSelector.translatesAutoresizingMaskIntoConstraints = false
-        leftSelector.backgroundColor = Constants.backgroundColor
         addSubview(leftSelector)
         
         NSLayoutConstraint.activate([
@@ -102,7 +101,6 @@ final class TrimArea: IgnoreTouchesView {
     private func setupRightSelector() {
         rightSelector.accessibilityIdentifier = "Trim Area Right Selector"
         rightSelector.translatesAutoresizingMaskIntoConstraints = false
-        rightSelector.backgroundColor = Constants.backgroundColor
         addSubview(rightSelector)
         
         NSLayoutConstraint.activate([
@@ -166,6 +164,13 @@ final class TrimArea: IgnoreTouchesView {
         return hitFrame.contains(point)
     }
     
+    /// Shows or hides the white line
+    ///
+    /// - Parameter show: true to show, false to hide.
+    func showLines(_ show: Bool) {
+        leftSelector.showLine(false)
+        rightSelector.showLine(false)
+    }
 }
 
 private class TrimAreaSelector: UIView {
@@ -187,6 +192,7 @@ private class TrimAreaSelector: UIView {
     // MARK: - Layout
     
     private func setupViews() {
+        backgroundColor = Constants.backgroundColor
         setupInnerLine()
     }
     
@@ -212,5 +218,14 @@ private class TrimAreaSelector: UIView {
         let hitTestEdgeInsets = UIEdgeInsets(top: 0, left: Constants.selectorInset, bottom: 0, right: Constants.selectorInset)
         let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
         return hitFrame.contains(point)
+    }
+    
+    // MARK: - Public interface
+    
+    /// Shows or hides the white line
+    ///
+    /// - Parameter show: true to show, false to hide.
+    func showLine(_ show: Bool) {
+        innerLine.alpha = show ? 1 : 0
     }
 }

@@ -47,6 +47,7 @@ final class TrimView: UIView, TrimAreaDelegate {
         return view
     }()
     
+    let backgroundHandles: TrimArea
     let thumbnailContainer: UIView
     let leftTimeIndicator: TimeIndicator
     let rightTimeIndicator: TimeIndicator
@@ -60,6 +61,7 @@ final class TrimView: UIView, TrimAreaDelegate {
     // MARK: - Initializers
     
     init() {
+        backgroundHandles = TrimArea()
         thumbnailContainer = UIView()
         leftTimeIndicator = TimeIndicator()
         rightTimeIndicator = TimeIndicator()
@@ -81,6 +83,7 @@ final class TrimView: UIView, TrimAreaDelegate {
     
     private func setupViews() {
         setupThumbnailContainer()
+        setupBackgroundHandles()
         setupTrimArea()
         setupLeftTimeIndicator()
         setupRightTimeIndicator()
@@ -99,6 +102,21 @@ final class TrimView: UIView, TrimAreaDelegate {
             thumbnailContainer.heightAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellHeight),
             thumbnailContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             thumbnailContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+        ])
+    }
+    
+    /// Sets up the handles in black and white.
+    private func setupBackgroundHandles() {
+        backgroundHandles.accessibilityIdentifier = "GIF Maker Background handles"
+        backgroundHandles.translatesAutoresizingMaskIntoConstraints = false
+        backgroundHandles.showLines(false)
+        addSubview(backgroundHandles)
+        
+        NSLayoutConstraint.activate([
+            backgroundHandles.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            backgroundHandles.heightAnchor.constraint(equalToConstant: TrimArea.height),
+            backgroundHandles.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.selectorMargin),
+            backgroundHandles.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.selectorMargin)
         ])
     }
     
