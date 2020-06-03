@@ -13,25 +13,16 @@ protocol TrimViewDelegate: class {
     func didStartMovingTrimArea()
     
     /// Called after the trim range changes
-    ///
-    /// - Parameters:
-    ///  - startingPercentage: trimming starting moment expressed as a percentage.
-    ///  - endingPercentage: trimming starting moment expressed as a percentage.
-    func didMoveTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
+    func didMoveTrimArea()
     
     /// Called after a trimming movement ends
-    ///
-    /// - Parameters:
-    ///  - startingPercentage: trimming starting moment expressed as a percentage.
-    ///  - endingPercentage: trimming starting moment expressed as a percentage.
-    func didEndMovingTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
+    func didEndMovingTrimArea()
 }
 
 /// Constants for Trim view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let height: CGFloat = 71
-    static let selectorInset: CGFloat = -20
     static let selectorMargin: CGFloat = 20
 }
 
@@ -39,7 +30,7 @@ private struct Constants {
 final class TrimView: UIView, TrimAreaDelegate {
     
     static let height: CGFloat = Constants.height
-    static let selectorHorizontalMargin = Constants.selectorMargin
+    static let selectorMargin = Constants.selectorMargin
     
     weak var delegate: TrimViewDelegate?
     
@@ -53,8 +44,6 @@ final class TrimView: UIView, TrimAreaDelegate {
     private var trimAreaLeadingConstraint: NSLayoutConstraint
     private var trimAreaTrailingConstraint: NSLayoutConstraint
     
-    // Queue to provide mutual exclusion
-    private let dispatchQueue: DispatchQueue
     private var movingLeftSelector: Bool
     private var movingRightSelector: Bool
     
@@ -66,7 +55,6 @@ final class TrimView: UIView, TrimAreaDelegate {
         trimAreaTrailingConstraint = NSLayoutConstraint()
         movingLeftSelector = false
         movingRightSelector = false
-        dispatchQueue = DispatchQueue(label: "trimmer.serialQueue")
         super.init(frame: .zero)
         
         setupViews()
@@ -125,19 +113,15 @@ final class TrimView: UIView, TrimAreaDelegate {
         
         switch recognizer.state {
         case .began:
-            dispatchQueue.sync {
-                trimAreaStartedMoving()
-                movingLeftSelector = true
-            }
+            trimAreaStartedMoving()
+            movingLeftSelector = true
             leftSideMoved(to: location)
         case .changed:
             leftSideMoved(to: location)
         case .ended:
             leftSideMoved(to: location)
-            dispatchQueue.sync {
-                movingLeftSelector = false
-                trimAreaEndedMoving()
-            }
+            movingLeftSelector = false
+            trimAreaEndedMoving()
         default:
             break
         }
@@ -148,19 +132,15 @@ final class TrimView: UIView, TrimAreaDelegate {
         
         switch recognizer.state {
         case .began:
-            dispatchQueue.sync {
-                trimAreaStartedMoving()
-                movingRightSelector = true
-            }
+            trimAreaStartedMoving()
+            movingRightSelector = true
             rightSideMoved(to: location)
         case .changed:
             rightSideMoved(to: location)
         case .ended:
             rightSideMoved(to: location)
-            dispatchQueue.sync {
-                movingRightSelector = false
-                trimAreaEndedMoving()
-            }
+            movingRightSelector = false
+            trimAreaEndedMoving()
         default:
             break
         }
@@ -176,9 +156,7 @@ final class TrimView: UIView, TrimAreaDelegate {
             trimAreaLeadingConstraint.constant = location
         }
         
-        let start = getStartingPercentage()
-        let end = getEndingPercentage()
-        delegate?.didMoveTrimArea(from: start, to: end)
+        delegate?.didMoveTrimArea()
     }
     
     private func rightSideMoved(to location: CGFloat) {
@@ -189,22 +167,10 @@ final class TrimView: UIView, TrimAreaDelegate {
             trimAreaTrailingConstraint.constant = location + TrimArea.selectorWidth - bounds.width
         }
         
-        let start = getStartingPercentage()
-        let end = getEndingPercentage()
-        delegate?.didMoveTrimArea(from: start, to: end)
+        delegate?.didMoveTrimArea()
     }
     
     // MARK: - Private utilities
-    
-    private func getStartingPercentage() -> CGFloat {
-        let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
-        return (trimArea.leftSelectorLocation - TrimArea.selectorWidth - Constants.selectorMargin) * 100 / totalWidth
-    }
-    
-    private func getEndingPercentage() -> CGFloat {
-        let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
-        return 100 - (bounds.width - TrimArea.selectorWidth - trimArea.rightSelectorLocation - Constants.selectorMargin) * 100 / totalWidth
-    }
     
     private func trimAreaStartedMoving() {
         guard !movingLeftSelector, !movingRightSelector else { return }
@@ -213,9 +179,7 @@ final class TrimView: UIView, TrimAreaDelegate {
     
     private func trimAreaEndedMoving() {
         guard !movingLeftSelector, !movingRightSelector else { return }
-        let start = getStartingPercentage()
-        let end = getEndingPercentage()
-        delegate?.didEndMovingTrimArea(from: start, to: end)
+        delegate?.didEndMovingTrimArea()
     }
     
     // MARK: - Public interface
@@ -227,5 +191,15 @@ final class TrimView: UIView, TrimAreaDelegate {
         UIView.animate(withDuration: Constants.animationDuration) { [weak self] in
             self?.alpha = show ? 1 : 0
         }
+    }
+    
+    func getStartingPercentage() -> CGFloat {
+        let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
+        return (trimArea.leftSelectorLocation - TrimArea.selectorWidth - Constants.selectorMargin) * 100 / totalWidth
+    }
+    
+    func getEndingPercentage() -> CGFloat {
+        let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
+        return 100 - (bounds.width - TrimArea.selectorWidth - trimArea.rightSelectorLocation - Constants.selectorMargin) * 100 / totalWidth
     }
 }

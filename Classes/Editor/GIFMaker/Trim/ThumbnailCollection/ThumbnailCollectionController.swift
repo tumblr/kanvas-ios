@@ -14,6 +14,10 @@ protocol ThumbnailCollectionControllerDelegate: class {
     ///
     /// - Parameter index: the index of the requested image.
     func getThumbnail(at index: Int) -> UIImage?
+    
+    func didBeginScrolling()
+    func didScroll()
+    func didEndScrolling()
 }
 
 /// Controller for handling the thumbnail collection in the trim menu.
@@ -74,7 +78,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: TrimView.selectorHorizontalMargin, bottom: 0, right: TrimView.selectorHorizontalMargin)
+        return UIEdgeInsets(top: 0, left: TrimView.selectorMargin, bottom: 0, right: TrimView.selectorMargin)
     }
     
     // MARK: - ThumbnailCollectionCellDelegate
@@ -91,5 +95,42 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     func setThumbnails(count: Int) {
         self.itemCount = count
         thumbnailCollectionView.collectionView.reloadData()
+    }
+    
+    // MARK: - UIScrollView
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        delegate?.didBeginScrolling()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        delegate?.didScroll()
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        delegate?.didEndScrolling()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            delegate?.didEndScrolling()
+        }
+    }
+    
+    func getStartOfVisibleRange() -> CGFloat {
+        let collectionView = thumbnailCollectionView.collectionView
+        let percent = collectionView.contentOffset.x * 100 / collectionView.contentSize.width
+        let min: CGFloat = 0
+        let max: CGFloat = 100
+        return (min...max).clamp(percent)
+    }
+    
+    func getEndOfVisibleRange() -> CGFloat {
+        let collectionView = thumbnailCollectionView.collectionView
+        let contentInset = collectionView.contentInset.left + collectionView.contentInset.right
+        let percent = (collectionView.contentOffset.x + collectionView.visibleSize.width - contentInset) * 100 / collectionView.contentSize.width
+        let min: CGFloat = 0
+        let max: CGFloat = 100
+        return (min...max).clamp(percent)
     }
 }

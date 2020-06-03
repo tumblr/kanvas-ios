@@ -24,8 +24,6 @@ private struct Constants {
     // General margins
     static let topMargin: CGFloat = 19.5
     static let bottomMargin: CGFloat = 16
-    static let leftMargin: CGFloat = 20
-    static let rightMargin: CGFloat = 20
     
     // Top options
     static let topButtonSize: CGFloat = 36

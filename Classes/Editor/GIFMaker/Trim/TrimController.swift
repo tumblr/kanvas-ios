@@ -36,6 +36,9 @@ protocol TrimControllerDelegate: class {
 final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollectionControllerDelegate {
     
     weak var delegate: TrimControllerDelegate?
+    
+    var movingHandles: Bool = false
+    var scrollingThumbnails: Bool = false
         
     private lazy var trimView: TrimView = {
         let view = TrimView()
@@ -87,21 +90,75 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     // MARK: - TrimViewDelegate
     
     func didStartMovingTrimArea() {
-        delegate?.didStartTrimming()
+        trimStarted()
+        movingHandles = true
     }
     
-    func didMoveTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        delegate?.didTrim(from: startingPercentage, to: endingPercentage)
+    func didMoveTrimArea() {
+        trimChanged()
     }
     
-    func didEndMovingTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        delegate?.didEndTrimming(from: startingPercentage, to: endingPercentage)
+    func didEndMovingTrimArea() {
+        movingHandles = false
+        trimEnded()
     }
     
     // MARK: - ThumbnailCollectionControllerDelegate
     
+    func didBeginScrolling() {
+        trimStarted()
+        scrollingThumbnails = true
+    }
+    
+    func didScroll() {
+        trimChanged()
+    }
+    
+    func didEndScrolling() {
+        scrollingThumbnails = false
+        trimEnded()
+    }
+    
     func getThumbnail(at index: Int) -> UIImage? {
         return delegate?.getThumbnail(at: index)
+    }
+    
+    // MARK: - Private utilities
+    
+    private func trimStarted() {
+        guard !movingHandles, !scrollingThumbnails else { return }
+        delegate?.didStartTrimming()
+    }
+    
+    private func trimChanged() {
+        let start = calculateStartingPercentage()
+        let end = calculateEndingPercentage()
+        delegate?.didTrim(from: start, to: end)
+    }
+    
+    private func trimEnded() {
+        guard !movingHandles, !scrollingThumbnails else { return }
+        let start = calculateStartingPercentage()
+        let end = calculateEndingPercentage()
+        delegate?.didEndTrimming(from: start, to: end)
+    }
+        
+    private func calculateStartingPercentage() -> CGFloat {
+        let collectionStart = thumbnailController.getStartOfVisibleRange()
+        let collectionEnd = thumbnailController.getEndOfVisibleRange()
+        let handleStart = trimView.getStartingPercentage()
+        
+        let visibleRange = collectionEnd - collectionStart
+        return collectionStart + handleStart * visibleRange / 100
+    }
+    
+    private func calculateEndingPercentage() -> CGFloat {
+        let collectionStart = thumbnailController.getStartOfVisibleRange()
+        let collectionEnd = thumbnailController.getEndOfVisibleRange()
+        let handleEnd = trimView.getEndingPercentage()
+        
+        let visibleRange = collectionEnd - collectionStart
+        return collectionStart + handleEnd * visibleRange / 100
     }
     
     // MARK: - Public interface

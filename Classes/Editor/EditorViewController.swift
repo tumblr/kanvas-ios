@@ -639,6 +639,18 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         return KanvasCameraImages.flashOnImage
     }
     
+    func didStartTrimming() {
+        
+    }
+    
+    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
+        
+    }
+    
+    func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
+        
+    }
+    
     // MARK: - EditorFilterControllerDelegate
     
     func didConfirmFilters() {
@@ -741,20 +753,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didDisplayFirstFrame(_ image: UIImage) {
         addCarouselDefaultColors(image)
-    }
-    
-    // MARK: - GifMakerControllerDelegate
-    
-    func didStartTrimming() {
-        
-    }
-    
-    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        
-    }
-    
-    func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        
     }
     
     // MARK: - MediaDrawerControllerDelegate
