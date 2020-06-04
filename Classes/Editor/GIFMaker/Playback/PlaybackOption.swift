@@ -13,7 +13,7 @@ enum PlaybackOption: String {
     case reverse
     
     /// Localized string for the option.
-    var text: String {
+    var description: String {
         switch self {
         case .loop:
             return NSLocalizedString("Loop", comment: "Loop playback mode")

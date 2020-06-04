@@ -272,6 +272,10 @@
 		6564641D248943B20078666B /* SpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65646418248943B10078666B /* SpeedView.swift */; };
 		656B3E70E2830FF0B8741875ABF998D3 /* UIView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E769AA548E0F3F6B5751471F4F05D9F /* UIView+Image.swift */; };
 		65A5C707F428EA70792DDCE00C63FCB8 /* cost_mips_dsp_r2.c in Sources */ = {isa = PBXBuildFile; fileRef = 75BFF17E0CF94691ED1B24E9EAB53437 /* cost_mips_dsp_r2.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
+		65CBE3D1248952B200206873 /* PlaybackOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CBE3CD248952B200206873 /* PlaybackOption.swift */; };
+		65CBE3D2248952B200206873 /* PlaybackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CBE3CE248952B200206873 /* PlaybackView.swift */; };
+		65CBE3D3248952B200206873 /* PlaybackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CBE3CF248952B200206873 /* PlaybackController.swift */; };
+		65CBE3D4248952B200206873 /* PlaybackCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CBE3D0248952B200206873 /* PlaybackCollectionCell.swift */; };
 		65D7C480CFA87DFF5BE8F6565D2D9AF8 /* cost_neon.c in Sources */ = {isa = PBXBuildFile; fileRef = 95C9AA1F7C4334AC2BC62C10DEDBA5EF /* cost_neon.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc"; }; };
 		65E886CE60A741C5930E7B328E46D5CB /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57ABF66FB4E4D9ACBEE03E6D1AB2292 /* EditorViewController.swift */; };
 		66CC8DC1A2315F96C953EE3C697966C2 /* UIColor+Adaptive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF32DCE8422DC547E53D12B5ABBFA3 /* UIColor+Adaptive.swift */; };
@@ -1101,6 +1105,10 @@
 		65646417248943B10078666B /* SpeedController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedController.swift; sourceTree = "<group>"; };
 		65646418248943B10078666B /* SpeedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
 		659BE77F151A9D6B05F6A0BFC5A010B0 /* ShowModalFromTopAnimator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShowModalFromTopAnimator.swift; path = Source/ShowModalFromTopAnimator.swift; sourceTree = "<group>"; };
+		65CBE3CD248952B200206873 /* PlaybackOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackOption.swift; sourceTree = "<group>"; };
+		65CBE3CE248952B200206873 /* PlaybackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackView.swift; sourceTree = "<group>"; };
+		65CBE3CF248952B200206873 /* PlaybackController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackController.swift; sourceTree = "<group>"; };
+		65CBE3D0248952B200206873 /* PlaybackCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackCollectionCell.swift; sourceTree = "<group>"; };
 		65E9E961655D5E3A8438A6CF32C063FD /* CameraInputOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputOutput.swift; sourceTree = "<group>"; };
 		66060355ECFA400CA363448B19B49E79 /* UIImage+GIF.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+GIF.h"; path = "SDWebImage/Core/UIImage+GIF.h"; sourceTree = "<group>"; };
 		661D8774EFABECB9AC050B44C5AA22CF /* SDWebImageError.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageError.h; path = SDWebImage/Core/SDWebImageError.h; sourceTree = "<group>"; };
@@ -2028,6 +2036,17 @@
 			path = DiscreteSlider;
 			sourceTree = "<group>";
 		};
+		65CBE3CC248952B100206873 /* Playback */ = {
+			isa = PBXGroup;
+			children = (
+				65CBE3CD248952B200206873 /* PlaybackOption.swift */,
+				65CBE3CE248952B200206873 /* PlaybackView.swift */,
+				65CBE3CF248952B200206873 /* PlaybackController.swift */,
+				65CBE3D0248952B200206873 /* PlaybackCollectionCell.swift */,
+			);
+			path = Playback;
+			sourceTree = "<group>";
+		};
 		681D64B097E7E19DA03C6513630470DA /* OpenGL */ = {
 			isa = PBXGroup;
 			children = (
@@ -2277,6 +2296,7 @@
 			children = (
 				1229CB3435A0360B34FF035FB91D2FB4 /* GifMakerController.swift */,
 				F07EF69A06D7E386CBB410941DABCEA7 /* GifMakerView.swift */,
+				65CBE3CC248952B100206873 /* Playback */,
 				65646412248943B10078666B /* Speed */,
 				17761DDCFC850F420DB51E458999F96C /* Trim */,
 			);
@@ -4157,6 +4177,7 @@
 				97A6909332FA42B597FC82946486E283 /* DrawerTabBarCell.swift in Sources */,
 				3784521C1F1F223C10B23AE708912102 /* DrawerTabBarController.swift in Sources */,
 				4B21630CABC3442A9B83F7E96734A07B /* DrawerTabBarOption.swift in Sources */,
+				65CBE3D3248952B200206873 /* PlaybackController.swift in Sources */,
 				ED4F87179DBB2F5D2EA277477F4B2AF7 /* DrawerTabBarView.swift in Sources */,
 				7A65860743079246BBEE4D71BB14AFDA /* DrawingCanvas.swift in Sources */,
 				3F4224148CB1B6B8C84B7AF1E3D591A4 /* DrawingController.swift in Sources */,
@@ -4181,12 +4202,14 @@
 				534CAD9394211920580851FBC665AF20 /* FilterCollectionCell.swift in Sources */,
 				32177C3E9D897299AF7C65B5EE830EE6 /* FilterCollectionInnerCell.swift in Sources */,
 				1B205FD902D23FDEF8FAE3D89802922A /* FilterCollectionView.swift in Sources */,
+				65CBE3D1248952B200206873 /* PlaybackOption.swift in Sources */,
 				D706A9F9ACF328F855C44FF8E6A02C23 /* FilteredInputViewController.swift in Sources */,
 				6D8DB0694D6E4CCC5014BB21B23E5E1F /* FilterFactory.swift in Sources */,
 				C8E86C460D1D1BE81644ABDCB8406FCE /* FilterItem.swift in Sources */,
 				C8ABAC1F1E3CFBCEBE0E0AC1CAF8A1FD /* FilterProtocol.swift in Sources */,
 				982ECCDAA86154015A84136A4A0409A5 /* FilterSettingsController.swift in Sources */,
 				62657B92EC205ABD420F5849F4A0E395 /* FilterSettingsView.swift in Sources */,
+				65CBE3D2248952B200206873 /* PlaybackView.swift in Sources */,
 				BD9A4C3AECD648CE45CDFE4C6D8C9E8E /* FilterType.swift in Sources */,
 				305719F26191F1A5241F5C6706E20992 /* GIFDecoder.swift in Sources */,
 				7C4720331B0532793A37D5ECA6F7278F /* GIFEncoder.swift in Sources */,
@@ -4196,6 +4219,7 @@
 				3F2F6C6EAAD484E833C844C30A70EA39 /* GLError.swift in Sources */,
 				DC9FDD0E058702B31E3D156D48931C4B /* GLKMatrix4+Unsafe.swift in Sources */,
 				9D48342A29CA52BFA9CDFDC284364FB4 /* GLPixelBufferView.swift in Sources */,
+				65CBE3D4248952B200206873 /* PlaybackCollectionCell.swift in Sources */,
 				C8CA8030267CD3F5C9F2B8263DE12609 /* GLUtilities.swift in Sources */,
 				9EB737249EDA566B0A70007E27149466 /* GrayscaleFilter.swift in Sources */,
 				30AEA82B6EF5F8000A3F4F390262B546 /* GroupFilter.swift in Sources */,

@@ -104,6 +104,6 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter option: the option to take the name from.
     func bindTo(_ option: PlaybackOption) {
-        button.setTitle(option.text, for: .normal)
+        button.setTitle(option.description, for: .normal)
     }
 }
