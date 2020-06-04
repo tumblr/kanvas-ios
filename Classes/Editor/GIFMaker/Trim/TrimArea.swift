@@ -172,6 +172,13 @@ final class TrimArea: IgnoreTouchesView {
         leftSelector.showLine(false)
         rightSelector.showLine(false)
     }
+    
+    func setBackgroundColor(_ color: UIColor) {
+        topBorder.backgroundColor = color
+        bottomBorder.backgroundColor = color
+        leftSelector.backgroundColor = color
+        rightSelector.backgroundColor = color
+    }
 }
 
 private class TrimAreaSelector: UIView {

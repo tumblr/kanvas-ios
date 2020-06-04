@@ -32,6 +32,7 @@ private struct Constants {
     static let selectorMargin: CGFloat = 20
     static let height: CGFloat = TrimArea.height + timeIndicatorMargin + TimeIndicator.height
     static let overlayColor: UIColor = UIColor.black.withAlphaComponent(0.6)
+    static let backgroundHandlesColor: UIColor = UIColor(hex: "#595959")
 }
 
 /// A UIView for the trim tool
@@ -122,7 +123,8 @@ final class TrimView: UIView, TrimAreaDelegate {
             backgroundHandles.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.selectorMargin)
         ])
         
-        backgroundHandles.alpha = 0
+        backgroundHandles.isUserInteractionEnabled = false
+        backgroundHandles.setBackgroundColor(Constants.backgroundHandlesColor)
     }
     
     /// Sets up the trim area view.
