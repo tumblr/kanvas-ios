@@ -12,6 +12,7 @@ enum PlaybackOption: String {
     case rebound
     case reverse
     
+    /// Localized string for the option.
     var text: String {
         switch self {
         case .loop:
