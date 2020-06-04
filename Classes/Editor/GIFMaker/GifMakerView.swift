@@ -34,6 +34,7 @@ private struct Constants {
     static let topButtonSize: CGFloat = 36
     static let topButtonInset: CGFloat = -10
     static let topButtonsInterspace: CGFloat = 30
+    static let topButtonsCount: CGFloat = 3
 }
 
 /// A UIView for the GIF maker view
@@ -88,7 +89,7 @@ final class GifMakerView: UIView {
         topButtonsContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topButtonsContainer)
         
-        let height = Constants.topButtonSize * 3 + Constants.topButtonsInterspace * 2
+        let height = Constants.topButtonSize * Constants.topButtonsCount + Constants.topButtonsInterspace * (Constants.topButtonsCount - 1)
         NSLayoutConstraint.activate([
             topButtonsContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topMargin),
             topButtonsContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
@@ -104,9 +105,11 @@ final class GifMakerView: UIView {
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
         
+        let index: CGFloat = 0
+        let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index
         NSLayoutConstraint.activate([
             confirmButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor),
-            confirmButton.topAnchor.constraint(equalTo: topButtonsContainer.topAnchor),
+            confirmButton.topAnchor.constraint(equalTo: topButtonsContainer.topAnchor, constant: topOffset),
             confirmButton.heightAnchor.constraint(equalToConstant: Constants.topButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: Constants.topButtonSize)
         ])
@@ -123,7 +126,8 @@ final class GifMakerView: UIView {
         trimButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(trimButton)
         
-        let topOffset = Constants.topButtonSize + Constants.topButtonsInterspace
+        let index: CGFloat = 1
+        let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index
         NSLayoutConstraint.activate([
             trimButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor ),
             trimButton.topAnchor.constraint(equalTo: topButtonsContainer.topAnchor, constant: topOffset),
@@ -157,7 +161,8 @@ final class GifMakerView: UIView {
         speedButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(speedButton)
         
-        let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * 2
+        let index: CGFloat = 2
+        let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index
         NSLayoutConstraint.activate([
             speedButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor ),
             speedButton.topAnchor.constraint(equalTo: topButtonsContainer.topAnchor, constant: topOffset),
