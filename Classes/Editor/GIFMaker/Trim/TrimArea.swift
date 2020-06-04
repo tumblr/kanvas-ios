@@ -40,6 +40,7 @@ final class TrimArea: IgnoreTouchesView {
     
     static let height: CGFloat = Constants.height
     static let selectorWidth = Constants.selectorSideWidth
+    static let cornerRadius = Constants.cornerRadius
     
     private let leftSelector: TrimAreaSelector
     private let rightSelector: TrimAreaSelector

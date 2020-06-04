@@ -57,7 +57,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         thumbnailCollectionView.collectionView.delegate = self
         thumbnailCollectionView.collectionView.dataSource = self
     }
-
+    
     // MARK: - UICollectionView
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -95,6 +95,25 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     func setThumbnails(count: Int) {
         self.itemCount = count
         thumbnailCollectionView.collectionView.reloadData()
+    }
+    
+    func getCellsFrame() -> CGRect {
+        let collectionView = thumbnailCollectionView.collectionView
+        var visibleCells = collectionView.visibleCells
+        visibleCells.sort(by: { $0.frame.minX < $1.frame.maxX })
+        
+        guard let firstCell = visibleCells.first, let lastCell = visibleCells.last
+            else { return .zero }
+        
+        let firstFrame = thumbnailCollectionView.collectionView.convert(firstCell.frame, to: thumbnailCollectionView)
+        let lastFrame = thumbnailCollectionView.collectionView.convert(lastCell.frame, to: thumbnailCollectionView)
+        
+        let rect = CGRect(x: firstFrame.origin.x,
+                          y: firstFrame.origin.y,
+                          width: lastFrame.maxX - firstFrame.minX,
+                          height: firstFrame.maxY - firstFrame.minY)
+        
+        return rect
     }
     
     // MARK: - UIScrollView

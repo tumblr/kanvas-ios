@@ -47,10 +47,11 @@ final class TrimView: UIView, TrimAreaDelegate {
         return view
     }()
     
-    let backgroundHandles: TrimArea
     let thumbnailContainer: UIView
-    let leftTimeIndicator: TimeIndicator
-    let rightTimeIndicator: TimeIndicator
+    private let backgroundHandles: TrimArea
+    private let leftTimeIndicator: TimeIndicator
+    private let rightTimeIndicator: TimeIndicator
+    private var overlayLayer: CALayer
     
     private var trimAreaLeadingConstraint: NSLayoutConstraint
     private var trimAreaTrailingConstraint: NSLayoutConstraint
@@ -69,6 +70,7 @@ final class TrimView: UIView, TrimAreaDelegate {
         trimAreaTrailingConstraint = NSLayoutConstraint()
         movingLeftSelector = false
         movingRightSelector = false
+        overlayLayer = CALayer()
         super.init(frame: .zero)
         
         setupViews()
@@ -118,6 +120,8 @@ final class TrimView: UIView, TrimAreaDelegate {
             backgroundHandles.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.selectorMargin),
             backgroundHandles.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.selectorMargin)
         ])
+        
+        backgroundHandles.alpha = 0
     }
     
     /// Sets up the trim area view.
@@ -272,5 +276,22 @@ final class TrimView: UIView, TrimAreaDelegate {
     func getEndingPercentage() -> CGFloat {
         let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
         return 100 - (bounds.width - TrimArea.selectorWidth - trimArea.rightSelectorLocation - Constants.selectorMargin) * 100 / totalWidth
+    }
+    
+    func setupOverlay(cellsFrame: CGRect) {
+        let path = UIBezierPath(rect: cellsFrame)
+        let shape = convert(trimArea.frame, to: thumbnailContainer)
+        let trimAreaPath = UIBezierPath.init(roundedRect: shape, cornerRadius: TrimArea.cornerRadius)
+        path.append(trimAreaPath)
+        path.usesEvenOddFillRule = true
+
+        let fillLayer = CAShapeLayer()
+        fillLayer.path = path.cgPath
+        fillLayer.fillRule = .evenOdd
+        fillLayer.fillColor = UIColor.black.cgColor
+        fillLayer.opacity = 0.4
+        overlayLayer.removeFromSuperlayer()
+        overlayLayer = fillLayer
+        thumbnailContainer.layer.addSublayer(fillLayer)
     }
 }
