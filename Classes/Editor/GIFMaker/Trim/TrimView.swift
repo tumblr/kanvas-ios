@@ -31,6 +31,7 @@ private struct Constants {
     static let timeIndicatorMargin: CGFloat = 8
     static let selectorMargin: CGFloat = 20
     static let height: CGFloat = TrimArea.height + timeIndicatorMargin + TimeIndicator.height
+    static let overlayColor: UIColor = UIColor.black.withAlphaComponent(0.6)
 }
 
 /// A UIView for the trim tool
@@ -278,18 +279,17 @@ final class TrimView: UIView, TrimAreaDelegate {
         return 100 - (bounds.width - TrimArea.selectorWidth - trimArea.rightSelectorLocation - Constants.selectorMargin) * 100 / totalWidth
     }
     
-    func setupOverlay(cellsFrame: CGRect) {
-        let path = UIBezierPath(rect: cellsFrame)
+    func setOverlay(cellsFrame: CGRect) {
+        let cellsPath = UIBezierPath(rect: cellsFrame)
         let shape = convert(trimArea.frame, to: thumbnailContainer)
-        let trimAreaPath = UIBezierPath.init(roundedRect: shape, cornerRadius: TrimArea.cornerRadius)
-        path.append(trimAreaPath)
-        path.usesEvenOddFillRule = true
+        let trimAreaPath = UIBezierPath(roundedRect: shape, cornerRadius: TrimArea.cornerRadius)
+        cellsPath.append(trimAreaPath)
+        cellsPath.usesEvenOddFillRule = true
 
         let fillLayer = CAShapeLayer()
-        fillLayer.path = path.cgPath
+        fillLayer.path = cellsPath.cgPath
         fillLayer.fillRule = .evenOdd
-        fillLayer.fillColor = UIColor.black.cgColor
-        fillLayer.opacity = 0.4
+        fillLayer.fillColor = Constants.overlayColor.cgColor
         overlayLayer.removeFromSuperlayer()
         overlayLayer = fillLayer
         thumbnailContainer.layer.addSublayer(fillLayer)

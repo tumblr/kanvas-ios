@@ -15,8 +15,13 @@ protocol ThumbnailCollectionControllerDelegate: class {
     /// - Parameter index: the index of the requested image.
     func getThumbnail(at index: Int) -> UIImage?
     
+    /// Called when the thumbnail collection starts scrolling.
     func didBeginScrolling()
+    
+    /// Called when the thumbnail collection scrolls.
     func didScroll()
+    
+    /// Called when the thumbnail collection ends scrolling.
     func didEndScrolling()
 }
 
@@ -97,10 +102,11 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         thumbnailCollectionView.collectionView.reloadData()
     }
     
+    /// Obtains the frame that contains the visible cells.
     func getCellsFrame() -> CGRect {
         let collectionView = thumbnailCollectionView.collectionView
         var visibleCells = collectionView.visibleCells
-        visibleCells.sort(by: { $0.frame.minX < $1.frame.maxX })
+        visibleCells.sort(by: { $0.frame.minX < $1.frame.minX })
         
         guard let firstCell = visibleCells.first, let lastCell = visibleCells.last
             else { return .zero }

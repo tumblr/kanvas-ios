@@ -90,7 +90,7 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let cellsFrame = thumbnailController.getCellsFrame()
-        trimView.setupOverlay(cellsFrame: cellsFrame)
+        trimView.setOverlay(cellsFrame: cellsFrame)
     }
     
     // MARK: - TrimViewDelegate
@@ -126,7 +126,7 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     
     func didScroll() {
         let cellsFrame = thumbnailController.getCellsFrame()
-        trimView.setupOverlay(cellsFrame: cellsFrame)
+        trimView.setOverlay(cellsFrame: cellsFrame)
         trimChanged()
     }
     
@@ -184,7 +184,7 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
         let cellsFrame = thumbnailController.getCellsFrame()
-        trimView.setupOverlay(cellsFrame: cellsFrame)
+        trimView.setOverlay(cellsFrame: cellsFrame)
         trimView.showView(show)
     }
     

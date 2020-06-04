@@ -165,7 +165,7 @@ final class TrimArea: IgnoreTouchesView {
         return hitFrame.contains(point)
     }
     
-    /// Shows or hides the white line
+    /// Shows or hides the white lines in the selectors.
     ///
     /// - Parameter show: true to show, false to hide.
     func showLines(_ show: Bool) {
