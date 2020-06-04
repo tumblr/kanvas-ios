@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class TrimViewTests: FBSnapshotTestCase {
+final class SpeedViewTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,14 +18,15 @@ final class TrimViewTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newView() -> TrimView {
-        let view = TrimView()
-        view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimView.height)
+    private func newView() -> SpeedView {
+        let view = SpeedView()
+        view.frame = CGRect(x: 0, y: 0, width: 320, height: SpeedView.height)
         return view
     }
     
     func testViewSetup() {
         let view = newView()
+        view.setLabelText("1x")
         FBSnapshotVerifyView(view)
     }
 }

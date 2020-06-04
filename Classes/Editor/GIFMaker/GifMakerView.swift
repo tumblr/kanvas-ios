@@ -15,6 +15,9 @@ protocol GifMakerViewDelegate: class {
     
     /// Called when the trim button is selected
     func didTapTrimButton()
+    
+    /// Called when the speed tools button is selected
+    func didTapSpeedButton()
 }
 
 /// Constants for GifMakerView
@@ -26,11 +29,14 @@ private struct Constants {
     static let bottomMargin: CGFloat = 16
     static let leftMargin: CGFloat = 20
     static let rightMargin: CGFloat = 20
+    static let trimMenuMargin: CGFloat = 16
+    static let speedMenuMargin: CGFloat = 34
     
     // Top options
     static let topButtonSize: CGFloat = 36
     static let topButtonInset: CGFloat = -10
     static let topButtonsInterspace: CGFloat = 30
+    static let topButtonsCount: CGFloat = 3
 }
 
 /// A UIView for the GIF maker view
@@ -40,8 +46,11 @@ final class GifMakerView: UIView {
     
     private let confirmButton: UIButton
     private let trimButton: UIButton
+    private let speedButton: UIButton
     private let topButtonsContainer: UIView
     let trimMenuContainer: IgnoreTouchesView
+    let speedMenuContainer: IgnoreTouchesView
+    let playbackMenuContainer: IgnoreTouchesView
     
     /// Confirm button location expressed in screen coordinates
     var confirmButtonLocation: CGPoint {
@@ -53,8 +62,11 @@ final class GifMakerView: UIView {
     init() {
         confirmButton = ExtendedButton(inset: Constants.topButtonInset)
         trimButton = ExtendedButton(inset: Constants.topButtonInset)
+        speedButton = ExtendedButton(inset: Constants.topButtonInset)
         topButtonsContainer = IgnoreTouchesView()
         trimMenuContainer = IgnoreTouchesView()
+        speedMenuContainer = IgnoreTouchesView()
+        playbackMenuContainer = IgnoreTouchesView()
         super.init(frame: .zero)
         setupViews()
     }
@@ -70,7 +82,10 @@ final class GifMakerView: UIView {
         setUpTopButtonsContainer()
         setUpConfirmButton()
         setUpTrimButton()
+        setUpSpeedButton()
         setupTrimMenuContainer()
+        setupSpeedMenuContainer()
+        setupPlaybackMenuContainer()
     }
     
     /// Sets up the container for the top buttons
@@ -79,7 +94,7 @@ final class GifMakerView: UIView {
         topButtonsContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topButtonsContainer)
         
-        let height = Constants.topButtonSize * 2 + Constants.topButtonsInterspace
+        let height = Constants.topButtonSize * Constants.topButtonsCount + Constants.topButtonsInterspace * (Constants.topButtonsCount - 1)
         NSLayoutConstraint.activate([
             topButtonsContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.topMargin),
             topButtonsContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
@@ -95,9 +110,11 @@ final class GifMakerView: UIView {
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
         
+        let index: CGFloat = 0
+        let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index
         NSLayoutConstraint.activate([
             confirmButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor),
-            confirmButton.topAnchor.constraint(equalTo: topButtonsContainer.topAnchor),
+            confirmButton.topAnchor.constraint(equalTo: topButtonsContainer.topAnchor, constant: topOffset),
             confirmButton.heightAnchor.constraint(equalToConstant: Constants.topButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: Constants.topButtonSize)
         ])
@@ -114,7 +131,8 @@ final class GifMakerView: UIView {
         trimButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(trimButton)
         
-        let topOffset = Constants.topButtonSize + Constants.topButtonsInterspace
+        let index: CGFloat = 1
+        let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index
         NSLayoutConstraint.activate([
             trimButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor ),
             trimButton.topAnchor.constraint(equalTo: topButtonsContainer.topAnchor, constant: topOffset),
@@ -125,19 +143,72 @@ final class GifMakerView: UIView {
         trimButton.addTarget(self, action: #selector(trimButtonTapped), for: .touchUpInside)
     }
     
+    /// Sets up the speed tools button in the top options
+    private func setUpSpeedButton() {
+        speedButton.accessibilityIdentifier = "GIF Maker Speed Button"
+        speedButton.setBackgroundImage(KanvasCameraImages.speedOff, for: .normal)
+        speedButton.translatesAutoresizingMaskIntoConstraints = false
+        topButtonsContainer.addSubview(speedButton)
+        
+        let index: CGFloat = 2
+        let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index
+        NSLayoutConstraint.activate([
+            speedButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor ),
+            speedButton.topAnchor.constraint(equalTo: topButtonsContainer.topAnchor, constant: topOffset),
+            speedButton.heightAnchor.constraint(equalToConstant: Constants.topButtonSize),
+            speedButton.widthAnchor.constraint(equalToConstant: Constants.topButtonSize)
+        ])
+        
+        speedButton.addTarget(self, action: #selector(speedButtonTapped), for: .touchUpInside)
+    }
+    
     /// Sets up the container for the trim menu
     private func setupTrimMenuContainer() {
         trimMenuContainer.backgroundColor = .clear
         trimMenuContainer.accessibilityIdentifier = "GIF Maker Trim Menu Container"
         trimMenuContainer.translatesAutoresizingMaskIntoConstraints = false
         trimMenuContainer.clipsToBounds = false
-        
         addSubview(trimMenuContainer)
+        
+        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.trimMenuMargin
         NSLayoutConstraint.activate([
             trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            trimMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
+            trimMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             trimMenuContainer.heightAnchor.constraint(equalToConstant: TrimView.height),
+        ])
+    }
+    
+    /// Sets up the container for the speed tools menu
+    private func setupSpeedMenuContainer() {
+        speedMenuContainer.backgroundColor = .clear
+        speedMenuContainer.accessibilityIdentifier = "GIF Maker Speed Menu Container"
+        speedMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        speedMenuContainer.clipsToBounds = false
+        addSubview(speedMenuContainer)
+        
+        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.speedMenuMargin
+        NSLayoutConstraint.activate([
+            speedMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
+            speedMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            speedMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
+            speedMenuContainer.heightAnchor.constraint(equalToConstant: SpeedView.height),
+        ])
+    }
+    
+    /// Sets up the container for the playback menu
+    private func setupPlaybackMenuContainer() {
+        playbackMenuContainer.backgroundColor = .clear
+        playbackMenuContainer.accessibilityIdentifier = "GIF Maker Playback Menu Container"
+        playbackMenuContainer.translatesAutoresizingMaskIntoConstraints = false
+        playbackMenuContainer.clipsToBounds = false
+        addSubview(playbackMenuContainer)
+        
+        NSLayoutConstraint.activate([
+            playbackMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
+            playbackMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            playbackMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
+            playbackMenuContainer.heightAnchor.constraint(equalToConstant: PlaybackView.height),
         ])
     }
     
@@ -149,6 +220,10 @@ final class GifMakerView: UIView {
     
     @objc private func trimButtonTapped() {
         delegate?.didTapTrimButton()
+    }
+    
+    @objc private func speedButtonTapped() {
+        delegate?.didTapSpeedButton()
     }
     
     // MARK: - Public interface
@@ -165,7 +240,7 @@ final class GifMakerView: UIView {
     }
     
     
-    /// Changes the image with an animation
+    /// Changes the trim button image with an animation
     ///
     /// - Parameter image: the new image for the button
     func changeTrimButton(_ enabled: Bool) {
@@ -175,6 +250,22 @@ final class GifMakerView: UIView {
         }
         
         UIView.transition(with: trimButton,
+                          duration: Constants.animationDuration,
+                          options: .transitionCrossDissolve,
+                          animations: animation,
+                          completion: nil)
+    }
+    
+    /// Changes the speed button image with an animation
+    ///
+    /// - Parameter image: the new image for the button
+    func changeSpeedButton(_ enabled: Bool) {
+        let animation: (() -> Void) = { [weak self] in
+            let image = enabled ? KanvasCameraImages.speedOn : KanvasCameraImages.speedOff
+            self?.speedButton.setBackgroundImage(image, for: .normal)
+        }
+        
+        UIView.transition(with: speedButton,
                           duration: Constants.animationDuration,
                           options: .transitionCrossDissolve,
                           animations: animation,

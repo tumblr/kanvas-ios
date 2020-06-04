@@ -636,11 +636,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         confirmEditionMenu()
     }
     
-    func getThumbnail(at index: Int) -> UIImage? {
-        // TODO: Get correct image.
-        return KanvasCameraImages.flashOnImage
-    }
-    
     func didStartTrimming() {
         
     }
@@ -650,6 +645,19 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
+        
+    }
+    
+    func getThumbnail(at index: Int) -> UIImage? {
+        // TODO: Get correct image.
+        return KanvasCameraImages.flashOnImage
+    }
+    
+    func didSelectSpeed(_ speed: Float) {
+        
+    }
+    
+    func didSelectPlayback(_ option: PlaybackOption) {
         
     }
     
