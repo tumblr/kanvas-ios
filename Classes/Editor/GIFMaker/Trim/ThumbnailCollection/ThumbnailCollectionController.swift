@@ -105,14 +105,13 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     /// Obtains the frame that contains the visible cells.
     func getCellsFrame() -> CGRect {
         let collectionView = thumbnailCollectionView.collectionView
-        var visibleCells = collectionView.visibleCells
-        visibleCells.sort(by: { $0.frame.minX < $1.frame.minX })
         
-        guard let firstCell = visibleCells.first, let lastCell = visibleCells.last
+        guard let firstCell = collectionView.visibleCells.min(by: { $0.frame.midX < $1.frame.midX }),
+            let lastCell = collectionView.visibleCells.max(by: { $0.frame.midX < $1.frame.midX })
             else { return .zero }
         
-        let firstFrame = thumbnailCollectionView.collectionView.convert(firstCell.frame, to: thumbnailCollectionView)
-        let lastFrame = thumbnailCollectionView.collectionView.convert(lastCell.frame, to: thumbnailCollectionView)
+        let firstFrame = collectionView.convert(firstCell.frame, to: thumbnailCollectionView)
+        let lastFrame = collectionView.convert(lastCell.frame, to: thumbnailCollectionView)
         
         let rect = CGRect(x: firstFrame.origin.x,
                           y: firstFrame.origin.y,
