@@ -290,17 +290,65 @@ final class TrimView: UIView, TrimAreaDelegate {
     /// - Parameter cellsFrame: the frame that contains the visible cells on the collection.
     func setOverlay(cellsFrame: CGRect) {
         let cellsPath = UIBezierPath(rect: cellsFrame)
-        let shape = convert(trimArea.frame, to: thumbnailContainer)
-        let trimAreaPath = UIBezierPath(roundedRect: shape, cornerRadius: TrimArea.cornerRadius)
-        cellsPath.append(trimAreaPath)
         cellsPath.usesEvenOddFillRule = true
-
-        let fillLayer = CAShapeLayer()
-        fillLayer.path = cellsPath.cgPath
-        fillLayer.fillRule = .evenOdd
-        fillLayer.fillColor = Constants.overlayColor.cgColor
+        
+        let trimAreaFrame = getTrimAreaFrame()
+        let trimAreaPath = UIBezierPath(roundedRect: trimAreaFrame, cornerRadius: TrimArea.cornerRadius)
+        cellsPath.append(trimAreaPath)
+        
+        let bouncingAreaFrame: CGRect = getBouncingAreaFrame(cellsFrame: cellsFrame, trimAreaFrame: trimAreaFrame)
+        let bouncingAreaPath = UIBezierPath(rect: bouncingAreaFrame)
+        cellsPath.append(bouncingAreaPath)
+        
+        // Layer creation
+        let newLayer = createOverlay(path: cellsPath)
         overlayLayer.removeFromSuperlayer()
-        overlayLayer = fillLayer
-        thumbnailContainer.layer.addSublayer(fillLayer)
+        overlayLayer = newLayer
+        thumbnailContainer.layer.addSublayer(newLayer)
+    }
+    
+    // MARK: - Overlay
+    
+    /// Creates the overlay layer.
+    ///
+    /// - Parameter path: the path to create the shape of the layer.
+    private func createOverlay(path: UIBezierPath) -> CAShapeLayer {
+        let layer = CAShapeLayer()
+        layer.path = path.cgPath
+        layer.fillRule = .evenOdd
+        layer.fillColor = Constants.overlayColor.cgColor
+        return layer
+    }
+    
+    /// Calculates the trim area frame in relation with the collection coordinates.
+    private func getTrimAreaFrame() -> CGRect {
+        return convert(trimArea.frame, to: thumbnailContainer)
+    }
+    
+    /// Calculates an extra frame for cases in which the collection is bouncing.
+    ///
+    /// - Parameters:
+    ///  - cellsFrame: the frame that surrounds the visible cells.
+    ///  - trimAreaFrame: the frame that surrounds the trim area.
+    private func getBouncingAreaFrame(cellsFrame: CGRect, trimAreaFrame: CGRect) -> CGRect {
+        let extraFrame: CGRect
+        
+        if trimAreaFrame.minX < cellsFrame.minX {
+            extraFrame = CGRect(x: cellsFrame.minX,
+                                y: cellsFrame.minY,
+                                width: trimAreaFrame.minX - cellsFrame.minX,
+                                height: cellsFrame.height)
+        }
+        else if cellsFrame.maxX < trimAreaFrame.maxX {
+            extraFrame = CGRect(x: cellsFrame.maxX,
+                                y: cellsFrame.minY,
+                                width: trimAreaFrame.maxX - cellsFrame.maxX,
+                                height: cellsFrame.height)
+        }
+        else {
+            extraFrame = .zero
+        }
+        
+        return extraFrame
     }
 }
