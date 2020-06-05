@@ -173,6 +173,9 @@ final class TrimArea: IgnoreTouchesView {
         rightSelector.showLine(false)
     }
     
+    /// Changes the background color of the view.
+    ///
+    /// - Parameter color: the new color.
     func setBackgroundColor(_ color: UIColor) {
         topBorder.backgroundColor = color
         bottomBorder.backgroundColor = color
@@ -181,6 +184,7 @@ final class TrimArea: IgnoreTouchesView {
     }
 }
 
+/// Handle at the side of the trim area.
 private class TrimAreaSelector: UIView {
     
     private let innerLine: UIView

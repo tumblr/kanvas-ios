@@ -141,6 +141,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         }
     }
     
+    /// Obtains the content offset of the collection at the location of the left gray handle. The value is expressed as a percentage.
     func getStartOfVisibleRange() -> CGFloat {
         let collectionView = thumbnailCollectionView.collectionView
         let percent = collectionView.contentOffset.x * 100 / collectionView.contentSize.width
@@ -149,6 +150,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         return (min...max).clamp(percent)
     }
     
+    /// Obtains the content offset of the collection at the location of the right gray handle. The value is expressed as a percentage.
     func getEndOfVisibleRange() -> CGFloat {
         let collectionView = thumbnailCollectionView.collectionView
         let contentInset = collectionView.contentInset.left + collectionView.contentInset.right

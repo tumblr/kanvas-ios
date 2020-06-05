@@ -146,6 +146,7 @@ final class TrimView: UIView, TrimAreaDelegate {
         ])
     }
     
+    /// Sets up the time bubble above the left handle.
     private func setupLeftTimeIndicator() {
         leftTimeIndicator.accessibilityIdentifier = "GIF Maker Left Time Indicator"
         leftTimeIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -162,6 +163,7 @@ final class TrimView: UIView, TrimAreaDelegate {
         leftTimeIndicator.alpha = 0
     }
     
+    /// Sets up the time bubble above the right handle.
     private func setupRightTimeIndicator() {
         rightTimeIndicator.accessibilityIdentifier = "GIF Maker Right Time Indicator"
         rightTimeIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -271,16 +273,21 @@ final class TrimView: UIView, TrimAreaDelegate {
         }
     }
     
+    /// Obtains the location of the left handle expressed as a percentage. 0 is the left limit and 100 is the right limit.
     func getStartingPercentage() -> CGFloat {
         let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
         return (trimArea.leftSelectorLocation - TrimArea.selectorWidth - Constants.selectorMargin) * 100 / totalWidth
     }
     
+    /// Obtains the location of the right handle expressed as a percentage. 0 is the left limit and 100 is the right limit.
     func getEndingPercentage() -> CGFloat {
         let totalWidth = bounds.width - (Constants.selectorMargin + TrimArea.selectorWidth) * 2
         return 100 - (bounds.width - TrimArea.selectorWidth - trimArea.rightSelectorLocation - Constants.selectorMargin) * 100 / totalWidth
     }
     
+    /// Updates the overlay on the thumbnail collection.
+    ///
+    /// - Parameter cellsFrame: the frame that contains the visible cells on the collection.
     func setOverlay(cellsFrame: CGRect) {
         let cellsPath = UIBezierPath(rect: cellsFrame)
         let shape = convert(trimArea.frame, to: thumbnailContainer)
