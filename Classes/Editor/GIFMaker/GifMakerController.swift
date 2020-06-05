@@ -35,15 +35,20 @@ protocol GifMakerControllerDelegate: class {
     ///
     /// - Parameter index: the index of the requested image.
     func getThumbnail(at index: Int) -> UIImage?
-}
-
-/// Constants for GifMakerController
-private struct Constants {
-    // TODO: Add constants
+    
+    /// Called when a new speed is selected.
+    ///
+    /// - Parameter speed: the selected speed.
+    func didSelectSpeed(_ speed: Float)
+    
+    /// Called when a playback option is selected.
+    ///
+    /// - Parameter option: the selected option.
+    func didSelectPlayback(_ option: PlaybackOption)
 }
 
 /// A view controller that contains the GIF maker menu
-final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimControllerDelegate {
+final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimControllerDelegate, SpeedControllerDelegate, PlaybackControllerDelegate {
     
     weak var delegate: GifMakerControllerDelegate?
         
@@ -59,6 +64,17 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         return controller
     }()
 
+    private lazy var speedController: SpeedController = {
+        let controller = SpeedController()
+        controller.delegate = self
+        return controller
+    }()
+    
+    private lazy var playbackController: PlaybackController = {
+        let controller = PlaybackController()
+        controller.delegate = self
+        return controller
+    }()
     
     /// Confirm button location expressed in screen coordinates
     var confirmButtonLocation: CGPoint {
@@ -72,10 +88,18 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         }
     }
     
+    private var speedEnabled: Bool {
+        willSet {
+            gifMakerView.changeSpeedButton(newValue)
+            speedController.showView(newValue)
+        }
+    }
+    
     // MARK: - Initializers
     
     init() {
         trimEnabled = false
+        speedEnabled = false
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -100,6 +124,8 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         setUpView()
         
         load(childViewController: trimController, into: gifMakerView.trimMenuContainer)
+        load(childViewController: speedController, into: gifMakerView.speedMenuContainer)
+        load(childViewController: playbackController, into: gifMakerView.playbackMenuContainer)
     }
     
     // MARK: - Layout
@@ -115,7 +141,13 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     }
     
     func didTapTrimButton() {
+        speedEnabled = false
         trimEnabled.toggle()
+    }
+    
+    func didTapSpeedButton() {
+        trimEnabled = false
+        speedEnabled.toggle()
     }
     
     // MARK: - TrimControllerDelegate
@@ -136,6 +168,18 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         return delegate?.getThumbnail(at: index)
     }
     
+    // MARK: - SpeedControllerDelegate
+    
+    func didSelectSpeed(_ speed: Float) {
+        delegate?.didSelectSpeed(speed)
+    }
+    
+    // MARK: - PlaybackControllerDelegate
+    
+    func didSelect(option: PlaybackOption) {
+        delegate?.didSelectPlayback(option)
+    }
+    
     // MARK: - Public interface
     
     /// shows or hides the GIF maker menu
@@ -144,6 +188,7 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     func showView(_ show: Bool) {
         gifMakerView.showView(show, completion: { [weak self] _ in
             self?.trimEnabled = false
+            self?.speedEnabled = false
         })
     }
     
