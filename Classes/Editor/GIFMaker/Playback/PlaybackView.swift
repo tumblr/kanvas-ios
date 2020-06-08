@@ -25,7 +25,9 @@ protocol PlaybackViewDelegate: class {
 
 /// Constants for PlaybackView
 private struct Constants {
+    static let animationDuration: TimeInterval = 0.25
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.65)
+    static let selectionViewColor: UIColor = .white
     static let cornerRadius: CGFloat = 18
 }
 
@@ -38,20 +40,32 @@ final class PlaybackView: UIView {
     
     let collectionView: UICollectionView
     private let layout: PlaybackCollectionViewLayout
+    private let selectionView: UIView
     
     var cellWidth: CGFloat {
         set { layout.estimatedItemSize.width = newValue }
         get { layout.estimatedItemSize.width }
     }
     
+    var selectionViewWidth: CGFloat {
+        willSet {
+            selectionView.transform = CGAffineTransform(scaleX: newValue / selectionView.bounds.width, y: 1)
+        }
+    }
+    
     // MARK: - Initializers
     
     init() {
+        selectionView = UIView()
         layout = PlaybackCollectionViewLayout()
         collectionView = PlaybackInnerCollectionView(frame: .zero, collectionViewLayout: layout)
+        selectionViewWidth = 0
         super.init(frame: .zero)
+        backgroundColor = Constants.backgroundColor
+        layer.cornerRadius = Constants.cornerRadius
+        layer.masksToBounds = true
         
-        setUpViews()
+        setupViews()
         setupGestureRecognizers()
     }
     
@@ -67,10 +81,29 @@ final class PlaybackView: UIView {
     
     // MARK: - Layout
     
-    private func setUpViews() {
+    private func setupViews() {
+        setupSelectionView()
+        setupCollectionView()
+    }
+    
+    private func setupSelectionView() {
+        addSubview(selectionView)
+        selectionView.accessibilityIdentifier = "Playback Selection View"
+        selectionView.translatesAutoresizingMaskIntoConstraints = false
+        selectionView.backgroundColor = Constants.selectionViewColor
+        selectionView.layer.cornerRadius = Constants.cornerRadius
+        
+        NSLayoutConstraint.activate([
+            selectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            selectionView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+            selectionView.widthAnchor.constraint(equalToConstant: PlaybackCollectionCell.width),
+            selectionView.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height)
+        ])
+    }
+    
+    private func setupCollectionView() {
         collectionView.accessibilityIdentifier = "Playback Collection View"
-        collectionView.backgroundColor = Constants.backgroundColor
-        collectionView.layer.cornerRadius = Constants.cornerRadius
+        collectionView.backgroundColor = .clear
         collectionView.add(into: self)
     }
     
@@ -102,6 +135,21 @@ final class PlaybackView: UIView {
             delegate?.didSwipeRight()
         default:
             break
+        }
+    }
+    
+    // MARK: - Public interface
+    
+    func select(cell: PlaybackCollectionCell, animated: Bool = true) {
+        let action: () -> Void = { [weak self] in
+            self?.selectionView.center = cell.center
+        }
+        
+        if animated {
+            UIView.animate(withDuration: 0.1, animations: action)
+        }
+        else {
+            action()
         }
     }
 }

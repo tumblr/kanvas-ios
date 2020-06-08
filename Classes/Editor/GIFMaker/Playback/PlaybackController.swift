@@ -70,6 +70,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
         let cellWidth = calculateCellWidth()
         PlaybackCollectionCell.width = cellWidth
         playbackView.cellWidth = cellWidth
+        playbackView.selectionViewWidth = cellWidth
     }
 
     // MARK: - UICollectionViewDataSource
@@ -88,7 +89,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
         cell.bindTo(option)
         
         if indexPath == selectedIndexPath {
-            cell.isSelected = true
+            cell.setSelected(true)
         }
         
         return cell
@@ -111,13 +112,14 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     private func didSelect(_ indexPath: IndexPath) {
-        guard let cell = playbackView.collectionView.cellForItem(at: indexPath),
-            let selectedCell = playbackView.collectionView.cellForItem(at: selectedIndexPath),
+        guard let cell = playbackView.collectionView.cellForItem(at: indexPath) as? PlaybackCollectionCell,
+            let selectedCell = playbackView.collectionView.cellForItem(at: selectedIndexPath) as? PlaybackCollectionCell,
             let option = options.object(at: indexPath.item),
             selectedIndexPath != indexPath else { return }
         
-        selectedCell.isSelected = false
-        cell.isSelected = true
+        selectedCell.setSelected(false)
+        cell.setSelected(true)
+        playbackView.select(cell: cell)
         selectedIndexPath = indexPath
         
         delegate?.didSelect(option: option)

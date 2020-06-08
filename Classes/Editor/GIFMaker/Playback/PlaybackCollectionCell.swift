@@ -9,11 +9,11 @@ import UIKit
 
 /// Constants for PlaybackCollectionCell
 private struct Constants {
+    static let animationDuration: TimeInterval = 0.1
     static let height: CGFloat = 36
     static let width: CGFloat = 100
     static let cornerRadius: CGFloat = 18
-    static let backgroundColorActive: UIColor = .white
-    static let backgroundColorInactive: UIColor = .clear
+    static let backgroundColor: UIColor = .clear
     static let fontColorActive: UIColor = .black
     static let fontColorInactive: UIColor = .white
     static let font: UIFont = .guavaMedium()
@@ -25,19 +25,6 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     static let height: CGFloat = Constants.height
     static var width: CGFloat = Constants.width
     private let label = UILabel()
-    
-    override var isSelected: Bool {
-        willSet {
-            if newValue {
-                label.backgroundColor = Constants.backgroundColorActive
-                label.textColor = Constants.fontColorActive
-            }
-            else {
-                label.backgroundColor = Constants.backgroundColorInactive
-                label.textColor = Constants.fontColorInactive
-            }
-        }
-    }
     
     // MARK: - Initializers
     
@@ -53,7 +40,7 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        isSelected = false
+        setSelected(false, animated: false)
         label.text = nil
     }
     
@@ -71,7 +58,7 @@ final class PlaybackCollectionCell: UICollectionViewCell {
         label.layer.masksToBounds = true
         label.font = Constants.font
         label.textColor = Constants.fontColorInactive
-        label.backgroundColor = Constants.backgroundColorInactive
+        label.backgroundColor = Constants.backgroundColor
         label.textAlignment = .center
         
         NSLayoutConstraint.activate([
@@ -89,5 +76,19 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     /// - Parameter option: the option to take the name from.
     func bindTo(_ option: PlaybackOption) {
         label.text = option.description
+    }
+    
+    func setSelected(_ selected: Bool, animated: Bool = true) {
+        let action: () -> Void = { [weak self] in
+            self?.label.textColor = selected ? Constants.fontColorActive : Constants.fontColorInactive
+        }
+        
+        if animated {
+            UIView.transition(with: self, duration: Constants.animationDuration,
+                              options: .transitionCrossDissolve, animations: action)
+        }
+        else {
+            action()
+        }
     }
 }
