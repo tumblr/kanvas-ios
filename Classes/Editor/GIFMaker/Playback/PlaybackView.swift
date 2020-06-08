@@ -7,6 +7,22 @@
 import Foundation
 import UIKit
 
+/// Protocol for tapping or swiping the options.
+protocol PlaybackViewDelegate: class {
+    
+    /// Called when a cell is tapped
+    ///
+    /// - Parameter indexPath: the index path of the cell where the tap occurred.
+    func didTapCell(at indexPath: IndexPath)
+    
+    /// Called when the options are swiped left
+    func didSwipeLeft()
+    
+    /// Called when the options are swiped right
+    func didSwipeRight()
+}
+
+
 /// Constants for PlaybackView
 private struct Constants {
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.65)
@@ -17,6 +33,8 @@ private struct Constants {
 final class PlaybackView: UIView {
     
     static let height: CGFloat = PlaybackCollectionCell.height
+    
+    weak var delegate: PlaybackViewDelegate?
     
     let collectionView: UICollectionView
     private let layout: PlaybackCollectionViewLayout
@@ -34,6 +52,7 @@ final class PlaybackView: UIView {
         super.init(frame: .zero)
         
         setUpViews()
+        setupGestureRecognizers()
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -53,6 +72,37 @@ final class PlaybackView: UIView {
         collectionView.backgroundColor = Constants.backgroundColor
         collectionView.layer.cornerRadius = Constants.cornerRadius
         collectionView.add(into: self)
+    }
+    
+    // MARK: - Gesture recognizer
+    
+    private func setupGestureRecognizers() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(optionsTapped(recognizer:)))
+        let leftSwipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(optionsSwiped(recognizer:)))
+        let rightSwipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(optionsSwiped(recognizer:)))
+        leftSwipeRecognizer.direction = .left
+        rightSwipeRecognizer.direction = .right
+        collectionView.addGestureRecognizer(tapRecognizer)
+        collectionView.addGestureRecognizer(leftSwipeRecognizer)
+        collectionView.addGestureRecognizer(rightSwipeRecognizer)
+    }
+    
+    @objc private func optionsTapped(recognizer: UITapGestureRecognizer) {
+        let location = recognizer.location(in: superview)
+        if let indexPath = collectionView.indexPathForItem(at: location) {
+            delegate?.didTapCell(at: indexPath)
+        }
+    }
+    
+    @objc private func optionsSwiped(recognizer: UISwipeGestureRecognizer) {
+        switch recognizer.direction {
+        case .left:
+            delegate?.didSwipeLeft()
+        case .right:
+            delegate?.didSwipeRight()
+        default:
+            break
+        }
     }
 }
 

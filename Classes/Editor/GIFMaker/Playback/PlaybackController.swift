@@ -22,10 +22,14 @@ private struct Constants {
 }
 
 /// Controller for handling the playback menu.
-final class PlaybackController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PlaybackCollectionCellDelegate {
+final class PlaybackController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PlaybackViewDelegate {
     
     weak var delegate: PlaybackControllerDelegate?
-    private let playbackView = PlaybackView()
+    private lazy var playbackView: PlaybackView = {
+        let view = PlaybackView()
+        view.delegate = self
+        return view
+    }()
     
     private var options: [PlaybackOption]
     private var selectedIndexPath: IndexPath
@@ -81,7 +85,6 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaybackCollectionCell.identifier, for: indexPath) as? PlaybackCollectionCell, let option = options.object(at: indexPath.item) else { return UICollectionViewCell() }
         
-        cell.delegate = self
         cell.bindTo(option)
         
         if indexPath == selectedIndexPath {
@@ -91,10 +94,24 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
         return cell
     }
     
-    // MARK: - PlaybackCollectionCellDelegate
+    // MARK: - PlaybackViewDelegate
     
-    func didTap(cell: PlaybackCollectionCell) {
-        guard let indexPath = playbackView.collectionView.indexPath(for: cell),
+    func didTapCell(at indexPath: IndexPath) {
+        didSelect(indexPath)
+    }
+    
+    func didSwipeLeft() {
+        let newIndexPath = selectedIndexPath.previous()
+        didSelect(newIndexPath)
+    }
+    
+    func didSwipeRight() {
+        let newIndexPath = selectedIndexPath.next()
+        didSelect(newIndexPath)
+    }
+    
+    private func didSelect(_ indexPath: IndexPath) {
+        guard let cell = playbackView.collectionView.cellForItem(at: indexPath),
             let selectedCell = playbackView.collectionView.cellForItem(at: selectedIndexPath),
             let option = options.object(at: indexPath.item),
             selectedIndexPath != indexPath else { return }
