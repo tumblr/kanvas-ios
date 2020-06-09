@@ -32,6 +32,11 @@ protocol TrimControllerDelegate: class {
     func getThumbnail(at index: Int) -> UIImage?
 }
 
+/// Constants for TrimController
+private struct Constants {
+    static let maxSelectableTime: TimeInterval = 3
+}
+
 /// A view controller that contains the trim menu
 final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollectionControllerDelegate {
     
@@ -40,6 +45,14 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     var movingHandles: Bool = false
     var scrollingThumbnails: Bool = false
         
+    private lazy var timeFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        formatter.unitsStyle = .positional
+        return formatter
+    }()
+    
     private lazy var trimView: TrimView = {
         let view = TrimView()
         view.delegate = self
@@ -110,11 +123,15 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     }
     
     func getLeftTimeIndicatorText() -> String {
-        return "0:00"
+        let start = trimView.getStartingPercentage()
+        let time = start.d * Constants.maxSelectableTime / 100
+        return format(time)
     }
     
     func getRightTimeIndicatorText() -> String {
-        return "0:00"
+        let start = trimView.getEndingPercentage()
+        let time = start.d * Constants.maxSelectableTime / 100
+        return format(time)
     }
     
     // MARK: - ThumbnailCollectionControllerDelegate
@@ -175,6 +192,19 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
         
         let visibleRange = collectionEnd - collectionStart
         return collectionStart + handleEnd * visibleRange / 100
+    }
+    
+    /// Create a string from a time interval using the format 'mm:ss'
+    /// or 'm:ss' if there is only one digit for the minutes.
+    ///
+    /// - Parameter time: the time interval.
+    private func format(_ time: TimeInterval) -> String {
+        guard var text = timeFormatter.string(from: time) else { return "" }
+        if text.hasPrefix("0") {
+            text = String(text.dropFirst())
+        }
+        
+        return text
     }
     
     // MARK: - Public interface
