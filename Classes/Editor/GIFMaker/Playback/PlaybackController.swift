@@ -100,7 +100,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
         cell.bindTo(option)
         
         if indexPath == selectedIndexPath {
-            cell.setSelected(true)
+            cell.setSelected(true, animated: false)
         }
         
         return cell
