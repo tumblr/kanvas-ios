@@ -86,6 +86,7 @@ final class PlaybackView: UIView {
         setupCollectionView()
     }
     
+    /// Sets up a white rounded view.
     private func setupSelectionView() {
         addSubview(selectionView)
         selectionView.accessibilityIdentifier = "Playback Selection View"
@@ -101,6 +102,7 @@ final class PlaybackView: UIView {
         ])
     }
     
+    /// Sets up the collection for the playback options.
     private func setupCollectionView() {
         collectionView.accessibilityIdentifier = "Playback Collection View"
         collectionView.backgroundColor = .clear
@@ -109,6 +111,7 @@ final class PlaybackView: UIView {
     
     // MARK: - Gesture recognizer
     
+    /// Adds the gesture recognizers to the collection.
     private func setupGestureRecognizers() {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(optionsTapped(recognizer:)))
         let leftSwipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(optionsSwiped(recognizer:)))
@@ -140,6 +143,11 @@ final class PlaybackView: UIView {
     
     // MARK: - Public interface
     
+    /// Moves the selection view to a specified cell.
+    ///
+    /// - Parameters:
+    ///  - cell: the cell to which the selection view will move.
+    ///  - animated: whether to animate the movement or not.
     func select(cell: PlaybackCollectionCell, animated: Bool = true) {
         let action: () -> Void = { [weak self] in
             self?.selectionView.center = cell.center

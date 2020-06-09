@@ -78,6 +78,11 @@ final class PlaybackCollectionCell: UICollectionViewCell {
         label.text = option.description
     }
     
+    /// Changes the color of the text with an optional animation.
+    ///
+    /// - Parameters:
+    ///  - selected: whether the option is selected or not.
+    ///  - animated: true to animate, false to change directly.
     func setSelected(_ selected: Bool, animated: Bool = true) {
         let action: () -> Void = { [weak self] in
             self?.label.textColor = selected ? Constants.fontColorActive : Constants.fontColorInactive
