@@ -25,7 +25,7 @@ protocol PlaybackViewDelegate: class {
 
 /// Constants for PlaybackView
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.25
+    static let animationDuration: TimeInterval = 0.1
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.65)
     static let selectionViewColor: UIColor = .white
     static let cornerRadius: CGFloat = 18
@@ -146,7 +146,7 @@ final class PlaybackView: UIView {
         }
         
         if animated {
-            UIView.animate(withDuration: 0.1, animations: action)
+            UIView.animate(withDuration: Constants.animationDuration, animations: action)
         }
         else {
             action()

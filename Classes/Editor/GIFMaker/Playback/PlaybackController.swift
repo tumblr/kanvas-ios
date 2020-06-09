@@ -25,6 +25,7 @@ private struct Constants {
 final class PlaybackController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PlaybackViewDelegate {
     
     weak var delegate: PlaybackControllerDelegate?
+    
     private lazy var playbackView: PlaybackView = {
         let view = PlaybackView()
         view.delegate = self
@@ -32,7 +33,17 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     }()
     
     private var options: [PlaybackOption]
-    private var selectedIndexPath: IndexPath
+    
+    private var selectedIndexPath: IndexPath {
+        willSet {
+            guard let cell = playbackView.collectionView.cellForItem(at: newValue) as? PlaybackCollectionCell else { return }
+            cell.setSelected(true)
+        }
+        didSet {
+            guard let cell = playbackView.collectionView.cellForItem(at: oldValue) as? PlaybackCollectionCell else { return }
+            cell.setSelected(false)
+        }
+    }
     
     // MARK: - Initializers
     
@@ -113,14 +124,11 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     
     private func didSelect(_ indexPath: IndexPath) {
         guard let cell = playbackView.collectionView.cellForItem(at: indexPath) as? PlaybackCollectionCell,
-            let selectedCell = playbackView.collectionView.cellForItem(at: selectedIndexPath) as? PlaybackCollectionCell,
             let option = options.object(at: indexPath.item),
             selectedIndexPath != indexPath else { return }
         
-        selectedCell.setSelected(false)
-        cell.setSelected(true)
-        playbackView.select(cell: cell)
         selectedIndexPath = indexPath
+        playbackView.select(cell: cell)
         
         delegate?.didSelect(option: option)
     }
