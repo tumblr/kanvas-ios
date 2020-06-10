@@ -97,7 +97,6 @@ final class PlaybackView: UIView {
         NSLayoutConstraint.activate([
             selectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             selectionView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            selectionView.widthAnchor.constraint(equalToConstant: PlaybackCollectionCell.width),
             selectionView.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height)
         ])
     }
