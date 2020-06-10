@@ -15,7 +15,7 @@ final class GifMakerControllerTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         
-        self.recordMode = true
+        self.recordMode = false
     }
     
     func newViewController() -> GifMakerController {
