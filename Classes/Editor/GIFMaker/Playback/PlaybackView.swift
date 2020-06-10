@@ -49,7 +49,7 @@ final class PlaybackView: UIView {
     
     var selectionViewWidth: CGFloat {
         willSet {
-            selectionView.transform = CGAffineTransform(scaleX: newValue / selectionView.bounds.width, y: 1)
+            selectionView.widthAnchor.constraint(equalToConstant: newValue).isActive = true
         }
     }
     
