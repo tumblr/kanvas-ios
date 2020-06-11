@@ -24,6 +24,10 @@ final class PlaybackViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
     func newView() -> PlaybackView {
         let view = PlaybackView()
         view.frame = CGRect(x: 0, y: 0, width: 320, height: PlaybackView.height)
+        let cellWidth = view.frame.width / CGFloat(options.count)
+        PlaybackCollectionCell.width = cellWidth
+        view.cellWidth = cellWidth
+        view.selectionViewWidth = cellWidth
         view.collectionView.register(cell: PlaybackCollectionCell.self)
         view.collectionView.dataSource = self
         return view
