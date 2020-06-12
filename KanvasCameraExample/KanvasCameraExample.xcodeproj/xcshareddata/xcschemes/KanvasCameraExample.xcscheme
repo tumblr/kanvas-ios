@@ -60,6 +60,9 @@
                   Identifier = "CameraSegmentHandlerTests/testMerge()">
                </Test>
                <Test
+                  Identifier = "GIFEncoderTests/testEncodeGIF()">
+               </Test>
+               <Test
                   Identifier = "GLPixelBufferViewTests">
                </Test>
                <Test
