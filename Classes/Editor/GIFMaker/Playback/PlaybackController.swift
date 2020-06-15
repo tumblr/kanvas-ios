@@ -22,13 +22,28 @@ private struct Constants {
 }
 
 /// Controller for handling the playback menu.
-final class PlaybackController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PlaybackCollectionCellDelegate {
+final class PlaybackController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PlaybackViewDelegate {
     
     weak var delegate: PlaybackControllerDelegate?
-    private let playbackView = PlaybackView()
+    
+    private lazy var playbackView: PlaybackView = {
+        let view = PlaybackView()
+        view.delegate = self
+        return view
+    }()
     
     private var options: [PlaybackOption]
-    private var selectedIndexPath: IndexPath
+    
+    private var selectedIndexPath: IndexPath {
+        willSet {
+            guard let cell = playbackView.collectionView.cellForItem(at: newValue) as? PlaybackCollectionCell else { return }
+            cell.setSelected(true)
+        }
+        didSet {
+            guard let cell = playbackView.collectionView.cellForItem(at: oldValue) as? PlaybackCollectionCell else { return }
+            cell.setSelected(false)
+        }
+    }
     
     // MARK: - Initializers
     
@@ -66,6 +81,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
         let cellWidth = calculateCellWidth()
         PlaybackCollectionCell.width = cellWidth
         playbackView.cellWidth = cellWidth
+        playbackView.selectionViewWidth = cellWidth
     }
 
     // MARK: - UICollectionViewDataSource
@@ -81,27 +97,38 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaybackCollectionCell.identifier, for: indexPath) as? PlaybackCollectionCell, let option = options.object(at: indexPath.item) else { return UICollectionViewCell() }
         
-        cell.delegate = self
         cell.bindTo(option)
         
         if indexPath == selectedIndexPath {
-            cell.isSelected = true
+            cell.setSelected(true, animated: false)
         }
         
         return cell
     }
     
-    // MARK: - PlaybackCollectionCellDelegate
+    // MARK: - PlaybackViewDelegate
     
-    func didTap(cell: PlaybackCollectionCell) {
-        guard let indexPath = playbackView.collectionView.indexPath(for: cell),
-            let selectedCell = playbackView.collectionView.cellForItem(at: selectedIndexPath),
+    func didTapCell(at indexPath: IndexPath) {
+        didSelect(indexPath)
+    }
+    
+    func didSwipeLeft() {
+        let newIndexPath = selectedIndexPath.previous()
+        didSelect(newIndexPath)
+    }
+    
+    func didSwipeRight() {
+        let newIndexPath = selectedIndexPath.next()
+        didSelect(newIndexPath)
+    }
+    
+    private func didSelect(_ indexPath: IndexPath) {
+        guard let cell = playbackView.collectionView.cellForItem(at: indexPath) as? PlaybackCollectionCell,
             let option = options.object(at: indexPath.item),
             selectedIndexPath != indexPath else { return }
         
-        selectedCell.isSelected = false
-        cell.isSelected = true
         selectedIndexPath = indexPath
+        playbackView.select(cell: cell)
         
         delegate?.didSelect(option: option)
     }

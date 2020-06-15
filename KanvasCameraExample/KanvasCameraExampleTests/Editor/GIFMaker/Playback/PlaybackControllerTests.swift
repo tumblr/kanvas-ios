@@ -22,6 +22,7 @@ final class PlaybackControllerTests: FBSnapshotTestCase {
         let controller = PlaybackController()
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: PlaybackView.height)
         controller.view.setNeedsDisplay()
+        controller.viewDidLayoutSubviews()
         return controller
     }
     
