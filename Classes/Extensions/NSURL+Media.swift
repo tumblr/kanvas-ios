@@ -11,39 +11,60 @@ import Foundation
 private struct URLConstants {
     static let jpg = "jpg"
     static let mp4 = "mp4"
-    static let baseURL: String = "camera-asset-%@.%@"
+    static let baseURL: String = "kanvas"
 }
 
 /// This is an extension to help create new URLs for videos and images
-extension NSURL {
-    
+extension URL {
+
     /// Returns a new video url
-    class func createNewVideoURL() -> URL? {
-        return createURLWithExtension(URLConstants.mp4)
+    static func videoURL() throws -> URL {
+        return try unique(filename: URLConstants.baseURL, fileExtension: URLConstants.mp4, unique: true, removeExisting: false)
     }
     
     /// Returns a new image url
-    class func createNewImageURL() -> URL? {
-        return createURLWithExtension(URLConstants.jpg)
+    static func imageURL() throws -> URL {
+        return try unique(filename: URLConstants.baseURL, fileExtension: URLConstants.jpg, unique: true, removeExisting: false)
+    }
+
+    enum URLError: Error {
+        case noDocumentsURL
+        case failed
     }
     
     /// Returns a url of the given extension
-    private class func createURLWithExtension(_ ext: String) -> URL? {
+    static func unique(filename: String, fileExtension: String, unique: Bool, removeExisting: Bool) throws -> URL {
         guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            NSLog("documents directory should exist")
-            return nil
+            throw URLError.noDocumentsURL
         }
-        var requiresNewFilePath = true
-        var fileURL: URL = documentsURL.appendingPathComponent(String(format: URLConstants.baseURL, NSUUID().uuidString, ext))
-        
-        while requiresNewFilePath {
-            if FileManager.default.fileExists(atPath: fileURL.path) != true {
-                requiresNewFilePath = false
+
+        if !FileManager.default.fileExists(atPath: documentsURL.path, isDirectory: nil) {
+            try FileManager.default.createDirectory(at: documentsURL, withIntermediateDirectories: true, attributes: nil)
+        }
+
+        var fileURL: URL?
+        while true {
+            let uniqueFilename = unique ?
+                "\(filename)-\(UUID().uuidString).\(fileExtension)" :
+                "\(filename).\(fileExtension)"
+            fileURL = documentsURL.appendingPathComponent(uniqueFilename, isDirectory: false)
+            guard let newFileURL = fileURL else {
                 break
             }
-            fileURL = documentsURL.appendingPathComponent(String(format: URLConstants.baseURL, NSUUID().uuidString, ext))
+            guard FileManager.default.fileExists(atPath: newFileURL.path) else {
+                break
+            }
+            guard !removeExisting else {
+                try FileManager.default.removeItem(at: newFileURL)
+                break
+            }
         }
-        return fileURL
+
+        guard let newFileURL = fileURL else {
+            throw URLError.failed
+        }
+
+        return newFileURL
     }
     
 }
