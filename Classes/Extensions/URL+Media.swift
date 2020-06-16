@@ -35,7 +35,7 @@ extension URL {
     /// - Parameters:
     ///     - filename: the filename
     ///     - fileExtension: the file extension (without the `.`)
-    ///     - unique: whether or not to add a uuid to the filename
+    ///     - unique: whether or not to add "-\(uuid)" to the filename
     ///     - removeExisting: if the file URL already exists, remove it
     init(filename: String, fileExtension: String, unique: Bool, removeExisting: Bool) throws {
         guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -47,7 +47,7 @@ extension URL {
         }
 
         let fullFilename = unique ?
-            "\(filename)\(UUID().uuidString).\(fileExtension)" :
+            "\(filename)-\(UUID().uuidString).\(fileExtension)" :
             "\(filename).\(fileExtension)"
         let fileURL = documentsURL.appendingPathComponent(fullFilename, isDirectory: false)
         if removeExisting && FileManager.default.fileExists(atPath: fileURL.path) {

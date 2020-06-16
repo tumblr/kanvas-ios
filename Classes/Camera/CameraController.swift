@@ -357,7 +357,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - Media Content Creation
     
-    class func saveImageToFile(_ image: UIImage?, info: TumblrMediaInfo) -> URL? {
+    class func save(image: UIImage?, info: TumblrMediaInfo) -> URL? {
         do {
             guard let image = image, let jpgImageData = image.jpegData(compressionQuality: 1.0) else {
                 return nil
@@ -838,7 +838,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     public func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
+        if let info = info, let url = CameraController.save(image: image, info: info) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
                 if let self = self, let image = image {
