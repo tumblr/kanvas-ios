@@ -513,7 +513,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             imageOverlays.append(drawingOverlayImage)
         }
         
-        editorView.movableViewCanvas.updateLayer()
         if let movableViewsOverlayImage = editorView.movableViewCanvas.layer.cgImage() {
             imageOverlays.append(movableViewsOverlayImage)
         }
