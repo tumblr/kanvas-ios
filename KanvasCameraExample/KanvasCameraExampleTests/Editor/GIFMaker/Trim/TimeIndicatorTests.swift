@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class TrimAreaTests: FBSnapshotTestCase {
+final class TimeIndicatorTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,14 +18,15 @@ final class TrimAreaTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newView() -> TrimArea {
-        let view = TrimArea()
-        view.frame = CGRect(x: 0, y: 0, width: 320, height: TrimArea.height)
+    func newView() -> TimeIndicator {
+        let view = TimeIndicator()
+        view.frame = CGRect(x: 0, y: 0, width: TimeIndicator.width, height: TimeIndicator.height)
         return view
     }
     
     func testViewSetup() {
         let view = newView()
+        view.text = "0:02"
         FBSnapshotVerifyView(view)
     }
     
