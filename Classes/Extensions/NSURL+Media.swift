@@ -17,23 +17,27 @@ private struct URLConstants {
 /// This is an extension to help create new URLs for videos and images
 extension URL {
 
-    /// Returns a new video url
+    /// Makes a new video URL
     static func videoURL() throws -> URL {
-        return try unique(filename: URLConstants.baseURL, fileExtension: URLConstants.mp4, unique: true, removeExisting: false)
+        return try URL(filename: URLConstants.baseURL, fileExtension: URLConstants.mp4, unique: true, removeExisting: false)
     }
     
-    /// Returns a new image url
+    /// Makes a new image URL
     static func imageURL() throws -> URL {
-        return try unique(filename: URLConstants.baseURL, fileExtension: URLConstants.jpg, unique: true, removeExisting: false)
+        return try URL(filename: URLConstants.baseURL, fileExtension: URLConstants.jpg, unique: true, removeExisting: false)
     }
 
     enum URLError: Error {
         case noDocumentsURL
-        case failed
     }
     
-    /// Returns a url of the given extension
-    static func unique(filename: String, fileExtension: String, unique: Bool, removeExisting: Bool) throws -> URL {
+    /// URL Initializer for Kanvas's files
+    /// - Parameters:
+    ///     - filename: the filename
+    ///     - fileExtension: the file extension (without the `.`)
+    ///     - unique: whether or not to add a uuid to the filename
+    ///     - removeExisting: if the file URL already exists, remove it
+    init(filename: String, fileExtension: String, unique: Bool, removeExisting: Bool) throws {
         guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw URLError.noDocumentsURL
         }
@@ -42,29 +46,13 @@ extension URL {
             try FileManager.default.createDirectory(at: documentsURL, withIntermediateDirectories: true, attributes: nil)
         }
 
-        var fileURL: URL?
-        while true {
-            let uniqueFilename = unique ?
-                "\(filename)-\(UUID().uuidString).\(fileExtension)" :
-                "\(filename).\(fileExtension)"
-            fileURL = documentsURL.appendingPathComponent(uniqueFilename, isDirectory: false)
-            guard let newFileURL = fileURL else {
-                break
-            }
-            guard FileManager.default.fileExists(atPath: newFileURL.path) else {
-                break
-            }
-            guard !removeExisting else {
-                try FileManager.default.removeItem(at: newFileURL)
-                break
-            }
+        let fullFilename = unique ?
+            "\(filename)\(UUID().uuidString).\(fileExtension)" :
+            "\(filename).\(fileExtension)"
+        let fileURL = documentsURL.appendingPathComponent(fullFilename, isDirectory: false)
+        if removeExisting && FileManager.default.fileExists(atPath: fileURL.path) {
+            try FileManager.default.removeItem(at: fileURL)
         }
-
-        guard let newFileURL = fileURL else {
-            throw URLError.failed
-        }
-
-        return newFileURL
+        self = fileURL
     }
-    
 }

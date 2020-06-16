@@ -372,7 +372,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     class func save(data: Data, to filename: String, ext fileExtension: String) throws -> URL {
-        let fileURL = try URL.unique(filename: filename, fileExtension: fileExtension, unique: false, removeExisting: true)
+        let fileURL = try URL(filename: filename, fileExtension: fileExtension, unique: false, removeExisting: true)
         try data.write(to: fileURL, options: .atomic)
         return fileURL
     }
