@@ -16,6 +16,8 @@ protocol MediaPlayerDelegate: class {
     /// Called then the first pixel buffer is shown
     /// - Parameter image: the first frame shown
     func didDisplayFirstFrame(_ image: UIImage)
+
+    func getDefaultTimeIntervalForImageSegments() -> TimeInterval
 }
 
 /// Delegate for MediaPlayerView
@@ -29,6 +31,21 @@ protocol MediaPlayerViewDelegate: class {
 enum MediaPlayerContent {
     case image(UIImage, TimeInterval?)
     case video(URL)
+}
+
+enum MediaPlayerPlaybackMode {
+    case loop, rebound, reverse
+
+    init(from playbackOption: PlaybackOption) {
+        switch playbackOption {
+        case .loop:
+            self = .loop
+        case .rebound:
+            self = .rebound
+        case .reverse:
+            self = .reverse
+        }
+    }
 }
 
 /// View for rendering the player.
@@ -140,9 +157,42 @@ final class MediaPlayer {
     private lazy var avPlayer: AVPlayer = {
         let player = AVPlayer(playerItem: nil)
         player.actionAtItemEnd = .none
+        NotificationCenter.default.addObserver(self, selector: #selector(videoFailedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(videoDidPlayToEndTime), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         return player
     }()
+
+    var rate: Float = 1.0
+    var startMediaIndex = 0
+    var endMediaIndex = 0
+
+    private var playSingleFrameAtIndex: Int? = nil
+    private var playbackDirection: Int = 1
+
+    var playbackMode: MediaPlayerPlaybackMode = .loop {
+        didSet {
+            switch playbackMode {
+            case .loop:
+                self.playbackDirection = 1
+            case .reverse:
+                self.playbackDirection = -1
+            case .rebound:
+                break
+            }
+        }
+    }
+
+    func getFrame(at index: Int) -> UIImage? {
+        guard index >= 0 && index < playableMedia.count else {
+            return nil
+        }
+        switch playableMedia[index] {
+        case .image(let image, _, _):
+            return image
+        case .video(_, _, _):
+            return nil
+        }
+    }
 
     /// Default initializer
     /// - Parameter renderer: Rendering instance for this player to use.
@@ -184,6 +234,8 @@ final class MediaPlayer {
     func stop() {
         pause()
         currentlyPlayingMediaIndex = -1
+        startMediaIndex = -1
+        endMediaIndex = -1
         playableMedia.removeAll()
     }
 
@@ -199,10 +251,30 @@ final class MediaPlayer {
 
     /// Resumes the playback of media.
     /// Can be used to resume playback after a call to `pause`.
+    /// This currently just resumes at the current segment; it doesn't continue playing a video at the time it was paused.
     func resume() {
         playCurrentMedia()
     }
     
+    /// Plays a single frame at a specific location
+    /// Useful for displaying a frame while scrubbing/trimming
+    /// - Parameter at: Value between 0 and 1, where 0 is the first frame, and 1 is the last frame.
+    func playSingleFrame(at location: CGFloat) {
+        var index = Int(CGFloat(playableMedia.count) * location)
+        if index > playableMedia.count - 1 {
+            index = playableMedia.count - 1
+        }
+        else if index < 0 {
+            index = 0
+        }
+        playSingleFrameAtIndex = index
+    }
+
+    /// Cancels the single-frame playback, resuming the playback before playSingleFrame was called.
+    func cancelPlayingSingleFrame() {
+        playSingleFrameAtIndex = nil
+    }
+
     /// Obtains color from a pixel
     /// - Parameter point: the point to take the color from
     func getColor(from point: CGPoint) -> UIColor {
@@ -265,6 +337,8 @@ final class MediaPlayer {
             }
             playableMedia.append(loadedMedia)
         }
+        startMediaIndex = 0
+        endMediaIndex = playableMedia.count - 1
     }
 
     private static func loadMedia(media: MediaPlayerContent) -> MediaPlayerContentLoaded? {
@@ -305,11 +379,37 @@ final class MediaPlayer {
     }
 
     private func playNextMedia() {
-        if currentlyPlayingMediaIndex + 1 < playableMedia.count {
-            currentlyPlayingMediaIndex += 1
+        if let index = playSingleFrameAtIndex {
+            currentlyPlayingMediaIndex = index
+        }
+        else if playableMedia.count == 0 {
+            currentlyPlayingMediaIndex = -1
+        }
+        else if playableMedia.count == 1 {
+            currentlyPlayingMediaIndex = 0
         }
         else {
-            currentlyPlayingMediaIndex = 0
+            switch playbackMode {
+            case .loop:
+                currentlyPlayingMediaIndex += 1
+                if currentlyPlayingMediaIndex > endMediaIndex {
+                    currentlyPlayingMediaIndex = startMediaIndex
+                }
+            case .reverse:
+                currentlyPlayingMediaIndex -= 1
+                if currentlyPlayingMediaIndex < startMediaIndex {
+                    currentlyPlayingMediaIndex = endMediaIndex
+                }
+            case .rebound:
+                if currentlyPlayingMediaIndex <= startMediaIndex {
+                    currentlyPlayingMediaIndex = startMediaIndex
+                    playbackDirection = 1
+                } else if currentlyPlayingMediaIndex >= endMediaIndex {
+                    currentlyPlayingMediaIndex = endMediaIndex
+                    playbackDirection = -1
+                }
+                currentlyPlayingMediaIndex += playbackDirection
+            }
         }
         playCurrentMedia()
     }
@@ -335,7 +435,7 @@ final class MediaPlayer {
         if nextImageTimer?.isValid ?? false {
             nextImageTimer?.invalidate()
         }
-        let displayTime = currentlyPlayingMedia?.interval ?? defaultTimeIntervalForImageSegments()
+        let displayTime = (currentlyPlayingMedia?.interval ?? delegate?.getDefaultTimeIntervalForImageSegments() ?? 1.0/6.0) / TimeInterval(rate)
         nextImageTimer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
             self?.playNextMedia()
         })
@@ -403,16 +503,8 @@ final class MediaPlayer {
         }
     }
 
-    private func defaultTimeIntervalForImageSegments() -> TimeInterval {
-        for media in playableMedia {
-            switch media {
-            case .image(_, _, _):
-                break
-            case .video(_, _, _):
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
-            }
-        }
-        return KanvasCameraTimes.onlyImagesFrameTimeInterval
+    @objc func videoFailedToPlayToEndTime(notification: Notification) {
+        print(notification.debugDescription)
     }
 
     private func refreshMediaAfterFilterChange() {

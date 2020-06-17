@@ -49,7 +49,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerControllerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         var mainActionMode: EditorView.MainActionMode = .confirm
@@ -103,16 +103,25 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private lazy var gifMakerController: GifMakerController = {
         let controller = GifMakerController()
-        controller.delegate = self
+        controller.delegate = gifMakerHandler
         return controller
     }()
-    
+
+    private lazy var gifMakerHandler: GifMakerHandler = {
+        let handler = GifMakerHandler(player: player)
+        handler.delegate = self
+        return handler
+    }()
+
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
 
     private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
-    private let segments: [CameraSegment]
+    private let originalSegments: [CameraSegment]
+    private var segments: [CameraSegment] {
+        return gifMakerHandler.segments ?? originalSegments
+    }
     private let assetsHandler: AssetsHandlerType
     private let exporterClass: MediaExporting.Type
     private var gifEncoderClass: GIFEncoder.Type
@@ -120,7 +129,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
-    
+
     private var shouldExportMediaAsGIF: Bool {
         get {
             return collectionController.shouldExportMediaAsGIF
@@ -204,7 +213,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          analyticsProvider: KanvasCameraAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.settings = settings
-        self.segments = segments
+        self.originalSegments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.analyticsProvider = analyticsProvider
@@ -251,8 +260,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         load(childViewController: textController, into: editorView.textMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         load(childViewController: gifMakerController, into: editorView.gifMakerMenuContainer)
-        
-        gifMakerController.setThumbnails(count: 30)
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {
@@ -581,7 +588,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             if settings.features.editorGIFMaker {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
                 showMainUI(false)
+                showLoading()
                 gifMakerController.showView(true)
+                gifMakerHandler.load(segments: segments) {
+                    self.player.stop()
+                    self.startPlayer()
+                    self.hideLoading()
+                }
                 editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
                     self.gifMakerController.showConfirmButton(true)
                 })
@@ -630,35 +643,28 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         openedMenu = editionOption
     }
     
-    // MARK: - GifMakerControllerDelegate
+    // MARK: - GifMakerHandlerDelegate & MediaPlayerDelegate
+
+    func getDefaultTimeIntervalForImageSegments() -> TimeInterval {
+        for media in segments {
+            switch media {
+            case .image(_, _, _, _):
+                break
+            case .video(_, _):
+                return KanvasCameraTimes.stopMotionFrameTimeInterval
+            }
+        }
+        return KanvasCameraTimes.onlyImagesFrameTimeInterval
+    }
+
+    // MARK: - GifMakerHandlerDelegate
     
     func didConfirmGif() {
         confirmEditionMenu()
     }
-    
-    func didStartTrimming() {
-        
-    }
-    
-    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        
-    }
-    
-    func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        
-    }
-    
-    func getThumbnail(at index: Int) -> UIImage? {
-        // TODO: Get correct image.
-        return KanvasCameraImages.flashOnImage
-    }
-    
-    func didSelectSpeed(_ speed: Float) {
-        
-    }
-    
-    func didSelectPlayback(_ option: PlaybackOption) {
-        
+
+    func setThumbnails(count: Int) {
+        gifMakerController.setThumbnails(count: count)
     }
     
     // MARK: - EditorFilterControllerDelegate
