@@ -1035,6 +1035,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 completion(nil)
                 return
             }
+            guard phAsset.mediaType == .image else {
+                completion(nil)
+                return
+            }
             let options = PHImageRequestOptions()
             options.version = .original
             options.deliveryMode = .highQualityFormat
