@@ -10,10 +10,13 @@ import UIKit
 /// Protocol for obtaining images.
 protocol ThumbnailCollectionControllerDelegate: class {
     
+    /// Obtains the full media duration
+    func getMediaDuration() -> TimeInterval?
+    
     /// Obtains a thumbnail for the background of the trimming tool
     ///
-    /// - Parameter index: the index of the requested image.
-    func getThumbnail(at index: Int) -> UIImage?
+    /// - Parameter timestamp: the time of the requested image.
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage?
     
     /// Called when the thumbnail collection starts scrolling.
     func didBeginScrolling()
@@ -75,9 +78,15 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? ThumbnailCollectionCell {
+        
+        if let cell = cell as? ThumbnailCollectionCell, let mediaDuration = delegate?.getMediaDuration() {
+            let collectionWidth = collectionView.contentSize.width - TrimView.selectorMargin * 2
+            let cellPercentage: CGFloat = CGFloat(indexPath.item) * ThumbnailCollectionCell.cellWidth / collectionWidth
+            let seconds = cellPercentage * CGFloat(mediaDuration)
+            let timeInterval = TimeInterval(seconds)
+            
             cell.delegate = self
-            cell.bindTo(indexPath.item)
+            cell.bindTo(timeInterval)
         }
         return cell
     }
@@ -88,8 +97,8 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     
     // MARK: - ThumbnailCollectionCellDelegate
     
-    func getThumbnail(at index: Int) -> UIImage? {
-        return delegate?.getThumbnail(at: index)
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
+        return delegate?.getThumbnail(at: timestamp)
     }
     
     // MARK: - Public interface

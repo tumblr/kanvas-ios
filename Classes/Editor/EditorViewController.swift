@@ -648,9 +648,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         
     }
     
-    func getThumbnail(at index: Int) -> UIImage? {
+    func getThumbnail(at thumbnail: TimeInterval) -> UIImage? {
         // TODO: Get correct image.
         return KanvasCameraImages.flashOnImage
+    }
+    
+    func getMediaDuration() -> TimeInterval? {
+        // TODO: Get correct time.
+        return TimeInterval(30)
     }
     
     func didSelectSpeed(_ speed: Float) {

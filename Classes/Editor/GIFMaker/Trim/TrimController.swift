@@ -26,10 +26,13 @@ protocol TrimControllerDelegate: class {
     ///  - endingPercentage: trimming starting moment expressed as a percentage.
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
     
+    /// Obtains the full media duration.
+    func getMediaDuration() -> TimeInterval?
+    
     /// Obtains a thumbnail for the background of the trimming tool
     ///
-    /// - Parameter index: the index of the requested image.
-    func getThumbnail(at index: Int) -> UIImage?
+    /// - Parameter timestamp: the time of the requested image.
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage?
 }
 
 /// Constants for TrimController
@@ -152,8 +155,12 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
         trimEnded()
     }
     
-    func getThumbnail(at index: Int) -> UIImage? {
-        return delegate?.getThumbnail(at: index)
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
+        return delegate?.getThumbnail(at: timestamp)
+    }
+    
+    func getMediaDuration() -> TimeInterval? {
+        return delegate?.getMediaDuration()
     }
     
     // MARK: - Private utilities
