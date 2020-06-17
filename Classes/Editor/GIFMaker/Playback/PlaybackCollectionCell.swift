@@ -7,22 +7,13 @@
 import Foundation
 import UIKit
 
-/// Protocol for tapping a cell.
-protocol PlaybackCollectionCellDelegate: class {
-    
-    /// Called when a cell is tapped
-    ///
-    /// - Parameter cell: the tapped cell
-    func didTap(cell: PlaybackCollectionCell)
-}
-
 /// Constants for PlaybackCollectionCell
 private struct Constants {
+    static let animationDuration: TimeInterval = 0.1
     static let height: CGFloat = 36
     static let width: CGFloat = 100
     static let cornerRadius: CGFloat = 18
-    static let backgroundColorActive: UIColor = .white
-    static let backgroundColorInactive: UIColor = .clear
+    static let backgroundColor: UIColor = .clear
     static let fontColorActive: UIColor = .black
     static let fontColorInactive: UIColor = .white
     static let font: UIFont = .guavaMedium()
@@ -33,21 +24,7 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     
     static let height: CGFloat = Constants.height
     static var width: CGFloat = Constants.width
-    weak var delegate: PlaybackCollectionCellDelegate?
-    private let button = UIButton()
-    
-    override var isSelected: Bool {
-        willSet {
-            if newValue {
-                button.backgroundColor = Constants.backgroundColorActive
-                button.setTitleColor(Constants.fontColorActive, for: .normal)
-            }
-            else {
-                button.backgroundColor = Constants.backgroundColorInactive
-                button.setTitleColor(Constants.fontColorInactive, for: .normal)
-            }
-        }
-    }
+    private let label = UILabel()
     
     // MARK: - Initializers
     
@@ -63,8 +40,8 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        button.isSelected = false
-        button.setTitle(nil, for: .normal)
+        setSelected(false, animated: false)
+        label.text = nil
     }
     
     // MARK: - Layout
@@ -74,28 +51,22 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     }
     
     private func setupLabel() {
-        contentView.addSubview(button)
-        button.accessibilityIdentifier = "Playback Collection Cell Label"
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = Constants.cornerRadius
-        button.titleLabel?.font = Constants.font
-        button.setTitleColor(Constants.fontColorInactive, for: .normal)
-        button.backgroundColor = Constants.backgroundColorInactive
+        contentView.addSubview(label)
+        label.accessibilityIdentifier = "Playback Collection Cell Label"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.layer.cornerRadius = Constants.cornerRadius
+        label.layer.masksToBounds = true
+        label.font = Constants.font
+        label.textColor = Constants.fontColorInactive
+        label.backgroundColor = Constants.backgroundColor
+        label.textAlignment = .center
         
         NSLayoutConstraint.activate([
-            button.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            button.widthAnchor.constraint(equalToConstant: PlaybackCollectionCell.width),
-            button.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height),
+            label.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            label.widthAnchor.constraint(equalToConstant: PlaybackCollectionCell.width),
+            label.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height),
         ])
-        
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    }
-    
-    // MARK: - Gesture recognizers
-    
-    @objc private func buttonTapped() {
-        delegate?.didTap(cell: self)
     }
     
     // MARK: - Public interface
@@ -104,6 +75,25 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter option: the option to take the name from.
     func bindTo(_ option: PlaybackOption) {
-        button.setTitle(option.description, for: .normal)
+        label.text = option.description
+    }
+    
+    /// Changes the color of the text with an optional animation.
+    ///
+    /// - Parameters:
+    ///  - selected: whether the option is selected or not.
+    ///  - animated: true to animate, false to change directly.
+    func setSelected(_ selected: Bool, animated: Bool = true) {
+        let action: () -> Void = { [weak self] in
+            self?.label.textColor = selected ? Constants.fontColorActive : Constants.fontColorInactive
+        }
+        
+        if animated {
+            UIView.transition(with: self, duration: Constants.animationDuration,
+                              options: .transitionCrossDissolve, animations: action)
+        }
+        else {
+            action()
+        }
     }
 }

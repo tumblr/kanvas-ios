@@ -172,8 +172,8 @@ final class GifMakerView: UIView {
         
         let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.trimMenuMargin
         NSLayoutConstraint.activate([
-            trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
-            trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
+            trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             trimMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             trimMenuContainer.heightAnchor.constraint(equalToConstant: TrimView.height),
         ])

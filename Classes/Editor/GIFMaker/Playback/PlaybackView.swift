@@ -7,9 +7,27 @@
 import Foundation
 import UIKit
 
+/// Protocol for tapping or swiping the options.
+protocol PlaybackViewDelegate: class {
+    
+    /// Called when a cell is tapped
+    ///
+    /// - Parameter indexPath: the index path of the cell where the tap occurred.
+    func didTapCell(at indexPath: IndexPath)
+    
+    /// Called when the options are swiped left
+    func didSwipeLeft()
+    
+    /// Called when the options are swiped right
+    func didSwipeRight()
+}
+
+
 /// Constants for PlaybackView
 private struct Constants {
+    static let animationDuration: TimeInterval = 0.1
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.65)
+    static let selectionViewColor: UIColor = .white
     static let cornerRadius: CGFloat = 18
 }
 
@@ -18,22 +36,37 @@ final class PlaybackView: UIView {
     
     static let height: CGFloat = PlaybackCollectionCell.height
     
+    weak var delegate: PlaybackViewDelegate?
+    
     let collectionView: UICollectionView
     private let layout: PlaybackCollectionViewLayout
+    private let selectionView: UIView
     
     var cellWidth: CGFloat {
         set { layout.estimatedItemSize.width = newValue }
         get { layout.estimatedItemSize.width }
     }
     
+    var selectionViewWidth: CGFloat {
+        willSet {
+            selectionView.widthAnchor.constraint(equalToConstant: newValue).isActive = true
+        }
+    }
+    
     // MARK: - Initializers
     
     init() {
+        selectionView = UIView()
         layout = PlaybackCollectionViewLayout()
         collectionView = PlaybackInnerCollectionView(frame: .zero, collectionViewLayout: layout)
+        selectionViewWidth = 0
         super.init(frame: .zero)
+        backgroundColor = Constants.backgroundColor
+        layer.cornerRadius = Constants.cornerRadius
+        layer.masksToBounds = true
         
-        setUpViews()
+        setupViews()
+        setupGestureRecognizers()
     }
     
     @available(*, unavailable, message: "use init() instead")
@@ -48,11 +81,83 @@ final class PlaybackView: UIView {
     
     // MARK: - Layout
     
-    private func setUpViews() {
+    private func setupViews() {
+        setupSelectionView()
+        setupCollectionView()
+    }
+    
+    /// Sets up a white rounded view.
+    private func setupSelectionView() {
+        addSubview(selectionView)
+        selectionView.accessibilityIdentifier = "Playback Selection View"
+        selectionView.translatesAutoresizingMaskIntoConstraints = false
+        selectionView.backgroundColor = Constants.selectionViewColor
+        selectionView.layer.cornerRadius = Constants.cornerRadius
+        
+        NSLayoutConstraint.activate([
+            selectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            selectionView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+            selectionView.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height)
+        ])
+    }
+    
+    /// Sets up the collection for the playback options.
+    private func setupCollectionView() {
         collectionView.accessibilityIdentifier = "Playback Collection View"
-        collectionView.backgroundColor = Constants.backgroundColor
-        collectionView.layer.cornerRadius = Constants.cornerRadius
+        collectionView.backgroundColor = .clear
         collectionView.add(into: self)
+    }
+    
+    // MARK: - Gesture recognizer
+    
+    /// Adds the gesture recognizers to the collection.
+    private func setupGestureRecognizers() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(optionsTapped(recognizer:)))
+        let leftSwipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(optionsSwiped(recognizer:)))
+        let rightSwipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(optionsSwiped(recognizer:)))
+        leftSwipeRecognizer.direction = .left
+        rightSwipeRecognizer.direction = .right
+        collectionView.addGestureRecognizer(tapRecognizer)
+        collectionView.addGestureRecognizer(leftSwipeRecognizer)
+        collectionView.addGestureRecognizer(rightSwipeRecognizer)
+    }
+    
+    @objc private func optionsTapped(recognizer: UITapGestureRecognizer) {
+        let location = recognizer.location(in: superview)
+        if let indexPath = collectionView.indexPathForItem(at: location) {
+            delegate?.didTapCell(at: indexPath)
+        }
+    }
+    
+    @objc private func optionsSwiped(recognizer: UISwipeGestureRecognizer) {
+        switch recognizer.direction {
+        case .left:
+            delegate?.didSwipeLeft()
+        case .right:
+            delegate?.didSwipeRight()
+        default:
+            break
+        }
+    }
+    
+    // MARK: - Public interface
+    
+    /// Moves the selection view to a specified cell.
+    ///
+    /// - Parameters:
+    ///  - cell: the cell to which the selection view will move.
+    ///  - animated: whether to animate the movement or not.
+    func select(cell: PlaybackCollectionCell, animated: Bool = true) {
+        let action: () -> Void = { [weak self] in
+            self?.selectionView.center = cell.center
+        }
+        
+        if animated {
+            UIView.animate(withDuration: Constants.animationDuration, animations: action)
+        }
+        else {
+            action()
+        }
     }
 }
 
