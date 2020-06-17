@@ -32,11 +32,27 @@ protocol TrimControllerDelegate: class {
     func getThumbnail(at index: Int) -> UIImage?
 }
 
+/// Constants for TrimController
+private struct Constants {
+    static let maxSelectableTime: TimeInterval = 3
+}
+
 /// A view controller that contains the trim menu
 final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollectionControllerDelegate {
     
     weak var delegate: TrimControllerDelegate?
+    
+    var movingHandles: Bool = false
+    var scrollingThumbnails: Bool = false
         
+    private lazy var timeFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        formatter.unitsStyle = .positional
+        return formatter
+    }()
+    
     private lazy var trimView: TrimView = {
         let view = TrimView()
         view.delegate = self
@@ -84,24 +100,111 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
         trimView.alpha = 0
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let cellsFrame = thumbnailController.getCellsFrame()
+        trimView.setOverlay(cellsFrame: cellsFrame)
+    }
+    
     // MARK: - TrimViewDelegate
     
     func didStartMovingTrimArea() {
-        delegate?.didStartTrimming()
+        trimStarted()
+        movingHandles = true
     }
     
-    func didMoveTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        delegate?.didTrim(from: startingPercentage, to: endingPercentage)
+    func didMoveTrimArea() {
+        trimChanged()
     }
     
-    func didEndMovingTrimArea(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        delegate?.didEndTrimming(from: startingPercentage, to: endingPercentage)
+    func didEndMovingTrimArea() {
+        movingHandles = false
+        trimEnded()
+    }
+    
+    func getLeftTimeIndicatorText() -> String {
+        let start = trimView.getStartingPercentage()
+        let time = start.d * Constants.maxSelectableTime / 100
+        return format(time)
+    }
+    
+    func getRightTimeIndicatorText() -> String {
+        let start = trimView.getEndingPercentage()
+        let time = start.d * Constants.maxSelectableTime / 100
+        return format(time)
     }
     
     // MARK: - ThumbnailCollectionControllerDelegate
     
+    func didBeginScrolling() {
+        trimStarted()
+        scrollingThumbnails = true
+    }
+    
+    func didScroll() {
+        let cellsFrame = thumbnailController.getCellsFrame()
+        trimView.setOverlay(cellsFrame: cellsFrame)
+        trimChanged()
+    }
+    
+    func didEndScrolling() {
+        scrollingThumbnails = false
+        trimEnded()
+    }
+    
     func getThumbnail(at index: Int) -> UIImage? {
         return delegate?.getThumbnail(at: index)
+    }
+    
+    // MARK: - Private utilities
+    
+    private func trimStarted() {
+        guard !movingHandles, !scrollingThumbnails else { return }
+        delegate?.didStartTrimming()
+    }
+    
+    private func trimChanged() {
+        let start = calculateStartingPercentage()
+        let end = calculateEndingPercentage()
+        delegate?.didTrim(from: start, to: end)
+    }
+    
+    private func trimEnded() {
+        guard !movingHandles, !scrollingThumbnails else { return }
+        let start = calculateStartingPercentage()
+        let end = calculateEndingPercentage()
+        delegate?.didEndTrimming(from: start, to: end)
+    }
+        
+    private func calculateStartingPercentage() -> CGFloat {
+        let collectionStart = thumbnailController.getStartOfVisibleRange()
+        let collectionEnd = thumbnailController.getEndOfVisibleRange()
+        let handleStart = trimView.getStartingPercentage()
+        
+        let visibleRange = collectionEnd - collectionStart
+        return collectionStart + handleStart * visibleRange / 100
+    }
+    
+    private func calculateEndingPercentage() -> CGFloat {
+        let collectionStart = thumbnailController.getStartOfVisibleRange()
+        let collectionEnd = thumbnailController.getEndOfVisibleRange()
+        let handleEnd = trimView.getEndingPercentage()
+        
+        let visibleRange = collectionEnd - collectionStart
+        return collectionStart + handleEnd * visibleRange / 100
+    }
+    
+    /// Create a string from a time interval using the format 'mm:ss'
+    /// or 'm:ss' if there is only one digit for the minutes.
+    ///
+    /// - Parameter time: the time interval.
+    private func format(_ time: TimeInterval) -> String {
+        guard var text = timeFormatter.string(from: time) else { return "" }
+        if text.hasPrefix("0") {
+            text = String(text.dropFirst())
+        }
+        
+        return text
     }
     
     // MARK: - Public interface
@@ -110,6 +213,8 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
+        let cellsFrame = thumbnailController.getCellsFrame()
+        trimView.setOverlay(cellsFrame: cellsFrame)
         trimView.showView(show)
     }
     
