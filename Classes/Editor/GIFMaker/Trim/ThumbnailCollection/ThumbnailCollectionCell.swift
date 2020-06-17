@@ -18,7 +18,7 @@ protocol ThumbnailCollectionCellDelegate: class {
 
 /// Constants for ThumbnailCollectionCell
 private struct Constants {
-    static let imageHeight: CGFloat = TrimView.height
+    static let imageHeight: CGFloat = 63
     static let imageWidth: CGFloat = 50
     static let loadingViewBackgroundColor: UIColor = .clear
     static let loadingViewColor: UIColor = .lightGray
@@ -71,8 +71,8 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             mainView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             mainView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            mainView.heightAnchor.constraint(equalToConstant: Constants.imageHeight),
-            mainView.widthAnchor.constraint(equalToConstant: Constants.imageWidth)
+            mainView.heightAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellHeight),
+            mainView.widthAnchor.constraint(equalToConstant: ThumbnailCollectionCell.cellWidth)
         ])
     }
     

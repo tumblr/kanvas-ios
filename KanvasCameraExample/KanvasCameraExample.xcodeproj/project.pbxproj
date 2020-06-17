@@ -31,6 +31,7 @@
 		650A834124646A3E0071BF9D /* GifMakerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A834024646A3E0071BF9D /* GifMakerViewTests.swift */; };
 		650B2A1E2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf in Resources */ = {isa = PBXBuildFile; fileRef = 650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */; };
 		6512C1B723DF5DB500FDE2BD /* SliderViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6512C1B623DF5DB500FDE2BD /* SliderViewTests.swift */; };
+		6515A24C24882FB300267A88 /* TimeIndicatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515A24B24882FB300267A88 /* TimeIndicatorTests.swift */; };
 		651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */; };
 		651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */; };
 		651D4B6122CE683B004AB75C /* DrawingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B6022CE683B004AB75C /* DrawingViewTests.swift */; };
@@ -227,6 +228,7 @@
 		650A834024646A3E0071BF9D /* GifMakerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerViewTests.swift; sourceTree = "<group>"; };
 		650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Fairwater Script Regular_Tumblr.otf"; path = "../../../../../Assets/Fonts/Fairwater/Fairwater Script Regular_Tumblr.otf"; sourceTree = "<group>"; };
 		6512C1B623DF5DB500FDE2BD /* SliderViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderViewTests.swift; sourceTree = "<group>"; };
+		6515A24B24882FB300267A88 /* TimeIndicatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIndicatorTests.swift; sourceTree = "<group>"; };
 		651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularImageViewTests.swift; sourceTree = "<group>"; };
 		651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingControllerTests.swift; sourceTree = "<group>"; };
 		651D4B6022CE683B004AB75C /* DrawingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingViewTests.swift; sourceTree = "<group>"; };
@@ -547,6 +549,7 @@
 				653E49522472FC11006F80A2 /* TrimControllerTests.swift */,
 				653E49542472FC19006F80A2 /* TrimViewTests.swift */,
 				653E49562472FC2E006F80A2 /* TrimAreaTests.swift */,
+				6515A24B24882FB300267A88 /* TimeIndicatorTests.swift */,
 			);
 			path = Trim;
 			sourceTree = "<group>";
@@ -1248,6 +1251,7 @@
 				658A329A239FFD9B00EEC1D3 /* StickerTypeCollectionControllerTests.swift in Sources */,
 				ABE49907213712E100379F7F /* OptionsStackViewTests.swift in Sources */,
 				AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */,
+				6515A24C24882FB300267A88 /* TimeIndicatorTests.swift in Sources */,
 				6591EE48239E9EBC007C590B /* LoadingIndicatorViewTests.swift in Sources */,
 				ABE498FC21370DFD00379F7F /* MediaClipsCollectionControllerTests.swift in Sources */,
 				651DEBA72209F17400476F22 /* ConicalGradientLayerTests.swift in Sources */,

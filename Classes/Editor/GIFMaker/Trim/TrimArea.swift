@@ -16,6 +16,7 @@ protocol TrimAreaDelegate: class {
 /// Constants for Trim area
 private struct Constants {
     // General
+    static let height: CGFloat = 71
     static let selectorInset: CGFloat = -20
     static let cornerRadius: CGFloat = 8
     static let backgroundColor: UIColor = .tumblrBrightBlue
@@ -37,7 +38,9 @@ final class TrimArea: IgnoreTouchesView {
     
     weak var delegate: TrimAreaDelegate?
     
+    static let height: CGFloat = Constants.height
     static let selectorWidth = Constants.selectorSideWidth
+    static let cornerRadius = Constants.cornerRadius
     
     private let leftSelector: TrimAreaSelector
     private let rightSelector: TrimAreaSelector
@@ -82,7 +85,6 @@ final class TrimArea: IgnoreTouchesView {
     private func setupLeftSelector() {
         leftSelector.accessibilityIdentifier = "Trim Area Left Selector"
         leftSelector.translatesAutoresizingMaskIntoConstraints = false
-        leftSelector.backgroundColor = Constants.backgroundColor
         addSubview(leftSelector)
         
         NSLayoutConstraint.activate([
@@ -100,7 +102,6 @@ final class TrimArea: IgnoreTouchesView {
     private func setupRightSelector() {
         rightSelector.accessibilityIdentifier = "Trim Area Right Selector"
         rightSelector.translatesAutoresizingMaskIntoConstraints = false
-        rightSelector.backgroundColor = Constants.backgroundColor
         addSubview(rightSelector)
         
         NSLayoutConstraint.activate([
@@ -164,8 +165,26 @@ final class TrimArea: IgnoreTouchesView {
         return hitFrame.contains(point)
     }
     
+    /// Shows or hides the white lines in the selectors.
+    ///
+    /// - Parameter show: true to show, false to hide.
+    func showLines(_ show: Bool) {
+        leftSelector.showLine(false)
+        rightSelector.showLine(false)
+    }
+    
+    /// Changes the background color of the view.
+    ///
+    /// - Parameter color: the new color.
+    func setBackgroundColor(_ color: UIColor) {
+        topBorder.backgroundColor = color
+        bottomBorder.backgroundColor = color
+        leftSelector.backgroundColor = color
+        rightSelector.backgroundColor = color
+    }
 }
 
+/// Handle at the side of the trim area.
 private class TrimAreaSelector: UIView {
     
     private let innerLine: UIView
@@ -185,6 +204,7 @@ private class TrimAreaSelector: UIView {
     // MARK: - Layout
     
     private func setupViews() {
+        backgroundColor = Constants.backgroundColor
         setupInnerLine()
     }
     
@@ -210,5 +230,14 @@ private class TrimAreaSelector: UIView {
         let hitTestEdgeInsets = UIEdgeInsets(top: 0, left: Constants.selectorInset, bottom: 0, right: Constants.selectorInset)
         let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
         return hitFrame.contains(point)
+    }
+    
+    // MARK: - Public interface
+    
+    /// Shows or hides the white line
+    ///
+    /// - Parameter show: true to show, false to hide.
+    func showLine(_ show: Bool) {
+        innerLine.alpha = show ? 1 : 0
     }
 }
