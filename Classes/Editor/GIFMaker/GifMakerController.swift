@@ -204,11 +204,4 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     func showConfirmButton(_ show: Bool) {
         gifMakerView.showConfirmButton(show)
     }
-    
-    /// Sets the size of the thumbnail collection
-    ///
-    /// - Parameter count: the new size
-    func setThumbnails(count: Int) {
-        trimController.setThumbnails(count: count)
-    }
 }

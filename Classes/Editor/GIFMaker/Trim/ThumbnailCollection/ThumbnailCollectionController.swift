@@ -73,14 +73,18 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return itemCount
+        guard let mediaDuration = delegate?.getMediaDuration() else { return 0 }
+        let timePerCell = calculateTimePerCell()
+        let cells = mediaDuration.f / timePerCell.f
+        let size = Int(cells.rounded(.up))
+        return size
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCollectionCell.identifier, for: indexPath)
         
-        if let cell = cell as? ThumbnailCollectionCell, let mediaDuration = delegate?.getMediaDuration() {
-            let timeInterval = calculateTimestamp(for: indexPath, mediaDuration: mediaDuration)
+        if let cell = cell as? ThumbnailCollectionCell {
+            let timeInterval = calculateTimestamp(for: indexPath)
             cell.delegate = self
             cell.bindTo(timeInterval)
         }
@@ -98,14 +102,6 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     // MARK: - Public interface
-    
-    /// Sets the size of the thumbnail collection
-    ///
-    /// - Parameter count: the new size
-    func setThumbnails(count: Int) {
-        self.itemCount = count
-        thumbnailCollectionView.collectionView.reloadData()
-    }
     
     /// Obtains the frame that contains the visible cells.
     func getCellsFrame() -> CGRect {
@@ -171,11 +167,17 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     ///
     /// - Parameters:
     ///  - indexPath: the index path of the cell.
-    ///  - mediaDuration: the full duration of the media represented in the collection.
-    private func calculateTimestamp(for indexPath: IndexPath, mediaDuration: TimeInterval) -> TimeInterval {
-        let collectionWidth = thumbnailCollectionView.collectionView.contentSize.width - TrimView.selectorMargin * 2
-        let cellPercentage: CGFloat = CGFloat(indexPath.item) * ThumbnailCollectionCell.cellWidth / collectionWidth
-        let cellSeconds = cellPercentage * CGFloat(mediaDuration)
-        return TimeInterval(cellSeconds)
+    private func calculateTimestamp(for indexPath: IndexPath) -> TimeInterval {
+        let timePerCell = calculateTimePerCell()
+        let timeForCurrentCell = timePerCell.f * indexPath.item.f
+        return TimeInterval(timeForCurrentCell)
+    }
+    
+    /// Calculates the time interval that each cell represents.
+    private func calculateTimePerCell() -> TimeInterval {
+        let secondsBetweenHandles: CGFloat = CGFloat(TrimController.maxSelectableTime)
+        let widthBetweenHandles = thumbnailCollectionView.collectionView.visibleSize.width - TrimView.selectorMargin * 2
+        let numberOfCellsThatFitBetweenHandles = widthBetweenHandles / ThumbnailCollectionCell.cellWidth
+        return TimeInterval(secondsBetweenHandles / numberOfCellsThatFitBetweenHandles)
     }
 }

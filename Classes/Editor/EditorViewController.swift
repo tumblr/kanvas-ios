@@ -251,9 +251,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         load(childViewController: textController, into: editorView.textMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         load(childViewController: gifMakerController, into: editorView.gifMakerMenuContainer)
-        
-        // TODO: Replace with correct call.
-        gifMakerController.setThumbnails(count: 30)
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {

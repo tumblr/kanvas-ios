@@ -24,7 +24,6 @@ final class ThumbnailCollectionControllerTests: FBSnapshotTestCase {
         controller.delegate = delegate
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: ThumbnailCollectionCell.cellHeight)
         controller.view.backgroundColor = .black
-        controller.setThumbnails(count: 4)
         controller.view.setNeedsDisplay()
         
         FBSnapshotVerifyView(controller.view)

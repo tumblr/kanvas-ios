@@ -45,6 +45,8 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     
     weak var delegate: TrimControllerDelegate?
     
+    static let maxSelectableTime: TimeInterval = Constants.maxSelectableTime
+    
     var movingHandles: Bool = false
     var scrollingThumbnails: Bool = false
         
@@ -223,12 +225,5 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
         let cellsFrame = thumbnailController.getCellsFrame()
         trimView.setOverlay(cellsFrame: cellsFrame)
         trimView.showView(show)
-    }
-    
-    /// Sets the size of the thumbnail collection
-    ///
-    /// - Parameter count: the new size
-    func setThumbnails(count: Int) {
-        thumbnailController.setThumbnails(count: count)
     }
 }
