@@ -465,7 +465,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
-        exporter.export(frames: segments.map{(image: $0.image!, interval: $0.timeInterval!)}) { orderedFrames in
+        let frames = segments.compactMap { (segment) -> MediaFrame? in
+            guard let image = segment.image, let interval = segment.timeInterval else {
+                assertionFailure("Frame can't be missing a UIImage or TimeInterval")
+                return nil
+            }
+            return (image: image, interval: interval)
+        }
+        exporter.export(frames: frames) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
                 self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)

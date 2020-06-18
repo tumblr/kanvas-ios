@@ -124,13 +124,19 @@ final class GIFEncoderImageIO: GIFEncoder {
             CGImageDestinationSetProperties(destination, getFileProperties(loopCount) as CFDictionary)
 
             for frame in frames {
-                var image = frame.image.cgImage!
-                //image = gifSize.scale(image: image) ?? image
-                CGImageDestinationAddImage(destination, image, getFrameProperties(frame.interval) as CFDictionary)
+                if let image = frame.image.cgImage {
+                    //image = gifSize.scale(image: image) ?? image
+                    CGImageDestinationAddImage(destination, image, getFrameProperties(frame.interval) as CFDictionary)
+                }
+                else {
+                    assertionFailure("GIF frame missing")
+                    completionMain(nil)
+                    return
+                }
             }
 
             guard CGImageDestinationFinalize(destination) else {
-                print("Failed to finalize GIF destination")
+                assertionFailure("Failed to finalize GIF destination")
                 completionMain(nil)
                 return
             }
@@ -204,14 +210,14 @@ final class GIFEncoderImageIO: GIFEncoder {
                     image = gifSize.scale(image: image) ?? image
                     CGImageDestinationAddImage(destination, image, getFrameProperties(1.0 / Double(framesPerSecond)) as CFDictionary)
                 } catch {
-                    print("Error copying GIF frame: \(error)")
+                    assertionFailure("Error copying GIF frame: \(error)")
                     completionMain(nil)
                     return
                 }
             }
 
             guard CGImageDestinationFinalize(destination) else {
-                print("Failed to finalize GIF destination")
+                assertionFailure("Failed to finalize GIF destination")
                 completionMain(nil)
                 return
             }
