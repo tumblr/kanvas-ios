@@ -207,7 +207,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         currentRecordingMode = mode
         recordingDelegate?.cameraWillTakeVideo()
 
-        setupAssetWriter(url: NSURL.createNewVideoURL())
+        setupAssetWriter(url: try? URL.videoURL())
         guard let assetWriter = assetWriter, let pixelBufferAdaptor = assetWriterPixelBufferInput else {
             return
         }
@@ -302,7 +302,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         currentRecordingMode = settings.features.newCameraModes ? .gif : .loop
         recordingDelegate?.cameraWillTakeVideo()
 
-        setupAssetWriter(url: NSURL.createNewVideoURL())
+        setupAssetWriter(url: try? URL.videoURL())
 
         gifVideoOutputHandler.takeGifMovie(assetWriter: assetWriter, pixelBufferAdaptor: assetWriterPixelBufferInput, videoInput: assetWriterVideoInput, audioInput: assetWriterAudioInput, numberOfFrames: numberOfFrames, framesPerSecond: framesPerSecond) { [weak self] success in
             guard let strongSelf = self else { return }
@@ -341,7 +341,7 @@ extension CameraRecorder: CameraRecordingProtocol {
     }
 
     func reset() {
-        setupAssetWriter(url: NSURL.createNewVideoURL())
+        setupAssetWriter(url: try? URL.videoURL())
         segmentsHandler.reset(removeFromDisk: true)
     }
 

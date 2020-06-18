@@ -447,7 +447,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameter size: resolution of video
     /// - Returns: URL?: the url of the local video
     private func setupAssetWriter(size: CGSize) -> URL? {
-        guard let url = NSURL.createNewVideoURL() else {
+        guard let url = try? URL.videoURL() else {
             return nil
         }
         do {
@@ -473,7 +473,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             return
         }
         assetExport.outputFileType = .mp4
-        let finalURL = NSURL.createNewVideoURL()
+        let finalURL = try? URL.videoURL()
         assetExport.outputURL = finalURL
 
         let mediaInfo: TumblrMediaInfo = {

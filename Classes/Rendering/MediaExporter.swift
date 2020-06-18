@@ -108,7 +108,7 @@ final class MediaExporter: MediaExporting {
             return
         }
 
-        let outputURL = NSURL.createNewVideoURL()
+        let outputURL = try? URL.videoURL()
         let exportSession = AVAssetExportSession(asset: asset, presetName: presetName)
         exportSession?.outputFileType = .mov
         exportSession?.outputURL = outputURL
