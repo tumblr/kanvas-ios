@@ -12,6 +12,7 @@ import CoreGraphics
 protocol GIFEncoder {
     init()
     func encode(video url: URL, loopCount: Int, framesPerSecond: Int, completion: @escaping (URL?) -> Void)
+    func encode(frames: [(image: UIImage, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void)
 }
 
 enum GIFSize {
@@ -81,6 +82,61 @@ final class GIFEncoderImageIO: GIFEncoder {
 
     init() {
 
+    }
+
+    func encode(frames: [(image: UIImage, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void) {
+
+        let completionMain = { (url: URL?) in
+            DispatchQueue.main.async {
+                completion(url)
+            }
+        }
+
+        DispatchQueue.global(qos: .default).async {
+
+            let getFileProperties = { (loopCount: Int) in
+                return [
+                    kCGImagePropertyGIFDictionary: [
+                        kCGImagePropertyGIFLoopCount: loopCount
+                    ]
+                ]
+            }
+
+            let getFrameProperties = { (delayTime: TimeInterval) in
+                return [
+                    kCGImagePropertyGIFDictionary: [
+                        kCGImagePropertyGIFDelayTime: delayTime,
+                        kCGImagePropertyColorModel: kCGImagePropertyColorModelRGB,
+                    ]
+                ]
+            }
+
+//            let gifSize = GIFSize(size: frames.first!.image.size)
+
+            let timeEncodedFileName = String(format: "%@-%lu.gif", "kanvas-gif", Date().timeIntervalSince1970)
+            let temporaryFile = NSTemporaryDirectory().appending(timeEncodedFileName)
+            let fileURL = URL(fileURLWithPath: temporaryFile)
+
+            guard let destination = CGImageDestinationCreateWithURL(fileURL as CFURL, kUTTypeGIF, frames.count, nil) else {
+                completionMain(nil)
+                return
+            }
+            CGImageDestinationSetProperties(destination, getFileProperties(loopCount) as CFDictionary)
+
+            for frame in frames {
+                var image = frame.image.cgImage!
+                //image = gifSize.scale(image: image) ?? image
+                CGImageDestinationAddImage(destination, image, getFrameProperties(frame.interval) as CFDictionary)
+            }
+
+            guard CGImageDestinationFinalize(destination) else {
+                print("Failed to finalize GIF destination")
+                completionMain(nil)
+                return
+            }
+
+            completionMain(fileURL)
+        }
     }
 
     func encode(video url: URL, loopCount: Int, framesPerSecond: Int, completion: @escaping (URL?) -> Void) {

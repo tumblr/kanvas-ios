@@ -399,6 +399,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
         return false
     }
+
+    private func allSegmentsAreImages() -> Bool {
+        for segment in originalSegments {
+            if segment.image == nil {
+                return false
+            }
+        }
+        return true
+    }
     
     private func startExporting(action: KanvasExportAction) {
         player.stop()
@@ -418,19 +427,24 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
             }
             else {
-                // Maybe try to avoid making this a video first and just make a GIF out of the frames...
-                // This is not straight-forward right now because the media exporter only works on videos or images
-                assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
-                    guard let self = self else {
-                        return
+                if allSegmentsAreImages() {
+                    self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? TumblrMediaInfo(source: .kanvas_camera), exportAction: action)
+                }
+                else {
+                    // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
+                    // It might be nice in the future to create a GIF directly from segments.
+                    assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+                        guard let self = self else {
+                            return
+                        }
+                        guard let url = url, let mediaInfo = mediaInfo else {
+                            self.hideLoading()
+                            self.handleExportError()
+                            return
+                        }
+                        let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale).seconds / KanvasCameraTimes.onlyImagesFrameTime.seconds)
+                        self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
                     }
-                    guard let url = url, let mediaInfo = mediaInfo else {
-                        self.hideLoading()
-                        self.handleExportError()
-                        return
-                    }
-                    let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale).seconds / KanvasCameraTimes.onlyImagesFrameTime.seconds)
-                    self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
                 }
             }
         }
@@ -442,6 +456,22 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     return
                 }
                 self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? TumblrMediaInfo(source: .media_library), exportAction: action)
+            }
+        }
+    }
+
+    private func createFinalGIF(segments: [CameraSegment], mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+        let exporter = exporterClass.init()
+        exporter.filterType = filterType ?? .passthrough
+        exporter.imageOverlays = imageOverlays()
+        let segments = gifMakerHandler.trimmedSegments(segments)
+        exporter.export(frames: segments.map{(image: $0.image!, interval: $0.timeInterval!)}) { orderedFrames in
+            let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
+            self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
+                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                performUIUpdate {
+                    self.hideLoading()
+                }
             }
         }
     }

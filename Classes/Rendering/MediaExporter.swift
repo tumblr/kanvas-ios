@@ -27,8 +27,10 @@ protocol MediaExporting: class {
     var imageOverlays: [CGImage] { get set }
     init()
     func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
+    func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
     func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void)
 }
+
 
 /// Exports media with frame-by-frame OpenGL processing
 final class MediaExporter: MediaExporting {
@@ -82,6 +84,30 @@ final class MediaExporter: MediaExporting {
                 return
             }
             completion(processedImage, nil)
+        }
+    }
+
+    func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void) {
+        var processedFrames: [Int: (image: UIImage, interval: TimeInterval)] = [:]
+        let group = DispatchGroup()
+        for (i, frame) in frames.enumerated() {
+            group.enter()
+            DispatchQueue.global(qos: .default).async {
+                self.export(image: frame.image, time: frame.interval) { (image, error) in
+                    guard error == nil, let image = image else {
+                        group.leave()
+                        return
+                    }
+                    processedFrames[i] = (image: image, interval: frame.interval)
+                    group.leave()
+                }
+            }
+        }
+        group.notify(queue: .main) {
+            let orderedFrames = processedFrames.keys.sorted().reduce([]) { (partialOrderedFrames, index) in
+                return partialOrderedFrames + [processedFrames[index]!]
+            }
+            completion(orderedFrames)
         }
     }
 

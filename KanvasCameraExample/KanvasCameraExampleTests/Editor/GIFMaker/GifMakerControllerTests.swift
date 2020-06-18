@@ -19,7 +19,7 @@ final class GifMakerControllerTests: FBSnapshotTestCase {
     }
     
     func newViewController() -> GifMakerController {
-        let controller = GifMakerController()
+        let controller = GifMakerController(segments: [])
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         controller.view.setNeedsDisplay()
         return controller

@@ -28,6 +28,8 @@ class GifMakerHandler {
 
     private let player: MediaPlayer
 
+    private var settings: GIFMakerSettings?
+
     private var frames: [MediaFrame]? {
         didSet {
             guard let frames = frames else {
@@ -40,6 +42,7 @@ class GifMakerHandler {
             segments = frames.map { frame in
                 CameraSegment.image(frame.image, nil, frame.interval, .init(source: .kanvas_camera))
             }
+            settings = GIFMakerSettings(rate: 1, startIndex: 0, endIndex: frames.count - 1, playbackMode: .loop)
         }
     }
 
@@ -60,6 +63,44 @@ class GifMakerHandler {
                 completion()
             }
         }
+    }
+
+    func trimmedSegments(_ segments: [CameraSegment]) -> [CameraSegment] {
+        guard let settings = settings else {
+            return []
+        }
+        return Array(segments[settings.startIndex...settings.endIndex])
+    }
+
+    func framesForPlayback(_ frames: [MediaFrame]) -> [MediaFrame] {
+        guard let settings = settings else {
+            return []
+        }
+
+        let rate = TimeInterval(settings.rate)
+
+        let getRateAdjustedFrames = { (frames: [MediaFrame]) -> [MediaFrame] in
+            return frames.map { frame in
+                return (image: frame.image, interval: frame.interval / rate)
+            }
+        }
+
+        let getPlaybackFrames = { (frames: [MediaFrame]) -> [MediaFrame] in
+            switch settings.playbackMode {
+            case .loop:
+                return frames
+            case .rebound:
+                return frames + frames.reversed()[1...frames.count - 2]
+            case .reverse:
+                return frames.reversed()
+            }
+        }
+
+        let rateAdjustedFrames = getRateAdjustedFrames(frames)
+
+        let playbackFrames = getPlaybackFrames(rateAdjustedFrames)
+
+        return playbackFrames
     }
 
     private func loadFrames(from segments: [CameraSegment], defaultInterval: TimeInterval, completion: @escaping ([MediaFrame]) -> ()) {
@@ -138,6 +179,9 @@ extension GifMakerHandler : GifMakerControllerDelegate {
         player.endMediaIndex = endIndex
 
         player.cancelPlayingSingleFrame()
+
+        settings?.startIndex = startIndex
+        settings?.endIndex = endIndex
     }
 
     func getThumbnail(at index: Int) -> UIImage? {
@@ -146,9 +190,11 @@ extension GifMakerHandler : GifMakerControllerDelegate {
 
     func didSelectSpeed(_ speed: Float) {
         player.rate = speed
+        settings?.rate = speed
     }
 
     func didSelectPlayback(_ option: PlaybackOption) {
         player.playbackMode = MediaPlayerPlaybackMode(from: option)
+        settings?.playbackMode = option
     }
 }
