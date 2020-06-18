@@ -404,7 +404,8 @@ final class MediaPlayer {
                 if currentlyPlayingMediaIndex <= startMediaIndex {
                     currentlyPlayingMediaIndex = startMediaIndex
                     playbackDirection = 1
-                } else if currentlyPlayingMediaIndex >= endMediaIndex {
+                }
+                else if currentlyPlayingMediaIndex >= endMediaIndex {
                     currentlyPlayingMediaIndex = endMediaIndex
                     playbackDirection = -1
                 }
