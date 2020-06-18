@@ -136,7 +136,7 @@ class GifMakerHandler {
     }
 }
 
-extension GifMakerHandler : GifMakerControllerDelegate {
+extension GifMakerHandler: GifMakerControllerDelegate {
 
     func didConfirmGif() {
         delegate?.didConfirmGif()
