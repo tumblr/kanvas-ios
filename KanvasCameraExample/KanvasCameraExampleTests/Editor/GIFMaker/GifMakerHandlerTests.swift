@@ -4,4 +4,14 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import Foundation
+@testable import KanvasCamera
+import XCTest
+
+final class GifMakerHandlerTests: XCTestCase {
+
+    func testGifMakerHandler() {
+        let handler = GifMakerHandler(player: MediaPlayer(renderer: nil))
+        XCTAssert(type(of: handler) == GifMakerHandler.self)
+    }
+
+}

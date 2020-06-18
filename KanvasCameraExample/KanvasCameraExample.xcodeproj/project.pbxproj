@@ -183,6 +183,7 @@
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
 		BF01710E2498592F00639E49 /* URL+MediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF01710D2498592F00639E49 /* URL+MediaTests.swift */; };
+		BF017114249B2C3700639E49 /* GifMakerHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */; };
 		BF428955238637F900D51A07 /* String+UTF16SubstringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF428954238637F900D51A07 /* String+UTF16SubstringTests.swift */; };
 		BF5AD6652460C7B50077481B /* GIFDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */; };
 		BF5AD6682460DA6F0077481B /* colors.gif in Resources */ = {isa = PBXBuildFile; fileRef = BF5AD6662460CB290077481B /* colors.gif */; };
@@ -386,6 +387,7 @@
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
 		BF01710D2498592F00639E49 /* URL+MediaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+MediaTests.swift"; sourceTree = "<group>"; };
+		BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerHandlerTests.swift; sourceTree = "<group>"; };
 		BF428954238637F900D51A07 /* String+UTF16SubstringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UTF16SubstringTests.swift"; sourceTree = "<group>"; };
 		BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFDecoderTests.swift; sourceTree = "<group>"; };
 		BF5AD6662460CB290077481B /* colors.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = colors.gif; sourceTree = "<group>"; };
@@ -480,6 +482,7 @@
 				653E49512472FBFF006F80A2 /* Trim */,
 				650A833E24646A350071BF9D /* GifMakerControllerTests.swift */,
 				650A834024646A3E0071BF9D /* GifMakerViewTests.swift */,
+				BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */,
 			);
 			path = GIFMaker;
 			sourceTree = "<group>";
@@ -1308,6 +1311,7 @@
 				658A329E239FFD9B00EEC1D3 /* StickerProviderStub.swift in Sources */,
 				654277352481D0B500B3FC3A /* PlaybackViewTests.swift in Sources */,
 				0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */,
+				BF017114249B2C3700639E49 /* GifMakerHandlerTests.swift in Sources */,
 				65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */,
 				0EAE0CB22139B966004CD7FF /* CameraPreviewViewTests.swift in Sources */,
 				6512C1B723DF5DB500FDE2BD /* SliderViewTests.swift in Sources */,
