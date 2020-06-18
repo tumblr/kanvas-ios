@@ -80,11 +80,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCollectionCell.identifier, for: indexPath)
         
         if let cell = cell as? ThumbnailCollectionCell, let mediaDuration = delegate?.getMediaDuration() {
-            let collectionWidth = collectionView.contentSize.width - TrimView.selectorMargin * 2
-            let cellPercentage: CGFloat = CGFloat(indexPath.item) * ThumbnailCollectionCell.cellWidth / collectionWidth
-            let seconds = cellPercentage * CGFloat(mediaDuration)
-            let timeInterval = TimeInterval(seconds)
-            
+            let timeInterval = calculateTimestamp(for: indexPath, mediaDuration: mediaDuration)
             cell.delegate = self
             cell.bindTo(timeInterval)
         }
@@ -167,5 +163,19 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         let min: CGFloat = 0
         let max: CGFloat = 100
         return (min...max).clamp(percent)
+    }
+    
+    // MARK: - Private utilities
+    
+    /// Calculates the timestamp of the cell in relation to its position in the collection.
+    ///
+    /// - Parameters:
+    ///  - indexPath: the index path of the cell.
+    ///  - mediaDuration: the full duration of the media represented in the collection.
+    private func calculateTimestamp(for indexPath: IndexPath, mediaDuration: TimeInterval) -> TimeInterval {
+        let collectionWidth = thumbnailCollectionView.collectionView.contentSize.width - TrimView.selectorMargin * 2
+        let cellPercentage: CGFloat = CGFloat(indexPath.item) * ThumbnailCollectionCell.cellWidth / collectionWidth
+        let cellSeconds = cellPercentage * CGFloat(mediaDuration)
+        return TimeInterval(cellSeconds)
     }
 }

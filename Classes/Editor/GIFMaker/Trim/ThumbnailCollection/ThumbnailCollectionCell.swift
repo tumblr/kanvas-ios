@@ -87,7 +87,7 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
     
     /// Updates the cell with an image
     ///
-    /// - Parameter time: The timestamp of the
+    /// - Parameter timeInterval: The timestamp of the cell.
     func bindTo(_ timeInterval: TimeInterval) {
         loadingView.startLoading()
         let workItem = DispatchWorkItem { [weak self] in

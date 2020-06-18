@@ -252,6 +252,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         load(childViewController: gifMakerController, into: editorView.gifMakerMenuContainer)
         
+        // TODO: Replace with correct call.
         gifMakerController.setThumbnails(count: 30)
     }
     
