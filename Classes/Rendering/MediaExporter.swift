@@ -27,8 +27,10 @@ protocol MediaExporting: class {
     var imageOverlays: [CGImage] { get set }
     init()
     func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
+    func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
     func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void)
 }
+
 
 /// Exports media with frame-by-frame OpenGL processing
 final class MediaExporter: MediaExporting {
@@ -85,6 +87,37 @@ final class MediaExporter: MediaExporting {
         }
     }
 
+    func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void) {
+        var processedFrames: [Int: MediaFrame] = [:]
+        let group = DispatchGroup()
+        for (i, frame) in frames.enumerated() {
+            group.enter()
+            DispatchQueue.global(qos: .default).async {
+                self.export(image: frame.image, time: frame.interval) { (image, error) in
+                    guard error == nil, let image = image else {
+                        group.leave()
+                        return
+                    }
+                    processedFrames[i] = (image: image, interval: frame.interval)
+                    group.leave()
+                }
+            }
+        }
+        group.notify(queue: .main) {
+            let initialValue: [MediaFrame] = []
+            let orderedFrames = processedFrames.keys.sorted().reduce(initialValue) { (partialOrderedFrames, index) in
+                if let processedFrame = processedFrames[index] {
+                    return partialOrderedFrames + [processedFrame]
+                }
+                else {
+                    assertionFailure("Missing frame")
+                    return partialOrderedFrames
+                }
+            }
+            completion(orderedFrames)
+        }
+    }
+
     /// Exports a video
     /// - Parameter video: URL of a video to export
     /// - Parameter completion: callback which is invoked with the processed video URL
@@ -108,7 +141,7 @@ final class MediaExporter: MediaExporting {
             return
         }
 
-        let outputURL = NSURL.createNewVideoURL()
+        let outputURL = try? URL.videoURL()
         let exportSession = AVAssetExportSession(asset: asset, presetName: presetName)
         exportSession?.outputFileType = .mov
         exportSession?.outputURL = outputURL
