@@ -357,29 +357,24 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     // MARK: - Media Content Creation
     
-    class func saveImageToFile(_ image: UIImage?, info: TumblrMediaInfo) -> URL? {
-        // TODO: Use NSURL.createNewImageURL rather than duplicate logic here
-        // https://jira.tumblr.net/browse/KANVAS-575
+    class func save(image: UIImage?, info: TumblrMediaInfo) -> URL? {
         do {
-            guard let image = image, let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            guard let image = image, let jpgImageData = image.jpegData(compressionQuality: 1.0) else {
                 return nil
             }
-            if !FileManager.default.fileExists(atPath: documentsURL.path, isDirectory: nil) {
-                try FileManager.default.createDirectory(at: documentsURL, withIntermediateDirectories: true, attributes: nil)
-            }
-            let fileURL = documentsURL.appendingPathComponent("kanvas-camera-image.jpg", isDirectory: false)
-            if FileManager.default.fileExists(atPath: fileURL.path) {
-                try FileManager.default.removeItem(at: fileURL)
-            }
-            if let jpgImageData = image.jpegData(compressionQuality: 1.0) {
-                try jpgImageData.write(to: fileURL, options: .atomic)
-                info.write(toImage: fileURL)
-            }
+            let fileURL = try save(data: jpgImageData, to: "kanvas-image", ext: "jpg")
+            info.write(toImage: fileURL)
             return fileURL
         } catch {
-            NSLog("failed to save to file. Maybe parent directories couldn't be created.")
+            print("Failed to save to file. \(error)")
             return nil
         }
+    }
+
+    class func save(data: Data, to filename: String, ext fileExtension: String) throws -> URL {
+        let fileURL = try URL(filename: filename, fileExtension: fileExtension, unique: false, removeExisting: true)
+        try data.write(to: fileURL, options: .atomic)
+        return fileURL
     }
     
     private func durationStringForAssetAtURL(_ url: URL?) -> String {
@@ -664,7 +659,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         imagePickerController.delegate = self
         imagePickerController.sourceType = .photoLibrary
         imagePickerController.allowsEditing = false
-        imagePickerController.mediaTypes = ["\(kUTTypeMovie)", "\(kUTTypeImage)"]
+        imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
         present(imagePickerController, animated: true) {
             self.modeAndShootController.resetMediaPickerButton()
             completion?()
@@ -843,7 +838,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     public func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        if let info = info, let url = CameraController.saveImageToFile(image, info: info) {
+        if let info = info, let url = CameraController.save(image: image, info: info) {
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
                 if let self = self, let image = image {
@@ -1034,12 +1029,41 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let imageMaybe = info[.originalImage] as? UIImage
         let mediaURLMaybe = info[.mediaURL] as? URL
         let imageURLMaybe = info[.imageURL] as? URL
+        let phAsset = info[.phAsset] as? PHAsset
+        let requestImageData = { (completion: @escaping (Data?) -> Void) in
+            guard let phAsset = phAsset else {
+                completion(nil)
+                return
+            }
+            guard phAsset.mediaType == .image else {
+                completion(nil)
+                return
+            }
+            let options = PHImageRequestOptions()
+            options.version = .original
+            options.deliveryMode = .highQualityFormat
+            options.isNetworkAccessAllowed = true
+            PHImageManager.default().requestImageData(for: phAsset, options: options) { (data, str, orientation, opts) in
+                completion(data)
+            }
+        }
+        requestImageData { data in
+            self.processPickedMedia(data: data, imageURLMaybe: imageURLMaybe, imageMaybe: imageMaybe, mediaURLMaybe: mediaURLMaybe)
+        }
+    }
 
+    private func processPickedMedia(data: Data?, imageURLMaybe: URL?, imageMaybe: UIImage?, mediaURLMaybe: URL?) {
         if settings.features.gifs,
-            let imageURL = imageURLMaybe,
-            GIFDecoderFactory.main().numberOfFrames(in: imageURL) > 1
-        {
-            pick(frames: imageURL)
+            let data = data,
+            GIFDecoderFactory.main().numberOfFrames(in: data) > 1,
+            let gifURL = try? CameraController.save(data: data, to: "kanvas-picked", ext: "gif") {
+            pick(frames: gifURL)
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
+        }
+        else if settings.features.gifs,
+            let gifURL = imageURLMaybe,
+            GIFDecoderFactory.main().numberOfFrames(in: gifURL) > 1 {
+            pick(frames: gifURL)
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
         }
         else if let image = imageMaybe {
