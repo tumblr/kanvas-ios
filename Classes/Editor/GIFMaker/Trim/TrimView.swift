@@ -296,9 +296,12 @@ final class TrimView: UIView, TrimAreaDelegate {
         let trimAreaPath = UIBezierPath(roundedRect: trimAreaFrame, cornerRadius: TrimArea.cornerRadius)
         cellsPath.append(trimAreaPath)
         
-        let bouncingAreaFrame: CGRect = getBouncingAreaFrame(cellsFrame: cellsFrame, trimAreaFrame: trimAreaFrame)
-        let bouncingAreaPath = UIBezierPath(rect: bouncingAreaFrame)
-        cellsPath.append(bouncingAreaPath)
+        let bouncingAreaFrames: [CGRect] = getBouncingAreaFrames(cellsFrame: cellsFrame, trimAreaFrame: trimAreaFrame)
+        bouncingAreaFrames.forEach { bouncingFrame in
+            let bouncingAreaPath = UIBezierPath(rect: bouncingFrame)
+            cellsPath.append(bouncingAreaPath)
+        }
+        
         
         // Layer creation
         let newLayer = createOverlay(path: cellsPath)
@@ -325,30 +328,31 @@ final class TrimView: UIView, TrimAreaDelegate {
         return convert(trimArea.frame, to: thumbnailContainer)
     }
     
-    /// Calculates an extra frame for cases in which the collection is bouncing.
+    /// Calculates extra frames for cases in which the collection is bouncing.
     ///
     /// - Parameters:
     ///  - cellsFrame: the frame that surrounds the visible cells.
     ///  - trimAreaFrame: the frame that surrounds the trim area.
-    private func getBouncingAreaFrame(cellsFrame: CGRect, trimAreaFrame: CGRect) -> CGRect {
-        let extraFrame: CGRect
+    private func getBouncingAreaFrames(cellsFrame: CGRect, trimAreaFrame: CGRect) -> [CGRect] {
+        var extraFrames: [CGRect] = []
         
         if trimAreaFrame.minX < cellsFrame.minX {
-            extraFrame = CGRect(x: cellsFrame.minX,
-                                y: cellsFrame.minY,
-                                width: trimAreaFrame.minX - cellsFrame.minX,
-                                height: cellsFrame.height)
-        }
-        else if cellsFrame.maxX < trimAreaFrame.maxX {
-            extraFrame = CGRect(x: cellsFrame.maxX,
-                                y: cellsFrame.minY,
-                                width: trimAreaFrame.maxX - cellsFrame.maxX,
-                                height: cellsFrame.height)
-        }
-        else {
-            extraFrame = .zero
+            let leftFrame = CGRect(x: cellsFrame.minX,
+                                   y: cellsFrame.minY,
+                                   width: trimAreaFrame.minX - cellsFrame.minX,
+                                   height: cellsFrame.height)
+            extraFrames.append(leftFrame)
         }
         
-        return extraFrame
+        if cellsFrame.maxX < trimAreaFrame.maxX {
+            let rightFrame = CGRect(x: cellsFrame.maxX,
+                                    y: cellsFrame.minY,
+                                    width: trimAreaFrame.maxX - cellsFrame.maxX,
+                                    height: cellsFrame.height)
+            
+            extraFrames.append(rightFrame)
+        }
+        
+        return extraFrames
     }
 }
