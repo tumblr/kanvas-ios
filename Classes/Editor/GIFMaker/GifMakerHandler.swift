@@ -52,15 +52,17 @@ class GifMakerHandler {
         self.player = player
     }
 
-    func load(segments: [CameraSegment], completion: @escaping () -> Void) {
+    func load(segments: [CameraSegment], showLoading: () -> Void, hideLoading: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
         if frames != nil {
-            completion()
+            completion(false)
         }
         else {
             let defaultInterval = delegate?.getDefaultTimeIntervalForImageSegments() ?? 1.0/6.0
+            showLoading()
             loadFrames(from: segments, defaultInterval: defaultInterval) { frames in
                 self.frames = frames
-                completion()
+                hideLoading()
+                completion(true)
             }
         }
     }
