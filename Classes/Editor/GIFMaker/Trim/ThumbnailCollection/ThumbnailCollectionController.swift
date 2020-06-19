@@ -190,15 +190,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     /// Calculates the time interval that each cell represents.
     private func calculateTimePerCell() -> TimeInterval {
         guard let mediaDuration = delegate?.getMediaDuration() else { return 0 }
-        
-        let secondsBetweenHandles: Float
-        if mediaDuration < TrimController.maxSelectableTime {
-            secondsBetweenHandles = mediaDuration.f
-        }
-        else {
-            secondsBetweenHandles = TrimController.maxSelectableTime.f
-        }
-        
+        let secondsBetweenHandles = min(mediaDuration.f, TrimController.maxSelectableTime.f)
         let numberOfCellsThatFitBetweenHandles = cellsThatFitBetweenHandles()
         return TimeInterval(secondsBetweenHandles / numberOfCellsThatFitBetweenHandles)
     }
