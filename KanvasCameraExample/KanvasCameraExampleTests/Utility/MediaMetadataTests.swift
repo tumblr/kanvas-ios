@@ -37,7 +37,7 @@ class MediaMetadataTests: XCTestCase {
         let segmentsHandler = CameraSegmentHandler()
         let recorder = CameraRecorderStub(size: CGSize(width: 300, height: 300), photoOutput: nil, videoOutput: nil, audioOutput: nil, recordingDelegate: nil, segmentsHandler: segmentsHandler, settings: settings)
         recorder.takePhoto(on: .photo) { image in
-            guard let url = CameraController.saveImageToFile(image, info: .init(source: .kanvas_camera)) else {
+            guard let url = CameraController.save(image: image, info: .init(source: .kanvas_camera)) else {
                 XCTFail()
                 return
             }
