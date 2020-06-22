@@ -23,7 +23,7 @@ final class VideoOutputHandlerTests: XCTestCase {
     
     func setupAssetWriter() -> AVAssetWriter? {
         do {
-            guard let url = NSURL.createNewVideoURL() else {
+            guard let url = try? URL.videoURL() else {
                 return nil
             }
             let assetWriter = try AVAssetWriter(outputURL: url, fileType: .mp4)

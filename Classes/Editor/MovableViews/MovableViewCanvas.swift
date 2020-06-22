@@ -168,11 +168,6 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         }
     }
     
-    /// Saves the current view into its layer
-    func updateLayer() {
-        layer.contents = asImage().cgImage
-    }
-    
     /// Removes the tapped view from the canvas
     func removeSelectedView() {
         selectedMovableView?.removeFromSuperview()

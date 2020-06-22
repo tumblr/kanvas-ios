@@ -16,6 +16,7 @@ class MediaExporterStub: MediaExporting {
     var imageOverlays: [CGImage] = []
 
     var exportImageCalled: Bool = false
+    var exportFramesCalled: Bool = false
     var exportVideoCalled: Bool = false
 
     required init() {
@@ -25,6 +26,11 @@ class MediaExporterStub: MediaExporting {
     func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
         exportImageCalled = true
         completion(image, nil)
+    }
+
+    func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void) {
+        exportFramesCalled = true
+        completion(frames)
     }
 
     func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void) {
@@ -40,6 +46,12 @@ final class GIFEncoderStub: GIFEncoder {
     func encode(video url: URL, loopCount: Int, framesPerSecond: Int, completion: @escaping (URL?) -> Void) {
         encodeGIFCalled = true
         completion(url)
+    }
+
+    func encode(frames: [(image: UIImage, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void) {
+        encodeGIFCalled = true
+        let gifURL = Bundle(for: type(of: self)).url(forResource: "colors", withExtension: "gif")
+        completion(gifURL)
     }
 }
 
@@ -177,7 +189,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
-        XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
+        XCTAssert(!handler.mergeAssetsCalled, "Handler merge assets function not called")
         XCTAssert(delegate.framesExportCalled, "Delegate frames export function not called")
     }
     
