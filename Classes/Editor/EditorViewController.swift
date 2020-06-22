@@ -698,10 +698,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didConfirmGif() {
         confirmEditionMenu()
     }
-
-    func setThumbnails(count: Int) {
-        gifMakerController.setThumbnails(count: count)
-    }
     
     // MARK: - EditorFilterControllerDelegate
     
