@@ -245,7 +245,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        startPlayer()
+
+        startPlayerFromSegments()
     }
     
     override public func viewDidLoad() {
@@ -363,7 +364,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     /// Loads the media into the player and starts it.
-    private func startPlayer() {
+    private func startPlayerFromSegments() {
         let media: [MediaPlayerContent] = segments.compactMap {segment in
             if let image = segment.image {
                 return .image(image, segment.timeInterval)
@@ -624,12 +625,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             if settings.features.editorGIFMaker {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
                 showMainUI(false)
-                showLoading()
                 gifMakerController.showView(true)
-                gifMakerHandler.load(segments: segments) {
-                    self.player.stop()
-                    self.startPlayer()
-                    self.hideLoading()
+                gifMakerHandler.load(segments: segments,
+                                     showLoading: self.showLoading,
+                                     hideLoading: self.hideLoading) { framesUpdated in
+                                        if framesUpdated {
+                                            self.player.stop()
+                                            self.startPlayerFromSegments()
+                                        }
                 }
                 editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
                     self.gifMakerController.showConfirmButton(true)
@@ -836,7 +839,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - MediaPlayerController
     
     func onPostingOptionsDismissed() {
-        startPlayer()
+        startPlayerFromSegments()
     }
     
     // MARK: - Private utilities
