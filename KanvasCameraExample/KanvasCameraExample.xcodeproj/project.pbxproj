@@ -31,6 +31,7 @@
 		650A834124646A3E0071BF9D /* GifMakerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A834024646A3E0071BF9D /* GifMakerViewTests.swift */; };
 		650B2A1E2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf in Resources */ = {isa = PBXBuildFile; fileRef = 650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */; };
 		6512C1B723DF5DB500FDE2BD /* SliderViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6512C1B623DF5DB500FDE2BD /* SliderViewTests.swift */; };
+		6515A24C24882FB300267A88 /* TimeIndicatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515A24B24882FB300267A88 /* TimeIndicatorTests.swift */; };
 		651D4B5D22CE6801004AB75C /* CircularImageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */; };
 		651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */; };
 		651D4B6122CE683B004AB75C /* DrawingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D4B6022CE683B004AB75C /* DrawingViewTests.swift */; };
@@ -38,6 +39,7 @@
 		651DEBA92209FC4300476F22 /* RGBATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DEBA82209FC4300476F22 /* RGBATests.swift */; };
 		65244CDA22BD5A4C0038050F /* ScrollHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65244CD922BD5A4C0038050F /* ScrollHandlerTests.swift */; };
 		652DFA1A22281F00007B1EF5 /* FilterItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652DFA1422281F00007B1EF5 /* FilterItemTests.swift */; };
+		652E7CC024900EB8002F7BD8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 652E7CBE24900EB8002F7BD8 /* Localizable.strings */; };
 		653B044A22E911DB005AAFCA /* ColorCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B044722E911DB005AAFCA /* ColorCollectionCellTests.swift */; };
 		653B044B22E911DB005AAFCA /* ColorCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B044822E911DB005AAFCA /* ColorCollectionViewTests.swift */; };
 		653B044C22E911DB005AAFCA /* ColorCollectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B044922E911DB005AAFCA /* ColorCollectionControllerTests.swift */; };
@@ -180,6 +182,9 @@
 		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
+		BF01710E2498592F00639E49 /* URL+MediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF01710D2498592F00639E49 /* URL+MediaTests.swift */; };
+		BF017114249B2C3700639E49 /* GifMakerHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */; };
+		BF017116249B30BF00639E49 /* GIFMakerSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF017115249B30BF00639E49 /* GIFMakerSettingsTests.swift */; };
 		BF428955238637F900D51A07 /* String+UTF16SubstringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF428954238637F900D51A07 /* String+UTF16SubstringTests.swift */; };
 		BF5AD6652460C7B50077481B /* GIFDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */; };
 		BF5AD6682460DA6F0077481B /* colors.gif in Resources */ = {isa = PBXBuildFile; fileRef = BF5AD6662460CB290077481B /* colors.gif */; };
@@ -226,6 +231,7 @@
 		650A834024646A3E0071BF9D /* GifMakerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerViewTests.swift; sourceTree = "<group>"; };
 		650B2A1D2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Fairwater Script Regular_Tumblr.otf"; path = "../../../../../Assets/Fonts/Fairwater/Fairwater Script Regular_Tumblr.otf"; sourceTree = "<group>"; };
 		6512C1B623DF5DB500FDE2BD /* SliderViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderViewTests.swift; sourceTree = "<group>"; };
+		6515A24B24882FB300267A88 /* TimeIndicatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIndicatorTests.swift; sourceTree = "<group>"; };
 		651D4B5C22CE6801004AB75C /* CircularImageViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularImageViewTests.swift; sourceTree = "<group>"; };
 		651D4B5E22CE6826004AB75C /* DrawingControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingControllerTests.swift; sourceTree = "<group>"; };
 		651D4B6022CE683B004AB75C /* DrawingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingViewTests.swift; sourceTree = "<group>"; };
@@ -233,6 +239,7 @@
 		651DEBA82209FC4300476F22 /* RGBATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBATests.swift; sourceTree = "<group>"; };
 		65244CD922BD5A4C0038050F /* ScrollHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollHandlerTests.swift; sourceTree = "<group>"; };
 		652DFA1422281F00007B1EF5 /* FilterItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterItemTests.swift; sourceTree = "<group>"; };
+		652E7CBF24900EB8002F7BD8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = ../../../../Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		653B044722E911DB005AAFCA /* ColorCollectionCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionCellTests.swift; sourceTree = "<group>"; };
 		653B044822E911DB005AAFCA /* ColorCollectionViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewTests.swift; sourceTree = "<group>"; };
 		653B044922E911DB005AAFCA /* ColorCollectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCollectionControllerTests.swift; sourceTree = "<group>"; };
@@ -380,6 +387,9 @@
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
+		BF01710D2498592F00639E49 /* URL+MediaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+MediaTests.swift"; sourceTree = "<group>"; };
+		BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerHandlerTests.swift; sourceTree = "<group>"; };
+		BF017115249B30BF00639E49 /* GIFMakerSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFMakerSettingsTests.swift; sourceTree = "<group>"; };
 		BF428954238637F900D51A07 /* String+UTF16SubstringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UTF16SubstringTests.swift"; sourceTree = "<group>"; };
 		BF5AD6642460C7B50077481B /* GIFDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFDecoderTests.swift; sourceTree = "<group>"; };
 		BF5AD6662460CB290077481B /* colors.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = colors.gif; sourceTree = "<group>"; };
@@ -474,6 +484,8 @@
 				653E49512472FBFF006F80A2 /* Trim */,
 				650A833E24646A350071BF9D /* GifMakerControllerTests.swift */,
 				650A834024646A3E0071BF9D /* GifMakerViewTests.swift */,
+				BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */,
+				BF017115249B30BF00639E49 /* GIFMakerSettingsTests.swift */,
 			);
 			path = GIFMaker;
 			sourceTree = "<group>";
@@ -545,6 +557,7 @@
 				653E49522472FC11006F80A2 /* TrimControllerTests.swift */,
 				653E49542472FC19006F80A2 /* TrimViewTests.swift */,
 				653E49562472FC2E006F80A2 /* TrimAreaTests.swift */,
+				6515A24B24882FB300267A88 /* TimeIndicatorTests.swift */,
 			);
 			path = Trim;
 			sourceTree = "<group>";
@@ -813,6 +826,7 @@
 				76826A0B2208E387009C1789 /* UIImage+FlipLeftMirroredTests.swift */,
 				7669B5A72230E548000D3EB5 /* UIImage+PixelBufferTests.swift */,
 				BF428954238637F900D51A07 /* String+UTF16SubstringTests.swift */,
+				BF01710D2498592F00639E49 /* URL+MediaTests.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -875,6 +889,7 @@
 				AB7F294D2121F02C00B8D599 /* Assets.xcassets */,
 				AB7F294F2121F02C00B8D599 /* LaunchScreen.storyboard */,
 				AB7F29522121F02C00B8D599 /* Info.plist */,
+				652E7CBE24900EB8002F7BD8 /* Localizable.strings */,
 				768548D622D0EC0800BC39D2 /* SplitViewController.swift */,
 				768548D822D17E6000BC39D2 /* MockDashboardViewController.swift */,
 				76FFF24722DCD991000A0D04 /* FeatureTableView.swift */,
@@ -1061,6 +1076,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = AB7F293A2121F02A00B8D599;
 			productRefGroup = AB7F29442121F02A00B8D599 /* Products */;
@@ -1083,6 +1099,7 @@
 				650B2A1E2326D01200F3DAD4 /* Fairwater Script Regular_Tumblr.otf in Resources */,
 				BF5AD6692460DA720077481B /* colors.gif in Resources */,
 				ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */,
+				652E7CC024900EB8002F7BD8 /* Localizable.strings in Resources */,
 				ABFBDE28212CCDE500E1044C /* sample.png in Resources */,
 				655163A42396E8A30043C01A /* stickers.json in Resources */,
 			);
@@ -1243,8 +1260,10 @@
 				658A329A239FFD9B00EEC1D3 /* StickerTypeCollectionControllerTests.swift in Sources */,
 				ABE49907213712E100379F7F /* OptionsStackViewTests.swift in Sources */,
 				AB7263EA212CC83B0044ED96 /* KanvasCameraImagesTests.swift in Sources */,
+				6515A24C24882FB300267A88 /* TimeIndicatorTests.swift in Sources */,
 				6591EE48239E9EBC007C590B /* LoadingIndicatorViewTests.swift in Sources */,
 				ABE498FC21370DFD00379F7F /* MediaClipsCollectionControllerTests.swift in Sources */,
+				BF017116249B30BF00639E49 /* GIFMakerSettingsTests.swift in Sources */,
 				651DEBA72209F17400476F22 /* ConicalGradientLayerTests.swift in Sources */,
 				AB7263EB212CC83B0044ED96 /* KanvasCameraColorsTests.swift in Sources */,
 				0EAE0CB62139D4F2004CD7FF /* CameraControllerTests.swift in Sources */,
@@ -1271,6 +1290,7 @@
 				ABE498DC2134AEB200379F7F /* VideoOutputHandlerTests.swift in Sources */,
 				658A3294239FFD9B00EEC1D3 /* StylableImageViewTests.swift in Sources */,
 				AB7263EC212CC83B0044ED96 /* KanvasCameraTimesTests.swift in Sources */,
+				BF01710E2498592F00639E49 /* URL+MediaTests.swift in Sources */,
 				76ED1DD222BF31F400E6AF79 /* VideoCompositorTests.swift in Sources */,
 				653B044C22E911DB005AAFCA /* ColorCollectionControllerTests.swift in Sources */,
 				654FE6CE247F4D7D002F774B /* DiscreteSliderViewTests.swift in Sources */,
@@ -1295,6 +1315,7 @@
 				658A329E239FFD9B00EEC1D3 /* StickerProviderStub.swift in Sources */,
 				654277352481D0B500B3FC3A /* PlaybackViewTests.swift in Sources */,
 				0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */,
+				BF017114249B2C3700639E49 /* GifMakerHandlerTests.swift in Sources */,
 				65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */,
 				0EAE0CB22139B966004CD7FF /* CameraPreviewViewTests.swift in Sources */,
 				6512C1B723DF5DB500FDE2BD /* SliderViewTests.swift in Sources */,
@@ -1348,6 +1369,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		652E7CBE24900EB8002F7BD8 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				652E7CBF24900EB8002F7BD8 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		AB7F294F2121F02C00B8D599 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

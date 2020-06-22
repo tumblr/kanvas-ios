@@ -103,12 +103,12 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         super.init(nibName: .none, bundle: .none)
     }
     
-    @available(*, unavailable, message: "use init(settings:, segments:) instead")
+    @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @available(*, unavailable, message: "use init(settings:, segments:) instead")
+    @available(*, unavailable, message: "use init() instead")
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }

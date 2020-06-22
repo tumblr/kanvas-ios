@@ -33,7 +33,7 @@ final class PlaybackCollectionCellTests: FBSnapshotTestCase {
     func testSelectedCell() {
         let cell = newCell()
         cell.bindTo(.loop)
-        cell.isSelected = true
+        cell.setSelected(true, animated: false)
         FBSnapshotVerifyView(cell)
     }
 }
