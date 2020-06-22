@@ -65,6 +65,12 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         thumbnailCollectionView.collectionView.delegate = self
         thumbnailCollectionView.collectionView.dataSource = self
     }
+
+    func reload(completion: ((Bool) -> Void)?) {
+        let collectionView = thumbnailCollectionView.collectionView
+        collectionView.reloadData()
+        collectionView.performBatchUpdates(nil, completion: completion)
+    }
     
     // MARK: - UICollectionView
     

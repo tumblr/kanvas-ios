@@ -222,8 +222,12 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        let cellsFrame = thumbnailController.getCellsFrame()
-        trimView.setOverlay(cellsFrame: cellsFrame)
+        if show {
+            thumbnailController.reload { finished in
+                let cellsFrame = self.thumbnailController.getCellsFrame()
+                self.trimView.setOverlay(cellsFrame: cellsFrame)
+            }
+        }
         trimView.showView(show)
     }
 }
