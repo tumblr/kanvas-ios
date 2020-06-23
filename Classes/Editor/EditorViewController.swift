@@ -136,6 +136,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         set {
             collectionController.shouldExportMediaAsGIF = newValue
+            if let editionOption = openedMenu, let cell = selectedCell {
+                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: newValue)
+                cell.setImage(image)
+            }
         }
     }
 
@@ -402,7 +406,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func allSegmentsAreImages() -> Bool {
-        for segment in originalSegments {
+        for segment in segments {
             if segment.image == nil {
                 return false
             }
@@ -587,6 +591,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             if settings.features.editorGIFMaker {
                 editorView.animateReturnOfEditionOption(cell: selectedCell)
+                shouldExportMediaAsGIF = gifMakerHandler.hasFrames
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
@@ -639,9 +644,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 })
             }
             else {
+                onBeforeShowingEditionMenu(editionOption, cell: cell)
                 shouldExportMediaAsGIF.toggle()
-                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: shouldExportMediaAsGIF)
-                cell.setImage(image)
+                onAfterConfirmingEditionMenu()
             }
         case .filter:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
