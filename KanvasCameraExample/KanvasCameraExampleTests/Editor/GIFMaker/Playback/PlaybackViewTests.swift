@@ -13,6 +13,7 @@ import XCTest
 final class PlaybackViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
     
     private let options: [PlaybackOption] = [.loop, .rebound, .reverse]
+    private let selectedIndexPath: IndexPath = IndexPath(item: 0, section: 0)
     
     override func setUp() {
         super.setUp()
@@ -23,6 +24,10 @@ final class PlaybackViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
     func newView() -> PlaybackView {
         let view = PlaybackView()
         view.frame = CGRect(x: 0, y: 0, width: 320, height: PlaybackView.height)
+        let cellWidth = view.frame.width / CGFloat(options.count)
+        PlaybackCollectionCell.width = cellWidth
+        view.cellWidth = cellWidth
+        view.selectionViewWidth = cellWidth
         view.collectionView.register(cell: PlaybackCollectionCell.self)
         view.collectionView.dataSource = self
         return view
@@ -40,9 +45,13 @@ final class PlaybackViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaybackCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? PlaybackCollectionCell, let option = options.object(at: indexPath.item) {
-            cell.bindTo(option)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaybackCollectionCell.identifier, for: indexPath) as? PlaybackCollectionCell, let option = options.object(at: indexPath.item)
+            else { return UICollectionViewCell() }
+        
+        cell.bindTo(option)
+        
+        if indexPath == selectedIndexPath {
+            cell.setSelected(true, animated: false)
         }
         return cell
     }

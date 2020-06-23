@@ -19,6 +19,7 @@ enum GIFDecoderType {
 protocol GIFDecoder {
     func decode(image url: URL, completion: @escaping (GIFDecodeFrames) -> Void)
     func numberOfFrames(in url: URL) -> Int
+    func numberOfFrames(in data: Data) -> Int
 }
 
 class GIFDecoderFactory {
@@ -47,6 +48,13 @@ class GIFDecoderImageIO: GIFDecoder {
         }
         let frames: GIFDecodeFrames = getFrames(from: source)
         completion(frames)
+    }
+
+    func numberOfFrames(in data: Data) -> Int {
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
+            return 0
+        }
+        return CGImageSourceGetCount(source)
     }
 
     func numberOfFrames(in url: URL) -> Int {
