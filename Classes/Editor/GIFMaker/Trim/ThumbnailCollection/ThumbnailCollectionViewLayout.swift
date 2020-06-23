@@ -61,6 +61,8 @@ final class ThumbnailCollectionViewLayout: UICollectionViewFlowLayout {
             
             contentWidth += width
         }
+        
+        contentWidth += TrimView.selectorMargin
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
