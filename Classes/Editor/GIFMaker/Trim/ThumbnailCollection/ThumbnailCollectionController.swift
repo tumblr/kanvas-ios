@@ -33,13 +33,10 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     
     weak var delegate: ThumbnailCollectionControllerDelegate?
     private lazy var thumbnailCollectionView = ThumbnailCollectionView()
-    
-    private var itemCount: Int
-    
+        
     // MARK: - Initializers
     
     init() {
-        itemCount = 0
         super.init(nibName: .none, bundle: .none)
     }
     
