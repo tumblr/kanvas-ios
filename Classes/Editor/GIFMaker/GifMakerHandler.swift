@@ -20,8 +20,8 @@ class GifMakerHandler {
 
     var segments: [CameraSegment]?
 
-    var shouldExport: Bool {
-        return frames != nil
+    var hasFrames: Bool {
+        return frames != nil && (frames?.count ?? 0) > 0
     }
 
     private let player: MediaPlayer
