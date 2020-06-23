@@ -20,11 +20,34 @@ final class ThumbnailCollectionControllerTests: FBSnapshotTestCase {
     
     func testThumbnailCollectionControllerView() {
         let controller = ThumbnailCollectionController()
+        let delegate = ThumbnailCollectionControllerDelegateStub()
+        controller.delegate = delegate
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: ThumbnailCollectionCell.cellHeight)
         controller.view.backgroundColor = .black
-        controller.setThumbnails(count: 4)
         controller.view.setNeedsDisplay()
         
         FBSnapshotVerifyView(controller.view)
+    }
+}
+
+private class ThumbnailCollectionControllerDelegateStub: ThumbnailCollectionControllerDelegate {
+    func getMediaDuration() -> TimeInterval? {
+        return TimeInterval(30)
+    }
+    
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
+        return KanvasCameraImages.flashOnImage
+    }
+    
+    func didBeginScrolling() {
+        
+    }
+    
+    func didScroll() {
+        
+    }
+    
+    func didEndScrolling() {
+        
     }
 }

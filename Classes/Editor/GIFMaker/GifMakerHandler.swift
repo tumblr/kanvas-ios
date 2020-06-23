@@ -12,8 +12,6 @@ protocol GifMakerHandlerDelegate: class {
     func didConfirmGif()
 
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval
-
-    func setThumbnails(count: Int)
 }
 
 class GifMakerHandler {
@@ -22,8 +20,8 @@ class GifMakerHandler {
 
     var segments: [CameraSegment]?
 
-    var shouldExport: Bool {
-        return frames != nil
+    var hasFrames: Bool {
+        return frames != nil && (frames?.count ?? 0) > 0
     }
 
     private let player: MediaPlayer
@@ -33,18 +31,24 @@ class GifMakerHandler {
     private var frames: [MediaFrame]? {
         didSet {
             guard let frames = frames else {
-                delegate?.setThumbnails(count: 0)
                 segments = nil
+                settings = nil
+                duration = nil
                 return
             }
-
-            delegate?.setThumbnails(count: frames.count)
             segments = frames.map { frame in
                 CameraSegment.image(frame.image, nil, frame.interval, .init(source: .kanvas_camera))
             }
             settings = GIFMakerSettings(rate: 1, startIndex: 0, endIndex: frames.count - 1, playbackMode: .loop)
+            duration = frames.reduce(0) { (duration, frame) in
+                return duration + frame.interval
+            }
         }
     }
+
+    private var duration: TimeInterval?
+
+    private var thumbnails: [TimeInterval: UIImage] = [:]
 
     private var previousTrim: ClosedRange<CGFloat>?
 
@@ -186,8 +190,23 @@ extension GifMakerHandler: GifMakerControllerDelegate {
         settings?.endIndex = endIndex
     }
 
-    func getThumbnail(at index: Int) -> UIImage? {
-        return player.getFrame(at: index)
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
+        if let thumbnail = thumbnails[timestamp] {
+            return thumbnail
+        }
+        var progress: TimeInterval = .zero
+        for frame in frames ?? [] {
+            if progress >= timestamp {
+                thumbnails[timestamp] = frame.image
+                return frame.image
+            }
+            progress += frame.interval
+        }
+        return nil
+    }
+
+    func getMediaDuration() -> TimeInterval? {
+        return duration
     }
 
     func didSelectSpeed(_ speed: Float) {
