@@ -519,6 +519,7 @@ final class MediaPlayer {
         }
         switch currentlyPlayingMedia {
         case .image(_, _, _):
+            lastStillFilterTime = Date.timeIntervalSinceReferenceDate - startTime
             playCurrentMedia()
         default:
             break
