@@ -11,11 +11,16 @@ import XCTest
 
 final class ThumbnailCollectionViewLayoutTests: XCTestCase, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    func testEstimatedItemSize() {
+    private let itemCount: Int = 10
+    
+    func testDelegate() {
         let layout = ThumbnailCollectionViewLayout()
         let delegate = ThumbnailCollectionViewLayoutDelegateStub()
         layout.delegate = delegate
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 200, height: 100), collectionViewLayout: layout)
+        
+        let frame = CGRect(x: 0, y: 0, width: 200, height: 100)
+        
+        let collectionView = UICollectionView(frame: frame, collectionViewLayout: layout)
         collectionView.register(cell: ThumbnailCollectionCell.self)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -25,7 +30,7 @@ final class ThumbnailCollectionViewLayoutTests: XCTestCase, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return itemCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -35,10 +40,12 @@ final class ThumbnailCollectionViewLayoutTests: XCTestCase, UICollectionViewDele
 
 private class ThumbnailCollectionViewLayoutDelegateStub: ThumbnailCollectionViewLayoutDelegate {
     
+    private static let cellWidth: CGFloat = 30
+    
     private(set) var called = false
     
     func collectionView(_ collectionView: UICollectionView, widthForCellAt indexPath: IndexPath) -> CGFloat {
         called = true
-        return 30
+        return ThumbnailCollectionViewLayoutDelegateStub.cellWidth
     }
 }

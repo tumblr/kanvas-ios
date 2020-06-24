@@ -63,12 +63,6 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         thumbnailCollectionView.collectionView.dataSource = self
         thumbnailCollectionView.collectionViewLayout.delegate = self
     }
-
-    func reload(completion: ((Bool) -> Void)?) {
-        let collectionView = thumbnailCollectionView.collectionView
-        collectionView.reloadData()
-        collectionView.performBatchUpdates(nil, completion: completion)
-    }
     
     // MARK: - UICollectionView
     
@@ -77,7 +71,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return getNumberOfCells()
+        return getCollectionSize()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -91,11 +85,13 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         return cell
     }
     
+    // MARK: - ThumbnailCollectionViewLayoutDelegate
+    
     func collectionView(_ collectionView: UICollectionView, widthForCellAt indexPath: IndexPath) -> CGFloat {
-        let collectionSize = getNumberOfCells()
-        if indexPath.item == collectionSize - 1 {
-            let fractionOfCell = getFractionOfCells()
-            let visiblePercent = fractionOfCell.truncatingRemainder(dividingBy: 1)
+        let itemCount = getCollectionSize()
+        if indexPath.item == itemCount - 1 {
+            let numberOfCells = getNumberOfCells()
+            let visiblePercent = numberOfCells.truncatingRemainder(dividingBy: 1)
             return ThumbnailCollectionCell.cellWidth * CGFloat(visiblePercent)
         }
         else {
@@ -110,6 +106,12 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     // MARK: - Public interface
+    
+    func reload(completion: ((Bool) -> Void)?) {
+        let collectionView = thumbnailCollectionView.collectionView
+        collectionView.reloadData()
+        collectionView.performBatchUpdates(nil, completion: completion)
+    }
     
     /// Obtains the frame that contains the visible cells.
     func getCellsFrame() -> CGRect {
@@ -189,28 +191,31 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         return TimeInterval(secondsBetweenHandles / numberOfCellsThatFitBetweenHandles)
     }
     
+    /// Obtains the number of cells that fit in the trimmer.
     private func cellsThatFitBetweenHandles() -> Float {
         let widthBetweenHandles = thumbnailCollectionView.collectionView.visibleSize.width - TrimView.selectorMargin * 2
         return widthBetweenHandles.f / ThumbnailCollectionCell.cellWidth.f
     }
     
-    private func getFractionOfCells() -> Float {
+    /// Obtains the number of cells considering the fraction of the last cell as well.
+    private func getNumberOfCells() -> Float {
         guard let mediaDuration = delegate?.getMediaDuration() else { return 0 }
-        let fractionOfCells: Float
+        let numberOfCells: Float
         
         if mediaDuration < TrimController.maxSelectableTime {
-            fractionOfCells = cellsThatFitBetweenHandles()
+            numberOfCells = cellsThatFitBetweenHandles()
         }
         else {
             let timePerCell = calculateTimePerCell()
-            fractionOfCells = mediaDuration.f / timePerCell.f
+            numberOfCells = mediaDuration.f / timePerCell.f
         }
         
-        return fractionOfCells
+        return numberOfCells
     }
     
-    private func getNumberOfCells() -> Int {
-        let fractionOfCells = getFractionOfCells()
-        return Int(fractionOfCells.rounded(.up))
+    /// Obtains the number of cells in the collection, expressed as an integer.
+    private func getCollectionSize() -> Int {
+        let cellsAsDecimal = getNumberOfCells()
+        return Int(cellsAsDecimal.rounded(.up))
     }
 }

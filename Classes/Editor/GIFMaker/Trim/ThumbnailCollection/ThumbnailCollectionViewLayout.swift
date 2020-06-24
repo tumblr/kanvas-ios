@@ -4,17 +4,23 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-protocol ThumbnailCollectionViewLayoutDelegate: AnyObject {
+protocol ThumbnailCollectionViewLayoutDelegate: class {
     func collectionView(_ collectionView: UICollectionView, widthForCellAt indexPath: IndexPath) -> CGFloat
 }
 
+/// Constants for ThumbnailCollectionViewLayout
+private struct Constants {
+    static let section: Int = 0
+}
+
+/// Layout for the thumbnail collection in the GIF maker.
 final class ThumbnailCollectionViewLayout: UICollectionViewFlowLayout {
 
     weak var delegate: ThumbnailCollectionViewLayoutDelegate?
 
+    private let contentHeight: CGFloat = ThumbnailCollectionCell.cellHeight
     private var contentWidth: CGFloat = 0
-    private var contentHeight: CGFloat = 0
-      
+    
     override var collectionViewContentSize: CGSize {
         return CGSize(width: contentWidth, height: contentHeight)
     }
@@ -25,6 +31,8 @@ final class ThumbnailCollectionViewLayout: UICollectionViewFlowLayout {
     
     override init() {
         super.init()
+        minimumLineSpacing = 0
+        minimumInteritemSpacing = 0
         sectionInset = UIEdgeInsets(top: 0, left: TrimView.selectorMargin, bottom: 0, right: TrimView.selectorMargin)
     }
       
@@ -36,33 +44,30 @@ final class ThumbnailCollectionViewLayout: UICollectionViewFlowLayout {
     
     override func prepare() {
         super.prepare()
-        guard let collectionView = collectionView else { return }
+        guard let collectionView = collectionView, let delegate = delegate else { return }
         
         cache.removeAll()
-        contentHeight = ThumbnailCollectionCell.cellHeight
         
-        minimumLineSpacing = 0
-        minimumInteritemSpacing = 0
-        
-        contentWidth = TrimView.selectorMargin
-        for item in 0..<collectionView.numberOfItems(inSection: 0) {
-            let indexPath = IndexPath(item: item, section: 0)
-        
-            let width = delegate?.collectionView(collectionView, widthForCellAt: indexPath) ?? ThumbnailCollectionCell.cellWidth
-            let height = ThumbnailCollectionCell.cellHeight
-            let frame = CGRect(x: contentWidth,
-                               y: 0,
-                               width: width,
-                               height: height)
+        contentWidth = sectionInset.left
+        for item in 0..<collectionView.numberOfItems(inSection: Constants.section) {
+            let indexPath = IndexPath(item: item, section: Constants.section)
+            
+            let cellWidth = delegate.collectionView(collectionView, widthForCellAt: indexPath)
+            let cellHeight = ThumbnailCollectionCell.cellHeight
+            
+            let cellFrame = CGRect(x: contentWidth,
+                                   y: 0,
+                                   width: cellWidth,
+                                   height: cellHeight)
         
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-            attributes.frame = frame
+            attributes.frame = cellFrame
             cache.append(attributes)
             
-            contentWidth += width
+            contentWidth += cellWidth
         }
         
-        contentWidth += TrimView.selectorMargin
+        contentWidth += sectionInset.right
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {

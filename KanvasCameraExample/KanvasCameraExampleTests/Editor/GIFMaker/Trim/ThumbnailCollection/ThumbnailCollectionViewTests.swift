@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
+final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDataSource, ThumbnailCollectionViewLayoutDelegate {
     
     private let thumbnailCount: Int = 4
     
@@ -26,6 +26,7 @@ final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDa
         view.backgroundColor = .black
         view.collectionView.register(cell: ThumbnailCollectionCell.self)
         view.collectionView.dataSource = self
+        view.collectionViewLayout.delegate = self
         return view
     }
     
@@ -47,5 +48,11 @@ final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDa
             cell.bindTo(timeInterval)
         }
         return cell
+    }
+    
+    // MARK: - ThumbnailCollectionViewLayoutDelegate
+    
+    func collectionView(_ collectionView: UICollectionView, widthForCellAt indexPath: IndexPath) -> CGFloat {
+        return ThumbnailCollectionCell.cellWidth
     }
 }
