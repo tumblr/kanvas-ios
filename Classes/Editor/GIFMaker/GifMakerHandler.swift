@@ -194,15 +194,21 @@ extension GifMakerHandler: GifMakerControllerDelegate {
         if let thumbnail = thumbnails[timestamp] {
             return thumbnail
         }
-        var progress: TimeInterval = .zero
+        var frameTime: TimeInterval = .zero
         for frame in frames ?? [] {
-            if progress >= timestamp {
+            if timestamp > frameTime {
+                frameTime += frame.interval
+                if timestamp < frameTime {
+                    thumbnails[timestamp] = frame.image
+                    return frame.image
+                }
+            }
+            else if timestamp == frameTime {
                 thumbnails[timestamp] = frame.image
                 return frame.image
             }
-            progress += frame.interval
         }
-        return nil
+        return frames?.last?.image
     }
 
     func getMediaDuration() -> TimeInterval? {

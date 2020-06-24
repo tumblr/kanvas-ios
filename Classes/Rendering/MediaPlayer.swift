@@ -420,6 +420,7 @@ final class MediaPlayer {
             return
         }
 
+        renderer.switchInputDimensions = false
         renderer.mediaTransform = nil
 
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
