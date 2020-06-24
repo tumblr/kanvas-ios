@@ -55,6 +55,7 @@ final class MainTextView: StylableTextView {
         tintColor = .white
         showsVerticalScrollIndicator = false
         autocorrectionType = .no
+        textDragInteraction?.isEnabled = false
     }
     
     private func setUpGestureRecognizers() {
