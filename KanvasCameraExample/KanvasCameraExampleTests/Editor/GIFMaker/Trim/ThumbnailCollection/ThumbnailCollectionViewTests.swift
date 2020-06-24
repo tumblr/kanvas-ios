@@ -43,7 +43,8 @@ final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCollectionCell.identifier, for: indexPath)
         if let cell = cell as? ThumbnailCollectionCell {
-            cell.bindTo(indexPath.item)
+            let timeInterval = TimeInterval(0)
+            cell.bindTo(timeInterval)
         }
         return cell
     }
