@@ -593,7 +593,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
-                analyticsProvider?.logEditorGIFConfirm(duration: gifMakerHandler.duration ?? 0, playbackMode: KanvasGIFPlaybackMode(from:  gifMakerHandler.settings?.playbackMode ?? .loop), speed: gifMakerHandler.settings?.rate ?? 1.0)
+                analyticsProvider?.logEditorGIFConfirm(
+                    duration: gifMakerHandler.trimmedDuration,
+                    playbackMode: KanvasGIFPlaybackMode(from: gifMakerHandler.settings?.playbackMode ?? .loop),
+                    speed: gifMakerHandler.settings?.rate ?? 1.0
+                )
             }
         case .filter:
             filterController.showView(false)

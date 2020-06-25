@@ -48,6 +48,13 @@ class GifMakerHandler {
 
     private(set) var duration: TimeInterval?
 
+    var trimmedDuration: TimeInterval? {
+        guard let settings = settings else { return nil }
+        let startTime = getTimestamp(at: settings.startIndex)
+        let endTime = getTimestamp(at: settings.endIndex)
+        return endTime - startTime
+    }
+
     private var thumbnails: [TimeInterval: UIImage] = [:]
 
     private var previousTrim: ClosedRange<CGFloat>?
