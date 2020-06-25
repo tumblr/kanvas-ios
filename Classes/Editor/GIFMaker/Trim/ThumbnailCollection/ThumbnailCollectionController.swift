@@ -10,10 +10,13 @@ import UIKit
 /// Protocol for obtaining images.
 protocol ThumbnailCollectionControllerDelegate: class {
     
+    /// Obtains the full media duration
+    func getMediaDuration() -> TimeInterval?
+    
     /// Obtains a thumbnail for the background of the trimming tool
     ///
-    /// - Parameter index: the index of the requested image.
-    func getThumbnail(at index: Int) -> UIImage?
+    /// - Parameter timestamp: the time of the requested image.
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage?
     
     /// Called when the thumbnail collection starts scrolling.
     func didBeginScrolling()
@@ -62,6 +65,12 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         thumbnailCollectionView.collectionView.delegate = self
         thumbnailCollectionView.collectionView.dataSource = self
     }
+
+    func reload(completion: ((Bool) -> Void)?) {
+        let collectionView = thumbnailCollectionView.collectionView
+        collectionView.reloadData()
+        collectionView.performBatchUpdates(nil, completion: completion)
+    }
     
     // MARK: - UICollectionView
     
@@ -70,14 +79,20 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return itemCount
+        guard let mediaDuration = delegate?.getMediaDuration() else { return 0 }
+        let timePerCell = calculateTimePerCell()
+        let cells = mediaDuration.f / timePerCell.f
+        let size = Int(cells.rounded(.up))
+        return size
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCollectionCell.identifier, for: indexPath)
+        
         if let cell = cell as? ThumbnailCollectionCell {
+            let timeInterval = calculateTimestamp(for: indexPath)
             cell.delegate = self
-            cell.bindTo(indexPath.item)
+            cell.bindTo(timeInterval)
         }
         return cell
     }
@@ -88,19 +103,11 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     
     // MARK: - ThumbnailCollectionCellDelegate
     
-    func getThumbnail(at index: Int) -> UIImage? {
-        return delegate?.getThumbnail(at: index)
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
+        return delegate?.getThumbnail(at: timestamp)
     }
     
     // MARK: - Public interface
-    
-    /// Sets the size of the thumbnail collection
-    ///
-    /// - Parameter count: the new size
-    func setThumbnails(count: Int) {
-        self.itemCount = count
-        thumbnailCollectionView.collectionView.reloadData()
-    }
     
     /// Obtains the frame that contains the visible cells.
     func getCellsFrame() -> CGRect {
@@ -158,5 +165,25 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         let min: CGFloat = 0
         let max: CGFloat = 100
         return (min...max).clamp(percent)
+    }
+    
+    // MARK: - Private utilities
+    
+    /// Calculates the timestamp of the cell in relation to its position in the collection.
+    ///
+    /// - Parameters:
+    ///  - indexPath: the index path of the cell.
+    private func calculateTimestamp(for indexPath: IndexPath) -> TimeInterval {
+        let timePerCell = calculateTimePerCell()
+        let timeForCurrentCell = timePerCell.f * indexPath.item.f
+        return TimeInterval(timeForCurrentCell)
+    }
+    
+    /// Calculates the time interval that each cell represents.
+    private func calculateTimePerCell() -> TimeInterval {
+        let secondsBetweenHandles: CGFloat = CGFloat(TrimController.maxSelectableTime)
+        let widthBetweenHandles = thumbnailCollectionView.collectionView.visibleSize.width - TrimView.selectorMargin * 2
+        let numberOfCellsThatFitBetweenHandles = widthBetweenHandles / ThumbnailCollectionCell.cellWidth
+        return TimeInterval(secondsBetweenHandles / numberOfCellsThatFitBetweenHandles)
     }
 }
