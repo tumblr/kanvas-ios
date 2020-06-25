@@ -33,13 +33,10 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     
     weak var delegate: ThumbnailCollectionControllerDelegate?
     private lazy var thumbnailCollectionView = ThumbnailCollectionView()
-    
-    private var itemCount: Int
-    
+        
     // MARK: - Initializers
     
     init() {
-        itemCount = 0
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -80,8 +77,16 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let mediaDuration = delegate?.getMediaDuration() else { return 0 }
-        let timePerCell = calculateTimePerCell()
-        let cells = mediaDuration.f / timePerCell.f
+        let cells: Float
+        
+        if mediaDuration < TrimController.maxSelectableTime {
+            cells = cellsThatFitBetweenHandles()
+        }
+        else {
+            let timePerCell = calculateTimePerCell()
+            cells = mediaDuration.f / timePerCell.f
+        }
+        
         let size = Int(cells.rounded(.up))
         return size
     }
@@ -181,9 +186,14 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     
     /// Calculates the time interval that each cell represents.
     private func calculateTimePerCell() -> TimeInterval {
-        let secondsBetweenHandles: CGFloat = CGFloat(TrimController.maxSelectableTime)
-        let widthBetweenHandles = thumbnailCollectionView.collectionView.visibleSize.width - TrimView.selectorMargin * 2
-        let numberOfCellsThatFitBetweenHandles = widthBetweenHandles / ThumbnailCollectionCell.cellWidth
+        guard let mediaDuration = delegate?.getMediaDuration() else { return 0 }
+        let secondsBetweenHandles = min(mediaDuration.f, TrimController.maxSelectableTime.f)
+        let numberOfCellsThatFitBetweenHandles = cellsThatFitBetweenHandles()
         return TimeInterval(secondsBetweenHandles / numberOfCellsThatFitBetweenHandles)
+    }
+    
+    private func cellsThatFitBetweenHandles() -> Float {
+        let widthBetweenHandles = thumbnailCollectionView.collectionView.visibleSize.width - TrimView.selectorMargin * 2
+        return widthBetweenHandles.f / ThumbnailCollectionCell.cellWidth.f
     }
 }
