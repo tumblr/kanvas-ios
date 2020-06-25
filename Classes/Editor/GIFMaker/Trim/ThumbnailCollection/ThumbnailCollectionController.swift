@@ -29,7 +29,7 @@ protocol ThumbnailCollectionControllerDelegate: class {
 }
 
 /// Controller for handling the thumbnail collection in the trim menu.
-final class ThumbnailCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ThumbnailCollectionCellDelegate {
+final class ThumbnailCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, ThumbnailCollectionViewLayoutDelegate, ThumbnailCollectionCellDelegate {
     
     weak var delegate: ThumbnailCollectionControllerDelegate?
     private lazy var thumbnailCollectionView = ThumbnailCollectionView()
@@ -61,12 +61,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         thumbnailCollectionView.collectionView.register(cell: ThumbnailCollectionCell.self)
         thumbnailCollectionView.collectionView.delegate = self
         thumbnailCollectionView.collectionView.dataSource = self
-    }
-
-    func reload(completion: ((Bool) -> Void)?) {
-        let collectionView = thumbnailCollectionView.collectionView
-        collectionView.reloadData()
-        collectionView.performBatchUpdates(nil, completion: completion)
+        thumbnailCollectionView.collectionViewLayout.delegate = self
     }
     
     // MARK: - UICollectionView
@@ -76,19 +71,7 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let mediaDuration = delegate?.getMediaDuration() else { return 0 }
-        let cells: Float
-        
-        if mediaDuration < TrimController.maxSelectableTime {
-            cells = cellsThatFitBetweenHandles()
-        }
-        else {
-            let timePerCell = calculateTimePerCell()
-            cells = mediaDuration.f / timePerCell.f
-        }
-        
-        let size = Int(cells.rounded(.up))
-        return size
+        return getCollectionSize()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -102,8 +85,18 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: TrimView.selectorMargin, bottom: 0, right: TrimView.selectorMargin)
+    // MARK: - ThumbnailCollectionViewLayoutDelegate
+    
+    func collectionView(_ collectionView: UICollectionView, widthForCellAt indexPath: IndexPath) -> CGFloat {
+        let itemCount = getCollectionSize()
+        if indexPath.item == itemCount - 1 {
+            let numberOfCells = getNumberOfCells()
+            let visiblePercent = numberOfCells.truncatingRemainder(dividingBy: 1)
+            return ThumbnailCollectionCell.cellWidth * CGFloat(visiblePercent)
+        }
+        else {
+            return ThumbnailCollectionCell.cellWidth
+        }
     }
     
     // MARK: - ThumbnailCollectionCellDelegate
@@ -113,6 +106,12 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
     }
     
     // MARK: - Public interface
+    
+    func reload(completion: ((Bool) -> Void)?) {
+        let collectionView = thumbnailCollectionView.collectionView
+        collectionView.reloadData()
+        collectionView.performBatchUpdates(nil, completion: completion)
+    }
     
     /// Obtains the frame that contains the visible cells.
     func getCellsFrame() -> CGRect {
@@ -192,8 +191,31 @@ final class ThumbnailCollectionController: UIViewController, UICollectionViewDel
         return TimeInterval(secondsBetweenHandles / numberOfCellsThatFitBetweenHandles)
     }
     
+    /// Obtains the number of cells that fit in the trimmer.
     private func cellsThatFitBetweenHandles() -> Float {
         let widthBetweenHandles = thumbnailCollectionView.collectionView.visibleSize.width - TrimView.selectorMargin * 2
         return widthBetweenHandles.f / ThumbnailCollectionCell.cellWidth.f
+    }
+    
+    /// Obtains the number of cells considering the fraction of the last cell as well.
+    private func getNumberOfCells() -> Float {
+        guard let mediaDuration = delegate?.getMediaDuration() else { return 0 }
+        let numberOfCells: Float
+        
+        if mediaDuration < TrimController.maxSelectableTime {
+            numberOfCells = cellsThatFitBetweenHandles()
+        }
+        else {
+            let timePerCell = calculateTimePerCell()
+            numberOfCells = mediaDuration.f / timePerCell.f
+        }
+        
+        return numberOfCells
+    }
+    
+    /// Obtains the number of cells in the collection, expressed as an integer.
+    private func getCollectionSize() -> Int {
+        let cellsAsDecimal = getNumberOfCells()
+        return Int(cellsAsDecimal.rounded(.up))
     }
 }
