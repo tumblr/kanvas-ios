@@ -250,6 +250,42 @@ final public class KanvasCameraAnalyticsStub: NSObject, KanvasCameraAnalyticsPro
         logString(string: "logAdvancedOptionsOpen Page: \(page)")
     }
 
+    public func logEditorGIFButtonToggle(_ value: Bool) {
+        logString(string: "logEditorGIFButtonToggle value:\(value)")
+    }
+
+    public func logEditorGIFOpen() {
+        logString(string: "logEditorGIFOpen")
+    }
+
+    public func logEditorGIFOpenTrim() {
+        logString(string: "logEditorGIFOpenTrim")
+    }
+
+    public func logEditorGIFOpenSpeed() {
+        logString(string: "logEditorGIFOpenSpeed")
+    }
+
+    public func logEditorGIFRevert() {
+        logString(string: "logEditorGIFRevert")
+    }
+
+    public func logEditorGIFConfirm(duration: TimeInterval, playbackMode: KanvasGIFPlaybackMode, speed: Float) {
+        logString(string: "logEditorGIFConfirm duration: \(duration), playbackMode: \(playbackMode.string()), speed: \(speed)")
+    }
+
+    public func logEditorGIFChange(playbackMode: KanvasGIFPlaybackMode) {
+        logString(string: "logEditorGIFChange playbackMode: \(playbackMode.string())")
+    }
+
+    public func logEditorGIFChange(speed: Float) {
+        logString(string: "logEditorGIFChange speed: \(speed)")
+    }
+
+    public func logEditorGIFChange(trimStart: TimeInterval, trimEnd: TimeInterval) {
+        logString(string: "logEditorGIFChange trimStart: \(trimStart) end: \(trimEnd)")
+    }
+
     func logString(string: String) {
         NSLog("\(self): \(string)")
     }
