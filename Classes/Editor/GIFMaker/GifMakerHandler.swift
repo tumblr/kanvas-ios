@@ -48,8 +48,10 @@ class GifMakerHandler {
 
     private(set) var duration: TimeInterval?
 
-    var trimmedDuration: TimeInterval? {
-        guard let settings = settings else { return nil }
+    var trimmedDuration: TimeInterval {
+        guard let settings = settings else {
+            return 0
+        }
         let startTime = getTimestamp(at: settings.startIndex)
         let endTime = getTimestamp(at: settings.endIndex)
         return endTime - startTime
