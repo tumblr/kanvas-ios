@@ -73,14 +73,14 @@ class GifMakerHandler {
 
     func trimmedSegments(_ segments: [CameraSegment]) -> [CameraSegment] {
         guard let settings = settings else {
-            return []
+            return segments
         }
         return Array(segments[settings.startIndex...settings.endIndex])
     }
 
     func framesForPlayback(_ frames: [MediaFrame]) -> [MediaFrame] {
         guard let settings = settings else {
-            return []
+            return frames
         }
 
         let rate = TimeInterval(settings.rate)

@@ -468,13 +468,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
-        let frames = segments.compactMap { (segment) -> MediaFrame? in
-            guard let image = segment.image, let interval = segment.timeInterval else {
-                assertionFailure("Frame can't be missing a UIImage or TimeInterval")
-                return nil
-            }
-            return (image: image, interval: interval)
-        }
+        let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
         exporter.export(frames: frames) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
@@ -688,15 +682,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - GifMakerHandlerDelegate & MediaPlayerDelegate
 
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval {
-        for media in segments {
-            switch media {
-            case .image(_, _, _, _):
-                break
-            case .video(_, _):
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
-            }
-        }
-        return KanvasCameraTimes.onlyImagesFrameTimeInterval
+        return CameraSegment.defaultTimeInterval(segments: segments)
     }
 
     // MARK: - GifMakerHandlerDelegate
