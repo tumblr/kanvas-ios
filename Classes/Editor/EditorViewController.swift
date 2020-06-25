@@ -108,7 +108,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
 
     private lazy var gifMakerHandler: GifMakerHandler = {
-        let handler = GifMakerHandler(player: player)
+        let handler = GifMakerHandler(player: player, analyticsProvider: analyticsProvider)
         handler.delegate = self
         return handler
     }()
@@ -587,6 +587,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
+                analyticsProvider?.logEditorGIFConfirm(
+                    duration: gifMakerHandler.trimmedDuration,
+                    playbackMode: KanvasGIFPlaybackMode(from: gifMakerHandler.settings?.playbackMode ?? .loop),
+                    speed: gifMakerHandler.settings?.rate ?? 1.0
+                )
             }
         case .filter:
             filterController.showView(false)
@@ -634,11 +639,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
                     self.gifMakerController.showConfirmButton(true)
                 })
+                analyticsProvider?.logEditorGIFOpen()
             }
             else {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
                 shouldExportMediaAsGIF.toggle()
                 onAfterConfirmingEditionMenu()
+                analyticsProvider?.logEditorGIFButtonToggle(shouldExportMediaAsGIF)
             }
         case .filter:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
