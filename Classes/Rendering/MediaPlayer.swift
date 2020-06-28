@@ -58,9 +58,8 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let pixelBufferView = GLPixelBufferView(frame: frame)
+        let pixelBufferView = GLPixelBufferView(delegate: self)
         pixelBufferView.mediaContentMode = .scaleAspectFit
-        pixelBufferView.delegate = self
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }

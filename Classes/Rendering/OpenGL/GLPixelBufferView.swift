@@ -19,7 +19,7 @@ protocol GLPixelBufferViewDelegate: class {
 /// OpenGL view for rendering a buffer of pixels.
 final class GLPixelBufferView: UIView {
 
-    weak var delegate: GLPixelBufferViewDelegate?
+    private weak var delegate: GLPixelBufferViewDelegate?
 
     private var renderShader: Shader?
     private var oglContext: EAGLContext?
@@ -32,7 +32,7 @@ final class GLPixelBufferView: UIView {
 
     private var uniformInputImageTexture: GLint = 0
 
-    var viewportRect: CGRect = .zero {
+    private var viewportRect: CGRect = .zero {
         didSet {
             if viewportRect != oldValue {
                 var rect = viewportRect.applying(.init(scaleX: 1/contentScaleFactor, y: 1/contentScaleFactor))
@@ -57,8 +57,9 @@ final class GLPixelBufferView: UIView {
     }
 
     /// Initializes the OpenGL layer and context
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(delegate: GLPixelBufferViewDelegate?) {
+        self.delegate = delegate
+        super.init(frame: .zero)
         
         self.contentScaleFactor = UIScreen.main.nativeScale
         
@@ -76,7 +77,7 @@ final class GLPixelBufferView: UIView {
     }
 
     /// Initializes framebuffers, renderbuffers, and a tecture cache
-    func initializeBuffers() -> Bool {
+    private func initializeBuffers() -> Bool {
         guard let oglContext = oglContext, let layer = self.layer as? CAEAGLLayer else {
             return false
         }
