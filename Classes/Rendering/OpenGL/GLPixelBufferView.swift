@@ -43,7 +43,7 @@ final class GLPixelBufferView: UIView {
         }
     }
 
-    var mediaContentMode: UIView.ContentMode = .scaleAspectFill {
+    private var mediaContentMode: UIView.ContentMode = .scaleAspectFill {
         didSet {
             guard mediaContentMode == .scaleAspectFill || mediaContentMode == .scaleAspectFit else {
                 assertionFailure("GLPixelBufferView.mediaContentMode only supports scaleAspectFill and scaleAspectFit")
@@ -57,8 +57,9 @@ final class GLPixelBufferView: UIView {
     }
 
     /// Initializes the OpenGL layer and context
-    init(delegate: GLPixelBufferViewDelegate?) {
+    init(delegate: GLPixelBufferViewDelegate?, mediaContentMode: UIView.ContentMode = .scaleAspectFill) {
         self.delegate = delegate
+        self.mediaContentMode = mediaContentMode
         super.init(frame: .zero)
         
         self.contentScaleFactor = UIScreen.main.nativeScale
