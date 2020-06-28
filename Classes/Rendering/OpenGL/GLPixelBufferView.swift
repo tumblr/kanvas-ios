@@ -17,7 +17,7 @@ protocol GLPixelBufferViewDelegate: class {
 }
 
 /// OpenGL view for rendering a buffer of pixels.
-final class GLPixelBufferView: UIView {
+final class GLPixelBufferView: UIView, PixelBufferView {
 
     private weak var delegate: GLPixelBufferViewDelegate?
 
@@ -136,39 +136,12 @@ final class GLPixelBufferView: UIView {
         return success
     }
 
-    /// Dispose of any OpenGL resources: ramebufers, renderbuffers, textureCache.
-    /// Also resets the OpenGL context.
-    func reset() {
-        guard let oglContext = oglContext else {
-            return
-        }
-        let oldContext = EAGLContext.current()
-        if oldContext !== oglContext {
-            if !EAGLContext.setCurrent(oglContext) {
-                assertionFailure("Problem with OpenGL context")
-                return
-            }
-        }
-        if frameBufferHandle != 0 {
-            glDeleteFramebuffers(1, &frameBufferHandle)
-            frameBufferHandle = 0
-        }
-        if colorBufferHandle != 0 {
-            glDeleteRenderbuffers(1, &colorBufferHandle)
-            colorBufferHandle = 0
-        }
-        renderShader?.deleteProgram()
-        flushPixelBufferCache()
-        self.textureCache = nil
-        if oldContext !== oglContext {
-            EAGLContext.setCurrent(oldContext)
-        }
-    }
-
     deinit {
         self.reset()
     }
-
+    
+    // MARK: - PixelBufferView
+    
     /// Renders a pixel buffer to a texture, which is applied to a 2D plane positioned to fill the entire view.
     func displayPixelBuffer(_ pixelBuffer: CVPixelBuffer) {
         guard let oglContext = oglContext else {
@@ -290,6 +263,35 @@ final class GLPixelBufferView: UIView {
         glBindTexture(CVOpenGLESTextureGetTarget(texture), 0)
         glBindTexture(GL_TEXTURE_2D.ui, 0)
     }
+    
+    /// Dispose of any OpenGL resources: ramebufers, renderbuffers, textureCache.
+    /// Also resets the OpenGL context.
+    func reset() {
+        guard let oglContext = oglContext else {
+            return
+        }
+        let oldContext = EAGLContext.current()
+        if oldContext !== oglContext {
+            if !EAGLContext.setCurrent(oglContext) {
+                assertionFailure("Problem with OpenGL context")
+                return
+            }
+        }
+        if frameBufferHandle != 0 {
+            glDeleteFramebuffers(1, &frameBufferHandle)
+            frameBufferHandle = 0
+        }
+        if colorBufferHandle != 0 {
+            glDeleteRenderbuffers(1, &colorBufferHandle)
+            colorBufferHandle = 0
+        }
+        renderShader?.deleteProgram()
+        flushPixelBufferCache()
+        self.textureCache = nil
+        if oldContext !== oglContext {
+            EAGLContext.setCurrent(oldContext)
+        }
+    }
 
     /// Flushes the texture cache
     func flushPixelBufferCache() {
@@ -297,5 +299,4 @@ final class GLPixelBufferView: UIView {
             CVOpenGLESTextureCacheFlush(textureCache, 0)
         }
     }
-    
 }

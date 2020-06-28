@@ -24,7 +24,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
         renderer.delegate = self
         return renderer
     }()
-    private weak var previewView: GLPixelBufferView?
+    private weak var previewView: PixelBufferView?
     private let settings: CameraSettings
 
     /// Filters

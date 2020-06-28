@@ -51,7 +51,7 @@ enum MediaPlayerPlaybackMode {
 /// View for rendering the player.
 final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
-    weak var pixelBufferView: GLPixelBufferView?
+    weak var pixelBufferView: PixelBufferView?
 
     weak var delegate: MediaPlayerViewDelegate?
 

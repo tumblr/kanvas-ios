@@ -466,6 +466,7 @@
 		B154000FADDD2E81CA1C25FBCDB2FFF8 /* SDAnimatedImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = DE73A3C79CF935D3345102972A49EB42 /* SDAnimatedImageRep.m */; };
 		B3676424DBAA47957E458754CF4D8DCC /* SDAsyncBlockOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C6BCD0D9DEB19511372524DB9887125 /* SDAsyncBlockOperation.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		B3ACF87AD40E0FF724AD5A2FFB79FF0A /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA61B5000CF44E6B6F28B5CEBD650D9 /* EditorTextController.swift */; };
+		B3F22C2924A9250C0007EDCD /* PixelBufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F22C2824A9250C0007EDCD /* PixelBufferView.swift */; };
 		B4420B10934E5919A5DF820E65703C7A /* lossless_common.h in Headers */ = {isa = PBXBuildFile; fileRef = E097034CC5E7594BE93F7B29F205B83D /* lossless_common.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		B48CA924B28B647DE2939738D07491DA /* FilterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517359E96446576C28E1D026C4FA66A2 /* FilterProtocol.swift */; };
 		B5B47D4098429A325AA0DDEEE80C6431 /* SDImageIOAnimatedCoderInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = DF79C05C9A8EDCED77648B84BAE4DC12 /* SDImageIOAnimatedCoderInternal.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -1313,6 +1314,7 @@
 		B321C73955714AFB57F9DB8F1090071D /* libUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B39F1800F18F8B865DAE8490212BBB20 /* Shader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shader.swift; sourceTree = "<group>"; };
 		B3CF84624A6CD466163FBBB3524CAC04 /* NSButton+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSButton+WebCache.m"; path = "SDWebImage/Core/NSButton+WebCache.m"; sourceTree = "<group>"; };
+		B3F22C2824A9250C0007EDCD /* PixelBufferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelBufferView.swift; sourceTree = "<group>"; };
 		B4CBE113B08096C3B0EEA7F124BA103D /* BackgroundFillOperation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundFillOperation.swift; sourceTree = "<group>"; };
 		B622D5D2C8F4D98CDEBBCA0AB5494DAF /* SDImageIOAnimatedCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageIOAnimatedCoder.m; path = SDWebImage/Core/SDImageIOAnimatedCoder.m; sourceTree = "<group>"; };
 		B62ADA54FF28FFA7DD03275F8A6A91F7 /* IgnoreBackgroundTouchesStackView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IgnoreBackgroundTouchesStackView.swift; sourceTree = "<group>"; };
@@ -1851,6 +1853,7 @@
 				B2ED2E19106EE1ECACBA37A2D2D1A3DE /* Renderer.swift */,
 				D8AB60C0A9CF5E58E6778EA947E69E68 /* Rendering.swift */,
 				3272797D60186F169AFF8B21404ACC45 /* VideoCompositor.swift */,
+				B3F22C2824A9250C0007EDCD /* PixelBufferView.swift */,
 				681D64B097E7E19DA03C6513630470DA /* OpenGL */,
 				B3F22C2724A91DE30007EDCD /* Metal */,
 				D5D6B30EA6EDF119629E0049DB515EC7 /* Filters */,
@@ -4095,6 +4098,7 @@
 				ACDBBB0237DCE7BE206CD5CCE632A867 /* KanvasQuickBlogSelectorCoordinating.swift in Sources */,
 				E7C9440C52610762C80239F5CB58AD17 /* KanvasUIImagePickerViewController.swift in Sources */,
 				B070855AFD3E797BF2C8208C4BAD71A9 /* LegoFilter.swift in Sources */,
+				B3F22C2924A9250C0007EDCD /* PixelBufferView.swift in Sources */,
 				10581968E68DF6DB5E7C94DE1DC41871 /* LightLeaksFilter.swift in Sources */,
 				B74A4D41B276C225AD5939622E138462 /* LoadingIndicatorView.swift in Sources */,
 				27D24703BF491BCEA4CAC76A7CC19C2A /* MainTextView.swift in Sources */,
