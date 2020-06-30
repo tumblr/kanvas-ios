@@ -30,11 +30,13 @@ protocol GifMakerControllerDelegate: class {
     ///  - endingPercentage: trimming starting moment expressed as a percentage.
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
     
+    /// Obtains the full media duration.
+    func getMediaDuration() -> TimeInterval?
     
     /// Obtains a thumbnail for the background of the trimming tool
     ///
-    /// - Parameter index: the index of the requested image.
-    func getThumbnail(at index: Int) -> UIImage?
+    /// - Parameter timestamp: the time of the requested image.
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage?
     
     /// Called when a new speed is selected.
     ///
@@ -164,8 +166,12 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         delegate?.didEndTrimming(from: startingPercentage, to: endingPercentage)
     }
     
-    func getThumbnail(at index: Int) -> UIImage? {
-        return delegate?.getThumbnail(at: index)
+    func getMediaDuration() -> TimeInterval? {
+        return delegate?.getMediaDuration()
+    }
+    
+    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
+        return delegate?.getThumbnail(at: timestamp)
     }
     
     // MARK: - SpeedControllerDelegate
@@ -197,12 +203,5 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
         gifMakerView.showConfirmButton(show)
-    }
-    
-    /// Sets the size of the thumbnail collection
-    ///
-    /// - Parameter count: the new size
-    func setThumbnails(count: Int) {
-        trimController.setThumbnails(count: count)
     }
 }
