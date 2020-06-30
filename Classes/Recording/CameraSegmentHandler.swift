@@ -42,6 +42,14 @@ enum CameraSegment {
             return mediaInfo ?? TumblrMediaInfo(fromVideoURL: url) ?? TumblrMediaInfo(source: .media_library)
         }
     }
+
+    init(from frame: GIFDecodeFrame, info: TumblrMediaInfo) {
+        self = .image(UIImage(cgImage: frame.image), nil, frame.interval, info)
+    }
+
+    static func from(frames: GIFDecodeFrames, info: TumblrMediaInfo) -> [CameraSegment] {
+        frames.map { CameraSegment.init(from: $0, info: info) }
+    }
 }
 
 /// A protocol to create final output with all assets
