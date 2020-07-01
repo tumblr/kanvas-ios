@@ -1,0 +1,49 @@
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+//
+
+import Metal
+
+final class MetalRenderEncoder {
+    let renderPipelineState: MTLRenderPipelineState
+    let device: MTLDevice
+    var shaderContext = ShaderContext()
+
+    init(device: MTLDevice) {
+        self.device = device
+
+        let library = device.makeDefaultLibrary()
+        let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+        renderPipelineDescriptor.sampleCount = 1
+        renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
+        renderPipelineDescriptor.depthAttachmentPixelFormat = .invalid
+        renderPipelineDescriptor.vertexFunction = library?.makeFunction(name: "vertexIdentity")
+        renderPipelineDescriptor.fragmentFunction = library?.makeFunction(name: "fragmentIdentity")
+        
+        guard let renderPipelineState = try? device.makeRenderPipelineState(descriptor: renderPipelineDescriptor) else {
+            fatalError("cannot create render pipeline state")
+        }
+        self.renderPipelineState = renderPipelineState
+    }
+    
+    func encode(commandBuffer: MTLCommandBuffer,
+                inputTexture: MTLTexture,
+                currentRenderPassDescriptor: MTLRenderPassDescriptor?,
+                shaderContext: ShaderContext) {
+        guard let currentRenderPassDescriptor = currentRenderPassDescriptor else {
+            return
+        }
+        
+        self.shaderContext = shaderContext
+        let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: currentRenderPassDescriptor)
+        renderEncoder?.setRenderPipelineState(renderPipelineState)
+        renderEncoder?.setFragmentTexture(inputTexture, index: 0)
+        renderEncoder?.setFragmentBytes(&self.shaderContext,
+                                        length: MemoryLayout<ShaderContext>.stride,
+                                        index: 0)
+        renderEncoder?.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4, instanceCount: 1)
+        renderEncoder?.endEncoding()
+    }
+}
