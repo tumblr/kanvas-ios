@@ -316,7 +316,7 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
         imageExportCalled = true
     }
 
-    func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(url)
         framesExportCalled = true
     }

@@ -19,7 +19,7 @@ public protocol EditorControllerDelegate: class {
     func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting frames
-    func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -509,7 +509,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(frames: frames) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
-                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                var size: CGSize? = nil
+                if let gifURL = gifURL {
+                    size = GIFDecoderFactory.main().size(of: gifURL)
+                }
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
                 }
@@ -538,7 +542,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     }
                     return
                 }
-                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                let size = GIFDecoderFactory.main().size(of: gifURL)
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
                 }
