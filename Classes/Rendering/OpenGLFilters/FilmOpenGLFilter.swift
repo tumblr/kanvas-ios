@@ -6,11 +6,11 @@
 
 import Foundation
 
-/// Light Leaks Filter
-final class LightLeaksFilter: Filter {
-
+/// Film Filter
+final class FilmOpenGLFilter: OpenGLFilter {
+    
     override func setupShader() {
-        let fragment = Shader.getSourceCode("light_leaks", type: .fragment)
+        let fragment = Shader.getSourceCode("film", type: .fragment)
         let vertex = Shader.getSourceCode("base_filter", type: .vertex)
         if let fragment = fragment, let vertex = vertex {
             let shader = Shader(vertexShader: vertex, fragmentShader: fragment)

@@ -10,7 +10,7 @@ import OpenGLES
 import GLKit
 
 /// A basic filter implementation to render CVPixelBuffer
-class Filter: FilterProtocol {
+class OpenGLFilter: FilterProtocol {
 
     private let glContext: EAGLContext?
     private var renderTextureCache: CVOpenGLESTextureCache?
@@ -128,7 +128,10 @@ class Filter: FilterProtocol {
             uniformTransform = GLU.getUniformLocation(shader.program, "transform")
             
             let maxRetainedBufferCount = ShaderConstants.retainedBufferCount
-            bufferPool = createPixelBufferPool(outputDimensions.width.i, outputDimensions.height.i, FourCharCode(kCVPixelFormatType_32BGRA), Int32(maxRetainedBufferCount))
+            bufferPool = createPixelBufferPool(outputDimensions.width.i,
+                                               outputDimensions.height.i,
+                                               FourCharCode(kCVPixelFormatType_32BGRA),
+                                               Int32(maxRetainedBufferCount))
             if bufferPool == nil {
                 throw GLError.setupError("Problem initializing a buffer pool.")
             }
@@ -254,7 +257,13 @@ class Filter: FilterProtocol {
     
     // MARK: - filters get rendered to a backing CVPixelBuffer
     func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?, time: TimeInterval) -> CVPixelBuffer? {
-        guard let shader = shader, let pixelBuffer = pixelBuffer, let textureCache = textureCache, let bufferPool = bufferPool, let renderTextureCache = renderTextureCache else {
+        guard
+            let shader = shader,
+            let pixelBuffer = pixelBuffer,
+            let textureCache = textureCache,
+            let bufferPool = bufferPool,
+            let renderTextureCache = renderTextureCache
+        else {
             return nil
         }
         let oldContext = EAGLContext.current()
@@ -280,7 +289,8 @@ class Filter: FilterProtocol {
             var dstTexture: CVOpenGLESTexture? = nil
             var dstPixelBuffer: CVPixelBuffer? = nil
 
-            let srcDimensions = CMVideoDimensions(width: Int32(CVPixelBufferGetWidth(pixelBuffer)), height: Int32(CVPixelBufferGetHeight(pixelBuffer)))
+            let srcDimensions = CMVideoDimensions(width: Int32(CVPixelBufferGetWidth(pixelBuffer)),
+                                                  height: Int32(CVPixelBufferGetHeight(pixelBuffer)))
             err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
                                                                textureCache,
                                                                pixelBuffer,

@@ -525,7 +525,13 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             return
         }
 
-        let bufferAttributes: [String: Any] = [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA, String(kCVPixelBufferCGBitmapContextCompatibilityKey): true, String(kCVPixelBufferCGImageCompatibilityKey): true, String(kCVPixelBufferWidthKey): image.size.width, String(kCVPixelBufferHeightKey): image.size.height]
+        let bufferAttributes: [String: Any] = [
+            String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA,
+            String(kCVPixelBufferCGBitmapContextCompatibilityKey): true,
+            String(kCVPixelBufferCGImageCompatibilityKey): true,
+            String(kCVPixelBufferWidthKey): image.size.width,
+            String(kCVPixelBufferHeightKey): image.size.height
+        ]
         assetWriter.add(input)
         let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: bufferAttributes)
 
@@ -560,7 +566,10 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameter image: input UIImage
     /// - Returns: the pixel buffer, if successful
     private func createNewPixelBuffer(from image: UIImage) -> CVPixelBuffer? {
-        let attrs: CFDictionary = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
+        let attrs: CFDictionary = [
+            kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
+            kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue
+        ] as CFDictionary
         var pixelBuffer: CVPixelBuffer?
         let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(image.size.width), Int(image.size.height), kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
         guard status == kCVReturnSuccess, let buffer = pixelBuffer else {

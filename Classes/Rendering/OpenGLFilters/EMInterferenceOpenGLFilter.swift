@@ -6,11 +6,11 @@
 
 import Foundation
 
-/// Plasma Filter
-final class PlasmaFilter: Filter {
-    
+/// EM Interference Filter
+final class EMInterferenceOpenGLFilter: OpenGLFilter {
+
     override func setupShader() {
-        let fragment = Shader.getSourceCode("plasma", type: .fragment)
+        let fragment = Shader.getSourceCode("em_interference", type: .fragment)
         let vertex = Shader.getSourceCode("base_filter", type: .vertex)
         if let fragment = fragment, let vertex = vertex {
             let shader = Shader(vertexShader: vertex, fragmentShader: fragment)

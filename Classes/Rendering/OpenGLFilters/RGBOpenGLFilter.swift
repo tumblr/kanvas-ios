@@ -6,11 +6,11 @@
 
 import Foundation
 
-/// Grayscale Filter
-final class GrayscaleFilter: Filter {
+/// RGB Filter
+final class RGBOpenGLFilter: OpenGLFilter {
 
     override func setupShader() {
-        let fragment = Shader.getSourceCode("grayscale", type: .fragment)
+        let fragment = Shader.getSourceCode("rgb", type: .fragment)
         let vertex = Shader.getSourceCode("base_filter", type: .vertex)
         if let fragment = fragment, let vertex = vertex {
             let shader = Shader(vertexShader: vertex, fragmentShader: fragment)
@@ -18,4 +18,7 @@ final class GrayscaleFilter: Filter {
         }
     }
 
+    override func updateUniforms() {
+        shader?.setFloatUniform(key: "time", value: Float(time))
+    }
 }

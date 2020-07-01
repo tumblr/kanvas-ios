@@ -17,35 +17,35 @@ struct FilterFactory {
         switch type {
         case .passthrough: fallthrough
         case .off:
-            newFilter = Filter(glContext: glContext)
+            newFilter = OpenGLFilter(glContext: glContext)
         case .emInterference:
-            newFilter = EMInterferenceFilter(glContext: glContext)
+            newFilter = EMInterferenceOpenGLFilter(glContext: glContext)
         case .film:
-            newFilter = FilmFilter(glContext: glContext)
+            newFilter = FilmOpenGLFilter(glContext: glContext)
         case .lego:
-            newFilter = LegoFilter(glContext: glContext)
+            newFilter = LegoOpenGLFilter(glContext: glContext)
         case .mirrorTwo:
-            newFilter = MirrorTwoFilter(glContext: glContext)
+            newFilter = MirrorTwoOpenGLFilter(glContext: glContext)
         case .mirrorFour:
-            newFilter = MirrorFourFilter(glContext: glContext)
+            newFilter = MirrorFourOpenGLFilter(glContext: glContext)
         case .plasma:
-            newFilter = PlasmaFilter(glContext: glContext)
+            newFilter = PlasmaOpenGLFilter(glContext: glContext)
         case .rave:
-            newFilter = RaveFilter(glContext: glContext)
+            newFilter = RaveOpenGLFilter(glContext: glContext)
         case .rgb:
-            newFilter = RGBFilter(glContext: glContext)
+            newFilter = RGBOpenGLFilter(glContext: glContext)
         case .chroma:
-            newFilter = ChromaFilter(glContext: glContext)
+            newFilter = ChromaOpenGLFilter(glContext: glContext)
         case .grayscale:
-            newFilter = GrayscaleFilter(glContext: glContext)
+            newFilter = GrayscaleOpenGLFilter(glContext: glContext)
         case .lightLeaks:
-            newFilter = LightLeaksFilter(glContext: glContext)
+            newFilter = LightLeaksOpenGLFilter(glContext: glContext)
         case .wavePool:
-            newFilter = ImagePoolFilter(glContext: glContext)
+            newFilter = ImagePoolOpenGLFilter(glContext: glContext)
         case .manga:
-            newFilter = MangaFilter(glContext: glContext)
+            newFilter = MangaOpenGLFilter(glContext: glContext)
         case .toon:
-            newFilter = ToonFilter(glContext: glContext)
+            newFilter = ToonOpenGLFilter(glContext: glContext)
         }
         return newFilter
     }
@@ -63,7 +63,7 @@ struct FilterFactory {
         var filters: [FilterProtocol] = []
 
         // not sure if this is OK...
-        let f = Filter(glContext: glContext)
+        let f = OpenGLFilter(glContext: glContext)
         filters.append(f)
 
         filters.append(createFilter(type: type, glContext: glContext))
@@ -72,6 +72,6 @@ struct FilterFactory {
     }
 
     private static func createFilter(fromFilterList filters: [FilterProtocol], glContext: EAGLContext?) -> FilterProtocol {
-        return filters.count > 1 ? GroupFilter(filters: filters) : filters.first ?? Filter(glContext: glContext)
+        return filters.count > 1 ? GroupOpenGLFilter(filters: filters) : filters.first ?? OpenGLFilter(glContext: glContext)
     }
 }
