@@ -152,9 +152,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private var mediaChanged: Bool {
         let hasStickerOrText = !editorView.movableViewCanvas.isEmpty
-        let filterApplied = filterType?.filterApplied == true
+        let filterApplied = filterType?.filterApplied ?? false
         let hasDrawings = !drawingController.isEmpty
-        return hasStickerOrText || filterApplied || hasDrawings
+        let gifMakerOpened = shouldExportMediaAsGIF
+        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened
     }
 
     private var editingNewText: Bool = true
