@@ -465,9 +465,9 @@
 		B070855AFD3E797BF2C8208C4BAD71A9 /* LegoOpenGLFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A43CB9F7DA1D1F6994E1CB34D2A97D /* LegoOpenGLFilter.swift */; };
 		B154000FADDD2E81CA1C25FBCDB2FFF8 /* SDAnimatedImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = DE73A3C79CF935D3345102972A49EB42 /* SDAnimatedImageRep.m */; };
 		B342F40924ACEA6100E9C461 /* MetalContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342F40824ACEA6100E9C461 /* MetalContext.swift */; };
-		B342F40C24ACFAC100E9C461 /* identity.metal in Sources */ = {isa = PBXBuildFile; fileRef = B342F40B24ACFAC100E9C461 /* identity.metal */; };
 		B342F40E24ACFB0100E9C461 /* types.h in Headers */ = {isa = PBXBuildFile; fileRef = B342F40D24ACFB0100E9C461 /* types.h */; };
 		B342F41024ACFBF200E9C461 /* MetalRenderEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342F40F24ACFBF200E9C461 /* MetalRenderEncoder.swift */; };
+		B342F41224AD26EF00E9C461 /* identity.metal in Sources */ = {isa = PBXBuildFile; fileRef = B342F40B24ACFAC100E9C461 /* identity.metal */; };
 		B3676424DBAA47957E458754CF4D8DCC /* SDAsyncBlockOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C6BCD0D9DEB19511372524DB9887125 /* SDAsyncBlockOperation.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		B3ACF87AD40E0FF724AD5A2FFB79FF0A /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA61B5000CF44E6B6F28B5CEBD650D9 /* EditorTextController.swift */; };
 		B3F22C2924A9250C0007EDCD /* PixelBufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F22C2824A9250C0007EDCD /* PixelBufferView.swift */; };
@@ -4084,6 +4084,7 @@
 				8E79E948A9F8BEBB81F1C41023BF96C4 /* OpenGLFilter.swift in Sources */,
 				34C5F69E387A9CF3671A5DBB80783503 /* FilterCollectionCell.swift in Sources */,
 				B836A1F6A70F68864E064F3FF6DF541B /* FilterCollectionInnerCell.swift in Sources */,
+				B342F41224AD26EF00E9C461 /* identity.metal in Sources */,
 				98A8893B59E5831B9BA4B6AF3EB024E7 /* FilterCollectionView.swift in Sources */,
 				405A829D2A32584965AA76135CAFD8E8 /* FilteredInputViewController.swift in Sources */,
 				87BA9D02CE9774EB576A6D9AC5331F4D /* FilterFactory.swift in Sources */,
@@ -4093,7 +4094,6 @@
 				F86D65880E8179E880D37A173CAB2157 /* FilterSettingsView.swift in Sources */,
 				25219BC6491DBEAD54EF803DB9ED78BC /* FilterType.swift in Sources */,
 				9DD1314667E205FFD32B8728972FB678 /* GIFDecoder.swift in Sources */,
-				B342F40C24ACFAC100E9C461 /* identity.metal in Sources */,
 				9D678745A5921CDC059F9CB3518DE5A7 /* GIFEncoder.swift in Sources */,
 				614A404482BF0E0CA33E680B0D9A7C96 /* GifMakerController.swift in Sources */,
 				C19387164695B0E81A348EC8D698D76F /* GifMakerHandler.swift in Sources */,

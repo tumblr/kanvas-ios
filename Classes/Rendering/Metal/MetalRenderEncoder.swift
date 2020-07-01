@@ -14,7 +14,14 @@ final class MetalRenderEncoder {
     init(device: MTLDevice) {
         self.device = device
 
-        let library = device.makeDefaultLibrary()
+        guard
+            let bundlePath = KanvasCameraStrings.bundlePath(for: MetalRenderEncoder.self),
+            let bundle = Bundle(path: bundlePath)
+        else {
+            fatalError("Couldn't find a bundle for KanvasCamera")
+        }
+        
+        let library = try? device.makeDefaultLibrary(bundle: bundle)
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.sampleCount = 1
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm

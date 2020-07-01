@@ -18,6 +18,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case ghostFrame(Bool)
         case openGLPreview(Bool)
         case openGLCapture(Bool)
+        case metalPreview(Bool)
         case cameraFilters(Bool)
         case experimentalCameraFilters(Bool)
         case editor(Bool)
@@ -41,6 +42,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Camera OpenGL"
             case .openGLCapture(_):
                 return "Camera OpenGL Capture"
+            case .metalPreview(_):
+                return "Camera Metal"
             case .cameraFilters(_):
                 return "Camera Filters"
             case .experimentalCameraFilters(_):
@@ -79,6 +82,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .openGLPreview(let enabled):
                 return enabled
             case .openGLCapture(let enabled):
+                return enabled
+            case .metalPreview(let enabled):
                 return enabled
             case .cameraFilters(let enabled):
                 return enabled
@@ -156,6 +161,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .openGLPreview(value)
         case .openGLCapture(_):
             featuresData[indexPath.row] = .openGLCapture(value)
+        case .metalPreview(_):
+            featuresData[indexPath.row] = .metalPreview(value)
         case .cameraFilters(_):
             featuresData[indexPath.row] = .cameraFilters(value)
         case .experimentalCameraFilters(_):

@@ -61,9 +61,22 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     
     // MARK: - layout
     private func setupPreview() {
-        let previewView = GLPixelBufferView(delegate: nil, mediaContentMode: .scaleAspectFit)
-        previewView.add(into: view)
-        self.previewView = previewView
+        if settings.features.openGLPreview {
+            let previewView = GLPixelBufferView(delegate: nil, mediaContentMode: .scaleAspectFit)
+            previewView.add(into: view)
+            self.previewView = previewView
+        }
+        else {
+            let device = MTLCreateSystemDefaultDevice()!
+            let commandQueue = device.makeCommandQueue()!
+            var textureCache: CVMetalTextureCache?
+            CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &textureCache)
+            let previewView = MetalPixelBufferView(context: MetalContext(device: device,
+                                                                         commandQueue: commandQueue,
+                                                                         textureCache:textureCache!))
+            previewView.add(into: view)
+            self.previewView = previewView
+        }
     }
 
     override func viewDidLayoutSubviews() {

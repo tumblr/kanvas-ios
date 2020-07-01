@@ -21,6 +21,7 @@ final class MetalPixelBufferView: MTKView {
     init(context: MetalContext) {
         self.context = context
         super.init(frame: .zero, device: context.device)
+        print(renderEncoder.device)
     }
     
     required init(coder: NSCoder) {

@@ -83,6 +83,9 @@ public struct CameraFeatures {
     /// The OpenGL Camera Capture feature
     public var openGLCapture: Bool = false
 
+    /// The metal camera preview feature. When openGLPreview is true, this will be ignored.
+    public var metalPreview: Bool = false
+
     /// The Camera Filters feature
     /// This enables the UI to select filters in the camera.
     public var cameraFilters: Bool = false

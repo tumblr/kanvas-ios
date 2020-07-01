@@ -252,6 +252,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .ghostFrame(settings.features.ghostFrame),
             .openGLPreview(settings.features.openGLPreview),
             .openGLCapture(settings.features.openGLCapture),
+            .metalPreview(settings.features.metalPreview),
             .cameraFilters(settings.features.cameraFilters),
             .experimentalCameraFilters(settings.features.experimentalCameraFilters),
             .editor(settings.features.editor),
@@ -277,6 +278,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.openGLPreview = value
         case .openGLCapture(_):
             settings.features.openGLCapture = value
+        case .metalPreview(_):
+            settings.features.metalPreview = value
         case .cameraFilters(_):
             settings.features.cameraFilters = value
         case .experimentalCameraFilters(_):
