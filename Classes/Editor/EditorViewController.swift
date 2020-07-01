@@ -436,15 +436,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
         return false
     }
-
-    private func allSegmentsAreImages() -> Bool {
-        for segment in segments {
-            if segment.image == nil {
-                return false
-            }
-        }
-        return true
-    }
     
     private func startExporting(action: KanvasExportAction) {
         player.stop()
@@ -463,7 +454,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
                 self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
             }
-            else if allSegmentsAreImages() {
+            else if assetsHandler.containsOnlyImages(segments: segments) {
                 self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? TumblrMediaInfo(source: .kanvas_camera), exportAction: action)
             }
             else {
