@@ -197,6 +197,37 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              analyticsProvider: nil,
                              quickBlogSelectorCoordinator: nil)
     }
+
+    public static func createEditor(forGIF url: URL,
+                              info: TumblrMediaInfo,
+                              settings: CameraSettings,
+                              stickerProvider: StickerProvider,
+                              analyticsProvider: KanvasCameraAnalyticsProvider,
+                              completion: @escaping (EditorViewController) -> Void) {
+        GIFDecoderFactory.main().decode(image: url) { frames in
+            let segments = CameraSegment.from(frames: frames, info: info)
+            let editor = EditorViewController(settings: settings,
+                                              segments: segments,
+                                              stickerProvider: stickerProvider,
+                                              analyticsProvider: analyticsProvider)
+            completion(editor)
+        }
+    }
+
+    convenience init(settings: CameraSettings,
+                     segments: [CameraSegment],
+                     stickerProvider: StickerProvider,
+                     analyticsProvider: KanvasCameraAnalyticsProvider) {
+        self.init(settings: settings,
+                  segments: segments,
+                  assetsHandler: CameraSegmentHandler(),
+                  exporterClass: MediaExporter.self,
+                  gifEncoderClass: GIFEncoderImageIO.self,
+                  cameraMode: nil,
+                  stickerProvider: stickerProvider,
+                  analyticsProvider: analyticsProvider,
+                  quickBlogSelectorCoordinator: nil)
+    }
     
     /// The designated initializer for the editor controller
     ///
