@@ -492,10 +492,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
         let frames = segments.compactMap { (segment) -> MediaFrame? in
-            guard let image = segment.image, let interval = segment.timeInterval else {
-                assertionFailure("Frame can't be missing a UIImage or TimeInterval")
+            guard let image = segment.image else {
+                assertionFailure("Frame can't be missing a UIImage")
                 return nil
             }
+            let interval = segment.timeInterval ?? getDefaultTimeIntervalForImageSegments()
             return (image: image, interval: interval)
         }
         exporter.export(frames: frames) { orderedFrames in
