@@ -40,6 +40,9 @@ final class Renderer: Rendering {
     /// OpenGL Context
     let glContext: EAGLContext?
 
+    /// Metal Context
+    let metalContext: MetalContext?
+
     /// Image overlays
     var imageOverlays: [CGImage] = []
 
@@ -66,8 +69,9 @@ final class Renderer: Rendering {
     /// Designated initializer
     ///
     /// - Parameter delegate: the callback
-    init() {
+    init(metalContext: MetalContext?=nil) {
         glContext = EAGLContext(api: .openGLES3)
+        self.metalContext = metalContext
         filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
         switchInputDimensions = false
     }

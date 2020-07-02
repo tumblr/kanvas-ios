@@ -468,6 +468,8 @@
 		B342F40E24ACFB0100E9C461 /* types.h in Headers */ = {isa = PBXBuildFile; fileRef = B342F40D24ACFB0100E9C461 /* types.h */; };
 		B342F41024ACFBF200E9C461 /* MetalRenderEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342F40F24ACFBF200E9C461 /* MetalRenderEncoder.swift */; };
 		B342F41224AD26EF00E9C461 /* identity.metal in Sources */ = {isa = PBXBuildFile; fileRef = B342F40B24ACFAC100E9C461 /* identity.metal */; };
+		B342F41424AD2EBD00E9C461 /* MetalFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342F41324AD2EBD00E9C461 /* MetalFilter.swift */; };
+		B342F41624AD9A4100E9C461 /* mirror.metal in Sources */ = {isa = PBXBuildFile; fileRef = B342F41524AD9A4100E9C461 /* mirror.metal */; };
 		B3676424DBAA47957E458754CF4D8DCC /* SDAsyncBlockOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C6BCD0D9DEB19511372524DB9887125 /* SDAsyncBlockOperation.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		B3ACF87AD40E0FF724AD5A2FFB79FF0A /* EditorTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA61B5000CF44E6B6F28B5CEBD650D9 /* EditorTextController.swift */; };
 		B3F22C2924A9250C0007EDCD /* PixelBufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F22C2824A9250C0007EDCD /* PixelBufferView.swift */; };
@@ -1321,6 +1323,8 @@
 		B342F40B24ACFAC100E9C461 /* identity.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = identity.metal; sourceTree = "<group>"; };
 		B342F40D24ACFB0100E9C461 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 		B342F40F24ACFBF200E9C461 /* MetalRenderEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalRenderEncoder.swift; sourceTree = "<group>"; };
+		B342F41324AD2EBD00E9C461 /* MetalFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalFilter.swift; sourceTree = "<group>"; };
+		B342F41524AD9A4100E9C461 /* mirror.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = mirror.metal; sourceTree = "<group>"; };
 		B39F1800F18F8B865DAE8490212BBB20 /* Shader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Shader.swift; sourceTree = "<group>"; };
 		B3CF84624A6CD466163FBBB3524CAC04 /* NSButton+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSButton+WebCache.m"; path = "SDWebImage/Core/NSButton+WebCache.m"; sourceTree = "<group>"; };
 		B3F22C2824A9250C0007EDCD /* PixelBufferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelBufferView.swift; sourceTree = "<group>"; };
@@ -2722,6 +2726,7 @@
 			children = (
 				B342F40B24ACFAC100E9C461 /* identity.metal */,
 				B342F40D24ACFB0100E9C461 /* types.h */,
+				B342F41524AD9A4100E9C461 /* mirror.metal */,
 			);
 			path = MetalShaders;
 			sourceTree = "<group>";
@@ -2732,6 +2737,7 @@
 				B3F22C2A24A927C30007EDCD /* MetalPixelBufferView.swift */,
 				B342F40824ACEA6100E9C461 /* MetalContext.swift */,
 				B342F40F24ACFBF200E9C461 /* MetalRenderEncoder.swift */,
+				B342F41324AD2EBD00E9C461 /* MetalFilter.swift */,
 			);
 			path = Metal;
 			sourceTree = "<group>";
@@ -4062,6 +4068,7 @@
 				2FEA2CFABB89A5098742B74B111D5E2C /* DrawerTabBarController.swift in Sources */,
 				529B4F85E671F7E2D6A606A93A9006F1 /* DrawerTabBarOption.swift in Sources */,
 				FD6DD0C90B5DFD77D3C15A5567586DF3 /* DrawerTabBarView.swift in Sources */,
+				B342F41424AD2EBD00E9C461 /* MetalFilter.swift in Sources */,
 				CBFD987DCFE25714470367DEFB6F42AF /* DrawingCanvas.swift in Sources */,
 				3DD254964B8D05C87AD32C53AD693883 /* DrawingController.swift in Sources */,
 				B729FEF96E8157D9832AC6D9575F5BDA /* DrawingView.swift in Sources */,
@@ -4146,6 +4153,7 @@
 				FBB8D13529079AFC77FF047658CFB860 /* MediaPlayerController.swift in Sources */,
 				D17567EE25552BF3F206F7638BE9C93C /* MirrorFourOpenGLFilter.swift in Sources */,
 				244607B1AB7527693F506FF7EAF9775E /* MirrorTwoOpenGLFilter.swift in Sources */,
+				B342F41624AD9A4100E9C461 /* mirror.metal in Sources */,
 				9EB5953FAE2510F8118FA0F2FF8E2380 /* MMCQ.swift in Sources */,
 				A0B837AFD4E4DAE904DA169BFDB36714 /* ModeButtonView.swift in Sources */,
 				5D4386FC9E8C64D749452F4EBFE1D1AB /* ModeSelectorAndShootController.swift in Sources */,

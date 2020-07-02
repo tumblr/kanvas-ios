@@ -19,6 +19,23 @@ protocol FilteredInputViewControllerDelegate: class {
 
 /// class for controlling filters and rendering with opengl
 final class FilteredInputViewController: UIViewController, RendererDelegate {
+    private lazy var metalContext: MetalContext = {
+        guard
+            let device = MTLCreateSystemDefaultDevice(),
+            let commandQueue = device.makeCommandQueue()
+        else {
+            fatalError("Failed to create MTLDevice or MTLCommandQueue")
+        }
+        var textureCache: CVMetalTextureCache?
+        CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &textureCache)
+        guard let unwrappedTextureCache = textureCache else {
+            fatalError("Failed to carete CVMetalTextureCache")
+        }
+        
+        return MetalContext(device: device,
+                            commandQueue: commandQueue,
+                            textureCache: unwrappedTextureCache)
+    }()
     private lazy var renderer: Renderer = {
         let renderer = Renderer()
         renderer.delegate = self
@@ -54,10 +71,6 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
         renderer.filterType = currentFilter
         renderer.refreshFilter()
     }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-    }
     
     // MARK: - layout
     private func setupPreview() {
@@ -67,13 +80,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
             self.previewView = previewView
         }
         else {
-            let device = MTLCreateSystemDefaultDevice()!
-            let commandQueue = device.makeCommandQueue()!
-            var textureCache: CVMetalTextureCache?
-            CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &textureCache)
-            let previewView = MetalPixelBufferView(context: MetalContext(device: device,
-                                                                         commandQueue: commandQueue,
-                                                                         textureCache:textureCache!))
+            let previewView = MetalPixelBufferView(context: metalContext)
             previewView.add(into: view)
             self.previewView = previewView
         }
