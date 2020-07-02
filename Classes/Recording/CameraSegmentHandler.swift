@@ -43,6 +43,27 @@ enum CameraSegment {
         }
     }
 
+    static func defaultTimeInterval(segments: [CameraSegment]) -> TimeInterval {
+        for media in segments {
+            switch media {
+            case .image(_, _, _, _):
+                break
+            case .video(_, _):
+                return KanvasCameraTimes.stopMotionFrameTimeInterval
+            }
+        }
+        return KanvasCameraTimes.onlyImagesFrameTimeInterval
+    }
+
+    func mediaFrame(defaultTimeInterval: TimeInterval) -> MediaFrame? {
+        if let image = self.image {
+            return (image: image, interval: self.timeInterval ?? defaultTimeInterval)
+        }
+        else {
+            return nil
+        }
+    }
+
     init(from frame: GIFDecodeFrame, info: TumblrMediaInfo) {
         self = .image(UIImage(cgImage: frame.image), nil, frame.interval, info)
     }
