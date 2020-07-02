@@ -11,7 +11,7 @@ import CoreMedia
 final class GifMakerHandlerTests: XCTestCase {
 
     func testGifMakerHandler() {
-        let handler = GifMakerHandler(player: MediaPlayer(renderer: nil))
+        let handler = GifMakerHandler(player: MediaPlayer(renderer: nil), analyticsProvider: nil)
         XCTAssert(type(of: handler) == GifMakerHandler.self)
     }
 
@@ -31,7 +31,7 @@ final class GifMakerHandlerTests: XCTestCase {
         let e = expectation(description: "load segments")
         e.expectedFulfillmentCount = 1
         let player = MediaPlayer(renderer: nil)
-        let handler = GifMakerHandler(player: player)
+        let handler = GifMakerHandler(player: player, analyticsProvider: nil)
         let colors: [UIColor] = [.red,  .orange, .yellow, .green, .blue, .purple]
         let images = colors.map { image(color: $0, size: CGSize(width: 100, height: 100)) }
         let segments = images.map { CameraSegment.image($0, nil, 0.5, .init(source: .kanvas_camera)) }

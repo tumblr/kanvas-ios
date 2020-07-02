@@ -147,6 +147,32 @@ import Foundation
     }
 }
 
+@objc public enum KanvasGIFPlaybackMode: Int {
+    case loop, rebound, reverse
+
+    init(from playbackOption: PlaybackOption) {
+        switch playbackOption {
+        case .loop:
+            self = .loop
+        case .rebound:
+            self = .rebound
+        case .reverse:
+            self = .reverse
+        }
+    }
+
+    public func string() -> String {
+        switch self {
+        case .loop:
+            return "loop"
+        case .rebound:
+            return "rebound"
+        case .reverse:
+            return "reverse"
+        }
+    }
+}
+
 /// A protocol for injecting analytics into the KanvasCamera module
 @objc public protocol KanvasCameraAnalyticsProvider {
 
@@ -350,7 +376,17 @@ import Foundation
     /// Logs when a sticker is moved through the canvas
     /// - Parameter stickerId: the ID of the sticker that was moved
     func logEditorStickerMove(stickerId: String)
-    
+
+    func logEditorGIFButtonToggle(_ value: Bool)
+    func logEditorGIFOpen()
+    func logEditorGIFOpenTrim()
+    func logEditorGIFOpenSpeed()
+    func logEditorGIFRevert()
+    func logEditorGIFConfirm(duration: TimeInterval, playbackMode: KanvasGIFPlaybackMode, speed: Float)
+    func logEditorGIFChange(playbackMode: KanvasGIFPlaybackMode)
+    func logEditorGIFChange(speed: Float)
+    func logEditorGIFChange(trimStart: TimeInterval, trimEnd: TimeInterval)
+
     /// Logs when the "next" button that opens APO is pressed in the Editor
     /// - Parameter page: page presenting the post options
     func logAdvancedOptionsOpen(page: String)

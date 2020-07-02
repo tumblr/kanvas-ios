@@ -47,6 +47,9 @@ protocol GifMakerControllerDelegate: class {
     ///
     /// - Parameter option: the selected option.
     func didSelectPlayback(_ option: PlaybackOption)
+
+    func didOpenTrim()
+    func didOpenSpeed()
 }
 
 /// A view controller that contains the GIF maker menu
@@ -145,11 +148,17 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     func didTapTrimButton() {
         speedEnabled = false
         trimEnabled.toggle()
+        if trimEnabled {
+            delegate?.didOpenTrim()
+        }
     }
     
     func didTapSpeedButton() {
         trimEnabled = false
         speedEnabled.toggle()
+        if speedEnabled {
+            delegate?.didOpenSpeed()
+        }
     }
     
     // MARK: - TrimControllerDelegate
