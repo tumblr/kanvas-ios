@@ -26,7 +26,7 @@ class GifMakerHandler {
 
     private let player: MediaPlayer
 
-    private var settings: GIFMakerSettings?
+    private(set) var settings: GIFMakerSettings?
 
     private var frames: [MediaFrame]? {
         didSet {
@@ -46,14 +46,26 @@ class GifMakerHandler {
         }
     }
 
-    private var duration: TimeInterval?
+    private(set) var duration: TimeInterval?
+
+    var trimmedDuration: TimeInterval {
+        guard let settings = settings else {
+            return 0
+        }
+        let startTime = getTimestamp(at: settings.startIndex)
+        let endTime = getTimestamp(at: settings.endIndex)
+        return endTime - startTime
+    }
 
     private var thumbnails: [TimeInterval: UIImage] = [:]
 
     private var previousTrim: ClosedRange<CGFloat>?
 
-    init(player: MediaPlayer) {
+    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+
+    init(player: MediaPlayer, analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.player = player
+        self.analyticsProvider = analyticsProvider
     }
 
     func load(segments: [CameraSegment], showLoading: () -> Void, hideLoading: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
@@ -73,14 +85,14 @@ class GifMakerHandler {
 
     func trimmedSegments(_ segments: [CameraSegment]) -> [CameraSegment] {
         guard let settings = settings else {
-            return []
+            return segments
         }
         return Array(segments[settings.startIndex...settings.endIndex])
     }
 
     func framesForPlayback(_ frames: [MediaFrame]) -> [MediaFrame] {
         guard let settings = settings else {
-            return []
+            return frames
         }
 
         let rate = TimeInterval(settings.rate)
@@ -188,6 +200,21 @@ extension GifMakerHandler: GifMakerControllerDelegate {
 
         settings?.startIndex = startIndex
         settings?.endIndex = endIndex
+
+        let startTime = getTimestamp(at: startIndex)
+        let endTime = getTimestamp(at: endIndex)
+        analyticsProvider?.logEditorGIFChange(trimStart: startTime, trimEnd: endTime)
+    }
+
+    private func getTimestamp(at index: Int) -> TimeInterval {
+        var frameTime: TimeInterval = .zero
+        for (i, frame) in (frames ?? []).enumerated() {
+            if i == index {
+                break
+            }
+            frameTime += frame.interval
+        }
+        return frameTime
     }
 
     func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
@@ -218,10 +245,20 @@ extension GifMakerHandler: GifMakerControllerDelegate {
     func didSelectSpeed(_ speed: Float) {
         player.rate = speed
         settings?.rate = speed
+        analyticsProvider?.logEditorGIFChange(speed: speed)
     }
 
     func didSelectPlayback(_ option: PlaybackOption) {
-        player.playbackMode = MediaPlayerPlaybackMode(from: option)
+        player.playbackMode = .init(from: option)
         settings?.playbackMode = option
+        analyticsProvider?.logEditorGIFChange(playbackMode: .init(from: option))
+    }
+
+    func didOpenTrim() {
+        analyticsProvider?.logEditorGIFOpenTrim()
+    }
+
+    func didOpenSpeed() {
+        analyticsProvider?.logEditorGIFOpenSpeed()
     }
 }
