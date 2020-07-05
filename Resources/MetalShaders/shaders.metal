@@ -1,13 +1,18 @@
-//
-//  identity.metal
-//  KanvasCamera
-//
-//  Created by Taichi Matsumoto on 7/1/20.
-//
-
 #include <metal_stdlib>
-#include "types.h"
 using namespace metal;
+
+struct ShaderContext {
+    float time;
+};
+
+typedef struct {
+    float4 renderedCoordinate [[position]];
+    float2 textureCoordinate;
+} TextureMappingVertex;
+
+//
+// Shaders for render pipeline
+//
 
 vertex TextureMappingVertex vertexIdentity(unsigned int vertex_id [[ vertex_id ]])
 {
@@ -34,4 +39,23 @@ fragment half4 fragmentIdentity(TextureMappingVertex mappingVertex [[ stage_in ]
 
     float4 color = texture.sample(s, mappingVertex.textureCoordinate);
     return half4(color);
+}
+
+//
+// Shaders for compute pipeline
+//
+
+kernel void mirror(texture2d<float, access::read> inTexture [[ texture(0) ]],
+                   texture2d<float, access::write> outTexture [[ texture(1) ]],
+                   uint2 gid [[ thread_position_in_grid ]])
+{
+    float4 outColor;
+    uint width = inTexture.get_width();
+    if (gid.x >= width / 2) {
+        outColor = inTexture.read(gid);
+    }
+    else {
+        outColor = inTexture.read(uint2(width - gid.x, gid.y));
+    }
+    outTexture.write(outColor, gid);
 }
