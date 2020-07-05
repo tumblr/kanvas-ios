@@ -61,18 +61,23 @@ final class Renderer: Rendering {
         }
     }
 
+    private let settings: CameraSettings?
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
+    private let filterFactory: FilterFactory
     private var processingImage = false
     private var filteredPixelBuffer: CVPixelBuffer?
 
     /// Designated initializer
     ///
     /// - Parameter delegate: the callback
-    init(metalContext: MetalContext?=nil) {
+    init(settings: CameraSettings?=nil, metalContext: MetalContext?=nil) {
         glContext = EAGLContext(api: .openGLES3)
+        self.settings = settings
         self.metalContext = metalContext
-        filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
+        let filterFactory = FilterFactory(glContext: glContext, metalContext: metalContext, filterPlatform: .openGL)
+        filter = filterFactory.createFilter(type: self.filterType)
+        self.filterFactory = filterFactory
         switchInputDimensions = false
     }
 
@@ -172,7 +177,7 @@ final class Renderer: Rendering {
             processingImage = false
         }
 
-        let imageFilter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
+        let imageFilter = filterFactory.createFilter(type: self.filterType)
         var sampleTime = CMSampleTimingInfo()
         var videoInfo: CMVideoFormatDescription?
         CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &videoInfo)
@@ -215,7 +220,7 @@ final class Renderer: Rendering {
     /// Refreshes a filter (used when changing the filter type)
     func refreshFilter() {
         synchronized(self) {
-            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
+            filter = filterFactory.createFilter(type: filterType, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
             filter.switchInputDimensions = self.switchInputDimensions
         }
     }

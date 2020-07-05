@@ -45,6 +45,14 @@ fragment half4 fragmentIdentity(TextureMappingVertex mappingVertex [[ stage_in ]
 // Shaders for compute pipeline
 //
 
+kernel void kernelIdentity(texture2d<float, access::read> inTexture [[ texture(0) ]],
+                           texture2d<float, access::write> outTexture [[ texture(1) ]],
+                           uint2 gid [[ thread_position_in_grid ]])
+{
+    float4 outColor = inTexture.read(gid);
+    outTexture.write(outColor, gid);
+}
+
 kernel void mirror(texture2d<float, access::read> inTexture [[ texture(0) ]],
                    texture2d<float, access::write> outTexture [[ texture(1) ]],
                    uint2 gid [[ thread_position_in_grid ]])

@@ -226,7 +226,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
-        self.player = MediaPlayer(renderer: Renderer())
+        self.player = MediaPlayer(renderer: Renderer(settings: settings))
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self

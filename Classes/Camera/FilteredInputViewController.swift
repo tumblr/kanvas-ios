@@ -37,7 +37,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
                             textureCache: unwrappedTextureCache)
     }()
     private lazy var renderer: Renderer = {
-        let renderer = Renderer()
+        let renderer = Renderer(settings: settings, metalContext: metalContext)
         renderer.delegate = self
         return renderer
     }()

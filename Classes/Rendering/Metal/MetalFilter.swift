@@ -24,9 +24,7 @@ class MetalFilter: FilterProtocol {
         self.context = context
         
         guard
-            let bundlePath = KanvasCameraStrings.bundlePath(for: MetalFilter.self),
-            let bundle = Bundle(path: bundlePath),
-            let library = try? context.device.makeDefaultLibrary(bundle: bundle),
+            let library = context.device.makeKanvasDefaultLibrary(),
             let kernelFunction = library.makeFunction(name: kernelFunctionName),
             let computePipelineState = try? context.device.makeComputePipelineState(function: kernelFunction)
         else {

@@ -6,13 +6,35 @@
 
 import Foundation
 
+enum FilterPlatform {
+    case openGL
+    case metal
+}
+
 /// Creates Filter instances from filter types
 struct FilterFactory {
+    private let glContext: EAGLContext?
+    private let metalContext: MetalContext?
+    private let filterPlatform: FilterPlatform
+    init(glContext: EAGLContext?, metalContext: MetalContext?, filterPlatform: FilterPlatform) {
+        self.glContext = glContext
+        self.metalContext = metalContext
+        self.filterPlatform = filterPlatform
+    }
 
     /// Creates a filter for the provided type and glContext
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
-    static func createFilter(type: FilterType, glContext: EAGLContext?) -> FilterProtocol {
+    func createFilter(type: FilterType) -> FilterProtocol {
+        switch filterPlatform {
+        case .openGL:
+            return createOpenGLFilter(type: type, glContext: glContext)
+        case .metal:
+            return createMetalFilter(type: type, metalContext: metalContext)
+        }
+    }
+    
+    private func createOpenGLFilter(type: FilterType, glContext: EAGLContext?) -> FilterProtocol {
         var newFilter: FilterProtocol
         switch type {
         case .passthrough: fallthrough
@@ -49,29 +71,33 @@ struct FilterFactory {
         }
         return newFilter
     }
+    
+    private func createMetalFilter(type: FilterType, metalContext: MetalContext?) -> FilterProtocol {
+        return MetalFilter(context: metalContext!, kernelFunctionName: "kernelIdentity")
+    }
 
     /// Creates a filter for the provided type, glContext, and overlays
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
     /// - Parameter overlays: Array of CVPixelBuffer instances to overlay.
-    static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer]) -> FilterProtocol {
-        let filters = createFilterList(type: type, glContext: glContext, overlays: overlays)
-        return createFilter(fromFilterList: filters, glContext: glContext)
+    func createFilter(type: FilterType, overlays: [CVPixelBuffer]) -> FilterProtocol {
+        let filters = createFilterList(type: type, overlays: overlays)
+        return createFilter(fromFilterList: filters)
     }
 
-    private static func createFilterList(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer]) -> [FilterProtocol] {
+    private func createFilterList(type: FilterType, overlays: [CVPixelBuffer]) -> [FilterProtocol] {
         var filters: [FilterProtocol] = []
 
         // not sure if this is OK...
         let f = OpenGLFilter(glContext: glContext)
         filters.append(f)
 
-        filters.append(createFilter(type: type, glContext: glContext))
+        filters.append(createFilter(type: type))
         filters.append(contentsOf: overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
         return filters
     }
 
-    private static func createFilter(fromFilterList filters: [FilterProtocol], glContext: EAGLContext?) -> FilterProtocol {
+    private func createFilter(fromFilterList filters: [FilterProtocol]) -> FilterProtocol {
         return filters.count > 1 ? GroupOpenGLFilter(filters: filters) : filters.first ?? OpenGLFilter(glContext: glContext)
     }
 }
