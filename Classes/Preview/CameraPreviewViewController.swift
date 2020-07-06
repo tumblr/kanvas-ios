@@ -162,12 +162,7 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
     }
     
     private static func defaultTimeIntervalForImageSegments(_ segments: [CameraSegment]) -> TimeInterval {
-        for segment in segments {
-            if segment.image == nil {
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
-            }
-        }
-        return KanvasCameraTimes.onlyImagesFrameTimeInterval
+        CameraSegment.defaultTimeInterval(segments: segments)
     }
 
     private func playVideo(url: URL) {

@@ -10,10 +10,12 @@ import UIKit
 /// Collection view for ThumbnailCollectionController
 final class ThumbnailCollectionView: UIView {
     
+    let collectionViewLayout: ThumbnailCollectionViewLayout
     let collectionView: UICollectionView
     
     init() {
-        collectionView = ThumbnailInnerCollectionView(frame: .zero, collectionViewLayout: ThumbnailCollectionViewLayout())
+        collectionViewLayout = ThumbnailCollectionViewLayout()
+        collectionView = ThumbnailInnerCollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         super.init(frame: .zero)
         
         clipsToBounds = true
@@ -65,26 +67,5 @@ private class ThumbnailInnerCollectionView: UICollectionView {
         contentInset = .zero
         decelerationRate = UIScrollView.DecelerationRate.fast
         dragInteractionEnabled = false
-    }
-}
-
-private class ThumbnailCollectionViewLayout: UICollectionViewFlowLayout {
-
-    override init() {
-        super.init()
-        configure()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        configure()
-    }
-    
-    private func configure() {
-        scrollDirection = .horizontal
-        itemSize = UICollectionViewFlowLayout.automaticSize
-        estimatedItemSize = CGSize(width: ThumbnailCollectionCell.cellWidth, height: ThumbnailCollectionCell.cellHeight)
-        minimumInteritemSpacing = 0
-        minimumLineSpacing = 0
     }
 }

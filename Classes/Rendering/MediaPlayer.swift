@@ -422,15 +422,18 @@ final class MediaPlayer {
 
         renderer.switchInputDimensions = false
         renderer.mediaTransform = nil
-
+        
+        renderer.processSampleBuffer(sampleBuffer, time: startTime)
+        
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
-        renderer.processSampleBuffer(sampleBuffer, time: startTime)
-        lastStillFilterTime = Date.timeIntervalSinceReferenceDate - startTime
-        renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime)
-
-        // If we're only playing one image, don't do anything else!
-        guard playableMedia.count > 1 else {
+        if playableMedia.count > 1 {
+            lastStillFilterTime = Date.timeIntervalSinceReferenceDate - startTime
+            renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime)
+        }
+        else {
+            renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime)
+            // If we're only playing one image, don't do anything else!
             return
         }
 
@@ -517,6 +520,7 @@ final class MediaPlayer {
         }
         switch currentlyPlayingMedia {
         case .image(_, _, _):
+            lastStillFilterTime = Date.timeIntervalSinceReferenceDate - startTime
             playCurrentMedia()
         default:
             break
