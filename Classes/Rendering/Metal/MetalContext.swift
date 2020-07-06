@@ -10,10 +10,12 @@ final class MetalContext {
     let device: MTLDevice
     let commandQueue: MTLCommandQueue
     let textureCache: CVMetalTextureCache
+    let library: MTLLibrary
     
-    init(device: MTLDevice, commandQueue: MTLCommandQueue, textureCache: CVMetalTextureCache) {
+    init(device: MTLDevice, commandQueue: MTLCommandQueue, textureCache: CVMetalTextureCache, library: MTLLibrary) {
         self.device = device
         self.commandQueue = commandQueue
         self.textureCache = textureCache
+        self.library = library
     }
 }

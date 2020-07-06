@@ -24,8 +24,7 @@ class MetalFilter: FilterProtocol {
         self.context = context
         
         guard
-            let library = context.device.makeKanvasDefaultLibrary(),
-            let kernelFunction = library.makeFunction(name: kernelFunctionName),
+            let kernelFunction = context.library.makeFunction(name: kernelFunctionName),
             let computePipelineState = try? context.device.makeComputePipelineState(function: kernelFunction)
         else {
             fatalError("Couldn't setup compute pipeline for \(kernelFunctionName)")

@@ -22,6 +22,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     private lazy var metalContext: MetalContext = {
         guard
             let device = MTLCreateSystemDefaultDevice(),
+            let library = device.makeKanvasDefaultLibrary(),
             let commandQueue = device.makeCommandQueue()
         else {
             fatalError("Failed to create MTLDevice or MTLCommandQueue")
@@ -34,7 +35,8 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
         
         return MetalContext(device: device,
                             commandQueue: commandQueue,
-                            textureCache: unwrappedTextureCache)
+                            textureCache: unwrappedTextureCache,
+                            library: library)
     }()
     private lazy var renderer: Renderer = {
         let renderer = Renderer(settings: settings, metalContext: metalContext)

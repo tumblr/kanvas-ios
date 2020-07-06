@@ -6,21 +6,21 @@
 
 import Metal
 
+// Take care of metal render pipeline
 final class MetalRenderEncoder {
     let renderPipelineState: MTLRenderPipelineState
     let device: MTLDevice
     var shaderContext = ShaderContext()
 
-    init(device: MTLDevice) {
+    init(device: MTLDevice, library: MTLLibrary) {
         self.device = device
 
-        let library = device.makeKanvasDefaultLibrary()
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.sampleCount = 1
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         renderPipelineDescriptor.depthAttachmentPixelFormat = .invalid
-        renderPipelineDescriptor.vertexFunction = library?.makeFunction(name: "vertexIdentity")
-        renderPipelineDescriptor.fragmentFunction = library?.makeFunction(name: "fragmentIdentity")
+        renderPipelineDescriptor.vertexFunction = library.makeFunction(name: "vertexIdentity")
+        renderPipelineDescriptor.fragmentFunction = library.makeFunction(name: "fragmentIdentity")
         
         guard let renderPipelineState = try? device.makeRenderPipelineState(descriptor: renderPipelineDescriptor) else {
             fatalError("cannot create render pipeline state")

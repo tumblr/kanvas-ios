@@ -15,7 +15,7 @@ final class MetalPixelBufferView: MTKView {
     private let context: MetalContext
     private var pixelBufferToDraw: CVPixelBuffer?
     private lazy var renderEncoder: MetalRenderEncoder = {
-        MetalRenderEncoder(device: context.device)
+        MetalRenderEncoder(device: context.device, library: context.library)
     }()
     
     init(context: MetalContext) {
