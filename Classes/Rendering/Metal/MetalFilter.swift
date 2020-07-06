@@ -91,6 +91,10 @@ class MetalFilter: FilterProtocol {
         
         self.offScreenBuffer = offScreenPixelBuffer
         self.offScreenTexture = offScreenTexture
+        
+        var outputFormatDescription: CMFormatDescription? = nil
+        CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: offScreenPixelBuffer, formatDescriptionOut: &outputFormatDescription)
+        self.outputFormatDescription = outputFormatDescription
     }
     
     func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?, time: TimeInterval) -> CVPixelBuffer? {

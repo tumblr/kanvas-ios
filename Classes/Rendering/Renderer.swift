@@ -75,7 +75,9 @@ final class Renderer: Rendering {
         glContext = EAGLContext(api: .openGLES3)
         self.settings = settings
         self.metalContext = metalContext
-        let filterFactory = FilterFactory(glContext: glContext, metalContext: metalContext, filterPlatform: .openGL)
+        let filterFactory = FilterFactory(glContext: glContext,
+                                          metalContext: metalContext,
+                                          filterPlatform: settings?.features.openGLPreview == true ? .openGL : .metal)
         filter = filterFactory.createFilter(type: self.filterType)
         self.filterFactory = filterFactory
         switchInputDimensions = false

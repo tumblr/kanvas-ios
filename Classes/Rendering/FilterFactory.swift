@@ -81,11 +81,16 @@ struct FilterFactory {
     /// - Parameter glContext: The EAGLContext to bind this filter to.
     /// - Parameter overlays: Array of CVPixelBuffer instances to overlay.
     func createFilter(type: FilterType, overlays: [CVPixelBuffer]) -> FilterProtocol {
-        let filters = createFilterList(type: type, overlays: overlays)
-        return createFilter(fromFilterList: filters)
+        switch filterPlatform {
+        case .openGL:
+            let filters = createOpenGLFilterList(type: type, overlays: overlays)
+            return createOpenGLFilter(fromFilterList: filters)
+        case .metal:
+            return createMetalFilter(type: type, metalContext: metalContext)
+        }
     }
 
-    private func createFilterList(type: FilterType, overlays: [CVPixelBuffer]) -> [FilterProtocol] {
+    private func createOpenGLFilterList(type: FilterType, overlays: [CVPixelBuffer]) -> [FilterProtocol] {
         var filters: [FilterProtocol] = []
 
         // not sure if this is OK...
@@ -97,7 +102,7 @@ struct FilterFactory {
         return filters
     }
 
-    private func createFilter(fromFilterList filters: [FilterProtocol]) -> FilterProtocol {
+    private func createOpenGLFilter(fromFilterList filters: [FilterProtocol]) -> FilterProtocol {
         return filters.count > 1 ? GroupOpenGLFilter(filters: filters) : filters.first ?? OpenGLFilter(glContext: glContext)
     }
 }
