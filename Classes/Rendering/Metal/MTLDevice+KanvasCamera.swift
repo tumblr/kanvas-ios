@@ -6,6 +6,9 @@
 
 import MetalKit
 
+// This is a workaround to load metal shaders from KanvasCamera bundle.
+// 1. Read .metal files from KanvasCamera.bundle/MetalShaders/ directory
+// 2. Concatinate all source files as a string then compile it at runtime by using MTLDevice::makeLibrary(source:options:)
 extension MTLDevice {
     func makeKanvasDefaultLibrary() -> MTLLibrary? {
         guard
@@ -19,7 +22,7 @@ extension MTLDevice {
         let enumerator = FileManager.default.enumerator(atPath: shaderDirectoryPath)
         var source = ""
         while let filename = enumerator?.nextObject() as? String {
-            if filename.hasSuffix("h") || filename.hasSuffix("metal") {
+            if filename.hasSuffix("metal") {
                 let fileURL = "\(shaderDirectoryPath)/\(filename)"
                 do {
                     source += try String(contentsOfFile: fileURL, encoding: .utf8)
