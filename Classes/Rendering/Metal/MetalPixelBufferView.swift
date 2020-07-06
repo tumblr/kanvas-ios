@@ -35,7 +35,6 @@ final class MetalPixelBufferView: MTKView {
             let commandBuffer = context.commandQueue.makeCommandBuffer(),
             let pixelBufferToDraw = pixelBufferToDraw
         else {
-            print("Resources are not configured")
             return
         }
         
@@ -66,7 +65,7 @@ final class MetalPixelBufferView: MTKView {
                              shaderContext: shaderContext)
         commandBuffer.present(drawable)
         commandBuffer.commit()
-//        self.pixelBufferToDraw = nil
+        self.pixelBufferToDraw = nil
     }
 }
 
@@ -75,9 +74,9 @@ extension MetalPixelBufferView: PixelBufferView {
         // pixelBufferToDraw is nil out once the frame is rendered.
         // if a new frame comes in before the previous frame is rendered,
         // we simply skip it.
-//        guard pixelBufferToDraw == nil else {
-//            return
-//        }
+        guard pixelBufferToDraw == nil else {
+            return
+        }
         pixelBufferToDraw = pixelBuffer
     }
     

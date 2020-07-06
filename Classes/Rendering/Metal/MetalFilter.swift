@@ -136,6 +136,7 @@ class MetalFilter: FilterProtocol {
                                  index: 0)
         computeEncoder.dispatchThreadgroups(threadgroupCount, threadsPerThreadgroup: threadgroupSize)
         computeEncoder.endEncoding()
+        commandBuffer.commit()
         
         return offScreenBuffer
     }
