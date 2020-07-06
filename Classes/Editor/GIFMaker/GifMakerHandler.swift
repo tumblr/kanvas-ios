@@ -18,9 +18,19 @@ protocol GifMakerHandlerDelegate: class {
     func didSettingsChange(dirty: Bool)
 }
 
+typealias DidSettingsChangeHandler = () -> Void
+
 class GifMakerSettingsViewModel {
 
     private let player: MediaPlayer
+
+    private let didSettingsChangeHandler: DidSettingsChangeHandler
+
+    private var baseSettings: GIFMakerSettings?
+
+    var dirty: Bool {
+        return playbackMode != baseSettings?.playbackMode
+    }
 
     var settings: GIFMakerSettings? {
         guard let rate = rate, let startIndex = startIndex, let endIndex = endIndex, let playbackMode = playbackMode else {
@@ -53,11 +63,13 @@ class GifMakerSettingsViewModel {
         didSet {
             guard let playbackMode = playbackMode else { return }
             player.playbackMode = .init(from: playbackMode)
+            didSettingsChangeHandler()
         }
     }
 
-    init(player: MediaPlayer) {
+    init(player: MediaPlayer, didSettingsChangeHandler: @escaping DidSettingsChangeHandler) {
         self.player = player
+        self.didSettingsChangeHandler = didSettingsChangeHandler
     }
 
     func update(settings: GIFMakerSettings) {
@@ -65,6 +77,7 @@ class GifMakerSettingsViewModel {
         startIndex = settings.startIndex
         endIndex = settings.endIndex
         playbackMode = settings.playbackMode
+        baseSettings = settings
     }
 
     func reset() {
@@ -72,6 +85,7 @@ class GifMakerSettingsViewModel {
         startIndex = nil
         endIndex = nil
         playbackMode = GIFMakerSettings.playbackMode
+        baseSettings = nil
     }
 }
 
@@ -89,16 +103,18 @@ class GifMakerHandler {
         settingsViewModel.settings
     }
 
+    var defaultSettings: GIFMakerSettings?
+
     var convertedMediaToGIF: Bool = false
 
     private let player: MediaPlayer
 
     private lazy var settingsViewModel: GifMakerSettingsViewModel = {
-        .init(player: player)
+        .init(player: player, didSettingsChangeHandler: didSettingsChange)
     }()
 
     func didSettingsChange() {
-        let dirty = convertedMediaToGIF
+        let dirty = convertedMediaToGIF || settingsViewModel.dirty
         delegate?.didSettingsChange(dirty: dirty)
     }
 
@@ -108,12 +124,14 @@ class GifMakerHandler {
                 segments = nil
                 settingsViewModel.reset()
                 duration = nil
+                defaultSettings = nil
                 return
             }
             segments = frames.map { frame in
                 CameraSegment.image(frame.image, nil, frame.interval, .init(source: .kanvas_camera))
             }
             let defaultSettings = GIFMakerSettings.default(startIndex: 0, endIndex: frames.count - 1)
+            self.defaultSettings = defaultSettings
             settingsViewModel.update(settings: defaultSettings)
             duration = frames.reduce(0) { (duration, frame) in
                 return duration + frame.interval

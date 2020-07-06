@@ -682,6 +682,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                             self.player.stop()
                                             self.startPlayerFromSegments()
                                         }
+                                        self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
                 }
                 editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
                     self.gifMakerController.showConfirmButton(true)

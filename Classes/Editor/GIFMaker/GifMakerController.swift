@@ -224,4 +224,9 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     func toggleRevertButton(_ show: Bool) {
         gifMakerView.toggleRevertButton(show)
     }
+
+    func configure(settings: GIFMakerSettings?) {
+        guard let settings = settings else { return }
+        playbackController.select(option: settings.playbackMode)
+    }
 }
