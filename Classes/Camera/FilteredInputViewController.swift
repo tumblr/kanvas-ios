@@ -21,22 +21,11 @@ protocol FilteredInputViewControllerDelegate: class {
 final class FilteredInputViewController: UIViewController, RendererDelegate {
     private lazy var metalContext: MetalContext = {
         guard
-            let device = MTLCreateSystemDefaultDevice(),
-            let library = device.makeKanvasDefaultLibrary(),
-            let commandQueue = device.makeCommandQueue()
+            let context = MetalContext.createContext()
         else {
             fatalError("Failed to create MTLDevice or MTLCommandQueue")
         }
-        var textureCache: CVMetalTextureCache?
-        CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &textureCache)
-        guard let unwrappedTextureCache = textureCache else {
-            fatalError("Failed to carete CVMetalTextureCache")
-        }
-        
-        return MetalContext(device: device,
-                            commandQueue: commandQueue,
-                            textureCache: unwrappedTextureCache,
-                            library: library)
+        return context
     }()
     private lazy var renderer: Renderer = {
         let renderer = Renderer(settings: settings, metalContext: metalContext)

@@ -18,4 +18,25 @@ final class MetalContext {
         self.textureCache = textureCache
         self.library = library
     }
+    
+    static public func createContext() -> MetalContext? {
+        guard
+            let device = MTLCreateSystemDefaultDevice(),
+            let library = device.makeKanvasDefaultLibrary(),
+            let commandQueue = device.makeCommandQueue()
+        else {
+            return nil
+        }
+        var textureCache: CVMetalTextureCache?
+        CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &textureCache)
+        guard let unwrappedTextureCache = textureCache else {
+            return nil
+        }
+        
+        return MetalContext(device: device,
+                            commandQueue: commandQueue,
+                            textureCache: unwrappedTextureCache,
+                            library: library)
+
+    }
 }

@@ -182,6 +182,7 @@
 		ABFBDE27212CCDE500E1044C /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE25212CCDE400E1044C /* sample.mp4 */; };
 		ABFBDE28212CCDE500E1044C /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = ABFBDE26212CCDE500E1044C /* sample.png */; };
 		ABFBDE2A212CCF0700E1044C /* CameraSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */; };
+		B342F42A24B3C45300E9C461 /* MetalPixelBufferViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342F42924B3C45300E9C461 /* MetalPixelBufferViewTests.swift */; };
 		BF01710E2498592F00639E49 /* URL+MediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF01710D2498592F00639E49 /* URL+MediaTests.swift */; };
 		BF017114249B2C3700639E49 /* GifMakerHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */; };
 		BF017116249B30BF00639E49 /* GIFMakerSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF017115249B30BF00639E49 /* GIFMakerSettingsTests.swift */; };
@@ -387,6 +388,7 @@
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
+		B342F42924B3C45300E9C461 /* MetalPixelBufferViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPixelBufferViewTests.swift; sourceTree = "<group>"; };
 		BF01710D2498592F00639E49 /* URL+MediaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+MediaTests.swift"; sourceTree = "<group>"; };
 		BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerHandlerTests.swift; sourceTree = "<group>"; };
 		BF017115249B30BF00639E49 /* GIFMakerSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFMakerSettingsTests.swift; sourceTree = "<group>"; };
@@ -803,6 +805,7 @@
 		764AC463221D83BD005C82EC /* Rendering */ = {
 			isa = PBXGroup;
 			children = (
+				B342F42824B3C42500E9C461 /* Metal */,
 				BF4BEEA1237B4FDD00E5D96C /* OpenGL */,
 				764AC46D221D851B005C82EC /* RendererTests.swift */,
 				764AC47F2223E07B005C82EC /* FilterInstancesTests.swift */,
@@ -977,6 +980,14 @@
 				76ED1DD522C15A9B00E6AF79 /* MediaPickerButtonViewTests.swift */,
 			);
 			path = ModeSelector;
+			sourceTree = "<group>";
+		};
+		B342F42824B3C42500E9C461 /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				B342F42924B3C45300E9C461 /* MetalPixelBufferViewTests.swift */,
+			);
+			path = Metal;
 			sourceTree = "<group>";
 		};
 		BF4BEEA1237B4FDD00E5D96C /* OpenGL */ = {
@@ -1351,6 +1362,7 @@
 				76ED1DCC22BF2DF400E6AF79 /* MediaPlayerTests.swift in Sources */,
 				764AC476221D86A2005C82EC /* GLUtilitiesTests.swift in Sources */,
 				65E46BAA22BD22DE004FD226 /* EditionOptionTests.swift in Sources */,
+				B342F42A24B3C45300E9C461 /* MetalPixelBufferViewTests.swift in Sources */,
 				0E29275F21879C18009E1FCF /* CameraZoomHandlerTests.swift in Sources */,
 				AB7263E9212CC83B0044ED96 /* KanvasCameraStringsTests.swift in Sources */,
 				65507DB4239F381700087014 /* MainTextViewTests.swift in Sources */,
