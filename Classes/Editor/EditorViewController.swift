@@ -748,6 +748,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didRevertGif() {
         revertGIF()
     }
+
+    func didSettingsChange(dirty: Bool) {
+        gifMakerController.toggleRevertButton(dirty)
+    }
     
     // MARK: - EditorFilterControllerDelegate
     

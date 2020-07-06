@@ -335,4 +335,8 @@ final class GifMakerView: UIView {
     func showConfirmButton(_ show: Bool) {
         confirmButton.alpha = show ? 1 : 0
     }
+
+    func toggleRevertButton(_ show: Bool) {
+        revertButton.alpha = show ? 1 : 0
+    }
 }

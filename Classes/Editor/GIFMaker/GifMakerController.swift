@@ -220,4 +220,8 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     func showConfirmButton(_ show: Bool) {
         gifMakerView.showConfirmButton(show)
     }
+
+    func toggleRevertButton(_ show: Bool) {
+        gifMakerView.toggleRevertButton(show)
+    }
 }

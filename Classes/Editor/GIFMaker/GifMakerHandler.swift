@@ -14,6 +14,8 @@ protocol GifMakerHandlerDelegate: class {
     func didRevertGif()
 
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval
+
+    func didSettingsChange(dirty: Bool)
 }
 
 class GifMakerHandler {
@@ -26,9 +28,16 @@ class GifMakerHandler {
         return frames != nil && (frames?.count ?? 0) > 0
     }
 
+    var convertedMediaToGIF: Bool = false
+
     private let player: MediaPlayer
 
     private(set) var settings: GIFMakerSettings?
+
+    func didSettingsChange() {
+        let dirty = convertedMediaToGIF
+        delegate?.didSettingsChange(dirty: dirty)
+    }
 
     private var frames: [MediaFrame]? {
         didSet {
@@ -77,10 +86,13 @@ class GifMakerHandler {
         else {
             let defaultInterval = delegate?.getDefaultTimeIntervalForImageSegments() ?? 1.0/6.0
             showLoading()
-            loadFrames(from: segments, defaultInterval: defaultInterval) { frames in
+
+            loadFrames(from: segments, defaultInterval: defaultInterval) { (frames, converted) in
                 self.frames = frames
+                self.convertedMediaToGIF = converted
                 hideLoading()
-                completion(true)
+                completion(converted)
+                self.didSettingsChange()
             }
         }
     }
@@ -131,11 +143,13 @@ class GifMakerHandler {
         return playbackFrames
     }
 
-    private func loadFrames(from segments: [CameraSegment], defaultInterval: TimeInterval, completion: @escaping ([MediaFrame]) -> ()) {
+    private func loadFrames(from segments: [CameraSegment], defaultInterval: TimeInterval, completion: @escaping ([MediaFrame], _ convertedToFrames: Bool) -> ()) {
         let group = DispatchGroup()
         var frames: [Int: [GIFDecodeFrame]] = [:]
         let encoder = GIFEncoderImageIO()
         let decoder = GIFDecoderFactory.create(type: .imageIO)
+        var converted = false
+
         for (i, segment) in segments.enumerated() {
             if let cgImage = segment.image?.cgImage {
                 frames[i] = [(image: cgImage, interval: segment.timeInterval ?? defaultInterval)]
@@ -149,6 +163,7 @@ class GifMakerHandler {
                     }
                     decoder.decode(image: gifURL) { gifFrames in
                         frames[i] = gifFrames
+                        converted = true
                         group.leave()
                     }
                 }
@@ -159,7 +174,7 @@ class GifMakerHandler {
                 return partialOrderedFrames + (frames[index] ?? [])
             }
             let mediaFrames = orderedFrames.map { (image: UIImage(cgImage: $0.image), interval: $0.interval) }
-            completion(mediaFrames)
+            completion(mediaFrames, converted)
         }
     }
 }
