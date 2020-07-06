@@ -12,6 +12,9 @@ protocol GifMakerControllerDelegate: class {
     
     /// Called after the confirm button is tapped
     func didConfirmGif()
+
+    /// Called after the revert button is tapped
+    func didRevertGif()
     
     /// Called after a trimming movement starts
     func didStartTrimming()
@@ -159,6 +162,10 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         if speedEnabled {
             delegate?.didOpenSpeed()
         }
+    }
+
+    func didTapRevertButton() {
+        delegate?.didRevertGif()
     }
     
     // MARK: - TrimControllerDelegate

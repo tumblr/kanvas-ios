@@ -11,6 +11,8 @@ typealias MediaFrame = (image: UIImage, interval: TimeInterval)
 protocol GifMakerHandlerDelegate: class {
     func didConfirmGif()
 
+    func didRevertGif()
+
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval
 }
 
@@ -80,6 +82,14 @@ class GifMakerHandler {
                 hideLoading()
                 completion(true)
             }
+        }
+    }
+
+    func revert(completion: @escaping (_ reverted: Bool) -> Void) {
+        let hadFrames = self.hasFrames
+        frames = nil
+        DispatchQueue.main.async {
+            completion(hadFrames)
         }
     }
 
@@ -158,6 +168,10 @@ extension GifMakerHandler: GifMakerControllerDelegate {
 
     func didConfirmGif() {
         delegate?.didConfirmGif()
+    }
+
+    func didRevertGif() {
+        delegate?.didRevertGif()
     }
 
     func didStartTrimming() {

@@ -606,6 +606,22 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         player.stop()
         delegate?.dismissButtonPressed()
     }
+
+    func revertGIF() {
+        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        shouldExportMediaAsGIF = false
+        gifMakerController.showView(false)
+        gifMakerController.showConfirmButton(false)
+        gifMakerHandler.revert { reverted in
+            if reverted {
+                self.player.stop()
+                self.startPlayerFromSegments()
+            }
+        }
+        showMainUI(true)
+        analyticsProvider?.logEditorGIFRevert()
+        onAfterConfirmingEditionMenu()
+    }
     
     func confirmEditionMenu() {
         guard let editionOption = openedMenu else { return }
@@ -727,6 +743,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didConfirmGif() {
         confirmEditionMenu()
+    }
+
+    func didRevertGif() {
+        revertGIF()
     }
     
     // MARK: - EditorFilterControllerDelegate
