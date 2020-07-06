@@ -67,3 +67,43 @@ kernel void mirror(texture2d<float, access::read> inTexture [[ texture(0) ]],
     }
     outTexture.write(outColor, gid);
 }
+
+#define TAU 6.28318530718
+#define MAX_ITER 5
+kernel void wavepool(texture2d<float, access::read> inTexture [[ texture(0) ]],
+                     texture2d<float, access::write> outTexture [[ texture(1) ]],
+                     constant ShaderContext &shaderContext [[ buffer(0) ]],
+                     uint2 gid [[ thread_position_in_grid ]])
+{
+    float time = shaderContext.time;
+    float width = inTexture.get_width();
+    float height = inTexture.get_height();
+    float2 uv = float2(gid.x / width, gid.y / height);
+    
+    float2 p =  fmod(uv * TAU * 2, TAU) - 250.0;
+    float2 i = float2(p);
+    float c = 1.0;
+    float inten = 0.005;
+    
+    for (int n = 0; n < MAX_ITER; n++) {
+        float t = time * (1.0 - (3.5 / float(n + 1)));
+        i = p + float2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+        c += 1.0 / length(float2(p.x / (sin(i.x + t) / inten), p.y / (cos(i.y + t) / inten)));
+    }
+    c /= float(MAX_ITER);
+    c = 1.17 - pow(c, 1.4);
+    float3 color = float3(pow(abs(c), 8.0));
+    color = clamp(color + float3(0.0, 0.35, 0.5), 0.0, 1.0);
+    
+    float4 outColor = float4(color, 1.0);
+    float stongth = 0.3;
+    float waveu = sin((uv.y + time) * 20.0) * 0.5 * 0.05 * stongth;
+    float4 textureColor = inTexture.read(gid + uint2(waveu * width, 0));
+    
+    outColor.r = (outColor.r + (textureColor.r * 1.3)) / 2.0;
+    outColor.g = (outColor.g + (textureColor.g * 1.3)) / 2.0;
+    outColor.b = (outColor.b + (textureColor.b * 1.3)) / 2.0;
+    outColor.a = 1.0;
+    
+    outTexture.write(outColor, gid);
+}

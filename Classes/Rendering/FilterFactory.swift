@@ -73,7 +73,14 @@ struct FilterFactory {
     }
     
     private func createMetalFilter(type: FilterType, metalContext: MetalContext?) -> FilterProtocol {
-        return MetalFilter(context: metalContext!, kernelFunctionName: "kernelIdentity")
+        switch type {
+        case .mirrorTwo:
+            return MetalFilter(context: metalContext!, kernelFunctionName: "mirror")
+        case .wavePool:
+            return MetalFilter(context: metalContext!, kernelFunctionName: "wavepool")
+        default:
+            return MetalFilter(context: metalContext!, kernelFunctionName: "kernelIdentity")
+        }
     }
 
     /// Creates a filter for the provided type, glContext, and overlays
