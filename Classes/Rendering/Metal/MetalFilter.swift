@@ -28,7 +28,7 @@ class MetalFilter: FilterProtocol {
             let kernelFunction = library.makeFunction(name: kernelFunctionName),
             let computePipelineState = try? context.device.makeComputePipelineState(function: kernelFunction)
         else {
-            fatalError("Couldn't find a bundle for KanvasCamera")
+            fatalError("Couldn't setup compute pipeline for \(kernelFunctionName)")
         }
         self.computePipelineState = computePipelineState
     }

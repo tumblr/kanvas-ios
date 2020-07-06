@@ -19,7 +19,7 @@ class FilterTests: XCTestCase {
 
     func testExample() {
         let context = EAGLContext(api: .openGLES3)
-        let _ = Filter(glContext: context)
+        let _ = OpenGLFilter(glContext: context)
     }
 
 }

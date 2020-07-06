@@ -11,7 +11,8 @@ class FilterFactoryTests: XCTestCase {
 
     func testCreateFilter() {
         let glContext = EAGLContext(api: .openGLES3) ?? nil
-        _ = FilterFactory.createFilter(type: .lego, glContext: glContext)
+        let filterFactory = FilterFactory(glContext: glContext, metalContext: nil, filterPlatform: .openGL)
+        _ = filterFactory.createFilter(type: .lego)
     }
 
     func testFilterType() {

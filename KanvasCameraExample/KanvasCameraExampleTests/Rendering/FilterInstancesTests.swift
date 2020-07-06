@@ -18,55 +18,55 @@ class FilterInstancesTests: XCTestCase {
     }
 
     func testChromaFilter() {
-        _ = ChromaFilter(glContext: glContext)
+        _ = ChromaOpenGLFilter(glContext: glContext)
     }
 
     func testEmInterferenceFilter() {
-        _ = EMInterferenceFilter(glContext: glContext)
+        _ = EMInterferenceOpenGLFilter(glContext: glContext)
     }
 
     func testFilmFilter() {
-        _ = FilmFilter(glContext: glContext)
+        _ = FilmOpenGLFilter(glContext: glContext)
     }
 
     func testGrayscaleFilter() {
-        _ = GrayscaleFilter(glContext: glContext)
+        _ = GrayscaleOpenGLFilter(glContext: glContext)
     }
 
     func testImagePoolFilter() {
-        _ = ImagePoolFilter(glContext: glContext)
+        _ = ImagePoolOpenGLFilter(glContext: glContext)
     }
     func testLegoFilter() {
-        _ = LegoFilter(glContext: glContext)
+        _ = LegoOpenGLFilter(glContext: glContext)
     }
     func testLightLeaksFilter() {
-        _ = LightLeaksFilter(glContext: glContext)
+        _ = LightLeaksOpenGLFilter(glContext: glContext)
     }
     func testMangaFilterr() {
-        _ = MangaFilter(glContext: glContext)
+        _ = MangaOpenGLFilter(glContext: glContext)
     }
     func testMirrorFourFilter() {
-        _ = MirrorFourFilter(glContext: glContext)
+        _ = MirrorFourOpenGLFilter(glContext: glContext)
     }
     func testMirrorTwoFilter() {
-        _ = MirrorTwoFilter(glContext: glContext)
+        _ = MirrorTwoOpenGLFilter(glContext: glContext)
     }
     func testPlasmaFilter() {
-        _ = PlasmaFilter(glContext: glContext)
+        _ = PlasmaOpenGLFilter(glContext: glContext)
     }
     func testRGBFilter() {
-        _ = RGBFilter(glContext: glContext)
+        _ = RGBOpenGLFilter(glContext: glContext)
     }
     func testRaveFilter() {
-        _ = RaveFilter(glContext: glContext)
+        _ = RaveOpenGLFilter(glContext: glContext)
     }
     func testToonFilter() {
-        _ = ToonFilter(glContext: glContext)
+        _ = ToonOpenGLFilter(glContext: glContext)
     }
     func testGroupFilter() {
-        _ = GroupFilter(filters: [
-                PlasmaFilter(glContext: glContext),
-                LegoFilter(glContext: glContext),
+        _ = GroupOpenGLFilter(filters: [
+                PlasmaOpenGLFilter(glContext: glContext),
+                LegoOpenGLFilter(glContext: glContext),
             ])
     }
     func testAlphaBlendFilter() {
