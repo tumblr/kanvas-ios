@@ -69,7 +69,9 @@ import Photos
         
         let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         pageViewController.dataSource = self
-        pageViewController.setViewControllers([orderedViewControllers.first!], direction: .forward, animated: false, completion: nil)
+        if let first = orderedViewControllers.first {
+            pageViewController.setViewControllers([first], direction: .forward, animated: false, completion: nil)
+        }
         self.pageViewController = pageViewController
         self.viewControllers = [pageViewController]
     }
