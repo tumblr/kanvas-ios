@@ -16,20 +16,26 @@ class KanvasCameraFontsTests: FBSnapshotTestCase {
 
     func testDrawerFont() {
         let label = newLabelView()
-        label.font = KanvasCameraFonts.shared.drawer.textSelectedFont
+        let drawer = KanvasCameraFonts.Drawer(textSelectedFont: .guavaMedium(), textUnselectedFont: .guavaMedium())
+        label.font = drawer.textSelectedFont
         FBSnapshotVerifyView(label)
     }
     
     func testPermissionsFont() {
         let label = newLabelView()
-        label.font = KanvasCameraFonts.shared.permissions.titleFont
+        let permissions = KanvasCameraFonts.CameraPermissions(titleFont: .guavaMedium(), descriptionFont: .guavaMedium(), buttonFont: .guavaMedium())
+        label.font = permissions.titleFont
         FBSnapshotVerifyView(label)
     }
     
     func testPadding() {
         let font = KanvasCameraFonts.shared.postLabelFont
-        let padding = KanvasCameraFonts.shared.paddingAdjustment?(font)
-        XCTAssertNil(padding)
+        
+        let padding = KanvasCameraFonts.Padding(topMargin: 10, leftMargin: 10, extraVerticalPadding: 10, extraHorizontalPadding: 10)
+        XCTAssertEqual(padding.topMargin, 10)
+        
+        let paddingAdjustment = KanvasCameraFonts.shared.paddingAdjustment?(font)
+        XCTAssertNil(paddingAdjustment)
     }
     
     func newLabelView() -> UILabel {
