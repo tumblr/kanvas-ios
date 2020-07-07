@@ -7,7 +7,6 @@
 import AVFoundation
 import Foundation
 import UIKit
-import Utils
 
 /// Protocol for camera editor controller methods
 

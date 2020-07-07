@@ -7,11 +7,7 @@ PODS:
   - ImageLoader (0.1.0):
     - SDWebImage (= 5.7.2)
     - SDWebImageWebPCoder (= 0.6.1)
-  - KanvasCamera (0.1.0):
-    - ImageLoader
-    - SharedUI
-    - TumblrTheme
-    - Utils
+  - KanvasCamera (0.1.0)
   - libwebp (1.1.0):
     - libwebp/demux (= 1.1.0)
     - libwebp/mux (= 1.1.0)
@@ -66,7 +62,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   ImageLoader: 46fca60f454bc2e0a3f7feb46339c7aa3ab39186
-  KanvasCamera: 0d5fc0c695e2b2141b680f2adf18acda0af9a39e
+  KanvasCamera: 2b0639e4bc54c5839cc38d91aadb0529c0a6d67a
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: d9ea4959d99c52276dfada481987018fcaea3d58

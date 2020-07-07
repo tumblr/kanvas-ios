@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Foundation
-import Utils
 
 /// A container for segments
 enum CameraSegment {
