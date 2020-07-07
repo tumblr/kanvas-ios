@@ -20,7 +20,7 @@ protocol GifMakerHandlerDelegate: class {
 
 typealias DidSettingsChangeHandler = () -> Void
 
-class GifMakerSettingsViewModel {
+private class GifMakerSettingsViewModel {
 
     private let player: MediaPlayer
 
