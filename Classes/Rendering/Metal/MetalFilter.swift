@@ -20,15 +20,15 @@ class MetalFilter: FilterProtocol {
     private let threadgroupSize = MTLSize(width: 16, height: 16, depth: 1)
     private var threadgroupCount: MTLSize = MTLSize(width: 0, height: 0, depth: 0)
     
-    init(context: MetalContext, kernelFunctionName: String) {
-        self.context = context
-        
+    init(context: MetalContext?, kernelFunctionName: String) {
         guard
+            let context = context,
             let kernelFunction = context.library.makeFunction(name: kernelFunctionName),
             let computePipelineState = try? context.device.makeComputePipelineState(function: kernelFunction)
         else {
             fatalError("Couldn't setup compute pipeline for \(kernelFunctionName)")
         }
+        self.context = context
         self.computePipelineState = computePipelineState
     }
     

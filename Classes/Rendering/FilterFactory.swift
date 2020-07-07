@@ -75,11 +75,11 @@ struct FilterFactory {
     private func createMetalFilter(type: FilterType, metalContext: MetalContext?) -> FilterProtocol {
         switch type {
         case .mirrorTwo:
-            return MetalFilter(context: metalContext!, kernelFunctionName: "mirror")
+            return MetalFilter(context: metalContext, kernelFunctionName: "mirror")
         case .wavePool:
-            return MetalFilter(context: metalContext!, kernelFunctionName: "wavepool")
+            return MetalFilter(context: metalContext, kernelFunctionName: "wavepool")
         default:
-            return MetalFilter(context: metalContext!, kernelFunctionName: "kernelIdentity")
+            return MetalFilter(context: metalContext, kernelFunctionName: "kernelIdentity")
         }
     }
 
