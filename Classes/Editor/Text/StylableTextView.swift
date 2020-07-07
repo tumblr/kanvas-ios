@@ -143,7 +143,8 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
             leftMargin = padding.leftMargin
             extraVerticalPadding = padding.extraVerticalPadding
             extraHorizontalPadding = padding.extraHorizontalPadding
-        } else {
+        }
+        else {
             topMargin = 6.0
             leftMargin = 6.0
             extraHorizontalPadding = 0

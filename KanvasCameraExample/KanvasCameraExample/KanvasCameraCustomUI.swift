@@ -101,7 +101,8 @@ public class KanvasCameraCustomUI {
                         leftMargin: 5.7,
                         extraVerticalPadding: 0.125 * font.pointSize,
                         extraHorizontalPadding: 0)
-            } else {
+            }
+            else {
                 return nil
             }
         }

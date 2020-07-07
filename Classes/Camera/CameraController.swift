@@ -1126,7 +1126,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             let bytesPerFrame = cgImage.bytesPerRow * cgImage.height
             let frameCount = image.images?.count ?? 1
             return Double(bytesPerFrame * frameCount) < 100000000.0
-        } else {
+        }
+        else {
             return false
         }
     }
