@@ -198,6 +198,8 @@ final class GifMakerView: UIView {
         revertButton.addTarget(self, action: #selector(revertButtonStartTap), for: .touchDown)
         revertButton.addTarget(self, action: #selector(revertButtonStopTap), for: [.touchUpOutside, .touchUpInside, .touchCancel, .touchDragOutside, .touchDragExit])
 
+        toggleRevertButton(false)
+
         addSubview(revertButton)
 
         revertButton.translatesAutoresizingMaskIntoConstraints = false
