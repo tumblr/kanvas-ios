@@ -30,7 +30,7 @@ class ImageLoader: StickerLoader {
 /// Class that obtains the stickers from the stickers file in the example app
 public final class ExperimentalStickerProvider: StickerProvider {
     
-    public func loader() -> StickerLoader {
+    public func loader() -> StickerLoader? {
         return ImageLoader()
     }
     

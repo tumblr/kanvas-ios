@@ -27,7 +27,8 @@ class ImageLoader: StickerLoader {
 }
 
 final class StickerProviderStub: StickerProvider {
-    func loader() -> StickerLoader {
+    
+    func loader() -> StickerLoader? {
         return ImageLoader()
     }
     
