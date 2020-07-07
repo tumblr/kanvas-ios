@@ -30,6 +30,8 @@ class GifMakerSettingsViewModel {
 
     var dirty: Bool {
         return rate != baseSettings?.rate ||
+            startIndex != baseSettings?.startIndex ||
+            endIndex != baseSettings?.endIndex ||
             playbackMode != baseSettings?.playbackMode
     }
 
@@ -51,6 +53,7 @@ class GifMakerSettingsViewModel {
         didSet {
             guard let startIndex = startIndex else { return }
             player.startMediaIndex = startIndex
+            didSettingsChangeHandler()
         }
     }
 
@@ -58,6 +61,7 @@ class GifMakerSettingsViewModel {
         didSet {
             guard let endIndex = endIndex else { return }
             player.endMediaIndex = endIndex
+            didSettingsChangeHandler()
         }
     }
 
@@ -377,5 +381,19 @@ extension GifMakerHandler: GifMakerControllerDelegate {
 
     func didOpenSpeed() {
         analyticsProvider?.logEditorGIFOpenSpeed()
+    }
+
+    func startLocation(from index: Int) -> CGFloat? {
+        guard let segments = segments else {
+            return nil
+        }
+        return max(CGFloat(index) / CGFloat(segments.count), 0.0)
+    }
+
+    func endLocation(from index: Int) -> CGFloat? {
+        guard let segments = segments else {
+            return nil
+        }
+        return min((CGFloat(index) + 1) / CGFloat(segments.count), 1.0)
     }
 }

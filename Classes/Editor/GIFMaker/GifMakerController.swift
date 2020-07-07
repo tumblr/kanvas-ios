@@ -52,7 +52,12 @@ protocol GifMakerControllerDelegate: class {
     func didSelectPlayback(_ option: PlaybackOption)
 
     func didOpenTrim()
+
     func didOpenSpeed()
+
+    func startLocation(from index: Int) -> CGFloat?
+
+    func endLocation(from index: Int) -> CGFloat?
 }
 
 /// A view controller that contains the GIF maker menu
@@ -229,5 +234,9 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         guard let settings = settings else { return }
         playbackController.select(option: settings.playbackMode)
         speedController.select(speed: settings.rate)
+        if let start = delegate?.startLocation(from: settings.startIndex),
+            let end = delegate?.endLocation(from: settings.endIndex) {
+            trimController.set(start: start, end: end)
+        }
     }
 }
