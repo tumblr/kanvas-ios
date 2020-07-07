@@ -6,9 +6,7 @@
 
 import Foundation
 import KanvasCamera
-import TumblrTheme
 import Photos
-import SharedUI
 
 @objc protocol DashboardPagingController: class {
     func setPageSlideEnabled(_ pageSlideEnabled: Bool)
@@ -22,7 +20,7 @@ import SharedUI
 
     private let isKanvasHorizontalSwipingEnabled: Bool = true
 
-    private var pageViewController: TMPageViewController?
+    private var pageViewController: UIPageViewController?
 
     private var preferences: [String: Bool] = [:]
 
@@ -52,6 +50,8 @@ import SharedUI
     @objc func doneButtonTapped() {
         dismiss(animated: true, completion: .none)
     }
+    
+    fileprivate var orderedViewControllers: [UIViewController] = []
 
     // MARK: - Initializers
 
@@ -65,10 +65,11 @@ import SharedUI
         if isKanvasHorizontalSwipingEnabled {
             orderedViewControllers.insert(kanvasController, at: 0)
         }
-        let pageViewController = TMPageViewController(orderedViewControllers: orderedViewControllers,
-                                                      initialViewController: tumblrTabBarController,
-                                                      delegate: self)
-        pageViewController.pagingEnabled = true
+        self.orderedViewControllers = orderedViewControllers
+        
+        let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        pageViewController.dataSource = self
+        pageViewController.setViewControllers([orderedViewControllers.first!], direction: .forward, animated: false, completion: nil)
         self.pageViewController = pageViewController
         self.viewControllers = [pageViewController]
     }
@@ -96,7 +97,9 @@ extension SplitViewController: UINavigationControllerDelegate {
         /// SwipeableDash is only available when the rootViewController on the page is the top viewController.
         guard let pageViewController = pageViewController else { return }
         guard let rootViewController = viewController.navigationController?.viewControllers.first else { return }
-        pageViewController.pagingEnabled = (rootViewController === viewController)
+        pageViewController.gestureRecognizers.forEach { recognizer in
+            recognizer.isEnabled = (rootViewController === viewController)
+        }
     }
 
     func navigationControllerDidShow(_ viewController: UIViewController) {
@@ -109,17 +112,19 @@ extension SplitViewController: UINavigationControllerDelegate {
 extension SplitViewController: DashboardPagingController {
 
     func setPageSlideEnabled(_ pageSlideEnabled: Bool) {
-        pageViewController?.pagingEnabled = pageSlideEnabled
+        pageViewController?.gestureRecognizers.forEach { recognizer in
+            recognizer.isEnabled = pageSlideEnabled
+        }
     }
 
     func navigateToKanvas() {
         openedKanvasWithTap = true
-        pageViewController?.moveToViewController(kanvasController, animated: true, direction: .reverse)
+        pageViewController?.setViewControllers([kanvasController], direction: .reverse, animated: true, completion: nil)
     }
 
     @objc func navigateFromKanvas() {
         closedKanvasWithTap = true
-        pageViewController?.moveToViewController(tumblrTabBarController, animated: true, direction: .forward)
+        pageViewController?.setViewControllers([tumblrTabBarController], direction: .forward, animated: true, completion: nil)
     }
 
 }
@@ -162,7 +167,29 @@ extension SplitViewController: KanvasDashboardStateDelegate {
     }
 }
 
-extension SplitViewController: TMPageViewControllerDelegate {
+extension SplitViewController: UIPageViewControllerDataSource {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        if let index = orderedViewControllers.index(of: viewController) {
+            let nextIndex = orderedViewControllers.index(before: index)
+            let nextVC = orderedViewControllers.itemAtIndex(nextIndex)
+            return nextVC
+        }
+        return nil
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        if let index = orderedViewControllers.index(of: viewController) {
+            let nextIndex = orderedViewControllers.index(after: index)
+            let nextVC = orderedViewControllers.itemAtIndex(nextIndex)
+            return nextVC
+        }
+        return nil
+    }
+    
+    
+}
+
+extension SplitViewController: UIPageViewControllerDelegate {
     func canMoveToViewController(_ viewController: UIViewController) -> Bool {
         return true
     }

@@ -7,8 +7,6 @@
 import XCTest
 
 @testable import KanvasCamera
-@testable import Utils
-
 class MediaMetadataTests: XCTestCase {
 
     func testWriteAndReadMetadataWithVideo() {
@@ -41,7 +39,7 @@ class MediaMetadataTests: XCTestCase {
                 XCTFail()
                 return
             }
-            let mediaInfo = TumblrMediaInfo(fromImage: url)
+            let mediaInfo = MediaInfo(fromImage: url)
             XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
             expectation.fulfill()
         }

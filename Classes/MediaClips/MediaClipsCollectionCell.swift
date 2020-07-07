@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Foundation
-import TumblrTheme
 import UIKit
 
 private struct MediaClipsCollectionCellConstants {
@@ -16,7 +15,7 @@ private struct MediaClipsCollectionCellConstants {
     static let clipWidth: CGFloat = 40
     static let borderWidth: CGFloat = 1.1
     static let cornerRadius: CGFloat = 8
-    static let font: UIFont = .favoritTumblrMedium(fontSize: 9.5)
+    static let font: UIFont = KanvasCameraFonts.shared.mediaClipsFont
     static let labelHorizontalPadding: CGFloat = 5.5
     static let labelVerticalPadding: CGFloat = 3.5
     static let labelHeight: CGFloat = 14
@@ -41,7 +40,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         let view = UIView()
         view.clipsToBounds = true
         view.layer.cornerRadius = MediaClipsCollectionCellConstants.cornerRadius
-        view.layer.borderColor = KanvasCameraColors.mediaBorderColor.cgColor
+        view.layer.borderColor = KanvasCameraColors.shared.mediaBorderColor.cgColor
         view.layer.borderWidth = MediaClipsCollectionCellConstants.borderWidth
         return view
     }()

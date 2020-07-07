@@ -11,8 +11,8 @@ import Utils
 /// A container for segments
 enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
-    case image(UIImage, URL?, TimeInterval?, TumblrMediaInfo)
-    case video(URL, TumblrMediaInfo?)
+    case image(UIImage, URL?, TimeInterval?, MediaInfo)
+    case video(URL, MediaInfo?)
 
     var image: UIImage? {
         switch self {
@@ -35,11 +35,11 @@ enum CameraSegment {
         }
     }
 
-    var mediaInfo: TumblrMediaInfo {
+    var mediaInfo: MediaInfo {
         switch self {
         case .image(_, _, _, let mediaInfo): return mediaInfo
         case .video(let url, let mediaInfo):
-            return mediaInfo ?? TumblrMediaInfo(fromVideoURL: url) ?? TumblrMediaInfo(source: .media_library)
+            return mediaInfo ?? MediaInfo(fromVideoURL: url) ?? MediaInfo(source: .media_library)
         }
     }
 
@@ -64,11 +64,11 @@ enum CameraSegment {
         }
     }
 
-    init(from frame: GIFDecodeFrame, info: TumblrMediaInfo) {
+    init(from frame: GIFDecodeFrame, info: MediaInfo) {
         self = .image(UIImage(cgImage: frame.image), nil, frame.interval, info)
     }
 
-    static func from(frames: GIFDecodeFrames, info: TumblrMediaInfo) -> [CameraSegment] {
+    static func from(frames: GIFDecodeFrames, info: MediaInfo) -> [CameraSegment] {
         frames.map { CameraSegment.init(from: $0, info: info) }
     }
 }
@@ -81,7 +81,7 @@ protocol AssetsHandlerType {
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, TumblrMediaInfo?) -> Void)
+    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void)
 }
 
 extension AssetsHandlerType {
@@ -117,7 +117,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     /// Creates a new CameraSegment from a video url and appends to segments
     ///
     /// - Parameter url: the local url of the video
-    func addNewVideoSegment(url: URL, mediaInfo: TumblrMediaInfo)
+    func addNewVideoSegment(url: URL, mediaInfo: MediaInfo)
 
     /// Creates a video from a UIImage representation and appends as a CameraSegment
     ///
@@ -126,7 +126,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     ///   - size: dimensions of the image
     ///   - mediaInfo: metadata about the segment
     ///   - completion: completion handler, success bool and URL of video
-    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void)
+    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: MediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void)
 
     /// Deletes a segment and removes from local storage. When running tests, it should be false
     ///
@@ -155,7 +155,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     /// This functions exports the complete final video to a local resource.
     ///
     /// - Parameter completion: returns a local video URL if merged successfully
-    func exportVideo(completion: @escaping (URL?, TumblrMediaInfo?) -> Void)
+    func exportVideo(completion: @escaping (URL?, MediaInfo?) -> Void)
 
     /// This removes all segments from disk and memory
     func reset(removeFromDisk: Bool)
@@ -203,7 +203,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// Creates a new CameraSegment from a video url and appends to segments
     ///
     /// - Parameter url: the local url of the video
-    func addNewVideoSegment(url: URL, mediaInfo: TumblrMediaInfo) {
+    func addNewVideoSegment(url: URL, mediaInfo: MediaInfo) {
         guard FileManager.default.fileExists(atPath: url.path) else {
             assertionFailure("no video exists at file url")
             return
@@ -219,7 +219,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - size: size (resolution) of the video
     ///   - mediaInfo: media info metadata
     ///   - completion: completion handler, success bool and URL of video
-    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
+    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: MediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
         addNewImageSegment(image: image, size: size, mediaInfo: mediaInfo, createVideoClip: false, completion: completion)
     }
 
@@ -231,7 +231,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - mediaInfo: media info metadata
     ///   - createVideoClip: an optimization flag for creating a video clip from the image, for later use in making stitch video
     ///   - completion: completion handler, success bool and URL of video
-    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: TumblrMediaInfo, createVideoClip: Bool, completion: @escaping (Bool, CameraSegment?) -> Void) {
+    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: MediaInfo, createVideoClip: Bool, completion: @escaping (Bool, CameraSegment?) -> Void) {
 
         guard createVideoClip else {
             let segment = CameraSegment.image(image, nil, nil, mediaInfo)
@@ -320,7 +320,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// This functions exports the complete final video to a local resource.
     ///
     /// - Parameter completion: returns a local video URL if merged successfully
-    func exportVideo(completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+    func exportVideo(completion: @escaping (URL?, MediaInfo?) -> Void) {
         mergeAssets(segments: segments, completion: completion)
     }
 
@@ -345,7 +345,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void) {
         let preciseOptions = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
         let mixComposition = AVMutableComposition(urlAssetInitializationOptions: preciseOptions)
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
@@ -496,7 +496,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameters:
     ///   - composition: the final composition to be exported
     ///   - completion: url of the local video
-    private func exportComposition(segments: [CameraSegment], composition: AVMutableComposition, completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+    private func exportComposition(segments: [CameraSegment], composition: AVMutableComposition, completion: @escaping (URL?, MediaInfo?) -> Void) {
         guard composition.tracks.count > 0, let assetExport = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else {
             completion(nil, nil)
             return
@@ -505,7 +505,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         let finalURL = try? URL.videoURL()
         assetExport.outputURL = finalURL
 
-        let mediaInfo: TumblrMediaInfo = {
+        let mediaInfo: MediaInfo = {
             // If this video is just one segment, let's use its media info...
             if segments.count == 1, let onlySegment = segments.first {
                 return onlySegment.mediaInfo
@@ -515,7 +515,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             // Kanvas Camera.
             // TODO support attribution for each segment in a video
             else {
-                return TumblrMediaInfo(source: .kanvas_camera)
+                return MediaInfo(source: .kanvas_camera)
             }
         }()
         assetExport.metadata = mediaInfo.createAVMetadataItems()

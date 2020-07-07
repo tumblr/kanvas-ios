@@ -276,7 +276,7 @@ private class Selector: UIImageView {
         outerCircle.accessibilityIdentifier = "Discrete Slider Selector Outer Circle"
         let image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
         outerCircle.image = image
-        outerCircle.tintColor = .tumblrBrightBlue
+        outerCircle.tintColor = KanvasCameraColors.shared.sliderOuterCircleColor
         outerCircle.translatesAutoresizingMaskIntoConstraints = false
         addSubview(outerCircle)
         

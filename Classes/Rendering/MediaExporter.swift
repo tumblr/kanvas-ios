@@ -7,7 +7,6 @@
 import Foundation
 import AVFoundation
 import Photos
-import Utils
 
 /// Errors that can be thrown from MediaExporter
 enum MediaExporterError: Error {
@@ -28,7 +27,7 @@ protocol MediaExporting: class {
     init()
     func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
-    func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void)
+    func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void)
 }
 
 
@@ -121,7 +120,7 @@ final class MediaExporter: MediaExporting {
     /// Exports a video
     /// - Parameter video: URL of a video to export
     /// - Parameter completion: callback which is invoked with the processed video URL
-    func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void) {
+    func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void) {
         guard needsProcessing else {
             completion(url, nil)
             return

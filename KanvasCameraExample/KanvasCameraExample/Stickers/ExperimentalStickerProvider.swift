@@ -16,8 +16,24 @@ private struct Constants {
     static let imageExtension: String = "png"
 }
 
+extension URLSessionTask: Cancelable {
+    
+}
+
+class ImageLoader: StickerLoader {
+    func loadImage(at imageURL: URL, OAuth: Bool, imageView: UIImageView?, displayImageImmediately: Bool, preloadAllFrames: Bool, completion: @escaping (UIImage?, Error?) -> Void) -> Cancelable {
+        let task = URLSessionTask()
+        return task
+    }
+}
+
 /// Class that obtains the stickers from the stickers file in the example app
 public final class ExperimentalStickerProvider: StickerProvider {
+    
+    public func loader() -> StickerLoader {
+        return ImageLoader()
+    }
+    
     
     private weak var delegate: StickerProviderDelegate?
     

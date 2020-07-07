@@ -6,7 +6,6 @@
 
 import Foundation
 import UIKit
-import TumblrTheme
 
 private struct Constants {
     static let animationDuration: TimeInterval = 0.5
@@ -40,7 +39,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     
     init() {
         mainContainer = IgnoreTouchesView()
-        mainContainer.backgroundColor = KanvasCameraColors.translucentBlack
+        mainContainer.backgroundColor = KanvasCameraColors.shared.translucentBlack
         
         collectionContainer = IgnoreTouchesView()
 

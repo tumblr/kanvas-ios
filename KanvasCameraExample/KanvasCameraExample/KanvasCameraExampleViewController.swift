@@ -7,7 +7,6 @@
 import KanvasCamera
 import Photos
 import UIKit
-import Utils
 
 private enum PhotoLibraryAccessError: Error {
     case notDetermined, restricted, denied, move(Error)
@@ -185,7 +184,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasButton.setTitle("", for: .normal)
         launchKanvasButton.setTitleColor(labelColor, for: .normal)
         launchKanvasButton.setTitleColor(labelColor, for: .highlighted)
-        launchKanvasButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
+        launchKanvasButton.titleLabel?.font = UIFont.systemFont(ofSize: 18)
 
         // action
         launchKanvasButton.addTarget(self, action: #selector(launchKanvasButtonTapped), for: .touchUpInside)
@@ -202,7 +201,7 @@ final class KanvasCameraExampleViewController: UIViewController {
 
         // text
         launchKanvasDashboardButton.setTitle("", for: .normal)
-        launchKanvasDashboardButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
+        launchKanvasDashboardButton.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         launchKanvasDashboardButton.titleLabel?.textAlignment = .center
         launchKanvasDashboardButton.setTitleColor(labelColor, for: .normal)
         launchKanvasDashboardButton.setTitleColor(labelColorHighlighted, for: .highlighted)

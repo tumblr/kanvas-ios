@@ -9,7 +9,6 @@ import FBSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest
-import Utils
 
 class MediaExporterStub: MediaExporting {
     var filterType: FilterType = .passthrough
@@ -33,7 +32,7 @@ class MediaExporterStub: MediaExporting {
         completion(frames)
     }
 
-    func export(video url: URL, mediaInfo: TumblrMediaInfo, completion: @escaping (URL?, Error?) -> Void) {
+    func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void) {
         exportVideoCalled = true
         completion(url, nil)
     }
@@ -77,7 +76,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
     func getAllSegments() -> [CameraSegment] {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+            let mediaInfo = MediaInfo(source: .kanvas_camera)
             return [
                 CameraSegment.image(image, videoURL, nil, mediaInfo),
                 CameraSegment.video(videoURL, mediaInfo),
@@ -90,7 +89,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
     
     func getVideoSegments() -> [CameraSegment] {
         if let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+            let mediaInfo = MediaInfo(source: .kanvas_camera)
             return [
                 CameraSegment.video(videoURL, mediaInfo),
                 CameraSegment.video(videoURL, mediaInfo)
@@ -102,7 +101,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
     func getPhotoSegment() -> [CameraSegment] {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+            let mediaInfo = MediaInfo(source: .kanvas_camera)
             return [
                 CameraSegment.image(image, videoURL, nil, mediaInfo)
             ]
@@ -113,7 +112,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
     func getPhotoSegments() -> [CameraSegment] {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+            let mediaInfo = MediaInfo(source: .kanvas_camera)
             return [
                 CameraSegment.image(image, videoURL, nil, mediaInfo),
                 CameraSegment.image(image, videoURL, nil, mediaInfo)
@@ -306,17 +305,17 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     private(set) var imageExportCalled = false
     private(set) var framesExportCalled = false
     
-    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(url)
         videoExportCalled = true
     }
     
-    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(image)
         imageExportCalled = true
     }
 
-    func didFinishExportingFrames(url: URL?, size: CGSize?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(url)
         framesExportCalled = true
     }

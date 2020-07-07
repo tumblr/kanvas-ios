@@ -16,7 +16,7 @@ private struct Constants {
     static let backgroundColor: UIColor = .clear
     static let fontColorActive: UIColor = .black
     static let fontColorInactive: UIColor = .white
-    static let font: UIFont = .guavaMedium()
+    static let font: UIFont = KanvasCameraFonts.shared.playbackCellFont
 }
 
 /// The cell in PlaybackController

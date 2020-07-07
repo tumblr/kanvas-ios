@@ -33,7 +33,7 @@ private struct Constants {
     static let selectorTopPadding: CGFloat = selectorPadding + (circleMaxSize - circleMinSize) / 2
     static let selectorPannableAreaHeight: CGFloat = selectorHeight - selectorTopPadding - selectorBottomPadding
     
-    static let circleDefaultColor: UIColor = .tumblrBrightBlue
+    static let circleDefaultColor: UIColor = KanvasCameraColors.shared.strokeColor
 }
 
 /// View for StrokeSelectorController
