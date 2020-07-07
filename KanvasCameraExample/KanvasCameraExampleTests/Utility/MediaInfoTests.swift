@@ -10,7 +10,7 @@ import XCTest
 class MediaInfoTests: XCTestCase {
 
     func testMediaInfo() {
-        let _ = MediaInfo(source: .kanvas_camera)
+        let _ = MediaInfoSimple(source: .kanvas_camera)
     }
 
 }
