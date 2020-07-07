@@ -228,5 +228,6 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     func configure(settings: GIFMakerSettings?) {
         guard let settings = settings else { return }
         playbackController.select(option: settings.playbackMode)
+        speedController.select(speed: settings.rate)
     }
 }

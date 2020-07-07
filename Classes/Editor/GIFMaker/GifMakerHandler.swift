@@ -29,7 +29,8 @@ class GifMakerSettingsViewModel {
     private var baseSettings: GIFMakerSettings?
 
     var dirty: Bool {
-        return playbackMode != baseSettings?.playbackMode
+        return rate != baseSettings?.rate ||
+            playbackMode != baseSettings?.playbackMode
     }
 
     var settings: GIFMakerSettings? {
@@ -42,6 +43,7 @@ class GifMakerSettingsViewModel {
     var rate: Float? {
         didSet {
             player.rate = rate ?? GIFMakerSettings.rate
+            didSettingsChangeHandler()
         }
     }
 
