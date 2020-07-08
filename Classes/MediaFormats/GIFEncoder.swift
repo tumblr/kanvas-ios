@@ -86,6 +86,12 @@ final class GIFEncoderImageIO: GIFEncoder {
 
     func encode(frames: [(image: UIImage, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void) {
 
+        guard frames.count > 0 else {
+            assertionFailure("At least one frame is needed to encode a GIF")
+            completion(nil)
+            return
+        }
+
         let completionMain = { (url: URL?) in
             DispatchQueue.main.async {
                 completion(url)
@@ -111,8 +117,6 @@ final class GIFEncoderImageIO: GIFEncoder {
                 ]
             }
 
-//            let gifSize = GIFSize(size: frames.first!.image.size)
-
             let timeEncodedFileName = String(format: "%@-%lu.gif", "kanvas-gif", Date().timeIntervalSince1970)
             let temporaryFile = NSTemporaryDirectory().appending(timeEncodedFileName)
             let fileURL = URL(fileURLWithPath: temporaryFile)
@@ -125,7 +129,6 @@ final class GIFEncoderImageIO: GIFEncoder {
 
             for frame in frames {
                 if let image = frame.image.cgImage {
-                    //image = gifSize.scale(image: image) ?? image
                     CGImageDestinationAddImage(destination, image, getFrameProperties(frame.interval) as CFDictionary)
                 }
                 else {
