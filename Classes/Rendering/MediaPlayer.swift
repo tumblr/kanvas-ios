@@ -160,7 +160,7 @@ final class MediaPlayer {
         return player
     }()
 
-    var rate: Float = 1.0
+    var rate = GIFMakerSettings.rate
     var startMediaIndex = 0
     var endMediaIndex = 0
 
