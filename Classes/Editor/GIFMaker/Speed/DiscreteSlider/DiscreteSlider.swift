@@ -70,7 +70,7 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
         super.viewDidLayoutSubviews()
         let newWidth = discreteSliderView.bounds.width / CGFloat(items.count)
         discreteSliderView.cellWidth = newWidth
-        discreteSliderView.setSelector(at: initialIndexPath.item)
+        discreteSliderView.setSelector(at: selectedIndexPath.item)
     }
 
     // MARK: - UICollectionViewDataSource
