@@ -6,72 +6,110 @@
 
 import Foundation
 
+enum FilterPlatform {
+    case openGL
+    case metal
+}
+
 /// Creates Filter instances from filter types
 struct FilterFactory {
+    private let glContext: EAGLContext?
+    private let metalContext: MetalContext?
+    private let filterPlatform: FilterPlatform
+    init(glContext: EAGLContext?, metalContext: MetalContext?, filterPlatform: FilterPlatform) {
+        self.glContext = glContext
+        self.metalContext = metalContext
+        self.filterPlatform = filterPlatform
+    }
 
     /// Creates a filter for the provided type and glContext
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
-    static func createFilter(type: FilterType, glContext: EAGLContext?) -> FilterProtocol {
+    func createFilter(type: FilterType) -> FilterProtocol {
+        switch filterPlatform {
+        case .openGL:
+            return createOpenGLFilter(type: type, glContext: glContext)
+        case .metal:
+            return createMetalFilter(type: type, metalContext: metalContext)
+        }
+    }
+    
+    private func createOpenGLFilter(type: FilterType, glContext: EAGLContext?) -> FilterProtocol {
         var newFilter: FilterProtocol
         switch type {
         case .passthrough: fallthrough
         case .off:
-            newFilter = Filter(glContext: glContext)
+            newFilter = OpenGLFilter(glContext: glContext)
         case .emInterference:
-            newFilter = EMInterferenceFilter(glContext: glContext)
+            newFilter = EMInterferenceOpenGLFilter(glContext: glContext)
         case .film:
-            newFilter = FilmFilter(glContext: glContext)
+            newFilter = FilmOpenGLFilter(glContext: glContext)
         case .lego:
-            newFilter = LegoFilter(glContext: glContext)
+            newFilter = LegoOpenGLFilter(glContext: glContext)
         case .mirrorTwo:
-            newFilter = MirrorTwoFilter(glContext: glContext)
+            newFilter = MirrorTwoOpenGLFilter(glContext: glContext)
         case .mirrorFour:
-            newFilter = MirrorFourFilter(glContext: glContext)
+            newFilter = MirrorFourOpenGLFilter(glContext: glContext)
         case .plasma:
-            newFilter = PlasmaFilter(glContext: glContext)
+            newFilter = PlasmaOpenGLFilter(glContext: glContext)
         case .rave:
-            newFilter = RaveFilter(glContext: glContext)
+            newFilter = RaveOpenGLFilter(glContext: glContext)
         case .rgb:
-            newFilter = RGBFilter(glContext: glContext)
+            newFilter = RGBOpenGLFilter(glContext: glContext)
         case .chroma:
-            newFilter = ChromaFilter(glContext: glContext)
+            newFilter = ChromaOpenGLFilter(glContext: glContext)
         case .grayscale:
-            newFilter = GrayscaleFilter(glContext: glContext)
+            newFilter = GrayscaleOpenGLFilter(glContext: glContext)
         case .lightLeaks:
-            newFilter = LightLeaksFilter(glContext: glContext)
+            newFilter = LightLeaksOpenGLFilter(glContext: glContext)
         case .wavePool:
-            newFilter = ImagePoolFilter(glContext: glContext)
+            newFilter = ImagePoolOpenGLFilter(glContext: glContext)
         case .manga:
-            newFilter = MangaFilter(glContext: glContext)
+            newFilter = MangaOpenGLFilter(glContext: glContext)
         case .toon:
-            newFilter = ToonFilter(glContext: glContext)
+            newFilter = ToonOpenGLFilter(glContext: glContext)
         }
         return newFilter
+    }
+    
+    private func createMetalFilter(type: FilterType, metalContext: MetalContext?) -> FilterProtocol {
+        switch type {
+        case .mirrorTwo:
+            return MetalFilter(context: metalContext, kernelFunctionName: "mirror")
+        case .wavePool:
+            return MetalFilter(context: metalContext, kernelFunctionName: "wavepool")
+        default:
+            return MetalFilter(context: metalContext, kernelFunctionName: "kernelIdentity")
+        }
     }
 
     /// Creates a filter for the provided type, glContext, and overlays
     /// - Parameter type: FilterType to create
     /// - Parameter glContext: The EAGLContext to bind this filter to.
     /// - Parameter overlays: Array of CVPixelBuffer instances to overlay.
-    static func createFilter(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer]) -> FilterProtocol {
-        let filters = createFilterList(type: type, glContext: glContext, overlays: overlays)
-        return createFilter(fromFilterList: filters, glContext: glContext)
+    func createFilter(type: FilterType, overlays: [CVPixelBuffer]) -> FilterProtocol {
+        switch filterPlatform {
+        case .openGL:
+            let filters = createOpenGLFilterList(type: type, overlays: overlays)
+            return createOpenGLFilter(fromFilterList: filters)
+        case .metal:
+            return createMetalFilter(type: type, metalContext: metalContext)
+        }
     }
 
-    private static func createFilterList(type: FilterType, glContext: EAGLContext?, overlays: [CVPixelBuffer]) -> [FilterProtocol] {
+    private func createOpenGLFilterList(type: FilterType, overlays: [CVPixelBuffer]) -> [FilterProtocol] {
         var filters: [FilterProtocol] = []
 
         // not sure if this is OK...
-        let f = Filter(glContext: glContext)
+        let f = OpenGLFilter(glContext: glContext)
         filters.append(f)
 
-        filters.append(createFilter(type: type, glContext: glContext))
+        filters.append(createFilter(type: type))
         filters.append(contentsOf: overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
         return filters
     }
 
-    private static func createFilter(fromFilterList filters: [FilterProtocol], glContext: EAGLContext?) -> FilterProtocol {
-        return filters.count > 1 ? GroupFilter(filters: filters) : filters.first ?? Filter(glContext: glContext)
+    private func createOpenGLFilter(fromFilterList filters: [FilterProtocol]) -> FilterProtocol {
+        return filters.count > 1 ? GroupOpenGLFilter(filters: filters) : filters.first ?? OpenGLFilter(glContext: glContext)
     }
 }

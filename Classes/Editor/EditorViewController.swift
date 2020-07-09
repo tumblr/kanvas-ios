@@ -258,7 +258,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
-        self.player = MediaPlayer(renderer: Renderer())
+        self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: MetalContext.createContext()))
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
@@ -603,6 +603,22 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         player.stop()
         delegate?.dismissButtonPressed()
     }
+
+    func revertGIF() {
+        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        shouldExportMediaAsGIF = false
+        gifMakerController.showView(false)
+        gifMakerController.showConfirmButton(false)
+        gifMakerHandler.revert { reverted in
+            if reverted {
+                self.player.stop()
+                self.startPlayerFromSegments()
+            }
+        }
+        showMainUI(true)
+        analyticsProvider?.logEditorGIFRevert()
+        onAfterConfirmingEditionMenu()
+    }
     
     func confirmEditionMenu() {
         guard let editionOption = openedMenu else { return }
@@ -663,6 +679,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                             self.player.stop()
                                             self.startPlayerFromSegments()
                                         }
+                                        self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
                 }
                 editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
                     self.gifMakerController.showConfirmButton(true)
@@ -724,6 +741,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didConfirmGif() {
         confirmEditionMenu()
+    }
+
+    func didRevertGif() {
+        revertGIF()
+    }
+
+    func didSettingsChange(dirty: Bool) {
+        gifMakerController.toggleRevertButton(dirty)
     }
     
     // MARK: - EditorFilterControllerDelegate

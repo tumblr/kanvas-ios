@@ -236,4 +236,10 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
         }
         trimView.showView(show)
     }
+
+    /// sets the start and end trim locations
+    func set(start: CGFloat, end: CGFloat) {
+        trimView.setLeftSide(percentage: start)
+        trimView.setRightSide(percentage: end)
+    }
 }

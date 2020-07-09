@@ -104,5 +104,10 @@ final class SpeedController: UIViewController, DiscreteSliderDelegate {
     func showView(_ show: Bool) {
         speedView.showView(show)
     }
+
+    func select(speed: Float) {
+        speedSlider.select(item: speed)
+        setLabelText(speed)
+    }
     
 }

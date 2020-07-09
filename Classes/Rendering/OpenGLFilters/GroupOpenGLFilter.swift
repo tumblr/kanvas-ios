@@ -9,7 +9,7 @@ import Foundation
 import GLKit
 
 /// A filter that renders shaders in a chain, with one output leading to the next
-class GroupFilter: FilterProtocol {
+class GroupOpenGLFilter: FilterProtocol {
 
     var switchInputDimensions: Bool {
         get {

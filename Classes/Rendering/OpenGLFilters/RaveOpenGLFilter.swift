@@ -7,7 +7,7 @@
 import Foundation
 
 /// Rave Filter
-final class RaveFilter: Filter {
+final class RaveOpenGLFilter: OpenGLFilter {
     
     override func setupShader() {
         let fragment = Shader.getSourceCode("rave", type: .fragment)

@@ -51,16 +51,14 @@ enum MediaPlayerPlaybackMode {
 /// View for rendering the player.
 final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
-    weak var pixelBufferView: GLPixelBufferView?
+    weak var pixelBufferView: PixelBufferView?
 
     weak var delegate: MediaPlayerViewDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let pixelBufferView = GLPixelBufferView(frame: frame)
-        pixelBufferView.mediaContentMode = .scaleAspectFit
-        pixelBufferView.delegate = self
+        let pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFit)
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
@@ -162,7 +160,7 @@ final class MediaPlayer {
         return player
     }()
 
-    var rate: Float = 1.0
+    var rate = GIFMakerSettings.rate
     var startMediaIndex = 0
     var endMediaIndex = 0
 

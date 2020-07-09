@@ -38,6 +38,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
         willSet {
             guard let cell = playbackView.collectionView.cellForItem(at: newValue) as? PlaybackCollectionCell else { return }
             cell.setSelected(true)
+            playbackView.select(cell: cell)
         }
         didSet {
             guard let cell = playbackView.collectionView.cellForItem(at: oldValue) as? PlaybackCollectionCell else { return }
@@ -61,6 +62,22 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     @available(*, unavailable, message: "use init() instead")
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
+    }
+
+    // MARK: - Public API
+
+    /// selects the option.
+    /// this does not trigger any delegation
+    func select(option: PlaybackOption) {
+        guard let index = options.index(of: option) else {
+            return
+        }
+        let indexPath = IndexPath(item: index, section: 0)
+        guard selectedIndexPath != indexPath else {
+            return
+        }
+
+        selectedIndexPath = indexPath
     }
     
     // MARK: - View Life Cycle
@@ -101,6 +118,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
         
         if indexPath == selectedIndexPath {
             cell.setSelected(true, animated: false)
+            playbackView.select(cell: cell)
         }
         
         return cell
@@ -123,12 +141,14 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     private func didSelect(_ indexPath: IndexPath) {
-        guard let cell = playbackView.collectionView.cellForItem(at: indexPath) as? PlaybackCollectionCell,
+        guard
             let option = options.object(at: indexPath.item),
-            selectedIndexPath != indexPath else { return }
+            selectedIndexPath != indexPath
+        else {
+            return
+        }
         
         selectedIndexPath = indexPath
-        playbackView.select(cell: cell)
         
         delegate?.didSelect(option: option)
     }
