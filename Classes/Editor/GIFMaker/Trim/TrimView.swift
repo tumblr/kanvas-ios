@@ -229,27 +229,34 @@ final class TrimView: UIView, TrimAreaDelegate {
     // MARK: - Gesture recognizers
     
     private func leftSideMoved(to location: CGFloat) {
+        setLeftSide(location: location)
+        delegate?.didMoveTrimArea()
+    }
+
+    private func rightSideMoved(to location: CGFloat) {
+        setRightSide(location: location)
+        delegate?.didMoveTrimArea()
+    }
+
+    private func setLeftSide(location: CGFloat) {
         if location <= Constants.selectorMargin {
             trimAreaLeadingConstraint.constant = Constants.selectorMargin
         }
         else if location + TrimArea.selectorWidth <= trimArea.rightSelectorLocation {
             trimAreaLeadingConstraint.constant = location
         }
-        
-        delegate?.didMoveTrimArea()
     }
-    
-    private func rightSideMoved(to location: CGFloat) {
+
+    private func setRightSide(location: CGFloat) {
+        print("setRightSide location:\(location)")
         if location + TrimArea.selectorWidth >= bounds.width - Constants.selectorMargin {
             trimAreaTrailingConstraint.constant = -Constants.selectorMargin
         }
         else if location >= trimArea.leftSelectorLocation {
             trimAreaTrailingConstraint.constant = location + TrimArea.selectorWidth - bounds.width
         }
-        
-        delegate?.didMoveTrimArea()
     }
-    
+
     // MARK: - Private utilities
     
     private func trimAreaStartedMoving() {
@@ -308,6 +315,22 @@ final class TrimView: UIView, TrimAreaDelegate {
         overlayLayer.removeFromSuperlayer()
         overlayLayer = newLayer
         thumbnailContainer.layer.addSublayer(newLayer)
+    }
+
+    /// Sets the location of the left-side handle
+    /// - Parameter location: 0.0-1.0 based location to move the handle to.
+    func setLeftSide(percentage: CGFloat) {
+        let totalWidth = bounds.width - (Constants.selectorMargin * 2)
+        let location = (totalWidth * percentage) + TrimArea.selectorWidth
+        setLeftSide(location: location)
+    }
+
+    /// Sets the location of the right-side handle
+    /// - Parameter location: 0.0-1.0 based location to move the handle to.
+    func setRightSide(percentage: CGFloat) {
+        let totalWidth = bounds.width - (Constants.selectorMargin * 2)
+        let location = (totalWidth * percentage) + TrimArea.selectorWidth
+        setRightSide(location: location)
     }
     
     // MARK: - Overlay

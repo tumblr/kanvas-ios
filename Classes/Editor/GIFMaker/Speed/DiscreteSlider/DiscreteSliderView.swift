@@ -130,6 +130,8 @@ final class DiscreteSliderView: UIView {
             }
         case .cancelled, .failed:
             resetSelectorPosition()
+        @unknown default:
+            break
         }
 
     }

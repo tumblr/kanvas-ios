@@ -21,7 +21,11 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     weak var delegate: DiscreteSliderDelegate?
     private let items: [Float]
     private let initialIndexPath: IndexPath
-    private var selectedIndexPath: IndexPath
+    private var selectedIndexPath: IndexPath {
+        didSet {
+            discreteSliderView.collectionView.reloadData()
+        }
+    }
     
     private lazy var discreteSliderView: DiscreteSliderView = {
         let view = DiscreteSliderView()
@@ -70,7 +74,7 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
         super.viewDidLayoutSubviews()
         let newWidth = discreteSliderView.bounds.width / CGFloat(items.count)
         discreteSliderView.cellWidth = newWidth
-        discreteSliderView.setSelector(at: initialIndexPath.item)
+        discreteSliderView.setSelector(at: selectedIndexPath.item)
     }
 
     // MARK: - UICollectionViewDataSource
@@ -109,7 +113,20 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
         
         selectedIndexPath = indexPath
         delegate?.didSelect(item: item)
-        discreteSliderView.collectionView.reloadData()
+    }
+
+    // MARK: - Public Interface
+
+    func select(item: Float) {
+        guard let index = items.index(of: item) else {
+            return
+        }
+        let indexPath = IndexPath(item: index, section: 0)
+        guard indexPath != selectedIndexPath else {
+            return
+        }
+        selectedIndexPath = indexPath
+        discreteSliderView.setSelector(at: index)
     }
     
     // MARK: - Private utilities

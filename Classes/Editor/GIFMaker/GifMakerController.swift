@@ -12,6 +12,9 @@ protocol GifMakerControllerDelegate: class {
     
     /// Called after the confirm button is tapped
     func didConfirmGif()
+
+    /// Called after the revert button is tapped
+    func didRevertGif()
     
     /// Called after a trimming movement starts
     func didStartTrimming()
@@ -49,7 +52,12 @@ protocol GifMakerControllerDelegate: class {
     func didSelectPlayback(_ option: PlaybackOption)
 
     func didOpenTrim()
+
     func didOpenSpeed()
+
+    func startLocation(from index: Int) -> CGFloat?
+
+    func endLocation(from index: Int) -> CGFloat?
 }
 
 /// A view controller that contains the GIF maker menu
@@ -160,6 +168,10 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
             delegate?.didOpenSpeed()
         }
     }
+
+    func didTapRevertButton() {
+        delegate?.didRevertGif()
+    }
     
     // MARK: - TrimControllerDelegate
     
@@ -212,5 +224,19 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
         gifMakerView.showConfirmButton(show)
+    }
+
+    func toggleRevertButton(_ show: Bool) {
+        gifMakerView.toggleRevertButton(show)
+    }
+
+    func configure(settings: GIFMakerSettings?) {
+        guard let settings = settings else { return }
+        playbackController.select(option: settings.playbackMode)
+        speedController.select(speed: settings.rate)
+        if let start = delegate?.startLocation(from: settings.startIndex),
+            let end = delegate?.endLocation(from: settings.endIndex) {
+            trimController.set(start: start, end: end)
+        }
     }
 }

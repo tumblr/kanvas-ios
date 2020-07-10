@@ -10,7 +10,7 @@ import OpenGLES
 import GLKit
 
 /// Alpha Blend Filter
-final class AlphaBlendFilter: Filter {
+final class AlphaBlendFilter: OpenGLFilter {
 
     private let pixelBuffer: CVPixelBuffer
     private let overlayDimensions: CGSize
