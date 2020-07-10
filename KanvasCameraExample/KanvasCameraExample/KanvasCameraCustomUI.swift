@@ -117,8 +117,8 @@ public class KanvasCameraCustomUI {
                                  colorSelectorTooltipFont:
                                     UIFont.favoritTumblr85(fontSize: 14),
                                  modeSelectorTooltipFont: UIFont.favoritTumblr85(fontSize: 15),
-                                 postLabelFont:
-                                    UIFont.favoritTumblrMedium(fontSize: 14),
+                                 postLabelFont: UIFont.favoritTumblrMedium(fontSize: 14),
+                                 gifMakerRevertButtonFont: UIFont.guavaMedium().fontByAddingSymbolicTrait(.traitBold),
                                  paddingAdjustment: paddingAdjustment
                                  )
     }
@@ -132,4 +132,14 @@ extension UIFont {
         }
         return font
     }
+    
+    @objc func fontByAddingSymbolicTrait(_ trait: UIFontDescriptor.SymbolicTraits) -> UIFont {
+        let modifiedTraits = fontDescriptor.symbolicTraits.union(trait)
+        guard let modifiedDescriptor = fontDescriptor.withSymbolicTraits(modifiedTraits) else {
+            assertionFailure("Unable to created modified font descriptor by adding a symbolic trait.")
+            return self
+        }
+        return UIFont(descriptor: modifiedDescriptor, size: pointSize)
+    }
+
 }
