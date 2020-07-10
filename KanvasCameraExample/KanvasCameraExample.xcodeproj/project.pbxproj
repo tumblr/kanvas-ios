@@ -200,6 +200,7 @@
 		F597B4F224B3EA7000843540 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 652E7CBE24900EB8002F7BD8 /* Localizable.strings */; };
 		F597B50924B4FAD100843540 /* KanvasCameraFontsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B50824B4FAD100843540 /* KanvasCameraFontsTests.swift */; };
 		F597B50B24B5017B00843540 /* MediaInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B50A24B5017B00843540 /* MediaInfoTests.swift */; };
+		F5E448CA24B8E23000403A7C /* KanvasCameraCustomUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E448C924B8E23000403A7C /* KanvasCameraCustomUITests.swift */; };
 		FECCC46BFCBD5D4DF20954D7 /* libPods-KanvasCameraExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A15411C557452BAE33C70F12 /* libPods-KanvasCameraExampleTests.a */; };
 /* End PBXBuildFile section */
 
@@ -411,6 +412,7 @@
 		F597B4EA24B3E90E00843540 /* Fairwater Script Regular_Tumblr.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Fairwater Script Regular_Tumblr.otf"; path = "../../../../Assets/Fonts/Fairwater/Fairwater Script Regular_Tumblr.otf"; sourceTree = "<group>"; };
 		F597B50824B4FAD100843540 /* KanvasCameraFontsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasCameraFontsTests.swift; sourceTree = "<group>"; };
 		F597B50A24B5017B00843540 /* MediaInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaInfoTests.swift; sourceTree = "<group>"; };
+		F5E448C924B8E23000403A7C /* KanvasCameraCustomUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasCameraCustomUITests.swift; sourceTree = "<group>"; };
 		F67459CFA8681ADB0C29FF28 /* Pods-KanvasCameraExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -915,7 +917,7 @@
 		AB7F295D2121F0ED00B8D599 /* KanvasCameraExampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				F597B50724B4FA5D00843540 /* Fonts */,
+				F5E448C924B8E23000403A7C /* KanvasCameraCustomUITests.swift */,
 				0EAE0CB72139EC81004CD7FF /* KanvasCameraAnalyticsStub.swift */,
 				0EAE0CAE2139B966004CD7FF /* CameraPreview */,
 				0EAE0C8A2139895A004CD7FF /* Camera */,
@@ -1045,13 +1047,6 @@
 			children = (
 			);
 			path = FavoritTumblr;
-			sourceTree = "<group>";
-		};
-		F597B50724B4FA5D00843540 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1303,6 +1298,7 @@
 				6578F83B22E12098002B952C /* ColorThiefTests.swift in Sources */,
 				65E46BA922BD22DE004FD226 /* EditorControllerTests.swift in Sources */,
 				F597B50B24B5017B00843540 /* MediaInfoTests.swift in Sources */,
+				F5E448CA24B8E23000403A7C /* KanvasCameraCustomUITests.swift in Sources */,
 				653E49572472FC2E006F80A2 /* TrimAreaTests.swift in Sources */,
 				764AC46E221D851B005C82EC /* RendererTests.swift in Sources */,
 				658A3298239FFD9B00EEC1D3 /* StickerTypeCollectionViewTests.swift in Sources */,

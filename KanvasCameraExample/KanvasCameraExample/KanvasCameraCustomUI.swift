@@ -11,13 +11,7 @@ import KanvasCamera
 public class KanvasCameraCustomUI {
     
    public static let shared = KanvasCameraCustomUI()
-        
-    /// Updates the shared fonts and colors with overridden values
-    public func updateKanvas() {
-        KanvasCameraFonts.shared = cameraFonts()
-        KanvasCameraColors.shared = cameraColors()
-    }
-    
+            
     private static let brightBlue = UIColor.tumblrBrightBlue
     private static let brightPurple = UIColor.tumblrBrightPurple
     private static let brightPink = UIColor.tumblrBrightPink
