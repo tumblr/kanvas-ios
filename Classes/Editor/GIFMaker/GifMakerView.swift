@@ -41,7 +41,7 @@ private struct Constants {
     static let topButtonsInterspace: CGFloat = 30
     static let topButtonsCount: CGFloat = 3
 
-    static let font = UIFont.guavaMedium().bolded()
+    static let font = KanvasCameraFonts.shared.gifMakerRevertButtonFont
     static let revertFontColor = UIColor(red: 1, green: 0.286, blue: 0.188, alpha: 1)
     static let revertBackgroundColor = UIColor.white
 }
@@ -55,7 +55,9 @@ final class GifMakerView: UIView {
     private let trimButton: UIButton
     private let speedButton: UIButton
     private lazy var revertButton: UIButton = {
-        UIButton(frame: .zero).forAutoLayout()
+        let button = UIButton(frame: .zero)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     private let topButtonsContainer: UIView
     let trimMenuContainer: IgnoreTouchesView
