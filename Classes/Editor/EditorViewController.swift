@@ -19,7 +19,7 @@ public protocol EditorControllerDelegate: class {
     func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting frames
-    func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -152,9 +152,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private var mediaChanged: Bool {
         let hasStickerOrText = !editorView.movableViewCanvas.isEmpty
-        let filterApplied = filterType?.filterApplied == true
+        let filterApplied = filterType?.filterApplied ?? false
         let hasDrawings = !drawingController.isEmpty
-        return hasStickerOrText || filterApplied || hasDrawings
+        let gifMakerOpened = shouldExportMediaAsGIF
+        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened
     }
 
     private var editingNewText: Bool = true
@@ -257,7 +258,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
-        self.player = MediaPlayer(renderer: Renderer())
+        self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: MetalContext.createContext()))
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
@@ -435,15 +436,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
         return false
     }
-
-    private func allSegmentsAreImages() -> Bool {
-        for segment in segments {
-            if segment.image == nil {
-                return false
-            }
-        }
-        return true
-    }
     
     private func startExporting(action: KanvasExportAction) {
         player.stop()
@@ -462,7 +454,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
                 self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
             }
-            else if allSegmentsAreImages() {
+            else if assetsHandler.containsOnlyImages(segments: segments) {
                 self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? TumblrMediaInfo(source: .kanvas_camera), exportAction: action)
             }
             else {
@@ -503,7 +495,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(frames: frames) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
-                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                var size: CGSize? = nil
+                if let gifURL = gifURL {
+                    size = GIFDecoderFactory.main().size(of: gifURL)
+                }
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
                 }
@@ -532,7 +528,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     }
                     return
                 }
-                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                let size = GIFDecoderFactory.main().size(of: gifURL)
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
                 }
@@ -606,6 +603,22 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         player.stop()
         delegate?.dismissButtonPressed()
     }
+
+    func revertGIF() {
+        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        shouldExportMediaAsGIF = false
+        gifMakerController.showView(false)
+        gifMakerController.showConfirmButton(false)
+        gifMakerHandler.revert { reverted in
+            if reverted {
+                self.player.stop()
+                self.startPlayerFromSegments()
+            }
+        }
+        showMainUI(true)
+        analyticsProvider?.logEditorGIFRevert()
+        onAfterConfirmingEditionMenu()
+    }
     
     func confirmEditionMenu() {
         guard let editionOption = openedMenu else { return }
@@ -666,6 +679,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                             self.player.stop()
                                             self.startPlayerFromSegments()
                                         }
+                                        self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
                 }
                 editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
                     self.gifMakerController.showConfirmButton(true)
@@ -727,6 +741,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didConfirmGif() {
         confirmEditionMenu()
+    }
+
+    func didRevertGif() {
+        revertGIF()
+    }
+
+    func didSettingsChange(dirty: Bool) {
+        gifMakerController.toggleRevertButton(dirty)
     }
     
     // MARK: - EditorFilterControllerDelegate

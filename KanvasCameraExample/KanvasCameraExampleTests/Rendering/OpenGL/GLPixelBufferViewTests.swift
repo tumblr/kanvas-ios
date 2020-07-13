@@ -22,7 +22,8 @@ class GLPixelBufferViewTests: FBSnapshotTestCase {
 
     func testPixelBufferView() {
         let rect = CGRect(x: 0, y: 0, width: 200, height: 200)
-        let view = GLPixelBufferView(frame: rect)
+        let view = GLPixelBufferView(delegate: nil)
+        view.frame = rect
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
             if let pixelBuffer = image.pixelBuffer() {
                 view.displayPixelBuffer(pixelBuffer)

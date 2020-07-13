@@ -31,7 +31,6 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     private(set) var textCell: EditionMenuCollectionCell?
     
     var shouldExportMediaAsGIF: Bool
-    var gifMakerEnabled: Bool
     
     weak var delegate: EditionMenuCollectionControllerDelegate?
     
@@ -41,7 +40,6 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     init(settings: CameraSettings, shouldExportMediaAsGIF: Bool?) {
         editionOptions = []
         self.shouldExportMediaAsGIF = shouldExportMediaAsGIF ?? false
-        gifMakerEnabled = settings.features.editorGIFMaker
 
         if settings.features.gifs && shouldExportMediaAsGIF != nil {
             editionOptions.append(.gif)
@@ -120,7 +118,7 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditionMenuCollectionCell.identifier, for: indexPath)
         if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
-            cell.bindTo(option, enabled: option == .gif && !gifMakerEnabled ? shouldExportMediaAsGIF : false)
+            cell.bindTo(option, enabled: option == .gif ? shouldExportMediaAsGIF : false)
             cell.delegate = self
             if option == .text {
                 textCell = cell

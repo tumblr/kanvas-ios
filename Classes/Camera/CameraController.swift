@@ -813,7 +813,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didFinishExportingFrames(url: URL?) {
-        didFinishExportingFrames(url: url, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
+        var size: CGSize? = nil
+        if let url = url {
+            size = GIFDecoderFactory.main().size(of: url)
+        }
+        didFinishExportingFrames(url: url, size: size, info: TumblrMediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
     }
 
     public func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
@@ -857,39 +861,14 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    public func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-
-        guard let url = url, let info = info else {
+    public func didFinishExportingFrames(url: URL?, size: CGSize?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+        guard let url = url, let info = info, let size = size, size != .zero else {
             performUIUpdate {
                 self.handleCloseSoon(action: action)
                 self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
             }
             return
         }
-
-        let size = { () -> CGSize in
-            guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
-                return .zero
-            }
-            guard let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) else {
-                return .zero
-            }
-            guard let width = (properties as NSDictionary)[kCGImagePropertyPixelWidth] as? Int,
-                let height = (properties as NSDictionary)[kCGImagePropertyPixelHeight] as? Int
-                else {
-                    return .zero
-            }
-            return .init(width: width, height: height)
-        }()
-
-        guard size != .zero else {
-            performUIUpdate {
-                self.handleCloseSoon(action: action)
-                self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
-            }
-            return
-        }
-
         performUIUpdate {
             self.handleCloseSoon(action: action)
             self.delegate?.didCreateMedia(self, media: .frames(url, info, size), exportAction: action, error: nil)

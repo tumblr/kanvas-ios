@@ -20,6 +20,7 @@ protocol GIFDecoder {
     func decode(image url: URL, completion: @escaping (GIFDecodeFrames) -> Void)
     func numberOfFrames(in url: URL) -> Int
     func numberOfFrames(in data: Data) -> Int
+    func size(of url: URL) -> CGSize
 }
 
 class GIFDecoderFactory {
@@ -62,6 +63,21 @@ class GIFDecoderImageIO: GIFDecoder {
             return 0
         }
         return CGImageSourceGetCount(source)
+    }
+
+    func size(of url: URL) -> CGSize {
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+            return .zero
+        }
+        guard let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) else {
+            return .zero
+        }
+        guard let width = (properties as NSDictionary)[kCGImagePropertyPixelWidth] as? Int,
+            let height = (properties as NSDictionary)[kCGImagePropertyPixelHeight] as? Int
+            else {
+                return .zero
+        }
+        return .init(width: width, height: height)
     }
 
     private func getFrames(from source: CGImageSource) -> GIFDecodeFramesUniformDelay {

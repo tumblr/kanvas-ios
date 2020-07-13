@@ -56,7 +56,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     private var filteredInputViewControllerInstance: FilteredInputViewController?
     private var filteredInputViewController: FilteredInputViewController? {
         if filteredInputViewControllerInstance == nil {
-            if settings.features.openGLPreview {
+            if settings.features.openGLPreview || settings.features.metalPreview {
                 filteredInputViewControllerInstance = FilteredInputViewController(delegate: self, settings: settings)
             }
             else {

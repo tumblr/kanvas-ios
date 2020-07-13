@@ -18,7 +18,9 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case ghostFrame(Bool)
         case openGLPreview(Bool)
         case openGLCapture(Bool)
+        case metalPreview(Bool)
         case cameraFilters(Bool)
+        case metalFilters(Bool)
         case experimentalCameraFilters(Bool)
         case editor(Bool)
         case editorGIFMaker(Bool)
@@ -41,8 +43,12 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Camera OpenGL"
             case .openGLCapture(_):
                 return "Camera OpenGL Capture"
+            case .metalPreview(_):
+                return "Camera Metal"
             case .cameraFilters(_):
                 return "Camera Filters"
+            case .metalFilters(_):
+                return "Metal Filters"
             case .experimentalCameraFilters(_):
                 return "Camera Filters (experimental)"
             case .editor(_):
@@ -80,7 +86,11 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return enabled
             case .openGLCapture(let enabled):
                 return enabled
+            case .metalPreview(let enabled):
+                return enabled
             case .cameraFilters(let enabled):
+                return enabled
+            case .metalFilters(let enabled):
                 return enabled
             case .experimentalCameraFilters(let enabled):
                 return enabled
@@ -156,6 +166,10 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .openGLPreview(value)
         case .openGLCapture(_):
             featuresData[indexPath.row] = .openGLCapture(value)
+        case .metalPreview(_):
+            featuresData[indexPath.row] = .metalPreview(value)
+        case .metalFilters(_):
+            featuresData[indexPath.row] = .metalFilters(value)
         case .cameraFilters(_):
             featuresData[indexPath.row] = .cameraFilters(value)
         case .experimentalCameraFilters(_):
