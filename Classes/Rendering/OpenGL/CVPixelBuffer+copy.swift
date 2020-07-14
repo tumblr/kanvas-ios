@@ -19,7 +19,8 @@ extension CVPixelBuffer {
                                         kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue as Any,
                                         kCVPixelBufferIOSurfacePropertiesKey: NSDictionary(),
                                         kCVPixelBufferOpenGLESCompatibilityKey: kCFBooleanTrue as Any,
-                                        kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue as Any]
+                                        kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferMetalCompatibilityKey: kCFBooleanTrue as Any]
 
         CVPixelBufferCreate(nil, width, height, format, attributes, &pixelBuffer)
         

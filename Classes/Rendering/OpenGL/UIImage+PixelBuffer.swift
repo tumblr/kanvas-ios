@@ -36,7 +36,8 @@ extension UIImage {
                                         kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue as Any,
                                         kCVPixelBufferIOSurfacePropertiesKey: NSDictionary(),
                                         kCVPixelBufferOpenGLESCompatibilityKey: kCFBooleanTrue as Any,
-                                        kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue as Any]
+                                        kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferMetalCompatibilityKey: kCFBooleanTrue as Any]
         
         let status = CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA, attributes as CFDictionary, &initialBuffer)
         guard status == kCVReturnSuccess, let pixelBuffer = initialBuffer else {

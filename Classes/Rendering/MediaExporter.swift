@@ -88,33 +88,19 @@ final class MediaExporter: MediaExporting {
     }
 
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void) {
-        var processedFrames: [Int: MediaFrame] = [:]
-        let group = DispatchGroup()
-        for (i, frame) in frames.enumerated() {
-            group.enter()
-            DispatchQueue.global(qos: .default).async {
+        var processedFrames: [MediaFrame] = []
+        DispatchQueue.global(qos: .default).async {
+            for frame in frames {
                 self.export(image: frame.image, time: frame.interval) { (image, error) in
                     guard error == nil, let image = image else {
-                        group.leave()
                         return
                     }
-                    processedFrames[i] = (image: image, interval: frame.interval)
-                    group.leave()
+                    processedFrames.append((image: image, interval: frame.interval))
                 }
             }
-        }
-        group.notify(queue: .main) {
-            let initialValue: [MediaFrame] = []
-            let orderedFrames = processedFrames.keys.sorted().reduce(initialValue) { (partialOrderedFrames, index) in
-                if let processedFrame = processedFrames[index] {
-                    return partialOrderedFrames + [processedFrame]
-                }
-                else {
-                    assertionFailure("Missing frame")
-                    return partialOrderedFrames
-                }
+            DispatchQueue.main.async {
+                completion(processedFrames)
             }
-            completion(orderedFrames)
         }
     }
 

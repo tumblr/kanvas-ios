@@ -6,20 +6,16 @@
 
 import Foundation
 
-/// Lego Filter
-final class LegoFilter: Filter {
-    
+/// Grayscale Filter
+final class GrayscaleOpenGLFilter: OpenGLFilter {
+
     override func setupShader() {
-        let fragment = Shader.getSourceCode("lego", type: .fragment)
+        let fragment = Shader.getSourceCode("grayscale", type: .fragment)
         let vertex = Shader.getSourceCode("base_filter", type: .vertex)
         if let fragment = fragment, let vertex = vertex {
             let shader = Shader(vertexShader: vertex, fragmentShader: fragment)
             self.shader = shader
         }
     }
-    
-    override func updateUniforms() {
-        let resolution: [Float] = [Float(outputDimensions.width), Float(outputDimensions.height)]
-        shader?.setFloat2Uniform(key: "iResolution", value: resolution)
-    }
+
 }
