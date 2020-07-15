@@ -76,6 +76,8 @@ struct FilterFactory {
         switch type {
         case .mirrorTwo:
             return MetalFilter(context: metalContext, kernelFunctionName: "mirror")
+        case .grayscale:
+            return MetalFilter(context: metalContext, kernelFunctionName: "grayscale")
         case .wavePool:
             return MetalFilter(context: metalContext, kernelFunctionName: "wavepool")
         default:
