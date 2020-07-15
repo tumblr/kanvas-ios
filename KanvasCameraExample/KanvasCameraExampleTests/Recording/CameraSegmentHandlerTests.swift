@@ -8,7 +8,6 @@
 import AVFoundation
 import Foundation
 import XCTest
-import Utils
 
 final class CameraSegmentHandlerTests: XCTestCase {
     
@@ -18,7 +17,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
             XCTFail("no valid url found")
             return
         }
-        let mediaInfo = TumblrMediaInfo(source: .media_library)
+        let mediaInfo = MediaInfo(source: .media_library)
         cameraSegmentHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
         cameraSegmentHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
         let expectation = XCTestExpectation(description: "merged")
@@ -43,7 +42,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
         let cameraSegmentHandler = CameraSegmentHandler()
         let images = createImagesArray()
         XCTAssert(images.count > 0, "Images should have been added")
-        let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+        let mediaInfo = MediaInfo(source: .kanvas_camera)
         for image in images {
             cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo, completion: { (success, segment) in
                 XCTAssert(success, "appending an image failed to create a CameraSegment")
@@ -60,7 +59,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
     func testAddVideo() {
         let cameraSegmentHandler = CameraSegmentHandler()
         if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
-            let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+            let mediaInfo = MediaInfo(source: .kanvas_camera)
             cameraSegmentHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
             XCTAssert(cameraSegmentHandler.segments.count == 1, "CameraSegmentHandler failed to add video segment")
         }
@@ -77,7 +76,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
         let deleteBlock: (() -> Void) = {
             cameraSegmentHandler.deleteSegment(at: 0, removeFromDisk: false)
         }
-        let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+        let mediaInfo = MediaInfo(source: .kanvas_camera)
         for image in images {
             cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo, completion: { (success, segment) in
                 XCTAssert(success, "appending an image failed to create a CameraSegment")
@@ -96,7 +95,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
         guard let url = createVideo() else { XCTFail("no valid url found"); return }
         
         let expectation = XCTestExpectation(description: "added image")
-        let mediaInfo = TumblrMediaInfo(source: .kanvas_camera)
+        let mediaInfo = MediaInfo(source: .kanvas_camera)
         cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo, completion: { (success, segment) in
             XCTAssert(success, "appending an image failed to create a CameraSegment")
             cameraSegmentHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)

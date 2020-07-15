@@ -6,7 +6,6 @@
 
 import Foundation
 import UIKit
-import ImageLoader
 
 /// Delegate for touch events on this cell
 protocol StickerCollectionCellDelegate: class {
@@ -47,9 +46,7 @@ final class StickerCollectionCell: UICollectionViewCell {
     private let loadingView = LoadingIndicatorView()
     private var imageTask: Cancelable?
     
-    private lazy var imageLoader: ImageLoader = {
-        return ImageLoaderProvider.makeImageLoader()
-    }()
+    var imageLoader: StickerLoader?
     
     weak var delegate: StickerCollectionCellDelegate?
     
@@ -171,7 +168,7 @@ final class StickerCollectionCell: UICollectionViewCell {
             }
         }
         
-        imageTask = imageLoader.loadImage(at: url, OAuth: false, imageView: stickerView,
+        imageTask = imageLoader?.loadImage(at: url, OAuth: false, imageView: stickerView,
                                           displayImageImmediately: true, preloadAllFrames: true,
                                           completion: completion)
     }

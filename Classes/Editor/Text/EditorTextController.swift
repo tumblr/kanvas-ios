@@ -61,7 +61,7 @@ protocol EditorTextControllerDelegate: class {
 /// Constants for EditorTextController
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let fonts: [UIFont?] = [.fairwater(fontSize: 48), .favoritTumblr85(fontSize: 48)]
+    static let fonts: [UIFont?] = KanvasCameraFonts.shared.editorFonts
     static let alignments: [NSTextAlignment] = [.left, .center, .right]
 }
 
@@ -75,7 +75,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     private var alignments: [NSTextAlignment]
     private var fonts: [UIFont?]
     private var highlight: Bool?
-    
+        
     private lazy var textView: EditorTextView = {
         let textView = EditorTextView()
         textView.delegate = self
@@ -291,7 +291,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     /// - Parameter transformations: transformations for the view
     /// - Parameter options: text style options
     func showView(_ visible: Bool,
-                  options: TextOptions = TextOptions(),
+                  options: TextOptions = TextOptions(font: Constants.fonts.first ?? nil),
                   transformations: ViewTransformations = ViewTransformations()) {
         if visible {
             show(options: options, transformations: transformations)
@@ -314,7 +314,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     ///
     /// - Parameter transformations: transformations for the view
     /// - Parameter options: text style options
-    private func show(options: TextOptions = TextOptions(),
+    private func show(options: TextOptions = TextOptions(font: Constants.fonts.first ?? nil),
                       transformations: ViewTransformations = ViewTransformations()) {
         prepareForText(options, transformations)
         

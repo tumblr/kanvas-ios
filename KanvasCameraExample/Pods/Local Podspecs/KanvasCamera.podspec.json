@@ -32,17 +32,5 @@
     "GCC_PREPROCESSOR_DEFINITIONS": "GLES_SILENCE_DEPRECATION=1"
   },
   "dependencies": {
-    "TumblrTheme": [
-
-    ],
-    "SharedUI": [
-
-    ],
-    "Utils": [
-
-    ],
-    "ImageLoader": [
-
-    ]
   }
 }

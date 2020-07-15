@@ -30,4 +30,10 @@ final class GifMakerViewTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(view)
     }
     
+    func testRevertButton() {
+        let view = newView()
+        view.toggleRevertButton(true)
+        FBSnapshotVerifyView(view)
+    }
+    
 }

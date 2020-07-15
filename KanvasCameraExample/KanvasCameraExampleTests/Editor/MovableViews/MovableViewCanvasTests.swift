@@ -29,7 +29,7 @@ final class MovableViewCanvasTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         let textView = StylableTextView()
-        textView.options = TextOptions(text: "Example")
+        textView.options = TextOptions(text: "Example", font: .fairwater(fontSize: 48))
         let location = view.center
         let transformations =  ViewTransformations()
         view.addView(view: textView, transformations: transformations, location: location, size: view.frame.size)
@@ -39,7 +39,7 @@ final class MovableViewCanvasTests: FBSnapshotTestCase {
     func testMovableTextView() {
         let view = newView()
         let textView = StylableTextView()
-        textView.options = TextOptions(text: "Example")
+        textView.options = TextOptions(text: "Example", font: .fairwater(fontSize: 48))
         let transformations =  ViewTransformations(position: CGPoint(x: 0, y: 300),
                                                    scale: 1.4,
                                                    rotation: 1.2)

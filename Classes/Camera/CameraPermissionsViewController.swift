@@ -6,7 +6,6 @@
 
 import Foundation
 import UIKit
-import SharedUI
 import AVFoundation
 
 protocol CaptureDeviceAuthorizing: class {
@@ -52,11 +51,11 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     private struct Constants {
         static let borderWidth: CGFloat = 2
-        static let titleFont: UIFont = .durianMedium()
+        static let titleFont: UIFont = KanvasCameraFonts.shared.permissions.titleFont
         static let textColor: UIColor = .white
-        static let descriptionFont: UIFont = .guava85()
+        static let descriptionFont: UIFont = KanvasCameraFonts.shared.permissions.descriptionFont
         static let descriptionOpacity: CGFloat = 0.65
-        static let buttonFont: UIFont = .guavaMedium()
+        static let buttonFont: UIFont = KanvasCameraFonts.shared.permissions.buttonFont
         static let buttonColor: UIColor = .init(red: 0, green: 184.0/255.0, blue: 1.0, alpha: 1.0)
         static let buttonAcceptedBackgroundColor: UIColor = .init(hex: 0x00cf35)
         static let buttonAcceptedColor: UIColor = .black
@@ -64,13 +63,15 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }
 
     private lazy var containerView: UIView = {
-        let view = UIView().forAutoLayout()
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.black.withAlphaComponent(0.75)
         return view
     }()
 
     private lazy var titleLabel: UILabel = {
-        let label = UILabel().forAutoLayout()
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = NSLocalizedString("Post to Tumblr", comment: "Title of camera permissions screen")
         label.font = Constants.titleFont
         label.textColor = Constants.textColor
@@ -79,7 +80,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }()
 
     private lazy var descriptionLabel: UILabel = {
-        let label = UILabel().forAutoLayout()
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
 
         let description = NSLocalizedString("Allow access so you can start taking photos and videos", comment: "Message on camera permissions screen to explain why the Tumblr app needs camera and microphone permissions")
         let descriptionParagraphStyle = NSMutableParagraphStyle()
@@ -99,7 +101,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private lazy var cameraAccessButton: UIButton = {
         let title = NSLocalizedString("Allow access to camera", comment: "Button on camera permissions screen to initiate the sytem prompt for camera access")
         let titleDisabled = NSLocalizedString("Camera access granted", comment: "Label on camera permissions screen to indicate camera access is granted")
-        let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled).forAutoLayout()
+        let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(cameraAccessButtonPressed), for: .touchUpInside)
         return button
     }()
@@ -107,7 +110,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private lazy var microphoneAccessButton: UIButton = {
         let title = NSLocalizedString("Allow access to microphone", comment: "Button on camera permissions screen to initiate the sytem prompt for microphone access")
         let titleDisabled = NSLocalizedString("Microphone access granted", comment: "Label on camera permissions screen to indicate microphone access is granted")
-        let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled).forAutoLayout()
+        let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(microphoneAccessButtonPressed), for: .touchUpInside)
         return button
     }()
@@ -115,7 +119,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private lazy var mediaPickerButton: MediaPickerButtonView = {
         let settings = CameraSettings()
         settings.features.mediaPicking = showMediaPicker
-        let button = MediaPickerButtonView(settings: settings).forAutoLayout()
+        let button = MediaPickerButtonView(settings: settings)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.delegate = self
         return button
     }()

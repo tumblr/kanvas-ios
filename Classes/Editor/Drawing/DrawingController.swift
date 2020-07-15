@@ -46,7 +46,7 @@ protocol DrawingControllerDelegate: class {
 /// Constants for Drawing Controller
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let defaultColor: UIColor = .tumblrBrightBlue
+    static let defaultColor: UIColor = KanvasCameraColors.shared.drawingDefaultColor
     static let numPointsPerLine: Int = 3
 }
 
