@@ -7,19 +7,18 @@
 import AVFoundation
 import Foundation
 import UIKit
-import Utils
 
 /// Protocol for camera editor controller methods
 
 public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
-    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting image
-    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting frames
-    func didFinishExportingFrames(url: URL?, size: CGSize?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -177,7 +176,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     stickerProvider: StickerProvider,
                                     analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
         EditorViewController(settings: settings,
-                             segments: [.image(image, nil, nil, TumblrMediaInfo(source: .media_library))],
+                             segments: [.image(image, nil, nil, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
                              gifEncoderClass: GIFEncoderImageIO.self,
@@ -189,7 +188,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
         EditorViewController(settings: settings,
-                             segments: [.video(videoURL, TumblrMediaInfo(source: .media_library))],
+                             segments: [.video(videoURL, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
                              gifEncoderClass: GIFEncoderImageIO.self,
@@ -200,7 +199,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     public static func createEditor(forGIF url: URL,
-                              info: TumblrMediaInfo,
+                              info: MediaInfo,
                               settings: CameraSettings,
                               stickerProvider: StickerProvider,
                               analyticsProvider: KanvasCameraAnalyticsProvider,
@@ -455,7 +454,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
             }
             else if assetsHandler.containsOnlyImages(segments: segments) {
-                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? TumblrMediaInfo(source: .kanvas_camera), exportAction: action)
+                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), exportAction: action)
             }
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
@@ -481,12 +480,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self?.handleExportError()
                     return
                 }
-                self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? TumblrMediaInfo(source: .media_library), exportAction: action)
+                self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
             }
         }
     }
 
-    private func createFinalGIF(segments: [CameraSegment], mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
@@ -507,7 +506,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
@@ -537,7 +536,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalVideo(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
@@ -554,7 +553,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalImage(image: UIImage, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()

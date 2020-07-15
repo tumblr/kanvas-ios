@@ -9,7 +9,6 @@ import UIKit
 import Photos
 import KanvasCamera
 import Photos
-import Utils
 
 private enum PhotoLibraryAccessError: Error {
     case notDetermined, restricted, denied, add(Error)

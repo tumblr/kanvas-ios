@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import SharedUI
 
 private struct ModeSelectorAndShootViewConstants {
     static let tooltipTopMargin: CGFloat = 13.5
@@ -14,7 +13,7 @@ private struct ModeSelectorAndShootViewConstants {
     static let tooltipBubbleWidth: CGFloat = 18
     static let tooltipBubbleHeight: CGFloat = 12
     static let tooltipCornerRadius: CGFloat = 6
-    static let tooltipTextFont: UIFont = .favoritTumblr85(fontSize: 15)
+    static let tooltipTextFont: UIFont = KanvasCameraFonts.shared.modeSelectorTooltipFont
     static let selectorYCenterMargin: CGFloat = CameraConstants.optionButtonSize / 2
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 14
@@ -58,7 +57,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     /// - Parameter settings: CameraSettings to determine the default and available modes
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
-        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shootButtonBaseColor)
+        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shared.shootButtonBaseColor)
         mediaPickerButton = MediaPickerButtonView(settings: settings)
         self.settings = settings
 
@@ -203,13 +202,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private func createTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
         preferences.drawing.foregroundColor = .white
-        preferences.drawing.backgroundColorCollection = [.tumblrBrightBlue,
-                                                         .tumblrBrightPurple,
-                                                         .tumblrBrightPink,
-                                                         .tumblrBrightRed,
-                                                         .tumblrBrightOrange,
-                                                         .tumblrBrightYellow,
-                                                         .tumblrBrightGreen,]
+        preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
         preferences.drawing.arrowPosition = .top
         preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
         preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight

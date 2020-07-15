@@ -79,7 +79,6 @@ private struct EditorViewConstants {
     static let postButtonSize: CGFloat = 54
     static let postButtonHorizontalMargin: CGFloat = 18
     static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 13 : 29
-    static let postButtonFontSize: CGFloat = 14.0
     static let postButtonLabelMargin: CGFloat = 3
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
@@ -435,7 +434,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         postLabel.text = NSLocalizedString("Post", comment: "Message for the post button in the editor screen")
         postLabel.textColor = .white
-        postLabel.font = .favoritTumblrMedium(fontSize: EditorViewConstants.postButtonFontSize)
+        postLabel.font = KanvasCameraFonts.shared.postLabelFont
         postLabel.clipsToBounds = false
         postLabel.layer.applyShadows()
         postLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -653,10 +652,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     func updatePostButton(avatarView: UIView) {
         postButton.addSubview(avatarView)
         postButton.setImage(nil, for: .normal)
-        postButton.backgroundColor = .tumblrWhite65
+        postButton.backgroundColor = KanvasCameraColors.shared.white65
         postButton.clipsToBounds = true
         postButton.layer.cornerRadius = EditorViewConstants.postButtonSize * 0.5
-        postButton.layer.borderColor = UIColor.tumblrWhite.cgColor
+        postButton.layer.borderColor = KanvasCameraColors.shared.white.cgColor
         postButton.layer.borderWidth = CGFloat(2.0)
     }
     
