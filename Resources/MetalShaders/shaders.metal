@@ -45,6 +45,8 @@ fragment half4 fragmentIdentity(TextureMappingVertex mappingVertex [[ stage_in ]
 // Shaders for compute pipeline
 //
 
+#define W float3(0.2125, 0.7154, 0.0721)
+
 kernel void kernelIdentity(texture2d<float, access::read> inTexture [[ texture(0) ]],
                            texture2d<float, access::write> outTexture [[ texture(1) ]],
                            uint2 gid [[ thread_position_in_grid ]])
@@ -53,9 +55,11 @@ kernel void kernelIdentity(texture2d<float, access::read> inTexture [[ texture(0
     outTexture.write(outColor, gid);
 }
 
-kernel void mirror(texture2d<float, access::read> inTexture [[ texture(0) ]],
-                   texture2d<float, access::write> outTexture [[ texture(1) ]],
-                   uint2 gid [[ thread_position_in_grid ]])
+// mirror2
+
+kernel void mirror2(texture2d<float, access::read> inTexture [[ texture(0) ]],
+                    texture2d<float, access::write> outTexture [[ texture(1) ]],
+                    uint2 gid [[ thread_position_in_grid ]])
 {
     float4 outColor;
     uint width = inTexture.get_width();
@@ -67,6 +71,8 @@ kernel void mirror(texture2d<float, access::read> inTexture [[ texture(0) ]],
     }
     outTexture.write(outColor, gid);
 }
+
+// mirror4
 
 kernel void mirror4(texture2d<float, access::read> inTexture [[ texture(0) ]],
                     texture2d<float, access::write> outTexture [[ texture(1) ]],
@@ -94,6 +100,8 @@ kernel void mirror4(texture2d<float, access::read> inTexture [[ texture(0) ]],
     }
     outTexture.write(outColor, gid);
 }
+
+// wavepool
 
 #define TAU 6.28318530718
 #define MAX_ITER 5
@@ -135,7 +143,8 @@ kernel void wavepool(texture2d<float, access::read> inTexture [[ texture(0) ]],
     outTexture.write(outColor, gid);
 }
 
-#define W float3(0.2125, 0.7154, 0.0721)
+// grayscale
+
 kernel void grayscale(texture2d<float, access::read> inTexture [[ texture(0) ]],
                       texture2d<float, access::write> outTexture [[ texture(1) ]],
                       uint2 gid [[ thread_position_in_grid ]])
@@ -145,6 +154,8 @@ kernel void grayscale(texture2d<float, access::read> inTexture [[ texture(0) ]],
     float4 outColor(gray, gray, gray, 1.0);
     outTexture.write(outColor, gid);
 }
+
+// light leaks
 
 kernel void lightLeaks(texture2d<float, access::read> inTexture [[ texture(0) ]],
                        texture2d<float, access::write> outTexture [[ texture(1) ]],
@@ -171,6 +182,8 @@ kernel void lightLeaks(texture2d<float, access::read> inTexture [[ texture(0) ]]
     outTexture.write(outColor, gid);
 }
 
+// lego
+
 kernel void lego(texture2d<float, access::read> inTexture [[ texture(0) ]],
                  texture2d<float, access::write> outTexture [[ texture(1) ]],
                  uint2 gid [[ thread_position_in_grid ]])
@@ -193,6 +206,8 @@ kernel void lego(texture2d<float, access::read> inTexture [[ texture(0) ]],
     }
     outTexture.write(float4(outColor, 1.0), gid);
 }
+
+// rgb
 
 uint2 clampToEdge(int2 pos, float width, float height) {
     if (pos.x < 0) pos.x = 0;
@@ -224,6 +239,8 @@ kernel void rgb(texture2d<float, access::read> inTexture [[ texture(0) ]],
                              1.0);
     outTexture.write(outColor, gid);
 }
+
+// toon
 
 kernel void toon(texture2d<float, access::read> inTexture [[ texture(0) ]],
                  texture2d<float, access::write> outTexture [[ texture(1) ]],
@@ -269,6 +286,8 @@ kernel void toon(texture2d<float, access::read> inTexture [[ texture(0) ]],
     }
     outTexture.write(outColor, gid);
 }
+
+// manga
 
 float3 StripsPattern(float2 position) {
     float2 p = (position - 0.5) * 500;
@@ -335,6 +354,8 @@ kernel void manga(texture2d<float, access::read> inTexture [[ texture(0) ]],
     outTexture.write(float4(outColor, 1.0), gid);
 }
 
+// film
+
 float hash(float n) {
     return fract(sin(n) * 43758.5453123);
 }
@@ -363,6 +384,8 @@ kernel void film(texture2d<float, access::read> inTexture [[ texture(0) ]],
     }
     outTexture.write(outColor, gid);
 }
+
+// plasma
 
 float3 rainbow(float h) {
     h = fmod(fmod(h, 1.0) + 1.0, 1.0);
@@ -424,6 +447,8 @@ kernel void plasma(texture2d<float, access::read> inTexture [[ texture(0) ]],
     outTexture.write(outColor, gid);
 }
 
+// rave
+
 kernel void rave(texture2d<float, access::read> inTexture [[ texture(0) ]],
                  texture2d<float, access::write> outTexture [[ texture(1) ]],
                  constant ShaderContext &shaderContext [[ buffer(0) ]],
@@ -437,6 +462,8 @@ kernel void rave(texture2d<float, access::read> inTexture [[ texture(0) ]],
     outColor.a = 1.0;
     outTexture.write(outColor, gid);
 }
+
+// chroma
 
 kernel void chroma(texture2d<float, access::read> inTexture [[ texture(0) ]],
                    texture2d<float, access::write> outTexture [[ texture(1) ]],
@@ -458,6 +485,8 @@ kernel void chroma(texture2d<float, access::read> inTexture [[ texture(0) ]],
     outColor.a = 1.0;
     outTexture.write(outColor, gid);
 }
+
+// em_interference
 
 float rng2(float time, float2 seed) {
     return fract(sin(dot(seed * floor(time * 12.), float2(127.1, 311.7))) * 43758.5453123);

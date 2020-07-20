@@ -81,7 +81,7 @@ struct FilterFactory {
         case .lego:
             return MetalFilter(context: metalContext, kernelFunctionName: "lego")
         case .mirrorTwo:
-            return MetalFilter(context: metalContext, kernelFunctionName: "mirror")
+            return MetalFilter(context: metalContext, kernelFunctionName: "mirror2")
         case .mirrorFour:
             return MetalFilter(context: metalContext, kernelFunctionName: "mirror4")
         case .plasma:
