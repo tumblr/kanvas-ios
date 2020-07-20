@@ -45,7 +45,19 @@ fragment half4 fragmentIdentity(TextureMappingVertex mappingVertex [[ stage_in ]
 // Shaders for compute pipeline
 //
 
+// common
+
 #define W float3(0.2125, 0.7154, 0.0721)
+
+uint2 clampToEdge(int2 pos, float width, float height) {
+    if (pos.x < 0) pos.x = 0;
+    if (pos.y < 0) pos.y = 0;
+    if (pos.x > width) pos.x = width - 1;
+    if (pos.y > height) pos.y = height - 1;
+    return uint2(pos);
+}
+
+// identity
 
 kernel void kernelIdentity(texture2d<float, access::read> inTexture [[ texture(0) ]],
                            texture2d<float, access::write> outTexture [[ texture(1) ]],
@@ -208,14 +220,6 @@ kernel void lego(texture2d<float, access::read> inTexture [[ texture(0) ]],
 }
 
 // rgb
-
-uint2 clampToEdge(int2 pos, float width, float height) {
-    if (pos.x < 0) pos.x = 0;
-    if (pos.y < 0) pos.y = 0;
-    if (pos.x > width) pos.x = width - 1;
-    if (pos.y > height) pos.y = height - 1;
-    return uint2(pos);
-}
 
 kernel void rgb(texture2d<float, access::read> inTexture [[ texture(0) ]],
                 texture2d<float, access::write> outTexture [[ texture(1) ]],
@@ -479,8 +483,8 @@ kernel void chroma(texture2d<float, access::read> inTexture [[ texture(0) ]],
     float2 strength = float2(2.5, 1.0); // tweaked value from the OpenGL shader
     
     float4 outColor;
-    outColor.r = inTexture.read(gid - uint2(float2(go * width, 0) * strength)).r;
-    outColor.g = inTexture.read(gid - uint2(float2(0.005 * width, go2 * height) * strength)).g;
+    outColor.r = inTexture.read(clampToEdge(int2(gid - uint2(float2(go * width, 0) * strength)), width, height)).r;
+    outColor.g = inTexture.read(clampToEdge(int2(gid - uint2(float2(0.005 * width, go2 * height) * strength)), width, height)).g;
     outColor.b = inTexture.read(gid).g;
     outColor.a = 1.0;
     outTexture.write(outColor, gid);
