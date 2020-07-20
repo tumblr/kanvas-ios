@@ -68,6 +68,33 @@ kernel void mirror(texture2d<float, access::read> inTexture [[ texture(0) ]],
     outTexture.write(outColor, gid);
 }
 
+kernel void mirror4(texture2d<float, access::read> inTexture [[ texture(0) ]],
+                    texture2d<float, access::write> outTexture [[ texture(1) ]],
+                    uint2 gid [[ thread_position_in_grid ]])
+{
+    uint width = inTexture.get_width();
+    uint height = inTexture.get_height();
+    
+    float4 outColor;
+    // bottom right
+    if (gid.x >= width / 2 && gid.y >= height / 2) {
+        outColor = inTexture.read(gid);
+    }
+    // bottom left
+    else if (gid.x < width / 2 && gid.y >= height / 2) {
+        outColor = inTexture.read(uint2(width - gid.x, gid.y));
+    }
+    // top right
+    else if (gid.x >= width / 2 && gid.y < height / 2) {
+        outColor = inTexture.read(uint2(gid.x, height - gid.y));
+    }
+    // top left
+    else {
+        outColor = inTexture.read(uint2(width - gid.x, height - gid.y));
+    }
+    outTexture.write(outColor, gid);
+}
+
 #define TAU 6.28318530718
 #define MAX_ITER 5
 kernel void wavepool(texture2d<float, access::read> inTexture [[ texture(0) ]],
