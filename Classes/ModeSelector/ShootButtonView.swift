@@ -395,21 +395,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         shape.lineJoin = CAShapeLayerLineJoin.bevel
         
         timeSegmentLayer.frame = containerView.bounds
-        timeSegmentLayer.colors = [.tumblrBrightBlue,
-                                   .tumblrBrightPurple,
-                                   .tumblrBrightPink,
-                                   .tumblrBrightRed,
-                                   .tumblrBrightOrange,
-                                   .tumblrBrightYellow,
-                                   .tumblrBrightGreen,
-                                   .tumblrBrightBlue,
-                                   .tumblrBrightPurple,
-                                   .tumblrBrightPink,
-                                   .tumblrBrightRed,
-                                   .tumblrBrightOrange,
-                                   .tumblrBrightYellow,
-                                   .tumblrBrightGreen,
-                                   .tumblrBrightBlue]
+        timeSegmentLayer.colors = KanvasCameraColors.shared.timeSegmentColors
         timeSegmentLayer.mask = shape
         timeSegmentLayer.transform = CATransform3DMakeRotation(-.pi / 2, 0.0, 0.0, 1.0)
         containerView.layer.addSublayer(timeSegmentLayer)

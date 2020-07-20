@@ -80,6 +80,8 @@ struct FilterFactory {
             return MetalFilter(context: metalContext, kernelFunctionName: "grayscale")
         case .wavePool:
             return MetalFilter(context: metalContext, kernelFunctionName: "wavepool")
+        case .lightLeaks:
+            return MetalFilter(context: metalContext, kernelFunctionName: "lightLeaks")
         default:
             return MetalFilter(context: metalContext, kernelFunctionName: "kernelIdentity")
         }

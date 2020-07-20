@@ -118,3 +118,28 @@ kernel void grayscale(texture2d<float, access::read> inTexture [[ texture(0) ]],
     float4 outColor(gray, gray, gray, 1.0);
     outTexture.write(outColor, gid);
 }
+
+kernel void lightLeaks(texture2d<float, access::read> inTexture [[ texture(0) ]],
+                       texture2d<float, access::write> outTexture [[ texture(1) ]],
+                       constant ShaderContext &shaderContext [[ buffer(0) ]],
+                       uint2 gid [[ thread_position_in_grid ]])
+{
+    float time = shaderContext.time;
+    float width = inTexture.get_width();
+    float height = inTexture.get_height();
+    float2 p = float2(gid.x / width, gid.y / height);
+    float4 cam = inTexture.read(gid);
+    
+    for (int i = 1; i < 6; i++) {
+        float2 newp = p;
+        newp.x += 0.6 / float(i) * cos(float(i) * p.y + (time * 7.0) / 10.0 + 0.3 * float(i)) + 400. / 20.0;
+        newp.y += 0.6 / float(i) * cos(float(i) * p.x + (time * 5.0) / 10.0 + 0.3 * float(i + 10)) - 400. / 20.0 + 15.0;
+        p = newp;
+    }
+    float4 col = float4(2.0 * sin(3.0 * p.x) + 0.7, 1.2 * sin(3.0 * p.y) + 0.7, 3.0 * sin(p.x + p.y)+0.4, sin(1.0));
+    float alphaDivisor = cam.a + step(cam.a, 0.2);
+    float4 outColor = cam * (col.a * (cam / alphaDivisor)
+                            + (1.5 * col * (1.0 - (cam / alphaDivisor))))
+                            + col * (1.0 - cam.a) + cam * (1.0 - col.a);
+    outTexture.write(outColor, gid);
+}

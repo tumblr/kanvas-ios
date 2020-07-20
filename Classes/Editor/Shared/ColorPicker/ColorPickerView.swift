@@ -33,14 +33,7 @@ private struct ColorPickerViewConstants {
     // Color picker gradient
     static let colorLocations: [NSNumber] = [0.0, 0.05, 0.2, 0.4, 0.64, 0.82, 0.95, 1.0]
     
-    static let colors = [UIColor.tumblrBrightBlue,
-                         UIColor.tumblrBrightBlue,
-                         UIColor.tumblrBrightPurple,
-                         UIColor.tumblrBrightPink,
-                         UIColor.tumblrBrightRed,
-                         UIColor.tumblrBrightYellow,
-                         UIColor.tumblrBrightGreen,
-                         UIColor.tumblrBrightGreen,]
+    static let colors = KanvasCameraColors.shared.colorPickerColors
 }
 
 /// View for ColorPickerController

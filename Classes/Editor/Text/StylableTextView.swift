@@ -138,13 +138,13 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
         let extraVerticalPadding: CGFloat
         let extraHorizontalPadding: CGFloat
         
-        switch font {
-        case UIFont.favoritTumblr85(fontSize: font.pointSize):
-            topMargin = 8.0
-            leftMargin = 5.7
-            extraVerticalPadding = 0.125 * font.pointSize
-            extraHorizontalPadding = 0
-        default:
+        if let padding = KanvasCameraFonts.shared.paddingAdjustment?(font) {
+            topMargin = padding.topMargin
+            leftMargin = padding.leftMargin
+            extraVerticalPadding = padding.extraVerticalPadding
+            extraHorizontalPadding = padding.extraHorizontalPadding
+        }
+        else {
             topMargin = 6.0
             leftMargin = 6.0
             extraHorizontalPadding = 0

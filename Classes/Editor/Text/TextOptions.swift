@@ -9,7 +9,6 @@ import UIKit
 
 private struct Constants {
     static let defaultText: String = ""
-    static let defaultFont: UIFont? = .fairwater(fontSize: 48)
     static let defaultColor: UIColor = .white
     static let defaultHighlightColor: UIColor = .clear
     static let defaultAlignment: NSTextAlignment = .left
@@ -31,7 +30,7 @@ final class TextOptions {
     }
     
     init(text: String = Constants.defaultText,
-         font: UIFont? = Constants.defaultFont,
+         font: UIFont?,
          color: UIColor? = Constants.defaultColor,
          highlightColor: UIColor? = Constants.defaultHighlightColor,
          alignment: NSTextAlignment = Constants.defaultAlignment,

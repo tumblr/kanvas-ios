@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import XCTest
 import Photos
-import Utils
 
 final class CameraControllerTests: FBSnapshotTestCase {
 

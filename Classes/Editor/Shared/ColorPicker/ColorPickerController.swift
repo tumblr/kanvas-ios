@@ -25,7 +25,7 @@ final class ColorPickerController: UIViewController, ColorPickerViewDelegate {
     
     weak var delegate: ColorPickerControllerDelegate?
     
-    private var selectedColor: UIColor = .tumblrBrightBlue
+    private var selectedColor: UIColor = KanvasCameraColors.shared.selectedPickerColor
     
     private lazy var colorPickerView: ColorPickerView = {
         let view = ColorPickerView()

@@ -15,7 +15,7 @@ final class KanvasCameraColorsTests: FBSnapshotTestCase {
 
     func testShootButtonBaseColor() {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = KanvasCameraColors.shootButtonBaseColor
+        view.backgroundColor = KanvasCameraColors.shared.shootButtonBaseColor
         
         FBSnapshotVerifyView(view)
     }
