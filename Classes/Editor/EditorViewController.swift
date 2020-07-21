@@ -296,6 +296,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         load(childViewController: textController, into: editorView.textMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         load(childViewController: gifMakerController, into: editorView.gifMakerMenuContainer)
+
+        if shouldConvertMediaToGIFOnLoad() {
+            loadMediaAsGIF()
+        }
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {
@@ -428,12 +432,16 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             return true
         }
 
-        // Media captured from the Stitch mode with only images (but at least two) should export as a GIF by default
+        // Media captured with only images (but at least two) should export as a GIF by default
         if segments.count > 1 && assetsHandler.containsOnlyImages(segments: segments) {
             return true
         }
 
         return false
+    }
+
+    private func shouldConvertMediaToGIFOnLoad() -> Bool {
+        shouldExportAsGIFByDefault()
     }
     
     private func startExporting(action: KanvasExportAction) {
@@ -663,27 +671,37 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
-    
+
+    func openGIFMaker(cell: EditionMenuCollectionCell) {
+        let editionOption = EditionOption.gif
+        onBeforeShowingEditionMenu(editionOption, cell: cell)
+        showMainUI(false)
+        gifMakerController.showView(true)
+        loadMediaAsGIF()
+        editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
+            self.gifMakerController.showConfirmButton(true)
+        })
+        analyticsProvider?.logEditorGIFOpen()
+    }
+
+    func loadMediaAsGIF() {
+        gifMakerHandler.load(segments: segments,
+                             showLoading: self.showLoading,
+                             hideLoading: self.hideLoading,
+                             completion: { framesUpdated in
+                                if framesUpdated {
+                                    self.player.stop()
+                                    self.startPlayerFromSegments()
+                                }
+                                self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
+                             })
+    }
+
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
-                onBeforeShowingEditionMenu(editionOption, cell: cell)
-                showMainUI(false)
-                gifMakerController.showView(true)
-                gifMakerHandler.load(segments: segments,
-                                     showLoading: self.showLoading,
-                                     hideLoading: self.hideLoading) { framesUpdated in
-                                        if framesUpdated {
-                                            self.player.stop()
-                                            self.startPlayerFromSegments()
-                                        }
-                                        self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
-                }
-                editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
-                    self.gifMakerController.showConfirmButton(true)
-                })
-                analyticsProvider?.logEditorGIFOpen()
+                openGIFMaker(cell: cell)
             }
             else {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
