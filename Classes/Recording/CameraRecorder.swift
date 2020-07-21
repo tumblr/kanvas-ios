@@ -56,7 +56,7 @@ final class CameraRecorder: NSObject {
         self.size = size
 
         photoOutputHandler = PhotoOutputHandler(photoOutput: photoOutput)
-        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput, usePixelBuffer: settings.features.openGLCapture)
+        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput, usePixelBuffer: settings.features.openGLCapture, rebound: !settings.features.editorGIFMaker)
         videoOutputHandlers = []
 
         self.photoOutput = photoOutput
