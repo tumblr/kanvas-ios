@@ -74,12 +74,34 @@ struct FilterFactory {
     
     private func createMetalFilter(type: FilterType, metalContext: MetalContext?) -> FilterProtocol {
         switch type {
+        case .emInterference:
+            return MetalFilter(context: metalContext, kernelFunctionName: "em_interference")
+        case .film:
+            return MetalFilter(context: metalContext, kernelFunctionName: "film")
+        case .lego:
+            return MetalFilter(context: metalContext, kernelFunctionName: "lego")
         case .mirrorTwo:
-            return MetalFilter(context: metalContext, kernelFunctionName: "mirror")
-        case .wavePool:
-            return MetalFilter(context: metalContext, kernelFunctionName: "wavepool")
+            return MetalFilter(context: metalContext, kernelFunctionName: "mirror2")
+        case .mirrorFour:
+            return MetalFilter(context: metalContext, kernelFunctionName: "mirror4")
+        case .plasma:
+            return MetalFilter(context: metalContext, kernelFunctionName: "plasma")
+        case .rave:
+            return MetalFilter(context: metalContext, kernelFunctionName: "rave")
+        case .rgb:
+            return MetalFilter(context: metalContext, kernelFunctionName: "rgb")
+        case .chroma:
+            return MetalFilter(context: metalContext, kernelFunctionName: "chroma")
+        case .grayscale:
+            return MetalFilter(context: metalContext, kernelFunctionName: "grayscale")
         case .lightLeaks:
             return MetalFilter(context: metalContext, kernelFunctionName: "lightLeaks")
+        case .wavePool:
+            return MetalFilter(context: metalContext, kernelFunctionName: "wavepool")
+        case .manga:
+            return MetalFilter(context: metalContext, kernelFunctionName: "manga")
+        case .toon:
+            return MetalFilter(context: metalContext, kernelFunctionName: "toon")
         default:
             return MetalFilter(context: metalContext, kernelFunctionName: "kernelIdentity")
         }
