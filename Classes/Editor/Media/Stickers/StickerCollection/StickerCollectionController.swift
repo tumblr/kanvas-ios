@@ -30,7 +30,7 @@ final class StickerCollectionController: UIViewController, UICollectionViewDeleg
     
     private lazy var stickerCollectionView = StickerCollectionView()
     private var stickerType: StickerType? = nil
-    private var stickerLoader: StickerLoader?
+    var stickerLoader: KanvasStickerLoader?
     private var stickers: [Sticker] = []
     private var cellSizes: [CGSize] = []
     
