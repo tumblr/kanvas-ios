@@ -321,8 +321,27 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             textController.addColorsForCarousel(colors: [mostDominantColor, .white, .black])
         }
     }
+
+    // MARK: - Media Player
+
+    /// Loads the media into the player and starts it.
+    private func startPlayerFromSegments() {
+        let media: [MediaPlayerContent] = segments.compactMap {segment in
+            if let image = segment.image {
+                return .image(image, segment.timeInterval)
+            }
+            else if let url = segment.videoURL {
+                return .video(url)
+            }
+            else {
+                return nil
+            }
+        }
+        player.play(media: media)
+    }
     
     // MARK: - Loading Indicator
+
     /// Shows the loading indicator on this view
     func showLoading() {
         loadingView.add(into: view)
@@ -333,6 +352,74 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func hideLoading() {
         loadingView.removeFromSuperview()
         loadingView.stopLoading()
+    }
+
+    // MARK: - GIF Maker Helpers
+
+    private func openGIFMaker(cell: EditionMenuCollectionCell) {
+        let editionOption = EditionOption.gif
+        onBeforeShowingEditionMenu(editionOption, cell: cell)
+        showMainUI(false)
+        gifMakerController.showView(true)
+        loadMediaAsGIF()
+        editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
+            self.gifMakerController.showConfirmButton(true)
+        })
+        analyticsProvider?.logEditorGIFOpen()
+    }
+
+    private func revertGIF() {
+        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        gifMakerController.showView(false)
+        gifMakerController.showConfirmButton(false)
+        gifMakerHandler.revert { reverted in
+            if reverted {
+                self.player.stop()
+                self.startPlayerFromSegments()
+            }
+        }
+        shouldExportMediaAsGIF = false
+        showMainUI(true)
+        analyticsProvider?.logEditorGIFRevert()
+        onAfterConfirmingEditionMenu()
+    }
+
+    private func loadMediaAsGIF() {
+        gifMakerHandler.load(segments: segments,
+                             showLoading: self.showLoading,
+                             hideLoading: self.hideLoading,
+                             completion: { framesUpdated in
+                                if framesUpdated {
+                                    self.player.stop()
+                                    self.startPlayerFromSegments()
+                                }
+                                self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
+                             })
+    }
+
+    private func shouldEnableGIFButton() -> Bool {
+        return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
+    }
+
+    private func shouldExportAsGIFByDefault() -> Bool {
+        guard settings.features.gifs else {
+            return false
+        }
+
+        if cameraMode?.group == .gif {
+            return true
+        }
+
+        // Media captured with only images (but at least two) should export as a GIF by default
+        if segments.count > 1 && assetsHandler.containsOnlyImages(segments: segments) {
+            return true
+        }
+
+        return false
+    }
+
+    private func shouldConvertMediaToGIFOnLoad() -> Bool {
+        shouldExportAsGIFByDefault()
     }
     
     // MARK: - EditorViewDelegate
@@ -401,49 +488,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didRenderRectChange(rect: CGRect) {
         drawingController.didRenderRectChange(rect: rect)
     }
-    
-    /// Loads the media into the player and starts it.
-    private func startPlayerFromSegments() {
-        let media: [MediaPlayerContent] = segments.compactMap {segment in
-            if let image = segment.image {
-                return .image(image, segment.timeInterval)
-            }
-            else if let url = segment.videoURL {
-                return .video(url)
-            }
-            else {
-                return nil
-            }
-        }
-        player.play(media: media)
+
+    func didTapCloseButton() {
+        player.stop()
+        delegate?.dismissButtonPressed()
     }
 
-    private func shouldEnableGIFButton() -> Bool {
-        return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
-    }
+    // MARK: - Media Exporting
 
-    private func shouldExportAsGIFByDefault() -> Bool {
-        guard settings.features.gifs else {
-            return false
-        }
-
-        // Media captured from the GIF mode should export as a GIF by default
-        if segments.count == 1 && segments.first?.videoURL != nil && cameraMode?.group == .gif {
-            return true
-        }
-
-        // Media captured with only images (but at least two) should export as a GIF by default
-        if segments.count > 1 && assetsHandler.containsOnlyImages(segments: segments) {
-            return true
-        }
-
-        return false
-    }
-
-    private func shouldConvertMediaToGIFOnLoad() -> Bool {
-        shouldExportAsGIFByDefault()
-    }
-    
     private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()
@@ -606,28 +658,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.present(alertController, animated: true, completion: .none)
     }
     
-    func didTapCloseButton() {
-        player.stop()
-        delegate?.dismissButtonPressed()
-    }
-
-    func revertGIF() {
-        editorView.animateReturnOfEditionOption(cell: selectedCell)
-        shouldExportMediaAsGIF = false
-        gifMakerController.showView(false)
-        gifMakerController.showConfirmButton(false)
-        gifMakerHandler.revert { reverted in
-            if reverted {
-                self.player.stop()
-                self.startPlayerFromSegments()
-            }
-        }
-        showMainUI(true)
-        analyticsProvider?.logEditorGIFRevert()
-        onAfterConfirmingEditionMenu()
-    }
-    
-    func confirmEditionMenu() {
+    private func confirmEditionMenu() {
         guard let editionOption = openedMenu else { return }
         
         switch editionOption {
@@ -671,31 +702,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
-
-    func openGIFMaker(cell: EditionMenuCollectionCell) {
-        let editionOption = EditionOption.gif
-        onBeforeShowingEditionMenu(editionOption, cell: cell)
-        showMainUI(false)
-        gifMakerController.showView(true)
-        loadMediaAsGIF()
-        editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
-            self.gifMakerController.showConfirmButton(true)
-        })
-        analyticsProvider?.logEditorGIFOpen()
-    }
-
-    func loadMediaAsGIF() {
-        gifMakerHandler.load(segments: segments,
-                             showLoading: self.showLoading,
-                             hideLoading: self.hideLoading,
-                             completion: { framesUpdated in
-                                if framesUpdated {
-                                    self.player.stop()
-                                    self.startPlayerFromSegments()
-                                }
-                                self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
-                             })
-    }
 
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
         switch editionOption {
