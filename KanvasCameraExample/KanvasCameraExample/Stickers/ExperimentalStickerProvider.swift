@@ -16,13 +16,17 @@ private struct Constants {
     static let imageExtension: String = "png"
 }
 
-extension URLSessionTask: Cancelable {
+extension URLSessionTask: KanvasCancelable {
     
 }
 
-class ImageLoader: StickerLoader {
-    func loadImage(at imageURL: URL, OAuth: Bool, imageView: UIImageView?, displayImageImmediately: Bool, preloadAllFrames: Bool, completion: @escaping (UIImage?, Error?) -> Void) -> Cancelable {
-        let task = URLSessionTask()
+class ImageLoader: KanvasStickerLoader {
+    func loadSticker(at imageURL: URL, imageView: UIImageView?, completion: @escaping (UIImage?, Error?) -> Void) -> KanvasCancelable {
+        let task = URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+            if let data = data {
+                imageView?.image = UIImage(data: data)
+            }
+        }
         return task
     }
 }
@@ -30,7 +34,7 @@ class ImageLoader: StickerLoader {
 /// Class that obtains the stickers from the stickers file in the example app
 public final class ExperimentalStickerProvider: StickerProvider {
     
-    public func loader() -> StickerLoader? {
+    public func loader() -> KanvasStickerLoader? {
         return ImageLoader()
     }
     
