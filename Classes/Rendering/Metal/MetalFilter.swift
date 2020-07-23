@@ -41,10 +41,12 @@ class MetalFilter: FilterProtocol {
     }
     
     func setupFormatDescription(inputDimensions: CGSize, transform: GLKMatrix4?, outputDimensions: CGSize) {
+        let finalDimensions = outputDimensions == .zero ? inputDimensions : outputDimensions
+        
         threadgroupCount = {
             var size = MTLSize()
-            size.width = (Int(outputDimensions.width) + threadgroupSize.width - 1) / threadgroupSize.width
-            size.height = (Int(outputDimensions.height) + threadgroupSize.height - 1) / threadgroupSize.height
+            size.width = (Int(finalDimensions.width) + threadgroupSize.width - 1) / threadgroupSize.width
+            size.height = (Int(finalDimensions.height) + threadgroupSize.height - 1) / threadgroupSize.height
             size.depth = 1
             return size
         }()
@@ -55,8 +57,8 @@ class MetalFilter: FilterProtocol {
         
         var pixelBuffer: CVPixelBuffer?
         CVPixelBufferCreate(kCFAllocatorDefault,
-                            Int(outputDimensions.width),
-                            Int(outputDimensions.height),
+                            Int(finalDimensions.width),
+                            Int(finalDimensions.height),
                             kCVPixelFormatType_32BGRA,
                             attributes as CFDictionary,
                             &pixelBuffer)
