@@ -386,6 +386,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private func loadMediaAsGIF() {
         gifMakerHandler.load(segments: segments,
+                             initialSettings: .init(rate: initialGIFPlaybackRate(),
+                                                    playbackMode: initialGIFPlaybackMode(),
+                                                    startTime: initialGIFTrim().lowerBound,
+                                                    endTime: initialGIFTrim().upperBound),
                              showLoading: self.showLoading,
                              hideLoading: self.hideLoading,
                              completion: { framesUpdated in
@@ -420,6 +424,21 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private func shouldConvertMediaToGIFOnLoad() -> Bool {
         shouldExportAsGIFByDefault()
+    }
+
+    private func initialGIFPlaybackMode() -> PlaybackOption {
+        if cameraMode?.group == .gif {
+            return .rebound
+        }
+        return .loop
+    }
+
+    private func initialGIFPlaybackRate() -> Float {
+        return 1.0
+    }
+
+    private func initialGIFTrim() -> ClosedRange<TimeInterval> {
+        return 0...3
     }
     
     // MARK: - EditorViewDelegate
@@ -671,8 +690,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 showMainUI(true)
                 analyticsProvider?.logEditorGIFConfirm(
                     duration: gifMakerHandler.trimmedDuration,
-                    playbackMode: KanvasGIFPlaybackMode(from: gifMakerHandler.settings?.playbackMode ?? .loop),
-                    speed: gifMakerHandler.settings?.rate ?? 1.0
+                    playbackMode: KanvasGIFPlaybackMode(from: gifMakerHandler.settings.playbackMode),
+                    speed: gifMakerHandler.settings.rate
                 )
             }
         case .filter:

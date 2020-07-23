@@ -35,7 +35,7 @@ final class GifMakerHandlerTests: XCTestCase {
         let colors: [UIColor] = [.red,  .orange, .yellow, .green, .blue, .purple]
         let images = colors.map { image(color: $0, size: CGSize(width: 100, height: 100)) }
         let segments = images.map { CameraSegment.image($0, nil, 0.5, .init(source: .kanvas_camera)) }
-        handler.load(segments: segments, showLoading: {}, hideLoading: {}) { generated in
+        handler.load(segments: segments, initialSettings: .init(), showLoading: {}, hideLoading: {}) { generated in
             e.fulfill()
         }
         wait(for: [e], timeout: 1.0)
@@ -47,6 +47,7 @@ final class GifMakerHandlerTests: XCTestCase {
         let times: [TimeInterval] = [0.0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4, 2.7, 3.0, 3.1]
         let thumbnails = times.map { handler.getThumbnail(at: $0) }
         let expectedColors: [UIColor] = [.red, .red, .orange, .orange, .yellow, .green, .green, .blue, .blue, .purple, .purple, .purple]
+        // TODO: hmm, should the last two be purple, or nil?
 
         //
         // Assert
@@ -63,6 +64,41 @@ final class GifMakerHandlerTests: XCTestCase {
             XCTAssertEqual(actualRGB.green, expectedRGB.green, accuracy: 0.05)
             XCTAssertEqual(actualRGB.blue, expectedRGB.blue, accuracy: 0.05)
         }
+    }
+
+    func testFrameLoadingSettings() {
+
+        //
+        // Arrange
+        //
+
+        let e = expectation(description: "load segments")
+        e.expectedFulfillmentCount = 1
+
+        let colors: [UIColor] = [.red,  .orange, .yellow, .green, .blue, .purple]
+        let images = colors.map { image(color: $0, size: CGSize(width: 100, height: 100)) }
+        let segments = images.map { CameraSegment.image($0, nil, 0.5, .init(source: .kanvas_camera)) }
+
+        let player = MediaPlayer(renderer: nil)
+        let handler = GifMakerHandler(player: player, analyticsProvider: nil)
+
+        //
+        // Act
+        //
+
+        handler.load(segments: segments, initialSettings: .init(rate: 0.5, playbackMode: .rebound, startTime: 0, endTime: 2), showLoading: {}, hideLoading: {}) { converted in
+            e.fulfill()
+        }
+        wait(for: [e], timeout: 1.0)
+
+        //
+        // Asset
+        //
+
+        XCTAssertEqual(handler.settings.rate, 0.5)
+        XCTAssertEqual(handler.settings.playbackMode, .rebound)
+        XCTAssertEqual(handler.settings.startIndex, 0)
+        XCTAssertEqual(handler.settings.endIndex, 4) // TODO: hmm, this should really be 3
     }
 
 }
