@@ -28,6 +28,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     private lazy var stickerTypeCollectionView = StickerTypeCollectionView()
     private var stickerTypes: [StickerType] = []
     private let stickerProvider: StickerProvider?
+    private let stickerLoader: KanvasStickerLoader?
     
     private var selectedIndexPath: IndexPath? {
         didSet {
@@ -51,6 +52,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     /// - Parameter stickerProvider: Class that will provide the stickers.
     init(stickerProvider: StickerProvider?) {
         self.stickerProvider = stickerProvider
+        self.stickerLoader = stickerProvider?.loader()
         super.init(nibName: .none, bundle: .none)
         stickerProvider?.setDelegate(delegate: self)
     }
@@ -93,6 +95,7 @@ final class StickerTypeCollectionController: UIViewController, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerTypeCollectionCell.identifier, for: indexPath)
         if let cell = cell as? StickerTypeCollectionCell, let stickerType = stickerTypes.object(at: indexPath.item) {
+            cell.imageLoader = stickerLoader
             cell.bindTo(stickerType)
             cell.delegate = self
             

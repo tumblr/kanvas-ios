@@ -7,16 +7,11 @@
 import KanvasCamera
 import Foundation
 
-extension URLSessionTask: Cancelable {
+extension URLSessionTask: KanvasCancelable {
 }
 
-class ImageLoader: StickerLoader {
-    func loadImage(at imageURL: URL,
-                   OAuth: Bool,
-                   imageView: UIImageView?,
-                   displayImageImmediately: Bool,
-                   preloadAllFrames: Bool,
-                   completion: @escaping (_ image: UIImage?, _ error: Error?) -> Void) -> Cancelable {
+class ImageLoader: KanvasStickerLoader {
+    func loadSticker(at imageURL: URL, imageView: UIImageView?, completion: @escaping (UIImage?, Error?) -> Void) -> KanvasCancelable {
         let task = URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
             if let data = data {
                 imageView?.image = UIImage(data: data)
@@ -28,7 +23,7 @@ class ImageLoader: StickerLoader {
 
 final class StickerProviderStub: StickerProvider {
     
-    func loader() -> StickerLoader? {
+    func loader() -> KanvasStickerLoader? {
         return ImageLoader()
     }
     
