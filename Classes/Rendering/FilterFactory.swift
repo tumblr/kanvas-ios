@@ -117,7 +117,7 @@ struct FilterFactory {
             let filters = createOpenGLFilterList(type: type, overlays: overlays)
             return createOpenGLFilter(fromFilterList: filters)
         case .metal:
-            return createMetalFilter(type: type, metalContext: metalContext)
+            return createMetalFilter(type: type, metalContext: metalContext, overlays: overlays)
         }
     }
 
@@ -129,11 +129,26 @@ struct FilterFactory {
         filters.append(f)
 
         filters.append(createFilter(type: type))
-        filters.append(contentsOf: overlays.compactMap{ AlphaBlendFilter(glContext: glContext, pixelBuffer: $0) })
+        filters.append(contentsOf: overlays.compactMap{ AlphaBlendOpenGLFilter(glContext: glContext, pixelBuffer: $0) })
         return filters
     }
 
     private func createOpenGLFilter(fromFilterList filters: [FilterProtocol]) -> FilterProtocol {
         return filters.count > 1 ? GroupOpenGLFilter(filters: filters) : filters.first ?? OpenGLFilter(glContext: glContext)
+    }
+    
+    private func createMetalFilter(type: FilterType, metalContext: MetalContext?, overlays: [CVPixelBuffer]) -> FilterProtocol {
+        if overlays.count == 0 {
+            return createMetalFilter(type: type, metalContext: metalContext)
+        }
+        else {
+            var filters = [MetalFilter]()
+            if let baseFilter = createMetalFilter(type: type, metalContext: metalContext) as? MetalFilter {
+                filters.append(baseFilter)
+            }
+            let overlays = overlays.compactMap { MetalFilter(context: metalContext, kernelFunctionName: "alpha_blend", overlayBuffer: $0) }
+            filters.append(contentsOf: overlays)
+            return MetalGroupFilter(filters: filters)
+        }
     }
 }

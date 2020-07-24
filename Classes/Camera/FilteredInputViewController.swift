@@ -22,7 +22,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
         guard
             let context = MetalContext.createContext()
         else {
-            fatalError("Failed to create MTLDevice or MTLCommandQueue")
+            fatalError("Failed to create MetalContext")
         }
         return context
     }()
