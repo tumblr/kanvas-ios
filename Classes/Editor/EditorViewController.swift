@@ -297,7 +297,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         load(childViewController: gifMakerController, into: editorView.gifMakerMenuContainer)
 
-        if shouldConvertMediaToGIFOnLoad() {
+        if shouldOpenGIFMakerOnLoad() {
+            openGIFMaker(animated: false)
+        }
+        else if shouldConvertMediaToGIFOnLoad() {
             loadMediaAsGIF()
         }
     }
@@ -356,15 +359,29 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     // MARK: - GIF Maker Helpers
 
-    private func openGIFMaker(cell: EditionMenuCollectionCell) {
+    private func openGIFMaker(animated: Bool) {
+        let editionOption = EditionOption.gif
+        guard let cell = collectionController.getCell(for: editionOption) else {
+            assertionFailure("Failed to open GIF Maker")
+            return
+        }
+        openGIFMaker(cell: cell, animated: animated)
+    }
+
+    private func openGIFMaker(cell: EditionMenuCollectionCell, animated: Bool) {
         let editionOption = EditionOption.gif
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         showMainUI(false)
         gifMakerController.showView(true)
         loadMediaAsGIF()
-        editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
-            self.gifMakerController.showConfirmButton(true)
-        })
+        if animated {
+            editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
+                self.gifMakerController.showConfirmButton(true)
+            })
+        }
+        else {
+            gifMakerController.showConfirmButton(true)
+        }
         analyticsProvider?.logEditorGIFOpen()
     }
 
@@ -397,7 +414,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     self.player.stop()
                                     self.startPlayerFromSegments()
                                 }
-                                self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
+                                self.gifMakerController.configure(settings: self.gifMakerHandler.settings, animated: false)
                              })
     }
 
@@ -405,12 +422,30 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
     }
 
+    private func shouldForceExportAsAGIF() -> Bool {
+        guard settings.features.gifs else {
+            return false
+        }
+
+        // Media captured from the GIF mode should always export as a GIF
+        if cameraMode?.group == .gif {
+            return true
+        }
+
+        // Media from the picker or directly loaded, that has only images, are GIFs.
+        if (cameraMode == nil || cameraMode == .some(.normal)) && segments.count > 1 && assetsHandler.containsOnlyImages(segments: segments) {
+            return true
+        }
+
+        return false
+    }
+
     private func shouldExportAsGIFByDefault() -> Bool {
         guard settings.features.gifs else {
             return false
         }
 
-        if cameraMode?.group == .gif {
+        if shouldForceExportAsAGIF() {
             return true
         }
 
@@ -420,6 +455,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
 
         return false
+    }
+
+    private func shouldOpenGIFMakerOnLoad() -> Bool {
+        guard settings.features.gifs && settings.features.editorGIFMaker else {
+            return false
+        }
+
+        return settings.editorShouldStartGIFMaker
     }
 
     private func shouldConvertMediaToGIFOnLoad() -> Bool {
@@ -726,7 +769,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
-                openGIFMaker(cell: cell)
+                openGIFMaker(cell: cell, animated: true)
             }
             else {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)

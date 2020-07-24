@@ -73,6 +73,17 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
+
+    func getCell(for option: EditionOption) -> EditionMenuCollectionCell? {
+        guard
+            let collectionView = (view as? EditionMenuCollectionView)?.collectionView,
+            let index = editionOptions.firstIndex(of: option)
+        else {
+                return nil
+        }
+        let indexPath = IndexPath(item: index, section: 0)
+        return self.collectionView(collectionView, cellForItemAt: indexPath) as? EditionMenuCollectionCell
+    }
     
     // MARK: - View Life Cycle
     

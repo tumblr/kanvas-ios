@@ -147,6 +147,8 @@ public struct CameraFeatures {
 // A class that defines the settings for the Kanvas Camera
 @objc public final class CameraSettings: NSObject {
 
+    public var editorShouldStartGIFMaker: Bool = DefaultCameraSettings.editorShouldStartGIFMaker
+
     // MARK: - Modes
     /**
      Enables/disables modes.
@@ -387,4 +389,6 @@ private struct DefaultCameraSettings {
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
     static let showTagButtonInEditor: Bool = false
+    static let editorShouldStartGIFMaker: Bool = false
+
 }
