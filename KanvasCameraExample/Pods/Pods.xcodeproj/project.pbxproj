@@ -469,6 +469,7 @@
 		B293E26A22658DD648708AA9A87CFFC7 /* FilterCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B145764FDEB26D9B20C8A55628661774 /* FilterCollectionCell.swift */; };
 		B3226E1424CB4CA3002F604C /* MetalGroupFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3226E1324CB4CA3002F604C /* MetalGroupFilter.swift */; };
 		B3226E1624CB4D03002F604C /* AlphaBlendOpenGLFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3226E1524CB4D03002F604C /* AlphaBlendOpenGLFilter.swift */; };
+		B3226E1824CB7A6E002F604C /* CVPixelBuffer+resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3226E1724CB7A6E002F604C /* CVPixelBuffer+resize.swift */; };
 		B3676424DBAA47957E458754CF4D8DCC /* SDAsyncBlockOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C6BCD0D9DEB19511372524DB9887125 /* SDAsyncBlockOperation.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		B371CA426BA92996FB213FE57F32AD90 /* FilterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3059AF5F89A0B9CF0E530203DB1CE7 /* FilterType.swift */; };
 		B3ABA5E3852CE107195F492F646DA0E2 /* PostFormKeyboardTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92926839F9D6648CE38DCF39A503FE3 /* PostFormKeyboardTracker.swift */; };
@@ -1334,6 +1335,7 @@
 		B321C73955714AFB57F9DB8F1090071D /* libUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3226E1324CB4CA3002F604C /* MetalGroupFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalGroupFilter.swift; sourceTree = "<group>"; };
 		B3226E1524CB4D03002F604C /* AlphaBlendOpenGLFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaBlendOpenGLFilter.swift; sourceTree = "<group>"; };
+		B3226E1724CB7A6E002F604C /* CVPixelBuffer+resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+resize.swift"; sourceTree = "<group>"; };
 		B3C4BC274B2B0F5EC50CFDAB1A38A8F5 /* ColorSelectorController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorSelectorController.swift; sourceTree = "<group>"; };
 		B3CF84624A6CD466163FBBB3524CAC04 /* NSButton+WebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSButton+WebCache.m"; path = "SDWebImage/Core/NSButton+WebCache.m"; sourceTree = "<group>"; };
 		B3F5B31C32B1F1335830BBADBADA4E0B /* OptionsController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
@@ -1713,6 +1715,7 @@
 				46A367F29BDF776EE56F22B5BB0E4B8B /* MetalPixelBufferView.swift */,
 				DC3D3003A4F6884F762752504BA1BFDF /* MetalRenderEncoder.swift */,
 				EBFE6FCA1B30BBB7A42DAD44850C0BC9 /* MTLDevice+KanvasCamera.swift */,
+				B3226E1724CB7A6E002F604C /* CVPixelBuffer+resize.swift */,
 			);
 			path = Metal;
 			sourceTree = "<group>";
@@ -4213,6 +4216,7 @@
 				BAFB0DA805356B7FC666F4E630A5FB72 /* EMInterferenceOpenGLFilter.swift in Sources */,
 				5AC39F6695815F130E33272326FF1C3A /* ExtendedButton.swift in Sources */,
 				0E208D527A4F3CAE6647F66A32F5D9E0 /* ExtendedStackView.swift in Sources */,
+				B3226E1824CB7A6E002F604C /* CVPixelBuffer+resize.swift in Sources */,
 				13F5173782917D3F019361BDD242FCDC /* FilmOpenGLFilter.swift in Sources */,
 				B293E26A22658DD648708AA9A87CFFC7 /* FilterCollectionCell.swift in Sources */,
 				131A9F73AD0B4529028F994EDE690803 /* FilterCollectionInnerCell.swift in Sources */,

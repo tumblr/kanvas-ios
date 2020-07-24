@@ -8,9 +8,18 @@ import AVFoundation
 import GLKit
 
 class MetalGroupFilter: FilterProtocol {
-    var outputFormatDescription: CMFormatDescription?
+    var outputFormatDescription: CMFormatDescription? {
+        return filters.last?.outputFormatDescription
+    }
     var transform: GLKMatrix4?
-    var switchInputDimensions: Bool = false
+    var switchInputDimensions: Bool {
+        get {
+            return filters.first?.switchInputDimensions ?? false
+        }
+        set {
+            filters.first?.switchInputDimensions = newValue
+        }
+    }
     
     private let filters: [MetalFilter]
     
@@ -19,17 +28,26 @@ class MetalGroupFilter: FilterProtocol {
     }
     
     func setupFormatDescription(from sampleBuffer: CMSampleBuffer, transform: GLKMatrix4?, outputDimensions: CGSize) {
-        for filter in filters {
-            filter.setupFormatDescription(from: sampleBuffer, transform: transform, outputDimensions: outputDimensions)
+        if outputFormatDescription == nil, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
+            let inputDimensionsCM = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
+            let inputDimensions = CGSize(width: inputDimensionsCM.width.g, height: inputDimensionsCM.height.g)
+            setupFormatDescription(inputDimensions: inputDimensions, transform: transform, outputDimensions: outputDimensions)
         }
-        outputFormatDescription = filters.last?.outputFormatDescription
     }
     
     func setupFormatDescription(inputDimensions: CGSize, transform: GLKMatrix4?, outputDimensions: CGSize) {
+        var inputDimensions = inputDimensions
+        var transform = transform
+        var outputDimensions = outputDimensions
         for filter in filters {
             filter.setupFormatDescription(inputDimensions: inputDimensions, transform: transform, outputDimensions: outputDimensions)
+            transform = nil
+            outputDimensions = .zero
+            if let desc = filter.outputFormatDescription {
+                let dim = CMVideoFormatDescriptionGetDimensions(desc)
+                inputDimensions = CGSize(width: dim.width.d, height: dim.height.d)
+            }
         }
-        outputFormatDescription = filters.last?.outputFormatDescription
     }
     
     func processPixelBuffer(_ pixelBuffer: CVPixelBuffer?, time: TimeInterval) -> CVPixelBuffer? {

@@ -6,6 +6,7 @@
 
 import AVFoundation
 import GLKit
+import CoreImage
 
 class MetalFilter: FilterProtocol {
     var outputFormatDescription: CMFormatDescription?
@@ -96,18 +97,19 @@ class MetalFilter: FilterProtocol {
         self.offScreenBuffer = offScreenPixelBuffer
         self.offScreenTexture = offScreenTexture
         
-        if let overlayBuffer = overlayBuffer {
+        if let overlayBuffer = overlayBuffer,
+            let pixelBuffer = overlayBuffer.resize(scale: (CGFloat(width) + UIScreen.main.scale) / CGFloat(CVPixelBufferGetWidth(overlayBuffer))) {
+            
             var overlayTextureOut: CVMetalTexture?
             let result = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
                                                                    textureCache,
-                                                                   overlayBuffer,
+                                                                   pixelBuffer,
                                                                    nil,
                                                                    .bgra8Unorm,
                                                                    width,
                                                                    height,
                                                                    0,
                                                                    &overlayTextureOut)
-            
             guard
                 result == kCVReturnSuccess,
                 let cvTextureUnwrapped = overlayTextureOut,
