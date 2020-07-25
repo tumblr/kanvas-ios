@@ -173,6 +173,7 @@ class GifMakerHandler {
 
     func load(segments: [CameraSegment],
               initialSettings: GIFMakerSettings.Initial,
+              permanent: Bool,
               showLoading: () -> Void,
               hideLoading: @escaping () -> Void,
               completion: @escaping (Bool) -> Void) {
@@ -184,7 +185,7 @@ class GifMakerHandler {
             showLoading()
             loadFrames(from: segments, defaultInterval: defaultInterval) { (frames, converted) in
                 self.initialSettings = initialSettings
-                self.convertedMediaToGIF = converted
+                self.convertedMediaToGIF = !permanent || converted
                 self.frames = frames
                 hideLoading()
                 completion(converted)
