@@ -18,6 +18,9 @@ protocol GifMakerViewDelegate: class {
     
     /// Called when the speed tools button is selected
     func didTapSpeedButton()
+
+    /// Called when the revert button is tapped
+    func didTapRevertButton()
 }
 
 /// Constants for GifMakerView
@@ -37,6 +40,10 @@ private struct Constants {
     static let topButtonInset: CGFloat = -10
     static let topButtonsInterspace: CGFloat = 30
     static let topButtonsCount: CGFloat = 3
+
+    static let font = KanvasCameraFonts.shared.gifMakerRevertButtonFont
+    static let revertFontColor = UIColor(red: 1, green: 0.286, blue: 0.188, alpha: 1)
+    static let revertBackgroundColor = UIColor.white
 }
 
 /// A UIView for the GIF maker view
@@ -47,6 +54,11 @@ final class GifMakerView: UIView {
     private let confirmButton: UIButton
     private let trimButton: UIButton
     private let speedButton: UIButton
+    private lazy var revertButton: UIButton = {
+        let button = UIButton(frame: .zero)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     private let topButtonsContainer: UIView
     let trimMenuContainer: IgnoreTouchesView
     let speedMenuContainer: IgnoreTouchesView
@@ -56,6 +68,8 @@ final class GifMakerView: UIView {
     var confirmButtonLocation: CGPoint {
         return topButtonsContainer.convert(confirmButton.center, to: nil)
     }
+
+    private var disposables: [NSKeyValueObservation] = []
     
     // MARK: - Initializers
     
@@ -83,6 +97,7 @@ final class GifMakerView: UIView {
         setUpConfirmButton()
         setUpTrimButton()
         setUpSpeedButton()
+        setupRevertButton()
         setupTrimMenuContainer()
         setupSpeedMenuContainer()
         setupPlaybackMenuContainer()
@@ -161,6 +176,40 @@ final class GifMakerView: UIView {
         
         speedButton.addTarget(self, action: #selector(speedButtonTapped), for: .touchUpInside)
     }
+
+    private func setupRevertButton() {
+        revertButton.accessibilityIdentifier = "GIF Maker Revert Button"
+
+        revertButton.contentHorizontalAlignment = .center
+        revertButton.backgroundColor = Constants.revertBackgroundColor
+        revertButton.setTitle("Revert", for: .normal)
+        revertButton.setTitleColor(Constants.revertFontColor, for: .normal)
+        revertButton.titleLabel?.font = Constants.font
+        revertButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
+        disposables.append(revertButton.observe(\.bounds) { object, _ in
+            self.revertButton.layer.cornerRadius = self.revertButton.bounds.height / 2
+        })
+
+        revertButton.layer.backgroundColor = UIColor.white.cgColor
+        revertButton.layer.borderColor = UIColor.white.cgColor
+        revertButton.layer.borderWidth = 2
+        revertButton.layer.masksToBounds = true
+        revertButton.clipsToBounds = true
+
+        revertButton.addTarget(self, action: #selector(revertButtonTapped), for: .touchUpInside)
+        revertButton.addTarget(self, action: #selector(revertButtonStartTap), for: .touchDown)
+        revertButton.addTarget(self, action: #selector(revertButtonStopTap), for: [.touchUpOutside, .touchUpInside, .touchCancel, .touchDragOutside, .touchDragExit])
+
+        toggleRevertButton(false)
+
+        addSubview(revertButton)
+
+        revertButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            revertButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            revertButton.centerYAnchor.constraint(equalTo: confirmButton.centerYAnchor)
+        ])
+    }
     
     /// Sets up the container for the trim menu
     private func setupTrimMenuContainer() {
@@ -225,6 +274,18 @@ final class GifMakerView: UIView {
     @objc private func speedButtonTapped() {
         delegate?.didTapSpeedButton()
     }
+
+    @objc private func revertButtonTapped() {
+        delegate?.didTapRevertButton()
+    }
+
+    @objc private func revertButtonStartTap() {
+        revertButton.layer.backgroundColor = UIColor.clear.cgColor
+    }
+
+    @objc private func revertButtonStopTap() {
+        revertButton.layer.backgroundColor = UIColor.white.cgColor
+    }
     
     // MARK: - Public interface
     
@@ -277,5 +338,9 @@ final class GifMakerView: UIView {
     /// - Parameter show: true to show, false to hide
     func showConfirmButton(_ show: Bool) {
         confirmButton.alpha = show ? 1 : 0
+    }
+
+    func toggleRevertButton(_ show: Bool) {
+        revertButton.alpha = show ? 1 : 0
     }
 }

@@ -35,6 +35,7 @@ final class GifVideoOutputHandler: NSObject {
     private var videoInput: AVAssetWriterInput?
     private var audioInput: AVAssetWriterInput?
     private let shouldUsePixelBuffers: Bool
+    private let shouldAddRebound: Bool
     private var framesPerSecond: Int = 0
     private var numberOfFrames: Int = 0
 
@@ -42,9 +43,10 @@ final class GifVideoOutputHandler: NSObject {
     ///
     /// - Parameter videoOutput: the video data output that the pixel buffer frames will be coming from. Optional for error handling
     /// - Parameter usePixelBuffer: use the pixel buffer instead of the sample buffer
-    required init(videoOutput: AVCaptureVideoDataOutput?, usePixelBuffer: Bool = false) {
+    required init(videoOutput: AVCaptureVideoDataOutput?, usePixelBuffer: Bool = false, rebound: Bool = true) {
         self.videoOutput = videoOutput
         shouldUsePixelBuffers = usePixelBuffer
+        shouldAddRebound = rebound
     }
 
     // MARK: - external methods
@@ -169,7 +171,9 @@ final class GifVideoOutputHandler: NSObject {
         var index = 0
 
         if shouldUsePixelBuffers {
-            gifPixelBuffers = buffersWithReverse(array: gifPixelBuffers)
+            if shouldAddRebound {
+                gifPixelBuffers = buffersWithReverse(array: gifPixelBuffers)
+            }
             self.pixelBufferAdaptor?.assetWriterInput.requestMediaDataWhenReady(on: self.gifQueue, using: { [weak self] in
                 guard let strongSelf = self else {
                     return
@@ -189,7 +193,9 @@ final class GifVideoOutputHandler: NSObject {
             })
         }
         else {
-            gifBuffers = buffersWithReverse(array: gifBuffers)
+            if shouldAddRebound {
+                gifBuffers = buffersWithReverse(array: gifBuffers)
+            }
             self.pixelBufferAdaptor?.assetWriterInput.requestMediaDataWhenReady(on: self.gifQueue, using: { [weak self] in
                 guard let strongSelf = self else {
                     return

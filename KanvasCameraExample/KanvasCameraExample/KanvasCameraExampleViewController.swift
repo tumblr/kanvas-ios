@@ -7,7 +7,6 @@
 import KanvasCamera
 import Photos
 import UIKit
-import Utils
 
 private enum PhotoLibraryAccessError: Error {
     case notDetermined, restricted, denied, move(Error)
@@ -185,7 +184,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         launchKanvasButton.setTitle("", for: .normal)
         launchKanvasButton.setTitleColor(labelColor, for: .normal)
         launchKanvasButton.setTitleColor(labelColor, for: .highlighted)
-        launchKanvasButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
+        launchKanvasButton.titleLabel?.font = UIFont.systemFont(ofSize: 18)
 
         // action
         launchKanvasButton.addTarget(self, action: #selector(launchKanvasButtonTapped), for: .touchUpInside)
@@ -202,7 +201,7 @@ final class KanvasCameraExampleViewController: UIViewController {
 
         // text
         launchKanvasDashboardButton.setTitle("", for: .normal)
-        launchKanvasDashboardButton.titleLabel?.font = UIFont.favoritTumblr85(fontSize: 18)
+        launchKanvasDashboardButton.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         launchKanvasDashboardButton.titleLabel?.textAlignment = .center
         launchKanvasDashboardButton.setTitleColor(labelColor, for: .normal)
         launchKanvasDashboardButton.setTitleColor(labelColorHighlighted, for: .highlighted)
@@ -252,6 +251,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .ghostFrame(settings.features.ghostFrame),
             .openGLPreview(settings.features.openGLPreview),
             .openGLCapture(settings.features.openGLCapture),
+            .metalPreview(settings.features.metalPreview),
+            .metalFilters(settings.features.metalFilters),
             .cameraFilters(settings.features.cameraFilters),
             .experimentalCameraFilters(settings.features.experimentalCameraFilters),
             .editor(settings.features.editor),
@@ -277,8 +278,12 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.openGLPreview = value
         case .openGLCapture(_):
             settings.features.openGLCapture = value
+        case .metalPreview(_):
+            settings.features.metalPreview = value
         case .cameraFilters(_):
             settings.features.cameraFilters = value
+        case .metalFilters(_):
+            settings.features.metalFilters = value
         case .experimentalCameraFilters(_):
             settings.features.experimentalCameraFilters = value
         case .editor(_):

@@ -46,10 +46,13 @@ final class PlaybackView: UIView {
         set { layout.estimatedItemSize.width = newValue }
         get { layout.estimatedItemSize.width }
     }
+
+    var selectionViewWidthConstraint: NSLayoutConstraint?
+    var selectionViewLeadingConstraint: NSLayoutConstraint?
     
     var selectionViewWidth: CGFloat {
         willSet {
-            selectionView.widthAnchor.constraint(equalToConstant: newValue).isActive = true
+            selectionViewWidthConstraint?.constant = newValue
         }
     }
     
@@ -93,12 +96,18 @@ final class PlaybackView: UIView {
         selectionView.translatesAutoresizingMaskIntoConstraints = false
         selectionView.backgroundColor = Constants.selectionViewColor
         selectionView.layer.cornerRadius = Constants.cornerRadius
-        
+
+        let selectionViewWidthConstraint = selectionView.widthAnchor.constraint(equalToConstant: 0)
+        let selectionViewLeadingConstraint = selectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 0)
         NSLayoutConstraint.activate([
-            selectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            selectionView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            selectionView.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height)
+            selectionViewWidthConstraint,
+            selectionView.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height),
+            selectionViewLeadingConstraint,
+            selectionView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor)
         ])
+
+        self.selectionViewWidthConstraint = selectionViewWidthConstraint
+        self.selectionViewLeadingConstraint = selectionViewLeadingConstraint
     }
     
     /// Sets up the collection for the playback options.
@@ -149,11 +158,17 @@ final class PlaybackView: UIView {
     ///  - animated: whether to animate the movement or not.
     func select(cell: PlaybackCollectionCell, animated: Bool = true) {
         let action: () -> Void = { [weak self] in
-            self?.selectionView.center = cell.center
+            self?.selectionViewLeadingConstraint?.constant = cell.frame.origin.x
         }
         
         if animated {
-            UIView.animate(withDuration: Constants.animationDuration, animations: action)
+            // `layoutIfNeeded` is needed both inside and outside of the
+            // animate block when animating layout constraints.
+            self.layoutIfNeeded()
+            UIView.animate(withDuration: Constants.animationDuration) {
+                action()
+                self.layoutIfNeeded()
+            }
         }
         else {
             action()

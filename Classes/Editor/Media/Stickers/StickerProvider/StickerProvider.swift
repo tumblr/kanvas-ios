@@ -20,4 +20,6 @@ public protocol StickerProvider {
     ///
     /// - Parameter delegate: the new delegate.
     func setDelegate(delegate: StickerProviderDelegate)
+    
+    func loader() -> KanvasStickerLoader?
 }

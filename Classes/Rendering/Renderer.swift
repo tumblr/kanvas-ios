@@ -40,6 +40,9 @@ final class Renderer: Rendering {
     /// OpenGL Context
     let glContext: EAGLContext?
 
+    /// Metal Context
+    let metalContext: MetalContext?
+
     /// Image overlays
     var imageOverlays: [CGImage] = []
 
@@ -58,17 +61,25 @@ final class Renderer: Rendering {
         }
     }
 
+    private let settings: CameraSettings?
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
+    private let filterFactory: FilterFactory
     private var processingImage = false
     private var filteredPixelBuffer: CVPixelBuffer?
 
     /// Designated initializer
     ///
     /// - Parameter delegate: the callback
-    init() {
+    init(settings: CameraSettings?=nil, metalContext: MetalContext?=nil) {
         glContext = EAGLContext(api: .openGLES3)
-        filter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
+        self.settings = settings
+        self.metalContext = metalContext
+        let filterFactory = FilterFactory(glContext: glContext,
+                                          metalContext: metalContext,
+                                          filterPlatform: settings?.features.metalFilters == true ? .metal : .openGL)
+        filter = filterFactory.createFilter(type: self.filterType)
+        self.filterFactory = filterFactory
         switchInputDimensions = false
     }
 
@@ -168,7 +179,7 @@ final class Renderer: Rendering {
             processingImage = false
         }
 
-        let imageFilter = FilterFactory.createFilter(type: self.filterType, glContext: glContext)
+        let imageFilter = filterFactory.createFilter(type: self.filterType)
         var sampleTime = CMSampleTimingInfo()
         var videoInfo: CMVideoFormatDescription?
         CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &videoInfo)
@@ -211,7 +222,7 @@ final class Renderer: Rendering {
     /// Refreshes a filter (used when changing the filter type)
     func refreshFilter() {
         synchronized(self) {
-            filter = FilterFactory.createFilter(type: filterType, glContext: glContext, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
+            filter = filterFactory.createFilter(type: filterType, overlays: imageOverlays.compactMap { UIImage(cgImage: $0).pixelBuffer() })
             filter.switchInputDimensions = self.switchInputDimensions
         }
     }

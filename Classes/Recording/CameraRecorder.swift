@@ -8,7 +8,6 @@ import AVFoundation
 import Foundation
 import UIKit
 import VideoToolbox
-import Utils
 
 /// Default values for the camera recorder
 private struct CameraRecordingConstants {
@@ -57,7 +56,7 @@ final class CameraRecorder: NSObject {
         self.size = size
 
         photoOutputHandler = PhotoOutputHandler(photoOutput: photoOutput)
-        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput, usePixelBuffer: settings.features.openGLCapture)
+        gifVideoOutputHandler = GifVideoOutputHandler(videoOutput: videoOutput, usePixelBuffer: settings.features.openGLCapture, rebound: !settings.features.editorGIFMaker)
         videoOutputHandlers = []
 
         self.photoOutput = photoOutput
@@ -222,7 +221,7 @@ extension CameraRecorder: CameraRecordingProtocol {
                     strongSelf.removeVideoOutputHandler(videoOutputHandler)
                     if success, let url = videoOutputHandler.assetWriterURL() {
                         if strongSelf.currentRecordingMode.quantity == .multiple {
-                            strongSelf.segmentsHandler.addNewVideoSegment(url: url, mediaInfo: TumblrMediaInfo(source: .kanvas_camera))
+                            strongSelf.segmentsHandler.addNewVideoSegment(url: url, mediaInfo: MediaInfo(source: .kanvas_camera))
                         }
                         completion(url)
                     }
@@ -265,7 +264,7 @@ extension CameraRecorder: CameraRecordingProtocol {
             }
             
             if strongSelf.currentRecordingMode.quantity == .multiple {
-                strongSelf.segmentsHandler.addNewImageSegment(image: filteredImage, size: strongSelf.size, mediaInfo: TumblrMediaInfo(source: .kanvas_camera), completion: { (success, _) in
+                strongSelf.segmentsHandler.addNewImageSegment(image: filteredImage, size: strongSelf.size, mediaInfo: MediaInfo(source: .kanvas_camera), completion: { (success, _) in
                     completion(success ? filteredImage : nil)
                 })
             }
@@ -275,7 +274,7 @@ extension CameraRecorder: CameraRecordingProtocol {
         }
     }
 
-    func exportRecording(completion: @escaping (URL?, TumblrMediaInfo?) -> Void) {
+    func exportRecording(completion: @escaping (URL?, MediaInfo?) -> Void) {
         segmentsHandler.exportVideo(completion: { url, mediaInfo in
             completion(url, mediaInfo)
         })

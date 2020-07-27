@@ -80,7 +80,7 @@ final class TrashView: IgnoreTouchesView {
         backgroundCircle.accessibilityIdentifier = "Trash Background Circle"
         backgroundCircle.translatesAutoresizingMaskIntoConstraints = false
         backgroundCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
-        backgroundCircle.tintColor = .tumblrBrightRed
+        backgroundCircle.tintColor = KanvasCameraColors.shared.trashColor
         
         backgroundCircle.contentMode = .scaleAspectFit
         backgroundCircle.clipsToBounds = true

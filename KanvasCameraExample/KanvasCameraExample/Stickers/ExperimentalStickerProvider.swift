@@ -7,6 +7,7 @@
 import Foundation
 import UIKit
 import KanvasCamera
+import ImageLoader
 
 /// Constants for ExperimentalStickerProvider
 private struct Constants {
@@ -16,9 +17,30 @@ private struct Constants {
     static let imageExtension: String = "png"
 }
 
+extension CancelationToken: KanvasCancelable {
+
+}
+
+extension SDWebImageImageLoader: KanvasStickerLoader {
+    public func loadSticker(at imageURL: URL, imageView: UIImageView?, completion: @escaping (UIImage?, Error?) -> Void) -> KanvasCancelable {
+        let cancelableMaybe = loadImage(at: imageURL, OAuth: false, imageView: imageView, displayImageImmediately: true, preloadAllFrames: true, completion: completion) as? KanvasCancelable
+        guard let cancelable = cancelableMaybe else {
+            assertionFailure("Failed to get the proper cancelation token for loading a sticker")
+            return CancelationToken {
+                print("Can't cancel")
+            }
+        }
+        return cancelable
+    }
+}
+
 /// Class that obtains the stickers from the stickers file in the example app
 public final class ExperimentalStickerProvider: StickerProvider {
     
+    public func loader() -> KanvasStickerLoader? {
+        return ImageLoaderProvider.makeImageLoader() as? KanvasStickerLoader
+    }
+
     private weak var delegate: StickerProviderDelegate?
     
     // MARK: - StickerProvider Protocol

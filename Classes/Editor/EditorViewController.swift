@@ -7,19 +7,18 @@
 import AVFoundation
 import Foundation
 import UIKit
-import Utils
 
 /// Protocol for camera editor controller methods
 
 public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
-    func didFinishExportingVideo(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting image
-    func didFinishExportingImage(image: UIImage?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting frames
-    func didFinishExportingFrames(url: URL?, info: TumblrMediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -108,7 +107,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
 
     private lazy var gifMakerHandler: GifMakerHandler = {
-        let handler = GifMakerHandler(player: player)
+        let handler = GifMakerHandler(player: player, analyticsProvider: analyticsProvider)
         handler.delegate = self
         return handler
     }()
@@ -152,9 +151,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private var mediaChanged: Bool {
         let hasStickerOrText = !editorView.movableViewCanvas.isEmpty
-        let filterApplied = filterType?.filterApplied == true
+        let filterApplied = filterType?.filterApplied ?? false
         let hasDrawings = !drawingController.isEmpty
-        return hasStickerOrText || filterApplied || hasDrawings
+        let gifMakerOpened = shouldExportMediaAsGIF
+        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened
     }
 
     private var editingNewText: Bool = true
@@ -176,7 +176,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     stickerProvider: StickerProvider,
                                     analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
         EditorViewController(settings: settings,
-                             segments: [.image(image, nil, nil, TumblrMediaInfo(source: .media_library))],
+                             segments: [.image(image, nil, nil, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
                              gifEncoderClass: GIFEncoderImageIO.self,
@@ -188,7 +188,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
         EditorViewController(settings: settings,
-                             segments: [.video(videoURL, TumblrMediaInfo(source: .media_library))],
+                             segments: [.video(videoURL, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
                              gifEncoderClass: GIFEncoderImageIO.self,
@@ -196,6 +196,37 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              stickerProvider: stickerProvider,
                              analyticsProvider: nil,
                              quickBlogSelectorCoordinator: nil)
+    }
+
+    public static func createEditor(forGIF url: URL,
+                              info: MediaInfo,
+                              settings: CameraSettings,
+                              stickerProvider: StickerProvider,
+                              analyticsProvider: KanvasCameraAnalyticsProvider,
+                              completion: @escaping (EditorViewController) -> Void) {
+        GIFDecoderFactory.main().decode(image: url) { frames in
+            let segments = CameraSegment.from(frames: frames, info: info)
+            let editor = EditorViewController(settings: settings,
+                                              segments: segments,
+                                              stickerProvider: stickerProvider,
+                                              analyticsProvider: analyticsProvider)
+            completion(editor)
+        }
+    }
+
+    convenience init(settings: CameraSettings,
+                     segments: [CameraSegment],
+                     stickerProvider: StickerProvider,
+                     analyticsProvider: KanvasCameraAnalyticsProvider) {
+        self.init(settings: settings,
+                  segments: segments,
+                  assetsHandler: CameraSegmentHandler(),
+                  exporterClass: MediaExporter.self,
+                  gifEncoderClass: GIFEncoderImageIO.self,
+                  cameraMode: nil,
+                  stickerProvider: stickerProvider,
+                  analyticsProvider: analyticsProvider,
+                  quickBlogSelectorCoordinator: nil)
     }
     
     /// The designated initializer for the editor controller
@@ -226,7 +257,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
-        self.player = MediaPlayer(renderer: Renderer())
+        self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: MetalContext.createContext()))
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
@@ -265,6 +296,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         load(childViewController: textController, into: editorView.textMenuContainer)
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         load(childViewController: gifMakerController, into: editorView.gifMakerMenuContainer)
+
+        if shouldConvertMediaToGIFOnLoad() {
+            loadMediaAsGIF()
+        }
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {
@@ -286,8 +321,27 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             textController.addColorsForCarousel(colors: [mostDominantColor, .white, .black])
         }
     }
+
+    // MARK: - Media Player
+
+    /// Loads the media into the player and starts it.
+    private func startPlayerFromSegments() {
+        let media: [MediaPlayerContent] = segments.compactMap {segment in
+            if let image = segment.image {
+                return .image(image, segment.timeInterval)
+            }
+            else if let url = segment.videoURL {
+                return .video(url)
+            }
+            else {
+                return nil
+            }
+        }
+        player.play(media: media)
+    }
     
     // MARK: - Loading Indicator
+
     /// Shows the loading indicator on this view
     func showLoading() {
         loadingView.add(into: view)
@@ -298,6 +352,93 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func hideLoading() {
         loadingView.removeFromSuperview()
         loadingView.stopLoading()
+    }
+
+    // MARK: - GIF Maker Helpers
+
+    private func openGIFMaker(cell: EditionMenuCollectionCell) {
+        let editionOption = EditionOption.gif
+        onBeforeShowingEditionMenu(editionOption, cell: cell)
+        showMainUI(false)
+        gifMakerController.showView(true)
+        loadMediaAsGIF()
+        editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
+            self.gifMakerController.showConfirmButton(true)
+        })
+        analyticsProvider?.logEditorGIFOpen()
+    }
+
+    private func revertGIF() {
+        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        gifMakerController.showView(false)
+        gifMakerController.showConfirmButton(false)
+        gifMakerHandler.revert { reverted in
+            if reverted {
+                self.player.stop()
+                self.startPlayerFromSegments()
+            }
+        }
+        shouldExportMediaAsGIF = false
+        showMainUI(true)
+        analyticsProvider?.logEditorGIFRevert()
+        onAfterConfirmingEditionMenu()
+    }
+
+    private func loadMediaAsGIF() {
+        gifMakerHandler.load(segments: segments,
+                             initialSettings: .init(rate: initialGIFPlaybackRate(),
+                                                    playbackMode: initialGIFPlaybackMode(),
+                                                    startTime: initialGIFTrim().lowerBound,
+                                                    endTime: initialGIFTrim().upperBound),
+                             showLoading: self.showLoading,
+                             hideLoading: self.hideLoading,
+                             completion: { framesUpdated in
+                                if framesUpdated {
+                                    self.player.stop()
+                                    self.startPlayerFromSegments()
+                                }
+                                self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
+                             })
+    }
+
+    private func shouldEnableGIFButton() -> Bool {
+        return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
+    }
+
+    private func shouldExportAsGIFByDefault() -> Bool {
+        guard settings.features.gifs else {
+            return false
+        }
+
+        if cameraMode?.group == .gif {
+            return true
+        }
+
+        // Media captured with only images (but at least two) should export as a GIF by default
+        if segments.count > 1 && assetsHandler.containsOnlyImages(segments: segments) {
+            return true
+        }
+
+        return false
+    }
+
+    private func shouldConvertMediaToGIFOnLoad() -> Bool {
+        shouldExportAsGIFByDefault()
+    }
+
+    private func initialGIFPlaybackMode() -> PlaybackOption {
+        if cameraMode?.group == .gif {
+            return .rebound
+        }
+        return .loop
+    }
+
+    private func initialGIFPlaybackRate() -> Float {
+        return 1.0
+    }
+
+    private func initialGIFTrim() -> ClosedRange<TimeInterval> {
+        return 0...3
     }
     
     // MARK: - EditorViewDelegate
@@ -366,54 +507,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didRenderRectChange(rect: CGRect) {
         drawingController.didRenderRectChange(rect: rect)
     }
-    
-    /// Loads the media into the player and starts it.
-    private func startPlayerFromSegments() {
-        let media: [MediaPlayerContent] = segments.compactMap {segment in
-            if let image = segment.image {
-                return .image(image, segment.timeInterval)
-            }
-            else if let url = segment.videoURL {
-                return .video(url)
-            }
-            else {
-                return nil
-            }
-        }
-        player.play(media: media)
+
+    func didTapCloseButton() {
+        player.stop()
+        delegate?.dismissButtonPressed()
     }
 
-    private func shouldEnableGIFButton() -> Bool {
-        return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
-    }
+    // MARK: - Media Exporting
 
-    private func shouldExportAsGIFByDefault() -> Bool {
-        guard settings.features.gifs else {
-            return false
-        }
-
-        // Media captured from the GIF mode should export as a GIF by default
-        if segments.count == 1 && segments.first?.videoURL != nil && cameraMode?.group == .gif {
-            return true
-        }
-
-        // Media captured from the Stitch mode with only images (but at least two) should export as a GIF by default
-        if segments.count > 1 && assetsHandler.containsOnlyImages(segments: segments) {
-            return true
-        }
-
-        return false
-    }
-
-    private func allSegmentsAreImages() -> Bool {
-        for segment in segments {
-            if segment.image == nil {
-                return false
-            }
-        }
-        return true
-    }
-    
     private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()
@@ -431,8 +532,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
                 self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
             }
-            else if allSegmentsAreImages() {
-                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? TumblrMediaInfo(source: .kanvas_camera), exportAction: action)
+            else if assetsHandler.containsOnlyImages(segments: segments) {
+                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), exportAction: action)
             }
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
@@ -458,27 +559,25 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self?.handleExportError()
                     return
                 }
-                self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? TumblrMediaInfo(source: .media_library), exportAction: action)
+                self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
             }
         }
     }
 
-    private func createFinalGIF(segments: [CameraSegment], mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
-        let frames = segments.compactMap { (segment) -> MediaFrame? in
-            guard let image = segment.image, let interval = segment.timeInterval else {
-                assertionFailure("Frame can't be missing a UIImage or TimeInterval")
-                return nil
-            }
-            return (image: image, interval: interval)
-        }
+        let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
         exporter.export(frames: frames) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
-                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                var size: CGSize? = nil
+                if let gifURL = gifURL {
+                    size = GIFDecoderFactory.main().size(of: gifURL)
+                }
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
                 }
@@ -486,7 +585,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
@@ -507,7 +606,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     }
                     return
                 }
-                self.delegate?.didFinishExportingFrames(url: gifURL, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                let size = GIFDecoderFactory.main().size(of: gifURL)
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
                 }
@@ -515,7 +615,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalVideo(videoURL: URL, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
@@ -532,7 +632,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalImage(image: UIImage, mediaInfo: TumblrMediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init()
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
@@ -577,12 +677,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.present(alertController, animated: true, completion: .none)
     }
     
-    func didTapCloseButton() {
-        player.stop()
-        delegate?.dismissButtonPressed()
-    }
-    
-    func confirmEditionMenu() {
+    private func confirmEditionMenu() {
         guard let editionOption = openedMenu else { return }
         
         switch editionOption {
@@ -593,6 +688,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
+                analyticsProvider?.logEditorGIFConfirm(
+                    duration: gifMakerHandler.trimmedDuration,
+                    playbackMode: KanvasGIFPlaybackMode(from: gifMakerHandler.settings.playbackMode),
+                    speed: gifMakerHandler.settings.rate
+                )
             }
         case .filter:
             filterController.showView(false)
@@ -621,30 +721,18 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     // MARK: - EditionMenuCollectionControllerDelegate
-    
+
     func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
-                onBeforeShowingEditionMenu(editionOption, cell: cell)
-                showMainUI(false)
-                gifMakerController.showView(true)
-                gifMakerHandler.load(segments: segments,
-                                     showLoading: self.showLoading,
-                                     hideLoading: self.hideLoading) { framesUpdated in
-                                        if framesUpdated {
-                                            self.player.stop()
-                                            self.startPlayerFromSegments()
-                                        }
-                }
-                editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
-                    self.gifMakerController.showConfirmButton(true)
-                })
+                openGIFMaker(cell: cell)
             }
             else {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
                 shouldExportMediaAsGIF.toggle()
                 onAfterConfirmingEditionMenu()
+                analyticsProvider?.logEditorGIFButtonToggle(shouldExportMediaAsGIF)
             }
         case .filter:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
@@ -688,21 +776,21 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - GifMakerHandlerDelegate & MediaPlayerDelegate
 
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval {
-        for media in segments {
-            switch media {
-            case .image(_, _, _, _):
-                break
-            case .video(_, _):
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
-            }
-        }
-        return KanvasCameraTimes.onlyImagesFrameTimeInterval
+        return CameraSegment.defaultTimeInterval(segments: segments)
     }
 
     // MARK: - GifMakerHandlerDelegate
     
     func didConfirmGif() {
         confirmEditionMenu()
+    }
+
+    func didRevertGif() {
+        revertGIF()
+    }
+
+    func didSettingsChange(dirty: Bool) {
+        gifMakerController.toggleRevertButton(dirty)
     }
     
     // MARK: - EditorFilterControllerDelegate

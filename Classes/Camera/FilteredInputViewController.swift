@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import CoreImage
 import Foundation
 import UIKit
 
@@ -19,12 +18,20 @@ protocol FilteredInputViewControllerDelegate: class {
 
 /// class for controlling filters and rendering with opengl
 final class FilteredInputViewController: UIViewController, RendererDelegate {
+    private lazy var metalContext: MetalContext = {
+        guard
+            let context = MetalContext.createContext()
+        else {
+            fatalError("Failed to create MTLDevice or MTLCommandQueue")
+        }
+        return context
+    }()
     private lazy var renderer: Renderer = {
-        let renderer = Renderer()
+        let renderer = Renderer(settings: settings, metalContext: metalContext)
         renderer.delegate = self
         return renderer
     }()
-    private weak var previewView: GLPixelBufferView?
+    private weak var previewView: PixelBufferView?
     private let settings: CameraSettings
 
     /// Filters
@@ -54,17 +61,19 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
         renderer.filterType = currentFilter
         renderer.refreshFilter()
     }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-    }
     
     // MARK: - layout
     private func setupPreview() {
-        let previewView = GLPixelBufferView(frame: .zero)
-        previewView.mediaContentMode = .scaleAspectFit
-        previewView.add(into: view)
-        self.previewView = previewView
+        if settings.features.openGLPreview {
+            let previewView = GLPixelBufferView(delegate: nil, mediaContentMode: .scaleAspectFit)
+            previewView.add(into: view)
+            self.previewView = previewView
+        }
+        else {
+            let previewView = MetalPixelBufferView(context: metalContext)
+            previewView.add(into: view)
+            self.previewView = previewView
+        }
     }
 
     override func viewDidLayoutSubviews() {

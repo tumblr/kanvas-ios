@@ -33,6 +33,7 @@ final class StickerMenuController: UIViewController, StickerCollectionController
     private lazy var stickerCollectionController: StickerCollectionController = {
         let controller = StickerCollectionController()
         controller.delegate = self
+        controller.stickerLoader = stickerProvider?.loader()
         return controller
     }()
     
