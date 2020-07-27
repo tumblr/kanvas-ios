@@ -6,16 +6,13 @@
 
 import Foundation
 
-public protocol Cancelable {
+public protocol KanvasCancelable {
     /// Cancels the running operation.
     func cancel()
 }
 
-public protocol StickerLoader {
-    func loadImage(at imageURL: URL,
-                   OAuth: Bool,
-                   imageView: UIImageView?,
-                   displayImageImmediately: Bool,
-                   preloadAllFrames: Bool,
-                   completion: @escaping (_ image: UIImage?, _ error: Error?) -> Void) -> Cancelable
+public protocol KanvasStickerLoader {
+
+    func loadSticker(at imageURL: URL, imageView: UIImageView?, completion: @escaping (UIImage?, Error?) -> Void) -> KanvasCancelable
+
 }

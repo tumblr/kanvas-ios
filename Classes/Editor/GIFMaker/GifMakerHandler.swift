@@ -8,6 +8,27 @@ import Foundation
 
 typealias MediaFrame = (image: UIImage, interval: TimeInterval)
 
+func MediaFrameGetFrame(_ frames: [MediaFrame], at timeInterval: TimeInterval) -> (Int, MediaFrame)? {
+    var frameTime: TimeInterval = .zero
+    for (index, frame) in frames.enumerated() {
+        if timeInterval > frameTime {
+            frameTime += frame.interval
+            if timeInterval < frameTime {
+                return (index, frame)
+            }
+        }
+        else if timeInterval == frameTime {
+            return (index, frame)
+        }
+    }
+    if let lastFrame = frames.last {
+        return (frames.count - 1, lastFrame)
+    }
+    else {
+        return nil
+    }
+}
+
 protocol GifMakerHandlerDelegate: class {
     func didConfirmGif()
 
@@ -22,76 +43,52 @@ typealias DidSettingsChangeHandler = () -> Void
 
 private class GifMakerSettingsViewModel {
 
-    private let player: MediaPlayer
-
     private let didSettingsChangeHandler: DidSettingsChangeHandler
 
-    private var baseSettings: GIFMakerSettings?
+    private let initialSettings: GIFMakerSettings
 
     var dirty: Bool {
-        return rate != baseSettings?.rate ||
-            startIndex != baseSettings?.startIndex ||
-            endIndex != baseSettings?.endIndex ||
-            playbackMode != baseSettings?.playbackMode
+        return rate != initialSettings.rate ||
+            startIndex != initialSettings.startIndex ||
+            endIndex != initialSettings.endIndex ||
+            playbackMode != initialSettings.playbackMode
     }
 
-    var settings: GIFMakerSettings? {
-        guard let rate = rate, let startIndex = startIndex, let endIndex = endIndex, let playbackMode = playbackMode else {
-            return nil
-        }
+    var settings: GIFMakerSettings {
         return .init(rate: rate, startIndex: startIndex, endIndex: endIndex, playbackMode: playbackMode)
     }
 
-    var rate: Float? {
+    var rate: Float {
         didSet {
-            player.rate = rate ?? GIFMakerSettings.rate
             didSettingsChangeHandler()
         }
     }
 
-    var startIndex: Int? {
+    var startIndex: Int {
         didSet {
-            guard let startIndex = startIndex else { return }
-            player.startMediaIndex = startIndex
             didSettingsChangeHandler()
         }
     }
 
-    var endIndex: Int? {
+    var endIndex: Int {
         didSet {
-            guard let endIndex = endIndex else { return }
-            player.endMediaIndex = endIndex
             didSettingsChangeHandler()
         }
     }
 
-    var playbackMode: PlaybackOption? {
+    var playbackMode: PlaybackOption {
         didSet {
-            guard let playbackMode = playbackMode else { return }
-            player.playbackMode = .init(from: playbackMode)
             didSettingsChangeHandler()
         }
     }
 
-    init(player: MediaPlayer, didSettingsChangeHandler: @escaping DidSettingsChangeHandler) {
-        self.player = player
+    init(initialSettings: GIFMakerSettings.Initial, frames: [MediaFrame], didSettingsChangeHandler: @escaping DidSettingsChangeHandler) {
         self.didSettingsChangeHandler = didSettingsChangeHandler
-    }
-
-    func update(settings: GIFMakerSettings) {
-        rate = settings.rate
-        startIndex = settings.startIndex
-        endIndex = settings.endIndex
-        playbackMode = settings.playbackMode
-        baseSettings = settings
-    }
-
-    func reset() {
-        rate = GIFMakerSettings.rate
-        startIndex = nil
-        endIndex = nil
-        playbackMode = GIFMakerSettings.playbackMode
-        baseSettings = nil
+        self.initialSettings = initialSettings.settings(frames: frames)
+        self.rate = self.initialSettings.rate
+        self.startIndex = self.initialSettings.startIndex
+        self.endIndex = self.initialSettings.endIndex
+        self.playbackMode = self.initialSettings.playbackMode
     }
 }
 
@@ -105,22 +102,32 @@ class GifMakerHandler {
         return frames != nil && (frames?.count ?? 0) > 0
     }
 
-    var settings: GIFMakerSettings? {
-        settingsViewModel.settings
+    var settings: GIFMakerSettings {
+        settingsViewModel?.settings ?? (initialSettings ?? GIFMakerSettings.Initial()).settings(frames: [])
     }
 
-    var defaultSettings: GIFMakerSettings?
+    private var initialSettings: GIFMakerSettings.Initial?
 
-    var convertedMediaToGIF: Bool = false
+    private var convertedMediaToGIF: Bool = false
 
     private let player: MediaPlayer
 
-    private lazy var settingsViewModel: GifMakerSettingsViewModel = {
-        .init(player: player, didSettingsChangeHandler: didSettingsChange)
-    }()
+    private var settingsViewModel: GifMakerSettingsViewModel? {
+        willSet {
+            if settingsViewModel != nil, newValue == nil {
+                resetPlayer()
+            }
+        }
+        didSet {
+            if settingsViewModel != nil {
+                didSettingsChange()
+            }
+        }
+    }
 
     func didSettingsChange() {
-        let dirty = convertedMediaToGIF || settingsViewModel.dirty
+        configurePlayer()
+        let dirty = convertedMediaToGIF || settingsViewModel?.dirty == true
         delegate?.didSettingsChange(dirty: dirty)
     }
 
@@ -128,17 +135,14 @@ class GifMakerHandler {
         didSet {
             guard let frames = frames else {
                 segments = nil
-                settingsViewModel.reset()
+                settingsViewModel = nil
                 duration = nil
-                defaultSettings = nil
                 return
             }
             segments = frames.map { frame in
                 CameraSegment.image(frame.image, nil, frame.interval, .init(source: .kanvas_camera))
             }
-            let defaultSettings = GIFMakerSettings.default(startIndex: 0, endIndex: frames.count - 1)
-            self.defaultSettings = defaultSettings
-            settingsViewModel.update(settings: defaultSettings)
+            settingsViewModel = GifMakerSettingsViewModel(initialSettings: initialSettings ?? .init(), frames: frames, didSettingsChangeHandler: didSettingsChange)
             duration = frames.reduce(0) { (duration, frame) in
                 return duration + frame.interval
             }
@@ -148,11 +152,11 @@ class GifMakerHandler {
     private(set) var duration: TimeInterval?
 
     var trimmedDuration: TimeInterval {
-        guard let startIndex = settingsViewModel.startIndex, let endIndex = settingsViewModel.endIndex else {
+        guard let settingsViewModel = settingsViewModel else {
             return 0
         }
-        let startTime = getTimestamp(at: startIndex)
-        let endTime = getTimestamp(at: endIndex)
+        let startTime = getTimestamp(at: settingsViewModel.startIndex)
+        let endTime = getTimestamp(at: settingsViewModel.endIndex)
         return endTime - startTime
     }
 
@@ -167,20 +171,23 @@ class GifMakerHandler {
         self.analyticsProvider = analyticsProvider
     }
 
-    func load(segments: [CameraSegment], showLoading: () -> Void, hideLoading: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
+    func load(segments: [CameraSegment],
+              initialSettings: GIFMakerSettings.Initial,
+              showLoading: () -> Void,
+              hideLoading: @escaping () -> Void,
+              completion: @escaping (Bool) -> Void) {
         if frames != nil {
             completion(false)
         }
         else {
             let defaultInterval = delegate?.getDefaultTimeIntervalForImageSegments() ?? 1.0/6.0
             showLoading()
-
             loadFrames(from: segments, defaultInterval: defaultInterval) { (frames, converted) in
-                self.frames = frames
+                self.initialSettings = initialSettings
                 self.convertedMediaToGIF = converted
+                self.frames = frames
                 hideLoading()
                 completion(converted)
-                self.didSettingsChange()
             }
         }
     }
@@ -194,18 +201,22 @@ class GifMakerHandler {
     }
 
     func trimmedSegments(_ segments: [CameraSegment]) -> [CameraSegment] {
-        guard let startIndex = settingsViewModel.startIndex, let endIndex = settingsViewModel.endIndex else {
+        guard let settingsViewModel = settingsViewModel else {
             return segments
         }
+        let startIndex = settingsViewModel.startIndex
+        let endIndex = settingsViewModel.endIndex
         return Array(segments[startIndex...endIndex])
     }
 
     func framesForPlayback(_ frames: [MediaFrame]) -> [MediaFrame] {
 
+        guard let settingsViewModel = self.settingsViewModel else {
+            return frames
+        }
+
         let getRateAdjustedFrames = { (frames: [MediaFrame]) -> [MediaFrame] in
-            guard let rate = self.settingsViewModel.rate else {
-                return frames
-            }
+            let rate = settingsViewModel.rate
             let timeIntervalRate = TimeInterval(rate)
             return frames.map { frame in
                 return (image: frame.image, interval: frame.interval / timeIntervalRate)
@@ -213,9 +224,7 @@ class GifMakerHandler {
         }
 
         let getPlaybackFrames = { (frames: [MediaFrame]) -> [MediaFrame] in
-            guard let playbackMode = self.settingsViewModel.playbackMode else {
-                return frames
-            }
+            let playbackMode = settingsViewModel.playbackMode
             switch playbackMode {
             case .loop:
                 return frames
@@ -281,6 +290,24 @@ class GifMakerHandler {
         }
         return min(Int(CGFloat(segments.count) * location), segments.count - 1)
     }
+
+    func configurePlayer() {
+        guard let settingsViewModel = settingsViewModel else {
+            return
+        }
+        player.rate = settingsViewModel.rate
+        player.startMediaIndex = settingsViewModel.startIndex
+        player.endMediaIndex = settingsViewModel.endIndex
+        player.playbackMode = .init(from: settingsViewModel.playbackMode)
+    }
+
+    func resetPlayer() {
+        let initialSettings = (self.initialSettings ?? .init()).settings(frames: frames ?? [])
+        player.rate = initialSettings.rate
+        player.startMediaIndex = initialSettings.startIndex
+        player.endMediaIndex = initialSettings.endIndex
+        player.playbackMode = .init(from: initialSettings.playbackMode)
+    }
 }
 
 extension GifMakerHandler: GifMakerControllerDelegate {
@@ -314,12 +341,12 @@ extension GifMakerHandler: GifMakerControllerDelegate {
         guard let startIndex = startIndex(from: startingPercentage / 100.0) else {
             return
         }
-        settingsViewModel.startIndex = startIndex
+        settingsViewModel?.startIndex = startIndex
 
         guard let endIndex = endIndex(from: endingPercentage / 100.0) else {
             return
         }
-        settingsViewModel.endIndex = endIndex
+        settingsViewModel?.endIndex = endIndex
 
         player.cancelPlayingSingleFrame()
         previousTrim = nil
@@ -344,21 +371,11 @@ extension GifMakerHandler: GifMakerControllerDelegate {
         if let thumbnail = thumbnails[timestamp] {
             return thumbnail
         }
-        var frameTime: TimeInterval = .zero
-        for frame in frames ?? [] {
-            if timestamp > frameTime {
-                frameTime += frame.interval
-                if timestamp < frameTime {
-                    thumbnails[timestamp] = frame.image
-                    return frame.image
-                }
-            }
-            else if timestamp == frameTime {
-                thumbnails[timestamp] = frame.image
-                return frame.image
-            }
+        guard let frame = MediaFrameGetFrame(frames ?? [], at: timestamp) else {
+            return nil
         }
-        return frames?.last?.image
+        thumbnails[timestamp] = frame.1.image
+        return frame.1.image
     }
 
     func getMediaDuration() -> TimeInterval? {
@@ -366,12 +383,12 @@ extension GifMakerHandler: GifMakerControllerDelegate {
     }
 
     func didSelectSpeed(_ speed: Float) {
-        settingsViewModel.rate = speed
+        settingsViewModel?.rate = speed
         analyticsProvider?.logEditorGIFChange(speed: speed)
     }
 
     func didSelectPlayback(_ option: PlaybackOption) {
-        settingsViewModel.playbackMode = option
+        settingsViewModel?.playbackMode = option
         analyticsProvider?.logEditorGIFChange(playbackMode: .init(from: option))
     }
 
