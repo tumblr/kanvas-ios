@@ -20,7 +20,7 @@ class MediaExporterTests: XCTestCase {
     }
 
     func testInit() {
-        let _ = MediaExporter()
+        let _ = MediaExporter(settings: CameraSettings())
     }
 
 }

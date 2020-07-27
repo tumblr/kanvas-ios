@@ -29,4 +29,9 @@ class MetalPixelBufferViewTests: FBSnapshotTestCase {
         let shaderContext = ShaderContext(time: 0)
         XCTAssertNotNil(shaderContext)
     }
+    
+    func testFake2() {
+        let groupFilter = MetalGroupFilter(filters: [])
+        XCTAssertNotNil(groupFilter)
+    }
 }

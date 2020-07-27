@@ -18,7 +18,7 @@ class MediaExporterStub: MediaExporting {
     var exportFramesCalled: Bool = false
     var exportVideoCalled: Bool = false
 
-    required init() {
+    required init(settings: CameraSettings) {
 
     }
 
