@@ -86,7 +86,7 @@ final class GifMakerHandlerTests: XCTestCase {
         // Act
         //
 
-        handler.load(segments: segments, initialSettings: .init(rate: 0.5, playbackMode: .rebound, startTime: 0, endTime: 2), showLoading: {}, hideLoading: {}) { converted in
+        handler.load(segments: segments, initialSettings: .init(rate: 0.5, playbackMode: .rebound, startTime: 0, endTime: 2), permanent: false, showLoading: {}, hideLoading: {}) { converted in
             e.fulfill()
         }
         wait(for: [e], timeout: 1.0)

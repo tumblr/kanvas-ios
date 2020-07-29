@@ -465,7 +465,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             return false
         }
 
-        return settings.editorShouldStartGIFMaker
+        return settings.editorShouldStartGIFMaker(mode: cameraMode)
     }
 
     private func shouldConvertMediaToGIFOnLoad() -> Bool {
