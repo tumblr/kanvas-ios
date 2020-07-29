@@ -98,19 +98,29 @@ class GifMakerHandler {
 
     var segments: [CameraSegment]?
 
-    var hasFrames: Bool {
-        return frames != nil && (frames?.count ?? 0) > 0
-    }
-
     var settings: GIFMakerSettings {
         settingsViewModel?.settings ?? (initialSettings ?? GIFMakerSettings.Initial()).settings(frames: [])
     }
 
+    var shouldExport: Bool {
+        hasFrames
+    }
+
+    private var dirty: Bool {
+        !mediaConversionPermanent && mediaDirty
+    }
+
     private var initialSettings: GIFMakerSettings.Initial?
 
-    private var convertedMediaToGIF: Bool = false
+    private var mediaDirty: Bool = false
+
+    private var mediaConversionPermanent: Bool = false
 
     private let player: MediaPlayer
+
+    private var hasFrames: Bool {
+        return frames != nil && (frames?.count ?? 0) > 0
+    }
 
     private var settingsViewModel: GifMakerSettingsViewModel? {
         willSet {
@@ -127,7 +137,7 @@ class GifMakerHandler {
 
     func didSettingsChange() {
         configurePlayer()
-        let dirty = convertedMediaToGIF || settingsViewModel?.dirty == true
+        let dirty = self.dirty || settingsViewModel?.dirty == true
         delegate?.didSettingsChange(dirty: dirty)
     }
 
@@ -185,7 +195,8 @@ class GifMakerHandler {
             showLoading()
             loadFrames(from: segments, defaultInterval: defaultInterval) { (frames, converted) in
                 self.initialSettings = initialSettings
-                self.convertedMediaToGIF = !permanent || converted
+                self.mediaDirty = converted
+                self.mediaConversionPermanent = permanent
                 self.frames = frames
                 hideLoading()
                 completion(converted)
@@ -196,6 +207,8 @@ class GifMakerHandler {
     func revert(completion: @escaping (_ reverted: Bool) -> Void) {
         let hadFrames = self.hasFrames
         frames = nil
+        mediaConversionPermanent = false
+        mediaDirty = false
         DispatchQueue.main.async {
             completion(hadFrames)
         }

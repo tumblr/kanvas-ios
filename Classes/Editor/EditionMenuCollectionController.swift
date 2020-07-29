@@ -30,7 +30,12 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     private var editionOptions: [EditionOption]
     private(set) var textCell: EditionMenuCollectionCell?
     
-    var shouldExportMediaAsGIF: Bool
+    var shouldExportMediaAsGIF: Bool {
+        didSet {
+            guard let index = editionOptions.firstIndex(of: .gif) else { return }
+            editionMenuCollectionView.collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+        }
+    }
     
     weak var delegate: EditionMenuCollectionControllerDelegate?
     

@@ -135,10 +135,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         set {
             collectionController.shouldExportMediaAsGIF = newValue
-            if let editionOption = openedMenu, let cell = selectedCell {
-                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: newValue)
-                cell.setImage(image)
-            }
         }
     }
 
@@ -733,8 +729,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
+                shouldExportMediaAsGIF = gifMakerHandler.shouldExport
                 editorView.animateReturnOfEditionOption(cell: selectedCell)
-                shouldExportMediaAsGIF = gifMakerHandler.hasFrames
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
