@@ -370,9 +370,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         gifMakerController.showView(true)
         loadMediaAsGIF(permanent: permanent)
         if animated {
-            editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
+            self.editorView.animateEditionOption(cell: cell, finalLocation: self.gifMakerController.confirmButtonLocation) {_ in
                 self.gifMakerController.showConfirmButton(true)
-            })
+            }
         }
         else {
             gifMakerController.showConfirmButton(true)
@@ -514,7 +514,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
-        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
             self.textController.showConfirmButton(true)
         })
         analyticsProvider?.logEditorTextEdit()
@@ -791,7 +791,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
                 self.textController.showConfirmButton(true)
             })
         case .drawing:
@@ -799,7 +799,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: {
+            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
                 self.drawingController.showConfirmButton(true)
             })
         case .media:
