@@ -95,11 +95,13 @@ final class MediaExporter: MediaExporting {
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void) {
         var processedFrames: [MediaFrame] = []
         DispatchQueue.global(qos: .default).async {
+            var time: TimeInterval = 0
             for frame in frames {
-                self.export(image: frame.image, time: frame.interval) { (image, error) in
+                self.export(image: frame.image, time: time) { (image, error) in
                     guard error == nil, let image = image else {
                         return
                     }
+                    time += frame.interval
                     processedFrames.append((image: image, interval: frame.interval))
                 }
             }
