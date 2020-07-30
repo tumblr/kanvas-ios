@@ -214,7 +214,7 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
         gifMakerView.showView(show, completion: { [weak self] _ in
-            self?.trimEnabled = false
+            self?.trimEnabled = show
             self?.speedEnabled = false
         })
     }

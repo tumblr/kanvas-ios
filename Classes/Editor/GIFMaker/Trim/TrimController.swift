@@ -229,17 +229,22 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
         if show {
-            thumbnailController.reload { finished in
-                let cellsFrame = self.thumbnailController.getCellsFrame()
-                self.trimView.setOverlay(cellsFrame: cellsFrame)
-            }
+            reloadThumbnails()
         }
         trimView.showView(show)
+    }
+
+    func reloadThumbnails() {
+        thumbnailController.reload { finished in
+            let cellsFrame = self.thumbnailController.getCellsFrame()
+            self.trimView.setOverlay(cellsFrame: cellsFrame)
+        }
     }
 
     /// sets the start and end trim locations
     func set(start: CGFloat, end: CGFloat) {
         trimView.setLeftSide(percentage: start)
         trimView.setRightSide(percentage: end)
+        reloadThumbnails()
     }
 }
