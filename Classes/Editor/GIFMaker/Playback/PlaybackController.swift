@@ -38,13 +38,15 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
         willSet {
             guard let cell = playbackView.collectionView.cellForItem(at: newValue) as? PlaybackCollectionCell else { return }
             cell.setSelected(true)
-            playbackView.select(cell: cell)
+            playbackView.select(cell: cell, animated: enableSelectionAnimation)
         }
         didSet {
             guard let cell = playbackView.collectionView.cellForItem(at: oldValue) as? PlaybackCollectionCell else { return }
             cell.setSelected(false)
         }
     }
+
+    private var enableSelectionAnimation: Bool = true
     
     // MARK: - Initializers
     
@@ -68,7 +70,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
 
     /// selects the option.
     /// this does not trigger any delegation
-    func select(option: PlaybackOption) {
+    func select(option: PlaybackOption, animated: Bool = true) {
         guard let index = options.index(of: option) else {
             return
         }
@@ -77,7 +79,10 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
             return
         }
 
+        let originalValue = enableSelectionAnimation
+        enableSelectionAnimation = animated
         selectedIndexPath = indexPath
+        enableSelectionAnimation = originalValue
     }
     
     // MARK: - View Life Cycle

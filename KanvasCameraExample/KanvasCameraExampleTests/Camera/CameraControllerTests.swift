@@ -76,16 +76,6 @@ final class CameraControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
 
-    func testSetUpWithoutStopMotionModeShouldStartWithPhotoMode() {
-        let delegate = newDelegateStub()
-        let settings = CameraSettings()
-        settings.enableStopMotionMode = false
-        settings.features.ghostFrame = true
-        settings.features.cameraFilters = true
-        let controller = newController(delegate: delegate, settings: settings)
-        FBSnapshotVerifyView(controller.view)
-    }
-
     func testSetUpWithFlashOn() {
         let delegate = newDelegateStub()
         let settings = CameraSettings()

@@ -30,7 +30,12 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     private var editionOptions: [EditionOption]
     private(set) var textCell: EditionMenuCollectionCell?
     
-    var shouldExportMediaAsGIF: Bool
+    var shouldExportMediaAsGIF: Bool {
+        didSet {
+            guard let index = editionOptions.firstIndex(of: .gif) else { return }
+            editionMenuCollectionView.collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+        }
+    }
     
     weak var delegate: EditionMenuCollectionControllerDelegate?
     
@@ -72,6 +77,17 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     @available(*, unavailable, message: "use init() instead")
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
+    }
+
+    func getCell(for option: EditionOption) -> EditionMenuCollectionCell? {
+        guard
+            let collectionView = (view as? EditionMenuCollectionView)?.collectionView,
+            let index = editionOptions.firstIndex(of: option)
+        else {
+                return nil
+        }
+        let indexPath = IndexPath(item: index, section: 0)
+        return self.collectionView(collectionView, cellForItemAt: indexPath) as? EditionMenuCollectionCell
     }
     
     // MARK: - View Life Cycle

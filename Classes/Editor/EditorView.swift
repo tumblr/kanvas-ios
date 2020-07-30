@@ -558,8 +558,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// - Parameter cell: the cell to be transformed
     /// - Parameter finalLocation: the location where the checkmark button will be
     /// - Parameter completion: a closure to execute when the animation ends
-    func animateEditionOption(cell: EditionMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping () -> Void) {
-        guard let cell = cell, let cellParent = cell.superview else { return }
+    func animateEditionOption(cell: EditionMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
+        guard let cell = cell, let cellParent = cell.superview else {
+            completion(false)
+            return
+        }
         fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
         fakeOptionCell.image = cell.circleView.image
         fakeOptionCell.alpha = 1
@@ -575,7 +578,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             })
         }, completion: { _ in
             self.fakeOptionCell.alpha = 0
-            completion()
+            completion(true)
         })
     }
     

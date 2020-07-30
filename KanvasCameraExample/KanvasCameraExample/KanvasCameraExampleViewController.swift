@@ -146,6 +146,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.gifs = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
+        settings.gifCameraShouldStartGIFMaker = true
         return settings
     }
 

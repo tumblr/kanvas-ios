@@ -239,92 +239,24 @@ public struct CameraFeatures {
     /// This shows a # button in the editor to enable adding tags
     public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
 
+    /// Auto-open GIF Maker in Editor
+    public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
+        if mode?.group == .gif {
+            return gifCameraShouldStartGIFMaker
+        }
+        return _editorShouldStartGIFMaker
+    }
+
+    public func setEditorShouldStartGIFMaker(_ newValue: Bool) {
+        _editorShouldStartGIFMaker = newValue
+    }
+
+    private var _editorShouldStartGIFMaker: Bool = DefaultCameraSettings.editorShouldStartGIFMaker
+
+    /// Auto-open GIF Maker after GIF Camera
+    public var gifCameraShouldStartGIFMaker: Bool = DefaultCameraSettings.editorShouldStartGIFMaker
+
     override public init() { }
-
-}
-
-
-// MARK: - External utilities
-public extension CameraSettings {
-    /**
-     Enables/disables photo mode.
-     */
-    var enablePhotoMode: Bool {
-        set {
-            setMode(.photo, to: newValue)
-        }
-        get {
-            return getMode(.photo)
-        }
-    }
-    /**
-     Enables/disables loop mode.
-     */
-    var enableLoopMode: Bool {
-        set {
-            setMode(.loop, to: newValue)
-        }
-        get {
-            return getMode(.loop)
-        }
-    }
-    /**
-     Enables/disables stop motion mode.
-     */
-    var enableStopMotionMode: Bool {
-        set {
-            setMode(.stopMotion, to: newValue)
-        }
-        get {
-            return getMode(.stopMotion)
-        }
-    }
-    /**
-     Enables/disables normal mode.
-     */
-    var enableNormalMode: Bool {
-        set {
-            setMode(.normal, to: newValue)
-        }
-        get {
-            return getMode(.normal)
-        }
-    }
-    /**
-     Enables/disables stitch mode.
-     */
-    var enableStitchMode: Bool {
-        set {
-            setMode(.stitch, to: newValue)
-        }
-        get {
-            return getMode(.stitch)
-        }
-    }
-    /**
-     Enables/disables GIF mode.
-     */
-    var enableGifMode: Bool {
-        set {
-            setMode(.gif, to: newValue)
-        }
-        get {
-            return getMode(.gif)
-        }
-    }
-
-    private func setMode(_ mode: CameraMode, to on: Bool) {
-        if on {
-            enabledModes.insert(mode)
-        }
-        else {
-            enabledModes.remove(mode)
-        }
-    }
-
-    private func getMode(_ mode: CameraMode) -> Bool {
-        return enabledModes.contains(mode)
-    }
 
 }
 
@@ -353,15 +285,6 @@ extension CameraSettings {
         }
     }
 
-    var notDefaultCameraPositionOption: AVCaptureDevice.Position {
-        if defaultCameraPositionOption == .front {
-            return .back
-        }
-        else {
-            return .front
-        }
-    }
-
     /// Returns the opposite of the value that has been set for the fullscreen image preview
     var notDefaultImagePreviewOption: ImagePreviewMode {
         if imagePreviewOption == .on {
@@ -387,4 +310,7 @@ private struct DefaultCameraSettings {
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
     static let showTagButtonInEditor: Bool = false
+    static let editorShouldStartGIFMaker: Bool = false
+    static let gifCameraShouldStartGIFMaker: Bool = false
+
 }
