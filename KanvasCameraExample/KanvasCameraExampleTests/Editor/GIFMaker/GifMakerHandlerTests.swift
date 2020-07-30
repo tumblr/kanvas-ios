@@ -35,7 +35,7 @@ final class GifMakerHandlerTests: XCTestCase {
         let colors: [UIColor] = [.red,  .orange, .yellow, .green, .blue, .purple]
         let images = colors.map { image(color: $0, size: CGSize(width: 100, height: 100)) }
         let segments = images.map { CameraSegment.image($0, nil, 0.5, .init(source: .kanvas_camera)) }
-        handler.load(segments: segments, initialSettings: .init(), showLoading: {}, hideLoading: {}) { generated in
+        handler.load(segments: segments, initialSettings: .init(), permanent: true, showLoading: {}, hideLoading: {}) { generated in
             e.fulfill()
         }
         wait(for: [e], timeout: 1.0)
@@ -86,7 +86,7 @@ final class GifMakerHandlerTests: XCTestCase {
         // Act
         //
 
-        handler.load(segments: segments, initialSettings: .init(rate: 0.5, playbackMode: .rebound, startTime: 0, endTime: 2), showLoading: {}, hideLoading: {}) { converted in
+        handler.load(segments: segments, initialSettings: .init(rate: 0.5, playbackMode: .rebound, startTime: 0, endTime: 2), permanent: false, showLoading: {}, hideLoading: {}) { converted in
             e.fulfill()
         }
         wait(for: [e], timeout: 1.0)

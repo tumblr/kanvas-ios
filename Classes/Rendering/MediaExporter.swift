@@ -24,7 +24,7 @@ enum MediaExporterError: Error {
 protocol MediaExporting: class {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
-    init()
+    init(settings: CameraSettings)
     func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
     func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void)
@@ -53,6 +53,12 @@ final class MediaExporter: MediaExporting {
         // so there needs to be some refactoring to make this work well.
         return true
     }
+    
+    private let settings: CameraSettings
+    
+    init(settings: CameraSettings) {
+        self.settings = settings
+    }
 
     /// Exports an image
     /// - Parameter image: UIImage to export
@@ -70,7 +76,7 @@ final class MediaExporter: MediaExporting {
             completion(nil, MediaExporterError.noSampleBuffer)
             return
         }
-        let renderer = Renderer()
+        let renderer = Renderer(settings: settings, metalContext: MetalContext.createContext())
         renderer.imageOverlays = imageOverlays
         renderer.filterType = filterType
         renderer.refreshFilter()
@@ -89,11 +95,13 @@ final class MediaExporter: MediaExporting {
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void) {
         var processedFrames: [MediaFrame] = []
         DispatchQueue.global(qos: .default).async {
+            var time: TimeInterval = 0
             for frame in frames {
-                self.export(image: frame.image, time: frame.interval) { (image, error) in
+                self.export(image: frame.image, time: time) { (image, error) in
                     guard error == nil, let image = image else {
                         return
                     }
+                    time += frame.interval
                     processedFrames.append((image: image, interval: frame.interval))
                 }
             }

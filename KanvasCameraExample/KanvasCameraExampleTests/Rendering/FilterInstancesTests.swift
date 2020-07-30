@@ -72,7 +72,7 @@ class FilterInstancesTests: XCTestCase {
     func testAlphaBlendFilter() {
         let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png")
         if let image = path.flatMap({ UIImage(contentsOfFile: $0) }), let pixelBuffer = image.pixelBuffer() {
-            _ = AlphaBlendFilter(glContext: glContext, pixelBuffer: pixelBuffer)
+            _ = AlphaBlendOpenGLFilter(glContext: glContext, pixelBuffer: pixelBuffer)
         }
     }
 }

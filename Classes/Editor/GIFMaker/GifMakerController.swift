@@ -214,7 +214,7 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
         gifMakerView.showView(show, completion: { [weak self] _ in
-            self?.trimEnabled = false
+            self?.trimEnabled = show
             self?.speedEnabled = false
         })
     }
@@ -230,9 +230,9 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         gifMakerView.toggleRevertButton(show)
     }
 
-    func configure(settings: GIFMakerSettings?) {
+    func configure(settings: GIFMakerSettings?, animated: Bool) {
         guard let settings = settings else { return }
-        playbackController.select(option: settings.playbackMode)
+        playbackController.select(option: settings.playbackMode, animated: animated)
         speedController.select(speed: settings.rate)
         if let start = delegate?.startLocation(from: settings.startIndex),
             let end = delegate?.endLocation(from: settings.endIndex) {

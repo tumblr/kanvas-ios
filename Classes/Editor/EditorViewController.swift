@@ -117,7 +117,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
-    private let originalSegments: [CameraSegment]
+    private var originalSegments: [CameraSegment]
     private var segments: [CameraSegment] {
         return gifMakerHandler.segments ?? originalSegments
     }
@@ -135,10 +135,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         set {
             collectionController.shouldExportMediaAsGIF = newValue
-            if let editionOption = openedMenu, let cell = selectedCell {
-                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: newValue)
-                cell.setImage(image)
-            }
         }
     }
 
@@ -297,8 +293,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         load(childViewController: drawingController, into: editorView.drawingMenuContainer)
         load(childViewController: gifMakerController, into: editorView.gifMakerMenuContainer)
 
-        if shouldConvertMediaToGIFOnLoad() {
-            loadMediaAsGIF()
+        if shouldOpenGIFMakerOnLoad() {
+            openGIFMaker(animated: false)
+        }
+        else if shouldConvertMediaToGIFOnLoad() {
+            loadMediaAsGIF(permanent: true)
         }
     }
     
@@ -356,15 +355,28 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     // MARK: - GIF Maker Helpers
 
-    private func openGIFMaker(cell: EditionMenuCollectionCell) {
+    private func openGIFMaker(animated: Bool) {
+        guard let cell = collectionController.getCell(for: .gif) else {
+            assertionFailure("Failed to open GIF Maker")
+            return
+        }
+        openGIFMaker(cell: cell, animated: animated, permanent: true)
+    }
+
+    private func openGIFMaker(cell: EditionMenuCollectionCell, animated: Bool, permanent: Bool) {
         let editionOption = EditionOption.gif
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         showMainUI(false)
         gifMakerController.showView(true)
-        loadMediaAsGIF()
-        editorView.animateEditionOption(cell: cell, finalLocation: gifMakerController.confirmButtonLocation, completion: {
-            self.gifMakerController.showConfirmButton(true)
-        })
+        loadMediaAsGIF(permanent: permanent)
+        if animated {
+            self.editorView.animateEditionOption(cell: cell, finalLocation: self.gifMakerController.confirmButtonLocation) {_ in
+                self.gifMakerController.showConfirmButton(true)
+            }
+        }
+        else {
+            gifMakerController.showConfirmButton(true)
+        }
         analyticsProvider?.logEditorGIFOpen()
     }
 
@@ -378,26 +390,30 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 self.startPlayerFromSegments()
             }
         }
-        shouldExportMediaAsGIF = false
+        shouldExportMediaAsGIF = shouldForceExportAsAGIF()
         showMainUI(true)
         analyticsProvider?.logEditorGIFRevert()
         onAfterConfirmingEditionMenu()
     }
 
-    private func loadMediaAsGIF() {
+    private func loadMediaAsGIF(permanent: Bool) {
         gifMakerHandler.load(segments: segments,
                              initialSettings: .init(rate: initialGIFPlaybackRate(),
                                                     playbackMode: initialGIFPlaybackMode(),
                                                     startTime: initialGIFTrim().lowerBound,
                                                     endTime: initialGIFTrim().upperBound),
+                             permanent: permanent,
                              showLoading: self.showLoading,
                              hideLoading: self.hideLoading,
                              completion: { framesUpdated in
                                 if framesUpdated {
                                     self.player.stop()
                                     self.startPlayerFromSegments()
+                                    if permanent, let newSegments = self.gifMakerHandler.segments {
+                                        self.originalSegments = newSegments
+                                    }
                                 }
-                                self.gifMakerController.configure(settings: self.gifMakerHandler.settings)
+                                self.gifMakerController.configure(settings: self.gifMakerHandler.settings, animated: false)
                              })
     }
 
@@ -405,12 +421,30 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
     }
 
+    private func shouldForceExportAsAGIF() -> Bool {
+        guard settings.features.gifs else {
+            return false
+        }
+
+        // Media captured from the GIF mode should always export as a GIF
+        if cameraMode?.group == .gif {
+            return true
+        }
+
+        // Media from the picker or directly loaded, that has only images, are GIFs.
+        if (cameraMode == nil || cameraMode == .some(.normal)) && segments.count > 1 && assetsHandler.containsOnlyImages(segments: segments) {
+            return true
+        }
+
+        return false
+    }
+
     private func shouldExportAsGIFByDefault() -> Bool {
         guard settings.features.gifs else {
             return false
         }
 
-        if cameraMode?.group == .gif {
+        if shouldForceExportAsAGIF() {
             return true
         }
 
@@ -420,6 +454,18 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
 
         return false
+    }
+
+    private func shouldOpenGIFMakerOnLoad() -> Bool {
+        guard
+            settings.features.gifs,
+            settings.features.editorGIFMaker,
+            shouldEnableGIFButton()
+        else {
+            return false
+        }
+
+        return settings.editorShouldStartGIFMaker(mode: cameraMode)
     }
 
     private func shouldConvertMediaToGIFOnLoad() -> Bool {
@@ -468,7 +514,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
-        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
             self.textController.showConfirmButton(true)
         })
         analyticsProvider?.logEditorTextEdit()
@@ -565,7 +611,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init()
+        let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
@@ -586,7 +632,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init()
+        let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
@@ -616,7 +662,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init()
+        let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
@@ -633,7 +679,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init()
+        let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
@@ -683,8 +729,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
+                shouldExportMediaAsGIF = gifMakerHandler.shouldExport
                 editorView.animateReturnOfEditionOption(cell: selectedCell)
-                shouldExportMediaAsGIF = gifMakerHandler.hasFrames
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
@@ -726,7 +772,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
-                openGIFMaker(cell: cell)
+                openGIFMaker(cell: cell, animated: true, permanent: false)
             }
             else {
                 onBeforeShowingEditionMenu(editionOption, cell: cell)
@@ -745,7 +791,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: {
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
                 self.textController.showConfirmButton(true)
             })
         case .drawing:
@@ -753,7 +799,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: {
+            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
                 self.drawingController.showConfirmButton(true)
             })
         case .media:

@@ -38,6 +38,7 @@ extension MTLDevice {
             return library
         }
         catch {
+            print("\(error)")
             return nil
         }
     }

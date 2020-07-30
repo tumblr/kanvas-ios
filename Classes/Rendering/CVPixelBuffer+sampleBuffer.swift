@@ -19,7 +19,14 @@ extension CVPixelBuffer {
         guard let formatDescription = formatDescriptionMaybe else {
             return nil
         }
-        CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: self, dataReady: true, makeDataReadyCallback: nil, refcon: nil, formatDescription: formatDescription, sampleTiming: &timingInfo, sampleBufferOut: &sampleBufferMaybe)
+        CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault,
+                                           imageBuffer: self,
+                                           dataReady: true,
+                                           makeDataReadyCallback: nil,
+                                           refcon: nil,
+                                           formatDescription: formatDescription,
+                                           sampleTiming: &timingInfo,
+                                           sampleBufferOut: &sampleBufferMaybe)
         return sampleBufferMaybe
     }
 

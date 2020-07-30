@@ -6,6 +6,7 @@
 
 import AVFoundation
 import GLKit
+import CoreImage
 
 class MetalFilter: FilterProtocol {
     var outputFormatDescription: CMFormatDescription?
@@ -18,9 +19,11 @@ class MetalFilter: FilterProtocol {
     private var offScreenTexture: MTLTexture?
     private var offScreenBuffer: CVPixelBuffer?
     private let threadgroupSize = MTLSize(width: 16, height: 16, depth: 1)
-    private var threadgroupCount: MTLSize = MTLSize(width: 0, height: 0, depth: 0)
+    private var threadgroupCount = MTLSize(width: 0, height: 0, depth: 0)
+    private var overlayBuffer: CVPixelBuffer?
+    private var overlayTexture: MTLTexture?
     
-    init(context: MetalContext?, kernelFunctionName: String) {
+    init(context: MetalContext?, kernelFunctionName: String, overlayBuffer: CVPixelBuffer?=nil) {
         guard
             let context = context,
             let kernelFunction = context.library.makeFunction(name: kernelFunctionName),
@@ -30,6 +33,7 @@ class MetalFilter: FilterProtocol {
         }
         self.context = context
         self.computePipelineState = computePipelineState
+        self.overlayBuffer = overlayBuffer
     }
     
     func setupFormatDescription(from sampleBuffer: CMSampleBuffer, transform: GLKMatrix4?, outputDimensions: CGSize) {
@@ -41,10 +45,12 @@ class MetalFilter: FilterProtocol {
     }
     
     func setupFormatDescription(inputDimensions: CGSize, transform: GLKMatrix4?, outputDimensions: CGSize) {
+        let finalDimensions = outputDimensions == .zero ? inputDimensions : outputDimensions
+        
         threadgroupCount = {
             var size = MTLSize()
-            size.width = (Int(outputDimensions.width) + threadgroupSize.width - 1) / threadgroupSize.width
-            size.height = (Int(outputDimensions.height) + threadgroupSize.height - 1) / threadgroupSize.height
+            size.width = (Int(finalDimensions.width) + threadgroupSize.width - 1) / threadgroupSize.width
+            size.height = (Int(finalDimensions.height) + threadgroupSize.height - 1) / threadgroupSize.height
             size.depth = 1
             return size
         }()
@@ -55,8 +61,8 @@ class MetalFilter: FilterProtocol {
         
         var pixelBuffer: CVPixelBuffer?
         CVPixelBufferCreate(kCFAllocatorDefault,
-                            Int(outputDimensions.width),
-                            Int(outputDimensions.height),
+                            Int(finalDimensions.width),
+                            Int(finalDimensions.height),
                             kCVPixelFormatType_32BGRA,
                             attributes as CFDictionary,
                             &pixelBuffer)
@@ -91,8 +97,33 @@ class MetalFilter: FilterProtocol {
         self.offScreenBuffer = offScreenPixelBuffer
         self.offScreenTexture = offScreenTexture
         
+        if let overlayBuffer = overlayBuffer,
+            let pixelBuffer = overlayBuffer.resize(scale: (CGFloat(width) + UIScreen.main.scale) / CGFloat(CVPixelBufferGetWidth(overlayBuffer))) {
+            
+            var overlayTextureOut: CVMetalTexture?
+            let result = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
+                                                                   textureCache,
+                                                                   pixelBuffer,
+                                                                   nil,
+                                                                   .bgra8Unorm,
+                                                                   width,
+                                                                   height,
+                                                                   0,
+                                                                   &overlayTextureOut)
+            guard
+                result == kCVReturnSuccess,
+                let cvTextureUnwrapped = overlayTextureOut,
+                let overlayTexture = CVMetalTextureGetTexture(cvTextureUnwrapped)
+            else {
+                return
+            }
+            self.overlayTexture = overlayTexture
+        }
+        
         var outputFormatDescription: CMFormatDescription? = nil
-        CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: offScreenPixelBuffer, formatDescriptionOut: &outputFormatDescription)
+        CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault,
+                                                     imageBuffer: offScreenPixelBuffer,
+                                                     formatDescriptionOut: &outputFormatDescription)
         self.outputFormatDescription = outputFormatDescription
     }
     
@@ -130,6 +161,9 @@ class MetalFilter: FilterProtocol {
         computeEncoder.setComputePipelineState(computePipelineState)
         computeEncoder.setTexture(inputTexture, index: 0)
         computeEncoder.setTexture(offScreenTexture, index: 1)
+        if let overlayTexture = overlayTexture {
+            computeEncoder.setTexture(overlayTexture, index: 2)
+        }
         computeEncoder.setBytes(&shaderContext,
                                  length: MemoryLayout<ShaderContext>.stride,
                                  index: 0)
