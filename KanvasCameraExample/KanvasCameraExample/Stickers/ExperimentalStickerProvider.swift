@@ -40,7 +40,8 @@ class ImageLoader: KanvasStickerLoader {
                     session?.configuration.urlCache?.storeCachedResponse(cachedResponse, for: request)
                 }
                 completion(image, nil)
-            } else {
+            }
+            else {
                 completion(nil, error)
             }
         }
