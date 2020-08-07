@@ -1016,6 +1016,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         let mediaURLMaybe = info[.mediaURL] as? URL
         let imageURLMaybe = info[.imageURL] as? URL
         let phAsset = info[.phAsset] as? PHAsset
+
         let requestImageData = { (completion: @escaping (Data?) -> Void) in
             guard let phAsset = phAsset else {
                 completion(nil)
@@ -1033,9 +1034,26 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 completion(data)
             }
         }
-        requestImageData { data in
-            self.processPickedMedia(data: data, imageURLMaybe: imageURLMaybe, imageMaybe: imageMaybe, mediaURLMaybe: mediaURLMaybe)
+
+        let loadMedia = {
+            requestImageData { data in
+                self.processPickedMedia(data: data, imageURLMaybe: imageURLMaybe, imageMaybe: imageMaybe, mediaURLMaybe: mediaURLMaybe)
+            }
         }
+
+        if phAsset?.mediaSubtypes.contains(.photoLive) == true && settings.convertLivePhotoToVideo {
+            LivePhotoLoader(asset: phAsset!).pairedVideo { livePhotoVideoURL in
+                guard let livePhotoVideoURL = livePhotoVideoURL else {
+                    loadMedia()
+                    return
+                }
+                self.processPickedMedia(data: nil, imageURLMaybe: nil, imageMaybe: nil, mediaURLMaybe: livePhotoVideoURL)
+            }
+        }
+        else {
+            loadMedia()
+        }
+
     }
 
     private func processPickedMedia(data: Data?, imageURLMaybe: URL?, imageMaybe: UIImage?, mediaURLMaybe: URL?) {
