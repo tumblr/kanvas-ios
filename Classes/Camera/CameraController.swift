@@ -96,7 +96,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, MediaPickerViewControllerDelegate {
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -662,12 +662,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didTapMediaPickerButton(completion: (() -> ())? = nil) {
-        let imagePickerController = KanvasUIImagePickerViewController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        imagePickerController.allowsEditing = false
-        imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
-        present(imagePickerController, animated: true) {
+        let mediaPicker = MediaPickerViewController()
+        mediaPicker.delegate = self
+        present(mediaPicker, animated: true) {
             self.modeAndShootController.resetMediaPickerButton()
             completion?()
         }
@@ -1008,14 +1005,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    // MARK: - UIImagePickerControllerDelegate
+    // MARK: - MediaPickerViewControllerDelegate
 
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        let imageMaybe = info[.originalImage] as? UIImage
-        let mediaURLMaybe = info[.mediaURL] as? URL
-        let imageURLMaybe = info[.imageURL] as? URL
-        let phAsset = info[.phAsset] as? PHAsset
+    func didPickMedia(image: UIImage?, imageURL: URL?, mediaURL: URL?, phAsset: PHAsset?) {
 
         let requestImageData = { (completion: @escaping (Data?) -> Void) in
             guard let phAsset = phAsset else {
@@ -1037,7 +1029,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
         let loadMedia = {
             requestImageData { data in
-                self.processPickedMedia(data: data, imageURLMaybe: imageURLMaybe, imageMaybe: imageMaybe, mediaURLMaybe: mediaURLMaybe)
+                self.processPickedMedia(data: data, imageURL: imageURL, image: image, mediaURL: mediaURL, livePhotoVideoURL: nil)
             }
         }
 
@@ -1047,16 +1039,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                     loadMedia()
                     return
                 }
-                self.processPickedMedia(data: nil, imageURLMaybe: nil, imageMaybe: nil, mediaURLMaybe: livePhotoVideoURL)
+
+                self.processPickedMedia(data: nil, imageURL: nil, image: image, mediaURL: nil, livePhotoVideoURL: livePhotoVideoURL)
             }
         }
         else {
             loadMedia()
         }
-
     }
 
-    private func processPickedMedia(data: Data?, imageURLMaybe: URL?, imageMaybe: UIImage?, mediaURLMaybe: URL?) {
+    private func processPickedMedia(data: Data?, imageURL: URL?, image: UIImage?, mediaURL: URL?, livePhotoVideoURL: URL?) {
         if settings.features.gifs,
             let data = data,
             GIFDecoderFactory.main().numberOfFrames(in: data) > 1,
@@ -1065,29 +1057,35 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
         }
         else if settings.features.gifs,
-            let gifURL = imageURLMaybe,
+            let gifURL = imageURL,
             GIFDecoderFactory.main().numberOfFrames(in: gifURL) > 1 {
             pick(frames: gifURL)
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
         }
-        else if let image = imageMaybe {
+        else if let image = image, let livePhotoVideoURL = livePhotoVideoURL {
+            pick(livePhotoStill: image, pairedVideo: livePhotoVideoURL)
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .livePhoto)
+        }
+        else if let image = image {
             guard canPick(image: image) else {
                 let message = NSLocalizedString("That's too big, bud.", comment: "That's too big, bud.")
                 let buttonMessage = NSLocalizedString("Got it", comment: "Got it")
                 showAlert(message: message, buttonMessage: buttonMessage)
                 return
             }
-            pick(image: image, url: mediaURLMaybe)
+            pick(image: image, url: mediaURL)
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
         }
-        else if let mediaURL = mediaURLMaybe {
+        else if let mediaURL = mediaURL {
             pick(video: mediaURL)
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .video)
         }
+        else {
+            assertionFailure("No action taken on chosen media")
+        }
     }
 
-    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
+    func didCancel() {
         analyticsProvider?.logMediaPickerDismiss()
     }
 
@@ -1142,6 +1140,16 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                                               lastFrame: self.getLastFrameFrom(url)))
                 }
             }
+        }
+    }
+
+    private func pick(livePhotoStill: UIImage, pairedVideo: URL) {
+        let mediaInfo = MediaInfo(source: .media_library)
+        if currentMode.quantity == .single {
+            self.showPreviewWithSegments([CameraSegment.image(livePhotoStill, pairedVideo, nil, mediaInfo)])
+        }
+        else {
+            assertionFailure("No media picking from stitch yet")
         }
     }
 

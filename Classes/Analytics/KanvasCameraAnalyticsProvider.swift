@@ -133,7 +133,7 @@ import Foundation
 }
 
 @objc public enum KanvasMediaType: Int {
-    case image, video, frames
+    case image, video, frames, livePhoto
 
     public func string() -> String {
         switch self {
@@ -143,6 +143,8 @@ import Foundation
             return "video"
         case .frames:
             return "frames"
+        case .livePhoto:
+            return "live-photo"
         }
     }
 }
