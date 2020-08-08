@@ -1033,8 +1033,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             }
         }
 
-        if phAsset?.mediaSubtypes.contains(.photoLive) == true && settings.convertLivePhotoToVideo {
-            LivePhotoLoader(asset: phAsset!).pairedVideo { livePhotoVideoURL in
+        if let phAsset = phAsset, phAsset.mediaSubtypes.contains(.photoLive) {
+            LivePhotoLoader(asset: phAsset).pairedVideo { livePhotoVideoURL in
                 guard let livePhotoVideoURL = livePhotoVideoURL else {
                     loadMedia()
                     return

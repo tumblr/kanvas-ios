@@ -256,12 +256,14 @@ class GifMakerHandler {
         return playbackFrames
     }
 
-    private func loadFrames(from segments: [CameraSegment], defaultInterval: TimeInterval, completion: @escaping ([MediaFrame], _ convertedToFrames: Bool) -> ()) {
+    private func loadFrames(from inputSegments: [CameraSegment], defaultInterval: TimeInterval, completion: @escaping ([MediaFrame], _ convertedToFrames: Bool) -> ()) {
         let group = DispatchGroup()
         var frames: [Int: [GIFDecodeFrame]] = [:]
         let encoder = GIFEncoderImageIO()
         let decoder = GIFDecoderFactory.create(type: .imageIO)
         var converted = false
+
+        let segments = convertLivePhotoStillToVideo(inputSegments) ?? inputSegments
 
         for (i, segment) in segments.enumerated() {
             if let cgImage = segment.image?.cgImage {
@@ -289,6 +291,18 @@ class GifMakerHandler {
             let mediaFrames = orderedFrames.map { (image: UIImage(cgImage: $0.image), interval: $0.interval) }
             completion(mediaFrames, converted)
         }
+    }
+
+    private func convertLivePhotoStillToVideo(_ inputSegments: [CameraSegment]) -> [CameraSegment]? {
+        guard
+            inputSegments.count == 1,
+            let segment = inputSegments.first,
+            let _ = segment.image,
+            let livePhotoVideo = segment.videoURL
+        else {
+            return nil
+        }
+        return [CameraSegment.video(livePhotoVideo, segment.mediaInfo)]
     }
 
     func startIndex(from location: CGFloat) -> Int? {

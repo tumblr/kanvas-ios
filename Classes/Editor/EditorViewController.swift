@@ -418,7 +418,24 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func shouldEnableGIFButton() -> Bool {
-        return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
+        guard settings.features.gifs else {
+            return false
+        }
+
+        // More than one segment, or one video-only segment, enable it.
+        if segments.count > 1 || segments.first?.image == nil {
+            return true
+        }
+
+        // A single segment that has both an image and a video (live photo), enabled it.
+        if segments.count == 1,
+            let firstSegment = segments.first,
+            firstSegment.image != nil,
+            firstSegment.videoURL != nil {
+            return true
+        }
+
+        return false
     }
 
     private func shouldForceExportAsAGIF() -> Bool {
