@@ -270,7 +270,6 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .newCameraModes(settings.features.newCameraModes),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
-            .convertLivePhotoToVideo(settings.convertLivePhotoToVideo),
         ]
     }
 
@@ -320,8 +319,6 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
-        case .convertLivePhotoToVideo(_):
-            settings.convertLivePhotoToVideo = value
         }
     }
 }

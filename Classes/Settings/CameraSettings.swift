@@ -256,9 +256,6 @@ public struct CameraFeatures {
     /// Auto-open GIF Maker after GIF Camera
     public var gifCameraShouldStartGIFMaker: Bool = DefaultCameraSettings.editorShouldStartGIFMaker
 
-    /// Converts Live Photos to Video
-    public var convertLivePhotoToVideo: Bool = DefaultCameraSettings.convertLivePhotoToVideo
-
     override public init() { }
 
 }
@@ -315,6 +312,5 @@ private struct DefaultCameraSettings {
     static let showTagButtonInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
-    static let convertLivePhotoToVideo: Bool = false
 
 }
