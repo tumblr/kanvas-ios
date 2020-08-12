@@ -115,7 +115,6 @@ final class ModeSelectorAndShootDelegateStub: ModeSelectorAndShootControllerDele
         // Works on every mode
     }
 
-    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-        completion(nil)
+    func updateMediaPickerThumbnail(targetSize: CGSize) {
     }
 }

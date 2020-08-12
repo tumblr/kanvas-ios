@@ -11,7 +11,7 @@ import XCTest
 final class KanvasUIImagePickerViewControllerTests: XCTestCase {
 
     func testPrefersStatusBarHidden() {
-        let picker = MediaPickerViewController()
+        let picker = KanvasMediaPickerViewController(settings: CameraSettings())
         guard let c = picker.children.first as? UIImagePickerController else {
             XCTFail("No picker")
             return
@@ -20,7 +20,7 @@ final class KanvasUIImagePickerViewControllerTests: XCTestCase {
     }
 
     func testChildForStatusBarHidden() {
-        let picker = MediaPickerViewController()
+        let picker = KanvasMediaPickerViewController(settings: CameraSettings())
         guard let c = picker.children.first as? UIImagePickerController else {
             XCTFail("No picker")
             return
