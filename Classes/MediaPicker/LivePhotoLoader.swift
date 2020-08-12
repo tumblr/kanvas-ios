@@ -39,7 +39,7 @@ public class LivePhotoLoader {
         let options = PHLivePhotoRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
-        PHImageManager.default().requestLivePhoto(for: asset, targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight), contentMode: .aspectFill, options: options) { (livePhoto: PHLivePhoto?, info: [AnyHashable : Any]?) in
+        PHImageManager.default().requestLivePhoto(for: asset, targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight), contentMode: .aspectFill, options: options) { (livePhoto: PHLivePhoto?, info: [AnyHashable: Any]?) in
             guard let livePhoto = livePhoto else {
                 print("Photo Library Asset is not a Live Photo")
                 mainCompletion(url: nil)
