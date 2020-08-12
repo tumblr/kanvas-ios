@@ -29,6 +29,18 @@ func MediaFrameGetFrame(_ frames: [MediaFrame], at timeInterval: TimeInterval) -
     }
 }
 
+func MediaFrameGetStartTimestamp(_ frames: [MediaFrame], at index: Int) -> TimeInterval {
+    return frames[0..<index].reduce(0) { (result, frame) in
+        result + frame.interval
+    }
+}
+
+func MediaFrameGetEndTimestamp(_ frames: [MediaFrame], at index: Int) -> TimeInterval {
+    return frames[0...index].reduce(0) { (result, frame) in
+        result + frame.interval
+    }
+}
+
 protocol GifMakerHandlerDelegate: class {
     func didConfirmGif()
 
@@ -153,9 +165,7 @@ class GifMakerHandler {
                 CameraSegment.image(frame.image, nil, frame.interval, .init(source: .kanvas_camera))
             }
             settingsViewModel = GifMakerSettingsViewModel(initialSettings: initialSettings ?? .init(), frames: frames, didSettingsChangeHandler: didSettingsChange)
-            duration = frames.reduce(0) { (duration, frame) in
-                return duration + frame.interval
-            }
+            duration = MediaFrameGetEndTimestamp(frames, at: frames.count - 1)
         }
     }
 
@@ -165,8 +175,8 @@ class GifMakerHandler {
         guard let settingsViewModel = settingsViewModel else {
             return 0
         }
-        let startTime = getTimestamp(at: settingsViewModel.startIndex)
-        let endTime = getTimestamp(at: settingsViewModel.endIndex)
+        let startTime = MediaFrameGetStartTimestamp(frames ?? [], at: settingsViewModel.startIndex)
+        let endTime = MediaFrameGetEndTimestamp(frames ?? [], at: settingsViewModel.endIndex)
         return endTime - startTime
     }
 
@@ -365,20 +375,9 @@ extension GifMakerHandler: GifMakerControllerDelegate {
         player.cancelPlayingSingleFrame()
         previousTrim = nil
 
-        let startTime = getTimestamp(at: startIndex)
-        let endTime = getTimestamp(at: endIndex)
+        let startTime = MediaFrameGetStartTimestamp(frames ?? [], at: startIndex)
+        let endTime = MediaFrameGetEndTimestamp(frames ?? [], at: endIndex)
         analyticsProvider?.logEditorGIFChange(trimStart: startTime, trimEnd: endTime)
-    }
-
-    private func getTimestamp(at index: Int) -> TimeInterval {
-        var frameTime: TimeInterval = .zero
-        for (i, frame) in (frames ?? []).enumerated() {
-            if i == index {
-                break
-            }
-            frameTime += frame.interval
-        }
-        return frameTime
     }
 
     func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
@@ -415,16 +414,20 @@ extension GifMakerHandler: GifMakerControllerDelegate {
     }
 
     func startLocation(from index: Int) -> CGFloat? {
-        guard let segments = segments else {
+        guard let frames = frames else {
             return nil
         }
-        return max(CGFloat(index) / CGFloat(segments.count), 0.0)
+        let timestamp = MediaFrameGetStartTimestamp(frames, at: index)
+        let maxTime = min(TrimController.maxSelectableTime, MediaFrameGetEndTimestamp(frames, at: frames.count - 1))
+        return CGFloat((0...maxTime).clamp(timestamp) / maxTime)
     }
 
     func endLocation(from index: Int) -> CGFloat? {
-        guard let segments = segments else {
+        guard let frames = frames else {
             return nil
         }
-        return min((CGFloat(index) + 1) / CGFloat(segments.count), 1.0)
+        let timestamp = MediaFrameGetEndTimestamp(frames, at: index)
+        let maxTime = min(TrimController.maxSelectableTime, MediaFrameGetEndTimestamp(frames, at: frames.count - 1))
+        return CGFloat((0...maxTime).clamp(timestamp) / maxTime)
     }
 }
