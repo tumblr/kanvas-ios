@@ -81,6 +81,8 @@ protocol AssetsHandlerType {
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
     func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void)
+
+    func ensureAllImagesHaveVideo(segments: [CameraSegment], completion: @escaping ([CameraSegment]) -> ())
 }
 
 extension AssetsHandlerType {

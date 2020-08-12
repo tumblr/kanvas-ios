@@ -235,5 +235,17 @@ final class AssetsHandlerStub: AssetsHandlerType {
         completion(videoURL, mediaInfo)
     }
 
+    func ensureAllImagesHaveVideo(segments: [CameraSegment], completion: @escaping ([CameraSegment]) -> ()) {
+        let newSegments = segments.map { (segment) -> CameraSegment in
+            switch segment {
+            case let .image(image, _, interval, mt):
+                let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4")
+                return CameraSegment.image(image, videoURL, interval, mt)
+            case let .video(url, mt):
+                return CameraSegment.video(url, mt)
+            }
+        }
+        completion(newSegments)
+    }
 
 }

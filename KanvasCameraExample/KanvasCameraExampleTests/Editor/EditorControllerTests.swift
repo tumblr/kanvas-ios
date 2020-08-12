@@ -97,8 +97,18 @@ final class EditorControllerTests: FBSnapshotTestCase {
         }
         return []
     }
-    
+
     func getPhotoSegment() -> [CameraSegment] {
+        if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
+            let mediaInfo = MediaInfo(source: .kanvas_camera)
+            return [
+                CameraSegment.image(image, nil, nil, mediaInfo)
+            ]
+        }
+        return []
+    }
+
+    func getLivePhotoSegment() -> [CameraSegment] {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
             let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             let mediaInfo = MediaInfo(source: .kanvas_camera)

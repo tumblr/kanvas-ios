@@ -584,8 +584,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
             // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
-            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
-                createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo {
+                assetsHandler.ensureAllImagesHaveVideo(segments: segments) { segments in
+                    guard let videoURL = segments.first?.videoURL else { return }
+                    self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                }
             }
             else {
                 createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)

@@ -18,7 +18,7 @@ protocol KanvasMediaPickerViewControllerDelegate: class {
     func pickingMediaNotAllowed(reason: String)
 }
 
-final fileprivate class KanvasUIImagePickerController : UIImagePickerController {
+final class KanvasUIImagePickerController : UIImagePickerController {
     override var prefersStatusBarHidden: Bool {
         return false
     }
