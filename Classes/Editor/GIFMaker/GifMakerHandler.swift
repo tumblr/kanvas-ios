@@ -49,6 +49,12 @@ protocol GifMakerHandlerDelegate: class {
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval
 
     func didSettingsChange(dirty: Bool)
+
+    func configureMediaPlayer(settings: GIFMakerSettings)
+
+    func setMediaPlayerFrame(location: CGFloat)
+
+    func unsetMediaPlayerFrame()
 }
 
 typealias DidSettingsChangeHandler = () -> Void
@@ -128,8 +134,6 @@ class GifMakerHandler {
 
     private var mediaConversionPermanent: Bool = false
 
-    private let player: MediaPlayer
-
     private var hasFrames: Bool {
         return frames != nil && (frames?.count ?? 0) > 0
     }
@@ -184,8 +188,7 @@ class GifMakerHandler {
 
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
 
-    init(player: MediaPlayer, analyticsProvider: KanvasCameraAnalyticsProvider?) {
-        self.player = player
+    init(analyticsProvider: KanvasCameraAnalyticsProvider?) {
         self.analyticsProvider = analyticsProvider
     }
 
@@ -317,18 +320,12 @@ class GifMakerHandler {
         guard let settingsViewModel = settingsViewModel else {
             return
         }
-        player.rate = settingsViewModel.rate
-        player.startMediaIndex = settingsViewModel.startIndex
-        player.endMediaIndex = settingsViewModel.endIndex
-        player.playbackMode = .init(from: settingsViewModel.playbackMode)
+        delegate?.configureMediaPlayer(settings: settingsViewModel.settings)
     }
 
     func resetPlayer() {
         let initialSettings = (self.initialSettings ?? .init()).settings(frames: frames ?? [])
-        player.rate = initialSettings.rate
-        player.startMediaIndex = initialSettings.startIndex
-        player.endMediaIndex = initialSettings.endIndex
-        player.playbackMode = .init(from: initialSettings.playbackMode)
+        delegate?.configureMediaPlayer(settings: initialSettings)
     }
 }
 
@@ -347,7 +344,7 @@ extension GifMakerHandler: GifMakerControllerDelegate {
 
     func didTrim(from startingPercentage: CGFloat?, to endingPercentage: CGFloat?) {
         if let percentage = startingPercentage ?? endingPercentage {
-            player.playSingleFrame(at: percentage / 100.0)
+            delegate?.setMediaPlayerFrame(location: percentage / 100.0)
         }
     }
 
@@ -362,7 +359,7 @@ extension GifMakerHandler: GifMakerControllerDelegate {
         }
         settingsViewModel?.endIndex = endIndex
 
-        player.cancelPlayingSingleFrame()
+        delegate?.unsetMediaPlayerFrame()
 
         let startTime = MediaFrameGetStartTimestamp(frames ?? [], at: startIndex)
         let endTime = MediaFrameGetEndTimestamp(frames ?? [], at: endIndex)

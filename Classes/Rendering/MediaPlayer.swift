@@ -161,8 +161,8 @@ final class MediaPlayer {
     }()
 
     var rate: Float = 1.0
-    var startMediaIndex: Int = 0
-    var endMediaIndex: Int = 0
+    var startMediaIndex: Int = -1
+    var endMediaIndex: Int = -1
 
     private var playSingleFrameAtIndex: Int? = nil
     private var playbackDirection: Int = 1
@@ -232,8 +232,10 @@ final class MediaPlayer {
     func stop() {
         pause()
         currentlyPlayingMediaIndex = -1
+        rate = 1
         startMediaIndex = -1
         endMediaIndex = -1
+        playbackDirection = 1
         playableMedia.removeAll()
     }
 
