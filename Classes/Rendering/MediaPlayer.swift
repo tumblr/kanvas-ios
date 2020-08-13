@@ -161,8 +161,8 @@ final class MediaPlayer {
     }()
 
     var rate: Float = 1.0
-    var startMediaIndex: Int = 0
-    var endMediaIndex: Int = 0
+    var startMediaIndex: Int = -1
+    var endMediaIndex: Int = -1
 
     private var playSingleFrameAtIndex: Int? = nil
     private var playbackDirection: Int = 1
@@ -232,8 +232,10 @@ final class MediaPlayer {
     func stop() {
         pause()
         currentlyPlayingMediaIndex = -1
+        rate = 1
         startMediaIndex = -1
         endMediaIndex = -1
+        playbackDirection = 1
         playableMedia.removeAll()
     }
 
@@ -439,9 +441,11 @@ final class MediaPlayer {
             nextImageTimer?.invalidate()
         }
         let displayTime = (currentlyPlayingMedia?.interval ?? delegate?.getDefaultTimeIntervalForImageSegments() ?? 1.0/6.0) / TimeInterval(rate)
-        nextImageTimer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
+        let timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
             self?.playNextMedia()
         })
+        RunLoop.main.add(timer, forMode: .common)
+        nextImageTimer = timer
     }
 
     private func playVideo() {

@@ -107,7 +107,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
 
     private lazy var gifMakerHandler: GifMakerHandler = {
-        let handler = GifMakerHandler(player: player, analyticsProvider: analyticsProvider)
+        let handler = GifMakerHandler(analyticsProvider: analyticsProvider)
         handler.delegate = self
         return handler
     }()
@@ -414,6 +414,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     }
                                 }
                                 self.gifMakerController.configure(settings: self.gifMakerHandler.settings, animated: false)
+                                self.configureMediaPlayer(settings: self.gifMakerHandler.settings)
                              })
     }
 
@@ -857,6 +858,21 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     func didSettingsChange(dirty: Bool) {
         gifMakerController.toggleRevertButton(dirty)
+    }
+
+    func configureMediaPlayer(settings: GIFMakerSettings) {
+        player.rate = settings.rate
+        player.startMediaIndex = settings.startIndex
+        player.endMediaIndex = settings.endIndex
+        player.playbackMode = .init(from: settings.playbackMode)
+    }
+
+    func setMediaPlayerFrame(location: CGFloat) {
+        player.playSingleFrame(at: location)
+    }
+
+    func unsetMediaPlayerFrame() {
+        player.cancelPlayingSingleFrame()
     }
     
     // MARK: - EditorFilterControllerDelegate

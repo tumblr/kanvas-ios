@@ -220,10 +220,9 @@ final class GifVideoOutputHandler: NSObject {
 
     private func buffersWithReverse<T>(array: [T]) -> [T] {
         guard array.count > 1 else {
-            NSLog("array needs to be at least two elements to reverse")
             return array
         }
-        let newArray = array + Array(array.reversed()[1...array.count - 2])
+        let newArray = array + array.reversed().dropFirst().dropLast()
 
         return newArray
     }

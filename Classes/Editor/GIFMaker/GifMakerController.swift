@@ -24,7 +24,7 @@ protocol GifMakerControllerDelegate: class {
     /// - Parameters:
     ///  - startingPercentage: trimming starting moment expressed as a percentage.
     ///  - endingPercentage: trimming starting moment expressed as a percentage.
-    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
+    func didTrim(from startingPercentage: CGFloat?, to endingPercentage: CGFloat?)
     
     /// Called after a trimming movement ends
     ///
@@ -179,7 +179,7 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         delegate?.didStartTrimming()
     }
     
-    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
+    func didTrim(from startingPercentage: CGFloat?, to endingPercentage: CGFloat?) {
         delegate?.didTrim(from: startingPercentage, to: endingPercentage)
     }
     
