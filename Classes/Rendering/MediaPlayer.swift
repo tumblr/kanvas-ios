@@ -439,9 +439,11 @@ final class MediaPlayer {
             nextImageTimer?.invalidate()
         }
         let displayTime = (currentlyPlayingMedia?.interval ?? delegate?.getDefaultTimeIntervalForImageSegments() ?? 1.0/6.0) / TimeInterval(rate)
-        nextImageTimer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
+        let timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
             self?.playNextMedia()
         })
+        RunLoop.main.add(timer, forMode: .common)
+        nextImageTimer = timer
     }
 
     private func playVideo() {

@@ -13,7 +13,8 @@ protocol TrimViewDelegate: class {
     func didStartMovingTrimArea()
     
     /// Called after the trim range changes
-    func didMoveTrimArea()
+    func didMoveStartTrim()
+    func didMoveEndTrim()
     
     /// Called after a trimming movement ends
     func didEndMovingTrimArea()
@@ -230,12 +231,12 @@ final class TrimView: UIView, TrimAreaDelegate {
     
     private func leftSideMoved(to location: CGFloat) {
         setLeftSide(location: location)
-        delegate?.didMoveTrimArea()
+        delegate?.didMoveStartTrim()
     }
 
     private func rightSideMoved(to location: CGFloat) {
         setRightSide(location: location)
-        delegate?.didMoveTrimArea()
+        delegate?.didMoveEndTrim()
     }
 
     private func setLeftSide(location: CGFloat) {

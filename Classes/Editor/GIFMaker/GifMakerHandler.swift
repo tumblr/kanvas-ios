@@ -182,8 +182,6 @@ class GifMakerHandler {
 
     private var thumbnails: [TimeInterval: UIImage] = [:]
 
-    private var previousTrim: ClosedRange<CGFloat>?
-
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
 
     init(player: MediaPlayer, analyticsProvider: KanvasCameraAnalyticsProvider?) {
@@ -345,20 +343,12 @@ extension GifMakerHandler: GifMakerControllerDelegate {
     }
 
     func didStartTrimming() {
-        previousTrim = 0.0...100.0
     }
 
-    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
-        guard let previousTrim = previousTrim else {
-            return
+    func didTrim(from startingPercentage: CGFloat?, to endingPercentage: CGFloat?) {
+        if let percentage = startingPercentage ?? endingPercentage {
+            player.playSingleFrame(at: percentage / 100.0)
         }
-        if previousTrim.lowerBound != startingPercentage {
-            player.playSingleFrame(at: startingPercentage / 100.0)
-        }
-        else if previousTrim.upperBound != endingPercentage {
-            player.playSingleFrame(at: endingPercentage / 100.0)
-        }
-        self.previousTrim = startingPercentage...endingPercentage
     }
 
     func didEndTrimming(from startingPercentage: CGFloat, to endingPercentage: CGFloat) {
@@ -373,7 +363,6 @@ extension GifMakerHandler: GifMakerControllerDelegate {
         settingsViewModel?.endIndex = endIndex
 
         player.cancelPlayingSingleFrame()
-        previousTrim = nil
 
         let startTime = MediaFrameGetStartTimestamp(frames ?? [], at: startIndex)
         let endTime = MediaFrameGetEndTimestamp(frames ?? [], at: endIndex)

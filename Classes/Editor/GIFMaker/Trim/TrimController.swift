@@ -11,13 +11,13 @@ import UIKit
 protocol TrimControllerDelegate: class {
     /// Called after a trimming movement starts
     func didStartTrimming()
-    
+
     /// Called after the trim range changes
     ///
     /// - Parameters:
     ///  - startingPercentage: trimming starting moment expressed as a percentage.
     ///  - endingPercentage: trimming starting moment expressed as a percentage.
-    func didTrim(from startingPercentage: CGFloat, to endingPercentage: CGFloat)
+    func didTrim(from startingPercentage: CGFloat?, to endingPercentage: CGFloat?)
     
     /// Called after a trimming movement ends
     ///
@@ -118,8 +118,12 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
         movingHandles = true
     }
     
-    func didMoveTrimArea() {
-        trimChanged()
+    func didMoveStartTrim() {
+        trimStartChanged()
+    }
+
+    func didMoveEndTrim() {
+        trimEndChanged()
     }
     
     func didEndMovingTrimArea() {
@@ -176,6 +180,16 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
     private func trimStarted() {
         guard !movingHandles, !scrollingThumbnails else { return }
         delegate?.didStartTrimming()
+    }
+
+    private func trimStartChanged() {
+        let start = calculateStartingPercentage()
+        delegate?.didTrim(from: start, to: nil)
+    }
+
+    private func trimEndChanged() {
+        let end = calculateEndingPercentage()
+        delegate?.didTrim(from: nil, to: end)
     }
     
     private func trimChanged() {
