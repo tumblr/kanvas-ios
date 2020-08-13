@@ -414,6 +414,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     }
                                 }
                                 self.gifMakerController.configure(settings: self.gifMakerHandler.settings, animated: false)
+                                self.configureMediaPlayer(settings: self.gifMakerHandler.settings)
                              })
     }
 
