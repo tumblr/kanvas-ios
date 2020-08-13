@@ -254,7 +254,7 @@ class GifMakerHandler {
             case .loop:
                 return frames
             case .rebound:
-                return frames + frames.reversed()[1...frames.count - 2]
+                return frames + frames.reversed().dropFirst().dropLast()
             case .reverse:
                 return frames.reversed()
             }
