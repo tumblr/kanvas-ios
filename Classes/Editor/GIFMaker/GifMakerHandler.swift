@@ -30,12 +30,18 @@ func MediaFrameGetFrame(_ frames: [MediaFrame], at timeInterval: TimeInterval) -
 }
 
 func MediaFrameGetStartTimestamp(_ frames: [MediaFrame], at index: Int) -> TimeInterval {
+    guard index >= 0, frames.count > 0, index <= frames.count else {
+        return 0
+    }
     return frames[0..<index].reduce(0) { (result, frame) in
         result + frame.interval
     }
 }
 
 func MediaFrameGetEndTimestamp(_ frames: [MediaFrame], at index: Int) -> TimeInterval {
+    guard index >= 0, frames.count > 0, index < frames.count else {
+        return 0
+    }
     return frames[0...index].reduce(0) { (result, frame) in
         result + frame.interval
     }

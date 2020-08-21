@@ -99,4 +99,58 @@ final class GifMakerHandlerTests: XCTestCase {
         XCTAssertEqual(handler.settings.endIndex, 4) // TODO: hmm, this should really be 3
     }
 
+    func testMediaFrameGetStartTimestamp() {
+        let frames = [
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2)
+        ]
+        XCTAssertEqual(MediaFrameGetStartTimestamp(frames, at: 0), 0, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetStartTimestamp(frames, at: 1), 0.2, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetStartTimestamp(frames, at: 2), 0.4, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetStartTimestamp(frames, at: 3), 0.6, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetStartTimestamp(frames, at: 4), 0.8, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetStartTimestamp(frames, at: 5), 1.0, accuracy: 0.001)
+    }
+
+    func testMediaFrameGetEndTimestamp() {
+        let frames = [
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2),
+            (image: UIImage(), interval: 0.2)
+        ]
+        XCTAssertEqual(MediaFrameGetEndTimestamp(frames, at: 0), 0.2, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetEndTimestamp(frames, at: 1), 0.4, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetEndTimestamp(frames, at: 2), 0.6, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetEndTimestamp(frames, at: 3), 0.8, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetEndTimestamp(frames, at: 4), 1.0, accuracy: 0.001)
+        XCTAssertEqual(MediaFrameGetEndTimestamp(frames, at: 5), 1.2, accuracy: 0.001)
+    }
+
+    func testMediaFrameGetStartTimestampWithInvalidIndex() {
+        let frames = [(image: UIImage(), interval: 0.0)]
+        XCTAssertEqual(MediaFrameGetStartTimestamp(frames, at: -1), 0)
+    }
+
+    func testMediaFrameGetEndTimestampWithInvalidIndex() {
+        let frames = [(image: UIImage(), interval: 0.0)]
+        XCTAssertEqual(MediaFrameGetEndTimestamp(frames, at: -1), 0)
+    }
+
+    func testMediaFrameGetStartTimestampWithEmptyFrames() {
+        let frames: [MediaFrame] = []
+        XCTAssertEqual(MediaFrameGetStartTimestamp(frames, at: 0), 0)
+    }
+
+    func testMediaFrameGetEndTimestampWithEmptyFrames() {
+        let frames: [MediaFrame] = []
+        XCTAssertEqual(MediaFrameGetEndTimestamp(frames, at: 0), 0)
+    }
+
 }
