@@ -220,7 +220,6 @@ final class GIFEncoderImageIO: GIFEncoder {
             }
 
             guard CGImageDestinationFinalize(destination) else {
-                assertionFailure("Failed to finalize GIF destination")
                 completionMain(nil)
                 return
             }
