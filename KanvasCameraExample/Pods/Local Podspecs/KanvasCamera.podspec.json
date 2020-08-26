@@ -12,6 +12,9 @@
   "platforms": {
     "ios": "12.0"
   },
+  "swift_versions": [
+    "4.2"
+  ],
   "requires_arc": true,
   "frameworks": [
     "Foundation",
@@ -32,5 +35,6 @@
     "GCC_PREPROCESSOR_DEFINITIONS": "GLES_SILENCE_DEPRECATION=1"
   },
   "dependencies": {
-  }
+  },
+  "swift_version": "4.2"
 }

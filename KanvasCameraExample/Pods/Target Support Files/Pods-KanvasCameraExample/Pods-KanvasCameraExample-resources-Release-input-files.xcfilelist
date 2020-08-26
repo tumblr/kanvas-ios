@@ -1,3 +1,2 @@
 ${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-resources.sh
 ${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera/KanvasCamera.bundle
-${PODS_CONFIGURATION_BUILD_DIR}/SharedUI/SharedUI.bundle
