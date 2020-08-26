@@ -175,10 +175,6 @@ extension KanvasDashboardController: CameraControllerDelegate {
         return false
     }
 
-    public func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-        completion(nil)
-    }
-
     public func didDismissColorSelectorTooltip() {
 
     }

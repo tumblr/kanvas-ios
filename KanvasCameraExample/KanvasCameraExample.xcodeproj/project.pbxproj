@@ -190,6 +190,9 @@
 		BF5AD6692460DA720077481B /* colors.gif in Resources */ = {isa = PBXBuildFile; fileRef = BF5AD6662460CB290077481B /* colors.gif */; };
 		BF5AD66B24652CB70077481B /* GIFEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5AD66A24652CB70077481B /* GIFEncoderTests.swift */; };
 		BF8C80F623BE6971001D29A0 /* CameraPermissionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C80F523BE6971001D29A0 /* CameraPermissionsTests.swift */; };
+		BFA7DAA824E3BA8000F357B6 /* LivePhotoLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA7DAA724E3BA8000F357B6 /* LivePhotoLoaderTests.swift */; };
+		BFA7DAAA24E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA7DAA924E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift */; };
+		BFA7DAAC24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA7DAAB24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift */; };
 		F597B4E124B3E57300843540 /* UIColor+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B4E024B3E57300843540 /* UIColor+Colors.swift */; };
 		F597B4E224B3E58C00843540 /* UIColor+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B4E024B3E57300843540 /* UIColor+Colors.swift */; };
 		F597B4E424B3E63300843540 /* UIFont+Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B4E324B3E63200843540 /* UIFont+Fonts.swift */; };
@@ -405,6 +408,9 @@
 		BF5AD6662460CB290077481B /* colors.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = colors.gif; sourceTree = "<group>"; };
 		BF5AD66A24652CB70077481B /* GIFEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFEncoderTests.swift; sourceTree = "<group>"; };
 		BF8C80F523BE6971001D29A0 /* CameraPermissionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionsTests.swift; sourceTree = "<group>"; };
+		BFA7DAA724E3BA8000F357B6 /* LivePhotoLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePhotoLoaderTests.swift; sourceTree = "<group>"; };
+		BFA7DAA924E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerThumbnailFetcherTests.swift; sourceTree = "<group>"; };
+		BFA7DAAB24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasMediaPickerViewControllerTests.swift; sourceTree = "<group>"; };
 		F1F6839B40675658A9EB1A05 /* Pods-KanvasCameraExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasCameraExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample.release.xcconfig"; sourceTree = "<group>"; };
 		F597B4E024B3E57300843540 /* UIColor+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Colors.swift"; sourceTree = "<group>"; };
 		F597B4E324B3E63200843540 /* UIFont+Fonts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Fonts.swift"; sourceTree = "<group>"; };
@@ -447,7 +453,6 @@
 				0E29275E21879C18009E1FCF /* CameraZoomHandlerTests.swift */,
 				65C1239F2201E13700562856 /* ImagePreviewControllerTests.swift */,
 				764AC466221D8485005C82EC /* FilteredInputViewControllerTests.swift */,
-				76FFF23F22D4EF53000A0D04 /* KanvasUIImagePickerViewControllerTests.swift */,
 				BF8C80F523BE6971001D29A0 /* CameraPermissionsTests.swift */,
 			);
 			path = Camera;
@@ -923,6 +928,7 @@
 				0EAE0C8A2139895A004CD7FF /* Camera */,
 				65E46B9822BD22DE004FD226 /* Editor */,
 				652DFA1022281F00007B1EF5 /* Filters */,
+				BFA7DAA624E3BA5900F357B6 /* MediaPicker */,
 				ABE4992921375B3700379F7F /* ModeSelector */,
 				764AC463221D83BD005C82EC /* Rendering */,
 				ABE4991B2137307500379F7F /* Utility */,
@@ -1021,6 +1027,17 @@
 				BF5AD66A24652CB70077481B /* GIFEncoderTests.swift */,
 			);
 			path = MediaFormats;
+			sourceTree = "<group>";
+		};
+		BFA7DAA624E3BA5900F357B6 /* MediaPicker */ = {
+			isa = PBXGroup;
+			children = (
+				BFA7DAA724E3BA8000F357B6 /* LivePhotoLoaderTests.swift */,
+				BFA7DAA924E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift */,
+				76FFF23F22D4EF53000A0D04 /* KanvasUIImagePickerViewControllerTests.swift */,
+				BFA7DAAB24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift */,
+			);
+			path = MediaPicker;
 			sourceTree = "<group>";
 		};
 		C15AF1B8DCB328EAA7285428 /* Frameworks */ = {
@@ -1366,6 +1383,7 @@
 				65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */,
 				0EAE0CB22139B966004CD7FF /* CameraPreviewViewTests.swift in Sources */,
 				6512C1B723DF5DB500FDE2BD /* SliderViewTests.swift in Sources */,
+				BFA7DAAA24E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift in Sources */,
 				652DFA1A22281F00007B1EF5 /* FilterItemTests.swift in Sources */,
 				ABE4991F2137307500379F7F /* QueueTests.swift in Sources */,
 				6578F83E22E120BD002B952C /* CALayer+ColorTests.swift in Sources */,
@@ -1385,6 +1403,8 @@
 				ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */,
 				658A329C239FFD9B00EEC1D3 /* StickerMenuViewTests.swift in Sources */,
 				653B045522E9143C005AAFCA /* HorizontalCollectionLayoutTests.swift in Sources */,
+				BFA7DAAC24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift in Sources */,
+				BFA7DAA824E3BA8000F357B6 /* LivePhotoLoaderTests.swift in Sources */,
 				651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */,
 				658A32A4239FFD9B00EEC1D3 /* MediaDrawerViewTests.swift in Sources */,
 				BF5AD66B24652CB70077481B /* GIFEncoderTests.swift in Sources */,

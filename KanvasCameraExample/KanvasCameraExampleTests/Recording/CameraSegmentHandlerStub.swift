@@ -71,5 +71,15 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
         return [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: Int(size.width), AVVideoHeightKey: Int(size.height)]
     }
 
-
+    func ensureAllImagesHaveVideo(segments: [CameraSegment], completion: @escaping ([CameraSegment]) -> ()) {
+        let newSegments = segments.map { (segment) -> CameraSegment in
+            switch segment {
+            case let .image(image, _, interval, mt):
+                return CameraSegment.image(image, URL(string: ""), interval, mt)
+            case let .video(url, mt):
+                return CameraSegment.video(url, mt)
+            }
+        }
+        completion(newSegments)
+    }
 }

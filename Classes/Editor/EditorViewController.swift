@@ -107,7 +107,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
 
     private lazy var gifMakerHandler: GifMakerHandler = {
-        let handler = GifMakerHandler(player: player, analyticsProvider: analyticsProvider)
+        let handler = GifMakerHandler(analyticsProvider: analyticsProvider)
         handler.delegate = self
         return handler
     }()
@@ -414,11 +414,29 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     }
                                 }
                                 self.gifMakerController.configure(settings: self.gifMakerHandler.settings, animated: false)
+                                self.configureMediaPlayer(settings: self.gifMakerHandler.settings)
                              })
     }
 
     private func shouldEnableGIFButton() -> Bool {
-        return settings.features.gifs && (segments.count > 1 || segments.first?.image == nil)
+        guard settings.features.gifs else {
+            return false
+        }
+
+        // More than one segment, or one video-only segment, enable it.
+        if segments.count > 1 || segments.first?.image == nil {
+            return true
+        }
+
+        // A single segment that has both an image and a video (live photo), enabled it.
+        if segments.count == 1,
+            let firstSegment = segments.first,
+            firstSegment.image != nil,
+            firstSegment.videoURL != nil {
+            return true
+        }
+
+        return false
     }
 
     private func shouldForceExportAsAGIF() -> Bool {
@@ -567,8 +585,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
             // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
-            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
-                createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo {
+                assetsHandler.ensureAllImagesHaveVideo(segments: segments) { segments in
+                    guard let videoURL = segments.first?.videoURL else { return }
+                    self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                }
             }
             else {
                 createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
@@ -837,6 +858,21 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     func didSettingsChange(dirty: Bool) {
         gifMakerController.toggleRevertButton(dirty)
+    }
+
+    func configureMediaPlayer(settings: GIFMakerSettings) {
+        player.rate = settings.rate
+        player.startMediaIndex = settings.startIndex
+        player.endMediaIndex = settings.endIndex
+        player.playbackMode = .init(from: settings.playbackMode)
+    }
+
+    func setMediaPlayerFrame(location: CGFloat) {
+        player.playSingleFrame(at: location)
+    }
+
+    func unsetMediaPlayerFrame() {
+        player.cancelPlayingSingleFrame()
     }
     
     // MARK: - EditorFilterControllerDelegate

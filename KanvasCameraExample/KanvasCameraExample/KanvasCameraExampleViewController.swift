@@ -268,6 +268,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
+            .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
+            .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
         ]
     }
 
@@ -313,6 +315,10 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.features.editorPostOptions = value
         case .gifs(_):
             settings.features.gifs = value
+        case .editorShouldStartGIFMaker(_):
+            settings.setEditorShouldStartGIFMaker(value)
+        case .gifCameraShouldStartGIFMaker(_):
+            settings.gifCameraShouldStartGIFMaker = value
         }
     }
 }
@@ -405,11 +411,6 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
     func dismissButtonPressed(_ cameraController: CameraController) {
         dismissCamera()
-    }
-
-    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-        // Providing nil signals CameraController to load the thumbnail itself
-        completion(nil)
     }
 
     private func save(media: KanvasCameraMedia, completion: @escaping (Error?) -> ()) {

@@ -7,8 +7,6 @@
 import AVFoundation
 import Foundation
 import UIKit
-import MobileCoreServices
-import Photos
 
 // Media wrapper for media generated from the CameraController
 public enum KanvasCameraMedia {
@@ -84,8 +82,6 @@ public protocol CameraControllerDelegate: class {
     /// - Returns: Bool for animation
     func editorShouldShowStrokeSelectorAnimation() -> Bool
     
-    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
-    
     /// Called when a drag interaction starts
     func didBeginDragInteraction()
     
@@ -96,7 +92,7 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, KanvasMediaPickerViewControllerDelegate, MediaPickerThumbnailFetcherDelegate {
 
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
@@ -143,7 +139,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         controller.delegate = self
         return controller
     }()
-
+    private lazy var mediaPickerThumbnailFetcher: MediaPickerThumbnailFetcher = {
+        let fetcher = MediaPickerThumbnailFetcher()
+        fetcher.delegate = self
+        return fetcher
+    }()
     private lazy var segmentsHandler: SegmentsHandlerType = {
         return segmentsHandlerClass.init()
     }()
@@ -159,10 +159,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
     private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
-    private var mediaPickerThumbnailTargetSize: CGSize = CGSize(width: 0, height: 0)
-    private var lastMediaPickerFetchResult: PHFetchResult<PHAsset>?
-    private var mediaPickerThumbnailQueue = DispatchQueue(label: "kanvas.mediaPickerThumbnailQueue")
-    private var didRegisterForPhotoLibraryChanges: Bool = false
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
 
     private weak var mediaPlayerController: MediaPlayerController?
@@ -662,70 +658,18 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didTapMediaPickerButton(completion: (() -> ())? = nil) {
-        let imagePickerController = KanvasUIImagePickerViewController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        imagePickerController.allowsEditing = false
-        imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
-        present(imagePickerController, animated: true) {
+        let picker = KanvasMediaPickerViewController(settings: settings)
+        picker.delegate = self
+        present(picker, animated: true) {
             self.modeAndShootController.resetMediaPickerButton()
             completion?()
         }
         analyticsProvider?.logMediaPickerOpen()
     }
 
-    func provideMediaPickerThumbnail(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-        mediaPickerThumbnailTargetSize = targetSize
-        self.delegate?.provideMediaPickerThumbnail(targetSize: targetSize) { [weak self] image in
-            if let image = image {
-                completion(image)
-                return
-            }
-            else {
-                self?.fetchMostRecentPhotoLibraryImage(targetSize: targetSize, completion: completion)
-            }
-        }
-    }
-
-    private func fetchMostRecentPhotoLibraryImage(targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-
-        guard PHPhotoLibrary.authorizationStatus() == .authorized else {
-            performUIUpdate {
-                completion(nil)
-            }
-            return
-        }
-
-        // PHPhotoLibrary.register prompts for Photo Pibrary access, so ensure this line always happens after the PHPhotoLibrary.authorizationStatus check.
-        if !didRegisterForPhotoLibraryChanges {
-            PHPhotoLibrary.shared().register(self)
-            didRegisterForPhotoLibraryChanges = true
-        }
-
-        mediaPickerThumbnailQueue.async {
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-            fetchOptions.fetchLimit = 1
-            // PHAsset.fetchAssets prompts for photo library access, so ensure this line always happens after the PHPhotoLibrary.authorizationStatus check.
-            let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
-            self.lastMediaPickerFetchResult = fetchResult
-            if fetchResult.count > 0 {
-                let requestOptions = PHImageRequestOptions()
-                requestOptions.deliveryMode = .opportunistic
-                requestOptions.resizeMode = .fast
-                let lastMediaPickerAsset = fetchResult.object(at: 0) as PHAsset
-                PHImageManager.default().requestImage(for: lastMediaPickerAsset, targetSize: targetSize, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
-                    performUIUpdate {
-                        completion(image)
-                    }
-                })
-            }
-            else {
-                performUIUpdate {
-                    completion(nil)
-                }
-            }
-        }
+    func updateMediaPickerThumbnail(targetSize: CGSize) {
+        mediaPickerThumbnailFetcher.thumbnailTargetSize = targetSize
+        mediaPickerThumbnailFetcher.updateThumbnail()
     }
 
     // MARK: - OptionsCollectionControllerDelegate (Top Options)
@@ -1008,85 +952,15 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    // MARK: - UIImagePickerControllerDelegate
+    // MARK: - KanvasMediaPickerViewControllerDelegate
 
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        let imageMaybe = info[.originalImage] as? UIImage
-        let mediaURLMaybe = info[.mediaURL] as? URL
-        let imageURLMaybe = info[.imageURL] as? URL
-        let phAsset = info[.phAsset] as? PHAsset
-        let requestImageData = { (completion: @escaping (Data?) -> Void) in
-            guard let phAsset = phAsset else {
-                completion(nil)
-                return
-            }
-            guard phAsset.mediaType == .image else {
-                completion(nil)
-                return
-            }
-            let options = PHImageRequestOptions()
-            options.version = .original
-            options.deliveryMode = .highQualityFormat
-            options.isNetworkAccessAllowed = true
-            PHImageManager.default().requestImageData(for: phAsset, options: options) { (data, str, orientation, opts) in
-                completion(data)
-            }
-        }
-        requestImageData { data in
-            self.processPickedMedia(data: data, imageURLMaybe: imageURLMaybe, imageMaybe: imageMaybe, mediaURLMaybe: mediaURLMaybe)
-        }
-    }
-
-    private func processPickedMedia(data: Data?, imageURLMaybe: URL?, imageMaybe: UIImage?, mediaURLMaybe: URL?) {
-        if settings.features.gifs,
-            let data = data,
-            GIFDecoderFactory.main().numberOfFrames(in: data) > 1,
-            let gifURL = try? CameraController.save(data: data, to: "kanvas-picked", ext: "gif") {
-            pick(frames: gifURL)
-            analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
-        }
-        else if settings.features.gifs,
-            let gifURL = imageURLMaybe,
-            GIFDecoderFactory.main().numberOfFrames(in: gifURL) > 1 {
-            pick(frames: gifURL)
-            analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
-        }
-        else if let image = imageMaybe {
-            guard canPick(image: image) else {
-                let message = NSLocalizedString("That's too big, bud.", comment: "That's too big, bud.")
-                let buttonMessage = NSLocalizedString("Got it", comment: "Got it")
-                showAlert(message: message, buttonMessage: buttonMessage)
-                return
-            }
-            pick(image: image, url: mediaURLMaybe)
+    func didPick(image: UIImage, url imageURL: URL?) {
+        defer {
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
         }
-        else if let mediaURL = mediaURLMaybe {
-            pick(video: mediaURL)
-            analyticsProvider?.logMediaPickerPickedMedia(ofType: .video)
-        }
-    }
-
-    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-        analyticsProvider?.logMediaPickerDismiss()
-    }
-
-    private func pick(frames imageURL: URL) {
         let mediaInfo: MediaInfo = {
+            guard let imageURL = imageURL else { return MediaInfo(source: .media_library) }
             return MediaInfo(fromImage: imageURL) ?? MediaInfo(source: .media_library)
-        }()
-        GIFDecoderFactory.main().decode(image: imageURL) { frames in
-            let segments = frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
-            self.showPreviewWithSegments(segments)
-        }
-    }
-
-    private func pick(image: UIImage, url: URL?) {
-        let mediaInfo: MediaInfo = {
-            guard let url = url else { return MediaInfo(source: .media_library) }
-            return MediaInfo(fromImage: url) ?? MediaInfo(source: .media_library)
         }()
         if currentMode.quantity == .single {
             performUIUpdate {
@@ -1110,7 +984,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    private func pick(video url: URL) {
+    func didPick(video url: URL) {
+        defer {
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .video)
+        }
         let mediaInfo = MediaInfo(fromVideoURL: url) ?? MediaInfo(source: .media_library)
         if currentMode.quantity == .single {
             self.showPreviewWithSegments([CameraSegment.video(url, mediaInfo)])
@@ -1127,17 +1004,45 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
     }
 
-    private func canPick(image: UIImage) -> Bool {
-        // image pixels must be less than 100MB
-        
-        if let cgImage = image.cgImage {
-            let bytesPerFrame = cgImage.bytesPerRow * cgImage.height
-            let frameCount = image.images?.count ?? 1
-            return Double(bytesPerFrame * frameCount) < 100000000.0
+    func didPick(gif url: URL) {
+        defer {
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
+        }
+        let mediaInfo: MediaInfo = {
+            return MediaInfo(fromImage: url) ?? MediaInfo(source: .media_library)
+        }()
+        GIFDecoderFactory.main().decode(image: url) { frames in
+            let segments = frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
+            self.showPreviewWithSegments(segments)
+        }
+    }
+
+    func didPick(livePhotoStill: UIImage, pairedVideo: URL) {
+        defer {
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .livePhoto)
+        }
+        let mediaInfo = MediaInfo(source: .media_library)
+        if currentMode.quantity == .single {
+            self.showPreviewWithSegments([CameraSegment.image(livePhotoStill, pairedVideo, nil, mediaInfo)])
         }
         else {
-            return false
+            assertionFailure("No media picking from stitch yet")
         }
+    }
+
+    func didCancel() {
+        analyticsProvider?.logMediaPickerDismiss()
+    }
+
+    func pickingMediaNotAllowed(reason: String) {
+        let buttonMessage = NSLocalizedString("Got it", comment: "Got it")
+        showAlert(message: reason, buttonMessage: buttonMessage)
+    }
+
+    // MARK: - MediaPickerThumbnailFetcherDelegate
+
+    func didUpdateThumbnail(image: UIImage) {
+        self.modeAndShootController.setMediaPickerButtonThumbnail(image)
     }
 
     // MARK: - breakdown
@@ -1146,32 +1051,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     public func cleanup() {
         resetState()
         cameraInputController.cleanup()
-        if didRegisterForPhotoLibraryChanges {
-            PHPhotoLibrary.shared().unregisterChangeObserver(self)
-        }
-    }
-    
-    // MARK: - Post Options Interaction
-    
-    public func onPostOptionsDismissed() {
-        mediaPlayerController?.onPostingOptionsDismissed()
-    }
-}
-
-extension CameraController: PHPhotoLibraryChangeObserver {
-    public func photoLibraryDidChange(_ changeInstance: PHChange) {
-        guard
-            let lastMediaPickerFetchResult = lastMediaPickerFetchResult,
-            let changeDetails = changeInstance.changeDetails(for: lastMediaPickerFetchResult),
-            changeDetails.insertedIndexes?.count == 1,
-            changeDetails.removedIndexes?.count == 1
-        else {
-            return
-        }
-        fetchMostRecentPhotoLibraryImage(targetSize: mediaPickerThumbnailTargetSize) { image in
-            guard let image = image else { return }
-            self.modeAndShootController.setMediaPickerButtonThumbnail(image)
-        }
+        mediaPickerThumbnailFetcher.cleanup()
     }
 
     public func resetState() {
@@ -1179,5 +1059,11 @@ extension CameraController: PHPhotoLibraryChangeObserver {
         clipsController.removeAllClips()
         cameraInputController.deleteAllSegments()
         imagePreviewController.setImagePreview(nil)
+    }
+
+    // MARK: - Post Options Interaction
+
+    public func onPostOptionsDismissed() {
+        mediaPlayerController?.onPostingOptionsDismissed()
     }
 }
