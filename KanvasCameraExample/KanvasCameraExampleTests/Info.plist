@@ -18,14 +18,5 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>FavoritTumblr-85.otf</string>
-		<string>Fairwater Script Regular_Tumblr.otf</string>
-		<string>FavoritTumblr-Bold.otf</string>
-		<string>FavoritTumblr-Italic.otf</string>
-		<string>FavoritTumblr-BoldIta.otf</string>
-		<string>FavoritTumblr-Medium.otf</string>
-	</array>
 </dict>
 </plist>
