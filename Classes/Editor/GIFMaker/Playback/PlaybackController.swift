@@ -71,7 +71,7 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     /// selects the option.
     /// this does not trigger any delegation
     func select(option: PlaybackOption, animated: Bool = true) {
-        guard let index = options.index(of: option) else {
+        guard let index = options.firstIndex(of: option) else {
             return
         }
         let indexPath = IndexPath(item: index, section: 0)

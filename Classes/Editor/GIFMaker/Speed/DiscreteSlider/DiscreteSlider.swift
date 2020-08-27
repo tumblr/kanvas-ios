@@ -118,7 +118,7 @@ final class DiscreteSlider: UIViewController, UICollectionViewDelegate, UICollec
     // MARK: - Public Interface
 
     func select(item: Float) {
-        guard let index = items.index(of: item) else {
+        guard let index = items.firstIndex(of: item) else {
             return
         }
         let indexPath = IndexPath(item: index, section: 0)
