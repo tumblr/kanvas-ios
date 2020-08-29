@@ -725,7 +725,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     // more documentation on the protocol methods can be found in the CameraRecordingDelegate
     func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
-        if output?.supportedFlashModes.contains(.on) == true {
+        if output?.isFlashScene == true {
             settings.flashMode = flashMode
         }
         return settings
