@@ -427,6 +427,10 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                 completionMainThread(PhotoLibraryAccessError.restricted)
             case .denied:
                 completionMainThread(PhotoLibraryAccessError.denied)
+#if swift(>=5.3)
+            case .limited:
+                fallthrough
+#endif
             case .authorized:
                 switch media {
                 case let .image(url, _, _):
@@ -436,6 +440,8 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                 case let .frames(url, _, _):
                     self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
                 }
+            @unknown default:
+                break
             }
         }
 

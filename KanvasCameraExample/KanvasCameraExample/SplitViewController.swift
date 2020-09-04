@@ -171,7 +171,7 @@ extension SplitViewController: KanvasDashboardStateDelegate {
 
 extension SplitViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if let index = orderedViewControllers.index(of: viewController) {
+        if let index = orderedViewControllers.firstIndex(of: viewController) {
             let nextIndex = orderedViewControllers.index(before: index)
             if orderedViewControllers.startIndex <= nextIndex {
                 let nextVC = orderedViewControllers[nextIndex]
@@ -183,7 +183,7 @@ extension SplitViewController: UIPageViewControllerDataSource {
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if let index = orderedViewControllers.index(of: viewController) {
+        if let index = orderedViewControllers.firstIndex(of: viewController) {
             let nextIndex = orderedViewControllers.index(after: index)
             if orderedViewControllers.endIndex >= nextIndex {
                 let nextVC = orderedViewControllers[nextIndex]
