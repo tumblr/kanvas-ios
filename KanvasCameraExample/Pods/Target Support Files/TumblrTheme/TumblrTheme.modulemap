@@ -1,6 +1,0 @@
-module TumblrTheme {
-  umbrella header "TumblrTheme-umbrella.h"
-
-  export *
-  module * { export * }
-}

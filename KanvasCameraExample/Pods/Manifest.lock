@@ -4,73 +4,24 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - ImageLoader (0.1.0):
-    - SDWebImage (= 5.8.4)
-    - SDWebImageWebPCoder (= 0.6.1)
   - KanvasCamera (0.1.0)
-  - libwebp (1.1.0):
-    - libwebp/demux (= 1.1.0)
-    - libwebp/mux (= 1.1.0)
-    - libwebp/webp (= 1.1.0)
-  - libwebp/demux (1.1.0):
-    - libwebp/webp
-  - libwebp/mux (1.1.0):
-    - libwebp/demux
-  - libwebp/webp (1.1.0)
-  - Reachability (3.2)
-  - SDWebImage (5.8.4):
-    - SDWebImage/Core (= 5.8.4)
-  - SDWebImage/Core (5.8.4)
-  - SDWebImageWebPCoder (0.6.1):
-    - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.7)
-  - SharedUI (1.0.0):
-    - TumblrTheme
-  - TumblrTheme (1.0.0):
-    - Utils
-  - Utils (1.0.0):
-    - Reachability (~> 3.2)
 
 DEPENDENCIES:
   - FBSnapshotTestCase (= 2.1.4)
-  - ImageLoader (from `../../ImageLoader`)
   - KanvasCamera (from `../`)
-  - SharedUI (from `../../SharedUI`)
-  - TumblrTheme (from `../../TumblrTheme`)
-  - Utils (from `../../Utils`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - FBSnapshotTestCase
-    - libwebp
-    - Reachability
-    - SDWebImage
-    - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
-  ImageLoader:
-    :path: "../../ImageLoader"
   KanvasCamera:
     :path: "../"
-  SharedUI:
-    :path: "../../SharedUI"
-  TumblrTheme:
-    :path: "../../TumblrTheme"
-  Utils:
-    :path: "../../Utils"
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  ImageLoader: a0f178e9bfa70c3acdee5c6216f0e8274e6c1008
   KanvasCamera: 2b0639e4bc54c5839cc38d91aadb0529c0a6d67a
-  libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
-  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SDWebImage: cf6922231e95550934da2ada0f20f2becf2ceba9
-  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
-  SharedUI: c237671626e3e66874800e51fb4925c72afb7003
-  TumblrTheme: 0d7d24e72e87184f0cfa2cb315e524701c09d436
-  Utils: 5895852d108b0ca6ad0d2742b5faafa4eb7c1fd6
 
-PODFILE CHECKSUM: b1babc90a92e45f840e195e3c30dfd0923cc97f2
+PODFILE CHECKSUM: dd746d9e90e7b711a1d15567bfe12bafa67ce73a
 
 COCOAPODS: 1.9.1

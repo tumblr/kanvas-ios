@@ -7,7 +7,6 @@
 import Foundation
 import UIKit
 import KanvasCamera
-import ImageLoader
 
 /// Constants for ExperimentalStickerProvider
 private struct Constants {
@@ -17,20 +16,37 @@ private struct Constants {
     static let imageExtension: String = "png"
 }
 
-extension CancelationToken: KanvasCancelable {
+extension URLSessionTask: KanvasCancelable {
 
 }
 
-extension SDWebImageImageLoader: KanvasStickerLoader {
-    public func loadSticker(at imageURL: URL, imageView: UIImageView?, completion: @escaping (UIImage?, Error?) -> Void) -> KanvasCancelable {
-        let cancelableMaybe = loadImage(at: imageURL, OAuth: false, imageView: imageView, displayImageImmediately: true, preloadAllFrames: true, completion: completion) as? KanvasCancelable
-        guard let cancelable = cancelableMaybe else {
-            assertionFailure("Failed to get the proper cancelation token for loading a sticker")
-            return CancelationToken {
-                print("Can't cancel")
+class ImageLoader: KanvasStickerLoader {
+
+    lazy var session: URLSession = {
+        var configuration = URLSessionConfiguration.default
+        configuration.urlCache = URLCache(memoryCapacity: 500*1024*1024, diskCapacity: 1000*1024*1024, diskPath: nil)
+        return URLSession(configuration: configuration)
+    }()
+
+    func loadSticker(at imageURL: URL, imageView: UIImageView?, completion: @escaping (UIImage?, Error?) -> Void) -> KanvasCancelable {
+        let request = URLRequest(url: imageURL, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 60)
+        let task = session.dataTask(with: request) { [weak imageView, weak session] (data, response, error) in
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    imageView?.image = image
+                }
+                if let response = response {
+                    let cachedResponse = CachedURLResponse(response: response, data: data)
+                    session?.configuration.urlCache?.storeCachedResponse(cachedResponse, for: request)
+                }
+                completion(image, nil)
+            }
+            else {
+                completion(nil, error)
             }
         }
-        return cancelable
+        task.resume()
+        return task
     }
 }
 
@@ -38,7 +54,7 @@ extension SDWebImageImageLoader: KanvasStickerLoader {
 public final class ExperimentalStickerProvider: StickerProvider {
     
     public func loader() -> KanvasStickerLoader? {
-        return ImageLoaderProvider.makeImageLoader() as? KanvasStickerLoader
+        return ImageLoader()
     }
 
     private weak var delegate: StickerProviderDelegate?

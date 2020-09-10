@@ -1,15 +1,14 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 FRAMEWORK_SEARCH_PATHS = $(inherited) "$(PLATFORM_DIR)/Developer/Library/Frameworks"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 GLES_SILENCE_DEPRECATION=1 $(inherited) SD_WEBP=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/FBSnapshotTestCase" "${PODS_ROOT}/Headers/Public/Reachability" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/SDWebImageWebPCoder" "${PODS_ROOT}/Headers/Public/libwebp"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 GLES_SILENCE_DEPRECATION=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/FBSnapshotTestCase"
 LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase"
-OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ImageLoader/ImageLoader.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera/KanvasCamera.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/SharedUI/SharedUI.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme/TumblrTheme.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Utils/Utils.modulemap" -fmodule-map-file="${PODS_ROOT}/Headers/Private/SDWebImageWebPCoder/SDWebImageWebPCoder.modulemap" -fmodule-map-file="${PODS_ROOT}/Headers/Public/Reachability/Reachability.modulemap" -fmodule-map-file="${PODS_ROOT}/Headers/Public/SDWebImage/SDWebImage.modulemap" -fmodule-map-file="${PODS_ROOT}/Headers/Public/libwebp/libwebp.modulemap"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"FBSnapshotTestCase" -framework "Foundation" -framework "GLKit" -framework "ImageIO" -framework "OpenGLES" -framework "QuartzCore" -framework "SystemConfiguration" -framework "UIKit" -framework "XCTest"
-OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/ImageLoader/ImageLoader.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera/KanvasCamera.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/SharedUI/SharedUI.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme/TumblrTheme.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/Utils/Utils.modulemap" -Xcc -fmodule-map-file="${PODS_ROOT}/Headers/Private/SDWebImageWebPCoder/SDWebImageWebPCoder.modulemap" -Xcc -fmodule-map-file="${PODS_ROOT}/Headers/Public/Reachability/Reachability.modulemap" -Xcc -fmodule-map-file="${PODS_ROOT}/Headers/Public/SDWebImage/SDWebImage.modulemap" -Xcc -fmodule-map-file="${PODS_ROOT}/Headers/Public/libwebp/libwebp.modulemap"
+OTHER_CFLAGS = $(inherited) -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.modulemap" -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera/KanvasCamera.modulemap"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"FBSnapshotTestCase" -framework "Foundation" -framework "GLKit" -framework "OpenGLES" -framework "QuartzCore" -framework "UIKit" -framework "XCTest"
+OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.modulemap" -Xcc -fmodule-map-file="${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera/KanvasCamera.modulemap"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
 PODS_ROOT = ${SRCROOT}/Pods
-SWIFT_INCLUDE_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase" "${PODS_CONFIGURATION_BUILD_DIR}/ImageLoader" "${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera" "${PODS_CONFIGURATION_BUILD_DIR}/SharedUI" "${PODS_CONFIGURATION_BUILD_DIR}/TumblrTheme" "${PODS_CONFIGURATION_BUILD_DIR}/Utils"
-USER_HEADER_SEARCH_PATHS = $(inherited) $(SRCROOT)/libwebp/src
+SWIFT_INCLUDE_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FBSnapshotTestCase" "${PODS_CONFIGURATION_BUILD_DIR}/KanvasCamera"
 USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES

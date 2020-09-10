@@ -10,10 +10,6 @@ project "KanvasCameraExample.xcodeproj"
 
 target 'KanvasCameraExample' do
     pod 'KanvasCamera', :path => '../'
-    pod 'TumblrTheme', :path => '../../TumblrTheme'
-    pod 'SharedUI', :path => '../../SharedUI'
-    pod 'Utils', :path => '../../Utils'
-    pod 'ImageLoader', :path => '../../ImageLoader'
     
     target 'KanvasCameraExampleTests' do
         inherit! :search_paths
