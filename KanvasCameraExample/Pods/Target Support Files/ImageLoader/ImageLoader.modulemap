@@ -1,6 +1,0 @@
-module ImageLoader {
-  umbrella header "ImageLoader-umbrella.h"
-
-  export *
-  module * { export * }
-}
