@@ -7,26 +7,12 @@
 import Foundation
 import UIKit
 
-/**
- All fonts used here are either FavoritTumblr-85 & FavoritTumblr-Medium. FavoritTumblr-85 has italic, bold and italic-bold.
- If they cannot be found, it will default to system font
- 
- The fruit names are in alphabetical order from largest font to smallest font. This follows the design teams naming scheme.
- 
- Do not adjust font weights as the .otf files might not support them at this moment.
- If bold or semibold is needed, use the Medium size.
- */
-
-private let FavoritTumblr = "Favorit Tumblr"
-private let FavoritTumblrMedium = "FavoritTumblr-Medium"
-private let FavoritTumblr85 = "FavoritTumblr-85"
-
 @objc public extension UIFont {
 
     static var isDynamicTypeEnabled: Bool = false
 
     static func favoritTumblrMedium(fontSize: CGFloat) -> UIFont {
-        let font = UIFont(name: FavoritTumblrMedium, size: fontSize) ?? UIFont.systemFont(ofSize: fontSize, weight: .medium)
+        let font = UIFont.systemFont(ofSize: fontSize, weight: .medium)
         if UIFont.isDynamicTypeEnabled {
             return UIFontMetrics.default.scaledFont(for: font)
         }
@@ -34,7 +20,7 @@ private let FavoritTumblr85 = "FavoritTumblr-85"
     }
     
     static func favoritTumblr85(fontSize: CGFloat) -> UIFont {
-        let font = UIFont(name: FavoritTumblr85, size: fontSize) ?? UIFont.systemFont(ofSize: fontSize)
+        let font = UIFont.systemFont(ofSize: fontSize)
         if UIFont.isDynamicTypeEnabled {
             return UIFontMetrics.default.scaledFont(for: font)
         }

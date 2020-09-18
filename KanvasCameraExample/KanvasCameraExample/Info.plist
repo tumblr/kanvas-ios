@@ -30,10 +30,6 @@
 	<string>So you can save pictures, you know?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>So you can post photos, you know?</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Fairwater Script Regular_Tumblr.otf</string>
-	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

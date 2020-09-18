@@ -120,7 +120,7 @@ public class KanvasCameraCustomUI {
 
 extension UIFont {
     static func fairwater(fontSize: CGFloat) -> UIFont {
-        let font = UIFont(name: "Fairwater Script", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize, weight: .medium)
+        let font = UIFont(name: "Bradley Hand", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize, weight: .medium)
         if UIFont.isDynamicTypeEnabled {
             return UIFontMetrics.default.scaledFont(for: font)
         }
