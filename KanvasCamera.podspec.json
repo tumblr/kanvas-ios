@@ -7,7 +7,8 @@
     "path": "."
   },
   "authors" : {
-    "Tony Cheng": "tony@getkanvas.com"
+    "Tony Cheng": "tony@getkanvas.com",
+    "Jimmy Schementi": "jimmys@tumblr.com"
   },
   "platforms": {
     "ios": "12.0"

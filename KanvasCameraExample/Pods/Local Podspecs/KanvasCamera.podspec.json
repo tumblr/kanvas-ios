@@ -3,16 +3,12 @@
   "version": "0.1.0",
   "summary": "A custom camera built for iOS.",
   "homepage": "https://github.tumblr.net/TumblrMobile/orangina",
-  "license": {
-    "type": "MPLv2",
-    "file": "LICENSE"
-  },
   "source": {
-    "git": "https://github.com/Automattic/Kanvas-iOS.git",
-    "branch": "main"
+    "path": "."
   },
   "authors": {
-    "Tony Cheng": "tony@getkanvas.com"
+    "Tony Cheng": "tony@getkanvas.com",
+    "Jimmy Schementi": "jimmys@tumblr.com"
   },
   "platforms": {
     "ios": "12.0"
