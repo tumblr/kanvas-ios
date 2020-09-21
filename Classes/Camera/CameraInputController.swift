@@ -725,15 +725,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     // more documentation on the protocol methods can be found in the CameraRecordingDelegate
     func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
-#if swift(>=5.3)
-            // Because the broken Xcode seed this is a workaround to access the flash mode `case on = 1`.
-            if output?.__supportedFlashModes.contains(1) == true {
-                settings.flashMode = flashMode
-            }
-#else
-            if output?.supportedFlashModes.contains(.on) == true {
-                settings.flashMode = flashMode
-            }
+#if !targetEnvironment(simulator)
+        if output?.supportedFlashModes.contains(.on) == true {
+            settings.flashMode = flashMode
+        }
 #endif
         return settings
     }
