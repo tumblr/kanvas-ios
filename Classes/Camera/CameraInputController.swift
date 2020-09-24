@@ -126,12 +126,16 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         self.segmentsHandler = segmentsHandler
         self.delegate = delegate
         super.init(nibName: .none, bundle: .none)
-        setupNotifications()
     }
 
     private func setupNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+
+    private func teardownNotifications() {
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     @objc private func appWillResignActive() {
@@ -147,7 +151,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        teardownNotifications()
     }
 
     func stopSession() {
@@ -194,6 +198,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         setupCaptureSession()
+
+        setupNotifications()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -204,6 +210,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
 
         stopCaptureSession()
+
+        teardownNotifications()
     }
 
     func setupCaptureSession() {
@@ -252,6 +260,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             self?.removeSessionInputsAndOutputs()
             self?.captureSession = nil
         }
+
+        teardownNotifications()
     }
 
     private static func blurEffect() -> UIBlurEffect {
