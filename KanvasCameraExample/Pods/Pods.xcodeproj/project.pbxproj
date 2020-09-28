@@ -2070,32 +2070,6 @@
 			};
 			name = Debug;
 		};
-		2211C3C7D6966018611A6D1FE772BD95 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 46DC965BBBEB4208C1F76C26A6879CD1 /* KanvasCamera.debug.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/KanvasCamera/KanvasCamera-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MODULEMAP_FILE = Headers/Public/KanvasCamera/KanvasCamera.modulemap;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = KanvasCamera;
-				PRODUCT_NAME = KanvasCamera;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
 		2272A3FA9BF168613E50A9D41E6A70A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 72BC6172444BC8896A7DD17D385D81BE /* Pods-KanvasCameraExampleTests.release.xcconfig */;
@@ -2115,6 +2089,33 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		281B134F5DF5EACE710C62D48346DE56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F283680FAF68CD9AD471FECC91E20C7 /* KanvasCamera.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/KanvasCamera/KanvasCamera-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MODULEMAP_FILE = Headers/Public/KanvasCamera/KanvasCamera.modulemap;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = KanvasCamera;
+				PRODUCT_NAME = KanvasCamera;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2209,9 +2210,9 @@
 			};
 			name = Debug;
 		};
-		CDC7DB0DF167F34FBCF8AB462F200E98 /* Release */ = {
+		B840453946F84D419356C80828405FBE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7F283680FAF68CD9AD471FECC91E20C7 /* KanvasCamera.release.xcconfig */;
+			baseConfigurationReference = 46DC965BBBEB4208C1F76C26A6879CD1 /* KanvasCamera.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2230,11 +2231,10 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = Debug;
 		};
 		E059973C6374BC628484A7F2451DA10C /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2388,8 +2388,8 @@
 		D699CC94B8090AB0D8223FA44090D873 /* Build configuration list for PBXNativeTarget "KanvasCamera" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2211C3C7D6966018611A6D1FE772BD95 /* Debug */,
-				CDC7DB0DF167F34FBCF8AB462F200E98 /* Release */,
+				B840453946F84D419356C80828405FBE /* Debug */,
+				281B134F5DF5EACE710C62D48346DE56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

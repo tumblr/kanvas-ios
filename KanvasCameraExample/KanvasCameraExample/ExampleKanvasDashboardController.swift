@@ -207,6 +207,10 @@ extension KanvasDashboardController: CameraControllerDelegate {
         }
         PHPhotoLibrary.requestAuthorization { authorizationStatus in
             switch authorizationStatus {
+#if swift(>=5.3)
+            case .limited:
+                fallthrough
+#endif
             case .notDetermined, .restricted, .denied:
                 completionMainThread(nil)
             case .authorized:
