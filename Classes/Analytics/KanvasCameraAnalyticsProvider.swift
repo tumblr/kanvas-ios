@@ -71,6 +71,8 @@ import Foundation
             return .regular
         case "Fairwater Script":
             return .script
+        case "Bradley Hand":
+            return .script
         default:
             return nil
         }
