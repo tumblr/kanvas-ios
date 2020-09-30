@@ -1,0 +1,6 @@
+module KanvasCamera {
+  umbrella header "KanvasCamera-umbrella.h"
+
+  export *
+  module * { export * }
+}

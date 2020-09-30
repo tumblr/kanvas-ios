@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ChatInvitationTextFormatString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>&quot;Invite %@ and %#@lu_extra_chat_count@&quot;</string>
+		<key>lu_extra_chat_count</key>
+		<dict>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>one</key>
+			<string>%lu other</string>
+			<key>other</key>
+			<string>%lu others</string>
+		</dict>
+	</dict>
+	<key>SentPostFormatString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Sent to %@ %#@d_remaining_recipients_count@</string>
+		<key>d_remaining_recipients_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>zero</key>
+			<string></string>
+			<key>one</key>
+			<string>and %d other</string>
+			<key>other</key>
+			<string>and %d others</string>
+		</dict>
+	</dict>
+	<key>SharePostTipFormatString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Send this post to %@ and %#@d_remaining_recipients_count@</string>
+		<key>d_remaining_recipients_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d other separately</string>
+			<key>other</key>
+			<string>%d others separately</string>
+		</dict>
+	</dict>
+	<key>SharePostSingleTipFormatString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$@Send to%2$@ %3$@</string>
+	</dict>
+	<key>SharePostGroupTipFormatString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$@Send to%2$@ %3$@ and %4$#@d_remaining_recipients_count@</string>
+		<key>d_remaining_recipients_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d other</string>
+			<key>other</key>
+			<string>%d others</string>
+		</dict>
+	</dict>
+	<key>ConversationUserActivityTimestamp</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Active in the %#@lu_hours_count@</string>
+		<key>lu_hours_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>last hour</string>
+			<key>other</key>
+			<string>last %lu hours</string>
+		</dict>
+	</dict>
+	<key>NoteRollupSummaryTextReblogs</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>[%#@lu_total_reblogs@]</string>
+		<key>lu_total_reblogs</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu reblog</string>
+			<key>other</key>
+			<string>%lu reblogs</string>
+		</dict>
+	</dict>
+	<key>NoteRollupSummaryTextLikes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>[%#@lu_total_likes@]</string>
+		<key>lu_total_likes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu like</string>
+			<key>other</key>
+			<string>%lu likes</string>
+		</dict>
+	</dict>
+	<key>NoteRollupSummaryTextLikesAndReblogs</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>[%#@lu_total_likes@] and [%#@lu_total_reblogs@]</string>
+		<key>lu_total_likes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu like</string>
+			<key>other</key>
+			<string>%lu likes</string>
+		</dict>
+		<key>lu_total_reblogs</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu reblog</string>
+			<key>other</key>
+			<string>%lu reblogs</string>
+		</dict>
+	</dict>
+	<key>UnreadMessageCountDescription</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@lu_unread_messages@</string>
+		<key>lu_unread_messages</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu unread message</string>
+			<key>other</key>
+			<string>%lu unread messages</string>
+		</dict>
+	</dict>
+	<key>QueueSummaryTextFormatString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Publish %#@lu_frequency_count@ between %@</string>
+		<key>lu_frequency_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>once a day</string>
+			<key>two</key>
+			<string>twice a day</string>
+			<key>other</key>
+			<string>%lu times a day</string>
+		</dict>
+	</dict>
+	<key>PostFrequencyTextFormatString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@lu_frequency_count@</string>
+		<key>lu_frequency_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>Once a day</string>
+			<key>two</key>
+			<string>Twice a day</string>
+			<key>other</key>
+			<string>%lu times a day</string>
+		</dict>
+	</dict>
+	<key>NotesButtonTextFormatString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@lu_note_count@</string>
+		<key>lu_note_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu note</string>
+			<key>other</key>
+			<string>%lu notes</string>
+		</dict>
+	</dict>
+	<key>ScheduledQueuePostCount</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@lu_total_posts@</string>
+		<key>lu_total_posts</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu post</string>
+			<key>other</key>
+			<string>%lu posts</string>
+		</dict>
+	</dict>
+	<key>BlogActivityRollupSummary</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%@ and %#@lu_rollup_count@</string>
+		<key>lu_rollup_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu other</string>
+			<key>other</key>
+			<string>%lu others</string>
+		</dict>
+	</dict>
+	<key>BlogActivitySummaryTextLikes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@lu_total_likes@</string>
+		<key>lu_total_likes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu like</string>
+			<key>other</key>
+			<string>%lu likes</string>
+		</dict>
+	</dict>
+	<key>BlogActivitySummaryTextReblogs</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@lu_total_reblogs@</string>
+		<key>lu_total_reblogs</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu reblog</string>
+			<key>other</key>
+			<string>%lu reblogs</string>
+		</dict>
+	</dict>
+	<key>BlogActivitySummaryTextFollows</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@lu_total_follows@</string>
+		<key>lu_total_follows</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu follow</string>
+			<key>other</key>
+			<string>%lu follows</string>
+		</dict>
+	</dict>
+	<key>ActiveHourString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Active %#@lu_hours_count@</string>
+		<key>lu_hours_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu hour ago</string>
+			<key>other</key>
+			<string>%lu hours ago</string>
+		</dict>
+	</dict>
+	<key>ActiveMinuteString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Active %#@lu_minutes_count@</string>
+		<key>lu_minutes_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu minute ago</string>
+			<key>other</key>
+			<string>%lu minutes ago</string>
+		</dict>
+	</dict>
+	<key>ActiveDayString</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Active %#@lu_days_count@</string>
+		<key>lu_days_count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lu</string>
+			<key>one</key>
+			<string>%lu day ago</string>
+			<key>other</key>
+			<string>%lu days ago</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
