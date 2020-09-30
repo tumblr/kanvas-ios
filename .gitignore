@@ -1,0 +1,33 @@
+# Ignore the Mac OS X .DS_Store files
+.DS_Store
+.idea/
+*.orig
+
+# Ignore Xcode debris
+build
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.moved-aside
+DerivedData
+.idea/
+*.hmap
+*.xccheckout
+*.xcscmblueprint
+
+# Ignore temp nibs and swap files
+*.swp
+*~.nib
+
+# ignore snapshot failure files
+**/FailureDiffs/*
+
+KanvasCameraExample/Pods/*
+!KanvasCameraExample/Pods/Target\ Support\ Files/
+

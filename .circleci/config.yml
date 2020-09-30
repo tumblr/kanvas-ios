@@ -1,0 +1,38 @@
+version: 2.1
+orbs:
+  ios: wordpress-mobile/ios@1.0
+  git: wordpress-mobile/git@1.0
+jobs:
+  build:
+    executor:
+      name: ios/default
+      xcode-version: "11.2.1"
+    steps:
+      - git/shallow-checkout
+      - ios/test:
+          xcode-version: 11.2.1
+          workspace: KanvasCameraExample/KanvasCameraExample.xcworkspace
+          scheme: KanvasCameraExample
+          device: iPhone 8
+          ios-version: 13.2.2
+          bundle-install: true
+          bundler-working-directory: KanvasCameraExample
+          pod-install: true
+          cocoapods-working-directory: KanvasCameraExample
+      - run:
+          name: Zip failed diffs
+          when: always
+          working_directory: ./KanvasCameraExample/KanvasCameraExampleTests
+          command: zip -r diffoutput.zip FailureDiffs || true
+      - store_artifacts:
+          name: Save diffs
+          path: KanvasCameraExample/KanvasCameraExampleTests/diffoutput.zip
+          destination: testresults
+      - ios/save-xcodebuild-artifacts:
+          result-bundle-path: build/results
+          #- ios/validate-podspec:
+          #name: Validate Podspec
+          #xcode-version: '11.5'
+          #podspec-path: KanvasCamera.podspec.json
+          #bundle-install: true
+
