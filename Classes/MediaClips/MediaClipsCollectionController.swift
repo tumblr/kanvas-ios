@@ -162,6 +162,10 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         let inset = leftBorder ? border : collectionView.bounds.width - border
         return inset
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)
+    }
 
     // MARK: - Scrolling
     func scrollToLast(animated: Bool) {
@@ -237,9 +241,6 @@ extension MediaClipsCollectionController: UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
         let parameters = UIDragPreviewParameters()
         parameters.backgroundColor = .clear
-        if let cellSize = collectionView.visibleCells.first?.bounds {
-            parameters.visiblePath = UIBezierPath(rect: CGRect(x: cellSize.center.x, y: cellSize.center.y, width: 0, height: 0))
-        }
         return parameters
     }
 }
