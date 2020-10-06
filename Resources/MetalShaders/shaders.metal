@@ -125,9 +125,9 @@ kernel void wavepool(texture2d<float, access::read> inTexture [[ texture(0) ]],
     float time = shaderContext.time;
     float width = inTexture.get_width();
     float height = inTexture.get_height();
-    float2 uv = float2(gid.x / width, gid.y / height);
+    float2 uv = float2(float(gid.x) / width, float(gid.y) / height);
     
-    float2 p =  fmod(uv * TAU * 2, TAU) - 250.0;
+    float2 p =  fmod(uv * TAU, TAU) - 250.0;
     float2 i = float2(p);
     float c = 1.0;
     float inten = 0.005;
