@@ -63,7 +63,12 @@ kernel void kernelIdentity(texture2d<float, access::read> inTexture [[ texture(0
                            texture2d<float, access::write> outTexture [[ texture(1) ]],
                            uint2 gid [[ thread_position_in_grid ]])
 {
-    float4 outColor = inTexture.read(gid);
+    uint inWidth = inTexture.get_width();
+    uint outWidth = outTexture.get_width();
+    
+    uint offset = (inWidth - outWidth) > 0 ? (inWidth - outWidth) / 2 : 0;
+    uint2 adjusted = uint2(gid.x + offset, gid.y);
+    float4 outColor = inTexture.read(adjusted);
     outTexture.write(outColor, gid);
 }
 
