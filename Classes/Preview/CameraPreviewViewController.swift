@@ -231,6 +231,10 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
     func onPostingOptionsDismissed() {
         // Does nothing
     }
+    
+    func onPostLongPressSubmitted() {
+        // Does nothing
+    }
 }
 
 // MARK: - CameraPreviewView

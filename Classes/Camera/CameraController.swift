@@ -89,6 +89,8 @@ public protocol CameraControllerDelegate: class {
     func didEndDragInteraction()
 
     func openAppSettings(completion: ((Bool) -> ())?)
+    
+    func getPostButton() -> UIView
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -873,6 +875,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndStrokeSelectorAnimation()
     }
     
+    public func getPostButton() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getPostButton()
+    }
+    
     // MARK: CameraZoomHandlerDelegate
     var currentDeviceForZooming: AVCaptureDevice? {
         return cameraInputController.currentDevice
@@ -1064,5 +1071,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     public func onPostOptionsDismissed() {
         mediaPlayerController?.onPostingOptionsDismissed()
+    }
+    
+    public func onPostLongPressSubmitted() {
+        mediaPlayerController?.onPostLongPressSubmitted()
     }
 }

@@ -67,6 +67,8 @@ protocol EditorViewDelegate: class {
     /// Called when the rendering rectangle has changed
     /// - Parameter rect: the rendering rectangle
     func didRenderRectChange(rect: CGRect)
+    
+    func getPostButton() -> UIView
 }
 
 /// Constants for EditorView
@@ -157,14 +159,20 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         return quickBlogSelectorCoordinator?.avatarView(frame: EditorViewConstants.frame)
     }
     
-    weak var delegate: EditorViewDelegate?
+    private lazy var postLongPressButton: UIView = {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getPostButton()
+    }()
+    
+    private weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+    init(delegate: EditorViewDelegate?, mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+        self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
         self.showTagButton = showTagButton
@@ -200,6 +208,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupDrawingMenu()
         setupGifMakerMenu()
         setupFakeOptionCell()
+        setupPostLongPressButton()
     }
     
     // MARK: - views
@@ -407,7 +416,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fakeOptionCell.alpha = 0
     }
 
-    func setupPostButton() {
+    private func setupPostButton() {
         postButton.accessibilityLabel = "Post Button"
         postButton.clipsToBounds = false
         postButton.layer.applyShadows()
@@ -453,7 +462,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         postButton.addGestureRecognizer(longPressRecognizer)
     }
 
-    func setupSaveButton() {
+    private func setupSaveButton() {
         saveButton.accessibilityLabel = "Save Button"
         navigationContainer.addSubview(saveButton)
         saveButton.layer.applyShadows()
@@ -470,7 +479,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         ])
     }
 
-    func confirmOrPostButton() -> UIButton {
+    private func confirmOrPostButton() -> UIButton {
         switch mainActionMode {
         case .confirm, .postOptions:
             return confirmButton
@@ -479,13 +488,24 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
     }
     
-    func confirmOrPostButtonHorizontalMargin() -> CGFloat {
+    private func confirmOrPostButtonHorizontalMargin() -> CGFloat {
         switch mainActionMode {
         case .confirm, .postOptions:
             return EditorViewConstants.confirmButtonHorizontalMargin
         case .post:
             return EditorViewConstants.postButtonHorizontalMargin
         }
+    }
+    
+    private func setupPostLongPressButton() {
+        postLongPressButton.accessibilityLabel = "Post Long Press Button"
+        
+        addSubview(postLongPressButton)
+        postLongPressButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            postLongPressButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+            postLongPressButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
+        ])
     }
     
     // MARK: - buttons
@@ -690,5 +710,23 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     func didEndTouchesOnMovableView() {
         delegate?.didEndTouchesOnText()
+    }
+    
+    // MARK: - LongPressOptionsButtonDelegate
+    
+    func didBeginLongPress() {
+        
+    }
+    
+    func didEndLongPress() {
+        
+    }
+    
+    func didEnterSelectionArea() {
+        
+    }
+    
+    func didExitSelectionArea() {
+        
     }
 }

@@ -10,4 +10,6 @@ import Foundation
 protocol MediaPlayerController: UIViewController {
     /// Called when the Posting Options view is dismissed.
     func onPostingOptionsDismissed()
+    
+    func onPostLongPressSubmitted()
 }

@@ -36,6 +36,7 @@ public struct KanvasCameraFonts {
                 colorSelectorTooltipFont: UIFont,
                 modeSelectorTooltipFont: UIFont,
                 postLabelFont: UIFont,
+                postWithLongPressLabel: UIFont,
                 gifMakerRevertButtonFont: UIFont,
                 paddingAdjustment: ((UIFont) -> Padding?)?) {
             self.permissions = permissions
@@ -49,6 +50,7 @@ public struct KanvasCameraFonts {
             self.colorSelectorTooltipFont = colorSelectorTooltipFont
             self.modeSelectorTooltipFont = modeSelectorTooltipFont
             self.postLabelFont = postLabelFont
+            self.postWithLongPressLabel = postWithLongPressLabel
             self.gifMakerRevertButtonFont = gifMakerRevertButtonFont
             self.paddingAdjustment = paddingAdjustment
     }
@@ -66,6 +68,7 @@ public struct KanvasCameraFonts {
                                    modeSelectorTooltipFont: KanvasCameraFonts.favoritTumblr85(fontSize: 15),
                                    postLabelFont:
                                     KanvasCameraFonts.favoritTumblrMedium(fontSize: 14),
+                                   postWithLongPressLabel: KanvasCameraFonts.favoritTumblrMedium(fontSize: 18),
                                    gifMakerRevertButtonFont: KanvasCameraFonts.guavaMedium,
                                    paddingAdjustment: nil
    )
@@ -107,6 +110,7 @@ public struct KanvasCameraFonts {
     let colorSelectorTooltipFont: UIFont // ColorSelectorView:42
     let modeSelectorTooltipFont: UIFont // ModeSelectorAndShootViewController:18
     let postLabelFont: UIFont // EditorView:438
+    let postWithLongPressLabel: UIFont
     let gifMakerRevertButtonFont: UIFont // GifMakerView:188
         
     public struct Padding {

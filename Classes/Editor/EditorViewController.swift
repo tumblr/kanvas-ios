@@ -41,6 +41,8 @@ public protocol EditorControllerDelegate: class {
 
     /// Called when the tag button is pressed
     func tagButtonPressed()
+    
+    func getPostButton() -> UIView
 }
 
 private struct Constants {
@@ -59,12 +61,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             mainActionMode = .post
         }
 
-        let editorView = EditorView(mainActionMode: mainActionMode,
+        let editorView = EditorView(delegate: self,
+                                    mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater)
-        editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
     }()
@@ -257,7 +259,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
-
+        
         setupNotifications()
     }
 
@@ -575,6 +577,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didTapCloseButton() {
         player.stop()
         delegate?.dismissButtonPressed()
+    }
+    
+    func getPostButton() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getPostButton()
     }
 
     // MARK: - Media Exporting
@@ -1009,6 +1016,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func onPostingOptionsDismissed() {
         startPlayerFromSegments()
+    }
+    
+    func onPostLongPressSubmitted() {
+        startExporting(action: .post)
     }
     
     // MARK: - Private utilities

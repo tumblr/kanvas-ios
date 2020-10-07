@@ -123,6 +123,11 @@ extension KanvasDashboardController: CameraControllerDelegate {
     public func tagButtonPressed() {
         // Only supported in Orangina
     }
+    
+    public func getPostButton() -> UIView {
+        // Only supported in Orangina
+        return UIView()
+    }
 
     public func editorDismissed() {
         // Only supported in Orangina
