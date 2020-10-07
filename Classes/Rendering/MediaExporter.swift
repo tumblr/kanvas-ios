@@ -25,7 +25,7 @@ protocol MediaExporting: class {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     init(settings: CameraSettings)
-    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
+    func export(image: UIImage, time: TimeInterval, completion: @escaping (UIImage?, Error?) -> Void)
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
     func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void)
 }
@@ -63,7 +63,7 @@ final class MediaExporter: MediaExporting {
     /// Exports an image
     /// - Parameter image: UIImage to export
     /// - Parameter completion: callback which is invoked with the processed UIImage
-    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
+    func export(image: UIImage, time: TimeInterval, completion: @escaping (UIImage?, Error?) -> Void) {
         guard needsProcessing else {
             completion(image, nil)
             return

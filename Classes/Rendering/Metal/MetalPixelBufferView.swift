@@ -65,6 +65,7 @@ final class MetalPixelBufferView: MTKView {
                              shaderContext: shaderContext)
         commandBuffer.present(drawable)
         commandBuffer.commit()
+        commandBuffer.waitUntilScheduled()
         self.pixelBufferToDraw = nil
     }
 }

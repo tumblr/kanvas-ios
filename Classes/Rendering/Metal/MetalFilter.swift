@@ -170,6 +170,7 @@ class MetalFilter: FilterProtocol {
         computeEncoder.dispatchThreadgroups(threadgroupCount, threadsPerThreadgroup: threadgroupSize)
         computeEncoder.endEncoding()
         commandBuffer.commit()
+        commandBuffer.waitUntilScheduled()
         
         return offScreenBuffer
     }
