@@ -113,7 +113,6 @@ public class KanvasCameraCustomUI {
                                     UIFont.favoritTumblr85(fontSize: 14),
                                  modeSelectorTooltipFont: UIFont.favoritTumblr85(fontSize: 15),
                                  postLabelFont: UIFont.favoritTumblrMedium(fontSize: 14),
-                                 postWithLongPressLabel: UIFont.favoritTumblrMedium(fontSize: 18),
                                  gifMakerRevertButtonFont: UIFont.guavaMedium().fontByAddingSymbolicTrait(.traitBold),
                                  paddingAdjustment: paddingAdjustment
                                  )

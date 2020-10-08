@@ -232,7 +232,15 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         // Does nothing
     }
     
-    func onPostLongPressSubmitted() {
+    func onQuickPostButtonSubmitted() {
+        // Does nothing
+    }
+    
+    func onQuickPostOptionsShown(_ visible: Bool) {
+        // Does nothing
+    }
+    
+    func onQuickPostOptionsChanged(_ selected: Bool) {
         // Does nothing
     }
 }

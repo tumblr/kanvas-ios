@@ -42,7 +42,7 @@ public protocol EditorControllerDelegate: class {
     /// Called when the tag button is pressed
     func tagButtonPressed()
     
-    func getPostButton() -> UIView
+    func getQuickPostButton() -> UIView
 }
 
 private struct Constants {
@@ -579,9 +579,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         delegate?.dismissButtonPressed()
     }
     
-    func getPostButton() -> UIView {
+    func getQuickPostButton() -> UIView {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getPostButton()
+        return delegate.getQuickPostButton()
     }
 
     // MARK: - Media Exporting
@@ -1018,8 +1018,27 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         startPlayerFromSegments()
     }
     
-    func onPostLongPressSubmitted() {
+    func onQuickPostButtonSubmitted() {
         startExporting(action: .post)
+    }
+    
+    public func onQuickPostOptionsShown(_ visible: Bool) {
+        if visible {
+            editorView.changeOverlayLabel(selected: false)
+        }
+        
+        editorView.showOverlay(visible)
+    }
+    
+    public func onQuickPostOptionsChanged(_ selected: Bool) {
+        if selected {
+            editorView.showOverlayLabel(false, completion: { [weak self] _ in
+                self?.editorView.changeOverlayLabel(selected: true)
+            })
+        }
+        else {
+            editorView.showOverlayLabel(true)
+        }
     }
     
     // MARK: - Private utilities

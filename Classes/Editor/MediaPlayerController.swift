@@ -11,5 +11,8 @@ protocol MediaPlayerController: UIViewController {
     /// Called when the Posting Options view is dismissed.
     func onPostingOptionsDismissed()
     
-    func onPostLongPressSubmitted()
+    func onQuickPostButtonSubmitted()
+    func onQuickPostOptionsShown(_ visible: Bool)
+    func onQuickPostOptionsChanged(_ selected: Bool)
+    
 }

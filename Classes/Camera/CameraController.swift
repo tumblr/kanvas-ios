@@ -90,7 +90,7 @@ public protocol CameraControllerDelegate: class {
 
     func openAppSettings(completion: ((Bool) -> ())?)
     
-    func getPostButton() -> UIView
+    func getQuickPostButton() -> UIView
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -875,9 +875,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndStrokeSelectorAnimation()
     }
     
-    public func getPostButton() -> UIView {
+    public func getQuickPostButton() -> UIView {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getPostButton()
+        return delegate.getQuickPostButton()
     }
     
     // MARK: CameraZoomHandlerDelegate
@@ -1073,7 +1073,15 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         mediaPlayerController?.onPostingOptionsDismissed()
     }
     
-    public func onPostLongPressSubmitted() {
-        mediaPlayerController?.onPostLongPressSubmitted()
+    public func onQuickPostButtonSubmitted() {
+        mediaPlayerController?.onQuickPostButtonSubmitted()
+    }
+    
+    public func onQuickPostOptionsShown(_ visible: Bool) {
+        mediaPlayerController?.onQuickPostOptionsShown(visible)
+    }
+    
+    public func onQuickPostOptionsChanged(_ selected: Bool) {
+        mediaPlayerController?.onQuickPostOptionsChanged(selected)
     }
 }

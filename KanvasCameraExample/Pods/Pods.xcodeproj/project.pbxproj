@@ -99,9 +99,6 @@
 		631EB768A41C7CF8DB83F5ACB89B0C5E /* KanvasCameraFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D2F01E2D4A9FD718B0148C637066CAF /* KanvasCameraFonts.swift */; };
 		6407E208640F7E1C34C00DF03F9EDE7A /* KanvasCameraTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE47B177E00AF208161165D7F123840 /* KanvasCameraTimes.swift */; };
 		64AC5EB0E2555596F3881FA73DF0AF90 /* CameraInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1E84F4A4F0F654FD5997B74432F4FA /* CameraInputController.swift */; };
-		65206004252CD57A0093C993 /* LongPressOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65206002252CD57A0093C993 /* LongPressOptionsButton.swift */; };
-		65206005252CD57A0093C993 /* SelectableButtonOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65206003252CD57A0093C993 /* SelectableButtonOption.swift */; };
-		65311FD6252CEDA200BD3135 /* NSLayoutConstraint+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65311FD5252CEDA200BD3135 /* NSLayoutConstraint+Utils.swift */; };
 		65566628AEC574B3CAEB2743DFD3DDAF /* UIImage+DominantColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49689484AF738DDB8D856B023F66E83C /* UIImage+DominantColors.swift */; };
 		662D344707D99DFEF4DE65BB47F7933E /* ModeSelectorAndShootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72114F25990891E38322CC600FE992F /* ModeSelectorAndShootController.swift */; };
 		67B4DEA860537E72019CD6FA22EA39A6 /* ThumbnailCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6656ACF3F5BD38598A8FADE9455D383D /* ThumbnailCollectionController.swift */; };
@@ -413,9 +410,6 @@
 		60FAE48A137EF500992B1D91DCEEA58F /* MMCQ.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MMCQ.swift; sourceTree = "<group>"; };
 		631F40A25B62352ED7BAD6D1F919E279 /* EditorTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
 		63D19E7BFFDADB5F47BF624D05D6C6ED /* StickerCollectionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerCollectionController.swift; sourceTree = "<group>"; };
-		65206002252CD57A0093C993 /* LongPressOptionsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LongPressOptionsButton.swift; sourceTree = "<group>"; };
-		65206003252CD57A0093C993 /* SelectableButtonOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectableButtonOption.swift; sourceTree = "<group>"; };
-		65311FD5252CEDA200BD3135 /* NSLayoutConstraint+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Utils.swift"; sourceTree = "<group>"; };
 		65FC997D7E8DA5C35A7310BA8F3E21F6 /* MovableView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MovableView.swift; sourceTree = "<group>"; };
 		661EB20EF506C344DA60DFC940205E4E /* KanvasCamera.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = KanvasCamera.modulemap; sourceTree = "<group>"; };
 		6656ACF3F5BD38598A8FADE9455D383D /* ThumbnailCollectionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThumbnailCollectionController.swift; sourceTree = "<group>"; };
@@ -827,15 +821,6 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		65206001252CD57A0093C993 /* LongPressButton */ = {
-			isa = PBXGroup;
-			children = (
-				65206002252CD57A0093C993 /* LongPressOptionsButton.swift */,
-				65206003252CD57A0093C993 /* SelectableButtonOption.swift */,
-			);
-			path = LongPressButton;
-			sourceTree = "<group>";
-		};
 		66852831E13DBDB7DAC69B44EE08009D /* Editor */ = {
 			isa = PBXGroup;
 			children = (
@@ -911,7 +896,6 @@
 				AF91F7E43BD68CF2618435304259E227 /* ColorThief */,
 				573947892110B9BD77CAAAA912883DAD /* HorizontalCollectionView */,
 				A98FE8892082FEE065882E35D5E249F0 /* IgnoreTouches */,
-				65206001252CD57A0093C993 /* LongPressButton */,
 			);
 			name = Utility;
 			path = Classes/Utility;
@@ -1107,7 +1091,6 @@
 				29A0441F63F5EE7E8EFCB245CC71F466 /* CGRect+Center.swift */,
 				75AED821F00A61A4AF10397F9D6888F9 /* ClosedRange+Clamp.swift */,
 				F682C480332DD760E563CF9EA70EDAEC /* IndexPath+Order.swift */,
-				65311FD5252CEDA200BD3135 /* NSLayoutConstraint+Utils.swift */,
 				8C3B077FCE1E8E7711095C9DB04FA58C /* String+UTF16Substring.swift */,
 				67626865F17351AC882B07FFDD609095 /* UICollectionView+Cells.swift */,
 				74086F40F32AE6FBF6A84E14DAC44820 /* UIColor+Hex.swift */,
@@ -1733,7 +1716,6 @@
 				E72CE87442DB517380B716040109AE46 /* CameraView.swift in Sources */,
 				97EC964595AC8FE4424BF2C49ECB69B2 /* CameraZoomHandler.swift in Sources */,
 				6DB072210A7715D72E4A576F611BD7BB /* CGPoint+Operators.swift in Sources */,
-				65206004252CD57A0093C993 /* LongPressOptionsButton.swift in Sources */,
 				81230D3F8062043CFF688D4821483BB4 /* CGRect+Center.swift in Sources */,
 				5749E69A16986A71D644A68C03DE42C4 /* ChromaOpenGLFilter.swift in Sources */,
 				F8BFACE46C7DDA09757EC39778A5F353 /* CircularImageView.swift in Sources */,
@@ -1906,7 +1888,6 @@
 				EE5243BA623727DB686C5F536A25E3C1 /* TextOptions.swift in Sources */,
 				14CF810DDDD5057E5BD4686226C76059 /* Texture.swift in Sources */,
 				5457FBAF708461B99AC2876867841054 /* TextureSelectorController.swift in Sources */,
-				65311FD6252CEDA200BD3135 /* NSLayoutConstraint+Utils.swift in Sources */,
 				B8C2CC899426D3CE4096E067F35C874F /* TextureSelectorView.swift in Sources */,
 				F004DA867D581B2771E9C5A5F41BB6E4 /* ThumbnailCollectionCell.swift in Sources */,
 				67B4DEA860537E72019CD6FA22EA39A6 /* ThumbnailCollectionController.swift in Sources */,
@@ -1923,7 +1904,6 @@
 				FB186B1B3C63A41C951AABF1EF0F2F41 /* UIColor+Lerp.swift in Sources */,
 				091C2B4E0BA70695EF394B3D0E92530C /* UIColor+Utils.swift in Sources */,
 				E50255642DD0FB4812E85483F31C3D8F /* UIFont+Utils.swift in Sources */,
-				65206005252CD57A0093C993 /* SelectableButtonOption.swift in Sources */,
 				D3092438A8CC2CD966162DBA0B8A7845 /* UIGestureRecognizer+Active.swift in Sources */,
 				3A52CBC1AFAA721E4AB867964319BAF5 /* UIImage+Camera.swift in Sources */,
 				65566628AEC574B3CAEB2743DFD3DDAF /* UIImage+DominantColors.swift in Sources */,
