@@ -521,7 +521,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private func setupOverlayLabel() {
         overlayLabel.accessibilityLabel = "Overlay Label"
         overlay.addSubview(overlayLabel)
-        overlayLabel.text = NSLocalizedString("Slide finger down", comment: "First title for the help tooltip in the long press menu")
         overlayLabel.textColor = UIColor.white.withAlphaComponent(0.87)
         overlayLabel.font = .boldSystemFont(ofSize: 16)
         overlayLabel.textAlignment = .right
