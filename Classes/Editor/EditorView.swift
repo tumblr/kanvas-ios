@@ -116,6 +116,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let tagButton = UIButton()
     private let fakeOptionCell = UIImageView()
     private let showTagButton: Bool
+    private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
     let collectionContainer = IgnoreTouchesView()
@@ -164,12 +165,18 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+    init(mainActionMode: MainActionMode,
+         showSaveButton: Bool,
+         showCrossIcon: Bool,
+         showTagButton: Bool,
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         metalContext: MetalContext?) {
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
         self.showTagButton = showTagButton
         self.showCrossIcon = showCrossIcon
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
+        self.metalContext = metalContext
         super.init(frame: .zero)
         setupViews()
     }
@@ -205,7 +212,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     // MARK: - views
 
     private func setupPlayer() {
-        let playerView = MediaPlayerView()
+        let playerView = MediaPlayerView(metalContext: metalContext)
         playerView.delegate = self
         playerView.add(into: self)
         self.playerView = playerView

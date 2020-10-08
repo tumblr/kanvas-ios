@@ -55,10 +55,17 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
     weak var delegate: MediaPlayerViewDelegate?
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(metalContext: MetalContext?) {
+        super.init(frame: .zero)
 
-        let pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFit)
+        let pixelBufferView: PixelBufferView & UIView
+        if let metalContext = metalContext {
+            pixelBufferView = MetalPixelBufferView(context: metalContext)
+        }
+        else {
+            pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFit)
+        }
+
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
