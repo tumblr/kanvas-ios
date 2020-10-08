@@ -240,7 +240,7 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         // Does nothing
     }
     
-    func onQuickPostOptionsChanged(_ selected: Bool) {
+    func onQuickPostOptionsSelected(_ isInSelectionArea: Bool) {
         // Does nothing
     }
 }

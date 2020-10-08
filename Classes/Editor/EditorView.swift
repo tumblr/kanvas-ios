@@ -67,7 +67,9 @@ protocol EditorViewDelegate: class {
     /// Called when the rendering rectangle has changed
     /// - Parameter rect: the rendering rectangle
     func didRenderRectChange(rect: CGRect)
-    
+    /// Obtains the quick post button.
+    ///
+    /// - Returns: the quick post button.
     func getQuickPostButton() -> UIView
 }
 
@@ -89,6 +91,8 @@ private struct EditorViewConstants {
     static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
     static let overlayColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.87)
     static let overlayLabelMargin: CGFloat = 20
+    static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
+    static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -521,10 +525,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private func setupOverlayLabel() {
         overlayLabel.accessibilityLabel = "Overlay Label"
         overlay.addSubview(overlayLabel)
-        overlayLabel.textColor = UIColor.white.withAlphaComponent(0.87)
-        overlayLabel.font = .boldSystemFont(ofSize: 16)
+        overlayLabel.textColor = EditorViewConstants.overlayLabelTextColor
+        overlayLabel.font = EditorViewConstants.overlayLabelFont
         overlayLabel.textAlignment = .right
-        overlayLabel.alpha = 1
         
         overlayLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -728,8 +731,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }, completion: completion)
     }
     
-    func changeOverlayLabel(selected: Bool) {
-        if selected {
+    /// Modifies the overlay message depending on whether an option is being selected or not.
+    ///
+    /// - Parameter isInSelectionArea: true if the user is holding an option, false if it is an empty area.
+    func changeOverlayLabel(isInSelectionArea: Bool) {
+        if isInSelectionArea {
             overlayLabel.text = NSLocalizedString("Release to cancel", comment: "Second title for the help tooltip in the long press menu")
         }
         else {
@@ -775,23 +781,5 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     func didEndTouchesOnMovableView() {
         delegate?.didEndTouchesOnText()
-    }
-    
-    // MARK: - LongPressOptionsButtonDelegate
-    
-    func didBeginLongPress() {
-        
-    }
-    
-    func didEndLongPress() {
-        
-    }
-    
-    func didEnterSelectionArea() {
-        
-    }
-    
-    func didExitSelectionArea() {
-        
     }
 }

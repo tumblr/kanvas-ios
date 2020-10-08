@@ -42,6 +42,9 @@ public protocol EditorControllerDelegate: class {
     /// Called when the tag button is pressed
     func tagButtonPressed()
     
+    /// Obtains the quick post button.
+    ///
+    /// - Returns: the quick post button.
     func getQuickPostButton() -> UIView
 }
 
@@ -259,7 +262,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
-        
+
         setupNotifications()
     }
 
@@ -1024,16 +1027,16 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     public func onQuickPostOptionsShown(_ visible: Bool) {
         if visible {
-            editorView.changeOverlayLabel(selected: false)
+            editorView.changeOverlayLabel(isInSelectionArea: false)
         }
         
         editorView.showOverlay(visible)
     }
     
-    public func onQuickPostOptionsChanged(_ selected: Bool) {
-        if selected {
+    public func onQuickPostOptionsSelected(_ isInSelectionArea: Bool) {
+        if isInSelectionArea {
             editorView.showOverlayLabel(false, completion: { [weak self] _ in
-                self?.editorView.changeOverlayLabel(selected: true)
+                self?.editorView.changeOverlayLabel(isInSelectionArea: true)
             })
         }
         else {

@@ -61,7 +61,6 @@ public struct KanvasCameraColors {
     
     public static var shared: KanvasCameraColors = {
         return KanvasCameraColors(
-            buttonBackgroundColor: brightBlue,
             drawingDefaultColor: brightBlue,
             colorPickerColors: pickerColors,
             selectedPickerColor: selectedColor,
@@ -94,7 +93,6 @@ public struct KanvasCameraColors {
     let white65: UIColor = UIColor(white: 1, alpha: 0.65)
     
     public init(
-        buttonBackgroundColor: UIColor,
         drawingDefaultColor: UIColor,
         colorPickerColors: [UIColor],
         selectedPickerColor: UIColor,
@@ -108,7 +106,6 @@ public struct KanvasCameraColors {
         tooltipBackgroundColor: UIColor,
         closeButtonColor: UIColor,
         filterColors: [FilterType: UIColor]) {
-        self.buttonBackgroundColor = buttonBackgroundColor
         self.drawingDefaultColor = drawingDefaultColor
         self.colorPickerColors = colorPickerColors
         self.selectedPickerColor = selectedPickerColor
@@ -124,7 +121,6 @@ public struct KanvasCameraColors {
         self.filterColors = filterColors
     }
     
-    let buttonBackgroundColor: UIColor
     let drawingDefaultColor: UIColor // DrawingController:50
     let colorPickerColors: [UIColor] // ColorPickerView:37
     let selectedPickerColor: UIColor // ColorPickerController:29

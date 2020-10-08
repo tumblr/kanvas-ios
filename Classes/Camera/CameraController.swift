@@ -90,6 +90,9 @@ public protocol CameraControllerDelegate: class {
 
     func openAppSettings(completion: ((Bool) -> ())?)
     
+    /// Obtains the quick post button for the editor.
+    ///
+    /// - Returns: the quick post button.
     func getQuickPostButton() -> UIView
 }
 
@@ -1081,7 +1084,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         mediaPlayerController?.onQuickPostOptionsShown(visible)
     }
     
-    public func onQuickPostOptionsChanged(_ selected: Bool) {
-        mediaPlayerController?.onQuickPostOptionsChanged(selected)
+    public func onQuickPostOptionsSelected(_ isInSelectionArea: Bool) {
+        mediaPlayerController?.onQuickPostOptionsSelected(isInSelectionArea)
     }
 }
