@@ -69,8 +69,9 @@ protocol EditorViewDelegate: class {
     func didRenderRectChange(rect: CGRect)
     /// Obtains the quick post button.
     ///
+    /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
-    func getQuickPostButton() -> UIView
+    func getQuickPostButton(enableLongPress: Bool) -> UIView
 }
 
 /// Constants for EditorView
@@ -124,6 +125,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let tagButton = UIButton()
     private let fakeOptionCell = UIImageView()
     private let showTagButton: Bool
+    private let showQuickPostButton: Bool
+    private let enableQuickPostLongPress: Bool
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
     private let overlay = UIView()
@@ -169,7 +172,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     private lazy var quickPostButton: UIView = {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton()
+        return delegate.getQuickPostButton(enableLongPress: enableQuickPostLongPress)
     }()
     
     private weak var delegate: EditorViewDelegate?
@@ -179,12 +182,14 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(delegate: EditorViewDelegate?, mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+    init(delegate: EditorViewDelegate?, mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, showQuickPostButton: Bool, enableQuickPostLongPress: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
         self.showTagButton = showTagButton
         self.showCrossIcon = showCrossIcon
+        self.showQuickPostButton = showQuickPostButton
+        self.enableQuickPostLongPress = enableQuickPostLongPress
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         super.init(frame: .zero)
         setupViews()
@@ -216,9 +221,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupDrawingMenu()
         setupGifMakerMenu()
         setupFakeOptionCell()
-        setupOverlay()
-        setupQuickPostButton()
-        setupOverlayLabel()
+        if showQuickPostButton {
+            setupOverlay()
+            setupQuickPostButton()
+            setupOverlayLabel()
+        }
     }
     
     // MARK: - views

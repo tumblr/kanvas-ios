@@ -341,7 +341,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         // Only supported in Orangina
     }
     
-    func getQuickPostButton() -> UIView {
+    func getQuickPostButton(enableLongPress: Bool) -> UIView {
         // Only supported in Orangina
         return UIView()
     }

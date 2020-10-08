@@ -44,8 +44,9 @@ public protocol EditorControllerDelegate: class {
     
     /// Obtains the quick post button.
     ///
+    /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
-    func getQuickPostButton() -> UIView
+    func getQuickPostButton(enableLongPress: Bool) -> UIView
 }
 
 private struct Constants {
@@ -69,6 +70,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
+                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
+                                    enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater)
         player.playerView = editorView.playerView
         return editorView
@@ -582,9 +585,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         delegate?.dismissButtonPressed()
     }
     
-    func getQuickPostButton() -> UIView {
+    func getQuickPostButton(enableLongPress: Bool) -> UIView {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton()
+        return delegate.getQuickPostButton(enableLongPress: enableLongPress)
     }
 
     // MARK: - Media Exporting

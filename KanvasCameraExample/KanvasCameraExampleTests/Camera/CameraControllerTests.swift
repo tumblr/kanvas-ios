@@ -345,7 +345,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         
     }
     
-    func getQuickPostButton() -> UIView {
+    func getQuickPostButton(enableLongPress: Bool) -> UIView {
         return UIView()
     }
     

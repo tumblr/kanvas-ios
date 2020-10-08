@@ -238,7 +238,15 @@ public struct CameraFeatures {
     /// Tag button in Editor
     /// This shows a # button in the editor to enable adding tags
     public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
-
+    
+    /// Quick post button in Editor
+    /// This shows a post button that shows options when long pressed
+    public var showQuickPostButtonInEditor = DefaultCameraSettings.showQuickPostButtonInEditor
+    
+    /// Long press for post button in Editor
+    /// This enables the long press for the quick post button.
+    public var enableQuickPostLongPress = DefaultCameraSettings.enableQuickPostLongPress
+    
     /// Auto-open GIF Maker in Editor
     public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
         if mode?.group == .gif {
@@ -310,6 +318,8 @@ private struct DefaultCameraSettings {
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
     static let showTagButtonInEditor: Bool = false
+    static let showQuickPostButtonInEditor: Bool = false
+    static let enableQuickPostLongPress: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
 
