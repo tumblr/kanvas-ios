@@ -240,7 +240,7 @@ public struct CameraFeatures {
     public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
     
     /// Quick post button in Editor
-    /// This shows a post button that shows options when long pressed
+    /// This shows a post button that makes quick options appear when long pressed
     public var showQuickPostButtonInEditor = DefaultCameraSettings.showQuickPostButtonInEditor
     
     /// Long press for post button in Editor
