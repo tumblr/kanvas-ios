@@ -62,7 +62,6 @@ public class KanvasCameraCustomUI {
     
     func cameraColors() -> KanvasCameraColors {
         return KanvasCameraColors(
-            buttonBackgroundColor: Self.brightBlue,
             drawingDefaultColor: Self.brightBlue,
             colorPickerColors: pickerColors,
             selectedPickerColor: selectedColor,

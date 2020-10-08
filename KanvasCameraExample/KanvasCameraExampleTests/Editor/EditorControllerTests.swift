@@ -353,4 +353,8 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     func tagButtonPressed() {
 
     }
+    
+    func getQuickPostButton() -> UIView {
+        return UIView()
+    }
 }

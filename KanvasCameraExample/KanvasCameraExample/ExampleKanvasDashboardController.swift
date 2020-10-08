@@ -124,7 +124,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         // Only supported in Orangina
     }
     
-    public func getPostButton() -> UIView {
+    public func getQuickPostButton() -> UIView {
         // Only supported in Orangina
         return UIView()
     }

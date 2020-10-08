@@ -345,6 +345,10 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         
     }
     
+    func getQuickPostButton() -> UIView {
+        return UIView()
+    }
+    
     var dismissCalled = false
     var videoURL: URL? = nil
     var framesURL: URL? = nil
