@@ -25,6 +25,11 @@ vertex TextureMappingVertex vertexIdentity(unsigned int vertex_id [[ vertex_id ]
                                            float2( 1.0, 1.0 ),
                                            float2( 0.0, 0.0 ),
                                            float2( 1.0, 0.0 ));
+    
+//    float4x2 textureCoordinates = float4x2(float2( 1.0, 1.0 ),
+//                                           float2( 1.0, 0.0 ),
+//                                           float2( 0.0, 1.0 ),
+//                                           float2( 0.0, 0.0 ));
     TextureMappingVertex outVertex;
     outVertex.renderedCoordinate = renderedCoordinates[vertex_id];
     outVertex.textureCoordinate = textureCoordinates[vertex_id];
