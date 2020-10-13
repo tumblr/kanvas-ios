@@ -61,7 +61,7 @@ final class MetalRenderEncoder {
     /**
     This is handling orientation.
 
-    Originally I implemented the following, which just applies the transform matrix to the base coordinates. But turned out that this flips the image as it keeps the polygons' order. (Therefore the direction of each surface changes).
+    Originally I implemented the following, which just applies the transform matrix to the base coordinates. But turned out that this flips the image as it keeps the vertices order. (Therefore the direction of each surface changes).
 
     ```
     var result = [Float]()
