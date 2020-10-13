@@ -58,6 +58,30 @@ final class MetalRenderEncoder {
         renderEncoder?.endEncoding()
     }
     
+    /**
+    This is handling orientation.
+
+    Originally I implemented the following, which just applies the transform matrix to the base coordinates. But turned out that this flips the image as it keeps the polygons' order. (Therefore the direction of each surface changes).
+
+    ```
+    var result = [Float]()
+    for var coordinate in baseCoordinates {
+        coordinate[0] -= 0.5
+        coordinate[1] -= 0.5
+        var x = coordinate[0] * textureTransform.m00 + coordinate[1] * textureTransform.m01
+        var y = -coordinate[0] * textureTransform.m10 + coordinate[1] * textureTransform.m11
+        x += 0.5
+        y += 0.5
+
+        result.append(round(x))
+        result.append(round(y))
+    }
+    return result
+    ```
+
+    I was not able to find a generic way to re-order vertex after applying the transform matrix. So I'm hardcoding the coordinates based on degrees.
+    Probably there is a better way. Please refactor if you know a better solution.
+    */
     private func createTextureCoordinates(textureTransform: GLKMatrix4?) -> [Float] {
         let baseCoordinates: [Float] = [
             0.0, 1.0,
@@ -91,6 +115,7 @@ final class MetalRenderEncoder {
         return baseCoordinates
     }
     
+    // This handles scaling
     private func createVertex(aspectRatio: CGFloat) -> [Float] {
         var baseVertex: [[Float]] = [
             [-1.0, -1.0, 0.0, 1.0],
