@@ -98,6 +98,7 @@ private struct EditorViewConstants {
     static let overlayLabelMargin: CGFloat = 20
     static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
+    static let topMenuElementHeight: CGFloat = 36
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -131,10 +132,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showTagButton: Bool
     private let showQuickPostButton: Bool
     private let enableQuickPostLongPress: Bool
+    private let showBlogSwitcher: Bool
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
     private let overlay = UIView()
     private let overlayLabel = UILabel()
+    private var overlayLabelConstraint: NSLayoutConstraint?
     let collectionContainer = IgnoreTouchesView()
     let filterMenuContainer = IgnoreTouchesView()
     let textMenuContainer = IgnoreTouchesView()
@@ -191,7 +194,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(delegate: EditorViewDelegate?, mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, showQuickPostButton: Bool, enableQuickPostLongPress: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+    init(delegate: EditorViewDelegate?, mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, showQuickPostButton: Bool, enableQuickPostLongPress: Bool, showBlogSwitcher: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
@@ -199,6 +202,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showCrossIcon = showCrossIcon
         self.showQuickPostButton = showQuickPostButton
         self.enableQuickPostLongPress = enableQuickPostLongPress
+        self.showBlogSwitcher = showBlogSwitcher
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         super.init(frame: .zero)
         setupViews()
@@ -230,12 +234,16 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupDrawingMenu()
         setupGifMakerMenu()
         setupFakeOptionCell()
+        
         if showQuickPostButton {
-            setupOverlay()
             setupQuickPostButton()
-            setupOverlayLabel()
         }
-        setupBlogSwitcher()
+        if showBlogSwitcher {
+            setupBlogSwitcher()
+        }
+        
+        setupOverlay()
+        setupOverlayLabel()
     }
     
     // MARK: - views
@@ -548,10 +556,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         overlayLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            overlayLabel.centerYAnchor.constraint(equalTo: quickPostButton.centerYAnchor),
-            overlayLabel.heightAnchor.constraint(equalTo: quickPostButton.heightAnchor),
+            overlayLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+            overlayLabel.heightAnchor.constraint(equalToConstant: EditorViewConstants.topMenuElementHeight),
             overlayLabel.leadingAnchor.constraint(equalTo: overlay.leadingAnchor),
-            overlayLabel.trailingAnchor.constraint(equalTo: quickPostButton.leadingAnchor, constant: -EditorViewConstants.overlayLabelMargin),
         ])
     }
     
@@ -571,9 +578,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         addSubview(blogSwitcher)
         blogSwitcher.translatesAutoresizingMaskIntoConstraints = false
+        let trailingAnchor = quickPostButton.isDescendant(of: self) ? quickPostButton.leadingAnchor : self.trailingAnchor
         NSLayoutConstraint.activate([
             blogSwitcher.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            blogSwitcher.trailingAnchor.constraint(equalTo: quickPostButton.leadingAnchor, constant: -CameraConstants.optionHorizontalMargin),
+            blogSwitcher.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
+            blogSwitcher.heightAnchor.constraint(equalToConstant: EditorViewConstants.topMenuElementHeight),
+            blogSwitcher.widthAnchor.constraint(equalToConstant: EditorViewConstants.topMenuElementHeight),
         ])
     }
     
@@ -744,31 +754,39 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// shows or hides the overlay
     ///
     /// - Parameter show: true to show, false to hide
-    func showOverlay(_ show: Bool) {
-        UIView.animate(withDuration: EditorViewConstants.animationDuration) { [weak self] in
-            self?.overlay.alpha = show ? 1 : 0
-        }
-    }
-    
-    /// shows or hides the overlay label
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showOverlayLabel(_ show: Bool, completion: ((Bool) -> Void)? = nil) {
+    func showOverlay(_ show: Bool, completion: ((Bool) -> Void)? = nil) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration, animations: { [weak self] in
-            self?.overlayLabel.alpha = show ? 1 : 0
+            self?.overlay.alpha = show ? 1 : 0
         }, completion: completion)
     }
     
-    /// Modifies the overlay message depending on whether an option is being selected or not.
-    ///
-    /// - Parameter isInSelectionArea: true if the user is holding an option, false if it is an empty area.
-    func changeOverlayLabel(isInSelectionArea: Bool) {
-        if isInSelectionArea {
-            overlayLabel.text = NSLocalizedString("Release to cancel", comment: "Second title for the help tooltip in the long press menu")
+    func moveOverlayLabel(to view: UIView) {
+        overlayLabelConstraint?.isActive = false
+        let newConstraint = overlayLabel.trailingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                                   constant: -EditorViewConstants.overlayLabelMargin)
+        newConstraint.isActive = true
+        overlayLabelConstraint = newConstraint
+        layoutIfNeeded()
+    }
+    
+    func moveViewToFront(_ view: UIView, visible: Bool) {
+        if visible {
+            bringSubviewToFront(view)
         }
         else {
-            overlayLabel.text = NSLocalizedString("Slide finger down", comment: "First title for the help tooltip in the long press menu")
+            bringSubviewToFront(overlay)
         }
+    }
+    /// Modifies the overlay message.
+    ///
+    /// - Parameter text: the new message.
+    func setOverlayLabel(text: String?) {
+        let newText = text ?? ""
+        UIView.animate(withDuration: EditorViewConstants.animationDuration, animations: { [weak self] in
+            guard let self = self else { return }
+            self.overlayLabel.alpha = !newText.isEmpty ? 1 : 0
+            self.overlayLabel.text = newText
+        })
     }
 
     func updatePostButton(avatarView: UIView) {

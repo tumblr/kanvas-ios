@@ -236,11 +236,11 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         // Does nothing
     }
     
-    func onQuickPostOptionsShown(_ visible: Bool) {
+    func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
         // Does nothing
     }
     
-    func onQuickPostOptionsSelected(_ isInSelectionArea: Bool) {
+    func onQuickPostOptionsSelected(selected: Bool, hintText: String?, view: UIView) {
         // Does nothing
     }
 }

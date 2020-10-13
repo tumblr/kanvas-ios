@@ -77,6 +77,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showTagButton: settings.showTagButtonInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
                                     enableQuickPostLongPress: settings.enableQuickPostLongPress,
+                                    showBlogSwitcher: settings.showBlogSwitcherInEditor,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater)
         player.playerView = editorView.playerView
         return editorView
@@ -1038,23 +1039,23 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         startExporting(action: .post)
     }
     
-    public func onQuickPostOptionsShown(_ visible: Bool) {
-        if visible {
-            editorView.changeOverlayLabel(isInSelectionArea: false)
-        }
+    public func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
+        editorView.moveOverlayLabel(to: view)
+        editorView.setOverlayLabel(text: hintText)
         
-        editorView.showOverlay(visible)
-    }
-    
-    public func onQuickPostOptionsSelected(_ isInSelectionArea: Bool) {
-        if isInSelectionArea {
-            editorView.showOverlayLabel(false, completion: { [weak self] _ in
-                self?.editorView.changeOverlayLabel(isInSelectionArea: true)
-            })
+        if visible {
+            editorView.moveViewToFront(view, visible: true)
+            editorView.showOverlay(true)
         }
         else {
-            editorView.showOverlayLabel(true)
+            editorView.showOverlay(false, completion: { [weak self] _ in
+                self?.editorView.moveViewToFront(view, visible: false)
+            })
         }
+    }
+    
+    public func onQuickPostOptionsSelected(selected: Bool, hintText: String?, view: UIView) {
+        editorView.setOverlayLabel(text: hintText)
     }
     
     // MARK: - Private utilities

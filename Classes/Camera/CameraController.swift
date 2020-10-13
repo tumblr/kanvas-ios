@@ -1091,11 +1091,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         mediaPlayerController?.onQuickPostButtonSubmitted()
     }
     
-    public func onQuickPostOptionsShown(_ visible: Bool) {
-        mediaPlayerController?.onQuickPostOptionsShown(visible)
+    public func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
+        mediaPlayerController?.onQuickPostOptionsShown(visible: visible, hintText: hintText, view: view)
     }
     
-    public func onQuickPostOptionsSelected(_ isInSelectionArea: Bool) {
-        mediaPlayerController?.onQuickPostOptionsSelected(isInSelectionArea)
+    public func onQuickPostOptionsSelected(selected: Bool, hintText: String?, view: UIView) {
+        mediaPlayerController?.onQuickPostOptionsSelected(selected: selected, hintText: hintText, view: view)
     }
 }
