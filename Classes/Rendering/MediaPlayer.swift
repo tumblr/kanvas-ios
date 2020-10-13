@@ -55,17 +55,13 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
     
     var mediaTransform: GLKMatrix4? {
         didSet {
-            if let metalPixelBufferView = pixelBufferView as? MetalPixelBufferView {
-                metalPixelBufferView.mediaTransform = mediaTransform
-            }
+            pixelBufferView?.mediaTransform = mediaTransform
         }
     }
     
     var isPortrait: Bool = true {
         didSet {
-            if let metalPixelBufferView = pixelBufferView as? MetalPixelBufferView {
-                metalPixelBufferView.isPortrait = isPortrait
-            }
+            pixelBufferView?.isPortrait = isPortrait
         }
     }
 
