@@ -5,6 +5,7 @@
 //
 
 import MetalKit
+import GLKit
 
 struct ShaderContext {
     var time: Float = 0.0
@@ -18,9 +19,13 @@ final class MetalPixelBufferView: MTKView {
         MetalRenderEncoder(device: context.device, library: context.library)
     }()
     
+    var mediaTransform: GLKMatrix4?
+    var isPortrait: Bool = true
+    
     init(context: MetalContext) {
         self.context = context
         super.init(frame: .zero, device: context.device)
+        self.contentMode = .scaleAspectFit
         print(renderEncoder.device)
     }
     
@@ -38,8 +43,8 @@ final class MetalPixelBufferView: MTKView {
             return
         }
         
-        let width = CVPixelBufferGetWidth(pixelBufferToDraw)
-        let height = CVPixelBufferGetHeight(pixelBufferToDraw)
+        var width = CVPixelBufferGetWidth(pixelBufferToDraw)
+        var height = CVPixelBufferGetHeight(pixelBufferToDraw)
         var cvTexture: CVMetalTexture?
         let result = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
                                                                context.textureCache,
@@ -59,10 +64,16 @@ final class MetalPixelBufferView: MTKView {
             return
         }
         
+        if isPortrait && width > height {
+            (width, height) = (height, width)
+        }
+        
         renderEncoder.encode(commandBuffer: commandBuffer,
                              inputTexture: metalTexture,
                              currentRenderPassDescriptor: currentRenderPassDescriptor,
-                             shaderContext: shaderContext)
+                             shaderContext: shaderContext,
+                             aspectRatio: CGFloat(height) / CGFloat(width),
+                             textureTransform: mediaTransform)
         commandBuffer.present(drawable)
         commandBuffer.commit()
         commandBuffer.waitUntilScheduled()

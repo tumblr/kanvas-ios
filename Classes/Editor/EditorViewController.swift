@@ -849,7 +849,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval {
         return CameraSegment.defaultTimeInterval(segments: segments)
     }
-
+    
     // MARK: - GifMakerHandlerDelegate
     
     func didConfirmGif() {

@@ -167,5 +167,4 @@ extension VideoCompositor: RendererDelegate {
     func rendererRanOutOfBuffers() {
         // Nothing we can do here...
     }
-
 }
