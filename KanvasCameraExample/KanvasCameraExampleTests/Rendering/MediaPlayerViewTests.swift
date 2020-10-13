@@ -29,6 +29,7 @@ class MediaPlayerViewTests: FBSnapshotTestCase {
         }
         let player = MediaPlayer(renderer: Renderer())
         let view = MediaPlayerView(metalContext: nil)
+        view.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         player.playerView = view
         player.play(media: [.image(image, nil)])
         RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 2))
