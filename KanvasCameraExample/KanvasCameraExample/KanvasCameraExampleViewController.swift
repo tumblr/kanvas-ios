@@ -346,6 +346,11 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         return UIView()
     }
 
+    func getBlogSwitcher() -> UIView {
+        // Only supported in Orangina
+        return UIView()
+    }
+    
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeTooltip
     }

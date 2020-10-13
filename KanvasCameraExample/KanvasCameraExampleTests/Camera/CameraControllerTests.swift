@@ -349,6 +349,10 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         return UIView()
     }
     
+    func getBlogSwitcher() -> UIView {
+        return UIView()
+    }
+    
     var dismissCalled = false
     var videoURL: URL? = nil
     var framesURL: URL? = nil
