@@ -72,6 +72,10 @@ protocol EditorViewDelegate: class {
     /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
     func getQuickPostButton(enableLongPress: Bool) -> UIView
+    /// Obtains the blog switcher.
+    ///
+    /// - Returns: the blog switcher.
+    func getBlogSwitcher() -> UIView
 }
 
 /// Constants for EditorView
@@ -175,6 +179,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         return delegate.getQuickPostButton(enableLongPress: enableQuickPostLongPress)
     }()
     
+    private lazy var blogSwitcher: UIView = {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getBlogSwitcher()
+    }()
+    
     private weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
@@ -226,6 +235,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             setupQuickPostButton()
             setupOverlayLabel()
         }
+        setupBlogSwitcher()
     }
     
     // MARK: - views
@@ -553,6 +563,17 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         NSLayoutConstraint.activate([
             quickPostButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             quickPostButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
+        ])
+    }
+    
+    private func setupBlogSwitcher() {
+        blogSwitcher.accessibilityLabel = "Blog Switcher"
+        
+        addSubview(blogSwitcher)
+        blogSwitcher.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            blogSwitcher.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+            blogSwitcher.trailingAnchor.constraint(equalTo: quickPostButton.leadingAnchor, constant: -CameraConstants.optionHorizontalMargin),
         ])
     }
     

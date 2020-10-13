@@ -95,6 +95,11 @@ public protocol CameraControllerDelegate: class {
     /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
     func getQuickPostButton(enableLongPress: Bool) -> UIView
+    
+    /// Obtains the blog switcher for the editor.
+    ///
+    /// - Returns: the blog switcher.
+    func getBlogSwitcher() -> UIView
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -882,6 +887,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     public func getQuickPostButton(enableLongPress: Bool) -> UIView {
         guard let delegate = delegate else { return UIView() }
         return delegate.getQuickPostButton(enableLongPress: enableLongPress)
+    }
+    
+    public func getBlogSwitcher() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getBlogSwitcher()
     }
     
     // MARK: CameraZoomHandlerDelegate

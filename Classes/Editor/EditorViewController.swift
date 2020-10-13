@@ -47,6 +47,11 @@ public protocol EditorControllerDelegate: class {
     /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
     func getQuickPostButton(enableLongPress: Bool) -> UIView
+    
+    /// Obtains the blog switcher.
+    ///
+    /// - Returns: the blog switcher.
+    func getBlogSwitcher() -> UIView
 }
 
 private struct Constants {
@@ -588,6 +593,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func getQuickPostButton(enableLongPress: Bool) -> UIView {
         guard let delegate = delegate else { return UIView() }
         return delegate.getQuickPostButton(enableLongPress: enableLongPress)
+    }
+    
+    func getBlogSwitcher() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getBlogSwitcher()
     }
 
     // MARK: - Media Exporting
