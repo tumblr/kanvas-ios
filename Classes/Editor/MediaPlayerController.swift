@@ -16,12 +16,18 @@ protocol MediaPlayerController: UIViewController {
     
     /// Called when the quick post options in the Editor change their visibility.
     ///
-    /// - Parameter visible: true if the quick options are visible, false if not.
+    /// - Parameters
+    ///  - visible: true if the quick options are visible, false if not.
+    ///  - hintText: an optional text to show as hint.
+    ///  - view: the view that starts the action.
     func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView)
     
     /// Called when the user enters or leaves the selection area.
     ///
-    /// - Parameter selected: true if the user is in the selection area, false if not.
+    /// - Parameters
+    ///  - selected: true if the user is in the selection area, false if not.
+    ///  - hintText: an optional text to show as hint.
+    ///  - view: the view that starts the action.
     func onQuickPostOptionsSelected(selected: Bool, hintText: String?, view: UIView)
     
 }

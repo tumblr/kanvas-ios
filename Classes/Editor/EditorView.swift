@@ -753,13 +753,18 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     /// shows or hides the overlay
     ///
-    /// - Parameter show: true to show, false to hide
+    /// - Parameters
+    ///  -  show: true to show, false to hide
+    ///  - completion: an optional action to be executed when the animation ends
     func showOverlay(_ show: Bool, completion: ((Bool) -> Void)? = nil) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration, animations: { [weak self] in
             self?.overlay.alpha = show ? 1 : 0
         }, completion: completion)
     }
     
+    /// moves the overlay label next to a specified view.
+    ///
+    /// - Parameter view: the view next to the label.
     func moveOverlayLabel(to view: UIView) {
         overlayLabelConstraint?.isActive = false
         let newConstraint = overlayLabel.trailingAnchor.constraint(equalTo: view.leadingAnchor,
@@ -769,6 +774,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         layoutIfNeeded()
     }
     
+    /// Moves a view to be shown above the overlay.
+    ///
+    /// - Parameters
+    ///  - view: the view that will be moved.
+    ///  - visible: true to move the specified view to the front. false to move the overlay to the front.
     func moveViewToFront(_ view: UIView, visible: Bool) {
         if visible {
             bringSubviewToFront(view)
