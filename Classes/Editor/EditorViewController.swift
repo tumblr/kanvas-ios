@@ -41,6 +41,12 @@ public protocol EditorControllerDelegate: class {
 
     /// Called when the tag button is pressed
     func tagButtonPressed()
+    
+    /// Obtains the quick post button.
+    ///
+    /// - Parameter enableLongPress: whether to enable the long press action for the button.
+    /// - Returns: the quick post button.
+    func getQuickPostButton(enableLongPress: Bool) -> UIView
 }
 
 private struct Constants {
@@ -59,13 +65,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             mainActionMode = .post
         }
 
-        let editorView = EditorView(mainActionMode: mainActionMode,
+        let editorView = EditorView(delegate: self,
+                                    mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
+                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
+                                    enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
                                     metalContext: settings.features.metalPreview ? metalContext : nil)
-        editorView.delegate = self
         player.playerView = editorView.playerView
         return editorView
     }()
@@ -580,6 +588,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         player.stop()
         delegate?.dismissButtonPressed()
     }
+    
+    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getQuickPostButton(enableLongPress: enableLongPress)
+    }
 
     // MARK: - Media Exporting
 
@@ -1013,6 +1026,29 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func onPostingOptionsDismissed() {
         startPlayerFromSegments()
+    }
+    
+    func onQuickPostButtonSubmitted() {
+        startExporting(action: .post)
+    }
+    
+    public func onQuickPostOptionsShown(_ visible: Bool) {
+        if visible {
+            editorView.changeOverlayLabel(isInSelectionArea: false)
+        }
+        
+        editorView.showOverlay(visible)
+    }
+    
+    public func onQuickPostOptionsSelected(_ isInSelectionArea: Bool) {
+        if isInSelectionArea {
+            editorView.showOverlayLabel(false, completion: { [weak self] _ in
+                self?.editorView.changeOverlayLabel(isInSelectionArea: true)
+            })
+        }
+        else {
+            editorView.showOverlayLabel(true)
+        }
     }
     
     // MARK: - Private utilities

@@ -326,7 +326,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 // MARK: - CameraControllerDelegate
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
-
+    
     func openAppSettings(completion: ((Bool) -> ())?) {
         if let url = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(url, options: [:], completionHandler: completion)
@@ -339,6 +339,11 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
 
     func editorDismissed() {
         // Only supported in Orangina
+    }
+    
+    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+        // Only supported in Orangina
+        return UIView()
     }
 
     func cameraShouldShowWelcomeTooltip() -> Bool {

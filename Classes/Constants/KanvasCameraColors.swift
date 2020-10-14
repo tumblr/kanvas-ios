@@ -120,7 +120,7 @@ public struct KanvasCameraColors {
         self.closeButtonColor = closeButtonColor
         self.filterColors = filterColors
     }
-            
+    
     let drawingDefaultColor: UIColor // DrawingController:50
     let colorPickerColors: [UIColor] // ColorPickerView:37
     let selectedPickerColor: UIColor // ColorPickerController:29

@@ -20,12 +20,16 @@ final class EditorViewTests: FBSnapshotTestCase {
     }
     
     func newView() -> EditorView {
+<<<<<<< HEAD
         let view = EditorView(mainActionMode: .confirm,
                               showSaveButton: false,
                               showCrossIcon: false,
                               showTagButton: false,
                               quickBlogSelectorCoordinator: nil,
                               metalContext: nil)
+=======
+        let view = EditorView(delegate: nil, mainActionMode: .confirm, showSaveButton: false, showCrossIcon: false, showTagButton: false, showQuickPostButton: false, enableQuickPostLongPress: false, quickBlogSelectorCoordinator: nil)
+>>>>>>> develop
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return view
     }

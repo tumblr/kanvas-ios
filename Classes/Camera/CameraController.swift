@@ -89,6 +89,12 @@ public protocol CameraControllerDelegate: class {
     func didEndDragInteraction()
 
     func openAppSettings(completion: ((Bool) -> ())?)
+    
+    /// Obtains the quick post button for the editor.
+    ///
+    /// - Parameter enableLongPress: whether to enable the long press action for the button.
+    /// - Returns: the quick post button.
+    func getQuickPostButton(enableLongPress: Bool) -> UIView
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -873,6 +879,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndStrokeSelectorAnimation()
     }
     
+    public func getQuickPostButton(enableLongPress: Bool) -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getQuickPostButton(enableLongPress: enableLongPress)
+    }
+    
     // MARK: CameraZoomHandlerDelegate
     var currentDeviceForZooming: AVCaptureDevice? {
         return cameraInputController.currentDevice
@@ -1064,5 +1075,17 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     public func onPostOptionsDismissed() {
         mediaPlayerController?.onPostingOptionsDismissed()
+    }
+    
+    public func onQuickPostButtonSubmitted() {
+        mediaPlayerController?.onQuickPostButtonSubmitted()
+    }
+    
+    public func onQuickPostOptionsShown(_ visible: Bool) {
+        mediaPlayerController?.onQuickPostOptionsShown(visible)
+    }
+    
+    public func onQuickPostOptionsSelected(_ isInSelectionArea: Bool) {
+        mediaPlayerController?.onQuickPostOptionsSelected(isInSelectionArea)
     }
 }
