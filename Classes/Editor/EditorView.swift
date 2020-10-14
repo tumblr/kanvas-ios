@@ -99,6 +99,7 @@ private struct EditorViewConstants {
     static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
     static let topMenuElementHeight: CGFloat = 36
+    static let blogSwitcherHorizontalMargin: CGFloat = 8
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -575,13 +576,20 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     private func setupBlogSwitcher() {
         blogSwitcher.accessibilityLabel = "Blog Switcher"
-        
         addSubview(blogSwitcher)
         blogSwitcher.translatesAutoresizingMaskIntoConstraints = false
-        let trailingAnchor = quickPostButton.isDescendant(of: self) ? quickPostButton.leadingAnchor : self.trailingAnchor
+        
+        let trailingAnchor: NSLayoutConstraint
+        if quickPostButton.isDescendant(of: self) {
+            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: quickPostButton.leadingAnchor, constant: -EditorViewConstants.blogSwitcherHorizontalMargin)
+        }
+        else {
+            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin)
+        }
+        
         NSLayoutConstraint.activate([
+            trailingAnchor,
             blogSwitcher.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            blogSwitcher.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
             blogSwitcher.heightAnchor.constraint(equalToConstant: EditorViewConstants.topMenuElementHeight),
             blogSwitcher.widthAnchor.constraint(equalToConstant: EditorViewConstants.topMenuElementHeight),
         ])
@@ -757,6 +765,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     ///  -  show: true to show, false to hide
     ///  - completion: an optional action to be executed when the animation ends
     func showOverlay(_ show: Bool, completion: ((Bool) -> Void)? = nil) {
+        overlayLabel.alpha = show ? 1 : 0
         UIView.animate(withDuration: EditorViewConstants.animationDuration, animations: { [weak self] in
             self?.overlay.alpha = show ? 1 : 0
         }, completion: completion)
@@ -792,11 +801,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// - Parameter text: the new message.
     func setOverlayLabel(text: String?) {
         let newText = text ?? ""
-        UIView.animate(withDuration: EditorViewConstants.animationDuration, animations: { [weak self] in
-            guard let self = self else { return }
-            self.overlayLabel.alpha = !newText.isEmpty ? 1 : 0
-            self.overlayLabel.text = newText
-        })
+        let animation: () -> Void = { [weak self] in
+            self?.overlayLabel.text = newText
+        }
+        
+        UIView.transition(with: overlayLabel, duration: EditorViewConstants.animationDuration,
+                          options: .transitionCrossDissolve, animations: animation, completion: nil)
     }
 
     func updatePostButton(avatarView: UIView) {

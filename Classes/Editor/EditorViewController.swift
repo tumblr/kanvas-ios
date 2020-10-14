@@ -1041,15 +1041,16 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     public func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
         editorView.moveOverlayLabel(to: view)
-        editorView.setOverlayLabel(text: hintText)
         
         if visible {
+            editorView.setOverlayLabel(text: hintText)
             editorView.moveViewToFront(view, visible: true)
             editorView.showOverlay(true)
         }
         else {
             editorView.showOverlay(false, completion: { [weak self] _ in
                 self?.editorView.moveViewToFront(view, visible: false)
+                self?.editorView.setOverlayLabel(text: hintText)
             })
         }
     }
