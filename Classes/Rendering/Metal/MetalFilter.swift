@@ -143,6 +143,10 @@ class MetalFilter: FilterProtocol {
         
         var sourcePixelBuffer: CVPixelBuffer = pixelBuffer
         if width < offScreenTexture.width && height < offScreenTexture.height {
+            // INFO: Resize input image so it has similar size as output buffer.
+            //       This is necessary as the shader function "kernelIdentity" assumes the input texture has similar size as output texture size.
+            //       Ideally we want to move this logic to the shader as GPU can execute scaling operation a lot faster,
+            //       but I wasn't able to make sampler function work in a kernel shader. (Sampler is necessary to scale image)
             if let pixelBuffer = pixelBuffer.resize(scale: CGFloat(offScreenTexture.height) / CGFloat(height)) {
                 sourcePixelBuffer = pixelBuffer
                 width = CVPixelBufferGetWidth(sourcePixelBuffer)
