@@ -45,9 +45,9 @@ jobs:
           destination: testresults
       - ios/save-xcodebuild-artifacts:
           result-bundle-path: build/results
-          #- ios/validate-podspec:
-          #name: Validate Podspec
-          #xcode-version: '11.5'
-          #podspec-path: KanvasCamera.podspec.json
-          #bundle-install: true
+      - ios/validate-podspec:
+          name: Validate Podspec
+          xcode-version: '11.5'
+          podspec-path: KanvasCamera.podspec.json
+          bundle-install: true
 
