@@ -3,7 +3,7 @@ orbs:
   ios: wordpress-mobile/ios@1.0
   git: wordpress-mobile/git@1.0
 jobs:
-  build:
+  Build and Test:
     executor:
       name: ios/default
       xcode-version: "11.2.1"
@@ -36,3 +36,7 @@ jobs:
           podspec-path: KanvasCamera.podspec.json
           bundle-install: true
 
+workflows:
+  test_and_validate:
+    jobs: 
+      - Build and Test
