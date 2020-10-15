@@ -137,12 +137,22 @@ class MetalFilter: FilterProtocol {
             return nil
         }
         
-        let width = CVPixelBufferGetWidth(pixelBuffer)
-        let height = CVPixelBufferGetHeight(pixelBuffer)
+        var width = CVPixelBufferGetWidth(pixelBuffer)
+        var height = CVPixelBufferGetHeight(pixelBuffer)
         var cvTexture: CVMetalTexture?
+        
+        var sourcePixelBuffer: CVPixelBuffer = pixelBuffer
+        if width < offScreenTexture.width && height < offScreenTexture.height {
+            if let pixelBuffer = pixelBuffer.resize(scale: CGFloat(offScreenTexture.height) / CGFloat(height)) {
+                sourcePixelBuffer = pixelBuffer
+                width = CVPixelBufferGetWidth(sourcePixelBuffer)
+                height = CVPixelBufferGetHeight(sourcePixelBuffer)
+            }
+        }
+        
         let result = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
                                                                context.textureCache,
-                                                               pixelBuffer,
+                                                               sourcePixelBuffer,
                                                                nil,
                                                                .bgra8Unorm,
                                                                width,
