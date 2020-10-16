@@ -134,6 +134,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showQuickPostButton: Bool
     private let enableQuickPostLongPress: Bool
     private let showBlogSwitcher: Bool
+    private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
     private let overlay = UIView()
@@ -195,7 +196,16 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(delegate: EditorViewDelegate?, mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, showQuickPostButton: Bool, enableQuickPostLongPress: Bool, showBlogSwitcher: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+    init(delegate: EditorViewDelegate?,
+         mainActionMode: MainActionMode,
+         showSaveButton: Bool,
+         showCrossIcon: Bool,
+         showTagButton: Bool,
+         showQuickPostButton: Bool,
+         enableQuickPostLongPress: Bool,
+         showBlogSwitcher: Bool,
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         metalContext: MetalContext?) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
@@ -205,6 +215,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.enableQuickPostLongPress = enableQuickPostLongPress
         self.showBlogSwitcher = showBlogSwitcher
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
+        self.metalContext = metalContext
         super.init(frame: .zero)
         setupViews()
     }
@@ -250,7 +261,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     // MARK: - views
 
     private func setupPlayer() {
-        let playerView = MediaPlayerView()
+        let playerView = MediaPlayerView(metalContext: metalContext)
         playerView.delegate = self
         playerView.add(into: self)
         self.playerView = playerView

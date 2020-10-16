@@ -78,7 +78,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
                                     enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
-                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinater)
+                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
+                                    metalContext: settings.features.metalPreview ? metalContext : nil)
         player.playerView = editorView.playerView
         return editorView
     }()
@@ -142,6 +143,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
+    private let metalContext = MetalContext.createContext()
 
     private var shouldExportMediaAsGIF: Bool {
         get {
@@ -152,7 +154,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private let player: MediaPlayer
+    private lazy var player: MediaPlayer = {
+        return MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
+    }()
+    
     private var filterType: FilterType? {
         didSet {
             player.filterType = filterType
@@ -267,7 +272,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
-        self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: MetalContext.createContext()))
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
@@ -869,7 +873,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval {
         return CameraSegment.defaultTimeInterval(segments: segments)
     }
-
+    
     // MARK: - GifMakerHandlerDelegate
     
     func didConfirmGif() {

@@ -51,6 +51,9 @@ final class GLPixelBufferView: UIView, PixelBufferView {
             }
         }
     }
+    
+    var mediaTransform: GLKMatrix4?
+    var isPortrait: Bool = true
 
     override class var layerClass: AnyClass {
         return CAEAGLLayer.self
