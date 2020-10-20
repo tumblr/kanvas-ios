@@ -81,9 +81,25 @@ struct KanvasCameraImages {
         .drawing: [UIImage.imageFromCameraBundle(named: "editorDraw")],
     ]
     
+    static let styleIcons: [EditionOption: [UIImage?]] = [
+        .gif: [
+            UIImage.imageFromCameraBundle(named: "editorGifOff"),
+            UIImage.imageFromCameraBundle(named: "editorGifOn"),
+        ],
+        .filter: [UIImage.imageFromCameraBundle(named: "editorFilters")],
+        .text: [UIImage.imageFromCameraBundle(named: "editorText")],
+        .media: [UIImage.imageFromCameraBundle(named: "editorMedia")],
+        .drawing: [UIImage.imageFromCameraBundle(named: "editorDraw")],
+    ]
+    
     static func editionOptionTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {
         let index = enabled && editIcons[option]?.count == 2 ? 1 : 0
         return editIcons[option]?[index]
+    }
+    
+    static func editionOptionNewTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {
+        let index = enabled && styleIcons[option]?.count == 2 ? 1 : 0
+        return styleIcons[option]?[index]
     }
     
     // MARK: - Draw

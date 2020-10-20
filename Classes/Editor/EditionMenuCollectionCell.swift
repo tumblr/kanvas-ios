@@ -33,7 +33,7 @@ private struct Constants {
 }
 
 /// The cell in EditionMenuCollectionView to display an individual option
-final class EditionMenuCollectionCell: UICollectionViewCell {
+final class EditionMenuCollectionCell: UICollectionViewCell, KanvasEditionMenuCollectionCell {
     
     static let height = Constants.height
     static let width = Constants.width

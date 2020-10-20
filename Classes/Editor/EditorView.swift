@@ -81,6 +81,7 @@ protocol EditorViewDelegate: class {
 /// Constants for EditorView
 private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
+    static let horizontalMargin: CGFloat = 16
     static let editionOptionAnimationDuration: TimeInterval = 0.5
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
@@ -135,6 +136,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showQuickPostButton: Bool
     private let enableQuickPostLongPress: Bool
     private let showBlogSwitcher: Bool
+    private let showVerticalEditionOptions: Bool
     private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
@@ -205,6 +207,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showQuickPostButton: Bool,
          enableQuickPostLongPress: Bool,
          showBlogSwitcher: Bool,
+         showVerticalEditionOptions: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          metalContext: MetalContext?) {
         self.delegate = delegate
@@ -215,6 +218,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showQuickPostButton = showQuickPostButton
         self.enableQuickPostLongPress = enableQuickPostLongPress
         self.showBlogSwitcher = showBlogSwitcher
+        self.showVerticalEditionOptions = showVerticalEditionOptions
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.metalContext = metalContext
         super.init(frame: .zero)
@@ -363,30 +367,42 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     }
     
     private func setupCollection() {
+        navigationContainer.addSubview(collectionContainer)
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Edition Menu Collection Container"
         collectionContainer.clipsToBounds = false
-        
-        navigationContainer.addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let buttonOnTheRight: UIButton
-        let trailingMargin: CGFloat
         
-        if showSaveButton {
-            buttonOnTheRight = saveButton
-            trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
+        if showVerticalEditionOptions {
+            
+            NSLayoutConstraint.activate([
+                collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+                collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.horizontalMargin),
+                collectionContainer.widthAnchor.constraint(equalToConstant: StyleMenuCollectionCell.width)
+            ])
         }
         else {
-            buttonOnTheRight = confirmOrPostButton()
-            trailingMargin = confirmOrPostButtonHorizontalMargin()
+            
+            let buttonOnTheRight: UIButton
+            let trailingMargin: CGFloat
+            
+            if showSaveButton {
+                buttonOnTheRight = saveButton
+                trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
+            }
+            else {
+                buttonOnTheRight = confirmOrPostButton()
+                trailingMargin = confirmOrPostButtonHorizontalMargin()
+            }
+            
+            NSLayoutConstraint.activate([
+                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+                collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight.leadingAnchor, constant: -trailingMargin / 2),
+                collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
+                collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
+            ])
         }
-        
-        NSLayoutConstraint.activate([
-            collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight.leadingAnchor, constant: -trailingMargin / 2),
-            collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
-            collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
-        ])
     }
     
     private func setupFilterMenu() {
@@ -678,7 +694,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// - Parameter cell: the cell to be transformed
     /// - Parameter finalLocation: the location where the checkmark button will be
     /// - Parameter completion: a closure to execute when the animation ends
-    func animateEditionOption(cell: EditionMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
+    func animateEditionOption(cell: KanvasEditionMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
         guard let cell = cell, let cellParent = cell.superview else {
             completion(false)
             return
@@ -705,7 +721,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// transforms the checkmark button of the current menu into its option cell with an animation
     ///
     /// - Parameter cell: the cell in which the checkmark button will be tranformed
-    func animateReturnOfEditionOption(cell: EditionMenuCollectionCell?) {
+    func animateReturnOfEditionOption(cell: KanvasEditionMenuCollectionCell?) {
         guard let cell = cell, let cellParent = cell.superview else { return }
         fakeOptionCell.alpha = 1
         

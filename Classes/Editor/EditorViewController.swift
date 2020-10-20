@@ -59,7 +59,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditionMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         var mainActionMode: EditorView.MainActionMode = .confirm
@@ -78,17 +78,26 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
                                     enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
+                                    showVerticalEditionOptions: settings.showVerticalEditionOptions,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
                                     metalContext: settings.features.metalPreview ? metalContext : nil)
         player.playerView = editorView.playerView
         return editorView
     }()
     
-    private lazy var collectionController: EditionMenuCollectionController = {
-        let controller = EditionMenuCollectionController(settings: self.settings,
-                                                         shouldExportMediaAsGIF: shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil)
-        controller.delegate = self
-        return controller
+    private lazy var collectionController: KanvasEditionMenuController = {
+        if settings.showVerticalEditionOptions {
+            let controller = StyleMenuCollectionController(settings: self.settings,
+                                                           shouldExportMediaAsGIF: shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil)
+            controller.delegate = self
+            return controller
+        }
+        else {
+            let controller = EditionMenuCollectionController(settings: self.settings,
+                                                             shouldExportMediaAsGIF: shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil)
+            controller.delegate = self
+            return controller
+        }
     }()
     
     private lazy var filterController: EditorFilterController = {
@@ -142,7 +151,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let stickerProvider: StickerProvider?
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
-    private var selectedCell: EditionMenuCollectionCell?
+    private var selectedCell: KanvasEditionMenuCollectionCell?
     private let metalContext = MetalContext.createContext()
 
     private var shouldExportMediaAsGIF: Bool {
@@ -381,7 +390,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         openGIFMaker(cell: cell, animated: animated, permanent: true)
     }
 
-    private func openGIFMaker(cell: EditionMenuCollectionCell, animated: Bool, permanent: Bool) {
+    private func openGIFMaker(cell: KanvasEditionMenuCollectionCell, animated: Bool, permanent: Bool) {
         let editionOption = EditionOption.gif
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         showMainUI(false)
@@ -815,9 +824,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         selectedCell = nil
     }
     
-    // MARK: - EditionMenuCollectionControllerDelegate
+    // MARK: - KanvasEditionMenuControllerDelegate
 
-    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
+    func didSelectEditionOption(_ editionOption: EditionOption, cell: KanvasEditionMenuCollectionCell) {
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
@@ -863,8 +872,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameters
     ///  - editionOption: the selected edition option
     ///  - cell: the cell of the selected edition option
-    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: KanvasEditionMenuCollectionCell? = nil) {
         selectedCell = cell
+        openedMenu = editionOption
+    }
+    
+    /// Prepares the editor state to show an edition menu
+    ///
+    /// - Parameters
+    ///  - editionOption: the selected style option
+    ///  - cell: the cell of the selected style option
+    private func onBeforeShowingStyleMenu(_ editionOption: EditionOption) {
         openedMenu = editionOption
     }
     

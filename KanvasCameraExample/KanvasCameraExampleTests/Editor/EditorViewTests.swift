@@ -29,6 +29,7 @@ final class EditorViewTests: FBSnapshotTestCase {
                               showQuickPostButton: false,
                               enableQuickPostLongPress: false,
                               showBlogSwitcher: false,
+                              showVerticalEditionOptions: false,
                               quickBlogSelectorCoordinator: nil,
                               metalContext: nil)
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)

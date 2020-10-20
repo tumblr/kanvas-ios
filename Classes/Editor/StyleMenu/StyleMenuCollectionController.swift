@@ -8,24 +8,22 @@ import Foundation
 import UIKit
 
 /// Constants for Collection Controller
-private struct EditionMenuCollectionControllerConstants {
+private struct StyleMenuCollectionControllerConstants {
     static let section: Int = 0
     static let animationDuration: TimeInterval = 0.25
-    static let collectionLeftInset: CGFloat = 12
-    static let collectionRightInset: CGFloat = 20
 }
 
 /// Controller for handling the filter item collection.
-final class EditionMenuCollectionController: UIViewController, KanvasEditionMenuController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditionMenuCollectionCellDelegate {
+final class StyleMenuCollectionController: UIViewController, KanvasEditionMenuController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, StyleMenuCollectionCellDelegate {
     
-    private lazy var editionMenuCollectionView = EditionMenuCollectionView()
+    private lazy var styleMenuCollectionView = StyleMenuCollectionView()
     private var editionOptions: [EditionOption]
     private(set) var textCell: KanvasEditionMenuCollectionCell?
     
     var shouldExportMediaAsGIF: Bool {
         didSet {
             guard let index = editionOptions.firstIndex(of: .gif) else { return }
-            editionMenuCollectionView.collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+            styleMenuCollectionView.collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
         }
     }
     
@@ -73,43 +71,36 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditionMenu
 
     func getCell(for option: EditionOption) -> KanvasEditionMenuCollectionCell? {
         guard
-            let collectionView = (view as? EditionMenuCollectionView)?.collectionView,
+            let collectionView = (view as? StyleMenuCollectionView)?.collectionView,
             let index = editionOptions.firstIndex(of: option)
         else {
-                return nil
+            return nil
         }
         let indexPath = IndexPath(item: index, section: 0)
-        return self.collectionView(collectionView, cellForItemAt: indexPath) as? EditionMenuCollectionCell
+        return self.collectionView(collectionView, cellForItemAt: indexPath) as? StyleMenuCollectionCell
     }
     
     // MARK: - View Life Cycle
     
     override func loadView() {
-        view = editionMenuCollectionView
+        view = styleMenuCollectionView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        editionMenuCollectionView.collectionView.register(cell: EditionMenuCollectionCell.self)
-        editionMenuCollectionView.collectionView.delegate = self
-        editionMenuCollectionView.collectionView.dataSource = self
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        editionMenuCollectionView.updateFadeOutEffect()
-        editionMenuCollectionView.collectionView.collectionViewLayout.invalidateLayout()
-        editionMenuCollectionView.collectionView.layoutIfNeeded()
+        styleMenuCollectionView.collectionView.register(cell: StyleMenuCollectionCell.self)
+        styleMenuCollectionView.collectionView.delegate = self
+        styleMenuCollectionView.collectionView.dataSource = self
     }
     
     // MARK: - Public interface
     
-    /// shows or hides the edition menu
+    /// shows or hides the style menu
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: EditionMenuCollectionControllerConstants.animationDuration) {
-            self.editionMenuCollectionView.alpha = show ? 1 : 0
+        UIView.animate(withDuration: StyleMenuCollectionControllerConstants.animationDuration) {
+            self.styleMenuCollectionView.alpha = show ? 1 : 0
         }
     }
     
@@ -124,8 +115,8 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditionMenu
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditionMenuCollectionCell.identifier, for: indexPath)
-        if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StyleMenuCollectionCell.identifier, for: indexPath)
+        if let cell = cell as? StyleMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
             cell.bindTo(option, enabled: option == .gif ? shouldExportMediaAsGIF : false)
             cell.delegate = self
             if option == .text {
@@ -138,8 +129,12 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditionMenu
     // MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        guard editionOptions.count > 0, collectionView.bounds != .zero else { return .zero }
-        return UIEdgeInsets(top: 0, left: EditionMenuCollectionControllerConstants.collectionLeftInset, bottom: 0, right: EditionMenuCollectionControllerConstants.collectionRightInset)
+        let itemCount = CGFloat(editionOptions.count)
+        let totalCellHeight = StyleMenuCollectionCell.height * itemCount
+
+        let inset = (collectionView.frame.height - totalCellHeight) / 2
+
+        return UIEdgeInsets(top: inset, left: 0, bottom: inset, right: 0)
     }
     
     // MARK: Option selection
@@ -148,15 +143,15 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditionMenu
     ///
     /// - Parameter index: position of the option in the collection
     /// - Parameter cell: the selected cell
-    private func selectEditionOption(index: Int, cell: EditionMenuCollectionCell) {
+    private func selectEditionOption(index: Int, cell: StyleMenuCollectionCell) {
         guard let option = editionOptions.object(at: index) else { return }
         delegate?.didSelectEditionOption(option, cell: cell)
     }
     
-    // MARK: - EditionMenuCollectionCellDelegate
+    // MARK: - StyleMenuCollectionCellDelegate
     
-    func didTap(cell: EditionMenuCollectionCell, recognizer: UITapGestureRecognizer) {
-        if let indexPath = editionMenuCollectionView.collectionView.indexPath(for: cell) {
+    func didTap(cell: StyleMenuCollectionCell, recognizer: UITapGestureRecognizer) {
+        if let indexPath = styleMenuCollectionView.collectionView.indexPath(for: cell) {
             selectEditionOption(index: indexPath.item, cell: cell)
         }
     }

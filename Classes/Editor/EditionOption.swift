@@ -5,9 +5,25 @@
 //
 
 enum EditionOption: Int {
+    
     case gif
     case filter
     case text
     case media
     case drawing
+    
+    var text: String {
+        switch self {
+        case .gif:
+            return "Create GIF"
+        case .filter:
+            return "Filters"
+        case .text:
+            return "Text"
+        case .media:
+            return "Stickers"
+        case .drawing:
+            return "Drawing"
+        }
+    }
 }
