@@ -25,7 +25,7 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let labelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let labelTextColor: UIColor = .white
-    static let backgroundColor: UIColor = .gray // UIColor.black.withAlphaComponent(0.6)
+    static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.6)
     
     static var height: CGFloat {
         return circleDiameter + 2 * circleMargin
@@ -92,6 +92,7 @@ final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditionMenuColl
         circleView.layer.cornerRadius = Constants.circleDiameter / 2
         circleView.layer.masksToBounds = true
         circleView.backgroundColor = Constants.backgroundColor
+        circleView.contentMode = .center
         
         NSLayoutConstraint.activate([
             circleView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
@@ -122,9 +123,8 @@ final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditionMenuColl
     // MARK: - Gesture recognizers
     
     private func setUpRecognizers() {
-        let tapRecognizer = UITapGestureRecognizer()
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(recognizer:)))
         contentView.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.addTarget(self, action: #selector(handleTap(recognizer:)))
     }
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {

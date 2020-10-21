@@ -82,14 +82,11 @@ struct KanvasCameraImages {
     ]
     
     static let styleIcons: [EditionOption: [UIImage?]] = [
-        .gif: [
-            UIImage.imageFromCameraBundle(named: "editorGifOff"),
-            UIImage.imageFromCameraBundle(named: "editorGifOn"),
-        ],
-        .filter: [UIImage.imageFromCameraBundle(named: "editorFilters")],
-        .text: [UIImage.imageFromCameraBundle(named: "editorText")],
-        .media: [UIImage.imageFromCameraBundle(named: "editorMedia")],
-        .drawing: [UIImage.imageFromCameraBundle(named: "editorDraw")],
+        .gif: [UIImage.imageFromCameraBundle(named: "menuGif")],
+        .filter: [UIImage.imageFromCameraBundle(named: "menuFilters")],
+        .text: [UIImage.imageFromCameraBundle(named: "menuText")],
+        .media: [UIImage.imageFromCameraBundle(named: "menuMedia")],
+        .drawing: [UIImage.imageFromCameraBundle(named: "menuDrawing")],
     ]
     
     static func editionOptionTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {

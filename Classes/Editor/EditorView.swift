@@ -468,6 +468,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// Sets up the image used for the animation that transforms a menu cell into a checkmark button
     private func setupFakeOptionCell() {
         fakeOptionCell.accessibilityLabel = "Fake Option Cell"
+        fakeOptionCell.contentMode = .center
+        fakeOptionCell.layer.cornerRadius = EditorViewConstants.fakeOptionCellMaxSize / 2
+        fakeOptionCell.layer.masksToBounds = true
         
         addSubview(fakeOptionCell)
         fakeOptionCell.translatesAutoresizingMaskIntoConstraints = false
@@ -701,6 +704,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
         fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
         fakeOptionCell.image = cell.circleView.image
+        fakeOptionCell.backgroundColor = cell.circleView.backgroundColor
         fakeOptionCell.alpha = 1
         cell.alpha = 0
         
@@ -729,6 +733,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
                 self.fakeOptionCell.image = cell.circleView.image
+                self.fakeOptionCell.backgroundColor = cell.circleView.backgroundColor
                 self.fakeOptionCell.transform = .identity
                 self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
             })
