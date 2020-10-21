@@ -877,15 +877,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         openedMenu = editionOption
     }
     
-    /// Prepares the editor state to show an edition menu
-    ///
-    /// - Parameters
-    ///  - editionOption: the selected style option
-    ///  - cell: the cell of the selected style option
-    private func onBeforeShowingStyleMenu(_ editionOption: EditionOption) {
-        openedMenu = editionOption
-    }
-    
     // MARK: - GifMakerHandlerDelegate & MediaPlayerDelegate
 
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval {

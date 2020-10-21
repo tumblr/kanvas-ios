@@ -129,7 +129,7 @@ final class StyleMenuCollectionController: UIViewController, KanvasEditorMenuCon
         return UIEdgeInsets(top: inset, left: 0, bottom: inset, right: 0)
     }
     
-    // MARK: Option selection
+    // MARK: - Option selection
     
     /// Selects an option
     ///

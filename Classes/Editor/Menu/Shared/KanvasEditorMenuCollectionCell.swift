@@ -7,7 +7,9 @@
 import Foundation
 import UIKit
 
+/// Protocol for a cell in the editor menu.
 protocol KanvasEditorMenuCollectionCell: UICollectionViewCell {
     
+    /// The view that contains the icon.
     var iconView: UIImageView { get }
 }

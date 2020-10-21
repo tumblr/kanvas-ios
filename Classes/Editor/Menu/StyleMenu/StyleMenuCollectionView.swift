@@ -7,10 +7,6 @@
 import Foundation
 import UIKit
 
-private struct StyleMenuCollectionViewConstants {
-    static var height: CGFloat =  StyleMenuCollectionCell.height
-}
-
 /// Collection view for StyleMenuCollectionController.
 final class StyleMenuCollectionView: IgnoreTouchesView {
         

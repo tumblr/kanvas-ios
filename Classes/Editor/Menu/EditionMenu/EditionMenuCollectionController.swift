@@ -137,7 +137,7 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditorMenuC
         return UIEdgeInsets(top: 0, left: Constants.collectionLeftInset, bottom: 0, right: Constants.collectionRightInset)
     }
     
-    // MARK: Option selection
+    // MARK: - Option selection
     
     /// Selects an option
     ///
