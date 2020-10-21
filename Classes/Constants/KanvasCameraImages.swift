@@ -81,12 +81,15 @@ struct KanvasCameraImages {
         .drawing: [UIImage.imageFromCameraBundle(named: "editorDraw")],
     ]
     
-    static let styleIcons: [EditionOption: UIImage?] = [
-        .gif: UIImage.imageFromCameraBundle(named: "menuGif"),
-        .filter: UIImage.imageFromCameraBundle(named: "menuFilters"),
-        .text: UIImage.imageFromCameraBundle(named: "menuText"),
-        .media: UIImage.imageFromCameraBundle(named: "menuMedia"),
-        .drawing: UIImage.imageFromCameraBundle(named: "menuDrawing"),
+    static let styleIcons: [EditionOption: [UIImage?]] = [
+        .gif: [
+            UIImage.imageFromCameraBundle(named: "menuGifOff"),
+            UIImage.imageFromCameraBundle(named: "menuGifOn"),
+        ],
+        .filter: [UIImage.imageFromCameraBundle(named: "menuFilters")],
+        .text: [UIImage.imageFromCameraBundle(named: "menuText")],
+        .media: [UIImage.imageFromCameraBundle(named: "menuMedia")],
+        .drawing: [UIImage.imageFromCameraBundle(named: "menuDrawing")],
     ]
     
     static func editionOptionTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {
@@ -94,9 +97,9 @@ struct KanvasCameraImages {
         return editIcons[option]?[index]
     }
     
-    static func styleOptionTypes(_ option: EditionOption) -> UIImage? {
-        guard let icon = styleIcons[option] else { return UIImage() }
-        return icon
+    static func styleOptionTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {
+        let index = enabled && styleIcons[option]?.count == 2 ? 1 : 0
+        return styleIcons[option]?[index]
     }
     
     // MARK: - Draw

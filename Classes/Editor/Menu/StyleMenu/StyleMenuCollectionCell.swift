@@ -25,9 +25,12 @@ private struct Constants {
     
     static let animationDuration: TimeInterval = 0.25
     static let labelFont: UIFont = .boldSystemFont(ofSize: 16)
-    static let labelTextColor: UIColor = .white
     static let labelInset: CGFloat = 12
-    static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.6)
+    static let labelTextColorOff: UIColor = .white
+    static let labelTextColorOn: UIColor = .black
+    static let backgroundColorOff: UIColor = UIColor.black.withAlphaComponent(0.6)
+    static let backgroundColorOn: UIColor = UIColor.white.withAlphaComponent(0.6)
+    
     
     static var height: CGFloat {
         return circleDiameter + 2 * circleMargin
@@ -67,8 +70,13 @@ final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuColle
     ///  - option: The style menu to display
     ///  - enabled: Whether the option is on or off.
     func bindTo(_ option: EditionOption, enabled: Bool) {
+        let backgroundColor = enabled ? Constants.backgroundColorOn : Constants.backgroundColorOff
+        let textColor = enabled ? Constants.labelTextColorOn : Constants.labelTextColorOff
         label.text = option.text
-        iconView.image = KanvasCameraImages.styleOptionTypes(option)
+        label.textColor = textColor
+        label.backgroundColor = backgroundColor
+        iconView.image = KanvasCameraImages.styleOptionTypes(option, enabled: enabled)
+        iconView.backgroundColor = backgroundColor
     }
     
     /// Updates the cell to be reused
@@ -92,7 +100,6 @@ final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuColle
         iconView.clipsToBounds = true
         iconView.layer.cornerRadius = Constants.circleDiameter / 2
         iconView.layer.masksToBounds = true
-        iconView.backgroundColor = Constants.backgroundColor
         iconView.contentMode = .center
         
         NSLayoutConstraint.activate([
@@ -143,8 +150,6 @@ private class RoundedLabel: UILabel {
     
     private func setupView() {
         font = Constants.labelFont
-        textColor = Constants.labelTextColor
-        backgroundColor = Constants.backgroundColor
         layer.cornerRadius = Constants.labelHeight / 2
         layer.masksToBounds = true
     }
