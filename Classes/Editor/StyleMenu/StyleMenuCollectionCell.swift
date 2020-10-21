@@ -111,6 +111,7 @@ final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditionMenuColl
         label.backgroundColor = Constants.backgroundColor
         label.layer.cornerRadius = Constants.labelHeight / 2
         label.layer.masksToBounds = true
+        label.alpha = 0
         
         let leadingMargin = Constants.circleDiameter + Constants.circleMargin
         NSLayoutConstraint.activate([
