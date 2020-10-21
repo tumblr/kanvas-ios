@@ -777,6 +777,34 @@
 			path = TabBar;
 			sourceTree = "<group>";
 		};
+		65C03EB425409D260001BBF5 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				65C03EB625409D4E0001BBF5 /* Shared */,
+				65C03EB525409D330001BBF5 /* EditionMenu */,
+				65303C33253FC2E20045E18F /* StyleMenu */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		65C03EB525409D330001BBF5 /* EditionMenu */ = {
+			isa = PBXGroup;
+			children = (
+				65E46B9F22BD22DE004FD226 /* EditionMenuCollectionCellTests.swift */,
+				65E46BA222BD22DE004FD226 /* EditionMenuCollectionViewTests.swift */,
+				65E46B9D22BD22DE004FD226 /* EditionMenuCollectionControllerTests.swift */,
+			);
+			path = EditionMenu;
+			sourceTree = "<group>";
+		};
+		65C03EB625409D4E0001BBF5 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				65E46BA122BD22DE004FD226 /* EditionOptionTests.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		65E46B8D22BD22CA004FD226 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
@@ -792,7 +820,7 @@
 		65E46B9822BD22DE004FD226 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				65303C33253FC2E20045E18F /* StyleMenu */,
+				65C03EB425409D260001BBF5 /* Menu */,
 				651D4B5B22CE67A5004AB75C /* Drawing */,
 				65E46B9922BD22DE004FD226 /* Filters */,
 				650A833D246469ED0071BF9D /* GIFMaker */,
@@ -800,12 +828,8 @@
 				65507D95239F381700087014 /* MovableViews */,
 				65507D97239F381700087014 /* Text */,
 				655C934C234CC9A1008F26AF /* Shared */,
-				65E46B9D22BD22DE004FD226 /* EditionMenuCollectionControllerTests.swift */,
 				65E46B9E22BD22DE004FD226 /* EditorViewTests.swift */,
-				65E46B9F22BD22DE004FD226 /* EditionMenuCollectionCellTests.swift */,
 				65E46BA022BD22DE004FD226 /* EditorControllerTests.swift */,
-				65E46BA122BD22DE004FD226 /* EditionOptionTests.swift */,
-				65E46BA222BD22DE004FD226 /* EditionMenuCollectionViewTests.swift */,
 			);
 			path = Editor;
 			sourceTree = "<group>";

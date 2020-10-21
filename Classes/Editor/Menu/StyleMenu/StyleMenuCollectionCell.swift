@@ -7,9 +7,10 @@
 import Foundation
 import UIKit
 
-/// Delegate for touch events on this cell
+/// Delegate for touch events on this cell.
 protocol StyleMenuCollectionCellDelegate: class {
-    /// Callback method when tapping a cell
+    
+    /// Callback method when tapping a cell.
     ///
     /// - Parameters:
     ///   - cell: the cell that was tapped
@@ -25,6 +26,7 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let labelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let labelTextColor: UIColor = .white
+    static let labelInset: CGFloat = 12
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.6)
     
     static var height: CGFloat {
@@ -36,27 +38,27 @@ private struct Constants {
     }
 }
 
-/// The cell in StyleMenuCollectionView to display an individual option
-final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditionMenuCollectionCell {
+/// The cell in StyleMenuCollectionView to display an individual option.
+final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuCollectionCell {
     
     static let height = Constants.height
     static let width = Constants.width
     
-    let circleView: UIImageView = UIImageView()
-    private let label: UILabel = CustomLabel()
+    let iconView: UIImageView
+    private let label: UILabel
     
     weak var delegate: StyleMenuCollectionCellDelegate?
         
     override init(frame: CGRect) {
+        iconView = UIImageView()
+        label = RoundedLabel()
         super.init(frame: frame)
         setUpView()
         setUpRecognizers()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setUpView()
-        setUpRecognizers()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     /// Updates the cell according to EditionOption properties
@@ -66,39 +68,38 @@ final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditionMenuColl
     ///  - enabled: Whether the option is on or off.
     func bindTo(_ option: EditionOption, enabled: Bool) {
         label.text = option.text
-        circleView.image = KanvasCameraImages.editionOptionNewTypes(option, enabled: enabled)
+        iconView.image = KanvasCameraImages.styleOptionTypes(option)
     }
-    
     
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
         label.text = nil
-        circleView.image = nil
+        iconView.image = nil
     }
     
     // MARK: - Layout
     
     private func setUpView() {
-        setupCircleView()
+        setupIconView()
         setupLabel()
     }
     
-    private func setupCircleView() {
-        contentView.addSubview(circleView)
-        circleView.accessibilityIdentifier = "Style Menu Cell Circle View"
-        circleView.translatesAutoresizingMaskIntoConstraints = false
-        circleView.clipsToBounds = true
-        circleView.layer.cornerRadius = Constants.circleDiameter / 2
-        circleView.layer.masksToBounds = true
-        circleView.backgroundColor = Constants.backgroundColor
-        circleView.contentMode = .center
+    private func setupIconView() {
+        contentView.addSubview(iconView)
+        iconView.accessibilityIdentifier = "Style Menu Cell Icon View"
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.clipsToBounds = true
+        iconView.layer.cornerRadius = Constants.circleDiameter / 2
+        iconView.layer.masksToBounds = true
+        iconView.backgroundColor = Constants.backgroundColor
+        iconView.contentMode = .center
         
         NSLayoutConstraint.activate([
-            circleView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
-            circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            circleView.heightAnchor.constraint(equalToConstant: Constants.circleDiameter),
-            circleView.widthAnchor.constraint(equalToConstant: Constants.circleDiameter)
+            iconView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
+            iconView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            iconView.heightAnchor.constraint(equalToConstant: Constants.circleDiameter),
+            iconView.widthAnchor.constraint(equalToConstant: Constants.circleDiameter)
         ])
     }
     
@@ -106,11 +107,6 @@ final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditionMenuColl
         contentView.addSubview(label)
         label.accessibilityIdentifier = "Style Menu Cell Label"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = Constants.labelFont
-        label.textColor = Constants.labelTextColor
-        label.backgroundColor = Constants.backgroundColor
-        label.layer.cornerRadius = Constants.labelHeight / 2
-        label.layer.masksToBounds = true
         label.alpha = 0
         
         let leadingMargin = Constants.circleDiameter + Constants.circleMargin
@@ -133,17 +129,33 @@ final class StyleMenuCollectionCell: UICollectionViewCell, KanvasEditionMenuColl
     }
 }
 
-private class CustomLabel: UILabel {
+/// Custom label with horizontal inset and rounded corners.
+private class RoundedLabel: UILabel {
     
-    private let inset: CGFloat = 12
+    init() {
+        super.init(frame: .zero)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
+        font = Constants.labelFont
+        textColor = Constants.labelTextColor
+        backgroundColor = Constants.backgroundColor
+        layer.cornerRadius = Constants.labelHeight / 2
+        layer.masksToBounds = true
+    }
     
     override func drawText(in rect: CGRect) {
-        let insets = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        let insets = UIEdgeInsets(top: 0, left: Constants.labelInset, bottom: 0, right: Constants.labelInset)
         super.drawText(in: rect.inset(by: insets))
     }
         
     override var intrinsicContentSize: CGSize {
         let size = super.intrinsicContentSize
-        return CGSize(width: size.width + inset * 2, height: size.height)
+        return CGSize(width: size.width + Constants.labelInset * 2, height: size.height)
     }
 }

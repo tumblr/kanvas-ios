@@ -147,7 +147,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
-        settings.showVerticalEditionOptions = true
+        settings.editToolsRedesign = true
         return settings
     }
 
@@ -271,7 +271,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .newCameraModes(settings.features.newCameraModes),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
-            .showVerticalEditionOptions(settings.showVerticalEditionOptions),
+            .editToolsRedesign(settings.editToolsRedesign),
         ]
     }
 
@@ -321,8 +321,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
-        case .showVerticalEditionOptions(_):
-            settings.showVerticalEditionOptions = value
+        case .editToolsRedesign(_):
+            settings.editToolsRedesign = value
         }
     }
 }

@@ -251,7 +251,9 @@ public struct CameraFeatures {
     /// This shows a blog switcher that makes quick options appear when long pressed
     public var showBlogSwitcherInEditor = DefaultCameraSettings.showBlogSwitcherInEditor
     
-    public var showVerticalEditionOptions = DefaultCameraSettings.showVerticalEditionOptions
+    /// Edit Tools Redesign
+    /// This shows the editor tools as a vertical collection.
+    public var editToolsRedesign = DefaultCameraSettings.editToolsRedesign
     
     /// Auto-open GIF Maker in Editor
     public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
@@ -329,5 +331,5 @@ private struct DefaultCameraSettings {
     static let showBlogSwitcherInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
-    static let showVerticalEditionOptions: Bool = false
+    static let editToolsRedesign: Bool = false
 }

@@ -11,11 +11,9 @@ private struct StyleMenuCollectionViewConstants {
     static var height: CGFloat =  StyleMenuCollectionCell.height
 }
 
-/// Collection view for StyleMenuCollectionController
+/// Collection view for StyleMenuCollectionController.
 final class StyleMenuCollectionView: IgnoreTouchesView {
-    
-    static let height = StyleMenuCollectionViewConstants.height
-    
+        
     let collectionView: UICollectionView
     
     init() {

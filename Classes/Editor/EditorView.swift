@@ -136,7 +136,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showQuickPostButton: Bool
     private let enableQuickPostLongPress: Bool
     private let showBlogSwitcher: Bool
-    private let showVerticalEditionOptions: Bool
+    private let editToolsRedesign: Bool
     private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
@@ -207,7 +207,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showQuickPostButton: Bool,
          enableQuickPostLongPress: Bool,
          showBlogSwitcher: Bool,
-         showVerticalEditionOptions: Bool,
+         editToolsRedesign: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          metalContext: MetalContext?) {
         self.delegate = delegate
@@ -218,7 +218,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showQuickPostButton = showQuickPostButton
         self.enableQuickPostLongPress = enableQuickPostLongPress
         self.showBlogSwitcher = showBlogSwitcher
-        self.showVerticalEditionOptions = showVerticalEditionOptions
+        self.editToolsRedesign = editToolsRedesign
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.metalContext = metalContext
         super.init(frame: .zero)
@@ -373,7 +373,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         collectionContainer.clipsToBounds = false
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        if showVerticalEditionOptions {
+        if editToolsRedesign {
             
             NSLayoutConstraint.activate([
                 collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
@@ -697,14 +697,14 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// - Parameter cell: the cell to be transformed
     /// - Parameter finalLocation: the location where the checkmark button will be
     /// - Parameter completion: a closure to execute when the animation ends
-    func animateEditionOption(cell: KanvasEditionMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
+    func animateEditionOption(cell: KanvasEditorMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
         guard let cell = cell, let cellParent = cell.superview else {
             completion(false)
             return
         }
         fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
-        fakeOptionCell.image = cell.circleView.image
-        fakeOptionCell.backgroundColor = cell.circleView.backgroundColor
+        fakeOptionCell.image = cell.iconView.image
+        fakeOptionCell.backgroundColor = cell.iconView.backgroundColor
         fakeOptionCell.alpha = 1
         cell.alpha = 0
         
@@ -725,15 +725,15 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// transforms the checkmark button of the current menu into its option cell with an animation
     ///
     /// - Parameter cell: the cell in which the checkmark button will be tranformed
-    func animateReturnOfEditionOption(cell: KanvasEditionMenuCollectionCell?) {
+    func animateReturnOfEditionOption(cell: KanvasEditorMenuCollectionCell?) {
         guard let cell = cell, let cellParent = cell.superview else { return }
         fakeOptionCell.alpha = 1
         
         let duration = EditorViewConstants.editionOptionAnimationDuration
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
-                self.fakeOptionCell.image = cell.circleView.image
-                self.fakeOptionCell.backgroundColor = cell.circleView.backgroundColor
+                self.fakeOptionCell.image = cell.iconView.image
+                self.fakeOptionCell.backgroundColor = cell.iconView.backgroundColor
                 self.fakeOptionCell.transform = .identity
                 self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
             })

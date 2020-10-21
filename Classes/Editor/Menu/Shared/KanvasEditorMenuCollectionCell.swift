@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol KanvasEditionMenuCollectionCell: UICollectionViewCell {
+protocol KanvasEditorMenuCollectionCell: UICollectionViewCell {
     
-    var circleView: UIImageView { get }
+    var iconView: UIImageView { get }
 }
