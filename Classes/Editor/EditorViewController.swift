@@ -555,7 +555,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
-        let cell = collectionController.textCell
+        let cell = collectionController.getCell(for: .text)
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)

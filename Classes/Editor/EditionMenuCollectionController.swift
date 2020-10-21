@@ -20,7 +20,6 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditionMenu
     
     private lazy var editionMenuCollectionView = EditionMenuCollectionView()
     private var editionOptions: [EditionOption]
-    private(set) var textCell: KanvasEditionMenuCollectionCell?
     
     var shouldExportMediaAsGIF: Bool {
         didSet {
@@ -128,9 +127,6 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditionMenu
         if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
             cell.bindTo(option, enabled: option == .gif ? shouldExportMediaAsGIF : false)
             cell.delegate = self
-            if option == .text {
-                textCell = cell
-            }
         }
         return cell
     }

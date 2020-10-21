@@ -16,7 +16,6 @@ protocol KanvasEditionMenuControllerDelegate: class {
 }
 
 protocol KanvasEditionMenuController: UIViewController {
-    var textCell: KanvasEditionMenuCollectionCell? { get }
     var shouldExportMediaAsGIF: Bool { get set }
     func getCell(for option: EditionOption) -> KanvasEditionMenuCollectionCell?
     func showView(_ show: Bool)
