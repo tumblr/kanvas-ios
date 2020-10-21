@@ -15,15 +15,15 @@ enum EditionOption: Int {
     var text: String {
         switch self {
         case .gif:
-            return NSLocalizedString("EditorGIF", comment: "Label GIF option in the editor tools")
+            return NSLocalizedString("EditorGIF", comment: "Label for the GIF option in the editor tools")
         case .filter:
-            return NSLocalizedString("EditorFilters", comment: "Label filters option in the editor tools")
+            return NSLocalizedString("EditorFilters", comment: "Label for the filters option in the editor tools")
         case .text:
-            return NSLocalizedString("EditorText", comment: "Label text option in the editor tools")
+            return NSLocalizedString("EditorText", comment: "Label for the text option in the editor tools")
         case .media:
-            return NSLocalizedString("EditorMedia", comment: "Label media option in the editor tools")
+            return NSLocalizedString("EditorMedia", comment: "Label for the media option in the editor tools")
         case .drawing:
-            return NSLocalizedString("EditorDrawing", comment: "Label drawing option in the editor tools")
+            return NSLocalizedString("EditorDrawing", comment: "Label for the drawing option in the editor tools")
         }
     }
 }

@@ -76,17 +76,17 @@
 /* Try creating final content again */
 "Try again" = "Try again";
 
-/* Label GIF option in the editor tools */
+/* Label for the GIF option in the editor tools */
 "EditorGIF" = "Create GIF";
 
-/* Label filters option in the editor tools */
+/* Label for the filters option in the editor tools */
 "EditorFilters" = "Filters";
 
-/* Label text option in the editor tools */
+/* Label for the text option in the editor tools */
 "EditorText" = "Text";
 
-/* Label media option in the editor tools */
+/* Label for the media option in the editor tools */
 "EditorMedia" = "Media";
 
-/* Label drawing option in the editor tools */
+/* Label for the drawing option in the editor tools */
 "EditorDrawing" = "Drawing";
