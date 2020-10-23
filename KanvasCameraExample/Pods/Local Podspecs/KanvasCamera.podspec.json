@@ -1,10 +1,15 @@
 {
   "name": "KanvasCamera",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "summary": "A custom camera built for iOS.",
-  "homepage": "https://github.tumblr.net/TumblrMobile/orangina",
+  "homepage": "https://github.com/tumblr/kanvas-ios",
+  "license": {
+    "type": "MPLv2",
+    "file": "LICENSE"
+  },
   "source": {
-    "path": "."
+    "git": "https://github.com/tumblr/kanvas-ios.git",
+    "branch": "main"
   },
   "authors": {
     "Tony Cheng": "tony@getkanvas.com",
