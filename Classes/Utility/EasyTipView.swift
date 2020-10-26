@@ -1,11 +1,10 @@
 //
 //  EasyTipView.swift
-//  KanvasCamera
 //
 //  Created by Teodor Patraş
-//  Source: https://github.com/teodorpatras/EasyTipView'
+//  Source: https://github.com/teodorpatras/EasyTipView
 //
-//  Modified for Kanvas by Gabriel Mazzei
+//  Modified for Kanvas
 //
 
 import UIKit

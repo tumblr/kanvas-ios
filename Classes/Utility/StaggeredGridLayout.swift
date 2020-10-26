@@ -29,7 +29,7 @@
 */
 
 //  Copied from this tutorial: https://www.raywenderlich.com/4829472-uicollectionview-custom-layout-tutorial-pinterest
-//  Modified by Gabriel Mazzei for Kanvas
+//  Modified for Kanvas
 
 import Foundation
 import UIKit
