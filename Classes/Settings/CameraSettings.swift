@@ -239,6 +239,10 @@ public struct CameraFeatures {
     /// This shows a # button in the editor to enable adding tags
     public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
     
+    /// Cog icon in Editor
+    /// This sets a cog icon for the posting options button in the editor
+    public var showCogIconInEditor = DefaultCameraSettings.showCogIconInEditor
+    
     /// Quick post button in Editor
     /// This shows a post button that makes quick options appear when long pressed
     public var showQuickPostButtonInEditor = DefaultCameraSettings.showQuickPostButtonInEditor
@@ -331,6 +335,7 @@ private struct DefaultCameraSettings {
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
     static let showTagButtonInEditor: Bool = false
+    static let showCogIconInEditor: Bool = false
     static let showQuickPostButtonInEditor: Bool = false
     static let enableQuickPostLongPress: Bool = false
     static let showBlogSwitcherInEditor: Bool = false

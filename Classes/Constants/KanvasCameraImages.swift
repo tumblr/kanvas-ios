@@ -44,6 +44,7 @@ struct KanvasCameraImages {
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
     static let nextImage = UIImage.imageFromCameraBundle(named: "next")
     static let saveImage = UIImage.imageFromCameraBundle(named: "save")
+    static let cogImage = UIImage.imageFromCameraBundle(named: "cog")
     static let tagImage = UIImage.imageFromCameraBundle(named: "tag")
 
     // MARK: - Filters

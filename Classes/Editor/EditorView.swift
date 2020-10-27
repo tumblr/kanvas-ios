@@ -35,14 +35,15 @@ struct FullViewConstraints {
 
 /// protocol for closing the preview or confirming
 protocol EditorViewDelegate: class {
-    /// A function that is called when the confirm button is pressed
+    /// Called when the confirm button is pressed
     func didTapConfirmButton()
-    /// A function that is called when the close button is pressed
+    /// Called when the close button is pressed
     func didTapCloseButton()
-    /// A function that is called when the post button is pressed
+    /// Called when the post button is pressed
     func didTapPostButton()
-    /// A function that is called when the save button is pressed
+    /// Called when the save button is pressed
     func didTapSaveButton()
+    /// Called when the post options button is pressed
     func didTapPostOptionsButton()
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnText()
@@ -100,6 +101,7 @@ private struct EditorViewConstants {
     static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
     static let topMenuElementHeight: CGFloat = 36
+    static let buttonBackgroundColor = UIColor.black.withAlphaComponent(0.4)
     static let blogSwitcherHorizontalMargin: CGFloat = 8
     static let buttonBackgroundColor = UIColor.black.withAlphaComponent(0.4)
 }
@@ -133,6 +135,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let tagButton = UIButton()
     private let fakeOptionCell = UIImageView()
     private let showTagButton: Bool
+    private let showCogIcon: Bool
     private let showQuickPostButton: Bool
     private let enableQuickPostLongPress: Bool
     private let showBlogSwitcher: Bool
@@ -204,6 +207,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showSaveButton: Bool,
          showCrossIcon: Bool,
          showTagButton: Bool,
+         showCogIcon: Bool,
          showQuickPostButton: Bool,
          enableQuickPostLongPress: Bool,
          showBlogSwitcher: Bool,
@@ -214,6 +218,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
         self.showTagButton = showTagButton
+        self.showCogIcon = showCogIcon
         self.showCrossIcon = showCrossIcon
         self.showQuickPostButton = showQuickPostButton
         self.enableQuickPostLongPress = enableQuickPostLongPress
@@ -354,7 +359,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private func setupPostOptionsButton() {
         confirmButton.accessibilityLabel = "Post Options Button"
         navigationContainer.addSubview(confirmButton)
-        confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(postOptionsButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -364,6 +368,16 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
             confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.confirmButtonVerticalMargin)
         ])
+        
+        if showCogIcon {
+            confirmButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
+            confirmButton.setImage(KanvasCameraImages.cogImage, for: .normal)
+            confirmButton.layer.cornerRadius = EditorViewConstants.confirmButtonSize / 2
+            confirmButton.layer.masksToBounds = true
+        }
+        else {
+            confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        }
     }
     
     private func setupCollection() {

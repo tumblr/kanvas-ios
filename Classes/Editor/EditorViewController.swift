@@ -75,6 +75,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
+                                    showCogIcon: settings.showCogIconInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
                                     enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
