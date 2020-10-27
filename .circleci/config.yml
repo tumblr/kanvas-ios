@@ -2,19 +2,34 @@ version: 2.1
 orbs:
   ios: wordpress-mobile/ios@1.0
   git: wordpress-mobile/git@1.0
+commands:
+  fix-image:
+    steps:
+      - run:
+          name: Fix CI Image
+          command: |
+            # Add `/usr/local/bin` to the Xcode 11.2 image's $PATH in order to be able to use dependencies
+            if [ $(echo $PATH | ruby -e "puts Kernel.gets.include?('/usr/local/bin')") != "true" ]; then
+              echo 'export PATH=/usr/local/bin:$PATH' >> $BASH_ENV
+              echo "Manually added `/usr/local/bin` to the $PATH:"
+              echo $PATH
+            fi
+            chruby ruby-2.6.6
+            gem install bundler
 jobs:
   build:
     executor:
       name: ios/default
-      xcode-version: "11.2.1"
+      xcode-version: "12.0.0"
     steps:
+      - fix-image
       - git/shallow-checkout
       - ios/test:
           xcode-version: 11.2.1
           workspace: KanvasCameraExample/KanvasCameraExample.xcworkspace
           scheme: KanvasCameraExample
           device: iPhone 8
-          ios-version: 13.2.2
+          ios-version: "14.0"
           bundle-install: true
           bundler-working-directory: KanvasCameraExample
           pod-install: true
