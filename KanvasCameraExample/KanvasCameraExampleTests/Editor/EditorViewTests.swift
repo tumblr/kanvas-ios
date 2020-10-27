@@ -26,6 +26,7 @@ final class EditorViewTests: FBSnapshotTestCase {
                               showSaveButton: false,
                               showCrossIcon: false,
                               showTagButton: false,
+                              showCogIcon: false,
                               showQuickPostButton: false,
                               enableQuickPostLongPress: false,
                               showBlogSwitcher: false,
