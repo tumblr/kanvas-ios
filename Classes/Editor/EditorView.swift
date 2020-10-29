@@ -83,7 +83,6 @@ private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
     static let editionOptionAnimationDuration: TimeInterval = 0.5
     static let confirmButtonSize: CGFloat = 49
-    static let tagButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let postButtonSize: CGFloat = 54
@@ -300,17 +299,18 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         tagButton.accessibilityLabel = "Tag Button"
         tagButton.setImage(KanvasCameraImages.tagImage, for: .normal)
         tagButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
-        tagButton.layer.cornerRadius = EditorViewConstants.tagButtonSize / 2
+        tagButton.layer.cornerRadius = EditorViewConstants.confirmButtonSize / 2
         tagButton.layer.masksToBounds = true
         navigationContainer.addSubview(tagButton)
 
         tagButton.addTarget(self, action: #selector(tagButtonPressed), for: .touchUpInside)
         tagButton.translatesAutoresizingMaskIntoConstraints = false
+        let bottomMargin = EditorViewConstants.confirmButtonVerticalMargin + EditorViewConstants.confirmButtonSize + 13
         NSLayoutConstraint.activate([
-            tagButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
-            tagButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            tagButton.heightAnchor.constraint(equalTo: tagButton.widthAnchor),
-            tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.tagButtonSize)
+            tagButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+            tagButton.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -bottomMargin),
+            tagButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+            tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize)
         ])
     }
     
