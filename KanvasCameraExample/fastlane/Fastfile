@@ -1,0 +1,4 @@
+lane :test do
+  cocoapods
+  scan
+end
