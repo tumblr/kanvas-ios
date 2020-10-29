@@ -129,6 +129,8 @@ public struct CameraFeatures {
     /// This enables the UI to post media from the editor.
     public var editorPosting: Bool = false
 
+    public var editorPublishing: Bool = false
+
     public var editorPostOptions: Bool = false
 
     /// The Editor Saving feature
@@ -142,6 +144,10 @@ public struct CameraFeatures {
     /// GIF support
     /// This enables GIFs to be picked from the media picker, and exported from the Editor.
     public var gifs = false
+
+    /// Multi-Export support
+    /// This enables multiple images/videos to be taken, edited, and then exported
+    public var multipleExports = false
 }
 
 // A class that defines the settings for the Kanvas Camera
@@ -238,19 +244,7 @@ public struct CameraFeatures {
     /// Tag button in Editor
     /// This shows a # button in the editor to enable adding tags
     public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
-    
-    /// Quick post button in Editor
-    /// This shows a post button that makes quick options appear when long pressed
-    public var showQuickPostButtonInEditor = DefaultCameraSettings.showQuickPostButtonInEditor
-    
-    /// Long press for post button in Editor
-    /// This enables the long press for the quick post button.
-    public var enableQuickPostLongPress = DefaultCameraSettings.enableQuickPostLongPress
-    
-    /// Blog Switcher in Editor
-    /// This shows a blog switcher that makes quick options appear when long pressed
-    public var showBlogSwitcherInEditor = DefaultCameraSettings.showBlogSwitcherInEditor
-    
+
     /// Auto-open GIF Maker in Editor
     public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
         if mode?.group == .gif {
@@ -322,9 +316,6 @@ private struct DefaultCameraSettings {
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
     static let showTagButtonInEditor: Bool = false
-    static let showQuickPostButtonInEditor: Bool = false
-    static let enableQuickPostLongPress: Bool = false
-    static let showBlogSwitcherInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
 

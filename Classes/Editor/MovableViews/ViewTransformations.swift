@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-final class ViewTransformations {
+final class ViewTransformations: Codable {
     
     static let defaultPosition: CGPoint = .zero
     static let defaultScale: CGFloat = 1.0

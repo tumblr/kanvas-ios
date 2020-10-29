@@ -73,7 +73,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     private var textTransformations: ViewTransformations
 
     private var alignments: [NSTextAlignment]
-    private var fonts: [UIFont?]
+    var fonts: [UIFont?]
     private var highlight: Bool?
         
     private lazy var textView: EditorTextView = {
@@ -122,6 +122,14 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
+    }
+
+    func add(views: [View]) {
+        views.filter { view in
+            return view.viewType == "TEXT"
+        }.forEach { view in
+            let info = view.viewInfo
+        }
     }
     
     // MARK: - View life cycle

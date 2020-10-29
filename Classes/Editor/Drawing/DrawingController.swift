@@ -116,7 +116,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     // Drawing
     var drawingLayer: CALayer?
-    private var drawingCollection: [UIImage]
+    var drawingCollection: [UIImage]
     private var drawingColor: UIColor
     private var mode: DrawingMode
     private var drawingPoints: [CGPoint]

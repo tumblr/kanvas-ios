@@ -43,9 +43,13 @@ final class MainTextView: StylableTextView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("init(from:) has not been implemented")
     }
-    
+
+    required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return false
     }

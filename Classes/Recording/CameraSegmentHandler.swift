@@ -20,6 +20,22 @@ enum CameraSegment {
         }
     }
 
+    var lastFrame: UIImage {
+        switch self {
+        case .image(let image, _, _, _): return image
+        case .video(let url, _):
+            let asset = AVAsset(url: url)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            do {
+                let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
+                return UIImage(cgImage: image)
+            } catch let error {
+                assertionFailure("Failed to generate CameraSegment thumbnail: \(error)")
+                return UIImage()
+            }
+        }
+    }
+
     var videoURL: URL? {
         switch self {
         case .image(_, let url, _, _): return url
@@ -524,7 +540,9 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         assetExport.shouldOptimizeForNetworkUse = true
 
         assetExport.exportAsynchronously() {
-            completion(assetExport.status == .completed ? finalURL : nil, mediaInfo)
+            DispatchQueue.main.async {
+                completion(assetExport.status == .completed ? finalURL : nil, mediaInfo)
+            }
         }
     }
 

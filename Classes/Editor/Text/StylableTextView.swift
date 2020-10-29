@@ -13,7 +13,7 @@ private struct Constants {
 }
 
 /// TextView that can be customized with TextOptions
-class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement {
+@objc class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement, Codable {
     
     // Color rectangles behind the text
     private var highlightViews: [UIView]
@@ -41,7 +41,11 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
             setScaleFactor(newValue)
         }
     }
-    
+
+    var viewSize: CGSize = .zero
+
+    var viewCenter: CGPoint = .zero
+
     // MARK: - Initializers
     
     init() {
@@ -65,11 +69,80 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
         backgroundColor = .clear
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        highlightViews = []
-        super.init(coder: aDecoder)
-        delegate = self
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
+
+    enum CodingKeys: String, CodingKey {
+        case textAlignment
+        case contentScaleFactor
+        case font
+        case text
+        case size
+        case center
+//        case textColor
+    }
+
+    enum FontKeys: String, CodingKey {
+        case name
+        case size
+    }
+
+    required init(from decoder: Decoder) throws {
+        highlightViews = []
+        super.init(frame: .zero, textContainer: nil)
+        delegate = self
+        backgroundColor = .clear
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        textAlignment = NSTextAlignment(rawValue: try values.decode(Int.self, forKey: .textAlignment))!
+        contentScaleFactor = try values.decode(CGFloat.self, forKey: .contentScaleFactor)
+
+        text = try values.decode(String.self, forKey: .text)
+//        textColor = try values.decode(UIColor.self, forKey: .textColor)
+        viewSize = try values.decode(CGSize.self, forKey: .size)
+        viewCenter = try values.decode(CGPoint.self, forKey: .center)
+
+        let fontInfo = try values.nestedContainer(keyedBy: FontKeys.self, forKey: .font)
+        let name = try fontInfo.decode(String.self, forKey: .name)
+        let size = try fontInfo.decode(CGFloat.self, forKey: .size)
+        font = UIFont(name: name, size: size)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = try encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(textAlignment.rawValue, forKey: .textAlignment)
+        try container.encode(contentScaleFactor, forKey: .contentScaleFactor)
+
+        try container.encode(text, forKey: .text)
+        try container.encode(viewSize, forKey: .size)
+        try container.encode(viewCenter, forKey: .center)
+
+//        try container.encode(textColor, forKey: .textColor)
+
+
+        var fontInfo = container.nestedContainer(keyedBy: FontKeys.self, forKey: .font)
+        try fontInfo.encode(font?.fontName, forKey: .name)
+        try fontInfo.encode(font?.pointSize, forKey: .size)
+    }
+
+//    required init?(coder aDecoder: NSCoder) {
+//        highlightViews = aDecoder.decodeObject(of: NSArray.self, forKey: "highlightViews") as! [UIView]
+//        super.init(coder: aDecoder)
+//        textAlignment = NSTextAlignment(rawValue: aDecoder.decodeInteger(forKey: "textAlignment")) ?? .left
+//        let fontSize = aDecoder.decodeFloat(forKey: "fontSize")
+//        font = UIFont(descriptor: aDecoder.decodeObject(of: UIFontDescriptor.self, forKey: "font")!, size: CGFloat(fontSize))
+//        highlightColor = aDecoder.decodeObject(of: UIColor.self, forKey: "highlightColor")
+//        delegate = self
+//    }
+//
+//    override func encode(with coder: NSCoder) {
+//        super.encode(with: coder)
+//        coder.encode(highlightViews, forKey: "highlightViews")
+//        coder.encode(textAlignment.rawValue, forKey: "textAlignment")
+//        coder.encode(font?.fontDescriptor, forKey: "font")
+//        coder.encode(font?.pointSize, forKey: "fontSize")
+//        coder.encode(highlightColor, forKey: "highlightColor")
+//    }
     
     override func layoutSubviews() {
         super.layoutSubviews()

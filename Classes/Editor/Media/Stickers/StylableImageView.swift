@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Image view that increases its image quality when its contentScaleFactor is modified
-final class StylableImageView: UIImageView, MovableViewInnerElement {
+@objc final class StylableImageView: UIImageView, MovableViewInnerElement, Codable {
     
     let id: String
     
@@ -17,6 +17,10 @@ final class StylableImageView: UIImageView, MovableViewInnerElement {
             setScaleFactor(newValue)
         }
     }
+
+    var viewSize: CGSize = .zero
+
+    var viewCenter: CGPoint = .zero
     
     // MARK: - Initializers
     
@@ -28,7 +32,28 @@ final class StylableImageView: UIImageView, MovableViewInnerElement {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case size
+        case center
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.viewSize = try container.decode(CGSize.self, forKey: .size)
+        self.viewCenter = try container.decode(CGPoint.self, forKey: .center)
+        super.init(image: nil)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = try encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(viewSize, forKey: .size)
+        try container.encode(viewCenter, forKey: .center)
+    }
+
     // MARK: - Scale factor
     
     /// Sets a new scale factor to update the quality of the inner image. This value represents how content in the view is mapped

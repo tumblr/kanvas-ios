@@ -60,9 +60,6 @@
                   Identifier = "CameraSegmentHandlerTests/testMerge()">
                </Test>
                <Test
-                  Identifier = "FilteredInputViewControllerTests/testFilteredInputView()">
-               </Test>
-               <Test
                   Identifier = "GIFEncoderTests">
                </Test>
                <Test
@@ -70,9 +67,6 @@
                </Test>
                <Test
                   Identifier = "GLPlayerTests">
-               </Test>
-               <Test
-                  Identifier = "MediaPlayerTests/testPlayVideo()">
                </Test>
             </SkippedTests>
          </TestableReference>

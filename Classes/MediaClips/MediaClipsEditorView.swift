@@ -20,6 +20,7 @@ private struct Constants {
 protocol MediaClipsEditorViewDelegate: class {
     /// Callback for when next button is selected
     func nextButtonWasPressed()
+    func addButtonWasPressed()
 }
 
 /// View for media clips editor
@@ -33,22 +34,31 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     
     private let mainContainer: IgnoreTouchesView
     private let nextButton: UIButton
+    private let addButton: UIButton // For adding a new clip
     let collectionContainer: IgnoreTouchesView
 
     // MARK: - Initializers
     
-    init() {
+    init(showsAddButton: Bool = false) {
         mainContainer = IgnoreTouchesView()
         mainContainer.backgroundColor = KanvasCameraColors.shared.translucentBlack
         
         collectionContainer = IgnoreTouchesView()
 
         nextButton = UIButton()
+        addButton = UIButton()
         super.init(frame: .zero)
         
         clipsToBounds = false
         
         setUpViews()
+        
+        if showsAddButton {
+            setUpAddButton()
+        }
+        else {
+            setUpNextButton()
+        }
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -66,7 +76,6 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     private func setUpViews() {
         setUpMainContainer()
         setUpCollection()
-        setUpNextButton()
     }
     
     private func setUpMainContainer() {
@@ -113,10 +122,33 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         ])
     }
     
+    private func setUpAddButton() {
+        mainContainer.addSubview(addButton)
+        addButton.accessibilityIdentifier = "Media Clips Next Button"
+        addButton.accessibilityLabel = "Next Button"
+        addButton.tintColor = .white
+        if #available(iOS 13.0, *) {
+            addButton.setImage(UIImage(systemName: "plus.app"), for: .normal)
+        }
+        addButton.addTarget(self, action: #selector(addPressed), for: .touchUpInside)
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            addButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonHorizontalMargin),
+            addButton.heightAnchor.constraint(equalToConstant: Constants.nextButtonSize),
+            addButton.widthAnchor.constraint(equalToConstant: Constants.nextButtonSize),
+            addButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor, constant: -Constants.nextButtonCenterYOffset)
+        ])
+    }
+    
     // MARK: - Gesture recognizers
     
     @objc private func nextPressed() {
         delegate?.nextButtonWasPressed()
+    }
+    
+    @objc private func addPressed() {
+        delegate?.addButtonWasPressed()
     }
     
     // MARK: - Public interface

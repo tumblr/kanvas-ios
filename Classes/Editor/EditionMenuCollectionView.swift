@@ -96,6 +96,8 @@ private class MenuCollectionView: IgnoreTouchesCollectionView {
 
 private class MenuCollectionViewLayout: UICollectionViewFlowLayout {
 
+//    var layoutDirection: UIUserInterfaceLayoutDirection?
+
     override init() {
         super.init()
         configure()
@@ -112,5 +114,13 @@ private class MenuCollectionViewLayout: UICollectionViewFlowLayout {
         estimatedItemSize = CGSize(width: EditionMenuCollectionCell.width, height: EditionMenuCollectionCell.height)
         minimumInteritemSpacing = 0
         minimumLineSpacing = 0
+    }
+
+    override var developmentLayoutDirection: UIUserInterfaceLayoutDirection {
+        return .rightToLeft
+    }
+
+    override var flipsHorizontallyInOppositeLayoutDirection: Bool {
+        return true
     }
 }

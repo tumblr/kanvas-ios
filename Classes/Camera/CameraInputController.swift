@@ -736,7 +736,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func photoSettings(for output: AVCapturePhotoOutput?) -> AVCapturePhotoSettings? {
         let settings = AVCapturePhotoSettings()
 #if !targetEnvironment(simulator)
-        if output?.supportedFlashModes.contains(.on) == true {
+        if output?.__supportedFlashModes.contains(1) == true {
             settings.flashMode = flashMode
         }
 #endif

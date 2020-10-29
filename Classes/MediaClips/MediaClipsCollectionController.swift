@@ -17,6 +17,8 @@ protocol MediaClipsCollectionControllerDelegate: class {
     
     /// Callback for when a clip finishes moving / draggin
     func mediaClipFinishedMoving()
+    
+    func mediaClipWasSelected(at: Int)
 }
 
 /// Constants for Collection Controller
@@ -69,6 +71,11 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
             clips.remove(at: 0)
             mediaClipsCollectionView.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
         }
+        mediaClipsCollectionView.collectionView.reloadData()
+    }
+    
+    func replace(clips: [MediaClip]) {
+        self.clips = clips
         mediaClipsCollectionView.collectionView.reloadData()
     }
     
@@ -214,6 +221,10 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         draggingCell?.show(true)
         draggingCell = .none
         draggingClipIndex = .none
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.mediaClipWasSelected(at: indexPath.row)
     }
 }
 

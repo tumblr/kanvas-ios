@@ -5,11 +5,8 @@
 //
 
 import Foundation
-import GLKit
 
 protocol PixelBufferView: class {
-    var mediaTransform: GLKMatrix4? { get set }
-    var isPortrait: Bool { get set }
     func displayPixelBuffer(_ pixelBuffer: CVPixelBuffer)
     func flushPixelBufferCache()
     func reset()

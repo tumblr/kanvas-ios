@@ -47,8 +47,7 @@ private struct Constants {
 }
 
 /// View that contains the collection of movable views
-final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, MovableViewDelegate {
-    
+final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, MovableViewDelegate, Codable {
     weak var delegate: MovableViewCanvasDelegate?
     
     // View that has been tapped
@@ -66,6 +65,8 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     
     // Values from which the different gestures start
     private var originTransformations: ViewTransformations
+
+    private var innerViews: [MovableViewInnerElement] = []
     
     var isEmpty: Bool {
         return subviews.compactMap{ $0 as? MovableView }.count == 0
@@ -79,9 +80,90 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         setUpViews()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+//    required init?(coder aDecoder: NSCoder) {
+//        overlay = aDecoder.decodeObject(of: UIView.self, forKey: "overlay")!
+//        trashView = TrashView()
+//        originTransformations = aDecoder.decodeObject(of: ViewTransformations.self, forKey: "transformations")!
+//
+//
+////        let unarchiver = try! NSKeyedUnarchiver(forReadingFrom: textData)
+////        unarchiver.requiresSecureCoding = false
+////        let textViews = unarchiver.decodeObject() as! [StylableTextView]
+////        let imageViews = aDecoder.decodeObject(forKey: "imageViews") as? [StylableTextView] ?? []
+////        unarchiver.finishDecoding()
+//
+//        super.init(coder: aDecoder)
+//
+//        if #available(iOS 14.0, *) {
+//            let innerViews = aDecoder.decodeArrayOfObjects(ofClasses: [StylableTextView.self, StylableImageView.self], forKey: "innerViews") as! [MovableViewInnerElement]
+////            let views: [MovableViewInnerElement] = textViews + imageViews
+//            innerViews.forEach({ view in
+//                addView(view: view, transformations: originTransformations, location: originTransformations.position, size: view.frame.size)
+//            })
+//        }
+//    }
+
+//    override func encode(with coder: NSCoder) {
+//        super.encode(with: coder)
+//        coder.encode(overlay, forKey: "overlay")
+//        coder.encode(originTransformations, forKey: "transformations")
+//
+//        var textViews: [StylableTextView]
+//        var imageViews: [StylableImageView]
+//        textViews = innerViews.compactMap { element in
+//            return element as? StylableTextView
+//        }
+//        imageViews = innerViews.compactMap { element in
+//            return element as? StylableImageView
+//        }
+//        coder.encode(innerViews, forKey: "innerViews")
+////        let textData = try! NSKeyedArchiver.archivedData(withRootObject: textViews, requiringSecureCoding: false)
+////        coder.encode(textData, forKey: "textViews")
+////        let imageData = try! NSKeyedArchiver.archivedData(withRootObject: imageViews, requiringSecureCoding: false)
+////        coder.encode(imageData, forKey: "imageViews")
+//    }
+
+    enum CodingKeys: String, CodingKey {
+        case originTransformations
+        case textViews
+        case imageViews
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        overlay = UIView()
+        trashView = TrashView()
+        originTransformations = try values.decode(ViewTransformations.self, forKey: .originTransformations)
+
+        super.init(frame: .zero)
+
+        let textViews = try values.decode([StylableTextView].self, forKey: .textViews)
+        let imageViews = try values.decode([StylableImageView].self, forKey: .imageViews)
+        let innerViews: [MovableViewInnerElement] = textViews + imageViews
+        innerViews.forEach({ view in
+            addView(view: view, transformations: originTransformations, location: view.viewCenter, size: view.viewSize)
+        })
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(originTransformations, forKey: .originTransformations)
+
+        let textViews = innerViews.compactMap { $0 as? StylableTextView } as [StylableTextView]
+        let imageViews = innerViews.compactMap { $0 as? StylableImageView } as [StylableImageView]
+        
+        try container.encode(textViews, forKey: .textViews)
+        try container.encode(imageViews, forKey: .imageViews)
+    }
+
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+//    func encode(to encoder: Encoder) throws {
+//
+//    }
     
     // MARK: - Layout
     
@@ -132,6 +214,8 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         let movableView = MovableView(view: view, transformations: transformations)
         movableView.delegate = self
+        view.viewSize = size
+        view.viewCenter = location
         movableView.isUserInteractionEnabled = true
         movableView.isExclusiveTouch = true
         movableView.isMultipleTouchEnabled = true
@@ -166,6 +250,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         UIView.animate(withDuration: Constants.animationDuration) {
             movableView.moveToDefinedPosition()
         }
+        innerViews.append(view)
     }
     
     /// Removes the tapped view from the canvas

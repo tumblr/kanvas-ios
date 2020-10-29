@@ -67,15 +67,6 @@ protocol EditorViewDelegate: class {
     /// Called when the rendering rectangle has changed
     /// - Parameter rect: the rendering rectangle
     func didRenderRectChange(rect: CGRect)
-    /// Obtains the quick post button.
-    ///
-    /// - Parameter enableLongPress: whether to enable the long press action for the button.
-    /// - Returns: the quick post button.
-    func getQuickPostButton(enableLongPress: Bool) -> UIView
-    /// Obtains the blog switcher.
-    ///
-    /// - Returns: the blog switcher.
-    func getBlogSwitcher() -> UIView
 }
 
 /// Constants for EditorView
@@ -94,12 +85,6 @@ private struct EditorViewConstants {
     static let fakeOptionCellMinSize: CGFloat = 36
     static let fakeOptionCellMaxSize: CGFloat = 45
     static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
-    static let overlayColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.87)
-    static let overlayLabelMargin: CGFloat = 20
-    static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
-    static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
-    static let topMenuElementHeight: CGFloat = 36
-    static let blogSwitcherHorizontalMargin: CGFloat = 8
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -107,8 +92,9 @@ private struct EditorViewConstants {
 final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelegate {
 
     func didRenderRectChange(rect: CGRect) {
-        drawingCanvasConstraints.update(with: rect)
-        movableViewCanvasConstraints.update(with: rect)
+        let newRect = rect.intersection(UIScreen.main.bounds)
+        drawingCanvasConstraints.update(with: newRect)
+        movableViewCanvasConstraints.update(with: newRect)
         delegate?.didRenderRectChange(rect: rect)
     }
 
@@ -116,6 +102,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         case confirm
         case post
         case postOptions
+        case publish
     }
     
     weak var playerView: MediaPlayerView?
@@ -127,19 +114,20 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showSaveButton: Bool
     private let showCrossIcon: Bool
     private let postButton = UIButton()
+    private lazy var publishButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.accessibilityIdentifier = "Media Clips Next Button"
+        button.accessibilityLabel = "Next Button"
+        button.setImage(KanvasCameraImages.nextImage, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     private let postLabel = UILabel()
     private let tagButton = UIButton()
     private let fakeOptionCell = UIImageView()
     private let showTagButton: Bool
-    private let showQuickPostButton: Bool
-    private let enableQuickPostLongPress: Bool
-    private let showBlogSwitcher: Bool
-    private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
-    private let overlay = UIView()
-    private let overlayLabel = UILabel()
-    private var overlayLabelConstraint: NSLayoutConstraint?
     let collectionContainer = IgnoreTouchesView()
     let filterMenuContainer = IgnoreTouchesView()
     let textMenuContainer = IgnoreTouchesView()
@@ -147,7 +135,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     let gifMakerMenuContainer = IgnoreTouchesView()
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
 
-    let drawingCanvas = IgnoreTouchesView()
+    var drawingCanvas: IgnoreTouchesView
 
     private lazy var drawingCanvasConstraints: FullViewConstraints = {
         return FullViewConstraints(
@@ -159,11 +147,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         )
     }()
 
-    lazy var movableViewCanvas: MovableViewCanvas = {
-        let canvas = MovableViewCanvas()
-        canvas.delegate = self
-        return canvas
-    }()
+    var movableViewCanvas: MovableViewCanvas
 
     private lazy var movableViewCanvasConstraints = {
         return FullViewConstraints(
@@ -179,44 +163,25 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         return quickBlogSelectorCoordinator?.avatarView(frame: EditorViewConstants.frame)
     }
     
-    private lazy var quickPostButton: UIView = {
-        guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton(enableLongPress: enableQuickPostLongPress)
-    }()
-    
-    private lazy var blogSwitcher: UIView = {
-        guard let delegate = delegate else { return UIView() }
-        return delegate.getBlogSwitcher()
-    }()
-    
-    private weak var delegate: EditorViewDelegate?
+    weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(delegate: EditorViewDelegate?,
-         mainActionMode: MainActionMode,
-         showSaveButton: Bool,
-         showCrossIcon: Bool,
-         showTagButton: Bool,
-         showQuickPostButton: Bool,
-         enableQuickPostLongPress: Bool,
-         showBlogSwitcher: Bool,
-         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-         metalContext: MetalContext?) {
-        self.delegate = delegate
+    init(mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, movableViewCanvas: MovableViewCanvas?, drawingCanvas: IgnoreTouchesView?) {
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
         self.showTagButton = showTagButton
         self.showCrossIcon = showCrossIcon
-        self.showQuickPostButton = showQuickPostButton
-        self.enableQuickPostLongPress = enableQuickPostLongPress
-        self.showBlogSwitcher = showBlogSwitcher
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
-        self.metalContext = metalContext
+
+        self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
+        self.drawingCanvas = drawingCanvas ?? IgnoreTouchesView()
+
         super.init(frame: .zero)
+        self.movableViewCanvas.delegate = self
         setupViews()
     }
     
@@ -236,6 +201,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             setupPostButton()
         case .postOptions:
             setupPostOptionsButton()
+        case .publish:
+            setupPublishButton()
         }
         if showSaveButton {
             setupSaveButton()
@@ -246,22 +213,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupDrawingMenu()
         setupGifMakerMenu()
         setupFakeOptionCell()
-        
-        if showQuickPostButton {
-            setupQuickPostButton()
-        }
-        if showBlogSwitcher {
-            setupBlogSwitcher()
-        }
-        
-        setupOverlay()
-        setupOverlayLabel()
     }
-    
+
     // MARK: - views
 
     private func setupPlayer() {
-        let playerView = MediaPlayerView(metalContext: metalContext)
+        let playerView = MediaPlayerView()
         playerView.delegate = self
         playerView.add(into: self)
         self.playerView = playerView
@@ -279,7 +236,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         addSubview(movableViewCanvas)
         movableViewCanvasConstraints.activate()
     }
-    
+
     /// Container that holds the back button and the bottom menu
     private func setupNavigationContainer() {
         navigationContainer.accessibilityIdentifier = "Navigation Container"
@@ -367,7 +324,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         navigationContainer.addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let buttonOnTheRight: UIButton
+        let buttonOnTheRight: UIView?
         let trailingMargin: CGFloat
         
         if showSaveButton {
@@ -378,11 +335,19 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             buttonOnTheRight = confirmOrPostButton()
             trailingMargin = confirmOrPostButtonHorizontalMargin()
         }
+
+        let verticalConstraint: NSLayoutConstraint
+
+        if let button = buttonOnTheRight {
+            verticalConstraint = collectionContainer.centerYAnchor.constraint(equalTo: button.centerYAnchor)
+        } else {
+            verticalConstraint = collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        }
         
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight.leadingAnchor, constant: -trailingMargin / 2),
-            collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
+            collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight?.leadingAnchor ?? trailingAnchor, constant: -trailingMargin / 2),
+            verticalConstraint,
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
         ])
     }
@@ -463,7 +428,29 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fakeOptionCell.alpha = 0
     }
 
-    private func setupPostButton() {
+    func setupPublishButton() {
+//        publishButton.translatesAutoresizingMaskIntoConstraints = false
+//        button.setTitleColor(.white, for: .normal)
+//        button.titleLabel?.font = KanvasCameraFonts.shared.postLabelFont
+
+        navigationContainer.addSubview(publishButton)
+
+        NSLayoutConstraint.activate([
+            publishButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
+//            button.heightAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
+//            button.widthAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
+            publishButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor)
+        ])
+
+        publishButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
+    }
+
+    @objc func nextPressed() {
+
+        delegate?.didTapPostButton()
+    }
+
+    func setupPostButton() {
         postButton.accessibilityLabel = "Post Button"
         postButton.clipsToBounds = false
         postButton.layer.applyShadows()
@@ -509,7 +496,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         postButton.addGestureRecognizer(longPressRecognizer)
     }
 
-    private func setupSaveButton() {
+    func setupSaveButton() {
         saveButton.accessibilityLabel = "Save Button"
         navigationContainer.addSubview(saveButton)
         saveButton.layer.applyShadows()
@@ -518,92 +505,40 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         saveButton.translatesAutoresizingMaskIntoConstraints = false
 
+        let verticalConstraint: NSLayoutConstraint
+
+        if let button = confirmOrPostButton() {
+            verticalConstraint = saveButton.centerYAnchor.constraint(equalTo: button.centerYAnchor)
+        } else {
+            verticalConstraint = saveButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        }
+
         NSLayoutConstraint.activate([
-            saveButton.trailingAnchor.constraint(equalTo: confirmOrPostButton().leadingAnchor, constant: -EditorViewConstants.saveButtonHorizontalMargin),
+            saveButton.trailingAnchor.constraint(equalTo: confirmOrPostButton()?.leadingAnchor ?? safeAreaLayoutGuide.leadingAnchor, constant: -EditorViewConstants.saveButtonHorizontalMargin),
             saveButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.saveButtonSize),
             saveButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.saveButtonSize),
-            saveButton.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor)
+            verticalConstraint
         ])
     }
 
-    private func confirmOrPostButton() -> UIButton {
+    func confirmOrPostButton() -> UIView? {
         switch mainActionMode {
         case .confirm, .postOptions:
             return confirmButton
         case .post:
             return postButton
+        case .publish:
+            return nil
         }
     }
     
-    private func confirmOrPostButtonHorizontalMargin() -> CGFloat {
+    func confirmOrPostButtonHorizontalMargin() -> CGFloat {
         switch mainActionMode {
         case .confirm, .postOptions:
             return EditorViewConstants.confirmButtonHorizontalMargin
-        case .post:
+        case .post, .publish:
             return EditorViewConstants.postButtonHorizontalMargin
         }
-    }
-    
-    private func setupOverlay() {
-        overlay.accessibilityLabel = "Overlay"
-        overlay.backgroundColor = EditorViewConstants.overlayColor
-        overlay.alpha = 0
-        
-        addSubview(overlay)
-        overlay.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            overlay.topAnchor.constraint(equalTo: topAnchor),
-            overlay.bottomAnchor.constraint(equalTo: bottomAnchor),
-            overlay.leadingAnchor.constraint(equalTo: leadingAnchor),
-            overlay.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-    }
-    
-    private func setupOverlayLabel() {
-        overlayLabel.accessibilityLabel = "Overlay Label"
-        overlay.addSubview(overlayLabel)
-        overlayLabel.textColor = EditorViewConstants.overlayLabelTextColor
-        overlayLabel.font = EditorViewConstants.overlayLabelFont
-        overlayLabel.textAlignment = .right
-        
-        overlayLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            overlayLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            overlayLabel.heightAnchor.constraint(equalToConstant: EditorViewConstants.topMenuElementHeight),
-            overlayLabel.leadingAnchor.constraint(equalTo: overlay.leadingAnchor),
-        ])
-    }
-    
-    private func setupQuickPostButton() {
-        quickPostButton.accessibilityLabel = "Quick Post Button"
-        
-        addSubview(quickPostButton)
-        quickPostButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            quickPostButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            quickPostButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
-        ])
-    }
-    
-    private func setupBlogSwitcher() {
-        blogSwitcher.accessibilityLabel = "Blog Switcher"
-        addSubview(blogSwitcher)
-        blogSwitcher.translatesAutoresizingMaskIntoConstraints = false
-        
-        let trailingAnchor: NSLayoutConstraint
-        if quickPostButton.isDescendant(of: self) {
-            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: quickPostButton.leadingAnchor, constant: -EditorViewConstants.blogSwitcherHorizontalMargin)
-        }
-        else {
-            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin)
-        }
-        
-        NSLayoutConstraint.activate([
-            trailingAnchor,
-            blogSwitcher.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            blogSwitcher.heightAnchor.constraint(equalToConstant: EditorViewConstants.topMenuElementHeight),
-            blogSwitcher.widthAnchor.constraint(equalToConstant: EditorViewConstants.topMenuElementHeight),
-        ])
     }
     
     // MARK: - buttons
@@ -735,6 +670,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
                 self.postButton.alpha = show ? 1 : 0
                 self.postLabel.alpha = show ? 1 : 0
             }
+        case .publish:
+            UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+                self.publishButton.alpha = show ? 1 : 0
+            }
         }
         if showSaveButton {
             UIView.animate(withDuration: EditorViewConstants.animationDuration) {
@@ -768,56 +707,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.tagButton.alpha = show ? 1 : 0
         }
-    }
-    
-    /// shows or hides the overlay
-    ///
-    /// - Parameters
-    ///  -  show: true to show, false to hide
-    ///  - completion: an optional action to be executed when the animation ends
-    func showOverlay(_ show: Bool, completion: ((Bool) -> Void)? = nil) {
-        overlayLabel.alpha = show ? 1 : 0
-        UIView.animate(withDuration: EditorViewConstants.animationDuration, animations: { [weak self] in
-            self?.overlay.alpha = show ? 1 : 0
-        }, completion: completion)
-    }
-    
-    /// moves the overlay label next to a specified view.
-    ///
-    /// - Parameter view: the view next to the label.
-    func moveOverlayLabel(to view: UIView) {
-        overlayLabelConstraint?.isActive = false
-        let newConstraint = overlayLabel.trailingAnchor.constraint(equalTo: view.leadingAnchor,
-                                                                   constant: -EditorViewConstants.overlayLabelMargin)
-        newConstraint.isActive = true
-        overlayLabelConstraint = newConstraint
-        layoutIfNeeded()
-    }
-    
-    /// Moves a view to be shown above the overlay.
-    ///
-    /// - Parameters
-    ///  - view: the view that will be moved.
-    ///  - visible: true to move the specified view to the front. false to move the overlay to the front.
-    func moveViewToFront(_ view: UIView, visible: Bool) {
-        if visible {
-            bringSubviewToFront(view)
-        }
-        else {
-            bringSubviewToFront(overlay)
-        }
-    }
-    /// Modifies the overlay message.
-    ///
-    /// - Parameter text: the new message.
-    func setOverlayLabel(text: String?) {
-        let newText = text ?? ""
-        let animation: () -> Void = { [weak self] in
-            self?.overlayLabel.text = newText
-        }
-        
-        UIView.transition(with: overlayLabel, duration: EditorViewConstants.animationDuration,
-                          options: .transitionCrossDissolve, animations: animation, completion: nil)
     }
 
     func updatePostButton(avatarView: UIView) {

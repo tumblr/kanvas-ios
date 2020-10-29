@@ -75,6 +75,8 @@ final class MovableView: UIView {
             applyTransform()
         }
     }
+
+    var size: CGSize = .zero
     
     var transformations: ViewTransformations {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
@@ -91,7 +93,42 @@ final class MovableView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        position = aDecoder.decodeCGPoint(forKey: "position")
+        scale = CGFloat(aDecoder.decodeFloat(forKey: "scale"))
+        rotation = CGFloat(aDecoder.decodeFloat(forKey: "rotation"))
+        innerView = aDecoder.decodeObject(forKey: "innerView") as! MovableViewInnerElement
+        super.init(coder: aDecoder)
+    }
+
+    override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(position, forKey: "position")
+        coder.encode(scale, forKey: "scale")
+        coder.encode(rotation, forKey: "rotation")
+        coder.encode(innerView, forKey: "innerView")
+    }
+
+    enum ViewType {
+        case text
+        case image
+    }
+
+    var type: ViewType {
+        if innerView is StylableTextView {
+            return .text
+        } else {
+            return .image
+        }
+    }
+
+    var textInfo: TextInfo? {
+        if let textView = innerView as? StylableTextView {
+            return TextInfo(text: textView.text,
+                            fontSizePx: Float(textView.font?.pointSize ?? 0),
+                            textColor: 0,
+                            textAlignment: TextAlignment(rawValue: textView.textAlignment.rawValue)!)
+        }
+        return nil
     }
     
     // MARK: - Layout
@@ -170,6 +207,7 @@ final class MovableView: UIView {
     
     // Called when the view is moved
     func onMove() {
+        innerView.viewCenter = position
         if let _ = innerView as? StylableTextView {
             delegate?.didMoveTextView()
         }

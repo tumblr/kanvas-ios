@@ -26,6 +26,7 @@ final class ModeButtonView: IgnoreTouchesView {
 
     private let modeButton: UIButton
 
+    var tapped: (() -> Void)?
     weak var delegate: ModeButtonViewDelegate?
 
     private var disposables: [NSKeyValueObservation] = []
@@ -81,6 +82,7 @@ final class ModeButtonView: IgnoreTouchesView {
 
     @objc private func buttonPressed() {
         delegate?.modeButtonViewDidTap()
+        tapped?()
     }
 
 }

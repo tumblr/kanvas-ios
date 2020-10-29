@@ -52,32 +52,13 @@ enum MediaPlayerPlaybackMode {
 final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
     weak var pixelBufferView: PixelBufferView?
-    
-    var mediaTransform: GLKMatrix4? {
-        didSet {
-            pixelBufferView?.mediaTransform = mediaTransform
-        }
-    }
-    
-    var isPortrait: Bool = true {
-        didSet {
-            pixelBufferView?.isPortrait = isPortrait
-        }
-    }
 
     weak var delegate: MediaPlayerViewDelegate?
 
-    init(metalContext: MetalContext?) {
-        super.init(frame: .zero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
 
-        let pixelBufferView: PixelBufferView & UIView
-        if let metalContext = metalContext {
-            pixelBufferView = MetalPixelBufferView(context: metalContext)
-        }
-        else {
-            pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFit)
-        }
-
+        let pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFill)
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
@@ -476,8 +457,6 @@ final class MediaPlayer {
         if let track = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first {
             renderer.switchInputDimensions = track.orientation.isPortrait
             renderer.mediaTransform = track.glPreferredTransform
-            playerView?.isPortrait = track.orientation.isPortrait
-            playerView?.mediaTransform = track.glPreferredTransform
         }
 
         avPlayer.replaceCurrentItem(with: playerItem)
@@ -571,4 +550,5 @@ extension MediaPlayer: RendererDelegate {
     func rendererRanOutOfBuffers() {
         self.playerView?.pixelBufferView?.flushPixelBufferCache()
     }
+
 }

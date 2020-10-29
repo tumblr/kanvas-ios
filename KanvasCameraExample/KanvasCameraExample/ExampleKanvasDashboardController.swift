@@ -123,51 +123,42 @@ extension KanvasDashboardController: CameraControllerDelegate {
     public func tagButtonPressed() {
         // Only supported in Orangina
     }
-    
-    public func getQuickPostButton(enableLongPress: Bool) -> UIView {
-        // Only supported in Orangina
-        return UIView()
-    }
-    
-    public func getBlogSwitcher() -> UIView {
-        // Only supported in Orangina
-        return UIView()
-    }
 
     public func editorDismissed() {
         // Only supported in Orangina
     }
 
-    public func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
-        if let error = error {
-            assertionFailure("Error creating Kanvas media: \(error)")
-            return
-        }
-        guard let media = media else {
-            assertionFailure("No error, but no media!?")
-            return
-        }
-
-        save(media: media, moveFile: false) { error in
-            DispatchQueue.main.async {
-                guard error == nil else {
-                    print("Error saving media to the photo library")
-                    return
+    public func didCreateMedia(_ cameraController: CameraController, media: [(KanvasCameraMedia?, Error?)], exportAction: KanvasExportAction) {
+        media.forEach { (media, error) in
+            guard let media = media else {
+                if let error = error {
+                    assertionFailure("Error creating Kanvas Media: \(error)")
                 }
+                return
+            }
+            save(media: media) { err in
+                DispatchQueue.main.async {
+                    if KanvasDevice.isRunningInSimulator == false {
+                        guard err == nil else {
+                            assertionFailure("Error saving to photo library")
+                            return
+                        }
+                    }
 
-                switch exportAction {
-                case .previewConfirm:
-                    assertionFailure("The Preview screen should never be shown from the Kanvas Dashboard")
-                case .confirm:
-                    self.kanvasViewController.resetState()
-                    self.delegate?.kanvasDashboardOpenComposeRequest()
-                case .post:
-                    self.kanvasViewController.resetState()
-                    self.delegate?.kanvasDashboardCreatePostRequest()
-                case .save:
-                    break
-                case .postOptions:
-                    self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
+                    switch exportAction {
+                    case .previewConfirm:
+                        assertionFailure("The Preview screen should never be shown from the Kanvas Dashboard")
+                    case .confirm:
+                        self.kanvasViewController.resetState()
+                        self.delegate?.kanvasDashboardOpenComposeRequest()
+                    case .post:
+                        self.kanvasViewController.resetState()
+                        self.delegate?.kanvasDashboardCreatePostRequest()
+                    case .save:
+                        break
+                    case .postOptions:
+                        self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
+                    }
                 }
             }
         }

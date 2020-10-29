@@ -24,8 +24,9 @@ enum MediaExporterError: Error {
 protocol MediaExporting: class {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
+    var dimensions: CGSize { get set }
     init(settings: CameraSettings)
-    func export(image: UIImage, time: TimeInterval, completion: @escaping (UIImage?, Error?) -> Void)
+    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
     func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void)
 }
@@ -63,7 +64,7 @@ final class MediaExporter: MediaExporting {
     /// Exports an image
     /// - Parameter image: UIImage to export
     /// - Parameter completion: callback which is invoked with the processed UIImage
-    func export(image: UIImage, time: TimeInterval, completion: @escaping (UIImage?, Error?) -> Void) {
+    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
         guard needsProcessing else {
             completion(image, nil)
             return
@@ -82,8 +83,8 @@ final class MediaExporter: MediaExporting {
         renderer.refreshFilter()
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
-        renderer.processSampleBuffer(sampleBuffer, time: time)
-        renderer.processSampleBuffer(sampleBuffer, time: time) { (filteredPixelBuffer, time) in
+        renderer.processSampleBuffer(sampleBuffer, time: time, scaleToFillSize: dimensions)
+        renderer.processSampleBuffer(sampleBuffer, time: time, scaleToFillSize: dimensions) { (filteredPixelBuffer, time) in
             guard let processedImage = UIImage(pixelBuffer: filteredPixelBuffer) else {
                 completion(nil, MediaExporterError.noProcessedImage)
                 return
@@ -146,6 +147,7 @@ final class MediaExporter: MediaExporting {
             completion(nil, MediaExporterError.noCompositor)
             return
         }
+        videoCompositor.dimensions = dimensions
         videoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
         videoCompositor.renderer.mediaTransform = track.glPreferredTransform
         videoCompositor.imageOverlays = imageOverlays

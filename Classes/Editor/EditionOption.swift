@@ -4,6 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+/// A representation of a edition option to be presented in EditionMenuCollectionController
 enum EditionOption: Int {
     case gif
     case filter

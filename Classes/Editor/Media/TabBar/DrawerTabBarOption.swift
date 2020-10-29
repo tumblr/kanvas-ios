@@ -4,6 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+/// A representation of the tab bar option in the media drawer
 enum DrawerTabBarOption: String {
     case stickers
     

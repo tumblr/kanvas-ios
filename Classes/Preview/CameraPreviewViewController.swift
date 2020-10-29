@@ -231,18 +231,6 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
     func onPostingOptionsDismissed() {
         // Does nothing
     }
-    
-    func onQuickPostButtonSubmitted() {
-        // Does nothing
-    }
-    
-    func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
-        // Does nothing
-    }
-    
-    func onQuickPostOptionsSelected(selected: Bool, hintText: String?, view: UIView) {
-        // Does nothing
-    }
 }
 
 // MARK: - CameraPreviewView

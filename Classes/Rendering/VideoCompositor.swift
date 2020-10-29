@@ -129,7 +129,7 @@ final class VideoCompositor: NSObject, AVVideoCompositing {
                     self.renderer.processSampleBuffer(sampleBuffer, time: 0)
                     self.firstFrame = false
                 }
-                self.renderer.processSampleBuffer(sampleBuffer, time: asyncVideoCompositionRequest.compositionTime.seconds - (self.startTime?.seconds ?? 0))
+                self.renderer.processSampleBuffer(sampleBuffer, time: asyncVideoCompositionRequest.compositionTime.seconds - (self.startTime?.seconds ?? 0), scaleToFillSize: self.dimensions)
             }
         }
     }
@@ -167,4 +167,5 @@ extension VideoCompositor: RendererDelegate {
     func rendererRanOutOfBuffers() {
         // Nothing we can do here...
     }
+
 }
