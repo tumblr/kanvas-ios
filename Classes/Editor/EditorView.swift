@@ -83,6 +83,7 @@ private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
     static let editionOptionAnimationDuration: TimeInterval = 0.5
     static let confirmButtonSize: CGFloat = 49
+    static let tagButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
     static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let postButtonSize: CGFloat = 54
@@ -100,6 +101,7 @@ private struct EditorViewConstants {
     static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
     static let topMenuElementHeight: CGFloat = 36
     static let blogSwitcherHorizontalMargin: CGFloat = 8
+    static let buttonBackgroundColor = UIColor.black.withAlphaComponent(0.4)
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -296,19 +298,19 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
     private func setupTagButton() {
         tagButton.accessibilityLabel = "Tag Button"
-        tagButton.layer.applyShadows()
         tagButton.setImage(KanvasCameraImages.tagImage, for: .normal)
-        tagButton.imageView?.contentMode = .scaleAspectFit
-        tagButton.imageView?.tintColor = .white
-
+        tagButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
+        tagButton.layer.cornerRadius = EditorViewConstants.tagButtonSize / 2
+        tagButton.layer.masksToBounds = true
         navigationContainer.addSubview(tagButton)
+
         tagButton.addTarget(self, action: #selector(tagButtonPressed), for: .touchUpInside)
         tagButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tagButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
             tagButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
             tagButton.heightAnchor.constraint(equalTo: tagButton.widthAnchor),
-            tagButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+            tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.tagButtonSize)
         ])
     }
     
