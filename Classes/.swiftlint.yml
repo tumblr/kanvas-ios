@@ -1,0 +1,17 @@
+whitelist_rules: # Rules to run
+  - control_statement
+  - force_cast
+  - force_try
+  - force_unwrapping
+  - colon
+  - trailing_semicolon
+  - trailing_newline
+  - legacy_constant
+  - overridden_super_call
+  - prohibited_super_call
+  - unused_enumerated
+  - implicitly_unwrapped_optional
+  - custom_rules
+  - unowned_variable_capture
+
+

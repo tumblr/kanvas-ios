@@ -27,6 +27,9 @@ jobs:
       - fix-image
       - git/shallow-checkout
       - run:
+          name: Linting
+          command: bundle install; bundle exec fastlane lint
+      - run:
           name: Build for Testing
           command: bundle install; bundle exec fastlane test
           working_directory: KanvasCameraExample

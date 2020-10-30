@@ -1,0 +1,5 @@
+lane :lint do
+  swiftlint(
+    path: "Classes"
+  )
+end
