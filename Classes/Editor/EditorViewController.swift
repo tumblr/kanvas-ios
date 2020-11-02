@@ -79,8 +79,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
-                                    showTagButton: settings.showTagButtonInEditor,
                                     showCogIcon: settings.showCogIconInEditor,
+                                    showTagButton: settings.showTagButtonInEditor,
+                                    showTagCollection: settings.showTagCollectionInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
                                     enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
@@ -1093,6 +1094,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         showConfirmButton(show)
         showCloseButton(show)
         showTagButton(show)
+        showTagCollection(show)
     }
     
     // MARK: - Public interface
@@ -1116,6 +1118,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameter show: true to show, false to hide
     func showTagButton(_ show: Bool) {
         editorView.showTagButton(show)
+    }
+    
+    /// shows or hides the tag collection
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTagCollection(_ show: Bool) {
+        editorView.showTagCollection(show)
     }
     
     /// shows or hides the editor menu and the back button

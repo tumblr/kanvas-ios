@@ -138,8 +138,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let postLabel = UILabel()
     private let tagButton = UIButton()
     private let fakeOptionCell = UIImageView()
-    private let showTagButton: Bool
     private let showCogIcon: Bool
+    private let showTagButton: Bool
+    private let showTagCollection: Bool
     private let showQuickPostButton: Bool
     private let enableQuickPostLongPress: Bool
     private let showBlogSwitcher: Bool
@@ -215,8 +216,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          mainActionMode: MainActionMode,
          showSaveButton: Bool,
          showCrossIcon: Bool,
-         showTagButton: Bool,
          showCogIcon: Bool,
+         showTagButton: Bool,
+         showTagCollection: Bool,
          showQuickPostButton: Bool,
          enableQuickPostLongPress: Bool,
          showBlogSwitcher: Bool,
@@ -226,8 +228,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
-        self.showTagButton = showTagButton
         self.showCogIcon = showCogIcon
+        self.showTagButton = showTagButton
+        self.showTagCollection = showTagCollection
         self.showCrossIcon = showCrossIcon
         self.showQuickPostButton = showQuickPostButton
         self.enableQuickPostLongPress = enableQuickPostLongPress
@@ -247,6 +250,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupCloseButton()
         if showTagButton {
             setupTagButton()
+        }
+        if showTagCollection {
             setupTagCollection()
         }
         switch mainActionMode {
@@ -829,6 +834,15 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     func showTagButton(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.tagButton.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the tag collection
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTagCollection(_ show: Bool) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.tagCollection.alpha = show ? 1 : 0
         }
     }
     

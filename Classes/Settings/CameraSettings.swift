@@ -235,13 +235,17 @@ public struct CameraFeatures {
     /// This changes back carat in the editor to a cross icon
     public var crossIconInEditor = DefaultCameraSettings.crossIconInEditor
 
+    /// Cog icon in Editor
+    /// This sets a cog icon for the posting options button in the editor
+    public var showCogIconInEditor = DefaultCameraSettings.showCogIconInEditor
+    
     /// Tag button in Editor
     /// This shows a # button in the editor to enable adding tags
     public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
     
-    /// Cog icon in Editor
-    /// This sets a cog icon for the posting options button in the editor
-    public var showCogIconInEditor = DefaultCameraSettings.showCogIconInEditor
+    /// Tag collection in Editor
+    /// This shows a collection of tags in the editor
+    public var showTagCollectionInEditor = DefaultCameraSettings.showTagCollectionInEditor
     
     /// Quick post button in Editor
     /// This shows a post button that makes quick options appear when long pressed
@@ -334,8 +338,9 @@ private struct DefaultCameraSettings {
     static let features = CameraFeatures()
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
-    static let showTagButtonInEditor: Bool = false
     static let showCogIconInEditor: Bool = false
+    static let showTagButtonInEditor: Bool = false
+    static let showTagCollectionInEditor: Bool = false
     static let showQuickPostButtonInEditor: Bool = false
     static let enableQuickPostLongPress: Bool = false
     static let showBlogSwitcherInEditor: Bool = false
