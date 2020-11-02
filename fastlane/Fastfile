@@ -1,5 +1,7 @@
 lane :lint do
+  install_swiftlint(version: "0.40.3")
   swiftlint(
-    path: "Classes"
+    path: "Classes",
+    executable: ENV["INSTALL_SWIFTLINT_PATH"]
   )
 end
