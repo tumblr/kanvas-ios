@@ -52,6 +52,11 @@ public protocol EditorControllerDelegate: class {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
+    
+    /// Obtains the tag collection.
+    ///
+    /// - Returns: the tag collection.
+    func getTagCollection() -> UIView
 }
 
 private struct Constants {
@@ -614,7 +619,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         guard let delegate = delegate else { return UIView() }
         return delegate.getBlogSwitcher()
     }
-
+    
+    func getTagCollection() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getTagCollection()
+    }
+    
     // MARK: - Media Exporting
 
     private func startExporting(action: KanvasExportAction) {

@@ -101,6 +101,11 @@ public protocol CameraControllerDelegate: class {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
+    
+    /// Obtains the tag collection for the editor.
+    ///
+    /// - Returns: the blog switcher.
+    func getTagCollection() -> UIView
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -893,6 +898,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     public func getBlogSwitcher() -> UIView {
         guard let delegate = delegate else { return UIView() }
         return delegate.getBlogSwitcher()
+    }
+    
+    public func getTagCollection() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getTagCollection()
     }
     
     // MARK: CameraZoomHandlerDelegate

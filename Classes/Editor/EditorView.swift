@@ -77,6 +77,10 @@ protocol EditorViewDelegate: class {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
+    /// Obtains the tag collection.
+    ///
+    /// - Returns: the blog switcher.
+    func getTagCollection() -> UIView
 }
 
 /// Constants for EditorView
@@ -195,6 +199,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         return delegate.getBlogSwitcher()
     }()
     
+    private lazy var tagCollection: UIView = {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getTagCollection()
+    }()
+    
     private weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
@@ -238,6 +247,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupCloseButton()
         if showTagButton {
             setupTagButton()
+            setupTagCollection()
         }
         switch mainActionMode {
         case .confirm:
@@ -320,6 +330,21 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             tagButton.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -bottomMargin),
             tagButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
             tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize)
+        ])
+    }
+    
+    private func setupTagCollection() {
+        tagCollection.accessibilityLabel = "Tag Collection"
+        navigationContainer.addSubview(tagCollection)
+
+        tagCollection.translatesAutoresizingMaskIntoConstraints = false
+        let bottomMargin = EditorViewConstants.confirmButtonVerticalMargin + EditorViewConstants.confirmButtonSize + 13
+        let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin + EditorViewConstants.confirmButtonSize
+        NSLayoutConstraint.activate([
+            tagCollection.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor),
+            tagCollection.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -trailingMargin),
+            tagCollection.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -bottomMargin),
+            tagCollection.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
         ])
     }
     

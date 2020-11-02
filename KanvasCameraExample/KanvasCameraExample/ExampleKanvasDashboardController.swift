@@ -135,7 +135,12 @@ extension KanvasDashboardController: CameraControllerDelegate {
         // Only supported in Orangina
         return UIView()
     }
-
+    
+    public func getTagCollection() -> UIView {
+        // Only supported in Orangina
+        return UIView()
+    }
+    
     public func editorDismissed() {
         // Only supported in Orangina
     }
