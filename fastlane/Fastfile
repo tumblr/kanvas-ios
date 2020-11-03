@@ -1,0 +1,8 @@
+desc "Installs SwiftLint from Github Releases & runs it on the library."
+lane :lint do
+  install_swiftlint(version: "0.40.3")
+  swiftlint(
+    path: "Classes",
+    executable: lane_context[SharedValues::INSTALL_SWIFTLINT_PATH]
+  )
+end

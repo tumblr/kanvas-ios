@@ -1,0 +1,5 @@
+desc "Installs pods and runs tests from the KanvasCameraExample project."
+lane :test do
+  cocoapods
+  scan
+end

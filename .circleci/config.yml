@@ -21,19 +21,18 @@ jobs:
     executor:
       name: ios/default
       xcode-version: "12.0.0"
+    environment:
+      SCAN_OUTPUT_DIRECTORY: "output/scan"
     steps:
       - fix-image
       - git/shallow-checkout
-      - ios/test:
-          xcode-version: 11.2.1
-          workspace: KanvasCameraExample/KanvasCameraExample.xcworkspace
-          scheme: KanvasCameraExample
-          device: iPhone 8
-          ios-version: "14.0"
-          bundle-install: true
-          bundler-working-directory: KanvasCameraExample
-          pod-install: true
-          cocoapods-working-directory: KanvasCameraExample
+      - run:
+          name: Linting
+          command: bundle install; bundle exec fastlane lint
+      - run:
+          name: Build for Testing
+          command: bundle install; bundle exec fastlane test
+          working_directory: KanvasCameraExample
       - run:
           name: Zip failed diffs
           when: always
@@ -43,11 +42,16 @@ jobs:
           name: Save diffs
           path: KanvasCameraExample/KanvasCameraExampleTests/diffoutput.zip
           destination: testresults
+      - store_test_results:
+          path: ./KanvasCameraExample/output/scan
+      - store_artifacts:
+          path: output
+      - store_test_results:
+          path: output/scan
+      - ios/save-xcodebuild-artifacts
       - ios/save-xcodebuild-artifacts:
           result-bundle-path: build/results
-          #- ios/validate-podspec:
+          #- run:
           #name: Validate Podspec
-          #xcode-version: '11.5'
-          #podspec-path: KanvasCamera.podspec.json
-          #bundle-install: true
+          #command: bundle exec fastlane podspec
 

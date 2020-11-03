@@ -28,6 +28,14 @@ DerivedData
 # ignore snapshot failure files
 **/FailureDiffs/*
 
+# Dependencies
+/vendor/
+
+# Fastlane
+fastlane/Preview.html
+fastlane/report.xml
+fastlane/README.md
+
 KanvasCameraExample/Pods/*
 !KanvasCameraExample/Pods/Target\ Support\ Files/
 
