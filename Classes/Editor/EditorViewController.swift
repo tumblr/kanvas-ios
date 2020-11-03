@@ -622,7 +622,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         guard let delegate = delegate else { return UIView() }
         return delegate.getBlogSwitcher()
     }
-    
+
     // MARK: - Media Exporting
 
     private func startExporting(action: KanvasExportAction) {

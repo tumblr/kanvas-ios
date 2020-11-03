@@ -361,8 +361,4 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     func getBlogSwitcher() -> UIView {
         return UIView()
     }
-    
-    func getTagCollection() -> UIView {
-        return UIView()
-    }
 }
