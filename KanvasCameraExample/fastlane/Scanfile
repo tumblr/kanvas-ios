@@ -5,7 +5,6 @@
 # fastlane scan --help
 
 scheme("KanvasCameraExample")
-#devices(["iPhone 8"])
 destination("platform=iOS Simulator,name=iPhone 8,OS=14.0")
 
 skip_build(true)
