@@ -77,10 +77,6 @@ protocol EditorViewDelegate: class {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
-    /// Obtains the tag collection.
-    ///
-    /// - Returns: the blog switcher.
-    func getTagCollection() -> UIView
 }
 
 /// Constants for EditorView
@@ -157,6 +153,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     let drawingMenuContainer = IgnoreTouchesView()
     let gifMakerMenuContainer = IgnoreTouchesView()
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
+    private let tagCollection: UIView?
 
     let drawingCanvas = IgnoreTouchesView()
 
@@ -200,11 +197,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         return delegate.getBlogSwitcher()
     }()
     
-    private lazy var tagCollection: UIView = {
-        guard let delegate = delegate else { return UIView() }
-        return delegate.getTagCollection()
-    }()
-    
     private weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
@@ -224,6 +216,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showBlogSwitcher: Bool,
          editToolsRedesign: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         tagCollection: UIView?,
          metalContext: MetalContext?) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
@@ -237,6 +230,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showBlogSwitcher = showBlogSwitcher
         self.editToolsRedesign = editToolsRedesign
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
+        self.tagCollection = tagCollection
         self.metalContext = metalContext
         super.init(frame: .zero)
         setupViews()
@@ -339,6 +333,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     }
     
     private func setupTagCollection() {
+        guard let tagCollection = tagCollection else { return }
         tagCollection.accessibilityLabel = "Tag Collection"
         navigationContainer.addSubview(tagCollection)
 
@@ -842,7 +837,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// - Parameter show: true to show, false to hide
     func showTagCollection(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-            self.tagCollection.alpha = show ? 1 : 0
+            self.tagCollection?.alpha = show ? 1 : 0
         }
     }
     

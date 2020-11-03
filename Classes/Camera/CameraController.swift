@@ -101,11 +101,6 @@ public protocol CameraControllerDelegate: class {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
-    
-    /// Obtains the tag collection for the editor.
-    ///
-    /// - Returns: the blog switcher.
-    func getTagCollection() -> UIView
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -177,6 +172,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let feedbackGenerator: UINotificationFeedbackGenerator
     private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
+    private let tagCollection: UIView?
 
     private weak var mediaPlayerController: MediaPlayerController?
 
@@ -190,8 +186,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// and which should be the result of the interaction.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator)
+    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, tagCollection: UIView?) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, tagCollection: tagCollection)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -213,7 +209,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
          captureDeviceAuthorizer: CaptureDeviceAuthorizing,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?,
-         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         tagCollection: UIView?) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
@@ -223,6 +220,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.stickerProvider = stickerProvider
         self.analyticsProvider = analyticsProvider
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
+        self.tagCollection = tagCollection
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
@@ -339,7 +337,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                               cameraMode: currentMode,
                                               stickerProvider: stickerProvider,
                                               analyticsProvider: analyticsProvider,
-                                              quickBlogSelectorCoordinator: quickBlogSelectorCoordinator)
+                                              quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                              tagCollection: tagCollection)
         controller.delegate = self
         return controller
     }
@@ -898,11 +897,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     public func getBlogSwitcher() -> UIView {
         guard let delegate = delegate else { return UIView() }
         return delegate.getBlogSwitcher()
-    }
-    
-    public func getTagCollection() -> UIView {
-        guard let delegate = delegate else { return UIView() }
-        return delegate.getTagCollection()
     }
     
     // MARK: CameraZoomHandlerDelegate

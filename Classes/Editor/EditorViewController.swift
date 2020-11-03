@@ -52,11 +52,6 @@ public protocol EditorControllerDelegate: class {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
-    
-    /// Obtains the tag collection.
-    ///
-    /// - Returns: the tag collection.
-    func getTagCollection() -> UIView
 }
 
 private struct Constants {
@@ -87,6 +82,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
                                     editToolsRedesign: settings.editToolsRedesign,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
+                                    tagCollection: tagCollection,
                                     metalContext: settings.features.metalPreview ? metalContext : nil)
         player.playerView = editorView.playerView
         return editorView
@@ -146,6 +142,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
 
     private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
+    private let tagCollection: UIView?
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
     private var originalSegments: [CameraSegment]
@@ -214,7 +211,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: analyticsProvider,
-                             quickBlogSelectorCoordinator: nil)
+                             quickBlogSelectorCoordinator: nil,
+                             tagCollection: nil)
     }
     
     public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
@@ -226,7 +224,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: nil,
-                             quickBlogSelectorCoordinator: nil)
+                             quickBlogSelectorCoordinator: nil,
+                             tagCollection: nil)
     }
 
     public static func createEditor(forGIF url: URL,
@@ -257,7 +256,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                   cameraMode: nil,
                   stickerProvider: stickerProvider,
                   analyticsProvider: analyticsProvider,
-                  quickBlogSelectorCoordinator: nil)
+                  quickBlogSelectorCoordinator: nil,
+                  tagCollection: nil)
     }
     
     /// The designated initializer for the editor controller
@@ -277,7 +277,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          cameraMode: CameraMode?,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?,
-         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         tagCollection: UIView?) {
         self.settings = settings
         self.originalSegments = segments
         self.assetsHandler = assetsHandler
@@ -287,6 +288,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.gifEncoderClass = gifEncoderClass
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
+        self.tagCollection = tagCollection
 
         super.init(nibName: .none, bundle: .none)
         
@@ -619,11 +621,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func getBlogSwitcher() -> UIView {
         guard let delegate = delegate else { return UIView() }
         return delegate.getBlogSwitcher()
-    }
-    
-    func getTagCollection() -> UIView {
-        guard let delegate = delegate else { return UIView() }
-        return delegate.getTagCollection()
     }
     
     // MARK: - Media Exporting
