@@ -8,40 +8,40 @@ import Foundation
 import UIKit
 
 /// Protocol for selecting an option.
-protocol PlaybackControllerDelegate: class {
+protocol OptionSelectorControllerDelegate: class {
     
-    /// Called when a playback option is selected
+    /// Called when an option is selected
     ///
     /// - Parameter option: the selected option.
-    func didSelect(option: PlaybackOption)
+    func didSelect(option: OptionSelectorItem)
 }
 
-/// Constants for PlaybackController
+/// Constants for SelectorController
 private struct Constants {
     static let initialIndexPath: IndexPath = IndexPath(item: 0, section: 0)
 }
 
-/// Controller for handling the playback menu.
-final class PlaybackController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PlaybackViewDelegate {
+/// Controller for handling the selector.
+final class OptionSelectorController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OptionSelectorViewDelegate {
     
-    weak var delegate: PlaybackControllerDelegate?
+    weak var delegate: OptionSelectorControllerDelegate?
     
-    private lazy var playbackView: PlaybackView = {
-        let view = PlaybackView()
+    private lazy var optionSelectorView: OptionSelectorView = {
+        let view = OptionSelectorView()
         view.delegate = self
         return view
     }()
     
-    private var options: [PlaybackOption]
+    private var options: [OptionSelectorItem]
     
     private var selectedIndexPath: IndexPath {
         willSet {
-            guard let cell = playbackView.collectionView.cellForItem(at: newValue) as? PlaybackCollectionCell else { return }
+            guard let cell = optionSelectorView.collectionView.cellForItem(at: newValue) as? OptionSelectorCell else { return }
             cell.setSelected(true)
-            playbackView.select(cell: cell, animated: enableSelectionAnimation)
+            optionSelectorView.select(cell: cell, animated: enableSelectionAnimation)
         }
         didSet {
-            guard let cell = playbackView.collectionView.cellForItem(at: oldValue) as? PlaybackCollectionCell else { return }
+            guard let cell = optionSelectorView.collectionView.cellForItem(at: oldValue) as? OptionSelectorCell else { return }
             cell.setSelected(false)
         }
     }
@@ -50,9 +50,9 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     
     // MARK: - Initializers
     
-    init() {
-        options = [.loop, .rebound, .reverse]
-        selectedIndexPath = Constants.initialIndexPath
+    init(options: [OptionSelectorItem]) {
+        self.options = options
+        self.selectedIndexPath = Constants.initialIndexPath
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -70,10 +70,9 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
 
     /// selects the option.
     /// this does not trigger any delegation
-    func select(option: PlaybackOption, animated: Bool = true) {
-        guard let index = options.firstIndex(of: option) else {
-            return
-        }
+    func select(option: OptionSelectorItem, animated: Bool = true) {
+        guard let index = options.firstIndex(where: { $0.description == option.description }) else { return }
+        
         let indexPath = IndexPath(item: index, section: 0)
         guard selectedIndexPath != indexPath else {
             return
@@ -88,22 +87,22 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: - View Life Cycle
     
     override func loadView() {
-        view = playbackView
+        view = optionSelectorView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        playbackView.collectionView.register(cell: PlaybackCollectionCell.self)
-        playbackView.collectionView.delegate = self
-        playbackView.collectionView.dataSource = self
+        optionSelectorView.collectionView.register(cell: OptionSelectorCell.self)
+        optionSelectorView.collectionView.delegate = self
+        optionSelectorView.collectionView.dataSource = self
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let cellWidth = calculateCellWidth()
-        PlaybackCollectionCell.width = cellWidth
-        playbackView.cellWidth = cellWidth
-        playbackView.selectionViewWidth = cellWidth
+        OptionSelectorCell.width = cellWidth
+        optionSelectorView.cellWidth = cellWidth
+        optionSelectorView.selectionViewWidth = cellWidth
     }
 
     // MARK: - UICollectionViewDataSource
@@ -117,19 +116,19 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaybackCollectionCell.identifier, for: indexPath) as? PlaybackCollectionCell, let option = options.object(at: indexPath.item) else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OptionSelectorCell.identifier, for: indexPath) as? OptionSelectorCell, let option = options.object(at: indexPath.item) else { return UICollectionViewCell() }
         
         cell.bindTo(option)
         
         if indexPath == selectedIndexPath {
             cell.setSelected(true, animated: false)
-            playbackView.select(cell: cell)
+            optionSelectorView.select(cell: cell)
         }
         
         return cell
     }
     
-    // MARK: - PlaybackViewDelegate
+    // MARK: - OptionSelectorViewDelegate
     
     func didTapCell(at indexPath: IndexPath) {
         didSelect(indexPath)
@@ -161,6 +160,6 @@ final class PlaybackController: UIViewController, UICollectionViewDelegate, UICo
     // MARK: - Private utilities
     
     private func calculateCellWidth() -> CGFloat {
-        return playbackView.bounds.width / CGFloat(options.count)
+        return optionSelectorView.bounds.width / CGFloat(options.count)
     }
 }

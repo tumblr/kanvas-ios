@@ -103,7 +103,7 @@ public class KanvasCameraCustomUI {
         return KanvasCameraFonts(permissions: Self.cameraPermissions,
                                  drawer: Self.drawer,
                                  editorFonts: [.fairwater(fontSize: 48), UIFont.favoritTumblr85(fontSize: 48)],
-                                 playbackCellFont: .guavaMedium(),
+                                 optionSelectorCellFont: .guavaMedium(),
                                  mediaClipsFont: UIFont.favoritTumblrMedium(fontSize: 9.5),
                                  modeButtonFont: UIFont.favoritTumblr85(fontSize: 18.5),
                                  speedLabelFont: Self.guavaMedium,

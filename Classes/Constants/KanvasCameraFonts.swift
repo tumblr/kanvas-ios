@@ -28,7 +28,7 @@ public struct KanvasCameraFonts {
     public init(permissions: CameraPermissions,
                 drawer: Drawer,
                 editorFonts: [UIFont],
-                playbackCellFont: UIFont,
+                optionSelectorCellFont: UIFont,
                 mediaClipsFont: UIFont,
                 modeButtonFont: UIFont,
                 speedLabelFont: UIFont,
@@ -41,7 +41,7 @@ public struct KanvasCameraFonts {
             self.permissions = permissions
             self.drawer = drawer
             self.editorFonts = editorFonts
-            self.playbackCellFont = playbackCellFont
+            self.optionSelectorCellFont = optionSelectorCellFont
             self.mediaClipsFont = mediaClipsFont
             self.modeButtonFont = modeButtonFont
             self.speedLabelFont = speedLabelFont
@@ -56,7 +56,7 @@ public struct KanvasCameraFonts {
     public static var shared = KanvasCameraFonts(permissions: defaultCameraPermissions,
                                    drawer: defaultDrawer,
                                    editorFonts: [UIFont.systemFont(ofSize: 48), KanvasCameraFonts.favoritTumblr85(fontSize: 48)],
-                                   playbackCellFont: guavaMedium,
+                                   optionSelectorCellFont: guavaMedium,
                                    mediaClipsFont: KanvasCameraFonts.favoritTumblrMedium(fontSize: 9.5),
                                    modeButtonFont: KanvasCameraFonts.favoritTumblr85(fontSize: 18.5),
                                    speedLabelFont: guavaMedium,
@@ -97,7 +97,7 @@ public struct KanvasCameraFonts {
         
     let editorFonts: [UIFont] // EditorTextController:65
     
-    let playbackCellFont: UIFont // PlaybackCollectionCell:20
+    let optionSelectorCellFont: UIFont // OptionSelectorCell:20
     
     let mediaClipsFont: UIFont // MediaClipsCollectionCell:20
     let modeButtonFont: UIFont // ModeButtonView:24

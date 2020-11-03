@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// Constants for PlaybackCollectionCell
+/// Constants for SelectorCollectionCell
 private struct Constants {
     static let animationDuration: TimeInterval = 0.1
     static let height: CGFloat = 36
@@ -16,11 +16,11 @@ private struct Constants {
     static let backgroundColor: UIColor = .clear
     static let fontColorActive: UIColor = .black
     static let fontColorInactive: UIColor = .white
-    static let font: UIFont = KanvasCameraFonts.shared.playbackCellFont
+    static let font: UIFont = KanvasCameraFonts.shared.optionSelectorCellFont
 }
 
-/// The cell in PlaybackController
-final class PlaybackCollectionCell: UICollectionViewCell {
+/// The cell in OptionSelectorController
+final class OptionSelectorCell: UICollectionViewCell {
     
     static let height: CGFloat = Constants.height
     static var width: CGFloat = Constants.width
@@ -52,7 +52,7 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     
     private func setupLabel() {
         contentView.addSubview(label)
-        label.accessibilityIdentifier = "Playback Collection Cell Label"
+        label.accessibilityIdentifier = "Selector Collection Cell Label"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.layer.cornerRadius = Constants.cornerRadius
         label.layer.masksToBounds = true
@@ -64,8 +64,8 @@ final class PlaybackCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
             label.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            label.widthAnchor.constraint(equalToConstant: PlaybackCollectionCell.width),
-            label.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height),
+            label.widthAnchor.constraint(equalToConstant: OptionSelectorCell.width),
+            label.heightAnchor.constraint(equalToConstant: OptionSelectorCell.height),
         ])
     }
     
@@ -74,7 +74,7 @@ final class PlaybackCollectionCell: UICollectionViewCell {
     /// Adds the name of an option to a cell.
     ///
     /// - Parameter option: the option to take the name from.
-    func bindTo(_ option: PlaybackOption) {
+    func bindTo(_ option: OptionSelectorItem) {
         label.text = option.description
     }
     

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class PlaybackCollectionCellTests: FBSnapshotTestCase {
+final class OptionSelectorCellTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,21 +18,21 @@ final class PlaybackCollectionCellTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newCell() -> PlaybackCollectionCell {
+    func newCell() -> OptionSelectorCell {
         let frame = CGRect(origin: .zero,
-                           size: CGSize(width: 100, height: PlaybackView.height))
-        return PlaybackCollectionCell(frame: frame)
+                           size: CGSize(width: 100, height: OptionSelectorView.height))
+        return OptionSelectorCell(frame: frame)
     }
     
     func testCell() {
         let cell = newCell()
-        cell.bindTo(.loop)
+        cell.bindTo(PlaybackOption.loop)
         FBSnapshotVerifyView(cell)
     }
     
     func testSelectedCell() {
         let cell = newCell()
-        cell.bindTo(.loop)
+        cell.bindTo(PlaybackOption.loop)
         cell.setSelected(true, animated: false)
         FBSnapshotVerifyView(cell)
     }

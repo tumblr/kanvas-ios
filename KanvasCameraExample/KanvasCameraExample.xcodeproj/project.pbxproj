@@ -56,9 +56,9 @@
 		653E495C2472FC73006F80A2 /* ThumbnailCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653E495B2472FC73006F80A2 /* ThumbnailCollectionViewTests.swift */; };
 		653E495E2472FC82006F80A2 /* ThumbnailCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653E495D2472FC82006F80A2 /* ThumbnailCollectionCellTests.swift */; };
 		654277312481CDF600B3FC3A /* PlaybackOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654277302481CDF600B3FC3A /* PlaybackOptionTests.swift */; };
-		654277332481CECD00B3FC3A /* PlaybackCollectionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654277322481CECD00B3FC3A /* PlaybackCollectionCellTests.swift */; };
-		654277352481D0B500B3FC3A /* PlaybackViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654277342481D0B500B3FC3A /* PlaybackViewTests.swift */; };
-		654277372481D1B600B3FC3A /* PlaybackControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654277362481D1B600B3FC3A /* PlaybackControllerTests.swift */; };
+		654277332481CECD00B3FC3A /* OptionSelectorCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654277322481CECD00B3FC3A /* OptionSelectorCellTests.swift */; };
+		654277352481D0B500B3FC3A /* OptionSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654277342481D0B500B3FC3A /* OptionSelectorViewTests.swift */; };
+		654277372481D1B600B3FC3A /* OptionSelectorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654277362481D1B600B3FC3A /* OptionSelectorControllerTests.swift */; };
 		654910EC22EB565E006DE5A1 /* EditorFilterViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654910EB22EB565E006DE5A1 /* EditorFilterViewTests.swift */; };
 		654910EE22EB5675006DE5A1 /* EditorFilterControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654910ED22EB5675006DE5A1 /* EditorFilterControllerTests.swift */; };
 		654AE15C22E8B8B200C8C0E4 /* ColorPickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654AE15B22E8B8B200C8C0E4 /* ColorPickerViewTests.swift */; };
@@ -270,9 +270,9 @@
 		653E495B2472FC73006F80A2 /* ThumbnailCollectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCollectionViewTests.swift; sourceTree = "<group>"; };
 		653E495D2472FC82006F80A2 /* ThumbnailCollectionCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCollectionCellTests.swift; sourceTree = "<group>"; };
 		654277302481CDF600B3FC3A /* PlaybackOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackOptionTests.swift; sourceTree = "<group>"; };
-		654277322481CECD00B3FC3A /* PlaybackCollectionCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCollectionCellTests.swift; sourceTree = "<group>"; };
-		654277342481D0B500B3FC3A /* PlaybackViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackViewTests.swift; sourceTree = "<group>"; };
-		654277362481D1B600B3FC3A /* PlaybackControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControllerTests.swift; sourceTree = "<group>"; };
+		654277322481CECD00B3FC3A /* OptionSelectorCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorCellTests.swift; sourceTree = "<group>"; };
+		654277342481D0B500B3FC3A /* OptionSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewTests.swift; sourceTree = "<group>"; };
+		654277362481D1B600B3FC3A /* OptionSelectorControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorControllerTests.swift; sourceTree = "<group>"; };
 		654910EB22EB565E006DE5A1 /* EditorFilterViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFilterViewTests.swift; sourceTree = "<group>"; };
 		654910ED22EB5675006DE5A1 /* EditorFilterControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFilterControllerTests.swift; sourceTree = "<group>"; };
 		654AE15B22E8B8B200C8C0E4 /* ColorPickerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewTests.swift; sourceTree = "<group>"; };
@@ -597,9 +597,6 @@
 			isa = PBXGroup;
 			children = (
 				654277302481CDF600B3FC3A /* PlaybackOptionTests.swift */,
-				654277322481CECD00B3FC3A /* PlaybackCollectionCellTests.swift */,
-				654277342481D0B500B3FC3A /* PlaybackViewTests.swift */,
-				654277362481D1B600B3FC3A /* PlaybackControllerTests.swift */,
 			);
 			path = Playback;
 			sourceTree = "<group>";
@@ -775,6 +772,16 @@
 				658A3291239FFD9B00EEC1D3 /* DrawerTabBarOptionTests.swift */,
 			);
 			path = TabBar;
+			sourceTree = "<group>";
+		};
+		65ABAA342551F63C00C1AA59 /* OptionSelector */ = {
+			isa = PBXGroup;
+			children = (
+				654277322481CECD00B3FC3A /* OptionSelectorCellTests.swift */,
+				654277342481D0B500B3FC3A /* OptionSelectorViewTests.swift */,
+				654277362481D1B600B3FC3A /* OptionSelectorControllerTests.swift */,
+			);
+			path = OptionSelector;
 			sourceTree = "<group>";
 		};
 		65C03EB425409D260001BBF5 /* Menu */ = {
@@ -1004,6 +1011,7 @@
 		ABE4991B2137307500379F7F /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				65ABAA342551F63C00C1AA59 /* OptionSelector */,
 				650AED0523D2377400C6CC4D /* IgnoreTouches */,
 				6578F83722E12098002B952C /* ColorThief */,
 				653B045222E9143C005AAFCA /* HorizontalCollection */,
@@ -1369,7 +1377,7 @@
 				651D4B6122CE683B004AB75C /* DrawingViewTests.swift in Sources */,
 				7669B5A82230E548000D3EB5 /* UIImage+PixelBufferTests.swift in Sources */,
 				65E46B9722BD22CA004FD226 /* CameraFilterCollectionCellTests.swift in Sources */,
-				654277372481D1B600B3FC3A /* PlaybackControllerTests.swift in Sources */,
+				654277372481D1B600B3FC3A /* OptionSelectorControllerTests.swift in Sources */,
 				65C123A02201E13700562856 /* ImagePreviewControllerTests.swift in Sources */,
 				655C9351234CCA99008F26AF /* ColorSelectorControllerTests.swift in Sources */,
 				ABE498D62134AA1C00379F7F /* PhotoOutputHandlerTests.swift in Sources */,
@@ -1377,7 +1385,7 @@
 				654AE15C22E8B8B200C8C0E4 /* ColorPickerViewTests.swift in Sources */,
 				ABE498FD21370DFD00379F7F /* MediaClipsCollectionCellTests.swift in Sources */,
 				ABE498E52136F22400379F7F /* CameraRecorderTests.swift in Sources */,
-				654277332481CECD00B3FC3A /* PlaybackCollectionCellTests.swift in Sources */,
+				654277332481CECD00B3FC3A /* OptionSelectorCellTests.swift in Sources */,
 				654FE6CC247F4D70002F774B /* DiscreteSliderTests.swift in Sources */,
 				ABE498DC2134AEB200379F7F /* VideoOutputHandlerTests.swift in Sources */,
 				658A3294239FFD9B00EEC1D3 /* StylableImageViewTests.swift in Sources */,
@@ -1405,7 +1413,7 @@
 				654AE16022E8B8CD00C8C0E4 /* StrokeSelectorControllerTests.swift in Sources */,
 				ABE498DA2134AD5700379F7F /* GifVideoOutputHandlerTests.swift in Sources */,
 				658A329E239FFD9B00EEC1D3 /* StickerProviderStub.swift in Sources */,
-				654277352481D0B500B3FC3A /* PlaybackViewTests.swift in Sources */,
+				654277352481D0B500B3FC3A /* OptionSelectorViewTests.swift in Sources */,
 				0EAE0C8121387DE3004CD7FF /* ModeSelectorAndShootControllerTests.swift in Sources */,
 				BF017114249B2C3700639E49 /* GifMakerHandlerTests.swift in Sources */,
 				65513E0D23019DBE0025C59D /* ColorDropTests.swift in Sources */,

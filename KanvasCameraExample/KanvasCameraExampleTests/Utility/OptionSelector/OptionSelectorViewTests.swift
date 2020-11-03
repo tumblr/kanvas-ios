@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 import XCTest
 
-final class PlaybackViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
+final class OptionSelectorViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
     
-    private let options: [PlaybackOption] = [.loop, .rebound, .reverse]
+    private let options: [OptionSelectorItem] = [PlaybackOption.loop, PlaybackOption.rebound, PlaybackOption.reverse]
     private let selectedIndexPath: IndexPath = IndexPath(item: 0, section: 0)
     
     override func setUp() {
@@ -21,14 +21,14 @@ final class PlaybackViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
         self.recordMode = false
     }
     
-    func newView() -> PlaybackView {
-        let view = PlaybackView()
-        view.frame = CGRect(x: 0, y: 0, width: 320, height: PlaybackView.height)
+    func newView() -> OptionSelectorView {
+        let view = OptionSelectorView()
+        view.frame = CGRect(x: 0, y: 0, width: 320, height: OptionSelectorView.height)
         let cellWidth = view.frame.width / CGFloat(options.count)
-        PlaybackCollectionCell.width = cellWidth
+        OptionSelectorCell.width = cellWidth
         view.cellWidth = cellWidth
         view.selectionViewWidth = cellWidth
-        view.collectionView.register(cell: PlaybackCollectionCell.self)
+        view.collectionView.register(cell: OptionSelectorCell.self)
         view.collectionView.dataSource = self
         return view
     }
@@ -45,7 +45,7 @@ final class PlaybackViewTests: FBSnapshotTestCase, UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaybackCollectionCell.identifier, for: indexPath) as? PlaybackCollectionCell, let option = options.object(at: indexPath.item)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OptionSelectorCell.identifier, for: indexPath) as? OptionSelectorCell, let option = options.object(at: indexPath.item)
             else { return UICollectionViewCell() }
         
         cell.bindTo(option)

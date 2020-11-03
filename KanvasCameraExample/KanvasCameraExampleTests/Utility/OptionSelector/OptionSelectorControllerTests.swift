@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class PlaybackControllerTests: FBSnapshotTestCase {
+final class OptionSelectorControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,15 +18,16 @@ final class PlaybackControllerTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    private func newViewController() -> PlaybackController {
-        let controller = PlaybackController()
-        controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: PlaybackView.height)
+    private func newViewController() -> OptionSelectorController {
+        let options: [OptionSelectorItem] = [PlaybackOption.loop, PlaybackOption.rebound, PlaybackOption.reverse]
+        let controller = OptionSelectorController(options: options)
+        controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: OptionSelectorView.height)
         controller.view.setNeedsDisplay()
         controller.viewDidLayoutSubviews()
         return controller
     }
     
-    func testPlaybackControllerView() {
+    func testControllerView() {
         let controller = newViewController()
         FBSnapshotVerifyView(controller.view)
     }

@@ -61,7 +61,7 @@ protocol GifMakerControllerDelegate: class {
 }
 
 /// A view controller that contains the GIF maker menu
-final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimControllerDelegate, SpeedControllerDelegate, PlaybackControllerDelegate {
+final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimControllerDelegate, SpeedControllerDelegate, OptionSelectorControllerDelegate {
     
     weak var delegate: GifMakerControllerDelegate?
         
@@ -83,8 +83,9 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         return controller
     }()
     
-    private lazy var playbackController: PlaybackController = {
-        let controller = PlaybackController()
+    private lazy var playbackController: OptionSelectorController = {
+        let options: [PlaybackOption] = [.loop, .rebound, .reverse]
+        let controller = OptionSelectorController(options: options)
         controller.delegate = self
         return controller
     }()
@@ -201,10 +202,11 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         delegate?.didSelectSpeed(speed)
     }
     
-    // MARK: - PlaybackControllerDelegate
+    // MARK: - OptionSelectorControllerDelegate
     
-    func didSelect(option: PlaybackOption) {
-        delegate?.didSelectPlayback(option)
+    func didSelect(option: OptionSelectorItem) {
+        guard let playbackOption = option as? PlaybackOption else { return }
+        delegate?.didSelectPlayback(playbackOption)
     }
     
     // MARK: - Public interface
