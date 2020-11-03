@@ -1050,7 +1050,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func onQuickPostButtonSubmitted() {
-        startExporting(action: .post)
+        startExporting(action: .confirmPostOptions)
     }
     
     public func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {

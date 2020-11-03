@@ -30,6 +30,8 @@ public protocol KanvasDashboardControllerDelegate: class {
     func kanvasDashboardCreatePostRequest()
 
     func kanvasDashboardOpenPostingOptionsRequest()
+    
+    func kanvasDashboardConfirmPostingOptionsRequest()
 }
 
 /// Protocol for the KanvasDashboardController to get state from
@@ -168,6 +170,8 @@ extension KanvasDashboardController: CameraControllerDelegate {
                     break
                 case .postOptions:
                     self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
+                case .confirmPostOptions:
+                    self.delegate?.kanvasDashboardConfirmPostingOptionsRequest()
                 }
             }
         }

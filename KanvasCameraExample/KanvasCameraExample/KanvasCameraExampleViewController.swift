@@ -420,6 +420,8 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                     break
                 case .postOptions:
                     self.dismissCamera()
+                case .confirmPostOptions:
+                    self.dismissCamera()
                 }
 
             }
