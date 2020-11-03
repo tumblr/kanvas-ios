@@ -6,7 +6,7 @@ A library for capture and editing content from the Camera.
 
 ### Cocoapods
 
-`KanvasCamera, ~> 1.0`
+`pod KanvasCamera`
 
 ## Usage
 
