@@ -23,7 +23,7 @@ protocol OptionSelectorViewDelegate: class {
 }
 
 
-/// Constants for SelectorView
+/// Constants for OptionSelectorView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.1
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.65)
@@ -39,7 +39,7 @@ final class OptionSelectorView: UIView {
     weak var delegate: OptionSelectorViewDelegate?
     
     let collectionView: UICollectionView
-    private let layout: SelectorCollectionViewLayout
+    private let layout: OptionSelectorCollectionViewLayout
     private let selectionView: UIView
     
     var cellWidth: CGFloat {
@@ -60,8 +60,8 @@ final class OptionSelectorView: UIView {
     
     init() {
         selectionView = UIView()
-        layout = SelectorCollectionViewLayout()
-        collectionView = SelectorInnerCollectionView(frame: .zero, collectionViewLayout: layout)
+        layout = OptionSelectorCollectionViewLayout()
+        collectionView = OptionSelectorInnerCollectionView(frame: .zero, collectionViewLayout: layout)
         selectionViewWidth = 0
         super.init(frame: .zero)
         backgroundColor = Constants.backgroundColor
@@ -177,7 +177,7 @@ final class OptionSelectorView: UIView {
 }
 
 
-private class SelectorInnerCollectionView: UICollectionView {
+private class OptionSelectorInnerCollectionView: UICollectionView {
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -204,7 +204,7 @@ private class SelectorInnerCollectionView: UICollectionView {
     }
 }
 
-private class SelectorCollectionViewLayout: UICollectionViewFlowLayout {
+private class OptionSelectorCollectionViewLayout: UICollectionViewFlowLayout {
 
     override init() {
         super.init()

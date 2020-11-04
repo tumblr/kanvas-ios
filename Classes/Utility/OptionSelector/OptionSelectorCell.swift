@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// Constants for SelectorCollectionCell
+/// Constants for OptionSelectorCell
 private struct Constants {
     static let animationDuration: TimeInterval = 0.1
     static let height: CGFloat = 36
