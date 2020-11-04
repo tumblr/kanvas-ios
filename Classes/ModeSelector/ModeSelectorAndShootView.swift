@@ -133,8 +133,9 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     /// shows the tooltip below the mode selector
     func showTooltip() {
+        let targetView = settings.shutterButtonTooltip ? shootButton : modeSelectorButton
         if let tooltip = tooltip, !tooltip.isVisible() {
-            tooltip.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
+            tooltip.show(animated: true, forView: targetView, withinSuperview: self)
         }
     }
     
@@ -201,18 +202,38 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     private func createTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
-        preferences.drawing.foregroundColor = .white
-        preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
-        preferences.drawing.arrowPosition = .top
-        preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
-        preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight
-        preferences.drawing.cornerRadius = ModeSelectorAndShootViewConstants.tooltipCornerRadius
-        preferences.drawing.font = ModeSelectorAndShootViewConstants.tooltipTextFont
-        preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
-        preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
-        preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
-        let text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
-        return EasyTipView(text: text, preferences: preferences, delegate: self)
+        let tooltip: EasyTipView
+        
+        if settings.shutterButtonTooltip {
+            preferences.drawing.foregroundColor = .black
+            preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
+            preferences.drawing.arrowPosition = .top
+            preferences.drawing.arrowWidth = 8.5
+            preferences.drawing.arrowHeight = 6
+            preferences.drawing.cornerRadius = 24
+            preferences.drawing.font = UIFont.boldSystemFont(ofSize: 16)
+            preferences.positioning.textHInset = 18
+            preferences.positioning.textVInset = 16
+            preferences.positioning.margin = 6
+            let text = NSLocalizedString("Tap and hold to record", comment: "Indicates to the user that they can tap and hold to record")
+            tooltip = EasyTipView(text: text, preferences: preferences, delegate: self)
+        }
+        else {
+            preferences.drawing.foregroundColor = .white
+            preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
+            preferences.drawing.arrowPosition = .top
+            preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
+            preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight
+            preferences.drawing.cornerRadius = ModeSelectorAndShootViewConstants.tooltipCornerRadius
+            preferences.drawing.font = ModeSelectorAndShootViewConstants.tooltipTextFont
+            preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
+            preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
+            preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
+            let text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
+            tooltip = EasyTipView(text: text, preferences: preferences, delegate: self)
+        }
+        
+        return tooltip
     }
     
     private func setUpButtons() {

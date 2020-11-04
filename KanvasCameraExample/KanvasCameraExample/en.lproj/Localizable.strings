@@ -70,6 +70,9 @@
 /* Indicates to the user that they can tap a button to switch camera modes */
 "Tap to switch modes" = "Tap to switch modes";
 
+/* Indicates to the user that they can tap and hold to record */
+"Tap and hold to record" = "Tap and hold to record";
+
 /* That's too big, bud. */
 "That's too big, bud." = "That's too big, bud.";
 

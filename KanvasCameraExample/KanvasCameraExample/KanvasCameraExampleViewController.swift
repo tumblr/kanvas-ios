@@ -272,6 +272,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
             .editToolsRedesign(settings.editToolsRedesign),
+            .shutterButtonTooltip(settings.shutterButtonTooltip),
         ]
     }
 
@@ -323,6 +324,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.gifCameraShouldStartGIFMaker = value
         case .editToolsRedesign(_):
             settings.editToolsRedesign = value
+        case .shutterButtonTooltip(_):
+            settings.shutterButtonTooltip = value
         }
     }
 }
