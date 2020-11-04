@@ -273,6 +273,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
             .editToolsRedesign(settings.editToolsRedesign),
             .shutterButtonTooltip(settings.shutterButtonTooltip),
+            .horizontalModeSelector(settings.horizontalModeSelector),
         ]
     }
 
@@ -326,6 +327,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.editToolsRedesign = value
         case .shutterButtonTooltip(_):
             settings.shutterButtonTooltip = value
+        case .horizontalModeSelector(_):
+            settings.horizontalModeSelector = value
         }
     }
 }

@@ -16,7 +16,7 @@ import Foundation
 /// - stitch: Capturing stop motions, a sequence of images and/or videos
 /// - gif: Capturing gifs, a sequence of photos
 
-@objc public enum CameraMode: Int {
+@objc public enum CameraMode: Int, OptionSelectorItem {
     case stopMotion = 0
     case photo
     case loop
@@ -66,6 +66,10 @@ import Foundation
     
     private var order: Int {
         return self.rawValue
+    }
+    
+    var description: String {
+        return KanvasCameraStrings.name(for: self)
     }
 }
 
@@ -267,6 +271,9 @@ public struct CameraFeatures {
     /// This shows the tooltip above the shutter.
     public var shutterButtonTooltip = DefaultCameraSettings.shutterButtonTooltip
     
+    /// Horizontal Mode Selector
+    /// This shows a horizontal mode selector in the camera.
+    public var horizontalModeSelector = DefaultCameraSettings.horizontalModeSelector
     
     /// Auto-open GIF Maker in Editor
     public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
@@ -348,4 +355,5 @@ private struct DefaultCameraSettings {
     static let gifCameraShouldStartGIFMaker: Bool = false
     static let editToolsRedesign: Bool = false
     static let shutterButtonTooltip: Bool = false
+    static let horizontalModeSelector: Bool = false
 }

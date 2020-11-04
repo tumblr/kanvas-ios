@@ -51,7 +51,9 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private let modeSelectorButton: ModeButtonView
     private let mediaPickerButton: MediaPickerButtonView
     private var tooltip: EasyTipView?
-
+    let modeSelectorView: UIView
+    
+    
     /// Initializer for the mode selector view
     ///
     /// - Parameter settings: CameraSettings to determine the default and available modes
@@ -59,6 +61,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         modeSelectorButton = ModeButtonView()
         shootButton = ShootButtonView(baseColor: KanvasCameraColors.shared.shootButtonBaseColor)
         mediaPickerButton = MediaPickerButtonView(settings: settings)
+        modeSelectorView = UIView()
         self.settings = settings
 
         super.init(frame: .zero)
@@ -109,11 +112,12 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showModeButton(_ show: Bool) {
+        let modeSelector = settings.horizontalModeSelector ? modeSelectorView : modeSelectorButton
         if show {
-            showViews(shownViews: [modeSelectorButton], hiddenViews: [], animated: true)
+            showViews(shownViews: [modeSelector], hiddenViews: [], animated: true)
         }
         else {
-            showViews(shownViews: [], hiddenViews: [modeSelectorButton], animated: true)
+            showViews(shownViews: [], hiddenViews: [modeSelector], animated: true)
         }
     }
     
@@ -133,7 +137,9 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        let targetView = settings.shutterButtonTooltip ? shootButton : modeSelectorButton
+        let modeSelector = settings.horizontalModeSelector ? modeSelectorView : modeSelectorButton
+        let targetView = settings.shutterButtonTooltip ? shootButton : modeSelector        
+        
         if let tooltip = tooltip, !tooltip.isVisible() {
             tooltip.show(animated: true, forView: targetView, withinSuperview: self)
         }
@@ -235,16 +241,19 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
     
     private func setUpButtons() {
-        addSubview(modeSelectorButton)
-        addSubview(mediaPickerButton)
-        addSubview(shootButton)
+        if settings.horizontalModeSelector {
+            setUpModeSelectorView()
+        }
+        else {
+            setUpModeSelector()
+        }
 
-        setUpModeSelector()
         setUpShootButton()
         setUpMediaPickerButton()
     }
 
     private func setUpModeSelector() {
+        addSubview(modeSelectorButton)
         modeSelectorButton.accessibilityIdentifier = "Mode Options Selector Button"
 
         modeSelectorButton.translatesAutoresizingMaskIntoConstraints = false
@@ -254,8 +263,22 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
             modeSelectorButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
         ])
     }
+    
+    private func setUpModeSelectorView() {
+        addSubview(modeSelectorView)
+        modeSelectorView.accessibilityIdentifier = "Mode Options Selector View"
+        
+        modeSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            modeSelectorView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            modeSelectorView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            modeSelectorView.heightAnchor.constraint(equalToConstant: OptionSelectorView.height),
+            modeSelectorView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, constant: -140),
+        ])
+    }
 
     private func setUpShootButton() {
+        addSubview(shootButton)
         shootButton.accessibilityIdentifier = "Shoot Button"
 
         shootButton.translatesAutoresizingMaskIntoConstraints = false
@@ -268,6 +291,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
 
     private func setUpMediaPickerButton() {
+        addSubview(mediaPickerButton)
         mediaPickerButton.translatesAutoresizingMaskIntoConstraints = false
         let guide = UILayoutGuide()
         addLayoutGuide(guide)
