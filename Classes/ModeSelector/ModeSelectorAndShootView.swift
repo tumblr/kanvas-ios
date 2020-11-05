@@ -202,7 +202,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     private func createTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
-        let tooltip: EasyTipView
+        let text: String
         
         if settings.shutterButtonTooltip {
             preferences.drawing.foregroundColor = .black
@@ -210,13 +210,12 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
             preferences.drawing.arrowPosition = .top
             preferences.drawing.arrowWidth = 8.5
             preferences.drawing.arrowHeight = 6
-            preferences.drawing.cornerRadius = 24
+            preferences.drawing.cornerRadius = 23
             preferences.drawing.font = UIFont.boldSystemFont(ofSize: 16)
             preferences.positioning.textHInset = 18
-            preferences.positioning.textVInset = 16
-            preferences.positioning.margin = 6
-            let text = NSLocalizedString("Tap and hold to record", comment: "Indicates to the user that they can tap and hold to record")
-            tooltip = EasyTipView(text: text, preferences: preferences, delegate: self)
+            preferences.positioning.textVInset = 14
+            preferences.positioning.margin = 4
+            text = NSLocalizedString("Tap and hold to record", comment: "Indicates to the user that they can tap and hold to record")
         }
         else {
             preferences.drawing.foregroundColor = .white
@@ -229,11 +228,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
             preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
             preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
             preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
-            let text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
-            tooltip = EasyTipView(text: text, preferences: preferences, delegate: self)
+            text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
         }
         
-        return tooltip
+        return EasyTipView(text: text, preferences: preferences, delegate: self)
     }
     
     private func setUpButtons() {
