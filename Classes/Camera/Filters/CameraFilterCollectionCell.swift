@@ -48,7 +48,6 @@ final class CameraFilterCollectionCell: UICollectionViewCell, FilterCollectionCe
     ///
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
-        guard item.type != .passthrough else { return }
         innerCell.bindTo(item)
     }
     
