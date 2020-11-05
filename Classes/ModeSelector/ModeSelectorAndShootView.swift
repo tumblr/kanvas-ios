@@ -21,6 +21,7 @@ private struct ModeSelectorAndShootViewConstants {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
     static let mediaPickerButtonSize: CGFloat = 35
+    static let modeSelectorWidth: CGFloat = 261
 }
 
 /// Protocol to handle mode selector container and capture button user actions
@@ -270,10 +271,10 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         
         modeSelectorView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            modeSelectorView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            modeSelectorView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             modeSelectorView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             modeSelectorView.heightAnchor.constraint(equalToConstant: OptionSelectorView.height),
-            modeSelectorView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, constant: -140),
+            modeSelectorView.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.modeSelectorWidth),
         ])
     }
 
