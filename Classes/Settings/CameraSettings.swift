@@ -270,6 +270,10 @@ public struct CameraFeatures {
     /// Shutter Button Tooltip
     /// This shows the tooltip above the shutter.
     public var shutterButtonTooltip = DefaultCameraSettings.shutterButtonTooltip
+
+    /// Camera Tools Redesign
+    /// This applies the new design to the camera tools.
+    public var cameraToolsRedesign = DefaultCameraSettings.cameraToolsRedesign
     
     /// Horizontal Mode Selector
     /// This shows a horizontal mode selector in the camera.
@@ -355,5 +359,6 @@ private struct DefaultCameraSettings {
     static let gifCameraShouldStartGIFMaker: Bool = false
     static let editToolsRedesign: Bool = false
     static let shutterButtonTooltip: Bool = false
+    static let cameraToolsRedesign: Bool = false
     static let horizontalModeSelector: Bool = false
 }

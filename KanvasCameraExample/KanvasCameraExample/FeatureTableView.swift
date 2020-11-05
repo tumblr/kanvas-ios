@@ -38,6 +38,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case gifCameraShouldStartGIFMaker(Bool)
         case editToolsRedesign(Bool)
         case shutterButtonTooltip(Bool)
+        case cameraToolsRedesign(Bool)
         case horizontalModeSelector(Bool)
 
         var name: String {
@@ -88,6 +89,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Edit Tools Redesign"
             case .shutterButtonTooltip(_):
                 return "Shutter Button Tooltip"
+            case .cameraToolsRedesign(_):
+                return "Camera Tools Redesign"
             case .horizontalModeSelector(_):
                 return "Horizontal Mode Selector"
             }
@@ -141,10 +144,11 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return enabled
             case .shutterButtonTooltip(let enabled):
                 return enabled
+            case .cameraToolsRedesign(let enabled):
+                return enabled
             case .horizontalModeSelector(let enabled):
                 return enabled
             }
-
         }
     }
 
@@ -232,6 +236,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editToolsRedesign(value)
         case .shutterButtonTooltip(_):
             featuresData[indexPath.row] = .shutterButtonTooltip(value)
+        case .cameraToolsRedesign(_):
+            featuresData[indexPath.row] = .cameraToolsRedesign(value)
         case .horizontalModeSelector(_):
             featuresData[indexPath.row] = .horizontalModeSelector(value)
         }
