@@ -107,7 +107,7 @@ final class OptionsController<Delegate: OptionsControllerDelegate>: UIViewContro
         let stackView = IgnoreBackgroundTouchesStackView(arrangedSubviews: optionsStackViews)
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = CameraConstants.optionSpacing
+        stackView.spacing = settings.cameraToolsRedesign ? CameraConstants.buttonSpacing : CameraConstants.optionSpacing
         return stackView
     }
     

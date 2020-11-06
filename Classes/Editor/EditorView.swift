@@ -123,6 +123,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     weak var playerView: MediaPlayerView?
 
+    private let isRedesign: Bool
     private let mainActionMode: MainActionMode
     private let confirmButton = UIButton()
     private let closeButton = UIButton()
@@ -167,7 +168,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     }()
 
     lazy var movableViewCanvas: MovableViewCanvas = {
-        let canvas = MovableViewCanvas()
+        let canvas = MovableViewCanvas(isRedesign: self.isRedesign)
         canvas.delegate = self
         return canvas
     }()
@@ -204,6 +205,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     }
     
     init(delegate: EditorViewDelegate?,
+         isRedesign: Bool,
          mainActionMode: MainActionMode,
          showSaveButton: Bool,
          showCrossIcon: Bool,
@@ -218,6 +220,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          tagCollection: UIView?,
          metalContext: MetalContext?) {
         self.delegate = delegate
+        self.isRedesign = isRedesign
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
         self.showCogIcon = showCogIcon

@@ -71,6 +71,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
 
         let editorView = EditorView(delegate: self,
+                                    isRedesign: settings.cameraToolsRedesign,
                                     mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,

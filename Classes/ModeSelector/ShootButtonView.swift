@@ -94,14 +94,15 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
     /// designated initializer for the shoot button view
     ///
     /// - Parameters:
+    ///   - settings: the camera settings
     ///   - baseColor: the color before recording
-    init(baseColor: UIColor) {
+    init(isRedesign: Bool, baseColor: UIColor) {
         pressBackgroundImageView = UIImageView()
         pressCircleImageView = UIImageView()
         containerView = UIView()
         imageView = UIImageView()
         borderView = UIView()
-        trashView = TrashView()
+        trashView = TrashView(isRedesign: isRedesign)
         tapRecognizer = UITapGestureRecognizer()
         longPressRecognizer = UILongPressGestureRecognizer()
         timeSegmentLayer = ConicalGradientLayer()

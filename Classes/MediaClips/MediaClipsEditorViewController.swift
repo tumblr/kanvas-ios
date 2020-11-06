@@ -40,7 +40,7 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     weak var delegate: MediaClipsEditorDelegate?
 
     private lazy var editorView: MediaClipsEditorView = {
-        let view = MediaClipsEditorView()
+        let view = MediaClipsEditorView(isRedesign: self.settings.cameraToolsRedesign)
         view.delegate = self
         return view
     }()
@@ -49,12 +49,15 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         controller.delegate = self
         return controller
     }()
+    
+    private let settings: CameraSettings
 
     /// Is there any clip?
     /// This needs to be dynamic because it will be observed
     @objc private(set) dynamic var hasClips: Bool = false
 
-    init() {
+    init(settings: CameraSettings) {
+        self.settings = settings
         super.init(nibName: .none, bundle: .none)
     }
 

@@ -13,6 +13,15 @@ private struct FilterSettingsViewConstants {
     static let padding: CGFloat = 4
     static let collectionViewHeight = CameraFilterCollectionCell.minimumHeight + 10
     static let height: CGFloat = collectionViewHeight + padding + iconSize
+    
+    // Redesign
+    static let interspace: CGFloat = 8
+    static var buttonSize: CGFloat {
+        return CameraConstants.buttonSize
+    }
+    static var totalHeight: CGFloat {
+        return collectionViewHeight + interspace + buttonSize
+    }
 }
 
 protocol FilterSettingsViewDelegate: class {
@@ -26,20 +35,27 @@ final class FilterSettingsView: IgnoreTouchesView {
     static let height: CGFloat = FilterSettingsViewConstants.height
     static let collectionViewHeight: CGFloat = FilterSettingsViewConstants.collectionViewHeight
     
+    // Redesign
+    static let totalHeight: CGFloat = FilterSettingsViewConstants.totalHeight
+    
     let collectionContainer: IgnoreTouchesView
     let visibilityButton: UIButton
+    private let settings: CameraSettings
     
     weak var delegate: FilterSettingsViewDelegate?
     
-    init() {
+    init(settings: CameraSettings) {
+        self.settings = settings
+        
         collectionContainer = IgnoreTouchesView()
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Filter Collection Container"
         collectionContainer.clipsToBounds = false
         
+        let defaultImage = settings.cameraToolsRedesign ? KanvasCameraImages.filtersImage : KanvasCameraImages.discoballUntappedImage
         visibilityButton = UIButton()
         visibilityButton.accessibilityIdentifier = "Filter Visibility Button"
-        visibilityButton.setImage(KanvasCameraImages.discoballUntappedImage, for: .normal)
+        visibilityButton.setImage(defaultImage, for: .normal)
         super.init(frame: .zero)
         
         clipsToBounds = false
@@ -64,8 +80,27 @@ final class FilterSettingsView: IgnoreTouchesView {
     /// - Parameter shown: whether the filter collection is now shown or hidden
     func onFilterCollectionShown(_ shown: Bool) {
         UIView.animate(withDuration: FilterSettingsViewConstants.animationDuration) { [weak self] in
-            let image = shown ? KanvasCameraImages.discoballTappedImage : KanvasCameraImages.discoballUntappedImage
-            self?.visibilityButton.setImage(image, for: .normal)
+            guard let self = self else { return }
+            let image: UIImage?
+            let backgroundColor: UIColor
+            
+            if self.settings.cameraToolsRedesign {
+                if shown {
+                    image = KanvasCameraImages.filtersInvertedImage
+                    backgroundColor = CameraConstants.buttonInvertedBackgroundColor
+                }
+                else {
+                    image = KanvasCameraImages.filtersImage
+                    backgroundColor = CameraConstants.buttonBackgroundColor
+                }
+            }
+            else {
+                image = shown ? KanvasCameraImages.discoballTappedImage : KanvasCameraImages.discoballUntappedImage
+                backgroundColor = .clear
+            }
+            
+            self.visibilityButton.backgroundColor = backgroundColor
+            self.visibilityButton.setImage(image, for: .normal)
         }
     }
     
@@ -101,9 +136,23 @@ private extension FilterSettingsView {
     func setUpVisibilityButton() {
         addSubview(visibilityButton)
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let size: CGFloat
+        
+        if settings.cameraToolsRedesign {
+            size = FilterSettingsViewConstants.buttonSize
+            
+            visibilityButton.backgroundColor = CameraConstants.buttonBackgroundColor
+            visibilityButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
+            visibilityButton.layer.masksToBounds = true
+        }
+        else {
+            size = FilterSettingsViewConstants.iconSize
+        }
+
         NSLayoutConstraint.activate([
-            visibilityButton.heightAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
-            visibilityButton.widthAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
+            visibilityButton.heightAnchor.constraint(equalToConstant: size),
+            visibilityButton.widthAnchor.constraint(equalToConstant: size),
             visibilityButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             visibilityButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
         ])

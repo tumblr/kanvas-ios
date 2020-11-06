@@ -50,7 +50,7 @@ private struct Constants {
 final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, MovableViewDelegate {
     
     weak var delegate: MovableViewCanvasDelegate?
-    
+
     // View that has been tapped
     private var selectedMovableView: MovableView?
     
@@ -71,9 +71,9 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         return subviews.compactMap{ $0 as? MovableView }.count == 0
     }
     
-    init() {
+    init(isRedesign: Bool) {
         overlay = UIView()
-        trashView = TrashView()
+        trashView = TrashView(isRedesign: isRedesign)
         originTransformations = ViewTransformations()
         super.init(frame: .zero)
         setUpViews()

@@ -30,24 +30,36 @@ struct KanvasCameraImages {
     // MARK: - Top options
     static let flashOnImage = UIImage.imageFromCameraBundle(named: "flashOn")
     static let flashOffImage = UIImage.imageFromCameraBundle(named: "flashOff")
+    static let cameraFlashOnImage = UIImage.imageFromCameraBundle(named: "cameraFlashOn")
+    static let cameraFlashOffImage = UIImage.imageFromCameraBundle(named: "cameraFlashOff")
     static let cameraPositionImage = UIImage.imageFromCameraBundle(named: "cameraPosition")
+    static let cameraRotateImage = UIImage.imageFromCameraBundle(named: "cameraRotate")
     static let imagePreviewOnImage = UIImage.imageFromCameraBundle(named: "imagePreviewOn")
     static let imagePreviewOffImage = UIImage.imageFromCameraBundle(named: "imagePreviewOff")
+    static let ghostFrameOnImage = UIImage.imageFromCameraBundle(named: "ghostFrameOn")
+    static let ghostFrameOffImage = UIImage.imageFromCameraBundle(named: "ghostFrameOff")
+    
     
     // MARK: - General
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
+    static let crossImage = UIImage.imageFromCameraBundle(named: "cross")
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
     static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
     static let forwardImage = UIImage.imageFromCameraBundle(named: "forwardArrow")
     static let trashClosed = UIImage.imageFromCameraBundle(named: "trashClosed")
     static let trashOpened = UIImage.imageFromCameraBundle(named: "trashOpened")
+    static let trashBinClosed = UIImage.imageFromCameraBundle(named: "trashBinClosed")
+    static let trashBinOpened = UIImage.imageFromCameraBundle(named: "trashBinOpened")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
     static let nextImage = UIImage.imageFromCameraBundle(named: "next")
+    static let nextArrowImage = UIImage.imageFromCameraBundle(named: "nextArrow")
     static let saveImage = UIImage.imageFromCameraBundle(named: "save")
     static let cogImage = UIImage.imageFromCameraBundle(named: "cog")
     static let tagImage = UIImage.imageFromCameraBundle(named: "tag")
 
     // MARK: - Filters
+    static let filtersImage =  UIImage.imageFromCameraBundle(named: "menuFilters")
+    static let filtersInvertedImage =  UIImage.imageFromCameraBundle(named: "menuFiltersInverted")
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
     static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
     static let filterTypes: [FilterType: UIImage?] = [

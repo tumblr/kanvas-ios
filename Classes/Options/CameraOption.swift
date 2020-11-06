@@ -84,24 +84,24 @@ extension CameraController {
         var options = [
             [
                 Option(option: settings.defaultCameraPositionOption.cameraOption,
-                       image: KanvasCameraImages.cameraPositionImage,
+                       image: settings.cameraToolsRedesign ? KanvasCameraImages.cameraRotateImage : KanvasCameraImages.cameraPositionImage,
                        type: .twoOptionsAnimation(animation: animation,
                                                   duration: CameraOptionsConstants.cameraFlipAnimationsDuration,
                                                   completion: completion))
             ],
             [
                 Option(option: settings.preferredFlashOption.cameraOption,
-                       image: getImage(for: settings.preferredFlashOption),
+                       image: getImage(for: settings.preferredFlashOption, with: settings),
                        type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.cameraOption,
-                                               alternateImage: getImage(for: settings.notDefaultFlashOption))),
+                                               alternateImage: getImage(for: settings.notDefaultFlashOption, with: settings))),
             ],
         ]
         if settings.features.ghostFrame {
             options.append([
                 Option(option: settings.imagePreviewOption.cameraOption,
-                       image: getImage(for: settings.imagePreviewOption),
+                       image: getImage(for: settings.imagePreviewOption, with: settings),
                        type: .twoOptionsImages(alternateOption: settings.notDefaultImagePreviewOption.cameraOption,
-                                               alternateImage: getImage(for: settings.notDefaultImagePreviewOption)))
+                                               alternateImage: getImage(for: settings.notDefaultImagePreviewOption, with: settings)))
             ])
         }
         return options
@@ -111,12 +111,22 @@ extension CameraController {
     ///
     /// - Parameter option: AVCaptureDevice.FlashMode, on or off / auto
     /// - Returns: an optional image
-    func getImage(for option: AVCaptureDevice.FlashMode) -> UIImage? {
-        if option == .on {
-            return KanvasCameraImages.flashOnImage
+    func getImage(for option: AVCaptureDevice.FlashMode, with settings: CameraSettings) -> UIImage? {
+        if settings.cameraToolsRedesign {
+            if option == .on {
+                return KanvasCameraImages.cameraFlashOnImage
+            }
+            else {
+                return KanvasCameraImages.cameraFlashOffImage
+            }
         }
         else {
-            return KanvasCameraImages.flashOffImage
+            if option == .on {
+                return KanvasCameraImages.flashOnImage
+            }
+            else {
+                return KanvasCameraImages.flashOffImage
+            }
         }
     }
     
@@ -124,12 +134,22 @@ extension CameraController {
     ///
     /// - Parameter option: ImagePreviewMode, on or off
     /// - Returns: an optional image
-    func getImage(for option: ImagePreviewMode) -> UIImage? {
-        if option == .on {
-            return KanvasCameraImages.imagePreviewOnImage
+    func getImage(for option: ImagePreviewMode, with settings: CameraSettings) -> UIImage? {
+        if settings.cameraToolsRedesign {
+            if option == .on {
+                return KanvasCameraImages.ghostFrameOnImage
+            }
+            else {
+                return KanvasCameraImages.ghostFrameOffImage
+            }
         }
         else {
-            return KanvasCameraImages.imagePreviewOffImage
+            if option == .on {
+                return KanvasCameraImages.imagePreviewOnImage
+            }
+            else {
+                return KanvasCameraImages.imagePreviewOffImage
+            }
         }
     }
     

@@ -31,13 +31,15 @@ final class MediaClipsEditorView: IgnoreTouchesView {
 
     weak var delegate: MediaClipsEditorViewDelegate?
     
+    private let isRedesign: Bool
     private let mainContainer: IgnoreTouchesView
     private let nextButton: UIButton
     let collectionContainer: IgnoreTouchesView
 
     // MARK: - Initializers
     
-    init() {
+    init(isRedesign: Bool) {
+        self.isRedesign = isRedesign
         mainContainer = IgnoreTouchesView()
         mainContainer.backgroundColor = KanvasCameraColors.shared.translucentBlack
         
@@ -101,9 +103,17 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         mainContainer.addSubview(nextButton)
         nextButton.accessibilityIdentifier = "Media Clips Next Button"
         nextButton.accessibilityLabel = "Next Button"
-        nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        if isRedesign {
+            let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: UIColor(hex: 0x00B8FF))
+            nextButton.setBackgroundImage(circle, for: .normal)
+            nextButton.setImage(KanvasCameraImages.nextArrowImage, for: .normal)
+        }
+        else {
+            nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        }
         
         NSLayoutConstraint.activate([
             nextButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonHorizontalMargin),

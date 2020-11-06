@@ -126,14 +126,16 @@ final class OptionsStackView<Item>: IgnoreTouchesView {
     }
 
     private func addOptions(_ options: [Option<Item>]) {
+        let size = settings.cameraToolsRedesign ? CameraConstants.buttonSize : CameraConstants.optionButtonSize
+        
         options.enumerated().forEach { (index, option) in
-            let optionView = OptionView(image: option.image, inset: OptionsStackViewConstants.inset)
+            let optionView = OptionView(image: option.image, inset: OptionsStackViewConstants.inset, settings: settings)
             optionView.button.tag = index
             optionView.accessibilityIdentifier = "Options Option View #\(index + 1)"
             optionView.button.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)
             NSLayoutConstraint.activate([
-                optionView.heightAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize),
-                optionView.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+                optionView.heightAnchor.constraint(equalToConstant: size),
+                optionView.widthAnchor.constraint(equalToConstant: size)
             ])
             stackView.addArrangedSubview(optionView)
         }

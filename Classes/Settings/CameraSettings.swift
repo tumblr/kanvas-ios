@@ -275,10 +275,6 @@ public struct CameraFeatures {
     /// This applies the new design to the camera tools.
     public var cameraToolsRedesign = DefaultCameraSettings.cameraToolsRedesign
     
-    /// Horizontal Mode Selector
-    /// This shows a horizontal mode selector in the camera.
-    public var horizontalModeSelector = DefaultCameraSettings.horizontalModeSelector
-    
     /// Auto-open GIF Maker in Editor
     public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
         if mode?.group == .gif {
@@ -360,5 +356,4 @@ private struct DefaultCameraSettings {
     static let editToolsRedesign: Bool = false
     static let shutterButtonTooltip: Bool = false
     static let cameraToolsRedesign: Bool = false
-    static let horizontalModeSelector: Bool = false
 }

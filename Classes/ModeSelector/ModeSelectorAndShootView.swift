@@ -21,7 +21,13 @@ private struct ModeSelectorAndShootViewConstants {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
     static let mediaPickerButtonSize: CGFloat = 35
-    static let modeSelectorWidth: CGFloat = 261
+    
+    // Redesign
+    static let modeSelectorTopMargin: CGFloat = 8
+    static let modeSelectorHorizontalMargin: CGFloat = 100
+    static var modeSelectorHeight: CGFloat {
+        return OptionSelectorCell.height
+    }
 }
 
 /// Protocol to handle mode selector container and capture button user actions
@@ -38,6 +44,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     static let shootButtonSize = ModeSelectorAndShootViewConstants.shootButtonSize
     static let shootButtonBottomMargin = ModeSelectorAndShootViewConstants.shootButtonBottomMargin
     static let shootButtonTopMargin = ModeSelectorAndShootViewConstants.shootButtonTopMargin
+    static let modeSelectorHeight = ModeSelectorAndShootViewConstants.modeSelectorHeight
+    static let modeSelectorTopMargin = ModeSelectorAndShootViewConstants.modeSelectorTopMargin
 
     weak var delegate: ModeSelectorAndShootViewDelegate? {
         didSet {
@@ -60,7 +68,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     /// - Parameter settings: CameraSettings to determine the default and available modes
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
-        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shared.shootButtonBaseColor)
+        shootButton = ShootButtonView(isRedesign: settings.cameraToolsRedesign, baseColor: KanvasCameraColors.shared.shootButtonBaseColor)
         mediaPickerButton = MediaPickerButtonView(settings: settings)
         modeSelectorView = UIView()
         self.settings = settings
@@ -113,7 +121,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showModeButton(_ show: Bool) {
-        let modeSelector = settings.horizontalModeSelector ? modeSelectorView : modeSelectorButton
+        let modeSelector = settings.cameraToolsRedesign ? modeSelectorView : modeSelectorButton
         if show {
             showViews(shownViews: [modeSelector], hiddenViews: [], animated: true)
         }
@@ -138,9 +146,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        let modeSelector = settings.horizontalModeSelector ? modeSelectorView : modeSelectorButton
-        let targetView = settings.shutterButtonTooltip ? shootButton : modeSelector        
-        
+        let targetView = settings.cameraToolsRedesign ? shootButton : modeSelectorButton
         if let tooltip = tooltip, !tooltip.isVisible() {
             tooltip.show(animated: true, forView: targetView, withinSuperview: self)
         }
@@ -242,15 +248,15 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
     
     private func setUpButtons() {
-        if settings.horizontalModeSelector {
+        setUpShootButton()
+        setUpMediaPickerButton()
+        
+        if settings.cameraToolsRedesign {
             setUpModeSelectorView()
         }
         else {
             setUpModeSelector()
         }
-
-        setUpShootButton()
-        setUpMediaPickerButton()
     }
 
     private func setUpModeSelector() {
@@ -273,8 +279,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         NSLayoutConstraint.activate([
             modeSelectorView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             modeSelectorView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-            modeSelectorView.heightAnchor.constraint(equalToConstant: OptionSelectorView.height),
-            modeSelectorView.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.modeSelectorWidth),
+            modeSelectorView.heightAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.modeSelectorHeight),
+            modeSelectorView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, constant: -ModeSelectorAndShootViewConstants.modeSelectorHorizontalMargin),
         ])
     }
 
@@ -283,8 +289,9 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.accessibilityIdentifier = "Shoot Button"
 
         shootButton.translatesAutoresizingMaskIntoConstraints = false
+        let bottomMargin = settings.cameraToolsRedesign ? ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.modeSelectorTopMargin + ModeSelectorAndShootViewConstants.modeSelectorHeight : ModeSelectorAndShootViewConstants.shootButtonBottomMargin
         NSLayoutConstraint.activate([
-            shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.shootButtonBottomMargin),
+            shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             shootButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             shootButton.heightAnchor.constraint(equalTo: shootButton.widthAnchor),
             shootButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.shootButtonSize)
