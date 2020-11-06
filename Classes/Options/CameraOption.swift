@@ -85,6 +85,7 @@ extension CameraController {
             [
                 Option(option: settings.defaultCameraPositionOption.cameraOption,
                        image: settings.cameraToolsRedesign ? KanvasCameraImages.cameraRotateImage : KanvasCameraImages.cameraPositionImage,
+                       backgroundColor: settings.cameraToolsRedesign ? CameraConstants.buttonBackgroundColor : .clear,
                        type: .twoOptionsAnimation(animation: animation,
                                                   duration: CameraOptionsConstants.cameraFlipAnimationsDuration,
                                                   completion: completion))
@@ -92,16 +93,20 @@ extension CameraController {
             [
                 Option(option: settings.preferredFlashOption.cameraOption,
                        image: getImage(for: settings.preferredFlashOption, with: settings),
+                       backgroundColor: settings.cameraToolsRedesign ? CameraConstants.buttonBackgroundColor : .clear,
                        type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.cameraOption,
-                                               alternateImage: getImage(for: settings.notDefaultFlashOption, with: settings))),
+                                               alternateImage: getImage(for: settings.notDefaultFlashOption, with: settings),
+                                               alternateBackgroundColor: settings.cameraToolsRedesign ? CameraConstants.buttonBackgroundColor : .clear)),
             ],
         ]
         if settings.features.ghostFrame {
             options.append([
                 Option(option: settings.imagePreviewOption.cameraOption,
                        image: getImage(for: settings.imagePreviewOption, with: settings),
+                       backgroundColor: getBackgroundColor(for: settings.imagePreviewOption, with: settings),
                        type: .twoOptionsImages(alternateOption: settings.notDefaultImagePreviewOption.cameraOption,
-                                               alternateImage: getImage(for: settings.notDefaultImagePreviewOption, with: settings)))
+                                               alternateImage: getImage(for: settings.notDefaultImagePreviewOption, with: settings),
+                                               alternateBackgroundColor: getBackgroundColor(for: settings.notDefaultImagePreviewOption, with: settings)))
             ])
         }
         return options
@@ -150,6 +155,24 @@ extension CameraController {
             else {
                 return KanvasCameraImages.imagePreviewOffImage
             }
+        }
+    }
+    
+    /// function to get the background color for the image preview button
+    ///
+    /// - Parameter option: ImagePreviewMode, on or off
+    /// - Returns: the background color
+    func getBackgroundColor(for option: ImagePreviewMode, with settings: CameraSettings) -> UIColor {
+        if settings.cameraToolsRedesign {
+            if option == .on {
+                return CameraConstants.buttonInvertedBackgroundColor
+            }
+            else {
+                return CameraConstants.buttonBackgroundColor
+            }
+        }
+        else {
+            return .clear
         }
     }
     

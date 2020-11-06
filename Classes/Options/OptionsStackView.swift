@@ -129,7 +129,8 @@ final class OptionsStackView<Item>: IgnoreTouchesView {
         let size = settings.cameraToolsRedesign ? CameraConstants.buttonSize : CameraConstants.optionButtonSize
         
         options.enumerated().forEach { (index, option) in
-            let optionView = OptionView(image: option.image, inset: OptionsStackViewConstants.inset, settings: settings)
+            let optionView = OptionView(image: option.image, inset: OptionsStackViewConstants.inset,
+                                        backgroundColor: option.backgroundColor, settings: settings)
             optionView.button.tag = index
             optionView.accessibilityIdentifier = "Options Option View #\(index + 1)"
             optionView.button.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)

@@ -20,7 +20,7 @@ private struct OptionsControllerConstants {
 ///     and so it will change from one to the other when it's tapped
 /// - twoOptionAnimation: An option that has two values, but only one image. It contains a custom animation.
 enum OptionType<Item> {
-    case twoOptionsImages(alternateOption: Item, alternateImage: UIImage?)
+    case twoOptionsImages(alternateOption: Item, alternateImage: UIImage?, alternateBackgroundColor: UIColor)
     case twoOptionsAnimation(animation: (UIView) -> (), duration: TimeInterval, completion: ((UIView) -> ())?)
 }
 
@@ -28,6 +28,7 @@ enum OptionType<Item> {
 final class Option<Item> {
     var option: Item
     var image: UIImage?
+    var backgroundColor: UIColor
     var type: OptionType<Item>
 
     /// The initializer for Options
@@ -35,10 +36,12 @@ final class Option<Item> {
     /// - Parameters:
     ///   - option: The generic option that this class will represent
     ///   - image: an optional UIImage to represent it
+    ///   - backgroundColor: the background color for the item image
     ///   - type: the OptionType to initalize as
-    init(option: Item, image: UIImage?, type: OptionType<Item>) {
+    init(option: Item, image: UIImage?, backgroundColor: UIColor, type: OptionType<Item>) {
         self.option = option
         self.image = image
+        self.backgroundColor = backgroundColor
         self.type = type
     }
 }
@@ -133,8 +136,8 @@ extension OptionsController: OptionsStackViewDelegate {
     func optionWasTapped(section: Int, optionIndex: Int) {
         let item = options[section][optionIndex]
         switch item.type {
-        case .twoOptionsImages(alternateOption: let otherOption, alternateImage: let otherImage):
-            alternateOption(section: section, index: optionIndex, newOption: otherOption, newImage: otherImage)
+        case .twoOptionsImages(alternateOption: let otherOption, alternateImage: let otherImage, alternateBackgroundColor: let otherBackgroundColor):
+            alternateOption(section: section, index: optionIndex, newOption: otherOption, newImage: otherImage, newBackgroundColor: otherBackgroundColor)
         case .twoOptionsAnimation(animation: let animation, duration: let duration, completion: let completion):
             animateOption(section: section, index: optionIndex, duration: duration, animation: animation, completion: completion)
         }
@@ -146,13 +149,15 @@ extension OptionsController: OptionsStackViewDelegate {
         delegate?.optionSelected(options[section][optionIndex].option)
     }
 
-    private func alternateOption(section: Int, index: Int, newOption: Item, newImage: UIImage?) {
+    private func alternateOption(section: Int, index: Int, newOption: Item, newImage: UIImage?, newBackgroundColor: UIColor) {
         let item = options[section][index]
         let oldOption = item.option
         let oldImage = item.image
+        let oldBackgroundColor = item.backgroundColor
         item.option = newOption
         item.image = newImage
-        item.type = .twoOptionsImages(alternateOption: oldOption, alternateImage: oldImage)
+        item.type = .twoOptionsImages(alternateOption: oldOption, alternateImage: oldImage, alternateBackgroundColor: oldBackgroundColor)
+        item.backgroundColor = newBackgroundColor
     }
 
     private func animateOption(section: Int, index: Int, duration: TimeInterval, animation: @escaping (UIView) -> (), completion: ((UIView) -> ())?) {

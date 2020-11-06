@@ -18,7 +18,7 @@ final class OptionView: UIView {
     /// - Parameters:
     ///   - image: image to describe the option
     ///   - inset: use a negative value to "outset"
-    init(image: UIImage?, inset: CGFloat = 0, settings: CameraSettings) {
+    init(image: UIImage?, inset: CGFloat = 0, backgroundColor: UIColor, settings: CameraSettings) {
         self.inset = inset
         button = ExtendedButton(inset: inset)
         button.setImage(image, for: .normal)
@@ -26,7 +26,7 @@ final class OptionView: UIView {
         if settings.cameraToolsRedesign {
             button.layer.cornerRadius = CameraConstants.buttonCornerRadius
             button.layer.masksToBounds = true
-            button.backgroundColor = CameraConstants.buttonBackgroundColor
+            button.backgroundColor = backgroundColor
         }
         else {
             button.contentMode = .scaleAspectFit
