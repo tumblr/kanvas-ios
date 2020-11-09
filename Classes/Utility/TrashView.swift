@@ -32,15 +32,13 @@ final class TrashView: IgnoreTouchesView {
     
     static let size: CGFloat = Constants.size
     
-    private let isRedesign: Bool
     private let borderCircle: UIImageView
     private let backgroundCircle: UIImageView
     private let translucentBackgroundCircle: UIImageView
     private let openedTrash: UIImageView
     private let closedTrash: UIImageView
     
-    init(isRedesign: Bool) {
-        self.isRedesign = isRedesign
+    init() {
         self.borderCircle = UIImageView()
         self.backgroundCircle = UIImageView()
         self.translucentBackgroundCircle = UIImageView()
@@ -146,7 +144,7 @@ final class TrashView: IgnoreTouchesView {
         let width: CGFloat
         let image: UIImage?
         
-        if isRedesign {
+        if KanvasCameraDesign.shared.isRedesign {
             height = Constants.openedBinHeight
             width = Constants.openedBinWidth
             yOffset = Constants.openedBinCenterYOffset
@@ -185,7 +183,7 @@ final class TrashView: IgnoreTouchesView {
         let width: CGFloat
         let image: UIImage?
         
-        if isRedesign {
+        if KanvasCameraDesign.shared.isRedesign {
             height = Constants.closedBinHeight
             width = Constants.closedBinWidth
             image = KanvasCameraImages.trashBinClosed
@@ -227,7 +225,7 @@ final class TrashView: IgnoreTouchesView {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.borderCircle.alpha = 1
             self.backgroundCircle.alpha = 0
-            self.translucentBackgroundCircle.alpha = self.isRedesign ? 1 : 0
+            self.translucentBackgroundCircle.alpha = KanvasCameraDesign.shared.isRedesign ? 1 : 0
             self.openedTrash.alpha = 0
             self.closedTrash.alpha = 1
         }

@@ -86,7 +86,7 @@ final class OptionsStackView<Item>: IgnoreTouchesView {
         let newStack = ExtendedStackView(inset: OptionsStackViewConstants.inset)
         stackView = newStack
         setUpStackView(newOptions)
-        if settings.cameraToolsRedesign {
+        if KanvasCameraDesign.shared.isRedesign {
             addStackView(newStack)
             oldStack.removeFromSuperview()
         }
@@ -134,7 +134,7 @@ final class OptionsStackView<Item>: IgnoreTouchesView {
     private func addOptions(_ options: [Option<Item>]) {
         options.enumerated().forEach { (index, option) in
             let optionView = OptionView(image: option.image, inset: OptionsStackViewConstants.inset,
-                                        backgroundColor: option.backgroundColor, settings: settings)
+                                        backgroundColor: option.backgroundColor)
             optionView.button.tag = index
             optionView.accessibilityIdentifier = "Options Option View #\(index + 1)"
             optionView.button.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)

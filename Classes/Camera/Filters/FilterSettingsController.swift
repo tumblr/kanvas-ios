@@ -36,7 +36,7 @@ final class FilterSettingsController: UIViewController, FilterSettingsViewDelega
     let settings: CameraSettings
     
     private lazy var filterSettingsView: FilterSettingsView = {
-        let view = FilterSettingsView(settings: self.settings)
+        let view = FilterSettingsView()
         view.delegate = self
         return view
     }()

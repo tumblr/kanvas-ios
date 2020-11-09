@@ -18,12 +18,12 @@ final class OptionView: UIView {
     /// - Parameters:
     ///   - image: image to describe the option
     ///   - inset: use a negative value to "outset"
-    init(image: UIImage?, inset: CGFloat = 0, backgroundColor: UIColor, settings: CameraSettings) {
+    init(image: UIImage?, inset: CGFloat = 0, backgroundColor: UIColor) {
         self.inset = inset
         button = ExtendedButton(inset: inset)
         button.setImage(image, for: .normal)
         
-        if settings.cameraToolsRedesign {
+        if KanvasCameraDesign.shared.isRedesign {
             button.layer.cornerRadius = CameraConstants.buttonCornerRadius
             button.layer.masksToBounds = true
             button.backgroundColor = backgroundColor

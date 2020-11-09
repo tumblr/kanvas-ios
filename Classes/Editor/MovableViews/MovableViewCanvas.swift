@@ -71,9 +71,9 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         return subviews.compactMap{ $0 as? MovableView }.count == 0
     }
     
-    init(isRedesign: Bool) {
+    init() {
         overlay = UIView()
-        trashView = TrashView(isRedesign: isRedesign)
+        trashView = TrashView()
         originTransformations = ViewTransformations()
         super.init(frame: .zero)
         setUpViews()

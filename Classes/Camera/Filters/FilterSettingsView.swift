@@ -28,13 +28,10 @@ final class FilterSettingsView: IgnoreTouchesView {
     
     let collectionContainer: IgnoreTouchesView
     let visibilityButton: UIButton
-    private let settings: CameraSettings
     
     weak var delegate: FilterSettingsViewDelegate?
     
-    init(settings: CameraSettings) {
-        self.settings = settings
-        
+    init() {        
         collectionContainer = IgnoreTouchesView()
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Filter Collection Container"
@@ -119,7 +116,7 @@ private extension FilterSettingsView {
         addSubview(visibilityButton)
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if settings.cameraToolsRedesign {
+        if KanvasCameraDesign.shared.isRedesign {
             visibilityButton.backgroundColor = CameraConstants.buttonBackgroundColor
             visibilityButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
             visibilityButton.layer.masksToBounds = true

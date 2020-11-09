@@ -33,18 +33,16 @@ private struct MediaClipsCollectionControllerConstants {
 /// Controller for handling the media clips collection.
 final class MediaClipsCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     private lazy var mediaClipsCollectionView = {
-        return MediaClipsCollectionView(settings: self.settings)
+        return MediaClipsCollectionView()
     }()
 
-    private let settings: CameraSettings
     private var clips: [MediaClip]
     private var draggingClipIndex: IndexPath?
     private weak var draggingCell: MediaClipsCollectionCell?
 
     weak var delegate: MediaClipsCollectionControllerDelegate?
 
-    init(settings: CameraSettings) {
-        self.settings = settings
+    init() {
         clips = []
         super.init(nibName: .none, bundle: .none)
     }

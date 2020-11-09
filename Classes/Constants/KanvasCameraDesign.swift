@@ -6,6 +6,8 @@
 
 public struct KanvasCameraDesign {
     
+    var isRedesign: Bool
+    
     // MARK: - Camera View
     let cameraViewButtonBackgroundColor: UIColor
     let cameraViewButtonInvertedBackgroundColor: UIColor
@@ -64,7 +66,8 @@ public struct KanvasCameraDesign {
     let mediaClipsCollectionCellCornerRadius: CGFloat
     let mediaClipsCollectionCellClipAlpha: CGFloat
     
-    public init(cameraViewButtonBackgroundColor: UIColor,
+    public init(isRedesign: Bool,
+                cameraViewButtonBackgroundColor: UIColor,
                 cameraViewButtonInvertedBackgroundColor: UIColor,
                 cameraViewOptionVerticalMargin: CGFloat,
                 cameraViewOptionHorizontalMargin: CGFloat,
@@ -102,6 +105,7 @@ public struct KanvasCameraDesign {
                 mediaClipsCollectionCellCornerRadius: CGFloat,
                 mediaClipsCollectionCellClipAlpha: CGFloat) {
         
+        self.isRedesign = isRedesign
         self.cameraViewOptionVerticalMargin = cameraViewOptionVerticalMargin
         self.cameraViewOptionHorizontalMargin = cameraViewOptionHorizontalMargin
         self.cameraViewOptionButtonSize = cameraViewOptionButtonSize
@@ -148,6 +152,7 @@ public struct KanvasCameraDesign {
     
     public static var cameraDimensions: KanvasCameraDesign = {
         return KanvasCameraDesign(
+            isRedesign: false,
             cameraViewButtonBackgroundColor: .clear,
             cameraViewButtonInvertedBackgroundColor: .clear,
             cameraViewOptionVerticalMargin: 24,
@@ -155,7 +160,7 @@ public struct KanvasCameraDesign {
             cameraViewOptionButtonSize: 26.5,
             cameraViewOptionSpacing: 33,
             cameraViewNextImage: KanvasCameraImages.forwardImage,
-            cameraViewCloseImage: KanvasCameraImages.crossImage,
+            cameraViewCloseImage: KanvasCameraImages.closeImage,
             shootButtonImageWidth: 30,
             shootButtonInnerCircleImageWidth: 64,
             shootButtonOuterCircleImageWidth: 95,
@@ -191,6 +196,7 @@ public struct KanvasCameraDesign {
     
     public static var cameraRedesignDimensions: KanvasCameraDesign = {
         return KanvasCameraDesign(
+            isRedesign: true,
             cameraViewButtonBackgroundColor: UIColor.black.withAlphaComponent(0.4),
             cameraViewButtonInvertedBackgroundColor: UIColor.white,
             cameraViewOptionVerticalMargin: 28,
@@ -198,7 +204,7 @@ public struct KanvasCameraDesign {
             cameraViewOptionButtonSize: 48,
             cameraViewOptionSpacing: 24,
             cameraViewNextImage: KanvasCameraImages.nextArrowImage,
-            cameraViewCloseImage: KanvasCameraImages.closeImage,
+            cameraViewCloseImage: KanvasCameraImages.crossImage,
             shootButtonImageWidth: 25,
             shootButtonInnerCircleImageWidth: 56.9,
             shootButtonOuterCircleImageWidth: 84.4,

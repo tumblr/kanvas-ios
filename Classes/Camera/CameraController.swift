@@ -128,7 +128,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return controller
     }()
     private lazy var clipsController: MediaClipsEditorViewController = {
-        let controller = MediaClipsEditorViewController(settings: self.settings)
+        let controller = MediaClipsEditorViewController()
         controller.delegate = self
         return controller
     }()

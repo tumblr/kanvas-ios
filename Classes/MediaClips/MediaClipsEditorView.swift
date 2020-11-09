@@ -32,17 +32,15 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     
     weak var delegate: MediaClipsEditorViewDelegate?
     
-    private let isRedesign: Bool
     private let mainContainer: IgnoreTouchesView
     private let nextButton: UIButton
     let collectionContainer: IgnoreTouchesView
 
     // MARK: - Initializers
     
-    init(isRedesign: Bool) {
-        self.isRedesign = isRedesign
+    init() {
         mainContainer = IgnoreTouchesView()
-        mainContainer.backgroundColor = isRedesign ? CameraConstants.buttonBackgroundColor : KanvasCameraColors.shared.translucentBlack
+        mainContainer.backgroundColor = KanvasCameraDesign.shared.isRedesign ? CameraConstants.buttonBackgroundColor : KanvasCameraColors.shared.translucentBlack
         
         collectionContainer = IgnoreTouchesView()
 
@@ -92,7 +90,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         
         let trailingMargin: CGFloat
-        if isRedesign {
+        if KanvasCameraDesign.shared.isRedesign {
             trailingMargin = Constants.nextButtonSize + Constants.buttonLeadingMargin + Constants.buttonTrailingMargin
         }
         else {
@@ -114,7 +112,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if isRedesign {
+        if KanvasCameraDesign.shared.isRedesign {
             let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: UIColor(hex: 0x00B8FF))
             nextButton.setBackgroundImage(circle, for: .normal)
             nextButton.setImage(KanvasCameraImages.nextArrowImage, for: .normal)

@@ -20,10 +20,9 @@ struct CameraConstants {
     private static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
     
-    // Redesign
     static let buttonCornerRadius: CGFloat = 24
-    static let buttonBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.4)
-    static let buttonInvertedBackgroundColor: UIColor = .white
+    static let buttonBackgroundColor: UIColor = KanvasCameraDesign.shared.cameraViewButtonBackgroundColor
+    static let buttonInvertedBackgroundColor: UIColor = KanvasCameraDesign.shared.cameraViewButtonInvertedBackgroundColor
 }
 
 /// View with containers for all camera subviews (input, mode selector, etc)
@@ -154,7 +153,7 @@ final class CameraView: UIView {
     private func setupModeLayoutGuide() {
         addLayoutGuide(modeLayoutGuide)
         
-        let bottomMargin: CGFloat = settings.cameraToolsRedesign ? MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin) : MediaClipsEditorView.height
+        let bottomMargin: CGFloat = KanvasCameraDesign.shared.isRedesign ? MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin) : MediaClipsEditorView.height
         
         modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
@@ -227,7 +226,7 @@ final class CameraView: UIView {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
         
-        if settings.cameraToolsRedesign {
+        if KanvasCameraDesign.shared.isRedesign {
             closeButton.backgroundColor = CameraConstants.buttonBackgroundColor
             closeButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
             closeButton.layer.masksToBounds = true

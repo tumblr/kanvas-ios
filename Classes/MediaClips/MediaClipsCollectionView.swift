@@ -18,11 +18,8 @@ final class MediaClipsCollectionView: UIView {
     static let height = MediaClipsCollectionViewConstants.height
     let collectionView: UICollectionView
     let fadeOutGradient = CAGradientLayer()
-    
-    private let settings: CameraSettings
-    
-    init(settings: CameraSettings) {
-        self.settings = settings
+        
+    init() {
         collectionView = createCollectionView()
 
         super.init(frame: .zero)
