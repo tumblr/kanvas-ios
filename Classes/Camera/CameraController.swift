@@ -123,8 +123,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return controller
     }()
     private lazy var topOptionsController: OptionsController<CameraController> = {
-        let spacing = settings.cameraToolsRedesign ? CameraConstants.buttonHorizontalMargin : CameraConstants.optionHorizontalMargin
-        let controller = OptionsController<CameraController>(options: options, spacing: spacing, settings: self.settings)
+        let controller = OptionsController<CameraController>(options: options, spacing: CameraConstants.optionHorizontalMargin, settings: self.settings)
         controller.delegate = self
         return controller
     }()

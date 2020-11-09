@@ -10,14 +10,12 @@ import UIKit
 private struct MediaClipsCollectionViewConstants {
     static var bufferSize: CGFloat = 10
     static var height: CGFloat = MediaClipsCollectionCell.minimumHeight + MediaClipsCollectionViewConstants.bufferSize
-    static var totalHeight: CGFloat = MediaClipsCollectionSmallCell.minimumHeight + MediaClipsCollectionViewConstants.bufferSize
 }
 
 /// Collection view for the MediaClipsCollectionController
 final class MediaClipsCollectionView: UIView {
 
     static let height = MediaClipsCollectionViewConstants.height
-    static let totalHeight = MediaClipsCollectionViewConstants.totalHeight
     let collectionView: UICollectionView
     let fadeOutGradient = CAGradientLayer()
     
@@ -65,13 +63,7 @@ extension MediaClipsCollectionView {
                                   UIColor.clear.cgColor]
         fadeOutGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
         fadeOutGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        
-        if settings.cameraToolsRedesign {
-            fadeOutGradient.locations = [0, 0.05, 0.95, 1.0]
-        }
-        else {
-            fadeOutGradient.locations = [0, 0.05, 0.9, 1.0]
-        }
+        fadeOutGradient.locations = KanvasCameraDesign.shared.mediaClipsCollectionViewFadeOutGradientLocations
         
         layer.mask = fadeOutGradient
     }

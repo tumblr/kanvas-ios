@@ -9,19 +9,10 @@ import UIKit
 
 private struct FilterSettingsViewConstants {
     static let animationDuration: TimeInterval = 0.25
-    static let iconSize: CGFloat = 39
-    static let padding: CGFloat = 4
+    static let iconSize: CGFloat = KanvasCameraDesign.shared.filterSettingsViewIconSize
+    static let padding: CGFloat = KanvasCameraDesign.shared.filterSettingsViewPadding
     static let collectionViewHeight = CameraFilterCollectionCell.minimumHeight + 10
     static let height: CGFloat = collectionViewHeight + padding + iconSize
-    
-    // Redesign
-    static let interspace: CGFloat = 8
-    static var buttonSize: CGFloat {
-        return CameraConstants.buttonSize
-    }
-    static var totalHeight: CGFloat {
-        return collectionViewHeight + interspace + buttonSize
-    }
 }
 
 protocol FilterSettingsViewDelegate: class {
@@ -34,9 +25,6 @@ final class FilterSettingsView: IgnoreTouchesView {
 
     static let height: CGFloat = FilterSettingsViewConstants.height
     static let collectionViewHeight: CGFloat = FilterSettingsViewConstants.collectionViewHeight
-    
-    // Redesign
-    static let totalHeight: CGFloat = FilterSettingsViewConstants.totalHeight
     
     let collectionContainer: IgnoreTouchesView
     let visibilityButton: UIButton
@@ -52,7 +40,7 @@ final class FilterSettingsView: IgnoreTouchesView {
         collectionContainer.accessibilityIdentifier = "Filter Collection Container"
         collectionContainer.clipsToBounds = false
         
-        let defaultImage = settings.cameraToolsRedesign ? KanvasCameraImages.filtersImage : KanvasCameraImages.discoballUntappedImage
+        let defaultImage = KanvasCameraDesign.shared.filterSettingsViewFiltersOffImage
         visibilityButton = UIButton()
         visibilityButton.accessibilityIdentifier = "Filter Visibility Button"
         visibilityButton.setImage(defaultImage, for: .normal)
@@ -84,19 +72,13 @@ final class FilterSettingsView: IgnoreTouchesView {
             let image: UIImage?
             let backgroundColor: UIColor
             
-            if self.settings.cameraToolsRedesign {
-                if shown {
-                    image = KanvasCameraImages.filtersInvertedImage
-                    backgroundColor = CameraConstants.buttonInvertedBackgroundColor
-                }
-                else {
-                    image = KanvasCameraImages.filtersImage
-                    backgroundColor = CameraConstants.buttonBackgroundColor
-                }
+            if shown {
+                image = KanvasCameraDesign.shared.filterSettingsViewFiltersOnImage
+                backgroundColor = CameraConstants.buttonInvertedBackgroundColor
             }
             else {
-                image = shown ? KanvasCameraImages.discoballTappedImage : KanvasCameraImages.discoballUntappedImage
-                backgroundColor = .clear
+                image = KanvasCameraDesign.shared.filterSettingsViewFiltersOffImage
+                backgroundColor = CameraConstants.buttonBackgroundColor
             }
             
             self.visibilityButton.backgroundColor = backgroundColor
@@ -137,22 +119,15 @@ private extension FilterSettingsView {
         addSubview(visibilityButton)
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
         
-        let size: CGFloat
-        
         if settings.cameraToolsRedesign {
-            size = FilterSettingsViewConstants.buttonSize
-            
             visibilityButton.backgroundColor = CameraConstants.buttonBackgroundColor
             visibilityButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
             visibilityButton.layer.masksToBounds = true
         }
-        else {
-            size = FilterSettingsViewConstants.iconSize
-        }
 
         NSLayoutConstraint.activate([
-            visibilityButton.heightAnchor.constraint(equalToConstant: size),
-            visibilityButton.widthAnchor.constraint(equalToConstant: size),
+            visibilityButton.heightAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
+            visibilityButton.widthAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
             visibilityButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             visibilityButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
         ])

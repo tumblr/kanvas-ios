@@ -10,8 +10,8 @@ import UIKit
 /// Constants for trash view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.5
-    static let size: CGFloat = 98
-    static let borderImageSize: CGFloat = 90
+    static let size: CGFloat = KanvasCameraDesign.shared.trashViewSize
+    static let borderImageSize: CGFloat = KanvasCameraDesign.shared.trashViewBorderImageSize
     static let closedIconSize: CGFloat = 33
     static let openedIconSize: CGFloat = 38
     static let borderWidth: CGFloat = 3.0

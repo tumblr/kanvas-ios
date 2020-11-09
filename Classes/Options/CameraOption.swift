@@ -84,8 +84,8 @@ extension CameraController {
         var options = [
             [
                 Option(option: settings.defaultCameraPositionOption.cameraOption,
-                       image: settings.cameraToolsRedesign ? KanvasCameraImages.cameraRotateImage : KanvasCameraImages.cameraPositionImage,
-                       backgroundColor: settings.cameraToolsRedesign ? CameraConstants.buttonBackgroundColor : .clear,
+                       image: KanvasCameraDesign.shared.cameraOptionCameraPositionImage,
+                       backgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor,
                        type: .twoOptionsAnimation(animation: animation,
                                                   duration: CameraOptionsConstants.cameraFlipAnimationsDuration,
                                                   completion: completion))
@@ -93,10 +93,10 @@ extension CameraController {
             [
                 Option(option: settings.preferredFlashOption.cameraOption,
                        image: getImage(for: settings.preferredFlashOption, with: settings),
-                       backgroundColor: settings.cameraToolsRedesign ? CameraConstants.buttonBackgroundColor : .clear,
+                       backgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor,
                        type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.cameraOption,
                                                alternateImage: getImage(for: settings.notDefaultFlashOption, with: settings),
-                                               alternateBackgroundColor: settings.cameraToolsRedesign ? CameraConstants.buttonBackgroundColor : .clear)),
+                                               alternateBackgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor)),
             ],
         ]
         if settings.features.ghostFrame {
@@ -117,21 +117,11 @@ extension CameraController {
     /// - Parameter option: AVCaptureDevice.FlashMode, on or off / auto
     /// - Returns: an optional image
     func getImage(for option: AVCaptureDevice.FlashMode, with settings: CameraSettings) -> UIImage? {
-        if settings.cameraToolsRedesign {
-            if option == .on {
-                return KanvasCameraImages.cameraFlashOnImage
-            }
-            else {
-                return KanvasCameraImages.cameraFlashOffImage
-            }
+        if option == .on {
+            return KanvasCameraDesign.shared.cameraOptionFlashOnImage
         }
         else {
-            if option == .on {
-                return KanvasCameraImages.flashOnImage
-            }
-            else {
-                return KanvasCameraImages.flashOffImage
-            }
+            return KanvasCameraDesign.shared.cameraOptionFlashOffImage
         }
     }
     
@@ -140,21 +130,11 @@ extension CameraController {
     /// - Parameter option: ImagePreviewMode, on or off
     /// - Returns: an optional image
     func getImage(for option: ImagePreviewMode, with settings: CameraSettings) -> UIImage? {
-        if settings.cameraToolsRedesign {
-            if option == .on {
-                return KanvasCameraImages.ghostFrameOnImage
-            }
-            else {
-                return KanvasCameraImages.ghostFrameOffImage
-            }
+        if option == .on {
+            return KanvasCameraDesign.shared.cameraOptionGhostFrameOnImage
         }
         else {
-            if option == .on {
-                return KanvasCameraImages.imagePreviewOnImage
-            }
-            else {
-                return KanvasCameraImages.imagePreviewOffImage
-            }
+            return KanvasCameraDesign.shared.cameraOptionGhostFrameOffImage
         }
     }
     
@@ -163,16 +143,11 @@ extension CameraController {
     /// - Parameter option: ImagePreviewMode, on or off
     /// - Returns: the background color
     func getBackgroundColor(for option: ImagePreviewMode, with settings: CameraSettings) -> UIColor {
-        if settings.cameraToolsRedesign {
-            if option == .on {
-                return CameraConstants.buttonInvertedBackgroundColor
-            }
-            else {
-                return CameraConstants.buttonBackgroundColor
-            }
+        if option == .on {
+            return CameraConstants.buttonInvertedBackgroundColor
         }
         else {
-            return .clear
+            return CameraConstants.buttonBackgroundColor
         }
     }
     
