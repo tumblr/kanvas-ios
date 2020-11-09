@@ -23,22 +23,32 @@ protocol MediaClipsCollectionControllerDelegate: class {
 private struct MediaClipsCollectionControllerConstants {
     /// Animation duration in seconds
     static let animationDuration: TimeInterval = 0.15
-        
+            
     /// Padding at each side of the clip collection
     static let horizontalInset: CGFloat = 11
+    
+    // Redesign
+    /// Padding at each side of the clip collection
+    static let leftInset: CGFloat = 28
+    static let rightInset: CGFloat = 14
+
 }
 
 /// Controller for handling the media clips collection.
 final class MediaClipsCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    private lazy var mediaClipsCollectionView = MediaClipsCollectionView()
+    private lazy var mediaClipsCollectionView = {
+        return MediaClipsCollectionView(settings: self.settings)
+    }()
 
+    private let settings: CameraSettings
     private var clips: [MediaClip]
     private var draggingClipIndex: IndexPath?
-    private weak var draggingCell: MediaClipsCollectionCell?
+    private weak var draggingCell: MediaClipCell?
 
     weak var delegate: MediaClipsCollectionControllerDelegate?
 
-    init() {
+    init(settings: CameraSettings) {
+        self.settings = settings
         clips = []
         super.init(nibName: .none, bundle: .none)
     }
@@ -106,7 +116,14 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        mediaClipsCollectionView.collectionView.register(cell: MediaClipsCollectionCell.self)
+        
+        if settings.cameraToolsRedesign {
+            mediaClipsCollectionView.collectionView.register(cell: MediaClipsCollectionSmallCell.self)
+        }
+        else {
+            mediaClipsCollectionView.collectionView.register(cell: MediaClipsCollectionCell.self)
+        }
+        
         mediaClipsCollectionView.collectionView.delegate = self
         mediaClipsCollectionView.collectionView.dataSource = self
         mediaClipsCollectionView.collectionView.dragDelegate = self
@@ -133,8 +150,9 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaClipsCollectionCell.identifier, for: indexPath)
-        if let mediaCell = cell as? MediaClipsCollectionCell {
+        let identifier = settings.cameraToolsRedesign ? MediaClipsCollectionSmallCell.identifier : MediaClipsCollectionCell.identifier
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
+        if let mediaCell = cell as? MediaClipCell {
             mediaCell.bindTo(clips[indexPath.item])
         }
         return cell
@@ -143,12 +161,28 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     // MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard clips.count > 0, collectionView.bounds != .zero else { return .zero }
-        return UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.horizontalInset,
-                            bottom: 0, right: MediaClipsCollectionControllerConstants.horizontalInset)
+        let insets: UIEdgeInsets
+        if settings.cameraToolsRedesign {
+            insets = UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.leftInset,
+                                  bottom: 0, right: MediaClipsCollectionControllerConstants.rightInset)
+        }
+        else {
+            insets = UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.horizontalInset,
+                                  bottom: 0, right: MediaClipsCollectionControllerConstants.horizontalInset)
+        }
+        
+        return insets
     }
 
     private func cellBorderWhenCentered(firstCell: Bool, leftBorder: Bool, collectionView: UICollectionView) -> CGFloat {
-        let cellMock = MediaClipsCollectionCell(frame: .zero)
+        let cellMock: MediaClipCell
+        if settings.cameraToolsRedesign {
+            cellMock = MediaClipsCollectionSmallCell(frame: .zero)
+        }
+        else {
+            cellMock = MediaClipsCollectionCell(frame: .zero)
+        }
+        
         if firstCell, let firstClip = clips.first {
             cellMock.bindTo(firstClip)
         }
@@ -164,7 +198,15 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)
+        let size: CGSize
+        if settings.cameraToolsRedesign {
+            size = CGSize(width: MediaClipsCollectionSmallCell.width, height: MediaClipsCollectionSmallCell.minimumHeight)
+        }
+        else {
+            size = CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)
+        }
+        
+        return size
     }
 
     // MARK: - Scrolling
@@ -188,7 +230,7 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         draggingClipIndex = indexPath
-        draggingCell = collectionView.cellForItem(at: indexPath) as? MediaClipsCollectionCell
+        draggingCell = collectionView.cellForItem(at: indexPath) as? MediaClipCell
         let item = clips[indexPath.item]
         // Local object won't be used
         let itemProvider = NSItemProvider(object: item.representativeFrame)

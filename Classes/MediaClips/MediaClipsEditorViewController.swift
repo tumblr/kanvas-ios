@@ -45,7 +45,7 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         return view
     }()
     private lazy var collectionController: MediaClipsCollectionController = {
-        let controller = MediaClipsCollectionController()
+        let controller = MediaClipsCollectionController(settings: self.settings)
         controller.delegate = self
         return controller
     }()

@@ -8,6 +8,11 @@ import AVFoundation
 import Foundation
 import UIKit
 
+protocol MediaClipCell: UICollectionViewCell {
+    func bindTo(_ item: MediaClip)
+    func show(_ show: Bool)
+}
+
 private struct MediaClipsCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
     static let cellPadding: CGFloat = 2.9
@@ -31,7 +36,7 @@ private struct MediaClipsCollectionCellConstants {
 }
 
 /// The cell in MediaClipsCollectionView to display an individual clip
-final class MediaClipsCollectionCell: UICollectionViewCell {
+final class MediaClipsCollectionCell: UICollectionViewCell, MediaClipCell {
     
     static let minimumHeight = MediaClipsCollectionCellConstants.minimumHeight
     static let width = MediaClipsCollectionCellConstants.width
@@ -128,6 +133,130 @@ extension MediaClipsCollectionCell {
             clipLabel.leadingAnchor.constraint(equalTo: clipView.leadingAnchor,
                                                constant: MediaClipsCollectionCellConstants.labelHorizontalPadding),
             clipLabel.heightAnchor.constraint(equalToConstant: MediaClipsCollectionCellConstants.labelHeight)
+        ])
+    }
+}
+
+private struct MediaClipsCollectionSmallCellConstants {
+    static let animationDuration: TimeInterval = 0.1
+    static let cellPadding: CGFloat = 2.9
+    static let clipHeight: CGFloat = 48
+    static let clipWidth: CGFloat = 33
+    static let borderWidth: CGFloat = 2
+    static let cornerRadius: CGFloat = 4
+    static let font: UIFont = KanvasCameraFonts.shared.mediaClipsFont
+    static let labelHorizontalPadding: CGFloat = 5.5
+    static let labelVerticalPadding: CGFloat = 3.5
+    static let labelHeight: CGFloat = 14
+    static let clipAlpha: CGFloat = 0.87
+
+    static var minimumHeight: CGFloat {
+        return clipHeight
+    }
+
+    static var width: CGFloat {
+        return clipWidth + 2 * cellPadding
+    }
+}
+
+/// The cell in MediaClipsCollectionView to display an individual clip
+final class MediaClipsCollectionSmallCell: UICollectionViewCell, MediaClipCell  {
+    
+    static let minimumHeight = MediaClipsCollectionSmallCellConstants.minimumHeight
+    static let width = MediaClipsCollectionSmallCellConstants.width
+
+    private let clipView: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = MediaClipsCollectionSmallCellConstants.cornerRadius
+        view.layer.borderColor = KanvasCameraColors.shared.mediaBorderColor.cgColor
+        view.layer.borderWidth = MediaClipsCollectionSmallCellConstants.borderWidth
+        return view
+    }()
+    private let clipImage: UIImageView = {
+        let view = UIImageView()
+        view.contentMode = .scaleAspectFill
+        view.alpha = MediaClipsCollectionSmallCellConstants.clipAlpha
+        return view
+    }()
+    private let clipLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .clear
+        label.textAlignment = .left
+        label.textColor = .white
+        label.font = MediaClipsCollectionSmallCellConstants.font
+        return label
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUpView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setUpView()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        clipImage.image = .none
+    }
+
+    /// updates the cell to the MediaClip properties
+    ///
+    /// - Parameter item: The MediaClip to display
+    func bindTo(_ item: MediaClip) {
+        clipImage.image = item.representativeFrame
+        clipLabel.text = item.overlayText
+    }
+    
+    // MARK: - Public interface
+    
+    /// shows or hides the cell
+    ///
+    /// - Parameter show: true to show, false to hide
+    func show(_ show: Bool) {
+        UIView.animate(withDuration: MediaClipsCollectionSmallCellConstants.animationDuration) { [weak self] in
+            self?.alpha = show ? 1 : 0
+            self?.contentView.alpha = show ? 1 : 0
+        }
+    }
+}
+
+// MARK: - Layout
+extension MediaClipsCollectionSmallCell {
+
+    private func setUpView() {
+        clipView.accessibilityIdentifier = "Media Clips Cell View"
+        clipImage.accessibilityIdentifier = "Media Clips Cell ImageView"
+        clipLabel.accessibilityIdentifier = "Media Clips Cell Duration"
+        clipImage.add(into: clipView)
+        clipView.addSubview(clipLabel)
+        contentView.addSubview(clipView)
+        clipView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            clipView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            clipView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: MediaClipsCollectionSmallCellConstants.cellPadding),
+            clipView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -MediaClipsCollectionSmallCellConstants.cellPadding),
+            clipView.topAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.topAnchor),
+            clipView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.bottomAnchor),
+            clipView.heightAnchor.constraint(equalToConstant: MediaClipsCollectionSmallCellConstants.clipHeight),
+            clipView.widthAnchor.constraint(equalToConstant: MediaClipsCollectionSmallCellConstants.clipWidth)
+        ])
+        setupLabelConstraints()
+    }
+
+    private func setupLabelConstraints() {
+        clipLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            clipLabel.trailingAnchor.constraint(equalTo: clipView.trailingAnchor,
+                                                constant: -MediaClipsCollectionSmallCellConstants.labelHorizontalPadding),
+            clipLabel.bottomAnchor.constraint(equalTo: clipView.bottomAnchor,
+                                              constant: -MediaClipsCollectionSmallCellConstants.labelVerticalPadding),
+            clipLabel.leadingAnchor.constraint(equalTo: clipView.leadingAnchor,
+                                               constant: MediaClipsCollectionSmallCellConstants.labelHorizontalPadding),
+            clipLabel.heightAnchor.constraint(equalToConstant: MediaClipsCollectionSmallCellConstants.labelHeight)
         ])
     }
 }

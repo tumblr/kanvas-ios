@@ -163,7 +163,7 @@ final class CameraView: UIView {
         
         if settings.cameraToolsRedesign {
             topMargin = CameraConstants.buttonVerticalMargin
-            bottomMargin = MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin)
+            bottomMargin = MediaClipsEditorView.totalHeight - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin)
         }
         else {
             topMargin = CameraConstants.optionVerticalMargin
@@ -179,10 +179,11 @@ final class CameraView: UIView {
 
     private func setupClipsGuide() {
         addLayoutGuide(clipsLayoutGuide)
+        let height: CGFloat = settings.cameraToolsRedesign ? MediaClipsEditorView.totalHeight : MediaClipsEditorView.height
         clipsLayoutGuide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor).isActive = true
         clipsLayoutGuide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor).isActive = true
         clipsLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        clipsLayoutGuide.heightAnchor.constraint(equalToConstant: MediaClipsEditorView.height).isActive = true
+        clipsLayoutGuide.heightAnchor.constraint(equalToConstant: height).isActive = true
     }
 
     private func setupOptionsGuide() {
@@ -230,7 +231,7 @@ final class CameraView: UIView {
     
     private func setupFilterSettingsGuide() {
         let height = settings.cameraToolsRedesign ? FilterSettingsView.totalHeight : FilterSettingsView.height
-        let bottomMargin = MediaClipsEditorView.height + ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterSettingsView.collectionViewHeight) / 2)
+        let bottomMargin = settings.cameraToolsRedesign ? MediaClipsEditorView.totalHeight + ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterSettingsView.collectionViewHeight) / 2) : MediaClipsEditorView.height + ModeSelectorAndShootView.shootButtonBottomMargin + ((ModeSelectorAndShootView.shootButtonSize - FilterSettingsView.collectionViewHeight) / 2)
         
         addLayoutGuide(filterSettingsLayoutGuide)
         filterSettingsLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true

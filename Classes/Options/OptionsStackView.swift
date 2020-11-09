@@ -86,10 +86,16 @@ final class OptionsStackView<Item>: IgnoreTouchesView {
         let newStack = ExtendedStackView(inset: OptionsStackViewConstants.inset)
         stackView = newStack
         setUpStackView(newOptions)
-        UIView.animate(withDuration: OptionsStackViewConstants.optionsChangeAnimationDuration, animations: {
-            self.addStackView(newStack)
-            oldStack.alpha = 0
-        }, completion: { _ in oldStack.removeFromSuperview() })
+        if settings.cameraToolsRedesign {
+            addStackView(newStack)
+            oldStack.removeFromSuperview()
+        }
+        else {
+            UIView.animate(withDuration: OptionsStackViewConstants.optionsChangeAnimationDuration, animations: {
+                self.addStackView(newStack)
+                oldStack.alpha = 0
+            }, completion: { _ in oldStack.removeFromSuperview() })
+        }
     }
 
     // MARK: - private functions
