@@ -8,11 +8,6 @@ import AVFoundation
 import Foundation
 import UIKit
 
-protocol MediaClipCell: UICollectionViewCell {
-    func bindTo(_ item: MediaClip)
-    func show(_ show: Bool)
-}
-
 private struct MediaClipsCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
     static let cellPadding: CGFloat = 2.9
@@ -24,7 +19,7 @@ private struct MediaClipsCollectionCellConstants {
     static let labelHorizontalPadding: CGFloat = 5.5
     static let labelVerticalPadding: CGFloat = 3.5
     static let labelHeight: CGFloat = 14
-    static let clipAlpha: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellCornerRadius
+    static let clipAlpha: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipAlpha
 
     static var minimumHeight: CGFloat {
         return clipHeight
@@ -36,7 +31,7 @@ private struct MediaClipsCollectionCellConstants {
 }
 
 /// The cell in MediaClipsCollectionView to display an individual clip
-final class MediaClipsCollectionCell: UICollectionViewCell, MediaClipCell {
+final class MediaClipsCollectionCell: UICollectionViewCell {
     
     static let minimumHeight = MediaClipsCollectionCellConstants.minimumHeight
     static let width = MediaClipsCollectionCellConstants.width

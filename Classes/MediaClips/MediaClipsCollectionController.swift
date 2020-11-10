@@ -139,7 +139,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaClipsCollectionCell.identifier, for: indexPath)
-        if let mediaCell = cell as? MediaClipCell {
+        if let mediaCell = cell as? MediaClipsCollectionCell {
             mediaCell.bindTo(clips[indexPath.item])
         }
         return cell
