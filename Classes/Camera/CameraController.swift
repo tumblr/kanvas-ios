@@ -332,9 +332,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func showPreviewWithSegments(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index) {
         modeAndShootController.dismissTooltip()
         cameraInputController.stopSession()
-        if presentedViewController != nil && settings.features.multipleExports == false {
-            dismiss(animated: true, completion: nil)
-        }
+//        if presentedViewController != nil && presentedViewController is MultiEditorViewController == false {
+//            dismiss(animated: true, completion: nil)
+//        }
         let controller = createNextStepViewController(segments, selected: selected)
         self.present(controller, animated: true)
         mediaPlayerController = controller
@@ -346,7 +346,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private func createNextStepViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index) -> MediaPlayerController {
         let controller: MediaPlayerController
         if settings.features.multipleExports {
-            multiEditorViewController?.addSegment(segments[selected])
+            if segments.indices.contains(selected) {
+                multiEditorViewController?.addSegment(segments[selected])
+            }
             controller = multiEditorViewController ?? createStoryViewController(segments, selected: selected)
             multiEditorViewController = controller as? MultiEditorViewController
         }
@@ -614,6 +616,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         // Let's prompt for losing clips if they have clips and it's the "x" button, rather than the ">" button.
         if clipsController.hasClips && !settings.topButtonsSwapped {
             showDismissTooltip()
+        } else if clips.isEmpty == false && multiEditorViewController != nil {
+            showPreviewWithSegments([], selected: multiEditorViewController?.selected ?? 0)
         }
         else {
             handleCloseButtonPressed()
@@ -957,8 +961,12 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         else {
             analyticsProvider?.logPreviewDismissed()
         }
-        performUIUpdate { [weak self] in
-            self?.dismiss(animated: true)
+        if settings.features.multipleExports && !clips.isEmpty {
+            showPreviewWithSegments([], selected: multiEditorViewController?.selected ?? 0)
+        } else {
+            performUIUpdate { [weak self] in
+                self?.dismiss(animated: true)
+            }
         }
         delegate?.editorDismissed()
     }

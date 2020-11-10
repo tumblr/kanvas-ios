@@ -262,6 +262,9 @@ public struct CameraFeatures {
     /// Auto-open GIF Maker after GIF Camera
     public var gifCameraShouldStartGIFMaker: Bool = DefaultCameraSettings.editorShouldStartGIFMaker
 
+    /// Animate the movement of control in the editor
+    public var animateEditorControls: Bool = DefaultCameraSettings.animateEditorControls
+
     override public init() { }
 
 }
@@ -318,5 +321,6 @@ private struct DefaultCameraSettings {
     static let showTagButtonInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
+    static let animateEditorControls: Bool = true
 
 }

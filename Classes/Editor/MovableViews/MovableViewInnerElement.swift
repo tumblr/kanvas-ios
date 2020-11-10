@@ -7,7 +7,7 @@
 import Foundation
 
 /// Protocol for the view inside MovableView
-protocol MovableViewInnerElement: UIView, Codable {
+protocol MovableViewInnerElement: UIView, Codable, NSSecureCoding {
     
     /// Checks whether the hit is done inside the shape of the view
     ///
@@ -18,4 +18,6 @@ protocol MovableViewInnerElement: UIView, Codable {
     var viewSize: CGSize { get set }
 
     var viewCenter: CGPoint { get set }
+
+
 }

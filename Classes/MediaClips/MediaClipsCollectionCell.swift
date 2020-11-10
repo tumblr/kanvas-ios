@@ -14,6 +14,7 @@ private struct MediaClipsCollectionCellConstants {
     static let clipHeight: CGFloat = 60
     static let clipWidth: CGFloat = 40
     static let borderWidth: CGFloat = 1.1
+    static let selectedBorderWidth: CGFloat = 2.0
     static let cornerRadius: CGFloat = 8
     static let font: UIFont = KanvasCameraFonts.shared.mediaClipsFont
     static let labelHorizontalPadding: CGFloat = 5.5
@@ -72,6 +73,12 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         clipImage.image = .none
+    }
+
+    override var isSelected: Bool {
+        didSet {
+            clipView.layer.borderWidth = isSelected ? MediaClipsCollectionCellConstants.selectedBorderWidth  : MediaClipsCollectionCellConstants.borderWidth
+        }
     }
 
     /// updates the cell to the MediaClip properties

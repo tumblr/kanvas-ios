@@ -286,30 +286,30 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         
         self.player.delegate = self
 
-        let movableViews = views?.forEach { view in
-            let type = view.viewType
-
-            let info = view.viewInfo
-
-            let innerElement: MovableViewInnerElement
-            if type == "TEXT" {
-                let textView = StylableTextView()
-                textView.text = info.addedViewTextInfo.text
-//                textView.textColor
-//                textView.highlightColor =
-//                textView.textAlignment = info.addedViewTextInfo.text
-                textView.textAlignment = info.addedViewTextInfo.textAlignment.nsAlignment
-                innerElement = textView
-            } else {
-                innerElement = StylableImageView(id: "", image: nil)
-            }
-
-            let location = CGPoint(x: CGFloat(info.translationX), y: CGFloat(info.translationY))
-
-            let transformations = ViewTransformations(position: location, scale: CGFloat(info.scale), rotation: CGFloat(info.rotation))
-
-            editorView.movableViewCanvas.addView(view: innerElement, transformations: transformations, location: location, size: info.size)
-        }
+//        views?.forEach { view in
+//            let type = view.viewType
+//
+//            let info = view.viewInfo
+//
+//            let innerElement: MovableViewInnerElement
+//            if type == "TEXT" {
+//                let textView = StylableTextView()
+//                textView.text = info.addedViewTextInfo.text
+////                textView.textColor
+////                textView.highlightColor =
+////                textView.textAlignment = info.addedViewTextInfo.text
+//                textView.textAlignment = info.addedViewTextInfo.textAlignment.nsAlignment
+//                innerElement = textView
+//            } else {
+//                innerElement = StylableImageView(id: "", image: nil)
+//            }
+//
+//            let location = CGPoint(x: CGFloat(info.translationX), y: CGFloat(info.translationY))
+//
+//            let transformations = ViewTransformations(position: location, scale: CGFloat(info.scale), rotation: CGFloat(info.rotation))
+//
+//            editorView.movableViewCanvas.addView(view: innerElement, transformations: transformations, location: location, size: info.size)
+//        }
 
         setupNotifications()
     }
@@ -431,7 +431,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func revertGIF() {
-        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        if settings.animateEditorControls {
+            editorView.animateReturnOfEditionOption(cell: selectedCell)
+        }
         gifMakerController.showView(false)
         gifMakerController.showConfirmButton(false)
         gifMakerHandler.revert { reverted in
@@ -584,9 +586,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
-        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+        if settings.animateEditorControls {
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+                self.textController.showConfirmButton(true)
+            })
+        } else {
             self.textController.showConfirmButton(true)
-        })
+        }
         analyticsProvider?.logEditorTextEdit()
         editingNewText = false
     }
@@ -749,20 +755,28 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
-        exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
+        let firstImage = UIImage(cgImage: exporter.imageOverlays.first!)
         exporter.filterType = filterType ?? .passthrough
-        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
-            performUIUpdate {
-                guard let url = exportedVideoURL else {
-                    self.hideLoading()
-                    self.handleExportError()
-                    return
+        exporter.export(video: videoURL, mediaInfo: mediaInfo) { [weak self] (exportedVideoURL, _) in
+            guard let self = self else { return }
+            guard let url = exportedVideoURL else {
+                if self.parent != nil {
+                    performUIUpdate {
+                        self.hideLoading()
+                        self.handleExportError()
+                        return
+                    }
                 }
-                self.exportCompletion?(.success((nil, url, mediaInfo)))
-                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
-                self.hideLoading()
+                return
             }
+            performUIUpdate {
+                if self.parent != nil {
+                    self.hideLoading()
+                }
+            }
+            self.exportCompletion?(.success((nil, url, mediaInfo)))
+            self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
         }
     }
 
@@ -820,7 +834,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             if settings.features.editorGIFMaker {
                 shouldExportMediaAsGIF = gifMakerHandler.shouldExport
-                editorView.animateReturnOfEditionOption(cell: selectedCell)
+                if settings.animateEditorControls {
+                    editorView.animateReturnOfEditionOption(cell: selectedCell)
+                } else {
+                    selectedCell?.alpha = 1
+                }
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
@@ -834,12 +852,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             filterController.showView(false)
             showMainUI(true)
         case .text:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            if settings.animateEditorControls {
+                editorView.animateReturnOfEditionOption(cell: selectedCell)
+            } else {
+                selectedCell?.alpha = 1
+            }
             textController.showView(false)
             textController.showConfirmButton(false)
             showMainUI(true)
         case .drawing:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            if settings.animateEditorControls {
+                editorView.animateReturnOfEditionOption(cell: selectedCell)
+            } else {
+                selectedCell?.alpha = 1
+            }
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
             showMainUI(true)
@@ -881,17 +907,25 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+            if settings.animateEditorControls {
+                editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+                    self.textController.showConfirmButton(true)
+                })
+            } else {
                 self.textController.showConfirmButton(true)
-            })
+            }
         case .drawing:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
+            if settings.animateEditorControls {
+                editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
+                    self.drawingController.showConfirmButton(true)
+                })
+            } else {
                 self.drawingController.showConfirmButton(true)
-            })
+            }
         case .media:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorMediaDrawerOpen()
@@ -975,7 +1009,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didConfirmText(textView: StylableTextView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         if !textView.text.isEmpty {
-            editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size)
+            editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size, animated: true)
             if let font = textView.options.font, let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
                 analyticsProvider?.logEditorTextConfirm(isNew: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
             }
@@ -1051,7 +1085,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
         editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(),
-                                             location: editorView.movableViewCanvas.bounds.center, size: size)
+                                             location: editorView.movableViewCanvas.bounds.center, size: size, animated: true)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {

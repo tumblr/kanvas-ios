@@ -50,10 +50,12 @@ private struct Constants {
 }
 
 /// A wrapper for UIViews that can be rotated, moved and scaled
-final class MovableView: UIView {
+final class MovableView: UIView, NSSecureCoding {
+
+    static var supportsSecureCoding: Bool { return true }
     
     weak var delegate: MovableViewDelegate?
-    private let innerView: MovableViewInnerElement
+    let innerView: MovableViewInnerElement
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -96,16 +98,29 @@ final class MovableView: UIView {
         position = aDecoder.decodeCGPoint(forKey: "position")
         scale = CGFloat(aDecoder.decodeFloat(forKey: "scale"))
         rotation = CGFloat(aDecoder.decodeFloat(forKey: "rotation"))
-        innerView = aDecoder.decodeObject(forKey: "innerView") as! MovableViewInnerElement
-        super.init(coder: aDecoder)
+        let view = aDecoder.decodeObject(of: [StylableTextView.self, StylableImageView.self], forKey: "innerView")
+
+        switch view {
+        case let imageView as StylableImageView:
+            innerView = imageView
+        case let textView as StylableTextView:
+            innerView = textView
+        default:
+            innerView = StylableTextView()
+        }
+
+        super.init(frame: aDecoder.decodeCGRect(forKey: "frame") ?? .zero)
+
+        setupInnerView()
     }
 
     override func encode(with coder: NSCoder) {
         super.encode(with: coder)
         coder.encode(position, forKey: "position")
-        coder.encode(scale, forKey: "scale")
-        coder.encode(rotation, forKey: "rotation")
+        coder.encode(Float(scale), forKey: "scale")
+        coder.encode(Float(rotation), forKey: "rotation")
         coder.encode(innerView, forKey: "innerView")
+        coder.encode(frame, forKey: "frame")
     }
 
     enum ViewType {

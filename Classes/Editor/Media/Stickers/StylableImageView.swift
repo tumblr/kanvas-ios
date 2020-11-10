@@ -8,7 +8,9 @@ import Foundation
 import UIKit
 
 /// Image view that increases its image quality when its contentScaleFactor is modified
-@objc final class StylableImageView: UIImageView, MovableViewInnerElement, Codable {
+@objc final class StylableImageView: UIImageView, MovableViewInnerElement, Codable, NSSecureCoding {
+
+    static var supportsSecureCoding: Bool { return true }
     
     let id: String
     
@@ -29,14 +31,19 @@ import UIKit
         super.init(image: image)
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required convenience init?(coder: NSCoder) {
+        let id = String(coder.decodeObject(of: NSString.self, forKey: CodingKeys.id.rawValue) ?? "")
+        let image = coder.decodeObject(of: UIImage.self, forKey: CodingKeys.image.rawValue)
+        self.init(id: id, image: image)
+        viewSize = coder.decodeCGSize(forKey: CodingKeys.size.rawValue)
+        viewCenter = coder.decodeCGPoint(forKey: CodingKeys.center.rawValue)
     }
 
     enum CodingKeys: String, CodingKey {
         case id
         case size
         case center
+        case image
     }
 
     init(from decoder: Decoder) throws {
@@ -52,6 +59,13 @@ import UIKit
         try container.encode(id, forKey: .id)
         try container.encode(viewSize, forKey: .size)
         try container.encode(viewCenter, forKey: .center)
+    }
+
+    override func encode(with coder: NSCoder) {
+        coder.encode(id, forKey: CodingKeys.id.rawValue)
+        coder.encode(viewSize, forKey: CodingKeys.size.rawValue)
+        coder.encode(viewCenter, forKey: CodingKeys.center.rawValue)
+        coder.encode(image, forKey: CodingKeys.image.rawValue)
     }
 
     // MARK: - Scale factor

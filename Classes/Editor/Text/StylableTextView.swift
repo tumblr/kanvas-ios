@@ -13,7 +13,9 @@ private struct Constants {
 }
 
 /// TextView that can be customized with TextOptions
-@objc class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement, Codable {
+@objc class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement, Codable, NSSecureCoding {
+
+    static var supportsSecureCoding: Bool { return true }
     
     // Color rectangles behind the text
     private var highlightViews: [UIView]
@@ -70,7 +72,30 @@ private struct Constants {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        highlightViews = []
+
+        let size = coder.decodeCGSize(forKey: CodingKeys.size.rawValue)
+        let center = coder.decodeCGPoint(forKey: CodingKeys.center.rawValue)
+
+        super.init(frame: CGRect(origin: .zero, size: size), textContainer: nil)
+        delegate = self
+        backgroundColor = .clear
+
+        textAlignment = NSTextAlignment(rawValue: coder.decodeInteger(forKey: CodingKeys.textAlignment.rawValue))!
+        contentScaleFactor = CGFloat(coder.decodeFloat(forKey: CodingKeys.contentScaleFactor.rawValue))
+        text = String(coder.decodeObject(of: NSString.self, forKey: CodingKeys.text.rawValue) ?? "")
+
+        viewSize = coder.decodeCGSize(forKey: CodingKeys.size.rawValue)
+        viewCenter = coder.decodeCGPoint(forKey: CodingKeys.center.rawValue)
+        textColor = coder.decodeObject(of: UIColor.self, forKey: CodingKeys.textColor.rawValue)
+        highlightColor = coder.decodeObject(of: UIColor.self, forKey: CodingKeys.highlightColor.rawValue)
+
+//        if let descriptor = coder.decodeObject(of: UIFontDescriptor.self, forKey: CodingKeys.font.rawValue) {
+//            font = UIFont(descriptor: descriptor, size: 12)
+//        }
+        let fontName = String(coder.decodeObject(of: NSString.self, forKey: FontKeys.name.rawValue) ?? "")
+        let fontSize = CGFloat(coder.decodeFloat(forKey: FontKeys.fontSize.rawValue))
+        font = UIFont(name: fontName, size: fontSize)
     }
 
     enum CodingKeys: String, CodingKey {
@@ -80,12 +105,13 @@ private struct Constants {
         case text
         case size
         case center
-//        case textColor
+        case textColor
+        case highlightColor
     }
 
     enum FontKeys: String, CodingKey {
         case name
-        case size
+        case fontSize
     }
 
     required init(from decoder: Decoder) throws {
@@ -104,7 +130,9 @@ private struct Constants {
 
         let fontInfo = try values.nestedContainer(keyedBy: FontKeys.self, forKey: .font)
         let name = try fontInfo.decode(String.self, forKey: .name)
-        let size = try fontInfo.decode(CGFloat.self, forKey: .size)
+        let size = try fontInfo.decode(CGFloat.self, forKey: .fontSize)
+        let descriptor = UIFontDescriptor(name: font!.fontName, size: font!.pointSize)
+//        font = UIFont(descriptor: descriptor, size: size)
         font = UIFont(name: name, size: size)
     }
 
@@ -121,8 +149,25 @@ private struct Constants {
 
 
         var fontInfo = container.nestedContainer(keyedBy: FontKeys.self, forKey: .font)
+        print("Attributes: \(font!.fontDescriptor.fontAttributes)")
         try fontInfo.encode(font?.fontName, forKey: .name)
-        try fontInfo.encode(font?.pointSize, forKey: .size)
+        try fontInfo.encode(font?.pointSize, forKey: .fontSize)
+    }
+
+    override func encode(with coder: NSCoder) {
+
+        coder.encode(textAlignment.rawValue, forKey: CodingKeys.textAlignment.rawValue)
+        coder.encode(Float(contentScaleFactor), forKey: CodingKeys.contentScaleFactor.rawValue)
+
+        coder.encode(text, forKey: CodingKeys.text.rawValue)
+        coder.encode(viewSize, forKey: CodingKeys.size.rawValue)
+        coder.encode(viewCenter, forKey: CodingKeys.center.rawValue)
+        coder.encode(textColor, forKey: CodingKeys.textColor.rawValue)
+        coder.encode(highlightColor, forKey: CodingKeys.highlightColor.rawValue)
+
+        coder.encode(font!.fontName, forKey: FontKeys.name.rawValue)
+        coder.encode(Float(font!.pointSize), forKey: FontKeys.fontSize.rawValue)
+//        coder.encode(font!.fontDescriptor, forKey: CodingKeys.font.rawValue)
     }
 
 //    required init?(coder aDecoder: NSCoder) {

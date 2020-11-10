@@ -503,10 +503,10 @@ final class MediaPlayer {
     }
 
     @objc func videoDidPlayToEndTime(notification: Notification) {
-        performUIUpdate {
-            self.displayLink?.invalidate()
-            self.displayLink = nil
-            self.playNextMedia()
+        performUIUpdate { [weak self] in
+            self?.displayLink?.invalidate()
+            self?.displayLink = nil
+            self?.playNextMedia()
         }
     }
 

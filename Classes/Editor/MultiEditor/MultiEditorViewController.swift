@@ -106,6 +106,10 @@ class MultiEditorViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -236,7 +240,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
     }
     
     func dismissButtonPressed() {
-        dismiss(animated: true, completion: nil)
+        presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     func didDismissColorSelectorTooltip() {
@@ -260,12 +264,9 @@ extension MultiEditorViewController: EditorControllerDelegate {
     }
 
     func archive(index: Int) {
-//        let archiver = NSKeyedArchiver(requiringSecureCoding: true)
-//        archiver.encode(currentEditor?.editorView.movableViewCanvas, forKey: NSKeyedArchiveRootObjectKey)
-//        archiver.finishEncoding()
-//        let currentCanvas = archiver.encodedData
-        let encoder = JSONEncoder()
-        let currentCanvas = try! encoder.encode(currentEditor!.editorView.movableViewCanvas)
+        let currentCanvas = try! NSKeyedArchiver.archivedData(withRootObject: currentEditor!.editorView.movableViewCanvas, requiringSecureCoding: true)
+//        let encoder = JSONEncoder()
+//        let currentCanvas = try! encoder.encode(currentEditor!.editorView.movableViewCanvas)
         let drawingLayer = currentEditor?.editorView.drawingCanvas
         if edits.indices ~= index {
             edits[index] = (currentCanvas, drawingLayer)
@@ -282,8 +283,9 @@ extension MultiEditorViewController: EditorControllerDelegate {
 //                let unarchiver = try! NSKeyedUnarchiver(forReadingFrom: edit)
 //                unarchiver.requiresSecureCoding = false
 //                canvas = unarchiver.decodeObject(of: MovableViewCanvas.self, forKey: NSKeyedArchiveRootObjectKey)
-                let decoder = JSONDecoder()
-                canvas = try! decoder.decode(MovableViewCanvas.self, from: edit)
+//                let decoder = JSONDecoder()
+//                canvas = try! decoder.decode(MovableViewCanvas.self, from: edit)
+                canvas = try! NSKeyedUnarchiver.unarchivedObject(ofClass: MovableViewCanvas.self, from: edit)
             } else {
                 canvas = nil
             }
@@ -327,14 +329,11 @@ extension MultiEditorViewController: EditorControllerDelegate {
             archive(index: selected)
         }
 
-        let archiver = NSKeyedArchiver(requiringSecureCoding: false)
-        archiver.encode(edits.first!.0)
-
         exportHandler.startWaiting(for: segments.count)
         exportingEditors = segments.enumerated().compactMap { (idx, segment) in
             let views = self.edits(for: idx)
-//            let views = self.views(for: idx)
-            return delegate?.editor(segment: segment, views: nil, canvas: views?.0, drawingView: views?.1)
+            let editor = delegate?.editor(segment: segment, views: nil, canvas: views?.0, drawingView: views?.1)
+            return editor
         }
         exportingEditors?.enumerated().forEach { (idx, editor) in
             unarchive(editor: editor, index: idx)
