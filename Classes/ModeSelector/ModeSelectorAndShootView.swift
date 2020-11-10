@@ -22,7 +22,6 @@ private struct ModeSelectorAndShootViewConstants {
     }
     static let mediaPickerButtonSize: CGFloat = 35
     
-    // Redesign
     static let modeSelectorTopMargin: CGFloat = 8
     static let modeSelectorHorizontalMargin: CGFloat = 100
     static var modeSelectorHeight: CGFloat {

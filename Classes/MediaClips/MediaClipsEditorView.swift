@@ -115,11 +115,9 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         if KanvasCameraDesign.shared.isRedesign {
             let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: UIColor(hex: 0x00B8FF))
             nextButton.setBackgroundImage(circle, for: .normal)
-            nextButton.setImage(KanvasCameraImages.nextArrowImage, for: .normal)
         }
-        else {
-            nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
-        }
+        
+        nextButton.setImage(KanvasCameraDesign.shared.mediaClipsEditorViewNextImage, for: .normal)
         
         NSLayoutConstraint.activate([
             nextButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonTrailingMargin),

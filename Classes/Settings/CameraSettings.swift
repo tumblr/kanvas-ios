@@ -345,5 +345,6 @@ private struct DefaultCameraSettings {
     static let showBlogSwitcherInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
+    static let cameraToolsRedesign: Bool = false
     static let editToolsRedesign: Bool = false
 }

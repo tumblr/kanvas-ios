@@ -12,19 +12,13 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.5
     static let size: CGFloat = KanvasCameraDesign.shared.trashViewSize
     static let borderImageSize: CGFloat = KanvasCameraDesign.shared.trashViewBorderImageSize
-    static let closedIconSize: CGFloat = 33
-    static let openedIconSize: CGFloat = 38
+    static let closedIconHeight: CGFloat = KanvasCameraDesign.shared.trashViewClosedIconHeight
+    static let closedIconWidth: CGFloat = KanvasCameraDesign.shared.trashViewClosedIconWidth
+    static let openedIconHeight: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconHeight
+    static let openedIconWidth: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconWidth
+    static let openedIconCenterYOffset: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconCenterYOffset
+    static let openedIconCenterXOffset: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconCenterXOffset
     static let borderWidth: CGFloat = 3.0
-    static let openedIconCenterYOffset: CGFloat = 2.5
-    static let openedIconCenterXOffset: CGFloat = 0
-    
-    // Redesign
-    static let closedBinHeight: CGFloat = 28
-    static let closedBinWidth: CGFloat = 24
-    static let openedBinHeight: CGFloat = 31.76
-    static let openedBinWidth: CGFloat = 23.29
-    static var openedBinCenterYOffset: CGFloat = 1
-    static var openedBinCenterXOffset: CGFloat = 0.9
 }
 
 /// View that shows an open or closed trash bin with a red circle as background
@@ -137,29 +131,12 @@ final class TrashView: IgnoreTouchesView {
         openedTrash.translatesAutoresizingMaskIntoConstraints = false
         openedTrash.contentMode = .scaleAspectFit
         openedTrash.clipsToBounds = true
+        openedTrash.image = KanvasCameraDesign.shared.trashViewOpenedImage
         
-        let yOffset: CGFloat
-        let xOffset: CGFloat
-        let height: CGFloat
-        let width: CGFloat
-        let image: UIImage?
-        
-        if KanvasCameraDesign.shared.isRedesign {
-            height = Constants.openedBinHeight
-            width = Constants.openedBinWidth
-            yOffset = Constants.openedBinCenterYOffset
-            xOffset = Constants.openedBinCenterXOffset
-            image = KanvasCameraImages.trashBinOpened
-        }
-        else {
-            height = Constants.openedIconSize
-            width = Constants.openedIconSize
-            yOffset = Constants.openedIconCenterYOffset
-            xOffset = Constants.openedIconCenterXOffset
-            image = KanvasCameraImages.trashOpened
-        }
-        
-        openedTrash.image = image
+        let yOffset = KanvasCameraDesign.shared.trashViewOpenedIconCenterYOffset
+        let xOffset = KanvasCameraDesign.shared.trashViewOpenedIconCenterXOffset
+        let height = KanvasCameraDesign.shared.trashViewOpenedIconHeight
+        let width = KanvasCameraDesign.shared.trashViewOpenedIconWidth
         
         NSLayoutConstraint.activate([
             openedTrash.heightAnchor.constraint(equalToConstant: height),
@@ -178,23 +155,10 @@ final class TrashView: IgnoreTouchesView {
         closedTrash.translatesAutoresizingMaskIntoConstraints = false
         closedTrash.contentMode = .scaleAspectFit
         closedTrash.clipsToBounds = true
+        closedTrash.image = KanvasCameraDesign.shared.trashViewClosedImage
         
-        let height: CGFloat
-        let width: CGFloat
-        let image: UIImage?
-        
-        if KanvasCameraDesign.shared.isRedesign {
-            height = Constants.closedBinHeight
-            width = Constants.closedBinWidth
-            image = KanvasCameraImages.trashBinClosed
-        }
-        else {
-            height = Constants.closedIconSize
-            width = Constants.closedIconSize
-            image = KanvasCameraImages.trashClosed
-        }
-        
-        closedTrash.image = image
+        let height = KanvasCameraDesign.shared.trashViewClosedIconHeight
+        let width = KanvasCameraDesign.shared.trashViewClosedIconWidth
         
         NSLayoutConstraint.activate([
             closedTrash.heightAnchor.constraint(equalToConstant: height),

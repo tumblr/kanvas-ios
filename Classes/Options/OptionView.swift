@@ -18,6 +18,7 @@ final class OptionView: UIView {
     /// - Parameters:
     ///   - image: image to describe the option
     ///   - inset: use a negative value to "outset"
+    ///   - backgroundColor: the background color for the option
     init(image: UIImage?, inset: CGFloat = 0, backgroundColor: UIColor) {
         self.inset = inset
         button = ExtendedButton(inset: inset)
