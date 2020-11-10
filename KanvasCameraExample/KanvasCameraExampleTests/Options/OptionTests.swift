@@ -12,7 +12,8 @@ import XCTest
 final class OptionTests: XCTestCase {
     
     func testFlashTopOption() {
-        let option = Option(option: CameraOption.flashOff, image: KanvasCameraImages.flashOffImage, backgroundColor: .clear, type: .twoOptionsImages(alternateOption: CameraOption.flashOn, alternateImage: KanvasCameraImages.flashOnImage, alternateBackgroundColor: .clear))
+        let backgroundColor: UIColor = .clear
+        let option = Option(option: CameraOption.flashOff, image: KanvasCameraImages.flashOffImage, backgroundColor: backgroundColor, type: .twoOptionsImages(alternateOption: CameraOption.flashOn, alternateImage: KanvasCameraImages.flashOnImage, alternateBackgroundColor: .clear))
         XCTAssert(option.image != nil && option.image == KanvasCameraImages.flashOffImage, "The option image does not match the expected image")
         XCTAssert(option.option == .flashOff, "The option does not match flash on option")
         
@@ -20,6 +21,7 @@ final class OptionTests: XCTestCase {
         case .twoOptionsImages(alternateOption: let alternateItem, alternateImage: let image, alternateBackgroundColor: let color):
                 XCTAssert(alternateItem == CameraOption.flashOn, "The alternate item did not match the expected item")
                 XCTAssert(image == KanvasCameraImages.flashOnImage, "The alternate image did not match the expected image")
+            XCTAssert(color == backgroundColor, "The alternate color did not match the expected color")
                 break
             default:
                 XCTFail("Option did not match the expected twoOptionsImages type")
