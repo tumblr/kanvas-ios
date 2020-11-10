@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         KanvasCameraColors.shared = KanvasCameraCustomUI.shared.cameraColors()
         KanvasCameraFonts.shared = KanvasCameraCustomUI.shared.cameraFonts()
-        KanvasCameraDesign.shared = KanvasCameraDesign.cameraDimensions
+        KanvasCameraDesign.shared = KanvasCameraDesign.cameraDefaultDesign
         let applicationViewController = KanvasCameraExampleViewController(nibName: nil, bundle: nil)
         if #available(iOS 13.0, *) {
             applicationViewController.view.tintColor = .systemBackground
