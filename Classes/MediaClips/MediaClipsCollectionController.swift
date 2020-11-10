@@ -32,9 +32,7 @@ private struct MediaClipsCollectionControllerConstants {
 
 /// Controller for handling the media clips collection.
 final class MediaClipsCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    private lazy var mediaClipsCollectionView = {
-        return MediaClipsCollectionView()
-    }()
+    private lazy var mediaClipsCollectionView = MediaClipsCollectionView()
 
     private var clips: [MediaClip]
     private var draggingClipIndex: IndexPath?
@@ -149,7 +147,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard clips.count > 0, collectionView.bounds != .zero else { return .zero }
         let insets = UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.leftInset,
-                              bottom: 0, right: MediaClipsCollectionControllerConstants.rightInset)
+                                  bottom: 0, right: MediaClipsCollectionControllerConstants.rightInset)
         return insets
     }
 

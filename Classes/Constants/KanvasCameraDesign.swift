@@ -69,6 +69,7 @@ public struct KanvasCameraDesign {
     let mediaClipsCollectionViewFadeOutGradientLocations: [NSNumber]
     
     // MARK: - MediaClipsEditorView
+    let mediaClipsEditorViewBackgroundColor: UIColor
     let mediaClipsEditorViewButtonLeadingMargin: CGFloat
     let mediaClipsEditorViewButtonTrailingMargin: CGFloat
     let mediaClipsEditorViewTopPadding: CGFloat
@@ -129,6 +130,7 @@ public struct KanvasCameraDesign {
                 mediaClipsCollectionControllerLeftInset: CGFloat,
                 mediaClipsCollectionControllerRightInset: CGFloat,
                 mediaClipsCollectionViewFadeOutGradientLocations: [NSNumber],
+                mediaClipsEditorViewBackgroundColor: UIColor,
                 mediaClipsEditorViewButtonLeadingMargin: CGFloat,
                 mediaClipsEditorViewButtonTrailingMargin: CGFloat,
                 mediaClipsEditorViewTopPadding: CGFloat,
@@ -186,6 +188,7 @@ public struct KanvasCameraDesign {
         self.mediaClipsCollectionControllerLeftInset = mediaClipsCollectionControllerLeftInset
         self.mediaClipsCollectionControllerRightInset = mediaClipsCollectionControllerRightInset
         self.mediaClipsCollectionViewFadeOutGradientLocations = mediaClipsCollectionViewFadeOutGradientLocations
+        self.mediaClipsEditorViewBackgroundColor = mediaClipsEditorViewBackgroundColor
         self.mediaClipsEditorViewButtonLeadingMargin = mediaClipsEditorViewButtonLeadingMargin
         self.mediaClipsEditorViewButtonTrailingMargin = mediaClipsEditorViewButtonTrailingMargin
         self.mediaClipsEditorViewTopPadding = mediaClipsEditorViewTopPadding
@@ -251,6 +254,7 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionControllerLeftInset: 11,
             mediaClipsCollectionControllerRightInset: 11,
             mediaClipsCollectionViewFadeOutGradientLocations: [0, 0.05, 0.9, 1.0],
+            mediaClipsEditorViewBackgroundColor: KanvasCameraColors.shared.translucentBlack,
             mediaClipsEditorViewButtonLeadingMargin: 16,
             mediaClipsEditorViewButtonTrailingMargin: 16,
             mediaClipsEditorViewTopPadding: 6,
@@ -313,6 +317,7 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionControllerLeftInset: 28,
             mediaClipsCollectionControllerRightInset: 14,
             mediaClipsCollectionViewFadeOutGradientLocations: [0, 0.05, 0.95, 1.0],
+            mediaClipsEditorViewBackgroundColor: UIColor.black.withAlphaComponent(0.4),
             mediaClipsEditorViewButtonLeadingMargin: 7,
             mediaClipsEditorViewButtonTrailingMargin: 28,
             mediaClipsEditorViewTopPadding: 11,

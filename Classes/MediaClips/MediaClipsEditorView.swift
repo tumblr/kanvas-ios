@@ -40,7 +40,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     
     init() {
         mainContainer = IgnoreTouchesView()
-        mainContainer.backgroundColor = KanvasCameraDesign.shared.isRedesign ? CameraConstants.buttonBackgroundColor : KanvasCameraColors.shared.translucentBlack
+        mainContainer.backgroundColor = KanvasCameraDesign.shared.mediaClipsEditorViewBackgroundColor
         
         collectionContainer = IgnoreTouchesView()
 
