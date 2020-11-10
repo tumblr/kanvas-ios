@@ -267,14 +267,6 @@ public struct CameraFeatures {
     /// This shows the editor tools as a vertical collection.
     public var editToolsRedesign = DefaultCameraSettings.editToolsRedesign
     
-    /// Shutter Button Tooltip
-    /// This shows the tooltip above the shutter.
-    public var shutterButtonTooltip = DefaultCameraSettings.shutterButtonTooltip
-
-    /// Camera Tools Redesign
-    /// This applies the new design to the camera tools.
-    public var cameraToolsRedesign = DefaultCameraSettings.cameraToolsRedesign
-    
     /// Auto-open GIF Maker in Editor
     public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
         if mode?.group == .gif {
@@ -354,6 +346,4 @@ private struct DefaultCameraSettings {
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
     static let editToolsRedesign: Bool = false
-    static let shutterButtonTooltip: Bool = false
-    static let cameraToolsRedesign: Bool = false
 }
