@@ -57,7 +57,7 @@ final class TrashView: IgnoreTouchesView {
         setUpTrashClosed()
     }
     
-    /// Sets up the red circle on the background
+    /// Sets up the red translucent circle on the background
     private func setUpTranslucentBackgroundCircle() {
         addSubview(translucentBackgroundCircle)
         translucentBackgroundCircle.accessibilityIdentifier = "Trash Translucent Background Circle"
