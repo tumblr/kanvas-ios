@@ -24,6 +24,7 @@ public struct KanvasCameraDesign {
     let shootButtonInnerCircleImageWidth: CGFloat
     let shootButtonOuterCircleImageWidth: CGFloat
     let shootButtonBorderWidth: CGFloat
+    let shootButtonMaximumWidth: CGFloat
     
     // MARK: - TrashView
     let trashViewOpenedImage: UIImage?
@@ -95,6 +96,7 @@ public struct KanvasCameraDesign {
                 shootButtonInnerCircleImageWidth: CGFloat,
                 shootButtonOuterCircleImageWidth: CGFloat,
                 shootButtonBorderWidth: CGFloat,
+                shootButtonMaximumWidth: CGFloat,
                 trashViewOpenedImage: UIImage?,
                 trashViewClosedImage: UIImage?,
                 trashViewSize: CGFloat,
@@ -144,6 +146,7 @@ public struct KanvasCameraDesign {
         self.shootButtonInnerCircleImageWidth = shootButtonInnerCircleImageWidth
         self.shootButtonOuterCircleImageWidth = shootButtonOuterCircleImageWidth
         self.shootButtonBorderWidth = shootButtonBorderWidth
+        self.shootButtonMaximumWidth = shootButtonMaximumWidth
         self.trashViewOpenedImage = trashViewOpenedImage
         self.trashViewClosedImage = trashViewClosedImage
         self.trashViewSize = trashViewSize
@@ -205,6 +208,7 @@ public struct KanvasCameraDesign {
             shootButtonInnerCircleImageWidth: 64,
             shootButtonOuterCircleImageWidth: 95,
             shootButtonBorderWidth: 3,
+            shootButtonMaximumWidth: 100,
             trashViewOpenedImage: UIImage.imageFromCameraBundle(named: "trashOpened"),
             trashViewClosedImage: UIImage.imageFromCameraBundle(named: "trashClosed"),
             trashViewSize: 98,
@@ -254,13 +258,14 @@ public struct KanvasCameraDesign {
             cameraViewOptionVerticalMargin: 28,
             cameraViewOptionHorizontalMargin: 16,
             cameraViewOptionButtonSize: 48,
-            cameraViewOptionSpacing: 24,
+            cameraViewOptionSpacing: 16,
             cameraViewNextImage: UIImage.imageFromCameraBundle(named: "nextArrow"),
             cameraViewCloseImage: UIImage.imageFromCameraBundle(named: "cross"),
             shootButtonImageWidth: 25,
             shootButtonInnerCircleImageWidth: 56.9,
             shootButtonOuterCircleImageWidth: 84.4,
             shootButtonBorderWidth: 2,
+            shootButtonMaximumWidth: 80,
             trashViewOpenedImage: UIImage.imageFromCameraBundle(named: "trashBinOpened"),
             trashViewClosedImage: UIImage.imageFromCameraBundle(named: "trashBinClosed"),
             trashViewSize: 87.1,
@@ -280,7 +285,7 @@ public struct KanvasCameraDesign {
             cameraOptionGhostFrameOffImage: UIImage.imageFromCameraBundle(named: "ghostFrameOff"),
             cameraOptionCameraPositionImage: UIImage.imageFromCameraBundle(named: "cameraRotate"),
             filterSettingsViewIconSize: 48,
-            filterSettingsViewPadding: 8,
+            filterSettingsViewPadding: 0,
             filterSettingsViewFiltersOffImage: UIImage.imageFromCameraBundle(named: "menuFilters"),
             filterSettingsViewFiltersOnImage: UIImage.imageFromCameraBundle(named: "menuFiltersInverted"),
             filterCollectionInnerCellBorderWidth: 2.0,

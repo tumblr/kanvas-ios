@@ -52,7 +52,7 @@ private struct ShootButtonViewConstants {
     static let buttonImageAnimationInDuration: TimeInterval = 0.5
     static let buttonImageAnimationInSpringDamping: CGFloat = 0.6
     static let buttonImageAnimationOutDuration: TimeInterval = 0.15
-    static var buttonMaximumWidth: CGFloat = 100
+    static var buttonMaximumWidth: CGFloat = KanvasCameraDesign.shared.shootButtonMaximumWidth
     static let animationDuration: TimeInterval = 0.5
 }
 
