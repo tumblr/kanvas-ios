@@ -18,7 +18,7 @@ private struct Constants {
     static let openedIconWidth: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconWidth
     static let openedIconCenterYOffset: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconCenterYOffset
     static let openedIconCenterXOffset: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconCenterXOffset
-    static let borderWidth: CGFloat = 3.0
+    static let borderWidth: CGFloat = KanvasCameraDesign.shared.trashViewBorderWidth
 }
 
 /// View that shows an open or closed trash bin with a red circle as background

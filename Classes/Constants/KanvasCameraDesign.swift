@@ -23,12 +23,14 @@ public struct KanvasCameraDesign {
     let shootButtonImageWidth: CGFloat
     let shootButtonInnerCircleImageWidth: CGFloat
     let shootButtonOuterCircleImageWidth: CGFloat
+    let shootButtonBorderWidth: CGFloat
     
     // MARK: - TrashView
     let trashViewOpenedImage: UIImage?
     let trashViewClosedImage: UIImage?
     let trashViewSize: CGFloat
     let trashViewBorderImageSize: CGFloat
+    let trashViewBorderWidth: CGFloat
     let trashViewClosedIconHeight: CGFloat
     let trashViewClosedIconWidth: CGFloat
     let trashViewOpenedIconHeight: CGFloat
@@ -53,6 +55,9 @@ public struct KanvasCameraDesign {
     let filterSettingsViewPadding: CGFloat
     let filterSettingsViewFiltersOffImage: UIImage?
     let filterSettingsViewFiltersOnImage: UIImage?
+    
+    // MARK: - FilterCollectionInnerCell
+    let filterCollectionInnerCellBorderWidth: CGFloat
     
     // MARK: - MediaClipsCollectionController
     let mediaClipsCollectionControllerLeftInset: CGFloat
@@ -89,10 +94,12 @@ public struct KanvasCameraDesign {
                 shootButtonImageWidth: CGFloat,
                 shootButtonInnerCircleImageWidth: CGFloat,
                 shootButtonOuterCircleImageWidth: CGFloat,
+                shootButtonBorderWidth: CGFloat,
                 trashViewOpenedImage: UIImage?,
                 trashViewClosedImage: UIImage?,
                 trashViewSize: CGFloat,
                 trashViewBorderImageSize: CGFloat,
+                trashViewBorderWidth: CGFloat,
                 trashViewClosedIconHeight: CGFloat,
                 trashViewClosedIconWidth: CGFloat,
                 trashViewOpenedIconHeight: CGFloat,
@@ -110,6 +117,7 @@ public struct KanvasCameraDesign {
                 filterSettingsViewPadding: CGFloat,
                 filterSettingsViewFiltersOffImage: UIImage?,
                 filterSettingsViewFiltersOnImage: UIImage?,
+                filterCollectionInnerCellBorderWidth: CGFloat,
                 mediaClipsCollectionControllerLeftInset: CGFloat,
                 mediaClipsCollectionControllerRightInset: CGFloat,
                 mediaClipsCollectionViewFadeOutGradientLocations: [NSNumber],
@@ -135,10 +143,12 @@ public struct KanvasCameraDesign {
         self.shootButtonImageWidth = shootButtonImageWidth
         self.shootButtonInnerCircleImageWidth = shootButtonInnerCircleImageWidth
         self.shootButtonOuterCircleImageWidth = shootButtonOuterCircleImageWidth
+        self.shootButtonBorderWidth = shootButtonBorderWidth
         self.trashViewOpenedImage = trashViewOpenedImage
         self.trashViewClosedImage = trashViewClosedImage
         self.trashViewSize = trashViewSize
         self.trashViewBorderImageSize = trashViewBorderImageSize
+        self.trashViewBorderWidth = trashViewBorderWidth
         self.trashViewClosedIconHeight = trashViewClosedIconHeight
         self.trashViewClosedIconWidth = trashViewClosedIconWidth
         self.trashViewOpenedIconHeight = trashViewOpenedIconHeight
@@ -158,6 +168,7 @@ public struct KanvasCameraDesign {
         self.filterSettingsViewPadding = filterSettingsViewPadding
         self.filterSettingsViewFiltersOffImage = filterSettingsViewFiltersOffImage
         self.filterSettingsViewFiltersOnImage = filterSettingsViewFiltersOnImage
+        self.filterCollectionInnerCellBorderWidth = filterCollectionInnerCellBorderWidth
         self.mediaClipsCollectionControllerLeftInset = mediaClipsCollectionControllerLeftInset
         self.mediaClipsCollectionControllerRightInset = mediaClipsCollectionControllerRightInset
         self.mediaClipsCollectionViewFadeOutGradientLocations = mediaClipsCollectionViewFadeOutGradientLocations
@@ -193,10 +204,12 @@ public struct KanvasCameraDesign {
             shootButtonImageWidth: 30,
             shootButtonInnerCircleImageWidth: 64,
             shootButtonOuterCircleImageWidth: 95,
+            shootButtonBorderWidth: 3,
             trashViewOpenedImage: UIImage.imageFromCameraBundle(named: "trashOpened"),
             trashViewClosedImage: UIImage.imageFromCameraBundle(named: "trashClosed"),
             trashViewSize: 98,
             trashViewBorderImageSize: 90,
+            trashViewBorderWidth: 3,
             trashViewClosedIconHeight: 33,
             trashViewClosedIconWidth: 33,
             trashViewOpenedIconHeight: 38,
@@ -214,6 +227,7 @@ public struct KanvasCameraDesign {
             filterSettingsViewPadding: 4,
             filterSettingsViewFiltersOffImage: UIImage.imageFromCameraBundle(named: "discoballUntapped"),
             filterSettingsViewFiltersOnImage: UIImage.imageFromCameraBundle(named: "discoballTapped"),
+            filterCollectionInnerCellBorderWidth: 3.0,
             mediaClipsCollectionControllerLeftInset: 11,
             mediaClipsCollectionControllerRightInset: 11,
             mediaClipsCollectionViewFadeOutGradientLocations: [0, 0.05, 0.9, 1.0],
@@ -246,10 +260,12 @@ public struct KanvasCameraDesign {
             shootButtonImageWidth: 25,
             shootButtonInnerCircleImageWidth: 56.9,
             shootButtonOuterCircleImageWidth: 84.4,
+            shootButtonBorderWidth: 2,
             trashViewOpenedImage: UIImage.imageFromCameraBundle(named: "trashBinOpened"),
             trashViewClosedImage: UIImage.imageFromCameraBundle(named: "trashBinClosed"),
             trashViewSize: 87.1,
             trashViewBorderImageSize: 80,
+            trashViewBorderWidth: 2,
             trashViewClosedIconHeight: 28,
             trashViewClosedIconWidth: 24,
             trashViewOpenedIconHeight: 31.76,
@@ -267,6 +283,7 @@ public struct KanvasCameraDesign {
             filterSettingsViewPadding: 8,
             filterSettingsViewFiltersOffImage: UIImage.imageFromCameraBundle(named: "menuFilters"),
             filterSettingsViewFiltersOnImage: UIImage.imageFromCameraBundle(named: "menuFiltersInverted"),
+            filterCollectionInnerCellBorderWidth: 2.0,
             mediaClipsCollectionControllerLeftInset: 28,
             mediaClipsCollectionControllerRightInset: 14,
             mediaClipsCollectionViewFadeOutGradientLocations: [0, 0.05, 0.95, 1.0],
