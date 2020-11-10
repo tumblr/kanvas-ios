@@ -39,7 +39,6 @@ public struct KanvasCameraDesign {
     let trashViewOpenedIconCenterYOffset: CGFloat
     let trashViewOpenedIconCenterXOffset: CGFloat
     
-    
     // MARK: - CameraFilterCollectionCell
     let cameraFilterCollectionCellCircleDiameter: CGFloat
     let cameraFilterCollectionCellCircleMaxDiameter: CGFloat
@@ -56,6 +55,8 @@ public struct KanvasCameraDesign {
     let filterSettingsViewPadding: CGFloat
     let filterSettingsViewFiltersOffImage: UIImage?
     let filterSettingsViewFiltersOnImage: UIImage?
+    let filterSettingsViewButtonBackgroundColor: UIColor
+    let filterSettingsViewButtonBackgroundInvertedColor: UIColor
     
     // MARK: - FilterCollectionInnerCell
     let filterCollectionInnerCellBorderWidth: CGFloat
@@ -82,6 +83,9 @@ public struct KanvasCameraDesign {
     let mediaClipsCollectionCellBorderWidth: CGFloat
     let mediaClipsCollectionCellCornerRadius: CGFloat
     let mediaClipsCollectionCellClipAlpha: CGFloat
+    let mediaClipsCollectionCellFont: UIFont
+    let mediaClipsCollectionCellLabelVerticalPadding: CGFloat
+    let mediaClipsCollectionCellLabelHorizontalPadding: CGFloat
     
     public init(isRedesign: Bool,
                 cameraViewButtonBackgroundColor: UIColor,
@@ -119,6 +123,8 @@ public struct KanvasCameraDesign {
                 filterSettingsViewPadding: CGFloat,
                 filterSettingsViewFiltersOffImage: UIImage?,
                 filterSettingsViewFiltersOnImage: UIImage?,
+                filterSettingsViewButtonBackgroundColor: UIColor,
+                filterSettingsViewButtonBackgroundInvertedColor: UIColor,
                 filterCollectionInnerCellBorderWidth: CGFloat,
                 mediaClipsCollectionControllerLeftInset: CGFloat,
                 mediaClipsCollectionControllerRightInset: CGFloat,
@@ -133,7 +139,10 @@ public struct KanvasCameraDesign {
                 mediaClipsCollectionCellClipWidth: CGFloat,
                 mediaClipsCollectionCellBorderWidth: CGFloat,
                 mediaClipsCollectionCellCornerRadius: CGFloat,
-                mediaClipsCollectionCellClipAlpha: CGFloat) {
+                mediaClipsCollectionCellClipAlpha: CGFloat,
+                mediaClipsCollectionCellFont: UIFont,
+                mediaClipsCollectionCellLabelVerticalPadding: CGFloat,
+                mediaClipsCollectionCellLabelHorizontalPadding: CGFloat) {
         
         self.isRedesign = isRedesign
         self.cameraViewOptionVerticalMargin = cameraViewOptionVerticalMargin
@@ -171,6 +180,8 @@ public struct KanvasCameraDesign {
         self.filterSettingsViewPadding = filterSettingsViewPadding
         self.filterSettingsViewFiltersOffImage = filterSettingsViewFiltersOffImage
         self.filterSettingsViewFiltersOnImage = filterSettingsViewFiltersOnImage
+        self.filterSettingsViewButtonBackgroundColor = filterSettingsViewButtonBackgroundColor
+        self.filterSettingsViewButtonBackgroundInvertedColor = filterSettingsViewButtonBackgroundInvertedColor
         self.filterCollectionInnerCellBorderWidth = filterCollectionInnerCellBorderWidth
         self.mediaClipsCollectionControllerLeftInset = mediaClipsCollectionControllerLeftInset
         self.mediaClipsCollectionControllerRightInset = mediaClipsCollectionControllerRightInset
@@ -186,6 +197,9 @@ public struct KanvasCameraDesign {
         self.mediaClipsCollectionCellBorderWidth = mediaClipsCollectionCellBorderWidth
         self.mediaClipsCollectionCellCornerRadius = mediaClipsCollectionCellCornerRadius
         self.mediaClipsCollectionCellClipAlpha = mediaClipsCollectionCellClipAlpha
+        self.mediaClipsCollectionCellFont = mediaClipsCollectionCellFont
+        self.mediaClipsCollectionCellLabelVerticalPadding = mediaClipsCollectionCellLabelVerticalPadding
+        self.mediaClipsCollectionCellLabelHorizontalPadding = mediaClipsCollectionCellLabelHorizontalPadding
     }
     
     public static var shared: KanvasCameraDesign = {
@@ -231,6 +245,8 @@ public struct KanvasCameraDesign {
             filterSettingsViewPadding: 4,
             filterSettingsViewFiltersOffImage: UIImage.imageFromCameraBundle(named: "discoballUntapped"),
             filterSettingsViewFiltersOnImage: UIImage.imageFromCameraBundle(named: "discoballTapped"),
+            filterSettingsViewButtonBackgroundColor: .clear,
+            filterSettingsViewButtonBackgroundInvertedColor: .clear,
             filterCollectionInnerCellBorderWidth: 3.0,
             mediaClipsCollectionControllerLeftInset: 11,
             mediaClipsCollectionControllerRightInset: 11,
@@ -245,7 +261,10 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionCellClipWidth: 40,
             mediaClipsCollectionCellBorderWidth: 1.1,
             mediaClipsCollectionCellCornerRadius: 8,
-            mediaClipsCollectionCellClipAlpha: 0.5
+            mediaClipsCollectionCellClipAlpha: 0.5,
+            mediaClipsCollectionCellFont: KanvasCameraFonts.shared.mediaClipsFont,
+            mediaClipsCollectionCellLabelVerticalPadding: 3.5,
+            mediaClipsCollectionCellLabelHorizontalPadding: 5.5
         )
     }()
     
@@ -262,8 +281,8 @@ public struct KanvasCameraDesign {
             cameraViewNextImage: UIImage.imageFromCameraBundle(named: "nextArrow"),
             cameraViewCloseImage: UIImage.imageFromCameraBundle(named: "cross"),
             shootButtonImageWidth: 25,
-            shootButtonInnerCircleImageWidth: 56.9,
-            shootButtonOuterCircleImageWidth: 84.4,
+            shootButtonInnerCircleImageWidth: 57,
+            shootButtonOuterCircleImageWidth: 85,
             shootButtonBorderWidth: 2,
             shootButtonMaximumWidth: 80,
             trashViewOpenedImage: UIImage.imageFromCameraBundle(named: "trashBinOpened"),
@@ -278,7 +297,7 @@ public struct KanvasCameraDesign {
             trashViewOpenedIconCenterYOffset: 1,
             trashViewOpenedIconCenterXOffset: 0.9,
             cameraFilterCollectionCellCircleDiameter: 64,
-            cameraFilterCollectionCellCircleMaxDiameter: 85.42,
+            cameraFilterCollectionCellCircleMaxDiameter: 86,
             cameraOptionFlashOnImage: UIImage.imageFromCameraBundle(named: "cameraFlashOn"),
             cameraOptionFlashOffImage: UIImage.imageFromCameraBundle(named: "cameraFlashOff"),
             cameraOptionGhostFrameOnImage: UIImage.imageFromCameraBundle(named: "ghostFrameOn"),
@@ -288,6 +307,8 @@ public struct KanvasCameraDesign {
             filterSettingsViewPadding: 0,
             filterSettingsViewFiltersOffImage: UIImage.imageFromCameraBundle(named: "menuFilters"),
             filterSettingsViewFiltersOnImage: UIImage.imageFromCameraBundle(named: "menuFiltersInverted"),
+            filterSettingsViewButtonBackgroundColor: .clear,
+            filterSettingsViewButtonBackgroundInvertedColor: .white,
             filterCollectionInnerCellBorderWidth: 2.0,
             mediaClipsCollectionControllerLeftInset: 28,
             mediaClipsCollectionControllerRightInset: 14,
@@ -302,7 +323,10 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionCellClipWidth: 33,
             mediaClipsCollectionCellBorderWidth: 2,
             mediaClipsCollectionCellCornerRadius: 4,
-            mediaClipsCollectionCellClipAlpha: 0.87
+            mediaClipsCollectionCellClipAlpha: 0.87,
+            mediaClipsCollectionCellFont: KanvasCameraFonts.shared.mediaClipsSmallFont,
+            mediaClipsCollectionCellLabelVerticalPadding: 4.5,
+            mediaClipsCollectionCellLabelHorizontalPadding: 3.5
         )
     }()
 }

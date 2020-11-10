@@ -71,11 +71,11 @@ final class FilterSettingsView: IgnoreTouchesView {
             
             if shown {
                 image = KanvasCameraDesign.shared.filterSettingsViewFiltersOnImage
-                backgroundColor = CameraConstants.buttonInvertedBackgroundColor
+                backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundInvertedColor
             }
             else {
                 image = KanvasCameraDesign.shared.filterSettingsViewFiltersOffImage
-                backgroundColor = CameraConstants.buttonBackgroundColor
+                backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundColor
             }
             
             self.visibilityButton.backgroundColor = backgroundColor
@@ -117,7 +117,7 @@ private extension FilterSettingsView {
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
         
         if KanvasCameraDesign.shared.isRedesign {
-            visibilityButton.backgroundColor = CameraConstants.buttonBackgroundColor
+            visibilityButton.backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundColor
             visibilityButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
             visibilityButton.layer.masksToBounds = true
         }

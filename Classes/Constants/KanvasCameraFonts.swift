@@ -30,6 +30,7 @@ public struct KanvasCameraFonts {
                 editorFonts: [UIFont],
                 optionSelectorCellFont: UIFont,
                 mediaClipsFont: UIFont,
+                mediaClipsSmallFont: UIFont,
                 modeButtonFont: UIFont,
                 speedLabelFont: UIFont,
                 timeIndicatorFont: UIFont,
@@ -43,6 +44,7 @@ public struct KanvasCameraFonts {
             self.editorFonts = editorFonts
             self.optionSelectorCellFont = optionSelectorCellFont
             self.mediaClipsFont = mediaClipsFont
+            self.mediaClipsSmallFont = mediaClipsSmallFont
             self.modeButtonFont = modeButtonFont
             self.speedLabelFont = speedLabelFont
             self.timeIndicatorFont = timeIndicatorFont
@@ -58,6 +60,7 @@ public struct KanvasCameraFonts {
                                    editorFonts: [UIFont.systemFont(ofSize: 48), KanvasCameraFonts.favoritTumblr85(fontSize: 48)],
                                    optionSelectorCellFont: guavaMedium,
                                    mediaClipsFont: KanvasCameraFonts.favoritTumblrMedium(fontSize: 9.5),
+                                   mediaClipsSmallFont: KanvasCameraFonts.favoritTumblrMedium(fontSize: 8.5),
                                    modeButtonFont: KanvasCameraFonts.favoritTumblr85(fontSize: 18.5),
                                    speedLabelFont: guavaMedium,
                                    timeIndicatorFont: guavaMedium,
@@ -100,6 +103,7 @@ public struct KanvasCameraFonts {
     let optionSelectorCellFont: UIFont // OptionSelectorCell:20
     
     let mediaClipsFont: UIFont // MediaClipsCollectionCell:20
+    let mediaClipsSmallFont: UIFont // MediaClipsCollectionCell:20
     let modeButtonFont: UIFont // ModeButtonView:24
     
     let speedLabelFont: UIFont // SpeedView.swift:18

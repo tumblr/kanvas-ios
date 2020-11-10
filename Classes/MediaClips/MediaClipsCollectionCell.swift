@@ -15,9 +15,9 @@ private struct MediaClipsCollectionCellConstants {
     static let clipWidth: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipWidth
     static let borderWidth: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellBorderWidth
     static let cornerRadius: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellCornerRadius
-    static let font: UIFont = KanvasCameraFonts.shared.mediaClipsFont
-    static let labelHorizontalPadding: CGFloat = 5.5
-    static let labelVerticalPadding: CGFloat = 3.5
+    static let font: UIFont = KanvasCameraDesign.shared.mediaClipsCollectionCellFont
+    static let labelHorizontalPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellLabelHorizontalPadding
+    static let labelVerticalPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellLabelVerticalPadding
     static let labelHeight: CGFloat = 14
     static let clipAlpha: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipAlpha
 

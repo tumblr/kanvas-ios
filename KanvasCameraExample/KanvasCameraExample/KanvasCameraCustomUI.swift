@@ -105,6 +105,7 @@ public class KanvasCameraCustomUI {
                                  editorFonts: [.fairwater(fontSize: 48), UIFont.favoritTumblr85(fontSize: 48)],
                                  optionSelectorCellFont: .guavaMedium(),
                                  mediaClipsFont: UIFont.favoritTumblrMedium(fontSize: 9.5),
+                                 mediaClipsSmallFont: UIFont.favoritTumblrMedium(fontSize: 8.5),
                                  modeButtonFont: UIFont.favoritTumblr85(fontSize: 18.5),
                                  speedLabelFont: Self.guavaMedium,
                                  timeIndicatorFont: Self.guavaMedium,
