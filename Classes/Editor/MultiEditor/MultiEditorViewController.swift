@@ -309,16 +309,6 @@ extension MultiEditorViewController: EditorControllerDelegate {
                 drawing = nil
             }
 
-            if let canvas = canvas {
-//                editor.editorView.movableViewCanvas = canvas
-//                editor.editorView.unarchive(movableView: canvas)
-            }
-
-            if let drawing = drawing {
-//                editor.editorView.unarchive(drawingCanvas: drawing)
-//                editor.editorView.drawingCanvas = drawing
-            }
-
             canvas?.delegate = editor.editorView
         }
     }

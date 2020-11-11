@@ -78,6 +78,8 @@ final class MovableView: UIView, NSSecureCoding {
         }
     }
 
+    var originLocation: CGPoint = .zero
+
     var size: CGSize = .zero
     
     var transformations: ViewTransformations {
@@ -108,8 +110,9 @@ final class MovableView: UIView, NSSecureCoding {
         default:
             innerView = StylableTextView()
         }
+        originLocation = aDecoder.decodeCGPoint(forKey: "origin")
 
-        super.init(frame: aDecoder.decodeCGRect(forKey: "frame") ?? .zero)
+        super.init(frame: .zero)
 
         setupInnerView()
     }
@@ -120,7 +123,7 @@ final class MovableView: UIView, NSSecureCoding {
         coder.encode(Float(scale), forKey: "scale")
         coder.encode(Float(rotation), forKey: "rotation")
         coder.encode(innerView, forKey: "innerView")
-        coder.encode(frame, forKey: "frame")
+        coder.encode(originLocation, forKey: "origin")
     }
 
     enum ViewType {

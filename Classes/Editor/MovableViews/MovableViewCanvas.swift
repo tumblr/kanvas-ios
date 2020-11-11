@@ -154,20 +154,15 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         overlay = UIView()
         trashView = TrashView()
 
-        originTransformations = coder.decodeObject(of: ViewTransformations.self, forKey: CodingKeys.originTransformations.rawValue)!
+        originTransformations = ViewTransformations()
+//        originTransformations = coder.decodeObject(of: ViewTransformations.self, forKey: CodingKeys.originTransformations.rawValue)!
 //        originTransformations = ViewTransformations()
 
-        super.init(frame: UIScreen.main.bounds)
+        super.init(frame: .zero)
 
-//        if #available(iOS 14.0, *) {
-//            let textViews = coder.decodeArrayOfObjects(ofClass: StylableTextView.self, forKey: CodingKeys.textViews.rawValue) ?? []
-//            let imageViews = coder.decodeArrayOfObjects(ofClass: StylableImageView.self, forKey: CodingKeys.imageViews.rawValue) ?? []
-//        let textViews = coder.decodeObject(of: [StylableTextView].self, forKey: CodingKeys.textViews.rawValue)
-//            let imageViews = coder.decodeObject(of: [StylableImageView.self], forKey: CodingKeys.imageViews.rawValue)
-//            let innerViews: [MovableViewInnerElement] = textViews + imageViews
         let innerViews = coder.decodeObject(of: [NSArray.self, MovableView.self], forKey: CodingKeys.movableViews.rawValue) as? [MovableView]
         innerViews?.forEach({ view in
-            addView(view: view.innerView, transformations: view.transformations, location: view.innerView.viewCenter, size: view.innerView.viewSize, animated: false)
+            addView(view: view.innerView, transformations: view.transformations, location: view.innerView.viewCenter, origin: view.originLocation, size: view.innerView.viewSize, animated: false)
         })
         setUpViews()
     }
@@ -184,29 +179,13 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         try container.encode(imageViews, forKey: .imageViews)
     }
 
-    override func encodeRestorableState(with coder: NSCoder) {
-        let textViews = innerViews.compactMap { $0 as? StylableTextView } as [StylableTextView]
-        let imageViews = innerViews.compactMap { $0 as? StylableImageView } as [StylableImageView]
-
-    }
-
     override func encode(with coder: NSCoder) {
         coder.encode(originTransformations, forKey: CodingKeys.originTransformations.rawValue)
-
-//        let textViews = innerViews.compactMap { $0 as? StylableTextView } as [StylableTextView]
-//        let imageViews = innerViews.compactMap { $0 as? StylableImageView } as [StylableImageView]
-//
-//        coder.encode(textViews, forKey: CodingKeys.textViews.rawValue)
-//        coder.encode(imageViews, forKey: CodingKeys.imageViews.rawValue)
 
         let movableViews = subviews.compactMap({ $0 as? MovableView })
         coder.encode(movableViews, forKey: CodingKeys.movableViews.rawValue)
     }
 
-//    func encode(to encoder: Encoder) throws {
-//
-//    }
-    
     // MARK: - Layout
     
     private func setUpViews() {
@@ -260,8 +239,9 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     ///  - transformations: transformations for the view
     ///  - location: location of the view before transformations
     ///  - size: size of the view
-    func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, size: CGSize, animated: Bool) {
+    func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, origin: CGPoint? = nil, size: CGSize, animated: Bool) {
         let movableView = MovableView(view: view, transformations: transformations)
+        movableView.originLocation = origin ?? location
         movableView.delegate = self
         view.viewSize = size
         view.viewCenter = location
@@ -274,10 +254,8 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         NSLayoutConstraint.activate([
             movableView.heightAnchor.constraint(equalToConstant: size.height),
             movableView.widthAnchor.constraint(equalToConstant: size.width),
-            movableView.centerXAnchor.constraint(equalTo: leadingAnchor, constant: location.x),
-            movableView.centerYAnchor.constraint(equalTo: topAnchor, constant: location.y)
-//            movableView.topAnchor.constraint(equalTo: topAnchor, constant: location.y - (size.height / 2)),
-//            movableView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: location.x - (size.width / 2))
+            movableView.centerXAnchor.constraint(equalTo: leadingAnchor, constant: movableView.originLocation.x),
+            movableView.centerYAnchor.constraint(equalTo: topAnchor, constant: movableView.originLocation.y)
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(movableViewTapped(recognizer:)))
