@@ -159,17 +159,16 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
 
         super.init(frame: UIScreen.main.bounds)
 
-        if #available(iOS 14.0, *) {
+//        if #available(iOS 14.0, *) {
 //            let textViews = coder.decodeArrayOfObjects(ofClass: StylableTextView.self, forKey: CodingKeys.textViews.rawValue) ?? []
 //            let imageViews = coder.decodeArrayOfObjects(ofClass: StylableImageView.self, forKey: CodingKeys.imageViews.rawValue) ?? []
 //        let textViews = coder.decodeObject(of: [StylableTextView].self, forKey: CodingKeys.textViews.rawValue)
 //            let imageViews = coder.decodeObject(of: [StylableImageView.self], forKey: CodingKeys.imageViews.rawValue)
 //            let innerViews: [MovableViewInnerElement] = textViews + imageViews
-            let innerViews = coder.decodeArrayOfObjects(ofClass: MovableView.self, forKey: CodingKeys.movableViews.rawValue)
-            innerViews?.forEach({ view in
-                addView(view: view.innerView, transformations: view.transformations, location: view.innerView.viewCenter, size: view.innerView.viewSize, animated: false)
-            })
-        }
+        let innerViews = coder.decodeObject(of: [NSArray.self, MovableView.self], forKey: CodingKeys.movableViews.rawValue) as? [MovableView]
+        innerViews?.forEach({ view in
+            addView(view: view.innerView, transformations: view.transformations, location: view.innerView.viewCenter, size: view.innerView.viewSize, animated: false)
+        })
         setUpViews()
     }
 

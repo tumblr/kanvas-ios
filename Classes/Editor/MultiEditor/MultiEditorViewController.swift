@@ -25,6 +25,7 @@ class MultiEditorViewController: UIViewController {
 
     var selected: Int? {
         willSet {
+            guard newValue != selected else { return }
             if let old = selected {
                 archive(index: old)
             }
