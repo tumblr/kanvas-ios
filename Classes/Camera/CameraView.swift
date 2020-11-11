@@ -20,7 +20,6 @@ struct CameraConstants {
     private static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
     
-    static let buttonCornerRadius: CGFloat = 24
     static let buttonBackgroundColor: UIColor = KanvasCameraDesign.shared.cameraViewButtonBackgroundColor
     static let buttonInvertedBackgroundColor: UIColor = KanvasCameraDesign.shared.cameraViewButtonInvertedBackgroundColor
 }
@@ -228,7 +227,7 @@ final class CameraView: UIView {
         
         if KanvasCameraDesign.shared.isBottomPicker {
             closeButton.backgroundColor = CameraConstants.buttonBackgroundColor
-            closeButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
+            closeButton.layer.cornerRadius = CameraConstants.optionButtonSize / 2
             closeButton.layer.masksToBounds = true
         }
         else {

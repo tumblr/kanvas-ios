@@ -28,9 +28,8 @@ private struct Constants {
     static let labelInset: CGFloat = 12
     static let labelTextColorOff: UIColor = .white
     static let labelTextColorOn: UIColor = .black
-    static let backgroundColorOff: UIColor = UIColor.black.withAlphaComponent(0.6)
-    static let backgroundColorOn: UIColor = UIColor.white.withAlphaComponent(0.6)
-    
+    static let backgroundColorOff: UIColor = UIColor.black.withAlphaComponent(0.4)
+    static let backgroundColorOn: UIColor = UIColor.white
     
     static var height: CGFloat {
         return circleDiameter + 2 * circleMargin

@@ -597,11 +597,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didBeginTouchesOnText() {
-        showNavigationContainer(false)
+        editorView.showNavigationItems(false)
     }
     
     func didEndTouchesOnText() {
-        showNavigationContainer(true)
+        editorView.showNavigationItems(true)
     }
 
     func didRenderRectChange(rect: CGRect) {
@@ -1088,46 +1088,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameter show: true to show, false to hide
     private func showMainUI(_ show: Bool) {
         collectionController.showView(show)
-        showConfirmButton(show)
-        showCloseButton(show)
-        showTagButton(show)
-        showTagCollection(show)
-    }
-    
-    // MARK: - Public interface
-    
-    /// shows or hides the confirm button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showConfirmButton(_ show: Bool) {
         editorView.showConfirmButton(show)
-    }
-    
-    /// shows or hides the close button (back caret)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
-    }
-
-    /// shows or hides the tag button (#)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTagButton(_ show: Bool) {
         editorView.showTagButton(show)
-    }
-    
-    /// shows or hides the tag collection
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTagCollection(_ show: Bool) {
         editorView.showTagCollection(show)
-    }
-    
-    /// shows or hides the editor menu and the back button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showNavigationContainer(_ show: Bool) {
-        editorView.showNavigationContainer(show)
+        editorView.showQuickPostButton(show)
+        editorView.showBlogSwitcher(show)
     }
 }

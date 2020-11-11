@@ -118,7 +118,7 @@ private extension FilterSettingsView {
         
         if KanvasCameraDesign.shared.isBottomPicker {
             visibilityButton.backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundColor
-            visibilityButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
+            visibilityButton.layer.cornerRadius = FilterSettingsViewConstants.iconSize / 2
             visibilityButton.layer.masksToBounds = true
         }
 
