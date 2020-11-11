@@ -105,6 +105,7 @@ private struct EditorViewConstants {
     static let buttonHorizontalMargin: CGFloat = 16
     static let topElementsInterspace: CGFloat = 8
     static let bottomElementsInterspace: CGFloat = 6
+    static let closeButtonSize: CGFloat = KanvasEditorDesign.shared.editorViewCloseButtonSize
     
     static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
 }
@@ -371,7 +372,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: EditorViewConstants.buttonHorizontalMargin),
             closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: EditorViewConstants.buttonTopMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.closeButtonSize)
         ])
     }
     

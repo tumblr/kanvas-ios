@@ -16,6 +16,7 @@ public struct KanvasEditorDesign {
     let editorViewButtonBottomMargin: CGFloat
     let editorViewFakeOptionCellMinSize: CGFloat
     let editorViewFakeOptionCellMaxSize: CGFloat
+    let editorViewCloseButtonSize: CGFloat
     
     public init(isRedesign: Bool,
                 editorViewCloseImage: UIImage?,
@@ -23,7 +24,8 @@ public struct KanvasEditorDesign {
                 editorViewButtonTopMargin: CGFloat,
                 editorViewButtonBottomMargin: CGFloat,
                 editorViewFakeOptionCellMinSize: CGFloat,
-                editorViewFakeOptionCellMaxSize: CGFloat) {
+                editorViewFakeOptionCellMaxSize: CGFloat,
+                editorViewCloseButtonSize: CGFloat) {
         
         self.isRedesign = isRedesign
         self.editorViewCloseImage = editorViewCloseImage
@@ -32,6 +34,7 @@ public struct KanvasEditorDesign {
         self.editorViewButtonBottomMargin = editorViewButtonBottomMargin
         self.editorViewFakeOptionCellMinSize = editorViewFakeOptionCellMinSize
         self.editorViewFakeOptionCellMaxSize = editorViewFakeOptionCellMaxSize
+        self.editorViewCloseButtonSize = editorViewCloseButtonSize
     }
     
     public static var shared: KanvasEditorDesign = {
@@ -47,7 +50,8 @@ public struct KanvasEditorDesign {
             editorViewButtonTopMargin: 24,
             editorViewButtonBottomMargin: Device.belongsToIPhoneXGroup ? 14 : 19.5,
             editorViewFakeOptionCellMinSize: 36,
-            editorViewFakeOptionCellMaxSize: 45
+            editorViewFakeOptionCellMaxSize: 45,
+            editorViewCloseButtonSize: 26.5
         )
     }()
     
@@ -60,7 +64,8 @@ public struct KanvasEditorDesign {
             editorViewButtonTopMargin: 28,
             editorViewButtonBottomMargin: Device.belongsToIPhoneXGroup ? 14 : 19.5,
             editorViewFakeOptionCellMinSize: 48,
-            editorViewFakeOptionCellMaxSize: 48
+            editorViewFakeOptionCellMaxSize: 48,
+            editorViewCloseButtonSize: 48
         )
     }()
 }
