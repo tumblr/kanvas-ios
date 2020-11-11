@@ -11,6 +11,8 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.5
     static let buttonHorizontalMargin: CGFloat = 16
     static let buttonRadius: CGFloat = 25
+    static let addButtonWidth: CGFloat = 40
+    static let addButtonHeight: CGFloat = 60
     static let nextButtonSize: CGFloat = 49
     static let nextButtonCenterYOffset: CGFloat = 3
     static let topPadding: CGFloat = 6
@@ -127,17 +129,15 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         addButton.accessibilityIdentifier = "Media Clips Next Button"
         addButton.accessibilityLabel = "Next Button"
         addButton.tintColor = .white
-        if #available(iOS 13.0, *) {
-            addButton.setImage(UIImage(systemName: "plus.app"), for: .normal)
-        }
+        addButton.setImage(UIImage.imageFromCameraBundle(named: "new"), for: .normal)
         addButton.addTarget(self, action: #selector(addPressed), for: .touchUpInside)
         addButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             addButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonHorizontalMargin),
-            addButton.heightAnchor.constraint(equalToConstant: Constants.nextButtonSize),
-            addButton.widthAnchor.constraint(equalToConstant: Constants.nextButtonSize),
-            addButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor, constant: -Constants.nextButtonCenterYOffset)
+            addButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
+            addButton.heightAnchor.constraint(equalToConstant: Constants.addButtonHeight),
+            addButton.widthAnchor.constraint(equalToConstant: Constants.addButtonWidth)
         ])
     }
     
