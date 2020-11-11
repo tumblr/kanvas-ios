@@ -17,6 +17,7 @@ public struct KanvasEditorDesign {
     let editorViewFakeOptionCellMinSize: CGFloat
     let editorViewFakeOptionCellMaxSize: CGFloat
     let editorViewCloseButtonSize: CGFloat
+    let editorViewCloseButtonHorizontalMargin: CGFloat
     
     public init(isRedesign: Bool,
                 editorViewCloseImage: UIImage?,
@@ -25,7 +26,8 @@ public struct KanvasEditorDesign {
                 editorViewButtonBottomMargin: CGFloat,
                 editorViewFakeOptionCellMinSize: CGFloat,
                 editorViewFakeOptionCellMaxSize: CGFloat,
-                editorViewCloseButtonSize: CGFloat) {
+                editorViewCloseButtonSize: CGFloat,
+                editorViewCloseButtonHorizontalMargin: CGFloat) {
         
         self.isRedesign = isRedesign
         self.editorViewCloseImage = editorViewCloseImage
@@ -35,6 +37,7 @@ public struct KanvasEditorDesign {
         self.editorViewFakeOptionCellMinSize = editorViewFakeOptionCellMinSize
         self.editorViewFakeOptionCellMaxSize = editorViewFakeOptionCellMaxSize
         self.editorViewCloseButtonSize = editorViewCloseButtonSize
+        self.editorViewCloseButtonHorizontalMargin = editorViewCloseButtonHorizontalMargin
     }
     
     public static var shared: KanvasEditorDesign = {
@@ -51,7 +54,8 @@ public struct KanvasEditorDesign {
             editorViewButtonBottomMargin: Device.belongsToIPhoneXGroup ? 14 : 19.5,
             editorViewFakeOptionCellMinSize: 36,
             editorViewFakeOptionCellMaxSize: 45,
-            editorViewCloseButtonSize: 26.5
+            editorViewCloseButtonSize: 26.5,
+            editorViewCloseButtonHorizontalMargin: 24
         )
     }()
     
@@ -65,7 +69,8 @@ public struct KanvasEditorDesign {
             editorViewButtonBottomMargin: Device.belongsToIPhoneXGroup ? 14 : 19.5,
             editorViewFakeOptionCellMinSize: 48,
             editorViewFakeOptionCellMaxSize: 48,
-            editorViewCloseButtonSize: 48
+            editorViewCloseButtonSize: 48,
+            editorViewCloseButtonHorizontalMargin: 16
         )
     }()
 }
