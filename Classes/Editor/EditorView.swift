@@ -98,7 +98,7 @@ private struct EditorViewConstants {
     static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
     
     // Redesign
-    static let overlayColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.87)
+    static let overlayColor: UIColor = KanvasCameraColors.shared.overlayColor.withAlphaComponent(0.87)
     static let overlayLabelMargin: CGFloat = 20
     static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
