@@ -74,6 +74,7 @@ public class KanvasCameraCustomUI {
             trashColor: Self.brightRed,
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
+            cameraNextButtonBackgroundColor: Self.brightBlue,
             filterColors: [
                 .manga: mangaColor,
                 .toon: toonColor,
