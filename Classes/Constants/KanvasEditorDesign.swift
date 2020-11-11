@@ -12,14 +12,26 @@ public struct KanvasEditorDesign {
     // MARK: - EditorView
     let editorViewCloseImage: UIImage?
     let editorViewBackImage: UIImage?
+    let editorViewButtonTopMargin: CGFloat
+    let editorViewButtonBottomMargin: CGFloat
+    let editorViewFakeOptionCellMinSize: CGFloat
+    let editorViewFakeOptionCellMaxSize: CGFloat
     
     public init(isRedesign: Bool,
                 editorViewCloseImage: UIImage?,
-                editorViewBackImage: UIImage?) {
+                editorViewBackImage: UIImage?,
+                editorViewButtonTopMargin: CGFloat,
+                editorViewButtonBottomMargin: CGFloat,
+                editorViewFakeOptionCellMinSize: CGFloat,
+                editorViewFakeOptionCellMaxSize: CGFloat) {
         
         self.isRedesign = isRedesign
         self.editorViewCloseImage = editorViewCloseImage
         self.editorViewBackImage = editorViewBackImage
+        self.editorViewButtonTopMargin = editorViewButtonTopMargin
+        self.editorViewButtonBottomMargin = editorViewButtonBottomMargin
+        self.editorViewFakeOptionCellMinSize = editorViewFakeOptionCellMinSize
+        self.editorViewFakeOptionCellMaxSize = editorViewFakeOptionCellMaxSize
     }
     
     public static var shared: KanvasEditorDesign = {
@@ -31,7 +43,11 @@ public struct KanvasEditorDesign {
         return KanvasEditorDesign(
             isRedesign: false,
             editorViewCloseImage: UIImage.imageFromCameraBundle(named: "whiteCloseIcon"),
-            editorViewBackImage: UIImage.imageFromCameraBundle(named: "back")
+            editorViewBackImage: UIImage.imageFromCameraBundle(named: "back"),
+            editorViewButtonTopMargin: 24,
+            editorViewButtonBottomMargin: Device.belongsToIPhoneXGroup ? 14 : 19.5,
+            editorViewFakeOptionCellMinSize: 36,
+            editorViewFakeOptionCellMaxSize: 45
         )
     }()
     
@@ -40,7 +56,11 @@ public struct KanvasEditorDesign {
         return KanvasEditorDesign(
             isRedesign: true,
             editorViewCloseImage: UIImage.imageFromCameraBundle(named: "cross"),
-            editorViewBackImage: UIImage.imageFromCameraBundle(named: "backArrow")
+            editorViewBackImage: UIImage.imageFromCameraBundle(named: "backArrow"),
+            editorViewButtonTopMargin: 28,
+            editorViewButtonBottomMargin: Device.belongsToIPhoneXGroup ? 14 : 19.5,
+            editorViewFakeOptionCellMinSize: 48,
+            editorViewFakeOptionCellMaxSize: 48
         )
     }()
 }

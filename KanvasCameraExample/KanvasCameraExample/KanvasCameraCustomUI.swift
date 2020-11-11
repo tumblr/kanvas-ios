@@ -19,6 +19,7 @@ public class KanvasCameraCustomUI {
     private static let brightGreen = UIColor.tumblrBrightGreen
     private static let brightRed = UIColor.tumblrBrightRed
     private static let brightOrange = UIColor.tumblrBrightOrange
+    private static let deepBlue = UIColor.tumblrDeepBlue
     private static let white = UIColor.tumblrWhite
     
     private let pickerColors = [brightBlue,
@@ -75,7 +76,7 @@ public class KanvasCameraCustomUI {
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
             cameraNextButtonBackgroundColor: Self.brightBlue,
-            overlayColor: Self.brightBlue,
+            overlayColor: Self.deepBlue,
             filterColors: [
                 .manga: mangaColor,
                 .toon: toonColor,

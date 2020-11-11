@@ -15,6 +15,7 @@ private let brightYellow = UIColor.systemYellow
 private let brightGreen = UIColor.systemGreen
 private let brightRed = UIColor.systemRed
 private let brightOrange = UIColor.systemOrange
+private let deepBlue = UIColor.systemBlue
 private let white = UIColor.white
 
 private let white65 = UIColor(white: 1, alpha: 0.65)
@@ -74,7 +75,7 @@ public struct KanvasCameraColors {
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
             cameraNextButtonBackgroundColor: brightBlue,
-            overlayColor: brightBlue,
+            overlayColor: deepBlue,
             filterColors: [
                 .manga: brightPink,
                 .toon: brightOrange,

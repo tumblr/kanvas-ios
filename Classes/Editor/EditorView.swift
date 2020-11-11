@@ -82,32 +82,31 @@ protocol EditorViewDelegate: class {
 /// Constants for EditorView
 private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
-    static let horizontalMargin: CGFloat = 16
     static let editionOptionAnimationDuration: TimeInterval = 0.5
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
-    static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let postButtonSize: CGFloat = 54
     static let postButtonHorizontalMargin: CGFloat = 18
     static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 13 : 29
     static let postButtonLabelMargin: CGFloat = 3
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
-    static let fakeOptionCellMinSize: CGFloat = 36
-    static let fakeOptionCellMaxSize: CGFloat = 45
-    static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
+    static let fakeOptionCellMinSize: CGFloat = KanvasEditorDesign.shared.editorViewFakeOptionCellMinSize
+    static let fakeOptionCellMaxSize: CGFloat = KanvasEditorDesign.shared.editorViewFakeOptionCellMaxSize
     
-    // Redesign
     static let overlayColor: UIColor = KanvasCameraColors.shared.overlayColor.withAlphaComponent(0.87)
     static let overlayLabelMargin: CGFloat = 20
     static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
     static let buttonSize: CGFloat = 48
     static let buttonBackgroundColor = UIColor.black.withAlphaComponent(0.4)
-    static let blogSwitcherHorizontalMargin: CGFloat = 8
-    static let buttonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
+    static let buttonTopMargin: CGFloat = KanvasEditorDesign.shared.editorViewButtonTopMargin
+    static let buttonBottomMargin: CGFloat = KanvasEditorDesign.shared.editorViewButtonBottomMargin
     static let buttonHorizontalMargin: CGFloat = 16
-    static let tagCollectionHorizontalMargin: CGFloat = 6
+    static let topElementsInterspace: CGFloat = 8
+    static let bottomElementsInterspace: CGFloat = 6
+    
+    static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -329,7 +328,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         tagButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tagButton.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor, constant: EditorViewConstants.confirmButtonHorizontalMargin),
-            tagButton.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -EditorViewConstants.buttonVerticalMargin),
+            tagButton.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
             tagButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
             tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize)
         ])
@@ -341,11 +340,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         navigationContainer.addSubview(tagCollection)
 
         tagCollection.translatesAutoresizingMaskIntoConstraints = false
-        let horizontalMargin = EditorViewConstants.horizontalMargin + EditorViewConstants.buttonSize + EditorViewConstants.tagCollectionHorizontalMargin
+        let horizontalMargin = EditorViewConstants.buttonHorizontalMargin + EditorViewConstants.buttonSize + EditorViewConstants.bottomElementsInterspace
         NSLayoutConstraint.activate([
             tagCollection.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor, constant: horizontalMargin),
             tagCollection.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -horizontalMargin),
-            tagCollection.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -EditorViewConstants.buttonVerticalMargin),
+            tagCollection.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
             tagCollection.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
         ])
     }
@@ -357,8 +356,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
         if KanvasEditorDesign.shared.isRedesign {
-            closeButton.backgroundColor = CameraConstants.buttonBackgroundColor
-            closeButton.layer.cornerRadius = CameraConstants.optionButtonSize / 2
+            closeButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
+            closeButton.layer.cornerRadius = EditorViewConstants.buttonSize / 2
             closeButton.layer.masksToBounds = true
         }
         else {
@@ -369,10 +368,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         let image = showCrossIcon ? KanvasEditorDesign.shared.editorViewCloseImage : KanvasEditorDesign.shared.editorViewBackImage
         closeButton.setImage(image, for: .normal)
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
-            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: EditorViewConstants.buttonHorizontalMargin),
+            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: EditorViewConstants.buttonTopMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize)
         ])
     }
     
@@ -387,7 +386,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
             confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.confirmButtonVerticalMargin)
+            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
         ])
     }
 
@@ -401,7 +400,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
             confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.confirmButtonVerticalMargin)
+            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
         ])
         
         if showCogIcon {
@@ -427,7 +426,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             NSLayoutConstraint.activate([
                 collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
                 collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.horizontalMargin),
+                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.buttonHorizontalMargin),
                 collectionContainer.widthAnchor.constraint(equalToConstant: StyleMenuCollectionCell.width)
             ])
         }
@@ -638,7 +637,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         overlayLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        let centerYOffset = CameraConstants.optionVerticalMargin + EditorViewConstants.buttonSize / 2
+        let centerYOffset = EditorViewConstants.buttonTopMargin + EditorViewConstants.buttonSize / 2
         NSLayoutConstraint.activate([
             overlayLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: centerYOffset),
             overlayLabel.leadingAnchor.constraint(equalTo: overlay.leadingAnchor),
@@ -651,8 +650,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         addSubview(quickPostButton)
         quickPostButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            quickPostButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            quickPostButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
+            quickPostButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: EditorViewConstants.buttonTopMargin),
+            quickPostButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin),
             quickPostButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
         ])
     }
@@ -664,15 +663,15 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         let trailingAnchor: NSLayoutConstraint
         if quickPostButton.isDescendant(of: self) {
-            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: quickPostButton.leadingAnchor, constant: -EditorViewConstants.blogSwitcherHorizontalMargin)
+            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: quickPostButton.leadingAnchor, constant: -EditorViewConstants.topElementsInterspace)
         }
         else {
-            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin)
+            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin)
         }
         
         NSLayoutConstraint.activate([
             trailingAnchor,
-            blogSwitcher.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+            blogSwitcher.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: EditorViewConstants.buttonTopMargin),
             blogSwitcher.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
             blogSwitcher.widthAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
         ])
