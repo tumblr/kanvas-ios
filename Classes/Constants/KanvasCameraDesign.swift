@@ -206,11 +206,11 @@ public struct KanvasCameraDesign {
     }
     
     public static var shared: KanvasCameraDesign = {
-        return KanvasCameraDesign.cameraDefaultDesign
+        return KanvasCameraDesign.defaultDesign
     }()
     
     
-    public static var cameraDefaultDesign: KanvasCameraDesign = {
+    public static var defaultDesign: KanvasCameraDesign = {
         return KanvasCameraDesign(
             isRedesign: false,
             cameraViewButtonBackgroundColor: .clear,
@@ -273,7 +273,7 @@ public struct KanvasCameraDesign {
     }()
     
     
-    public static var cameraRedesign: KanvasCameraDesign = {
+    public static var redesign: KanvasCameraDesign = {
         return KanvasCameraDesign(
             isRedesign: true,
             cameraViewButtonBackgroundColor: UIColor.black.withAlphaComponent(0.4),

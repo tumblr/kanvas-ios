@@ -11,11 +11,11 @@ import XCTest
 final class KanvasCameraDesignTests: XCTestCase {
 
     func testDefaultDesign() {
-        XCTAssertFalse(KanvasCameraDesign.cameraDefaultDesign.isRedesign, "The result should be false.")
+        XCTAssertFalse(KanvasCameraDesign.defaultDesign.isRedesign, "The result should be false.")
     }
     
     func testRedesign() {
-        XCTAssertTrue(KanvasCameraDesign.cameraRedesign.isRedesign, "The result should be true.")
+        XCTAssertTrue(KanvasCameraDesign.redesign.isRedesign, "The result should be true.")
     }
 
 }
