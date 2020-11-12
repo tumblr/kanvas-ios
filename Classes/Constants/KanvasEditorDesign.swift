@@ -65,7 +65,7 @@ public struct KanvasEditorDesign {
             isRedesign: true,
             editorViewCloseImage: UIImage.imageFromCameraBundle(named: "cross"),
             editorViewBackImage: UIImage.imageFromCameraBundle(named: "backArrow"),
-            editorViewButtonTopMargin: 28,
+            editorViewButtonTopMargin: 16,
             editorViewButtonBottomMargin: Device.belongsToIPhoneXGroup ? 14 : 19.5,
             editorViewFakeOptionCellMinSize: 48,
             editorViewFakeOptionCellMaxSize: 48,
