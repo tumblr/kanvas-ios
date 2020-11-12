@@ -10,7 +10,7 @@ import KanvasCamera
 /// Contains custom colors and fonts for the KanvasCamera framework
 public class KanvasCameraCustomUI {
     
-   public static let shared = KanvasCameraCustomUI()
+    public static let shared = KanvasCameraCustomUI()
             
     private static let brightBlue = UIColor.tumblrBrightBlue
     private static let brightPurple = UIColor.tumblrBrightPurple
