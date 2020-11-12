@@ -330,7 +330,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         tagButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tagButton.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor, constant: EditorViewConstants.confirmButtonHorizontalMargin),
-            tagButton.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
+            tagButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
             tagButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
             tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize)
         ])
@@ -346,7 +346,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         NSLayoutConstraint.activate([
             tagCollection.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor, constant: horizontalMargin),
             tagCollection.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -horizontalMargin),
-            tagCollection.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
+            tagCollection.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
             tagCollection.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
         ])
     }
