@@ -278,7 +278,7 @@ public struct KanvasCameraDesign {
             isRedesign: true,
             cameraViewButtonBackgroundColor: UIColor.black.withAlphaComponent(0.4),
             cameraViewButtonInvertedBackgroundColor: UIColor.white,
-            cameraViewOptionVerticalMargin: 28,
+            cameraViewOptionVerticalMargin: 16,
             cameraViewOptionHorizontalMargin: 16,
             cameraViewOptionButtonSize: 48,
             cameraViewOptionSpacing: 16,
