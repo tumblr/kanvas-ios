@@ -425,7 +425,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     /// Sets up the cross button to close the color picker menu
     private func setUpCloseColorPickerButton() {
-        closeColorPickerButton.image = KanvasCameraImages.closeGradientImage
+        closeColorPickerButton.image = KanvasEditorDesign.shared.closeGradientImage
         closeColorPickerButton.accessibilityIdentifier = "Editor Close Color Picker Button"
         colorPickerContainer.addSubview(closeColorPickerButton)
         
@@ -443,7 +443,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     /// Sets up the eye dropper button in the color picker menu
     private func setUpEyeDropper() {
-        eyeDropperButton.image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
+        eyeDropperButton.image = KanvasEditorDesign.shared.drawingViewEyeDropperImage?.withRenderingMode(.alwaysTemplate)
         eyeDropperButton.contentMode = .center
         eyeDropperButton.accessibilityIdentifier = "Editor Eye Dropper Button"
         colorPickerContainer.addSubview(eyeDropperButton)

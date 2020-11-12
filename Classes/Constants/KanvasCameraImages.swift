@@ -125,23 +125,39 @@ struct KanvasCameraImages {
     static let eraserOffImage = UIImage.imageFromCameraBundle(named: "eraserOff")
     static let eraserOnImage = UIImage.imageFromCameraBundle(named: "eraserOn")
     static let markerImage = UIImage.imageFromCameraBundle(named: "marker")
+    static let markerRoundedImage = UIImage.imageFromCameraBundle(named: "markerRounded")
     static let sharpieImage = UIImage.imageFromCameraBundle(named: "sharpie")
+    static let sharpieRoundedImage = UIImage.imageFromCameraBundle(named: "sharpieRounded")
     static let pencilImage = UIImage.imageFromCameraBundle(named: "pencil")
+    static let pencilRoundedImage = UIImage.imageFromCameraBundle(named: "pencilRounded")
     static let gradientImage = UIImage.imageFromCameraBundle(named: "gradient")
     static let closeGradientImage = UIImage.imageFromCameraBundle(named: "closeGradient")
+    static let closeGradientRoundedImage = UIImage.imageFromCameraBundle(named: "closeGradientRounded")
     static let eyeDropperImage = UIImage.imageFromCameraBundle(named: "eyeDropper")
+    static let eyeDropperRoundedImage = UIImage.imageFromCameraBundle(named: "eyeDropperRounded")
     static let dropImage = UIImage.imageFromCameraBundle(named: "drop")
     
     // MARK: - Text
     static let fontImage = UIImage.imageFromCameraBundle(named: "font")
+    static let fontBlockImage = UIImage.imageFromCameraBundle(named: "fontBlock")
     static let aligmentImages: [NSTextAlignment: UIImage?] = [
         .left: UIImage.imageFromCameraBundle(named: "leftAlignment"),
         .center: UIImage.imageFromCameraBundle(named: "centerAlignment"),
         .right: UIImage.imageFromCameraBundle(named: "rightAlignment"),
     ]
+    static let aligmentRoundedImages: [NSTextAlignment: UIImage?] = [
+        .left: UIImage.imageFromCameraBundle(named: "leftAlignmentRounded"),
+        .center: UIImage.imageFromCameraBundle(named: "centerAlignmentRounded"),
+        .right: UIImage.imageFromCameraBundle(named: "rightAlignmentRounded"),
+    ]
     static let highlightUnselected = UIImage.imageFromCameraBundle(named: "highlightUnselected")
+    static let highlightRoundedUnselected = UIImage.imageFromCameraBundle(named: "highlightRoundedUnselected")
     static let highlightSelected = UIImage.imageFromCameraBundle(named: "highlightSelected")
+    static let highlightRoundedSelected = UIImage.imageFromCameraBundle(named: "highlightRoundedSelected")
     static func highlightImage(for selected: Bool) -> UIImage? {
+        return selected ? highlightSelected : highlightUnselected
+    }
+    static func highlightRoundedImage(for selected: Bool) -> UIImage? {
         return selected ? highlightSelected : highlightUnselected
     }
     

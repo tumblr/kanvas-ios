@@ -17,6 +17,7 @@ public struct KanvasEditorDesign {
     let topSecondaryButtonSize: CGFloat
     let topButtonInterspace: CGFloat
     let fakeOptionCellCheckmarkImage: UIImage?
+    let closeGradientImage: UIImage?
     
     // MARK: - EditorView
     let editorViewCloseImage: UIImage?
@@ -32,6 +33,15 @@ public struct KanvasEditorDesign {
     let drawingViewUndoImage: UIImage?
     let drawingViewEraserSelectedImage: UIImage?
     let drawingViewEraserUnselectedImage: UIImage?
+    let drawingViewMarkerImage: UIImage?
+    let drawingViewSharpieImage: UIImage?
+    let drawingViewPencilImage: UIImage?
+    let drawingViewEyeDropperImage: UIImage?
+    
+    // MARK: - EditorTextView
+    let editorTextViewFontImage: UIImage?
+    let editorTextViewAlignmentImage: [NSTextAlignment: UIImage?]
+    let editorTextViewHighlightImage: (Bool) -> UIImage?
     
     public init(isRedesign: Bool,
                 checkmarkImage: UIImage?,
@@ -41,6 +51,7 @@ public struct KanvasEditorDesign {
                 topSecondaryButtonSize: CGFloat,
                 topButtonInterspace: CGFloat,
                 fakeOptionCellCheckmarkImage: UIImage?,
+                closeGradientImage: UIImage?,
                 editorViewCloseImage: UIImage?,
                 editorViewBackImage: UIImage?,
                 editorViewButtonTopMargin: CGFloat,
@@ -51,7 +62,14 @@ public struct KanvasEditorDesign {
                 editorViewCloseButtonHorizontalMargin: CGFloat,
                 drawingViewUndoImage: UIImage?,
                 drawingViewEraserSelectedImage: UIImage?,
-                drawingViewEraserUnselectedImage: UIImage?) {
+                drawingViewEraserUnselectedImage: UIImage?,
+                drawingViewMarkerImage: UIImage?,
+                drawingViewSharpieImage: UIImage?,
+                drawingViewPencilImage: UIImage?,
+                drawingViewEyeDropperImage: UIImage?,
+                editorTextViewFontImage: UIImage?,
+                editorTextViewAlignmentImage: [NSTextAlignment: UIImage?],
+                editorTextViewHighlightImage: @escaping (Bool) -> UIImage?) {
         
         self.isRedesign = isRedesign
         self.checkmarkImage = checkmarkImage
@@ -61,6 +79,7 @@ public struct KanvasEditorDesign {
         self.topSecondaryButtonSize = topSecondaryButtonSize
         self.topButtonInterspace = topButtonInterspace
         self.fakeOptionCellCheckmarkImage = fakeOptionCellCheckmarkImage
+        self.closeGradientImage = closeGradientImage
         self.editorViewCloseImage = editorViewCloseImage
         self.editorViewBackImage = editorViewBackImage
         self.editorViewButtonTopMargin = editorViewButtonTopMargin
@@ -72,6 +91,13 @@ public struct KanvasEditorDesign {
         self.drawingViewUndoImage = drawingViewUndoImage
         self.drawingViewEraserSelectedImage = drawingViewEraserSelectedImage
         self.drawingViewEraserUnselectedImage = drawingViewEraserUnselectedImage
+        self.drawingViewMarkerImage = drawingViewMarkerImage
+        self.drawingViewSharpieImage = drawingViewSharpieImage
+        self.drawingViewPencilImage = drawingViewPencilImage
+        self.drawingViewEyeDropperImage = drawingViewEyeDropperImage
+        self.editorTextViewFontImage = editorTextViewFontImage
+        self.editorTextViewAlignmentImage = editorTextViewAlignmentImage
+        self.editorTextViewHighlightImage = editorTextViewHighlightImage
     }
     
     public static var shared: KanvasEditorDesign = {
@@ -89,6 +115,7 @@ public struct KanvasEditorDesign {
             topSecondaryButtonSize: 36,
             topButtonInterspace: 30,
             fakeOptionCellCheckmarkImage: UIImage.imageFromCameraBundle(named: "confirm"),
+            closeGradientImage: UIImage.imageFromCameraBundle(named: "closeGradient"),
             editorViewCloseImage: UIImage.imageFromCameraBundle(named: "whiteCloseIcon"),
             editorViewBackImage: UIImage.imageFromCameraBundle(named: "back"),
             editorViewButtonTopMargin: 24,
@@ -99,7 +126,20 @@ public struct KanvasEditorDesign {
             editorViewCloseButtonHorizontalMargin: 24,
             drawingViewUndoImage: UIImage.imageFromCameraBundle(named: "undo"),
             drawingViewEraserSelectedImage: UIImage.imageFromCameraBundle(named: "eraserSelected"),
-            drawingViewEraserUnselectedImage: UIImage.imageFromCameraBundle(named: "eraserUnselected")
+            drawingViewEraserUnselectedImage: UIImage.imageFromCameraBundle(named: "eraserUnselected"),
+            drawingViewMarkerImage: UIImage.imageFromCameraBundle(named: "marker"),
+            drawingViewSharpieImage: UIImage.imageFromCameraBundle(named: "sharpie"),
+            drawingViewPencilImage: UIImage.imageFromCameraBundle(named: "pencil"),
+            drawingViewEyeDropperImage: UIImage.imageFromCameraBundle(named: "eyeDropper"),
+            editorTextViewFontImage: UIImage.imageFromCameraBundle(named: "font"),
+            editorTextViewAlignmentImage: [
+                .left: UIImage.imageFromCameraBundle(named: "leftAlignment"),
+                .center: UIImage.imageFromCameraBundle(named: "centerAlignment"),
+                .right: UIImage.imageFromCameraBundle(named: "rightAlignment"),
+            ],
+            editorTextViewHighlightImage: { selected in
+                return selected ? UIImage.imageFromCameraBundle(named: "highlightSelected") : UIImage.imageFromCameraBundle(named: "highlightUnselected")
+            }
         )
     }()
     
@@ -114,6 +154,7 @@ public struct KanvasEditorDesign {
             topSecondaryButtonSize: 36,
             topButtonInterspace: 16,
             fakeOptionCellCheckmarkImage: UIImage.imageFromCameraBundle(named: "longCheckmark"),
+            closeGradientImage: UIImage.imageFromCameraBundle(named: "closeGradientRounded"),
             editorViewCloseImage: UIImage.imageFromCameraBundle(named: "cross"),
             editorViewBackImage: UIImage.imageFromCameraBundle(named: "backArrow"),
             editorViewButtonTopMargin: 16,
@@ -124,7 +165,20 @@ public struct KanvasEditorDesign {
             editorViewCloseButtonHorizontalMargin: 16,
             drawingViewUndoImage: UIImage.imageFromCameraBundle(named: "undoLong"),
             drawingViewEraserSelectedImage: UIImage.imageFromCameraBundle(named: "eraserOn"),
-            drawingViewEraserUnselectedImage: UIImage.imageFromCameraBundle(named: "eraserOff")
+            drawingViewEraserUnselectedImage: UIImage.imageFromCameraBundle(named: "eraserOff"),
+            drawingViewMarkerImage: UIImage.imageFromCameraBundle(named: "markerRounded"),
+            drawingViewSharpieImage: UIImage.imageFromCameraBundle(named: "sharpieRounded"),
+            drawingViewPencilImage: UIImage.imageFromCameraBundle(named: "pencilRounded"),
+            drawingViewEyeDropperImage: UIImage.imageFromCameraBundle(named: "eyeDropperRounded"),
+            editorTextViewFontImage: UIImage.imageFromCameraBundle(named: "fontBlock"),
+            editorTextViewAlignmentImage: [
+                .left: UIImage.imageFromCameraBundle(named: "leftAlignmentRounded"),
+                .center: UIImage.imageFromCameraBundle(named: "centerAlignmentRounded"),
+                .right: UIImage.imageFromCameraBundle(named: "rightAlignmentRounded"),
+            ],
+            editorTextViewHighlightImage: { selected in
+                return selected ? UIImage.imageFromCameraBundle(named: "highlightSelectedRounded") : UIImage.imageFromCameraBundle(named: "highlightUnselectedRounded")
+            }
         )
     }()
 }

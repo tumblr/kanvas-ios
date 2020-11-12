@@ -127,7 +127,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     var highlightColor: UIColor? {
         get { return mainTextView.highlightColor }
         set {
-            guard let newColor = newValue, let image = KanvasCameraImages.highlightImage(for: newColor.isVisible()) else { return }
+            guard let newColor = newValue, let image = KanvasEditorDesign.shared.editorTextViewHighlightImage(newColor.isVisible()) else { return }
             highlightSelector.setImage(image, for: .normal)
             mainTextView.highlightColor = newColor
         }
@@ -145,7 +145,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     var alignment: NSTextAlignment {
         get { return mainTextView.textAlignment }
         set {
-            guard let image = KanvasCameraImages.aligmentImages[newValue] else { return }
+            guard let image = KanvasEditorDesign.shared.editorTextViewAlignmentImage[newValue] else { return }
             alignmentSelector.setImage(image, for: .normal)
             mainTextView.textAlignment = newValue
         }
@@ -328,7 +328,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the font selector button
     private func setUpFontSelector() {
         fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
-        fontSelector.setImage(KanvasCameraImages.fontImage, for: .normal)
+        fontSelector.setImage(KanvasEditorDesign.shared.editorTextViewFontImage, for: .normal)
         fontSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(fontSelector)
         
@@ -417,7 +417,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the cross button to close the color picker menu
     private func setUpCloseColorPicker() {
         closeColorPicker.accessibilityIdentifier = "Editor Text Close Color Picker"
-        closeColorPicker.setImage(KanvasCameraImages.closeGradientImage, for: .normal)
+        closeColorPicker.setImage(KanvasEditorDesign.shared.closeGradientImage, for: .normal)
         closeColorPicker.translatesAutoresizingMaskIntoConstraints = false
         colorPickerContainer.addSubview(closeColorPicker)
         
@@ -435,7 +435,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the eye dropper button in the color picker menu
     private func setUpEyeDropper() {
         eyeDropper.accessibilityIdentifier = "Editor Text Eye Dropper"
-        let image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
+        let image = KanvasEditorDesign.shared.drawingViewEyeDropperImage?.withRenderingMode(.alwaysTemplate)
         eyeDropper.setImage(image, for: .normal)
         eyeDropper.layer.borderColor = Constants.circularIconBorderColor.cgColor
         eyeDropper.layer.borderWidth = Constants.circularIconBorderWidth
