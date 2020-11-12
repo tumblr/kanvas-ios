@@ -13,6 +13,7 @@ public struct KanvasEditorDesign {
     let checkmarkImage: UIImage?
     let buttonBackgroundColor: UIColor
     let buttonInvertedBackgroundColor: UIColor
+    let optionBackgroundColor: UIColor
     let topButtonSize: CGFloat
     let topSecondaryButtonSize: CGFloat
     let topButtonInterspace: CGFloat
@@ -47,6 +48,7 @@ public struct KanvasEditorDesign {
                 checkmarkImage: UIImage?,
                 buttonBackgroundColor: UIColor,
                 buttonInvertedBackgroundColor: UIColor,
+                optionBackgroundColor: UIColor,
                 topButtonSize: CGFloat,
                 topSecondaryButtonSize: CGFloat,
                 topButtonInterspace: CGFloat,
@@ -75,6 +77,7 @@ public struct KanvasEditorDesign {
         self.checkmarkImage = checkmarkImage
         self.buttonBackgroundColor = buttonBackgroundColor
         self.buttonInvertedBackgroundColor = buttonInvertedBackgroundColor
+        self.optionBackgroundColor = optionBackgroundColor
         self.topButtonSize = topButtonSize
         self.topSecondaryButtonSize = topSecondaryButtonSize
         self.topButtonInterspace = topButtonInterspace
@@ -111,6 +114,7 @@ public struct KanvasEditorDesign {
             checkmarkImage: UIImage.imageFromCameraBundle(named: "editorConfirm"),
             buttonBackgroundColor: .clear,
             buttonInvertedBackgroundColor: .clear,
+            optionBackgroundColor: .clear,
             topButtonSize: 36,
             topSecondaryButtonSize: 36,
             topButtonInterspace: 30,
@@ -150,6 +154,7 @@ public struct KanvasEditorDesign {
             checkmarkImage: UIImage.imageFromCameraBundle(named: "longCheckmark"),
             buttonBackgroundColor: UIColor.black.withAlphaComponent(0.4),
             buttonInvertedBackgroundColor: .white,
+            optionBackgroundColor: .white,
             topButtonSize: 48,
             topSecondaryButtonSize: 36,
             topButtonInterspace: 16,

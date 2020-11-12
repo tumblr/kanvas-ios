@@ -426,6 +426,8 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     /// Sets up the cross button to close the color picker menu
     private func setUpCloseColorPickerButton() {
         closeColorPickerButton.image = KanvasEditorDesign.shared.closeGradientImage
+        closeColorPickerButton.contentMode = .center
+        closeColorPickerButton.backgroundColor = KanvasEditorDesign.shared.buttonInvertedBackgroundColor
         closeColorPickerButton.accessibilityIdentifier = "Editor Close Color Picker Button"
         colorPickerContainer.addSubview(closeColorPickerButton)
         

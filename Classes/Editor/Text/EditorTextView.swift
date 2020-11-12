@@ -329,6 +329,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     private func setUpFontSelector() {
         fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
         fontSelector.setImage(KanvasEditorDesign.shared.editorTextViewFontImage, for: .normal)
+        fontSelector.layer.cornerRadius = Constants.customIconSize / 2
+        fontSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         fontSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(fontSelector)
         
@@ -346,6 +348,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the alignment selector button
     private func setUpAlignmentSelector() {
         alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
+        alignmentSelector.layer.cornerRadius = Constants.customIconSize / 2
+        alignmentSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(alignmentSelector)
         
@@ -363,6 +367,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the highlight selector button
     private func setUpHighlightSelector() {
         highlightSelector.accessibilityIdentifier = "Editor Text Font Selector"
+        highlightSelector.layer.cornerRadius = Constants.customIconSize / 2
+        highlightSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         highlightSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(highlightSelector)
         
@@ -418,6 +424,9 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     private func setUpCloseColorPicker() {
         closeColorPicker.accessibilityIdentifier = "Editor Text Close Color Picker"
         closeColorPicker.setImage(KanvasEditorDesign.shared.closeGradientImage, for: .normal)
+        closeColorPicker.contentMode = .center
+        closeColorPicker.backgroundColor = KanvasEditorDesign.shared.buttonInvertedBackgroundColor
+        closeColorPicker.layer.cornerRadius = Constants.circularIconSize / 2
         closeColorPicker.translatesAutoresizingMaskIntoConstraints = false
         colorPickerContainer.addSubview(closeColorPicker)
         
