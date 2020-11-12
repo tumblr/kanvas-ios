@@ -54,8 +54,9 @@ private struct Constants {
     static let stackViewInset: CGFloat = -10
     
     // Top buttons
-    static let topButtonSize: CGFloat = 36
-    static let topButtonSpacing: CGFloat = 30
+    static let topButtonSize: CGFloat = KanvasEditorDesign.shared.topButtonSize
+    static let topSecondaryButtonSize: CGFloat = KanvasEditorDesign.shared.topSecondaryButtonSize
+    static let topButtonSpacing: CGFloat = KanvasEditorDesign.shared.topButtonInterspace
     
     // Selectors
     static let verticalSelectorHeight: CGFloat = 128
@@ -246,7 +247,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         addSubview(topButtonContainer)
         
         let topMargin = Constants.topMargin
-        let height = Constants.topButtonSize * 3 + Constants.topButtonSpacing * 2
+        let height = Constants.topButtonSize + Constants.topSecondaryButtonSize * 2 + Constants.topButtonSpacing * 2
         NSLayoutConstraint.activate([
             topButtonContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topMargin),
             topButtonContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
@@ -275,9 +276,30 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     // Adds top buttons to the top buttons container
     private func setUpTopButtons() {
-        confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
-        undoButton.setBackgroundImage(KanvasCameraImages.undoImage, for: .normal)
-        eraseButton.setBackgroundImage(KanvasCameraImages.eraserUnselectedImage, for: .normal)
+        let checkmarkImage = KanvasEditorDesign.shared.checkmarkImage
+        let undoImage = KanvasEditorDesign.shared.drawingViewUndoImage
+        let eraserUnselectedImage = KanvasEditorDesign.shared.drawingViewEraserUnselectedImage
+        let primaryBackgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
+        let secondaryBackgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
+        
+        if KanvasEditorDesign.shared.isRedesign {
+            confirmButton.setImage(checkmarkImage, for: .normal)
+            undoButton.setImage(undoImage, for: .normal)
+            eraseButton.setImage(eraserUnselectedImage, for: .normal)
+            
+            confirmButton.backgroundColor = primaryBackgroundColor
+            undoButton.backgroundColor = secondaryBackgroundColor
+            eraseButton.backgroundColor = secondaryBackgroundColor
+            
+            confirmButton.layer.cornerRadius = Constants.topButtonSize / 2
+            undoButton.layer.cornerRadius = Constants.topSecondaryButtonSize / 2
+            eraseButton.layer.cornerRadius = Constants.topSecondaryButtonSize / 2
+        }
+        else {
+            confirmButton.setBackgroundImage(checkmarkImage, for: .normal)
+            undoButton.setBackgroundImage(undoImage, for: .normal)
+            eraseButton.setBackgroundImage(eraserUnselectedImage, for: .normal)
+        }
         
         let confirmButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmButtonTapped(recognizer:)))
         let undoButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(undoButtonTapped(recognizer:)))
@@ -290,6 +312,15 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         topButtonContainer.addArrangedSubview(confirmButton)
         topButtonContainer.addArrangedSubview(undoButton)
         topButtonContainer.addArrangedSubview(eraseButton)
+        
+        NSLayoutConstraint.activate([
+            confirmButton.heightAnchor.constraint(equalToConstant: Constants.topButtonSize),
+            confirmButton.widthAnchor.constraint(equalToConstant: Constants.topButtonSize),
+            undoButton.heightAnchor.constraint(equalToConstant: Constants.topSecondaryButtonSize),
+            undoButton.widthAnchor.constraint(equalToConstant: Constants.topSecondaryButtonSize),
+            eraseButton.heightAnchor.constraint(equalToConstant: Constants.topSecondaryButtonSize),
+            eraseButton.widthAnchor.constraint(equalToConstant: Constants.topSecondaryButtonSize),
+        ])
         
         confirmButton.alpha = 0
     }
@@ -525,10 +556,27 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     /// toggles the erase icon (selected or unselected)
     func changeEraseIcon(selected: Bool) {
-        let image = selected ? KanvasCameraImages.eraserSelectedImage : KanvasCameraImages.eraserUnselectedImage
+        let image: UIImage?
+        let backgroundColor: UIColor
+        
+        if selected {
+            image = KanvasEditorDesign.shared.drawingViewEraserSelectedImage
+            backgroundColor = KanvasEditorDesign.shared.buttonInvertedBackgroundColor
+        }
+        else {
+            image = KanvasEditorDesign.shared.drawingViewEraserUnselectedImage
+            backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
+        }
         
         UIView.transition(with: eraseButton, duration: Constants.animationDuration, options: .transitionCrossDissolve, animations: {
-            self.eraseButton.setBackgroundImage(image, for: .normal)
+            if KanvasEditorDesign.shared.isRedesign {
+                self.eraseButton.setImage(image, for: .normal)
+                self.eraseButton.backgroundColor = backgroundColor
+            }
+            else {
+                self.eraseButton.setBackgroundImage(image, for: .normal)
+            }
+            
         }, completion: nil)
     }
     

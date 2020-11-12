@@ -50,7 +50,7 @@ private struct Constants {
     static let circularIconCornerRadius: CGFloat = circularIconSize / 2
 
     // Confirm button
-    static let confirmButtonSize: CGFloat = 36
+    static let confirmButtonSize: CGFloat = KanvasEditorDesign.shared.topButtonSize
     static let confirmButtonInset: CGFloat = -10
 }
 
@@ -270,9 +270,18 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
         confirmButton.accessibilityIdentifier = "Editor Text Confirm Button"
-        confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
+        
+        let checkmark = KanvasEditorDesign.shared.checkmarkImage
+        if KanvasEditorDesign.shared.isRedesign {
+            let backgroundImage = UIImage.circle(diameter: Constants.confirmButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
+            confirmButton.setBackgroundImage(backgroundImage, for: .normal)
+            confirmButton.setImage(checkmark, for: .normal)
+        }
+        else {
+            confirmButton.setBackgroundImage(checkmark, for: .normal)
+        }
         
         NSLayoutConstraint.activate([
             confirmButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor),

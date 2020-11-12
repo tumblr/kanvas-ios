@@ -44,6 +44,7 @@ struct KanvasCameraImages {
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
     static let crossImage = UIImage.imageFromCameraBundle(named: "cross")
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
+    static let longCheckmarkImage = UIImage.imageFromCameraBundle(named: "longCheckmark")
     static let backImage = UIImage.imageFromCameraBundle(named: "back")
     static let backArrowImage = UIImage.imageFromCameraBundle(named: "backArrow")
     static let forwardImage = UIImage.imageFromCameraBundle(named: "forwardArrow")
@@ -118,8 +119,11 @@ struct KanvasCameraImages {
     
     // MARK: - Draw
     static let undoImage = UIImage.imageFromCameraBundle(named: "undo")
+    static let undoLongImage = UIImage.imageFromCameraBundle(named: "undoLong")
     static let eraserUnselectedImage = UIImage.imageFromCameraBundle(named: "eraserUnselected")
     static let eraserSelectedImage = UIImage.imageFromCameraBundle(named: "eraserSelected")
+    static let eraserOffImage = UIImage.imageFromCameraBundle(named: "eraserOff")
+    static let eraserOnImage = UIImage.imageFromCameraBundle(named: "eraserOn")
     static let markerImage = UIImage.imageFromCameraBundle(named: "marker")
     static let sharpieImage = UIImage.imageFromCameraBundle(named: "sharpie")
     static let pencilImage = UIImage.imageFromCameraBundle(named: "pencil")

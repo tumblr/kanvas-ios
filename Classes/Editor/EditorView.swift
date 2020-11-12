@@ -792,7 +792,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         let duration = EditorViewConstants.editionOptionAnimationDuration
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
-                self.fakeOptionCell.image = KanvasCameraImages.confirmImage
+                self.fakeOptionCell.image = KanvasEditorDesign.shared.checkmarkImage
+                self.fakeOptionCell.backgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
                 let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
                 self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale)
                 self.fakeOptionCell.center = finalLocation

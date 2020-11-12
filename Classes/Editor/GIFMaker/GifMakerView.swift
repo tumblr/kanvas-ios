@@ -36,9 +36,9 @@ private struct Constants {
     static let speedMenuMargin: CGFloat = 34
     
     // Top options
-    static let topButtonSize: CGFloat = 36
+    static let topButtonSize: CGFloat = KanvasEditorDesign.shared.topButtonSize
     static let topButtonInset: CGFloat = -10
-    static let topButtonsInterspace: CGFloat = 30
+    static let topButtonsInterspace: CGFloat = KanvasEditorDesign.shared.topButtonInterspace
     static let topButtonsCount: CGFloat = 3
 
     static let font = KanvasCameraFonts.shared.gifMakerRevertButtonFont
@@ -121,9 +121,19 @@ final class GifMakerView: UIView {
     /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
         confirmButton.accessibilityIdentifier = "GIF Maker Confirm Button"
-        confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
+        
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
+        
+        let checkmark = KanvasEditorDesign.shared.checkmarkImage
+        if KanvasEditorDesign.shared.isRedesign {
+            let backgroundImage = UIImage.circle(diameter: Constants.topButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
+            confirmButton.setBackgroundImage(backgroundImage, for: .normal)
+            confirmButton.setImage(checkmark, for: .normal)
+        }
+        else {
+            confirmButton.setBackgroundImage(checkmark, for: .normal)
+        }
         
         let index: CGFloat = 0
         let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index

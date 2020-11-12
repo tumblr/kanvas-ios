@@ -74,7 +74,7 @@ public struct KanvasCameraColors {
             trashColor: brightRed,
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
-            cameraNextButtonBackgroundColor: brightBlue,
+            primaryButtonBackgroundColor: brightBlue,
             overlayColor: deepBlue,
             filterColors: [
                 .manga: brightPink,
@@ -108,7 +108,7 @@ public struct KanvasCameraColors {
         trashColor: UIColor,
         tooltipBackgroundColor: UIColor,
         closeButtonColor: UIColor,
-        cameraNextButtonBackgroundColor: UIColor,
+        primaryButtonBackgroundColor: UIColor,
         overlayColor: UIColor,
         filterColors: [FilterType: UIColor]) {
         self.drawingDefaultColor = drawingDefaultColor
@@ -123,7 +123,7 @@ public struct KanvasCameraColors {
         self.trashColor = trashColor
         self.tooltipBackgroundColor = tooltipBackgroundColor
         self.closeButtonColor = closeButtonColor
-        self.cameraNextButtonBackgroundColor = cameraNextButtonBackgroundColor
+        self.primaryButtonBackgroundColor = primaryButtonBackgroundColor
         self.overlayColor = overlayColor
         self.filterColors = filterColors
     }
@@ -143,7 +143,7 @@ public struct KanvasCameraColors {
     
     let closeButtonColor: UIColor // MediaDrawerView:130
     
-    let cameraNextButtonBackgroundColor: UIColor // MediaClipsEditorView:118
+    let primaryButtonBackgroundColor: UIColor
     
     let overlayColor: UIColor // EditorView:102
     

@@ -113,7 +113,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         
         if KanvasCameraDesign.shared.isBottomPicker {
-            let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: KanvasCameraColors.shared.cameraNextButtonBackgroundColor)
+            let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
             nextButton.setBackgroundImage(circle, for: .normal)
         }
         
