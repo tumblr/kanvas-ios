@@ -263,17 +263,9 @@ public struct CameraFeatures {
     /// This shows a post button that makes quick options appear when long pressed
     public var showQuickPostButtonInEditor = DefaultCameraSettings.showQuickPostButtonInEditor
     
-    /// Long press for post button in Editor
-    /// This enables the long press for the quick post button.
-    public var enableQuickPostLongPress = DefaultCameraSettings.enableQuickPostLongPress
-    
     /// Blog Switcher in Editor
     /// This shows a blog switcher that makes quick options appear when long pressed
     public var showBlogSwitcherInEditor = DefaultCameraSettings.showBlogSwitcherInEditor
-    
-    /// Edit Tools Redesign
-    /// This shows the editor tools as a vertical collection.
-    public var editToolsRedesign = DefaultCameraSettings.editToolsRedesign
     
     /// Auto-open GIF Maker in Editor
     public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
@@ -349,9 +341,7 @@ private struct DefaultCameraSettings {
     static let showTagButtonInEditor: Bool = false
     static let showTagCollectionInEditor: Bool = false
     static let showQuickPostButtonInEditor: Bool = false
-    static let enableQuickPostLongPress: Bool = false
     static let showBlogSwitcherInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
-    static let editToolsRedesign: Bool = false
 }

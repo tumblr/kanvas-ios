@@ -148,7 +148,6 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
-        settings.editToolsRedesign = false
         return settings
     }
 
@@ -274,7 +273,6 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .shutterButtonTooltip(settings.features.shutterButtonTooltip),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
-            .editToolsRedesign(settings.editToolsRedesign),
         ]
     }
 
@@ -328,8 +326,6 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
-        case .editToolsRedesign(_):
-            settings.editToolsRedesign = value
         }
     }
 }
@@ -352,7 +348,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         // Only supported in Orangina
     }
     
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    func getQuickPostButton() -> UIView {
         // Only supported in Orangina
         return UIView()
     }

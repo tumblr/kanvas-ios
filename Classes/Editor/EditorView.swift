@@ -70,9 +70,8 @@ protocol EditorViewDelegate: class {
     func didRenderRectChange(rect: CGRect)
     /// Obtains the quick post button.
     ///
-    /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
-    func getQuickPostButton(enableLongPress: Bool) -> UIView
+    func getQuickPostButton() -> UIView
     /// Obtains the blog switcher.
     ///
     /// - Returns: the blog switcher.
@@ -143,9 +142,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showTagButton: Bool
     private let showTagCollection: Bool
     private let showQuickPostButton: Bool
-    private let enableQuickPostLongPress: Bool
     private let showBlogSwitcher: Bool
-    private let editToolsRedesign: Bool
     private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
@@ -194,7 +191,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     private lazy var quickPostButton: UIView = {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton(enableLongPress: enableQuickPostLongPress)
+        return delegate.getQuickPostButton()
     }()
     
     private lazy var blogSwitcher: UIView = {
@@ -217,9 +214,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showTagButton: Bool,
          showTagCollection: Bool,
          showQuickPostButton: Bool,
-         enableQuickPostLongPress: Bool,
          showBlogSwitcher: Bool,
-         editToolsRedesign: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
          metalContext: MetalContext?) {
@@ -231,9 +226,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showTagCollection = showTagCollection
         self.showCrossIcon = showCrossIcon
         self.showQuickPostButton = showQuickPostButton
-        self.enableQuickPostLongPress = enableQuickPostLongPress
         self.showBlogSwitcher = showBlogSwitcher
-        self.editToolsRedesign = editToolsRedesign
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
         self.metalContext = metalContext
@@ -423,7 +416,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         collectionContainer.clipsToBounds = false
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        if editToolsRedesign {
+        if KanvasEditorDesign.shared.isRedesign {
             
             NSLayoutConstraint.activate([
                 collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),

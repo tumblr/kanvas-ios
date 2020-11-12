@@ -29,9 +29,7 @@ final class EditorViewTests: FBSnapshotTestCase {
                               showTagButton: false,
                               showTagCollection: false,
                               showQuickPostButton: false,
-                              enableQuickPostLongPress: false,
                               showBlogSwitcher: false,
-                              editToolsRedesign: false,
                               quickBlogSelectorCoordinator: nil,
                               tagCollection: nil,
                               metalContext: nil)

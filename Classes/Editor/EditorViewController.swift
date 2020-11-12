@@ -44,9 +44,8 @@ public protocol EditorControllerDelegate: class {
     
     /// Obtains the quick post button.
     ///
-    /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
-    func getQuickPostButton(enableLongPress: Bool) -> UIView
+    func getQuickPostButton() -> UIView
     
     /// Obtains the blog switcher.
     ///
@@ -78,9 +77,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showTagButton: settings.showTagButtonInEditor,
                                     showTagCollection: settings.showTagCollectionInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
-                                    enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
-                                    editToolsRedesign: settings.editToolsRedesign,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
                                     tagCollection: tagCollection,
                                     metalContext: settings.features.metalPreview ? metalContext : nil)
@@ -92,7 +89,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
         let controller: KanvasEditorMenuController
         
-        if settings.editToolsRedesign {
+        if KanvasEditorDesign.shared.isRedesign {
             controller = StyleMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
         }
         else {
@@ -613,9 +610,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         delegate?.dismissButtonPressed()
     }
     
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    func getQuickPostButton() -> UIView {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton(enableLongPress: enableLongPress)
+        return delegate.getQuickPostButton()
     }
     
     func getBlogSwitcher() -> UIView {

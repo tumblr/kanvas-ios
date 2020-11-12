@@ -33,10 +33,6 @@ final class StyleMenuCollectionController: UIViewController, KanvasEditorMenuCon
     init(settings: CameraSettings, shouldExportMediaAsGIF: Bool?) {
         self.editionOptions = []
         self.shouldExportMediaAsGIF = shouldExportMediaAsGIF ?? false
-
-        if settings.features.gifs && shouldExportMediaAsGIF != nil {
-            editionOptions.append(.gif)
-        }
         
         if settings.features.editorFilters {
             editionOptions.append(.filter)
@@ -52,6 +48,10 @@ final class StyleMenuCollectionController: UIViewController, KanvasEditorMenuCon
         
         if settings.features.editorDrawing {
             editionOptions.append(.drawing)
+        }
+        
+        if settings.features.gifs && shouldExportMediaAsGIF != nil {
+            editionOptions.append(.gif)
         }
         
         super.init(nibName: .none, bundle: .none)

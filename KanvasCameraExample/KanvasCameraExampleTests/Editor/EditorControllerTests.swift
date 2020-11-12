@@ -354,7 +354,7 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
 
     }
     
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    func getQuickPostButton() -> UIView {
         return UIView()
     }
     
