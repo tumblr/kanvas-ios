@@ -148,6 +148,10 @@ public struct CameraFeatures {
     /// Multi-Export support
     /// This enables multiple images/videos to be taken, edited, and then exported
     public var multipleExports = false
+
+    /// Button to Mute Sound
+    /// This adds an option to mute sounds from videos during editing and in export.
+    public var muteButton = false
 }
 
 // A class that defines the settings for the Kanvas Camera

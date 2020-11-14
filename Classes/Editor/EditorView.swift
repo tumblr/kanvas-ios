@@ -43,6 +43,8 @@ protocol EditorViewDelegate: class {
     func didTapPostButton()
     /// A function that is called when the save button is pressed
     func didTapSaveButton()
+    /// A function that is called when the sound button is pressed
+    func didTapMuteButton(enabled: Bool)
     func didTapPostOptionsButton()
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnText()
@@ -80,6 +82,8 @@ private struct EditorViewConstants {
     static let postButtonHorizontalMargin: CGFloat = 18
     static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 13 : 29
     static let postButtonLabelMargin: CGFloat = 3
+    static let muteButtonSize: CGFloat = 50
+    static let muteButtonBackgroundColor = UIColor.black.withAlphaComponent(0.49) // Matches the edition option buttons but they include their backgrounds in the asset.
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
     static let fakeOptionCellMinSize: CGFloat = 36
@@ -111,7 +115,18 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let confirmButton = UIButton()
     private let closeButton = UIButton()
     private let saveButton = UIButton()
+    private lazy var muteButton: UIButton = {
+        let button = UIButton(frame: .zero)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 13.0, *) {
+            let configuration = UIImage.SymbolConfiguration(weight: .semibold)
+            button.setImage(UIImage(systemName: "speaker.2", withConfiguration: configuration), for: .normal)
+            button.setImage(UIImage(systemName: "speaker.slash", withConfiguration: configuration), for: .selected)
+        }
+        return button
+    }()
     private let showSaveButton: Bool
+    private let showMuteButton: Bool
     private let showCrossIcon: Bool
     private let postButton = UIButton()
     private lazy var publishButton: UIButton = {
@@ -170,9 +185,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainActionMode: MainActionMode, showSaveButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, movableViewCanvas: MovableViewCanvas?, drawingCanvas: IgnoreTouchesView?) {
+    init(mainActionMode: MainActionMode, showSaveButton: Bool, showMuteButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, movableViewCanvas: MovableViewCanvas?, drawingCanvas: IgnoreTouchesView?) {
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
+        self.showMuteButton = showMuteButton
         self.showTagButton = showTagButton
         self.showCrossIcon = showCrossIcon
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
@@ -206,6 +222,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
         if showSaveButton {
             setupSaveButton()
+        }
+        if showMuteButton {
+            setupMuteButton()
         }
         setupCollection()
         setupFilterMenu()
@@ -324,9 +343,19 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         navigationContainer.addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        let buttonOnTheLeft: UIView?
         let buttonOnTheRight: UIView?
         let trailingMargin: CGFloat
-        
+        let leadingMargin: CGFloat
+
+        if showMuteButton {
+            buttonOnTheLeft = muteButton
+            leadingMargin = EditorViewConstants.saveButtonHorizontalMargin
+        } else {
+            buttonOnTheLeft = nil
+            leadingMargin = 0
+        }
+
         if showSaveButton {
             buttonOnTheRight = saveButton
             trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
@@ -345,7 +374,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
         
         NSLayoutConstraint.activate([
-            collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            collectionContainer.leadingAnchor.constraint(equalTo: buttonOnTheLeft?.trailingAnchor ?? safeAreaLayoutGuide.leadingAnchor, constant: trailingMargin),
             collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight?.leadingAnchor ?? trailingAnchor, constant: -trailingMargin / 2),
             verticalConstraint,
             collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
@@ -521,6 +550,25 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         ])
     }
 
+    func setupMuteButton() {
+        muteButton.accessibilityLabel = "Sound Button"
+        navigationContainer.addSubview(muteButton)
+        muteButton.tintColor = .white
+        muteButton.layer.applyShadows()
+        muteButton.addTarget(self, action: #selector(muteButtonPressed), for: .touchUpInside)
+
+        muteButton.backgroundColor = EditorViewConstants.muteButtonBackgroundColor
+        muteButton.layer.cornerRadius = EditorViewConstants.muteButtonSize/2
+        muteButton.layer.masksToBounds = true
+
+        NSLayoutConstraint.activate([
+            muteButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.saveButtonHorizontalMargin),
+            muteButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.muteButtonSize),
+            muteButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.muteButtonSize),
+            muteButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+
     func confirmOrPostButton() -> UIView? {
         switch mainActionMode {
         case .confirm, .postOptions:
@@ -556,6 +604,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
     @objc private func saveButtonPressed() {
         delegate?.didTapSaveButton()
+    }
+
+    @objc private func muteButtonPressed() {
+        muteButton.isSelected = !muteButton.isSelected
+        delegate?.didTapMuteButton(enabled: muteButton.isSelected)
     }
 
     @objc private func postButtonPressed(_ recognizer: UITapGestureRecognizer) {

@@ -61,7 +61,7 @@ class MultiEditorViewController: UIViewController {
 
 //    private var edits: [[View]] = []
 
-    private var edits: [(Data?, IgnoreTouchesView?)] = []
+    private var edits: [(Data?, IgnoreTouchesView?, EditOptions)] = []
     private var exportingEditors: [EditorViewController]?
 
     private weak var currentEditor: EditorViewController?
@@ -264,19 +264,24 @@ extension MultiEditorViewController: EditorControllerDelegate {
         
     }
 
+    struct EditOptions {
+        let soundEnabled: Bool
+    }
+
     func archive(index: Int) {
         let currentCanvas = try! NSKeyedArchiver.archivedData(withRootObject: currentEditor!.editorView.movableViewCanvas, requiringSecureCoding: true)
 //        let encoder = JSONEncoder()
 //        let currentCanvas = try! encoder.encode(currentEditor!.editorView.movableViewCanvas)
         let drawingLayer = currentEditor?.editorView.drawingCanvas
+        let options = EditOptions(soundEnabled: currentEditor?.shouldExportSound ?? true)
         if edits.indices ~= index {
-            edits[index] = (currentCanvas, drawingLayer)
+            edits[index] = (currentCanvas, drawingLayer, options)
         } else {
-            edits.insert((currentCanvas, drawingLayer), at: index)
+            edits.insert((currentCanvas, drawingLayer, options), at: index)
         }
     }
 
-    func edits(for index: Int) -> (MovableViewCanvas?, IgnoreTouchesView?)? {
+    func edits(for index: Int) -> (MovableViewCanvas?, IgnoreTouchesView?, EditOptions)? {
         if edits.indices ~= index {
             let edit = edits[index] 
             let canvas: MovableViewCanvas?
@@ -291,7 +296,8 @@ extension MultiEditorViewController: EditorControllerDelegate {
                 canvas = nil
             }
             let drawing = edit.1
-            return (canvas, drawing)
+            let options = edit.2
+            return (canvas, drawing, options)
         } else {
             return nil
         }
@@ -322,8 +328,9 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
         exportHandler.startWaiting(for: segments.count)
         exportingEditors = segments.enumerated().compactMap { (idx, segment) in
-            let views = self.edits(for: idx)
-            let editor = delegate?.editor(segment: segment, views: nil, canvas: views?.0, drawingView: views?.1)
+            let edits = self.edits(for: idx)
+            let editor = delegate?.editor(segment: segment, views: nil, canvas: edits?.0, drawingView: edits?.1)
+            editor?.shouldExportSound = edits?.2.soundEnabled ?? true
             return editor
         }
         exportingEditors?.enumerated().forEach { (idx, editor) in

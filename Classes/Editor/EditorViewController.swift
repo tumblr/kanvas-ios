@@ -125,6 +125,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private var openedMenu: EditionOption?
     private var selectedCell: EditionMenuCollectionCell?
 
+    var shouldExportSound: Bool = true
+
     private var shouldExportMediaAsGIF: Bool {
         get {
             return collectionController.shouldExportMediaAsGIF
@@ -159,7 +161,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private var exportCompletion: ((Result<(UIImage?, URL?, MediaInfo), Error>) -> Void)?
 
-    private static func editor(settings: CameraSettings, canvas: MovableViewCanvas?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, drawingView: IgnoreTouchesView?) -> EditorView {
+    private static func editor(settings: CameraSettings, canvas: MovableViewCanvas?, showsMuteButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, drawingView: IgnoreTouchesView?) -> EditorView {
         var mainActionMode: EditorView.MainActionMode = .confirm
         if settings.features.editorPostOptions {
             mainActionMode = .postOptions
@@ -172,6 +174,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
         let editorView = EditorView(mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
+                                    showMuteButton: showsMuteButton,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
@@ -280,7 +283,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
 
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: MetalContext.createContext()))
-        self.editorView = EditorViewController.editor(settings: settings, canvas: canvas, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, drawingView: drawingView)
+        let muteButtonShown = settings.features.muteButton && segments.first?.image == nil
+        self.editorView = EditorViewController.editor(settings: settings, canvas: canvas, showsMuteButton: muteButtonShown, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, drawingView: drawingView)
         super.init(nibName: .none, bundle: .none)
 
         editorView.delegate = self
@@ -566,6 +570,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         analyticsProvider?.logSaveFromDashboard()
     }
 
+    func didTapMuteButton(enabled: Bool) {
+        player.isMuted = enabled
+        shouldExportSound = !enabled
+    }
+
     func didTapPostButton() {
         if delegate?.shouldExport() ?? true {
             startExporting(action: .post)
@@ -671,7 +680,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
                 // It might be nice in the future to create a GIF directly from segments.
-                assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+                assetsHandler.mergeAssets(segments: segments, withAudio: true) { [weak self] url, mediaInfo in
                     guard let self = self else {
                         return
                     }
@@ -686,7 +695,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else {
-            assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+            assetsHandler.mergeAssets(segments: segments, withAudio: shouldExportSound) { [weak self] url, mediaInfo in
                 guard let url = url else {
                     self?.hideLoading()
                     self?.handleExportError()
