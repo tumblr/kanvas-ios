@@ -122,6 +122,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             let configuration = UIImage.SymbolConfiguration(weight: .semibold)
             button.setImage(UIImage(systemName: "speaker.2", withConfiguration: configuration), for: .normal)
             button.setImage(UIImage(systemName: "speaker.slash", withConfiguration: configuration), for: .selected)
+        } else {
+            // Backfilled symbols for SFSymbols
+            button.setImage(KanvasCameraImages.speakerImage, for: .normal)
+            button.setImage(KanvasCameraImages.speakerSlashImage, for: .selected)
         }
         return button
     }()

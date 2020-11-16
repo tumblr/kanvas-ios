@@ -85,6 +85,9 @@ struct KanvasCameraImages {
         let index = enabled && editIcons[option]?.count == 2 ? 1 : 0
         return editIcons[option]?[index]
     }
+
+    static let speakerImage = UIImage.imageFromCameraBundle(named: "Speaker")
+    static let speakerSlashImage = UIImage.imageFromCameraBundle(named: "Speaker Slash")
     
     // MARK: - Draw
     static let undoImage = UIImage.imageFromCameraBundle(named: "undo")
