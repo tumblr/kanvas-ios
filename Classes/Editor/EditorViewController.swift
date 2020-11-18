@@ -90,7 +90,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let controller: KanvasEditorMenuController
         
         if KanvasEditorDesign.shared.isVerticalMenu {
-            controller = StyleMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+            controller = VerticalMenuController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
         }
         else {
             controller = EditionMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
