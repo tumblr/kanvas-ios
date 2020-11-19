@@ -1,13 +1,9 @@
 # Kanvas
 
-A library for capture and editing content from the Camera.
+![kanvy](https://github.com/tumblr/kanvas-ios/blob/main/images/kanvy-grin.png?raw=true)
 
-## Usage
+A iOS library for adding effects, drawings, text, stickers, and making GIFs
+from existing media or the camera.
 
-Entrypoint: `CameraController`
+It is used in the Tumblr and Wordpress iOS apps.
 
-
-#### Customization
-
-- `CameraSettings`
-- `KanvasCameraCustomUI`
