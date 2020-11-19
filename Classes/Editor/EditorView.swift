@@ -103,7 +103,6 @@ private struct EditorViewConstants {
     static let topMenuElementHeight: CGFloat = 36
     static let buttonBackgroundColor = UIColor.black.withAlphaComponent(0.4)
     static let blogSwitcherHorizontalMargin: CGFloat = 8
-    static let buttonBackgroundColor = UIColor.black.withAlphaComponent(0.4)
 }
 
 /// A UIView to preview the contents of segments without exporting
