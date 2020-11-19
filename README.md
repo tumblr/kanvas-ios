@@ -26,7 +26,7 @@ pod install
 
 Kanvas is mainly two parts: the Camera, and the Editor. Both are just view controllers that you present, and have settings and delegates that help you customize their behavior.
 
-To just show the camera:
+To show the camera:
 
 ```swift
 let settings = CameraSettings()
@@ -34,7 +34,7 @@ let camera = CameraController(settings: settings)
 present(camera, animated: true)
 ```
 
-And to edit an existing video:
+And to edit existing media, like a video:
 
 ```swift
 let videoURL = URL(string: "path/to/video.mov")
@@ -43,13 +43,14 @@ let editor = EditorViewController.createEditor(for: videoURL, settings: settings
 present(editor, animated: true)
 ```
 
-Each view controller uses `CameraSettings`, which have numberous flags for enabling or disabling each feature. Each view controller also have a `delegate` property for providing your own handlers to creating media, performing editing operations, logging, or really anything else Kanvas can do.
+Each view controller accepts a `CameraSettings` object, which provides fine-grained settings and feature togges. Each view controller also has a `delegate` property for providing your own handlers to creating media, performing editing operations, logging, or really anything else Kanvas can do.
 
+Documentation is lacking at the moment, but contributions are welcome!
 
 ## Example App
 
-`KanvasCameraExample` is an example app showing how to use Kanvas. To try it out:
+`KanvasCameraExample` is an example app showing how to use Kanvas. Try it out!
 
 1. Run `cd KanvasCameraExample; bundle exec pod install`
-2. Open `KanvasCameraExample/KanvasCameraExample.xcworkspace`
-3. Run it on a device from Xcode.
+2. Open `KanvasCameraExample/KanvasCameraExample.xcworkspace` in Xcode
+3. Run the app on a device.
