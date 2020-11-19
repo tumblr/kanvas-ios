@@ -1,8 +1,8 @@
+<img width="200" align="right" src="https://github.com/tumblr/kanvas-ios/blob/readme/images/kanvy-grin.png?raw=true" alt="kanvy">
+
 # Kanvas
 
-[![Kanvas Build Status](https://circleci.com/gh/tumblr/kanvas-ios.svg?style=svg)](https://circleci.com/gh/tumblr/kanvas-ios)
-
-<img width="200" align="center" src="https://github.com/tumblr/kanvas-ios/blob/readme/images/kanvy-grin.png?raw=true" alt="kanvy">
+<img src="https://circleci.com/gh/tumblr/kanvas-ios.svg?style=svg" alt="Kanvas Build Status">
 
 Kanvas is an iOS library for adding effects, drawings, text, stickers, and making GIFs from existing media or the camera.
 
