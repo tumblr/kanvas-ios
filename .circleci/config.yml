@@ -27,6 +27,8 @@ jobs:
       - ios/install-dependencies:
           bundle-install: true
           bundler-working-directory: KanvasCameraExample
+          pod-install: true
+          cocoapods-working-directory: KanvasCameraExample
       - run:
           name: Pod Install
           when: always
