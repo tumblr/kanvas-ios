@@ -1,4 +1,4 @@
-<img width="200" align="right" src="https://github.com/tumblr/kanvas-ios/blob/readme/images/kanvy-grin.png?raw=true" alt="kanvy">
+<img width="200" align="right" src="https://github.com/tumblr/kanvas-ios/blob/main/images/kanvy-grin.png?raw=true" alt="kanvy">
 
 # Kanvas
 
