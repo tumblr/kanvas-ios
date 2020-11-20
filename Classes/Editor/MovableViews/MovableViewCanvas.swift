@@ -82,6 +82,15 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         super.init(frame: .zero)
         setUpViews()
     }
+
+    var trashCompletion: (() -> Void)? {
+        set {
+            trashView.completion = newValue
+        }
+        get {
+            return trashView.completion
+        }
+    }
     
 //    required init?(coder aDecoder: NSCoder) {
 //        overlay = aDecoder.decodeObject(of: UIView.self, forKey: "overlay")!
@@ -403,6 +412,23 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         let oneIsTapGesture = gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer
         return !oneIsTapGesture
+    }
+
+    /// shows the trash icon opened with its red background
+    func openTrash() {
+        trashView.open()
+    }
+
+    /// shows the trash icon closed
+    func closeTrash() {
+        trashView.isHidden = false
+        trashView.close()
+    }
+
+    /// hides the trash icon with its red background
+    func hideTrash() {
+        trashView.hide()
+        trashView.isHidden = true
     }
     
     // MARK: - MovableViewDelegate

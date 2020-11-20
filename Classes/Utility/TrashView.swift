@@ -27,6 +27,12 @@ final class TrashView: IgnoreTouchesView {
     private let backgroundCircle: UIImageView
     private let openedTrash: UIImageView
     private let closedTrash: UIImageView
+
+    var completion: (() -> Void)?
+
+    override var ignoredTypes: [UIEvent.EventType]? {
+        return [.touches, .presses]
+    }
     
     init() {
         borderCircle = UIImageView()
@@ -36,6 +42,12 @@ final class TrashView: IgnoreTouchesView {
         super.init(frame: .zero)
         
         setUpViews()
+
+        let dropInteraction = UIDropInteraction(delegate: self)
+        addInteraction(dropInteraction)
+
+        isUserInteractionEnabled = true
+        isHidden = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -189,5 +201,37 @@ final class TrashView: IgnoreTouchesView {
         else {
             close()
         }
+    }
+}
+
+extension TrashView: UIDropInteractionDelegate {
+    // MARK: - UIDropInteractionDelegate
+
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+        return UIDropProposal(operation: .move)
+    }
+
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        completion?()
+    }
+
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidEnter session: UIDropSession) {
+        UISelectionFeedbackGenerator().selectionChanged()
+        open()
+    }
+
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidExit session: UIDropSession) {
+        UISelectionFeedbackGenerator().selectionChanged()
+        close()
+    }
+
+    func dropInteraction(_ interaction: UIDropInteraction, item: UIDragItem, willAnimateDropWith animator: UIDragAnimating) {
+        //TODO: Implement animation here
+    }
+
+    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+//        return session.localDragSession?.localContext is [IndexPath]
+        return true
     }
 }

@@ -23,13 +23,17 @@ class MultiEditorViewController: UIViewController {
 
     private var segments: [CameraSegment]
 
+    var migratedIndex: Int?
     var selected: Int? {
         willSet {
-            guard newValue != selected else { return }
-            if let old = selected {
-                archive(index: old)
+            guard newValue != selected && migratedIndex != newValue else {
+                return
             }
-            if let new = newValue {
+            if let old = selected {
+                archive(index: migratedIndex ?? old)
+                migratedIndex = nil
+            }
+            if let new = newValue { // If the new index is the same as the old just keep the current editor
                 loadEditor(for: new)
             }
         }
@@ -133,6 +137,9 @@ class MultiEditorViewController: UIViewController {
             currentEditor?.unloadFromParentViewController()
             editor.additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 0, bottom: MediaClipsCollectionView.height + 10, right: 0)
             editor.delegate = self
+            editor.editorView.movableViewCanvas.trashCompletion = { [weak self] in
+                self?.clipsController.removeDraggingClip()
+            }
 //            unarchive(editor: editor, index: index)
             load(childViewController: editor, into: editorContainer)
             currentEditor = editor
@@ -176,6 +183,16 @@ extension MultiEditorViewController: MediaPlayerController {
 
 extension MultiEditorViewController: MediaClipsEditorDelegate {
     func mediaClipWasDeleted(at index: Int) {
+        var clips = self.clipsController.getClips()
+        if edits.indices.contains(index) {
+            edits.remove(at: index)
+        }
+        if segments.indices.contains(index) {
+            segments.remove(at: index)
+        }
+
+        migratedIndex = shift(index: selected ?? 0, indices: [index], edits: edits)
+        selected = newIndex(indices: [index], selected: selected, edits: edits)
         //TODO: Ask delegate for view controller to load
 //        else {
 //            let previousIndex = editors.index(before: index)
@@ -191,14 +208,44 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
     }
     
     func mediaClipWasAdded(at index: Int) {
-        
+
     }
-    
+
+    func newIndex(indices: [Int], selected: Int?, edits: [Any]) -> Int {
+        var nextIndex: Int? = nil
+
+        let sortedindices = indices.sorted()
+
+        if let selected = selected, sortedindices.contains(selected) { // If selected index hasn't been deleted don't change it
+            if let firstIndex = indices.first {
+                nextIndex = edits.index(before: firstIndex)
+            } else if let lastIndex = sortedindices.last {
+                nextIndex = edits.index(before: lastIndex)
+            }
+            if nextIndex == nil || edits.indices.contains(nextIndex ?? 0) == false {
+                nextIndex = edits.endIndex
+            }
+        } else {
+            return shift(index: selected ?? 0, indices: indices, edits: edits)
+        }
+        return nextIndex ?? 0
+    }
+
+    func shift(index: Int, indices: [Int], edits: [Any]) -> Int {
+        if index < indices.first ?? 0 {
+            return index
+        } else {
+            let countToIndex = indices.filter({ $0 < selected ?? 0 })
+            return edits.index(selected ?? 0, offsetBy: -countToIndex.count)
+        }
+    }
+
     func mediaClipStartedMoving() {
+        currentEditor?.editorView.updateUI(forDraggingClip: true)
     }
     
     func mediaClipFinishedMoving() {
-        
+        currentEditor?.editorView.updateUI(forDraggingClip: false)
     }
     
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
