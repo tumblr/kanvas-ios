@@ -4,7 +4,7 @@
 
 <img src="https://circleci.com/gh/tumblr/kanvas-ios.svg?style=svg" alt="Kanvas Build Status">
 
-Kanvas is an iOS library for adding effects, drawings, text, stickers, and making GIFs from existing media or the camera.
+Kanvas is an [open-source](https://github.com/tumblr/kanvas-ios/blob/main/LICENSE) iOS library for adding effects, drawings, text, stickers, and making GIFs from existing media or the camera.
 
 It is used in the [Tumblr iOS app](https://apps.apple.com/us/app/tumblr/id305343404) as a camera, media editor, GIF maker, and media posting tool. 
 
