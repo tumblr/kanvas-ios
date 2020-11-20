@@ -35,6 +35,8 @@ class MultiEditorViewController: UIViewController {
             }
             if let new = newValue { // If the new index is the same as the old just keep the current editor
                 loadEditor(for: new)
+            } else {
+                dismissButtonPressed()
             }
         }
     }
@@ -211,24 +213,22 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 
     }
 
-    func newIndex(indices: [Int], selected: Int?, edits: [Any]) -> Int {
+    func newIndex(indices: [Int], selected: Int?, edits: [Any]) -> Int? {
         var nextIndex: Int? = nil
 
         let sortedindices = indices.sorted()
 
         if let selected = selected, sortedindices.contains(selected) { // If selected index hasn't been deleted don't change it
-            if let firstIndex = indices.first {
+            if let firstIndex = indices.first, firstIndex > edits.startIndex {
                 nextIndex = edits.index(before: firstIndex)
-            } else if let lastIndex = sortedindices.last {
+            } else if let lastIndex = sortedindices.last, lastIndex > edits.startIndex {
                 nextIndex = edits.index(before: lastIndex)
-            }
-            if nextIndex == nil || edits.indices.contains(nextIndex ?? 0) == false {
-                nextIndex = edits.endIndex
             }
         } else {
             return shift(index: selected ?? 0, indices: indices, edits: edits)
         }
-        return nextIndex ?? 0
+
+        return nextIndex
     }
 
     func shift(index: Int, indices: [Int], edits: [Any]) -> Int {
