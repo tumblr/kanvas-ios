@@ -44,7 +44,8 @@ struct KanvasCameraImages {
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
     static let nextImage = UIImage.imageFromCameraBundle(named: "next")
     static let saveImage = UIImage.imageFromCameraBundle(named: "save")
-    static let tagImage = UIImage.imageFromCameraBundle(named: "tag.pdf")
+    static let cogImage = UIImage.imageFromCameraBundle(named: "cog")
+    static let tagImage = UIImage.imageFromCameraBundle(named: "tag")
 
     // MARK: - Filters
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
@@ -81,6 +82,17 @@ struct KanvasCameraImages {
         .drawing: [UIImage.imageFromCameraBundle(named: "editorDraw")],
     ]
     
+    static let styleIcons: [EditionOption: [UIImage?]] = [
+        .gif: [
+            UIImage.imageFromCameraBundle(named: "menuGifOff"),
+            UIImage.imageFromCameraBundle(named: "menuGifOn"),
+        ],
+        .filter: [UIImage.imageFromCameraBundle(named: "menuFilters")],
+        .text: [UIImage.imageFromCameraBundle(named: "menuText")],
+        .media: [UIImage.imageFromCameraBundle(named: "menuMedia")],
+        .drawing: [UIImage.imageFromCameraBundle(named: "menuDrawing")],
+    ]
+    
     static func editionOptionTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {
         let index = enabled && editIcons[option]?.count == 2 ? 1 : 0
         return editIcons[option]?[index]
@@ -88,6 +100,11 @@ struct KanvasCameraImages {
 
     static let speakerImage = UIImage.imageFromCameraBundle(named: "Speaker")
     static let speakerSlashImage = UIImage.imageFromCameraBundle(named: "Speaker Slash")
+    
+    static func styleOptionTypes(_ option: EditionOption, enabled: Bool) -> UIImage? {
+        let index = enabled && styleIcons[option]?.count == 2 ? 1 : 0
+        return styleIcons[option]?[index]
+    }
     
     // MARK: - Draw
     static let undoImage = UIImage.imageFromCameraBundle(named: "undo")

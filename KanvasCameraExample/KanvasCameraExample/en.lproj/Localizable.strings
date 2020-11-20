@@ -70,9 +70,26 @@
 /* Indicates to the user that they can tap a button to switch camera modes */
 "Tap to switch modes" = "Tap to switch modes";
 
+/* Indicates to the user that they can tap and hold to record */
+"Tap and hold to record" = "Tap and hold to record";
+
 /* That's too big, bud. */
 "That's too big, bud." = "That's too big, bud.";
 
 /* Try creating final content again */
 "Try again" = "Try again";
 
+/* Label for the GIF option in the editor tools */
+"EditorGIF" = "Create GIF";
+
+/* Label for the filters option in the editor tools */
+"EditorFilters" = "Filters";
+
+/* Label for the text option in the editor tools */
+"EditorText" = "Text";
+
+/* Label for the media option in the editor tools */
+"EditorMedia" = "Media";
+
+/* Label for the drawing option in the editor tools */
+"EditorDrawing" = "Drawing";

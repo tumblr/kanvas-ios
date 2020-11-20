@@ -147,6 +147,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
+        settings.editToolsRedesign = true
         return settings
     }
 
@@ -158,7 +159,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasCameraAnalyticsStub(), quickBlogSelectorCoordinator: nil)
+        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasCameraAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
         controller.delegate = self
         controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
@@ -270,6 +271,9 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .newCameraModes(settings.features.newCameraModes),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
+            .editToolsRedesign(settings.editToolsRedesign),
+            .shutterButtonTooltip(settings.shutterButtonTooltip),
+            .horizontalModeSelector(settings.horizontalModeSelector),
         ]
     }
 
@@ -319,6 +323,12 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
+        case .editToolsRedesign(_):
+            settings.editToolsRedesign = value
+        case .shutterButtonTooltip(_):
+            settings.shutterButtonTooltip = value
+        case .horizontalModeSelector(_):
+            settings.horizontalModeSelector = value
         }
     }
 }
@@ -390,18 +400,20 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                         }
                     }
 
-                    switch exportAction {
-                    case .previewConfirm:
-                        self.dismissCamera()
-                    case .confirm:
-                        self.dismissCamera()
-                    case .post:
-                        self.dismissCamera()
-                    case .save:
-                        break
-                    case .postOptions:
-                        self.dismissCamera()
-                    }
+                switch exportAction {
+                case .previewConfirm:
+                    self.dismissCamera()
+                case .confirm:
+                    self.dismissCamera()
+                case .post:
+                    self.dismissCamera()
+                case .save:
+                    break
+                case .postOptions:
+                    self.dismissCamera()
+                case .confirmPostOptions:
+                    self.dismissCamera()
+                }
 
                 }
             }

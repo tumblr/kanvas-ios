@@ -49,6 +49,13 @@ protocol ModeSelectorAndShootControllerDelegate: class {
 final class ModeSelectorAndShootController: UIViewController {
 
     private let settings: CameraSettings
+    
+    private lazy var modeSelector: OptionSelectorController = {
+        let controller = OptionSelectorController(options: settings.orderedEnabledModes)
+        controller.delegate = self
+        return controller
+    }()
+    
     lazy var modeView: ModeSelectorAndShootView = {
         let view = ModeSelectorAndShootView(settings: self.settings)
         view.delegate = self
@@ -56,7 +63,7 @@ final class ModeSelectorAndShootController: UIViewController {
     }()
 
     weak var delegate: ModeSelectorAndShootControllerDelegate?
-
+    
     private lazy var modesQueue: Queue<CameraMode> = {
         var queue = Queue(elements: self.settings.orderedEnabledModes)
         // Start in the default mode but maintain order
@@ -69,6 +76,14 @@ final class ModeSelectorAndShootController: UIViewController {
     private var currentMode: CameraMode? {
         return modesQueue.first
     }
+    
+    private lazy var modeList: [CameraMode] = {
+        return self.settings.orderedEnabledModes
+    }()
+    
+    private lazy var selectedMode: CameraMode? = {
+        return self.modeList.first
+    }()
     
     /// Initializer with CameraSettings
     ///
@@ -95,13 +110,30 @@ final class ModeSelectorAndShootController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let mode = currentMode {
-            setMode(mode, from: nil)
+        
+        if settings.horizontalModeSelector {
+            if let mode = selectedMode {
+                setMode(mode, from: nil)
+            }
+            
+            if modeList.count == 1 {
+                hideModeButton()
+            }
         }
-        if modesQueue.count == 1 {
-            hideModeButton()
+        else {
+            if let mode = currentMode {
+                setMode(mode, from: nil)
+            }
+            
+            if modesQueue.count == 1 {
+                hideModeButton()
+            }
         }
+        
+        
         updateMediaPickerThumbnail()
+        
+        load(childViewController: modeSelector, into: modeView.modeSelectorView)
     }
     
     // MARK: - Public interface
@@ -225,11 +257,13 @@ final class ModeSelectorAndShootController: UIViewController {
 extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     
     // MARK: - ModeSelectorAndShootViewDelegate
+    
     func didDismissWelcomeTooltip() {
         delegate?.didDismissWelcomeTooltip()
     }
     
     // MARK: - ModeButtonViewDelegate
+    
     func modeButtonViewDidTap() {
         dismissTooltip()
         let oldMode = modesQueue.rotateOnce()
@@ -239,45 +273,56 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     }
 
     func setMode(_ newMode: CameraMode, from oldMode: CameraMode?) {
+        if settings.horizontalModeSelector {
+            modeSelector.select(option: newMode, animated: false)
+        }
+        
         modeView.setUpMode(newMode)
         delegate?.didOpenMode(newMode, andClosed: oldMode)
     }
 
     // MARK: - ShootButtonViewDelegate
+    
     func shootButtonViewDidTap() {
-        if let mode = currentMode {
+        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        if let mode = modeMaybe {
             dismissTooltip()
             delegate?.didTapForMode(mode)
         }
     }
 
     func shootButtonViewDidStartLongPress() {
-        if let mode = currentMode {
+        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        if let mode = modeMaybe {
             dismissTooltip()
             delegate?.didStartPressingForMode(mode)
         }
     }
 
     func shootButtonViewDidEndLongPress() {
-        if let mode = currentMode {
+        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        if let mode = modeMaybe {
             delegate?.didEndPressingForMode(mode)
         }
     }
 
     func shootButtonReachedMaximumTime() {
-        if let mode = currentMode {
+        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        if let mode = modeMaybe {
             delegate?.didEndPressingForMode(mode)
         }
     }
     
     func shootButtonDidReceiveDropInteraction() {
-        if let mode = currentMode {
+        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        if let mode = modeMaybe {
             delegate?.didDropToDelete(mode)
         }
     }
     
     func shootButtonDidZoom(currentPoint: CGPoint, gesture: UILongPressGestureRecognizer) {
-        if let mode = currentMode {
+        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        if let mode = modeMaybe {
             delegate?.didPanForZoom(mode, currentPoint, gesture)
         }
     }
@@ -286,5 +331,15 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
         delegate?.didTapMediaPickerButton {
             self.modeView.resetMediaPickerButton()
         }
+    }
+}
+
+extension ModeSelectorAndShootController: OptionSelectorControllerDelegate {
+    
+    func didSelect(option: OptionSelectorItem) {
+        guard let mode = option as? CameraMode else { return }
+        dismissTooltip()
+        selectedMode = mode
+        setMode(mode, from: .none)
     }
 }

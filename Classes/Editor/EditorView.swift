@@ -35,16 +35,17 @@ struct FullViewConstraints {
 
 /// protocol for closing the preview or confirming
 protocol EditorViewDelegate: class {
-    /// A function that is called when the confirm button is pressed
+    /// Called when the confirm button is pressed
     func didTapConfirmButton()
-    /// A function that is called when the close button is pressed
+    /// Called when the close button is pressed
     func didTapCloseButton()
-    /// A function that is called when the post button is pressed
+    /// Called when the post button is pressed
     func didTapPostButton()
-    /// A function that is called when the save button is pressed
+    /// Called when the save button is pressed
     func didTapSaveButton()
     /// A function that is called when the sound button is pressed
     func didTapMuteButton(enabled: Bool)
+    /// Called when the post options button is pressed
     func didTapPostOptionsButton()
     /// Called when a touch event on a movable view begins
     func didBeginTouchesOnText()
@@ -74,6 +75,7 @@ protocol EditorViewDelegate: class {
 /// Constants for EditorView
 private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
+    static let horizontalMargin: CGFloat = 16
     static let editionOptionAnimationDuration: TimeInterval = 0.5
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
@@ -89,6 +91,13 @@ private struct EditorViewConstants {
     static let fakeOptionCellMinSize: CGFloat = 36
     static let fakeOptionCellMaxSize: CGFloat = 45
     static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
+    static let overlayColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.87)
+    static let overlayLabelMargin: CGFloat = 20
+    static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
+    static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
+    static let topMenuElementHeight: CGFloat = 36
+    static let buttonBackgroundColor = UIColor.black.withAlphaComponent(0.4)
+    static let blogSwitcherHorizontalMargin: CGFloat = 8
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -144,15 +153,26 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let postLabel = UILabel()
     private let tagButton = UIButton()
     private let fakeOptionCell = UIImageView()
+    private let showCogIcon: Bool
     private let showTagButton: Bool
+    private let showTagCollection: Bool
+    private let showQuickPostButton: Bool
+    private let enableQuickPostLongPress: Bool
+    private let showBlogSwitcher: Bool
+    private let editToolsRedesign: Bool
+    private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
+    private let overlay = UIView()
+    private let overlayLabel = UILabel()
+    private var overlayLabelConstraint: NSLayoutConstraint?
     let collectionContainer = IgnoreTouchesView()
     let filterMenuContainer = IgnoreTouchesView()
     let textMenuContainer = IgnoreTouchesView()
     let drawingMenuContainer = IgnoreTouchesView()
     let gifMakerMenuContainer = IgnoreTouchesView()
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
+    private let tagCollection: UIView?
 
     var drawingCanvas: IgnoreTouchesView
 
@@ -189,17 +209,40 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(mainActionMode: MainActionMode, showSaveButton: Bool, showMuteButton: Bool, showCrossIcon: Bool, showTagButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, movableViewCanvas: MovableViewCanvas?, drawingCanvas: IgnoreTouchesView?) {
+    init(delegate: EditorViewDelegate?,
+         mainActionMode: MainActionMode,
+         showSaveButton: Bool,
+         showMuteButton: Bool,
+         showCrossIcon: Bool,
+         showCogIcon: Bool,
+         showTagButton: Bool,
+         showTagCollection: Bool,
+         showQuickPostButton: Bool,
+         enableQuickPostLongPress: Bool,
+         showBlogSwitcher: Bool,
+         editToolsRedesign: Bool,
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         tagCollection: UIView?,
+         metalContext: MetalContext?,
+         movableViewCanvas: MovableViewCanvas?,
+         drawingCanvas: IgnoreTouchesView?) {
+        self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
         self.showMuteButton = showMuteButton
+        self.showCogIcon = showCogIcon
         self.showTagButton = showTagButton
+        self.showTagCollection = showTagCollection
         self.showCrossIcon = showCrossIcon
+        self.showQuickPostButton = showQuickPostButton
+        self.enableQuickPostLongPress = enableQuickPostLongPress
+        self.showBlogSwitcher = showBlogSwitcher
+        self.editToolsRedesign = editToolsRedesign
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
-
+        self.tagCollection = tagCollection
+        self.metalContext = metalContext
         self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
         self.drawingCanvas = drawingCanvas ?? IgnoreTouchesView()
-
         super.init(frame: .zero)
         self.movableViewCanvas.delegate = self
         setupViews()
@@ -213,6 +256,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupCloseButton()
         if showTagButton {
             setupTagButton()
+        }
+        if showTagCollection {
+            setupTagCollection()
         }
         switch mainActionMode {
         case .confirm:
@@ -276,19 +322,36 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
     private func setupTagButton() {
         tagButton.accessibilityLabel = "Tag Button"
-        tagButton.layer.applyShadows()
         tagButton.setImage(KanvasCameraImages.tagImage, for: .normal)
-        tagButton.imageView?.contentMode = .scaleAspectFit
-        tagButton.imageView?.tintColor = .white
-
+        tagButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
+        tagButton.layer.cornerRadius = EditorViewConstants.confirmButtonSize / 2
+        tagButton.layer.masksToBounds = true
         navigationContainer.addSubview(tagButton)
+
         tagButton.addTarget(self, action: #selector(tagButtonPressed), for: .touchUpInside)
         tagButton.translatesAutoresizingMaskIntoConstraints = false
+        let bottomMargin = EditorViewConstants.confirmButtonVerticalMargin + EditorViewConstants.confirmButtonSize + 13
         NSLayoutConstraint.activate([
-            tagButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
-            tagButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
-            tagButton.heightAnchor.constraint(equalTo: tagButton.widthAnchor),
-            tagButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+            tagButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+            tagButton.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -bottomMargin),
+            tagButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+            tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize)
+        ])
+    }
+    
+    private func setupTagCollection() {
+        guard let tagCollection = tagCollection else { return }
+        tagCollection.accessibilityLabel = "Tag Collection"
+        navigationContainer.addSubview(tagCollection)
+
+        tagCollection.translatesAutoresizingMaskIntoConstraints = false
+        let bottomMargin = EditorViewConstants.confirmButtonVerticalMargin + EditorViewConstants.confirmButtonSize + 13
+        let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin + EditorViewConstants.confirmButtonSize
+        NSLayoutConstraint.activate([
+            tagCollection.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor),
+            tagCollection.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -trailingMargin),
+            tagCollection.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -bottomMargin),
+            tagCollection.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
         ])
     }
     
@@ -328,7 +391,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private func setupPostOptionsButton() {
         confirmButton.accessibilityLabel = "Post Options Button"
         navigationContainer.addSubview(confirmButton)
-        confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(postOptionsButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -338,14 +400,23 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
             confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.confirmButtonVerticalMargin)
         ])
+        
+        if showCogIcon {
+            confirmButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
+            confirmButton.setImage(KanvasCameraImages.cogImage, for: .normal)
+            confirmButton.layer.cornerRadius = EditorViewConstants.confirmButtonSize / 2
+            confirmButton.layer.masksToBounds = true
+        }
+        else {
+            confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        }
     }
     
     private func setupCollection() {
+        navigationContainer.addSubview(collectionContainer)
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Edition Menu Collection Container"
         collectionContainer.clipsToBounds = false
-        
-        navigationContainer.addSubview(collectionContainer)
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         let buttonOnTheLeft: UIView?
         let buttonOnTheRight: UIView?
@@ -368,21 +439,33 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             buttonOnTheRight = confirmOrPostButton()
             trailingMargin = confirmOrPostButtonHorizontalMargin()
         }
-
-        let verticalConstraint: NSLayoutConstraint
-
-        if let button = buttonOnTheRight {
-            verticalConstraint = collectionContainer.centerYAnchor.constraint(equalTo: button.centerYAnchor)
-        } else {
-            verticalConstraint = collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
-        }
         
-        NSLayoutConstraint.activate([
-            collectionContainer.leadingAnchor.constraint(equalTo: buttonOnTheLeft?.trailingAnchor ?? safeAreaLayoutGuide.leadingAnchor, constant: trailingMargin),
-            collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight?.leadingAnchor ?? trailingAnchor, constant: -trailingMargin / 2),
-            verticalConstraint,
-            collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
-        ])
+        if editToolsRedesign {
+            
+            NSLayoutConstraint.activate([
+                collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+                collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.horizontalMargin),
+                collectionContainer.widthAnchor.constraint(equalToConstant: StyleMenuCollectionCell.width)
+            ])
+        }
+        else {
+
+            let verticalConstraint: NSLayoutConstraint
+
+            if let button = buttonOnTheRight {
+                verticalConstraint = collectionContainer.centerYAnchor.constraint(equalTo: button.centerYAnchor)
+            } else {
+                verticalConstraint = collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            }
+
+            NSLayoutConstraint.activate([
+                collectionContainer.leadingAnchor.constraint(equalTo: buttonOnTheLeft?.trailingAnchor ?? safeAreaLayoutGuide.leadingAnchor, constant: trailingMargin),
+                collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight?.leadingAnchor ?? trailingAnchor, constant: -trailingMargin / 2),
+                verticalConstraint,
+                collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
+            ])
+        }
     }
     
     private func setupFilterMenu() {
@@ -448,6 +531,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// Sets up the image used for the animation that transforms a menu cell into a checkmark button
     private func setupFakeOptionCell() {
         fakeOptionCell.accessibilityLabel = "Fake Option Cell"
+        fakeOptionCell.contentMode = .center
+        fakeOptionCell.layer.cornerRadius = EditorViewConstants.fakeOptionCellMaxSize / 2
+        fakeOptionCell.layer.masksToBounds = true
         
         addSubview(fakeOptionCell)
         fakeOptionCell.translatesAutoresizingMaskIntoConstraints = false
@@ -668,13 +754,14 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// - Parameter cell: the cell to be transformed
     /// - Parameter finalLocation: the location where the checkmark button will be
     /// - Parameter completion: a closure to execute when the animation ends
-    func animateEditionOption(cell: EditionMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
+    func animateEditionOption(cell: KanvasEditorMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
         guard let cell = cell, let cellParent = cell.superview else {
             completion(false)
             return
         }
         fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
-        fakeOptionCell.image = cell.circleView.image
+        fakeOptionCell.image = cell.iconView.image
+        fakeOptionCell.backgroundColor = cell.iconView.backgroundColor
         fakeOptionCell.alpha = 1
         cell.alpha = 0
         
@@ -695,14 +782,15 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     /// transforms the checkmark button of the current menu into its option cell with an animation
     ///
     /// - Parameter cell: the cell in which the checkmark button will be tranformed
-    func animateReturnOfEditionOption(cell: EditionMenuCollectionCell?) {
+    func animateReturnOfEditionOption(cell: KanvasEditorMenuCollectionCell?) {
         guard let cell = cell, let cellParent = cell.superview else { return }
         fakeOptionCell.alpha = 1
         
         let duration = EditorViewConstants.editionOptionAnimationDuration
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
-                self.fakeOptionCell.image = cell.circleView.image
+                self.fakeOptionCell.image = cell.iconView.image
+                self.fakeOptionCell.backgroundColor = cell.iconView.backgroundColor
                 self.fakeOptionCell.transform = .identity
                 self.fakeOptionCell.center = cellParent.convert(cell.center, to: nil)
             })
@@ -764,6 +852,65 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.tagButton.alpha = show ? 1 : 0
         }
+    }
+    
+    /// shows or hides the tag collection
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTagCollection(_ show: Bool) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.tagCollection?.alpha = show ? 1 : 0
+        }
+    }
+    
+    /// shows or hides the overlay
+    ///
+    /// - Parameters
+    ///  -  show: true to show, false to hide
+    ///  - completion: an optional action to be executed when the animation ends
+    func showOverlay(_ show: Bool, completion: ((Bool) -> Void)? = nil) {
+        overlayLabel.alpha = show ? 1 : 0
+        UIView.animate(withDuration: EditorViewConstants.animationDuration, animations: { [weak self] in
+            self?.overlay.alpha = show ? 1 : 0
+        }, completion: completion)
+    }
+    
+    /// moves the overlay label next to a specified view.
+    ///
+    /// - Parameter view: the view next to the label.
+    func moveOverlayLabel(to view: UIView) {
+        overlayLabelConstraint?.isActive = false
+        let newConstraint = overlayLabel.trailingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                                   constant: -EditorViewConstants.overlayLabelMargin)
+        newConstraint.isActive = true
+        overlayLabelConstraint = newConstraint
+        layoutIfNeeded()
+    }
+    
+    /// Moves a view to be shown above the overlay.
+    ///
+    /// - Parameters
+    ///  - view: the view that will be moved.
+    ///  - visible: true to move the specified view to the front. false to move the overlay to the front.
+    func moveViewToFront(_ view: UIView, visible: Bool) {
+        if visible {
+            bringSubviewToFront(view)
+        }
+        else {
+            bringSubviewToFront(overlay)
+        }
+    }
+    /// Modifies the overlay message.
+    ///
+    /// - Parameter text: the new message.
+    func setOverlayLabel(text: String?) {
+        let newText = text ?? ""
+        let animation: () -> Void = { [weak self] in
+            self?.overlayLabel.text = newText
+        }
+        
+        UIView.transition(with: overlayLabel, duration: EditorViewConstants.animationDuration,
+                          options: .transitionCrossDissolve, animations: animation, completion: nil)
     }
 
     func updatePostButton(avatarView: UIView) {

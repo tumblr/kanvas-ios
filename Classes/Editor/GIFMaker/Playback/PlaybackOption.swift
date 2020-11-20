@@ -6,8 +6,9 @@
 
 import Foundation
 
-/// A representation of a playback option to be presented in PlaybackController
-enum PlaybackOption: String {
+/// A representation of a playback option to be presented in the selector.
+enum PlaybackOption: String, OptionSelectorItem {
+
     case loop
     case rebound
     case reverse
@@ -23,4 +24,5 @@ enum PlaybackOption: String {
             return NSLocalizedString("GIFReverseLoop", comment: "Reverse playback mode")
         }
     }
+    
 }

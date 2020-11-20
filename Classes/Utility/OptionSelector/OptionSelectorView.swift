@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for tapping or swiping the options.
-protocol PlaybackViewDelegate: class {
+protocol OptionSelectorViewDelegate: class {
     
     /// Called when a cell is tapped
     ///
@@ -23,7 +23,7 @@ protocol PlaybackViewDelegate: class {
 }
 
 
-/// Constants for PlaybackView
+/// Constants for OptionSelectorView
 private struct Constants {
     static let animationDuration: TimeInterval = 0.1
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.65)
@@ -31,15 +31,15 @@ private struct Constants {
     static let cornerRadius: CGFloat = 18
 }
 
-/// View for the playback controller
-final class PlaybackView: UIView {
+/// View for the selector controller
+final class OptionSelectorView: UIView {
     
-    static let height: CGFloat = PlaybackCollectionCell.height
+    static let height: CGFloat = OptionSelectorCell.height
     
-    weak var delegate: PlaybackViewDelegate?
+    weak var delegate: OptionSelectorViewDelegate?
     
     let collectionView: UICollectionView
-    private let layout: PlaybackCollectionViewLayout
+    private let layout: OptionSelectorCollectionViewLayout
     private let selectionView: UIView
     
     var cellWidth: CGFloat {
@@ -60,8 +60,8 @@ final class PlaybackView: UIView {
     
     init() {
         selectionView = UIView()
-        layout = PlaybackCollectionViewLayout()
-        collectionView = PlaybackInnerCollectionView(frame: .zero, collectionViewLayout: layout)
+        layout = OptionSelectorCollectionViewLayout()
+        collectionView = OptionSelectorInnerCollectionView(frame: .zero, collectionViewLayout: layout)
         selectionViewWidth = 0
         super.init(frame: .zero)
         backgroundColor = Constants.backgroundColor
@@ -92,7 +92,7 @@ final class PlaybackView: UIView {
     /// Sets up a white rounded view.
     private func setupSelectionView() {
         addSubview(selectionView)
-        selectionView.accessibilityIdentifier = "Playback Selection View"
+        selectionView.accessibilityIdentifier = "Option Selector Selection View"
         selectionView.translatesAutoresizingMaskIntoConstraints = false
         selectionView.backgroundColor = Constants.selectionViewColor
         selectionView.layer.cornerRadius = Constants.cornerRadius
@@ -101,7 +101,7 @@ final class PlaybackView: UIView {
         let selectionViewLeadingConstraint = selectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 0)
         NSLayoutConstraint.activate([
             selectionViewWidthConstraint,
-            selectionView.heightAnchor.constraint(equalToConstant: PlaybackCollectionCell.height),
+            selectionView.heightAnchor.constraint(equalToConstant: OptionSelectorCell.height),
             selectionViewLeadingConstraint,
             selectionView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor)
         ])
@@ -110,9 +110,9 @@ final class PlaybackView: UIView {
         self.selectionViewLeadingConstraint = selectionViewLeadingConstraint
     }
     
-    /// Sets up the collection for the playback options.
+    /// Sets up the collection for the  options.
     private func setupCollectionView() {
-        collectionView.accessibilityIdentifier = "Playback Collection View"
+        collectionView.accessibilityIdentifier = "Option Selector Collection View"
         collectionView.backgroundColor = .clear
         collectionView.add(into: self)
     }
@@ -156,7 +156,7 @@ final class PlaybackView: UIView {
     /// - Parameters:
     ///  - cell: the cell to which the selection view will move.
     ///  - animated: whether to animate the movement or not.
-    func select(cell: PlaybackCollectionCell, animated: Bool = true) {
+    func select(cell: OptionSelectorCell, animated: Bool = true) {
         let action: () -> Void = { [weak self] in
             self?.selectionViewLeadingConstraint?.constant = cell.frame.origin.x
         }
@@ -177,7 +177,7 @@ final class PlaybackView: UIView {
 }
 
 
-private class PlaybackInnerCollectionView: UICollectionView {
+private class OptionSelectorInnerCollectionView: UICollectionView {
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -204,7 +204,7 @@ private class PlaybackInnerCollectionView: UICollectionView {
     }
 }
 
-private class PlaybackCollectionViewLayout: UICollectionViewFlowLayout {
+private class OptionSelectorCollectionViewLayout: UICollectionViewFlowLayout {
 
     override init() {
         super.init()
@@ -219,7 +219,7 @@ private class PlaybackCollectionViewLayout: UICollectionViewFlowLayout {
     private func configure() {
         scrollDirection = .horizontal
         itemSize = UICollectionViewFlowLayout.automaticSize
-        estimatedItemSize = CGSize(width: PlaybackCollectionCell.width, height: PlaybackCollectionCell.height)
+        estimatedItemSize = CGSize(width: OptionSelectorCell.width, height: OptionSelectorCell.height)
         minimumInteritemSpacing = 0
         minimumLineSpacing = 0
     }

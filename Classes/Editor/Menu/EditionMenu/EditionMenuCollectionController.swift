@@ -7,16 +7,8 @@
 import Foundation
 import UIKit
 
-protocol EditionMenuCollectionControllerDelegate: class {
-    /// Callback for the selection of an option
-    ///
-    /// - Parameter editionOption: the selected option
-    /// - Parameter cell: the selected cell
-    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell)
-}
-
 /// Constants for Collection Controller
-private struct EditionMenuCollectionControllerConstants {
+private struct Constants {
     static let section: Int = 0
     static let animationDuration: TimeInterval = 0.25
     static let collectionLeftInset: CGFloat = 12
@@ -24,26 +16,24 @@ private struct EditionMenuCollectionControllerConstants {
 }
 
 /// Controller for handling the filter item collection.
-final class EditionMenuCollectionController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditionMenuCollectionCellDelegate {
+final class EditionMenuCollectionController: UIViewController, KanvasEditorMenuController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditionMenuCollectionCellDelegate {
     
     private lazy var editionMenuCollectionView = EditionMenuCollectionView()
     private var editionOptions: [EditionOption]
-    private(set) var textCell: EditionMenuCollectionCell?
+    weak var delegate: KanvasEditorMenuControllerDelegate?
     
     var shouldExportMediaAsGIF: Bool {
         didSet {
             guard let index = editionOptions.firstIndex(of: .gif) else { return }
-            editionMenuCollectionView.collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+            editionMenuCollectionView.collectionView.reloadItems(at: [IndexPath(item: index, section: Constants.section)])
         }
     }
-    
-    weak var delegate: EditionMenuCollectionControllerDelegate?
     
     /// Initializes the option collection
     /// - Parameter settings: Camera settings
     /// - Parameter shouldExportMediaAsGIF: initial value for GIF export toggle button. `nil` means the button is disabled.
     init(settings: CameraSettings, shouldExportMediaAsGIF: Bool?) {
-        editionOptions = []
+        self.editionOptions = []
         self.shouldExportMediaAsGIF = shouldExportMediaAsGIF ?? false
 
         if settings.features.gifs && shouldExportMediaAsGIF != nil {
@@ -78,17 +68,6 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
-
-    func getCell(for option: EditionOption) -> EditionMenuCollectionCell? {
-        guard
-            let collectionView = (view as? EditionMenuCollectionView)?.collectionView,
-            let index = editionOptions.firstIndex(of: option)
-        else {
-                return nil
-        }
-        let indexPath = IndexPath(item: index, section: 0)
-        return self.collectionView(collectionView, cellForItemAt: indexPath) as? EditionMenuCollectionCell
-    }
     
     // MARK: - View Life Cycle
     
@@ -110,15 +89,26 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         editionMenuCollectionView.collectionView.layoutIfNeeded()
     }
     
-    // MARK: - Public interface
+    // MARK: - KanvasEditorMenuController
     
     /// shows or hides the edition menu
     ///
     /// - Parameter show: true to show, false to hide
     func showView(_ show: Bool) {
-        UIView.animate(withDuration: EditionMenuCollectionControllerConstants.animationDuration) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             self.editionMenuCollectionView.alpha = show ? 1 : 0
         }
+    }
+    
+    func getCell(for option: EditionOption) -> KanvasEditorMenuCollectionCell? {
+        guard
+            let collectionView = (view as? EditionMenuCollectionView)?.collectionView,
+            let index = editionOptions.firstIndex(of: option)
+        else {
+            return nil
+        }
+        let indexPath = IndexPath(item: index, section: Constants.section)
+        return self.collectionView(collectionView, cellForItemAt: indexPath) as? EditionMenuCollectionCell
     }
     
     // MARK: - UICollectionViewDataSource
@@ -136,9 +126,6 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
         if let cell = cell as? EditionMenuCollectionCell, let option = editionOptions.object(at: indexPath.item) {
             cell.bindTo(option, enabled: option == .gif ? shouldExportMediaAsGIF : false)
             cell.delegate = self
-            if option == .text {
-                textCell = cell
-            }
         }
         return cell
     }
@@ -147,10 +134,10 @@ final class EditionMenuCollectionController: UIViewController, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard editionOptions.count > 0, collectionView.bounds != .zero else { return .zero }
-        return UIEdgeInsets(top: 0, left: EditionMenuCollectionControllerConstants.collectionLeftInset, bottom: 0, right: EditionMenuCollectionControllerConstants.collectionRightInset)
+        return UIEdgeInsets(top: 0, left: Constants.collectionLeftInset, bottom: 0, right: Constants.collectionRightInset)
     }
     
-    // MARK: Option selection
+    // MARK: - Option selection
     
     /// Selects an option
     ///

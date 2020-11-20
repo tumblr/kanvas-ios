@@ -4,11 +4,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-/// A representation of a edition option to be presented in EditionMenuCollectionController
-enum EditionOption: Int {
-    case gif
-    case filter
-    case text
-    case media
-    case drawing
+import Foundation
+
+/// A protocol for the item to be presented in the option selector controller.
+protocol OptionSelectorItem {
+    
+    /// Name of the item.
+    var description: String { get }    
 }

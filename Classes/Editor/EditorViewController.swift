@@ -59,13 +59,21 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
 
     var editorView: EditorView
     
-    private lazy var collectionController: EditionMenuCollectionController = {
-        let controller = EditionMenuCollectionController(settings: self.settings,
-                                                         shouldExportMediaAsGIF: shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil)
+    private lazy var collectionController: KanvasEditorMenuController = {
+        let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
+        let controller: KanvasEditorMenuController
+        
+        if settings.editToolsRedesign {
+            controller = StyleMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+        }
+        else {
+            controller = EditionMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+        }
+        
         controller.delegate = self
         return controller
     }()
@@ -111,6 +119,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
 
     private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
+    private let tagCollection: UIView?
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
     private var originalSegments: [CameraSegment]
@@ -123,9 +132,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let stickerProvider: StickerProvider?
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
-    private var selectedCell: EditionMenuCollectionCell?
+    private var selectedCell: KanvasEditorMenuCollectionCell?
 
     var shouldExportSound: Bool = true
+    private let metalContext = MetalContext.createContext()
 
     private var shouldExportMediaAsGIF: Bool {
         get {
@@ -133,10 +143,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         set {
             collectionController.shouldExportMediaAsGIF = newValue
-            if let editionOption = openedMenu, let cell = selectedCell {
-                let image = KanvasCameraImages.editionOptionTypes(editionOption, enabled: newValue)
-                cell.setImage(image)
-            }
         }
     }
 
@@ -161,7 +167,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private var exportCompletion: ((Result<(UIImage?, URL?, MediaInfo), Error>) -> Void)?
 
-    private static func editor(settings: CameraSettings, canvas: MovableViewCanvas?, showsMuteButton: Bool, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, drawingView: IgnoreTouchesView?) -> EditorView {
+    private static func editor(delegate: EditorViewDelegate?,
+                               settings: CameraSettings,
+                               canvas: MovableViewCanvas?,
+                               showsMuteButton: Bool,
+                               quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+                               drawingView: IgnoreTouchesView?,
+                               tagCollection: UIView?,
+                               metalContext: MetalContext?) -> EditorView {
         var mainActionMode: EditorView.MainActionMode = .confirm
         if settings.features.editorPostOptions {
             mainActionMode = .postOptions
@@ -172,12 +185,21 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             mainActionMode = .publish
         }
 
-        let editorView = EditorView(mainActionMode: mainActionMode,
+        let editorView: EditorView = EditorView(delegate: delegate,
+                                    mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
                                     showMuteButton: showsMuteButton,
                                     showCrossIcon: settings.crossIconInEditor,
+                                    showCogIcon: settings.showCogIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
+                                    showTagCollection: settings.showTagCollectionInEditor,
+                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
+                                    enableQuickPostLongPress: settings.enableQuickPostLongPress,
+                                    showBlogSwitcher: settings.showBlogSwitcherInEditor,
+                                    editToolsRedesign: settings.editToolsRedesign,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                    tagCollection: tagCollection,
+                                    metalContext: metalContext,
                                     movableViewCanvas: canvas,
                                     drawingCanvas: drawingView)
         return editorView
@@ -205,7 +227,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: analyticsProvider,
-                             quickBlogSelectorCoordinator: nil)
+                             quickBlogSelectorCoordinator: nil,
+                             tagCollection: nil)
     }
     
     public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
@@ -217,7 +240,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: nil,
-                             quickBlogSelectorCoordinator: nil)
+                             quickBlogSelectorCoordinator: nil,
+                             tagCollection: nil)
     }
 
     public static func createEditor(forGIF url: URL,
@@ -248,7 +272,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                   cameraMode: nil,
                   stickerProvider: stickerProvider,
                   analyticsProvider: analyticsProvider,
-                  quickBlogSelectorCoordinator: nil)
+                  quickBlogSelectorCoordinator: nil,
+                  tagCollection: nil)
     }
     
     /// The designated initializer for the editor controller
@@ -271,7 +296,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          views: [View]? = nil,
          canvas: MovableViewCanvas? = nil,
-         drawingView: IgnoreTouchesView? = nil) {
+         drawingView: IgnoreTouchesView? = nil,
+         tagCollection: UIView?) {
         self.settings = settings
         self.originalSegments = segments
         self.assetsHandler = assetsHandler
@@ -281,11 +307,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.gifEncoderClass = gifEncoderClass
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
+        self.tagCollection = tagCollection
 
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: MetalContext.createContext()))
         let muteButtonShown = settings.features.muteButton && segments.first?.image == nil
-        self.editorView = EditorViewController.editor(settings: settings, canvas: canvas, showsMuteButton: muteButtonShown, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, drawingView: drawingView)
+        self.editorView = EditorViewController.editor(delegate: nil,
+                                                      settings: settings,
+                                                      canvas: canvas,
+                                                      showsMuteButton: muteButtonShown,
+                                                      quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                                      drawingView: drawingView,
+                                                      tagCollection: tagCollection,
+                                                      metalContext: metalContext)
         super.init(nibName: .none, bundle: .none)
+        self.editorView.delegate = self
 
         editorView.delegate = self
         player.playerView = editorView.playerView
@@ -419,7 +454,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         openGIFMaker(cell: cell, animated: animated, permanent: true)
     }
 
-    private func openGIFMaker(cell: EditionMenuCollectionCell, animated: Bool, permanent: Bool) {
+    private func openGIFMaker(cell: KanvasEditorMenuCollectionCell, animated: Bool, permanent: Bool) {
         let editionOption = EditionOption.gif
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         showMainUI(false)
@@ -593,7 +628,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
-        let cell = collectionController.textCell
+        let cell = collectionController.getCell(for: .text)
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
@@ -893,9 +928,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         selectedCell = nil
     }
     
-    // MARK: - EditionMenuCollectionControllerDelegate
+    // MARK: - KanvasEditionMenuControllerDelegate
 
-    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
+    func didSelectEditionOption(_ editionOption: EditionOption, cell: KanvasEditorMenuCollectionCell) {
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
@@ -949,7 +984,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameters
     ///  - editionOption: the selected edition option
     ///  - cell: the cell of the selected edition option
-    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: KanvasEditorMenuCollectionCell? = nil) {
         selectedCell = cell
         openedMenu = editionOption
     }
@@ -1123,6 +1158,30 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         startPlayerFromSegments()
     }
     
+    func onQuickPostButtonSubmitted() {
+        startExporting(action: .confirmPostOptions)
+    }
+    
+    public func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
+        editorView.moveOverlayLabel(to: view)
+        
+        if visible {
+            editorView.setOverlayLabel(text: hintText)
+            editorView.moveViewToFront(view, visible: true)
+            editorView.showOverlay(true)
+        }
+        else {
+            editorView.showOverlay(false, completion: { [weak self] _ in
+                self?.editorView.moveViewToFront(view, visible: false)
+                self?.editorView.setOverlayLabel(text: hintText)
+            })
+        }
+    }
+    
+    public func onQuickPostOptionsSelected(selected: Bool, hintText: String?, view: UIView) {
+        editorView.setOverlayLabel(text: hintText)
+    }
+    
     // MARK: - Private utilities
     
     /// shows or hides the main UI (edition options, tag button and back button)
@@ -1133,6 +1192,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         showConfirmButton(show)
         showCloseButton(show)
         showTagButton(show)
+        showTagCollection(show)
     }
     
     // MARK: - Public interface
@@ -1156,6 +1216,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameter show: true to show, false to hide
     func showTagButton(_ show: Bool) {
         editorView.showTagButton(show)
+    }
+    
+    /// shows or hides the tag collection
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showTagCollection(_ show: Bool) {
+        editorView.showTagCollection(show)
     }
     
     /// shows or hides the editor menu and the back button

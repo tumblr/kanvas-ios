@@ -219,7 +219,7 @@ final class GifMakerView: UIView {
         trimMenuContainer.clipsToBounds = false
         addSubview(trimMenuContainer)
         
-        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.trimMenuMargin
+        let bottomMargin = Constants.bottomMargin + OptionSelectorView.height + Constants.trimMenuMargin
         NSLayoutConstraint.activate([
             trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
@@ -236,7 +236,7 @@ final class GifMakerView: UIView {
         speedMenuContainer.clipsToBounds = false
         addSubview(speedMenuContainer)
         
-        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.speedMenuMargin
+        let bottomMargin = Constants.bottomMargin + OptionSelectorView.height + Constants.speedMenuMargin
         NSLayoutConstraint.activate([
             speedMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             speedMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
@@ -257,7 +257,7 @@ final class GifMakerView: UIView {
             playbackMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             playbackMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
             playbackMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
-            playbackMenuContainer.heightAnchor.constraint(equalToConstant: PlaybackView.height),
+            playbackMenuContainer.heightAnchor.constraint(equalToConstant: OptionSelectorView.height),
         ])
     }
     

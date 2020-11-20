@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class PlaybackCollectionCellTests: FBSnapshotTestCase {
+final class StyleMenuCollectionCellTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,22 +18,16 @@ final class PlaybackCollectionCellTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newCell() -> PlaybackCollectionCell {
-        let frame = CGRect(origin: .zero,
-                           size: CGSize(width: 100, height: PlaybackView.height))
-        return PlaybackCollectionCell(frame: frame)
+    func newCell() -> StyleMenuCollectionCell {
+        let size = CGSize(width: StyleMenuCollectionCell.width, height: StyleMenuCollectionCell.height)
+        let frame = CGRect(origin: CGPoint.zero, size: size)
+        return StyleMenuCollectionCell(frame: frame)
     }
     
     func testCell() {
         let cell = newCell()
-        cell.bindTo(.loop)
-        FBSnapshotVerifyView(cell)
-    }
-    
-    func testSelectedCell() {
-        let cell = newCell()
-        cell.bindTo(.loop)
-        cell.setSelected(true, animated: false)
+        let editionOption = EditionOption.media
+        cell.bindTo(editionOption, enabled: false)
         FBSnapshotVerifyView(cell)
     }
 }

@@ -141,6 +141,10 @@ extension SplitViewController: KanvasDashboardControllerDelegate {
     func kanvasDashboardOpenPostingOptionsRequest() {
         navigateFromKanvas()
     }
+    
+    func kanvasDashboardConfirmPostingOptionsRequest() {
+        navigateFromKanvas()
+    }
 
     func kanvasDashboardOpenComposeRequest() {
         navigateFromKanvas()

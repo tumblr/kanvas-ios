@@ -63,6 +63,7 @@ public enum KanvasExportAction {
     case post
     case save
     case postOptions
+    case confirmPostOptions
 }
 
 // Error handling
@@ -196,6 +197,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let feedbackGenerator: UINotificationFeedbackGenerator
     private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
+    private let tagCollection: UIView?
 
     private weak var mediaPlayerController: MediaPlayerController?
 
@@ -209,8 +211,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// and which should be the result of the interaction.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator)
+    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, tagCollection: UIView?) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, tagCollection: tagCollection)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -232,7 +234,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
          captureDeviceAuthorizer: CaptureDeviceAuthorizing,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?,
-         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         tagCollection: UIView?) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
@@ -242,6 +245,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.stickerProvider = stickerProvider
         self.analyticsProvider = analyticsProvider
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
+        self.tagCollection = tagCollection
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
@@ -363,9 +367,21 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         controller.modalPresentationStyle = .fullScreen
         return controller
     }
-
+    
     private func createEditorViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, views: [View]? = nil, canvas: MovableViewCanvas? = nil, drawing: IgnoreTouchesView? = nil) -> EditorViewController {
-        let controller = EditorViewController(settings: settings, segments: segments, assetsHandler: segmentsHandler, exporterClass: MediaExporter.self, gifEncoderClass: GIFEncoderImageIO.self, cameraMode: currentMode, stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, views: views, canvas: canvas, drawingView: drawing)
+        let controller = EditorViewController(settings: settings,
+                                              segments: segments,
+                                              assetsHandler: segmentsHandler,
+                                              exporterClass: MediaExporter.self,
+                                              gifEncoderClass: GIFEncoderImageIO.self,
+                                              cameraMode: currentMode,
+                                              stickerProvider: stickerProvider,
+                                              analyticsProvider: analyticsProvider,
+                                              quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                              views: views,
+                                              canvas: canvas,
+                                              drawingView: drawing,
+                                              tagCollection: tagCollection)
         controller.delegate = self
         return controller
     }
@@ -949,7 +965,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         switch action {
         case .previewConfirm:
             analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: clipsCount, length: length)
-        case .confirm, .post, .save, .postOptions:
+        case .confirm, .post, .save, .postOptions, .confirmPostOptions:
             analyticsProvider?.logEditorCreatedMedia(clipsCount: clipsCount, length: length)
         }
     }

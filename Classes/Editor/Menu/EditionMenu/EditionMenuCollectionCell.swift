@@ -33,25 +33,24 @@ private struct Constants {
 }
 
 /// The cell in EditionMenuCollectionView to display an individual option
-final class EditionMenuCollectionCell: UICollectionViewCell {
+final class EditionMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuCollectionCell {
     
     static let height = Constants.height
     static let width = Constants.width
     
-    let circleView = UIImageView()
+    let iconView: UIImageView
     
     weak var delegate: EditionMenuCollectionCellDelegate?
         
     override init(frame: CGRect) {
+        iconView = UIImageView()
         super.init(frame: frame)
         setUpView()
         setUpRecognizers()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setUpView()
-        setUpRecognizers()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     /// Updates the cell according to EditionOption properties
@@ -60,34 +59,33 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     ///  - option: The edition menu to display
     ///  - enabled: Whether the option is on or off.
     func bindTo(_ option: EditionOption, enabled: Bool) {
-        circleView.image = KanvasCameraImages.editionOptionTypes(option, enabled: enabled)
+        iconView.image = KanvasCameraImages.editionOptionTypes(option, enabled: enabled)
     }
     
     
     /// Updates the cell to be reused
     override func prepareForReuse() {
         super.prepareForReuse()
-        circleView.image = nil
-        circleView.backgroundColor = nil
+        iconView.image = nil
+        iconView.backgroundColor = nil
     }
     
     // MARK: - Layout
     
     private func setUpView() {
-        contentView.addSubview(circleView)
-        circleView.accessibilityIdentifier = "Edition Menu Cell View"
-        circleView.translatesAutoresizingMaskIntoConstraints = false
-        circleView.contentMode = .scaleAspectFill
-        circleView.clipsToBounds = true
-        circleView.layer.masksToBounds = true
+        contentView.addSubview(iconView)
+        iconView.accessibilityIdentifier = "Edition Menu Cell Icon View"
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.contentMode = .scaleAspectFill
+        iconView.clipsToBounds = true
+        iconView.layer.masksToBounds = true
         
         NSLayoutConstraint.activate([
-            circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            circleView.heightAnchor.constraint(equalToConstant: Constants.circleDiameter),
-            circleView.widthAnchor.constraint(equalToConstant: Constants.circleDiameter)
+            iconView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            iconView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            iconView.heightAnchor.constraint(equalToConstant: Constants.circleDiameter),
+            iconView.widthAnchor.constraint(equalToConstant: Constants.circleDiameter)
         ])
-        
     }
     
     // MARK: - Gesture recognizers
@@ -100,22 +98,5 @@ final class EditionMenuCollectionCell: UICollectionViewCell {
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
         delegate?.didTap(cell: self, recognizer: recognizer)
-    }
-    
-    // MARK: - Public interface
-    
-    /// Changes the image with an animation
-    ///
-    /// - Parameter image: the new image for the button
-    func setImage(_ image: UIImage?) {
-        let animation: (() -> Void) = { [weak self] in
-            self?.circleView.image = image
-        }
-        
-        UIView.transition(with: circleView,
-                          duration: Constants.animationDuration,
-                          options: .transitionCrossDissolve,
-                          animations: animation,
-                          completion: nil)
     }
 }

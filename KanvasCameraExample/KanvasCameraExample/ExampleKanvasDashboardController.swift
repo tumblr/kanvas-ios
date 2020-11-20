@@ -30,6 +30,8 @@ public protocol KanvasDashboardControllerDelegate: class {
     func kanvasDashboardCreatePostRequest()
 
     func kanvasDashboardOpenPostingOptionsRequest()
+    
+    func kanvasDashboardConfirmPostingOptionsRequest()
 }
 
 /// Protocol for the KanvasDashboardController to get state from
@@ -123,26 +125,37 @@ extension KanvasDashboardController: CameraControllerDelegate {
     public func tagButtonPressed() {
         // Only supported in Orangina
     }
-
+    
+    public func getQuickPostButton(enableLongPress: Bool) -> UIView {
+        // Only supported in Orangina
+        return UIView()
+    }
+    
+    public func getBlogSwitcher() -> UIView {
+        // Only supported in Orangina
+        return UIView()
+    }
+    
     public func editorDismissed() {
         // Only supported in Orangina
     }
 
     public func didCreateMedia(_ cameraController: CameraController, media: [(KanvasCameraMedia?, Error?)], exportAction: KanvasExportAction) {
         media.forEach { (media, error) in
-            guard let media = media else {
-                if let error = error {
-                    assertionFailure("Error creating Kanvas Media: \(error)")
-                }
+            if let error = error {
+                assertionFailure("Error creating Kanvas media: \(error)")
                 return
             }
-            save(media: media) { err in
+            guard let media = media else {
+                assertionFailure("No error, but no media!?")
+                return
+            }
+
+            save(media: media, moveFile: false) { error in
                 DispatchQueue.main.async {
-                    if KanvasDevice.isRunningInSimulator == false {
-                        guard err == nil else {
-                            assertionFailure("Error saving to photo library")
-                            return
-                        }
+                    guard error == nil else {
+                        print("Error saving media to the photo library")
+                        return
                     }
 
                     switch exportAction {
@@ -158,6 +171,8 @@ extension KanvasDashboardController: CameraControllerDelegate {
                         break
                     case .postOptions:
                         self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
+                    case .confirmPostOptions:
+                        self.delegate?.kanvasDashboardConfirmPostingOptionsRequest()
                     }
                 }
             }
@@ -251,7 +266,7 @@ private extension KanvasDashboardController {
     func createCameraController() -> CameraController {
         let kanvasAnalyticsProvider = stateDelegate?.kanvasDashboardAnalyticsProvider
         let stickerProvider = ExperimentalStickerProvider()
-        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider, quickBlogSelectorCoordinator: nil)
+        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider, quickBlogSelectorCoordinator: nil, tagCollection: nil)
         kanvasViewController.delegate = self
         return kanvasViewController
     }
