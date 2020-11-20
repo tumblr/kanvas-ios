@@ -243,6 +243,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.metalContext = metalContext
         self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
         self.drawingCanvas = drawingCanvas ?? IgnoreTouchesView()
+
         super.init(frame: .zero)
         self.movableViewCanvas.delegate = self
         setupViews()
@@ -287,7 +288,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     // MARK: - views
 
     private func setupPlayer() {
-        let playerView = MediaPlayerView()
+        let playerView: MediaPlayerView
+        if let metalContext = metalContext {
+            playerView = MediaPlayerView(metalContext: metalContext)
+        } else {
+            playerView = MediaPlayerView()
+        }
         playerView.delegate = self
         playerView.add(into: self)
         self.playerView = playerView
