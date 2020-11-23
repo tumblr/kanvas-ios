@@ -12,11 +12,16 @@ private struct Constants {
     static let maxVisibleCells: Int = 3
 }
 
-protocol VerticalMenuViewDelegate: class {
+protocol StyleMenuViewDelegate: class {
     
     func numberOfItems() -> Int
     
-    func bindItem(at index: Int)
+    func bindItem(at index: Int, cell: StyleMenuCell)
+    
+    /// Callback method when selecting a cell.
+    ///
+    /// - Parameter cell: the cell that was tapped
+    func didSelect(cell: StyleMenuCell)
 }
 
 private enum State {
@@ -24,18 +29,19 @@ private enum State {
     case closed
 }
 
-/// Collection view for VerticalMenuController.
-final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
+/// Collection view for StyleMenuController.
+final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellDelegate {
     
-    private weak var delegate: VerticalMenuViewDelegate?
+    private weak var delegate: StyleMenuViewDelegate?
     
     private var state: State
     private let scrollView: UIScrollView
     private let scrollViewContent: IgnoreTouchesView
     private let contentView: IgnoreTouchesView
     private let fadeView: IgnoreTouchesView
-    private var cells: [VerticalMenuCell]
+    private var cells: [StyleMenuCell]
     private let expandCell: ExpandCell
+    
     
     private var showExpandCell: Bool {
         guard let delegate = delegate else { return false }
@@ -50,7 +56,7 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
         fadeView.heightAnchor.constraint(equalToConstant: 0)
     }()
     
-    init(delegate: VerticalMenuViewDelegate) {
+    init(delegate: StyleMenuViewDelegate) {
         self.delegate = delegate
         self.scrollView = IgnoreTouchesScrollView()
         self.scrollViewContent = IgnoreTouchesView()
@@ -120,7 +126,7 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
         
         let numberOfItems = CGFloat(delegate.numberOfItems())
         
-        let itemHeight: CGFloat = numberOfItems * VerticalMenuCell.height
+        let itemHeight: CGFloat = numberOfItems * StyleMenuCell.height
         let expandCellHeight = ExpandCell.height
         let contentHeight: CGFloat = showExpandCell ? (itemHeight + expandCellHeight) : itemHeight
         
@@ -140,7 +146,7 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
         fadeView.translatesAutoresizingMaskIntoConstraints = false
         
         let numberOfItems = CGFloat(delegate.numberOfItems())
-        let contentHeight: CGFloat = numberOfItems * VerticalMenuCell.height
+        let contentHeight: CGFloat = numberOfItems * StyleMenuCell.height
         
         fadeViewHeightContraint.constant = contentHeight
         NSLayoutConstraint.activate([
@@ -155,7 +161,7 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
         guard let delegate = delegate else { return }
         
         for _ in 0..<delegate.numberOfItems() {
-            let cell = VerticalMenuCell()
+            let cell = StyleMenuCell()
             fadeView.addSubview(cell)
             cells.append(cell)
         }
@@ -167,13 +173,15 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
         for index in 0..<delegate.numberOfItems() {
             let cell = cells[index]
             cell.translatesAutoresizingMaskIntoConstraints = false
+            cell.clipsToBounds = true
+            cell.delegate = self
             
-            let topOffset: CGFloat = VerticalMenuCell.height * CGFloat(index)
+            let topOffset: CGFloat = StyleMenuCell.height * CGFloat(index)
             NSLayoutConstraint.activate([
                 cell.topAnchor.constraint(equalTo: fadeView.safeAreaLayoutGuide.topAnchor, constant: topOffset),
-                cell.centerXAnchor.constraint(equalTo: fadeView.safeAreaLayoutGuide.centerXAnchor),
-                cell.heightAnchor.constraint(equalToConstant: VerticalMenuCell.height),
-                cell.widthAnchor.constraint(equalToConstant: VerticalMenuCell.width),
+                cell.leadingAnchor.constraint(equalTo: fadeView.safeAreaLayoutGuide.leadingAnchor),
+                cell.heightAnchor.constraint(equalToConstant: StyleMenuCell.height),
+                cell.widthAnchor.constraint(equalToConstant: StyleMenuCell.width),
             ])
         }
     }
@@ -184,7 +192,7 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
         
         NSLayoutConstraint.activate([
             expandCell.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
-            expandCell.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            expandCell.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
             expandCell.heightAnchor.constraint(equalToConstant: ExpandCell.height),
             expandCell.widthAnchor.constraint(equalToConstant: ExpandCell.width),
         ])
@@ -193,8 +201,8 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
     private func bindCells() {
         guard let delegate = delegate else { return }
         
-        for i in 0..<delegate.numberOfItems() {
-            delegate.bindItem(at: i)
+        for (index, cell) in cells.enumerated() {
+            delegate.bindItem(at: index, cell: cell)
         }
     }
     
@@ -206,21 +214,12 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
         }
         
         cells.removeAll()
-        contentHeightContraint.constant = 0
+        
         fadeViewHeightContraint.constant = 0
-    }
-    
-    // MARK: - Expand & Collapse
-    
-    private func moveExpandCellUp() {
-        contentHeightContraint.constant = VerticalMenuCell.height * CGFloat(Constants.maxVisibleCells) + ExpandCell.height
-        fadeViewHeightContraint.constant = VerticalMenuCell.height * CGFloat(Constants.maxVisibleCells)
-    }
-    
-    private func moveExpandCellDown() {
-        guard let delegate = delegate else { return }
-        contentHeightContraint.constant = VerticalMenuCell.height * CGFloat(delegate.numberOfItems()) + ExpandCell.height
-        fadeViewHeightContraint.constant = VerticalMenuCell.height * CGFloat(delegate.numberOfItems())
+        fadeView.removeFromSuperview()
+        
+        contentHeightContraint.constant = 0
+        contentView.removeFromSuperview()
     }
     
     private func hideExtraCells() {
@@ -236,68 +235,92 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
             $0.alpha = 1
         }
     }
+        
+    // MARK: - Expand & Collapse
+    
+    private func moveExpandCellUp() {
+        contentHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells) + ExpandCell.height
+        fadeViewHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells)
+    }
+    
+    private func moveExpandCellDown() {
+        guard let delegate = delegate else { return }
+        contentHeightContraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems()) + ExpandCell.height
+        fadeViewHeightContraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems())
+    }
     
     // MARK: - Public interface
     
     func collapseCollection(animated: Bool = false) {
         state = .closed
-        let firstAction: () -> Void = { [weak self] in
-            guard let self = self else { return }
-            self.hideExtraCells()
-        }
         
-        let secondAction: () -> Void = { [weak self] in
+        let action: () -> Void = { [weak self] in
             guard let self = self else { return }
             self.expandCell.close()
             self.moveExpandCellUp()
             self.layoutIfNeeded()
         }
         
+        let extraCells = cells[Constants.maxVisibleCells..<cells.count]
+        let timeSlice = 1.0 / Double(extraCells.count + 1)
+        
+        let actions = {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1.0, animations: action)
+            
+            extraCells.enumerated().forEach { index, cell in
+                let startTime = (Double(extraCells.count - index - 1)) * timeSlice
+                UIView.addKeyframe(withRelativeStartTime: startTime, relativeDuration: timeSlice, animations: {
+                    cell.alpha = 0
+                })
+            }
+        }
+        
         if animated {
-            let duration = Constants.animationDuration
-            UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1 / duration, animations: firstAction)
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5 / duration, animations: secondAction)
-            }, completion: nil)
+            UIView.animateKeyframes(withDuration: Constants.animationDuration, delay: 0, options: [.calculationModeCubic], animations: actions, completion: nil)
         }
         else {
-            firstAction()
-            secondAction()
+            action()
+            hideExtraCells()
         }
     }
     
     func expandCollection(animated: Bool = false) {
         state = .open
         
-        let firstAction: () -> Void = { [weak self] in
+        let action: () -> Void = { [weak self] in
             guard let self = self else { return }
             self.expandCell.open()
             self.moveExpandCellDown()
             self.layoutIfNeeded()
         }
         
-        let secondAction: () -> Void = { [weak self] in
-            guard let self = self else { return }
-            self.showExtraCells()
+        let extraCells = cells[Constants.maxVisibleCells..<cells.count]
+        let timeSlice = 1.0 / Double(extraCells.count + 1)
+        
+        let actions = {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1.0, animations: action)
+            
+            extraCells.enumerated().forEach { index, cell in
+                let startTime = (Double(index) + 1) * timeSlice
+                UIView.addKeyframe(withRelativeStartTime: startTime, relativeDuration: timeSlice, animations: {
+                    cell.alpha = 1
+                })
+            }
         }
         
         if animated {
-            let duration = Constants.animationDuration
-            UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
-                UIView.addKeyframe(withRelativeStartTime: 0 / duration, relativeDuration: 0.5 / duration, animations: firstAction)
-                UIView.addKeyframe(withRelativeStartTime: 0.1 / duration, relativeDuration: 0.4 / duration, animations: secondAction)
-            }, completion: nil)
+            UIView.animateKeyframes(withDuration: Constants.animationDuration, delay: 0, options: [.calculationModeCubic], animations: actions, completion: nil)
         }
         else {
-            firstAction()
-            secondAction()
+            action()
+            showExtraCells()
         }
     }
     
-    func reload() {
+    func load() {
         resetCollection()
-        setupFadeView()
         setupContentView()
+        setupFadeView()
         setupCollection()
         setupCells()
         bindCells()
@@ -308,16 +331,23 @@ final class VerticalMenuView: IgnoreTouchesView, ExpandCellDelegate {
         }
     }
     
-    func getCell(at index: Int) -> VerticalMenuCell? {
+    func getCell(at index: Int) -> StyleMenuCell? {
         return cells.object(at: index)
     }
     
-    func getIndex(for cell: VerticalMenuCell) -> Int? {
+    func getIndex(for cell: StyleMenuCell) -> Int? {
         return cells.index(of: cell)
     }
     
     func reloadItem(at index: Int) {
-        delegate?.bindItem(at: index)
+        guard let cell = cells.object(at: index) else { return }
+        delegate?.bindItem(at: index, cell: cell)
+    }
+    
+    // MARK: - StyleMenuCellDelegate
+    
+    func didTap(cell: StyleMenuCell, recognizer: UITapGestureRecognizer) {
+        delegate?.didSelect(cell: cell)
     }
     
     // MARK: - ExpandCellDelegate

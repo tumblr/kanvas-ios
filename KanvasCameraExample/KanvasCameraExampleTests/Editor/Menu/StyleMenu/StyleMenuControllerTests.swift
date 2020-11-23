@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class StyleMenuCollectionControllerTests: FBSnapshotTestCase {
+final class StyleMenuControllerTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -25,19 +25,16 @@ final class StyleMenuCollectionControllerTests: FBSnapshotTestCase {
         return settings
     }
     
-    func newViewController() -> StyleMenuCollectionController {
+    func newViewController() -> StyleMenuController {
         let settings = newCameraSettings()
-        let controller = StyleMenuCollectionController(settings: settings, shouldExportMediaAsGIF: false)
-        controller.view.frame = CGRect(x: 0, y: 0, width: StyleMenuCollectionCell.width, height: StyleMenuCollectionCell.height * 10)
+        let controller = StyleMenuController(settings: settings, shouldExportMediaAsGIF: false)
+        controller.view.frame = CGRect(x: 0, y: 0, width: StyleMenuCell.width, height: StyleMenuCell.height * 10)
         controller.view.setNeedsDisplay()
         return controller
     }
     
-    func testCollectionControllerView() {
+    func testControllerView() {
         let controller = newViewController()
-        UIView.setAnimationsEnabled(false)
-        controller.showView(true)
-        UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(controller.view)
     }
 }

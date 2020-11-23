@@ -28,8 +28,8 @@ private struct Constants {
     static let labelInset: CGFloat = 12
     static let labelTextColor: UIColor = .white
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.4)
-    static let upAngle: CGFloat = -.pi / 2
-    static let downAngle: CGFloat = .pi / 2
+    static let downAngle: CGFloat = 0
+    static let upAngle: CGFloat = .pi * 0.999 // Trick to make it rotate counter clockwise
     
     static var height: CGFloat {
         return circleDiameter + 2 * circleMargin
@@ -40,7 +40,7 @@ private struct Constants {
     }
 }
 
-/// The cell in VerticalMenuView to display an individual option.
+/// The cell in StyleMenuView to display an individual option.
 final class ExpandCell: UIView {
     
     static let height = Constants.height
@@ -79,7 +79,7 @@ final class ExpandCell: UIView {
         iconView.layer.cornerRadius = Constants.circleDiameter / 2
         iconView.layer.masksToBounds = true
         iconView.contentMode = .center
-        iconView.image = KanvasCameraImages.backImage
+        iconView.image = KanvasCameraImages.chevron
         iconView.backgroundColor = Constants.backgroundColor
         
         NSLayoutConstraint.activate([
@@ -120,13 +120,13 @@ final class ExpandCell: UIView {
     // MARK: - Public interface
     
     func open() {
-        label.text = "Close"
-        iconView.transform = CGAffineTransform(rotationAngle: Constants.downAngle)
+        label.text = NSLocalizedString("EditorClose", comment: "Label for the 'Close' option in the editor tools")
+        iconView.transform = CGAffineTransform(rotationAngle: Constants.upAngle)
     }
     
     func close() {
-        label.text = "Open"
-        iconView.transform = CGAffineTransform(rotationAngle: Constants.upAngle)
+        label.text = NSLocalizedString("EditorMore", comment: "Label for the 'More' option in the editor tools")
+        iconView.transform = CGAffineTransform(rotationAngle: Constants.downAngle)
     }
 }
 

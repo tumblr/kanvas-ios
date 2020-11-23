@@ -47,6 +47,7 @@ struct KanvasCameraImages {
     static let longCheckmarkImage = UIImage.imageFromCameraBundle(named: "longCheckmark")
     static let backImage = UIImage.imageFromCameraBundle(named: "back")
     static let backArrowImage = UIImage.imageFromCameraBundle(named: "backArrow")
+    static let chevron = UIImage.imageFromCameraBundle(named: "chevron")
     static let forwardImage = UIImage.imageFromCameraBundle(named: "forwardArrow")
     static let trashClosed = UIImage.imageFromCameraBundle(named: "trashClosed")
     static let trashOpened = UIImage.imageFromCameraBundle(named: "trashOpened")

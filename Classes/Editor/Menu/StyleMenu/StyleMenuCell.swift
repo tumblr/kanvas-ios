@@ -8,14 +8,14 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell.
-protocol VerticalMenuCellDelegate: class {
+protocol StyleMenuCellDelegate: class {
     
     /// Callback method when tapping a cell.
     ///
     /// - Parameters:
     ///   - cell: the cell that was tapped
     ///   - recognizer: the tap gesture recognizer
-    func didTap(cell: VerticalMenuCell, recognizer: UITapGestureRecognizer)
+    func didTap(cell: StyleMenuCell, recognizer: UITapGestureRecognizer)
 }
 
 private struct Constants {
@@ -40,8 +40,8 @@ private struct Constants {
     }
 }
 
-/// The cell in VerticalMenuView to display an individual option.
-final class VerticalMenuCell: UIView, KanvasEditorMenuCollectionCell {
+/// The cell in StyleMenuView to display an individual option.
+final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
     
     static let height = Constants.height
     static let width = Constants.width
@@ -49,7 +49,7 @@ final class VerticalMenuCell: UIView, KanvasEditorMenuCollectionCell {
     let iconView: UIImageView
     private let label: UILabel
     
-    weak var delegate: VerticalMenuCellDelegate?
+    weak var delegate: StyleMenuCellDelegate?
         
     init() {
         iconView = UIImageView()
@@ -87,7 +87,7 @@ final class VerticalMenuCell: UIView, KanvasEditorMenuCollectionCell {
     
     private func setupIconView() {
         addSubview(iconView)
-        iconView.accessibilityIdentifier = "Vertical Menu Cell Icon View"
+        iconView.accessibilityIdentifier = "Style Menu Cell Icon View"
         iconView.translatesAutoresizingMaskIntoConstraints = false
         iconView.clipsToBounds = true
         iconView.layer.cornerRadius = Constants.circleDiameter / 2
@@ -104,7 +104,7 @@ final class VerticalMenuCell: UIView, KanvasEditorMenuCollectionCell {
     
     private func setupLabel() {
         addSubview(label)
-        label.accessibilityIdentifier = "Vertical Menu Cell Label"
+        label.accessibilityIdentifier = "Style Menu Cell Label"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.alpha = 0
         

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class StyleMenuCollectionCellTests: FBSnapshotTestCase {
+final class StyleMenuCellTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,10 +18,10 @@ final class StyleMenuCollectionCellTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newCell() -> StyleMenuCollectionCell {
-        let size = CGSize(width: StyleMenuCollectionCell.width, height: StyleMenuCollectionCell.height)
-        let frame = CGRect(origin: CGPoint.zero, size: size)
-        return StyleMenuCollectionCell(frame: frame)
+    func newCell() -> StyleMenuCell {
+        let cell = StyleMenuCell()
+        cell.frame = CGRect(x: 0, y: 0, width: StyleMenuCell.width, height: StyleMenuCell.height)
+        return cell
     }
     
     func testCell() {
