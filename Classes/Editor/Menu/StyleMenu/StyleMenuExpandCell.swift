@@ -128,16 +128,11 @@ final class StyleMenuExpandCell: UIView {
             self?.label.alpha = show ? 1 : 0
         }
         
-        let completion: (Bool) -> Void = { [weak self] _ in
-            self?.sizeToFit()
-        }
-        
         if animated {
-            UIView.animate(withDuration: Constants.animationDuration, animations: action, completion: completion)
+            UIView.animate(withDuration: Constants.animationDuration, animations: action)
         }
         else {
             action()
-            completion(true)
         }
     }
 }

@@ -28,7 +28,7 @@ private struct Constants {
     static let backgroundColorOff: UIColor = UIColor.black.withAlphaComponent(0.4)
     static let backgroundColorOn: UIColor = UIColor.white
     
-    static var height: CGFloat {
+    static var size: CGFloat {
         return circleDiameter + 2 * circleMargin
     }
 }
@@ -36,7 +36,8 @@ private struct Constants {
 /// The cell in StyleMenuView to display an individual option.
 final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
     
-    static let height = Constants.height
+    static let height = Constants.size
+    static let iconWidth = Constants.size
     
     let iconView: UIImageView
     private let label: UILabel
@@ -119,7 +120,7 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
         label.backgroundColor = backgroundColor
         iconView.image = KanvasCameraImages.styleOptionTypes(option, enabled: enabled)
         iconView.backgroundColor = backgroundColor
-        sizeToFit()
+
     }
     
     func showLabel(_ show: Bool, animated: Bool = false) {
@@ -127,16 +128,11 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
             self?.label.alpha = show ? 1 : 0
         }
         
-        let completion: (Bool) -> Void = { [weak self] _ in
-            self?.sizeToFit()
-        }
-        
         if animated {
-            UIView.animate(withDuration: Constants.animationDuration, animations: action, completion: completion)
+            UIView.animate(withDuration: Constants.animationDuration, animations: action)
         }
         else {
             action()
-            completion(true)
         }
     }
 }

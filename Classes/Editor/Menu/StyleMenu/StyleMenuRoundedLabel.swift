@@ -8,15 +8,15 @@ import Foundation
 import UIKit
 
 private struct Constants {
-    static let labelHeight: CGFloat = 24
-    static let labelFont: UIFont = .boldSystemFont(ofSize: 16)
-    static let labelInset: CGFloat = 12
+    static let height: CGFloat = 24
+    static let font: UIFont = .boldSystemFont(ofSize: 16)
+    static let inset: CGFloat = 12
 }
 
 /// Custom label with horizontal inset and rounded corners.
 final class StyleMenuRoundedLabel: UILabel {
     
-    static let height: CGFloat = Constants.labelHeight
+    static let height: CGFloat = Constants.height
     
     init() {
         super.init(frame: .zero)
@@ -28,18 +28,18 @@ final class StyleMenuRoundedLabel: UILabel {
     }
     
     private func setupView() {
-        font = Constants.labelFont
-        layer.cornerRadius = Constants.labelHeight / 2
+        font = Constants.font
+        layer.cornerRadius = Constants.height / 2
         layer.masksToBounds = true
     }
     
     override func drawText(in rect: CGRect) {
-        let insets = UIEdgeInsets(top: 0, left: Constants.labelInset, bottom: 0, right: Constants.labelInset)
+        let insets = UIEdgeInsets(top: 0, left: Constants.inset, bottom: 0, right: Constants.inset)
         super.drawText(in: rect.inset(by: insets))
     }
         
     override var intrinsicContentSize: CGSize {
         let size = super.intrinsicContentSize
-        return CGSize(width: size.width + Constants.labelInset * 2, height: size.height)
+        return CGSize(width: size.width + Constants.inset * 2, height: size.height)
     }
 }

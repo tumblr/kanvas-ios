@@ -58,6 +58,14 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         fadeView.heightAnchor.constraint(equalToConstant: 0)
     }()
     
+    private lazy var menuOpenContentViewWidthConstraint: NSLayoutConstraint = {
+        contentView.trailingAnchor.constraint(equalTo: scrollViewContent.safeAreaLayoutGuide.trailingAnchor)
+    }()
+    
+    private lazy var menuClosedContentViewWidthConstraint: NSLayoutConstraint = {
+        contentView.widthAnchor.constraint(equalToConstant: StyleMenuCell.iconWidth)
+    }()
+    
     init(delegate: StyleMenuViewDelegate) {
         self.delegate = delegate
         self.scrollView = IgnoreTouchesScrollView()
@@ -138,8 +146,9 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             contentHeightContraint,
             contentView.centerYAnchor.constraint(equalTo: scrollViewContent.safeAreaLayoutGuide.centerYAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollViewContent.safeAreaLayoutGuide.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollViewContent.safeAreaLayoutGuide.trailingAnchor),
         ])
+        
+        setConstraints(for: .open)
     }
     
     private func setupFadeView() {
@@ -241,6 +250,17 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         labelTimer?.invalidate()
         labelTimer = nil
     }
+    
+    private func setConstraints(for state: State) {
+        switch state {
+        case .open:
+            menuOpenContentViewWidthConstraint.isActive = true
+            menuClosedContentViewWidthConstraint.isActive = false
+        case .closed:
+            menuOpenContentViewWidthConstraint.isActive = false
+            menuClosedContentViewWidthConstraint.isActive = true
+        }
+    }
         
     // MARK: - Expand & Collapse
     
@@ -266,6 +286,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             self.expandCell.rotateDown()
             self.moveExpandCellUp()
             self.showLabels(false)
+            self.setConstraints(for: .closed)
             self.layoutIfNeeded()
         }
         
@@ -307,6 +328,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             self.expandCell.rotateUp()
             self.moveExpandCellDown()
             self.showLabels(true)
+            self.setConstraints(for: .open)
             self.layoutIfNeeded()
         }
         
@@ -371,10 +393,12 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     
     func showTemporalLabels() {
         showLabels(true, animated: false)
+        setConstraints(for: .open)
         
         let timer = Timer(fire: .init(timeIntervalSinceNow: Constants.timerInterval), interval: 0, repeats: false) { [weak self] timer in
             guard let self = self else { return }
             self.showLabels(false, animated: true)
+            self.setConstraints(for: .closed)
             self.stopTimer()
         }
         timer.tolerance = 1.0
@@ -408,7 +432,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     }
 }
 
-protocol IgnoreTouchesScrollViewDelegate: class {
+private protocol IgnoreTouchesScrollViewDelegate: class {
     func didTouchEmptySpace()
 }
 
