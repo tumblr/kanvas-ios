@@ -60,7 +60,7 @@ final class StyleMenuExpandCell: UIView {
     private func setUpView() {
         setupIconView()
         setupLabel()
-        close()
+        rotateDown()
     }
     
     private func setupIconView() {
@@ -111,15 +111,33 @@ final class StyleMenuExpandCell: UIView {
     
     // MARK: - Public interface
     
-    func open() {
-        label.text = NSLocalizedString("EditorClose", comment: "Label for the 'Close' option in the editor tools")
+    func rotateUp() {
         iconView.transform = CGAffineTransform(rotationAngle: Constants.upAngle)
-        sizeToFit()
     }
     
-    func close() {
-        label.text = NSLocalizedString("EditorMore", comment: "Label for the 'More' option in the editor tools")
+    func rotateDown() {
         iconView.transform = CGAffineTransform(rotationAngle: Constants.downAngle)
-        sizeToFit()
+    }
+    
+    func changeLabel(to text: String) {
+        label.text = text
+    }
+    
+    func showLabel(_ show: Bool, animated: Bool = false) {
+        let action: () -> Void = { [weak self] in
+            self?.label.alpha = show ? 1 : 0
+        }
+        
+        let completion: (Bool) -> Void = { [weak self] _ in
+            self?.sizeToFit()
+        }
+        
+        if animated {
+            UIView.animate(withDuration: Constants.animationDuration, animations: action, completion: completion)
+        }
+        else {
+            action()
+            completion(true)
+        }
     }
 }

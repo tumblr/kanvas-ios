@@ -78,6 +78,7 @@ final class StyleMenuController: UIViewController, KanvasEditorMenuController, S
     override func viewDidLoad() {
         super.viewDidLoad()
         styleMenuView.load()
+        styleMenuView.showTemporalLabels()
     }
     
     // MARK: - KanvasEditorMenuController

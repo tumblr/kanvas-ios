@@ -10,6 +10,7 @@ import UIKit
 private struct Constants {
     static let animationDuration: TimeInterval = 0.5
     static let maxVisibleCells: Int = 3
+    static let timerInterval: TimeInterval = 3
 }
 
 protocol StyleMenuViewDelegate: class {
@@ -30,17 +31,18 @@ private enum State {
 }
 
 /// Collection view for StyleMenuController.
-final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuExpandCellDelegate {
+final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuExpandCellDelegate, IgnoreTouchesScrollViewDelegate {
     
     private weak var delegate: StyleMenuViewDelegate?
     
     private var state: State
-    private let scrollView: UIScrollView
+    private let scrollView: IgnoreTouchesScrollView
     private let scrollViewContent: IgnoreTouchesView
     private let contentView: IgnoreTouchesView
     private let fadeView: IgnoreTouchesView
     private var cells: [StyleMenuCell]
     private let expandCell: StyleMenuExpandCell
+    private var labelTimer: Timer?
     
     
     private var showExpandCell: Bool {
@@ -67,6 +69,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         self.state = .closed
         super.init(frame: .zero)
         self.expandCell.delegate = self
+        self.scrollView.touchDelegate = self
         
         setupViews()
     }
@@ -233,6 +236,11 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             $0.alpha = 1
         }
     }
+    
+    private func stopTimer() {
+        labelTimer?.invalidate()
+        labelTimer = nil
+    }
         
     // MARK: - Expand & Collapse
     
@@ -251,11 +259,13 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     
     func collapseCollection(animated: Bool = false) {
         state = .closed
+        stopTimer()
         
         let action: () -> Void = { [weak self] in
             guard let self = self else { return }
-            self.expandCell.close()
+            self.expandCell.rotateDown()
             self.moveExpandCellUp()
+            self.showLabels(false)
             self.layoutIfNeeded()
         }
         
@@ -273,22 +283,30 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             }
         }
         
+        let completion: (Bool) -> Void = { [weak self] _ in
+            self?.expandCell.changeLabel(to: NSLocalizedString("EditorMore", comment: "Label for the 'More' option in the editor tools"))
+        }
+        
         if animated {
-            UIView.animateKeyframes(withDuration: Constants.animationDuration, delay: 0, options: [.calculationModeCubic], animations: actions, completion: nil)
+            UIView.animateKeyframes(withDuration: Constants.animationDuration, delay: 0, options: [.calculationModeCubic], animations: actions, completion: completion)
         }
         else {
             action()
             hideExtraCells()
+            completion(true)
         }
     }
     
     func expandCollection(animated: Bool = false) {
         state = .open
+        expandCell.changeLabel(to: NSLocalizedString("EditorClose", comment: "Label for the 'Close' option in the editor tools"))
+        stopTimer()
         
         let action: () -> Void = { [weak self] in
             guard let self = self else { return }
-            self.expandCell.open()
+            self.expandCell.rotateUp()
             self.moveExpandCellDown()
+            self.showLabels(true)
             self.layoutIfNeeded()
         }
         
@@ -305,6 +323,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
                 })
             }
         }
+        
         
         if animated {
             UIView.animateKeyframes(withDuration: Constants.animationDuration, delay: 0, options: [.calculationModeCubic], animations: actions, completion: nil)
@@ -342,6 +361,27 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         delegate?.bindItem(at: index, cell: cell)
     }
     
+    func showLabels(_ show: Bool, animated: Bool = false) {
+        cells.forEach { cell in
+            cell.showLabel(show, animated: animated)
+        }
+        
+        expandCell.showLabel(show, animated: animated)
+    }
+    
+    func showTemporalLabels() {
+        showLabels(true, animated: false)
+        
+        let timer = Timer(fire: .init(timeIntervalSinceNow: Constants.timerInterval), interval: 0, repeats: false) { [weak self] timer in
+            guard let self = self else { return }
+            self.showLabels(false, animated: true)
+            self.stopTimer()
+        }
+        timer.tolerance = 1.0
+        RunLoop.current.add(timer, forMode: .common)
+        self.labelTimer = timer
+    }
+    
     // MARK: - StyleMenuCellDelegate
     
     func didTap(cell: StyleMenuCell, recognizer: UITapGestureRecognizer) {
@@ -358,12 +398,32 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             expandCollection(animated: true)
         }
     }
+    
+    // MARK: - IgnoreTouchesScrollViewDelegate
+    
+    func didTouchEmptySpace() {
+        if state == .open {
+            collapseCollection(animated: true)
+        }
+    }
+}
+
+protocol IgnoreTouchesScrollViewDelegate: class {
+    func didTouchEmptySpace()
 }
 
 private final class IgnoreTouchesScrollView: UIScrollView {
     
+    weak var touchDelegate: IgnoreTouchesScrollViewDelegate?
+    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
-        return hitView == self ? nil : hitView
+        if hitView == self {
+            touchDelegate?.didTouchEmptySpace()
+            return nil
+        }
+        else {
+            return hitView
+        }
     }
 }

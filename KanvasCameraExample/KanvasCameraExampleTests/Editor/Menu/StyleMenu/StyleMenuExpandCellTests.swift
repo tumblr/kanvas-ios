@@ -21,7 +21,7 @@ final class StyleMenuExpandCellTests: FBSnapshotTestCase {
     func testOpenCell() {
         let cell = StyleMenuExpandCell()
         cell.frame = CGRect(x: 0, y: 0, width: 120, height: StyleMenuExpandCell.height)
-        cell.open()
+        cell.rotateUp()
         cell.layoutIfNeeded()
         FBSnapshotVerifyView(cell)
     }
@@ -29,7 +29,7 @@ final class StyleMenuExpandCellTests: FBSnapshotTestCase {
     func testClosedCell() {
         let cell = StyleMenuExpandCell()
         cell.frame = CGRect(x: 0, y: 0, width: 115, height: StyleMenuExpandCell.height)
-        cell.close()
+        cell.rotateDown()
         cell.layoutIfNeeded()
         FBSnapshotVerifyView(cell)
     }

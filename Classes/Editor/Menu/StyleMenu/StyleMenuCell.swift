@@ -55,22 +55,6 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /// Updates the cell according to EditionOption properties
-    ///
-    /// - Parameters
-    ///  - option: The style menu to display
-    ///  - enabled: Whether the option is on or off.
-    func bindTo(_ option: EditionOption, enabled: Bool) {
-        let backgroundColor = enabled ? Constants.backgroundColorOn : Constants.backgroundColorOff
-        let textColor = enabled ? Constants.labelTextColorOn : Constants.labelTextColorOff
-        label.text = option.text
-        label.textColor = textColor
-        label.backgroundColor = backgroundColor
-        iconView.image = KanvasCameraImages.styleOptionTypes(option, enabled: enabled)
-        iconView.backgroundColor = backgroundColor
-        sizeToFit()
-    }
-    
     // MARK: - Layout
     
     private func setUpView() {
@@ -118,5 +102,41 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
         delegate?.didTap(cell: self, recognizer: recognizer)
+    }
+    
+    // MARK: - Public interface
+    
+    /// Updates the cell according to EditionOption properties
+    ///
+    /// - Parameters
+    ///  - option: The style menu to display
+    ///  - enabled: Whether the option is on or off.
+    func bindTo(_ option: EditionOption, enabled: Bool) {
+        let backgroundColor = enabled ? Constants.backgroundColorOn : Constants.backgroundColorOff
+        let textColor = enabled ? Constants.labelTextColorOn : Constants.labelTextColorOff
+        label.text = option.text
+        label.textColor = textColor
+        label.backgroundColor = backgroundColor
+        iconView.image = KanvasCameraImages.styleOptionTypes(option, enabled: enabled)
+        iconView.backgroundColor = backgroundColor
+        sizeToFit()
+    }
+    
+    func showLabel(_ show: Bool, animated: Bool = false) {
+        let action: () -> Void = { [weak self] in
+            self?.label.alpha = show ? 1 : 0
+        }
+        
+        let completion: (Bool) -> Void = { [weak self] _ in
+            self?.sizeToFit()
+        }
+        
+        if animated {
+            UIView.animate(withDuration: Constants.animationDuration, animations: action, completion: completion)
+        }
+        else {
+            action()
+            completion(true)
+        }
     }
 }
