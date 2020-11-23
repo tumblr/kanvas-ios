@@ -20,12 +20,9 @@ protocol StyleMenuCellDelegate: class {
 
 private struct Constants {
     static let circleDiameter: CGFloat = 48
-    static let labelHeight: CGFloat = 24
     static let circleMargin: CGFloat = 4
     
     static let animationDuration: TimeInterval = 0.25
-    static let labelFont: UIFont = .boldSystemFont(ofSize: 16)
-    static let labelInset: CGFloat = 12
     static let labelTextColorOff: UIColor = .white
     static let labelTextColorOn: UIColor = .black
     static let backgroundColorOff: UIColor = UIColor.black.withAlphaComponent(0.4)
@@ -34,17 +31,12 @@ private struct Constants {
     static var height: CGFloat {
         return circleDiameter + 2 * circleMargin
     }
-    
-    static var width: CGFloat {
-        return circleDiameter
-    }
 }
 
 /// The cell in StyleMenuView to display an individual option.
 final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
     
     static let height = Constants.height
-    static let width = Constants.width
     
     let iconView: UIImageView
     private let label: UILabel
@@ -53,7 +45,7 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
         
     init() {
         iconView = UIImageView()
-        label = RoundedLabel()
+        label = StyleMenuRoundedLabel()
         super.init(frame: .zero)
         setUpView()
         setUpRecognizers()
@@ -76,6 +68,7 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
         label.backgroundColor = backgroundColor
         iconView.image = KanvasCameraImages.styleOptionTypes(option, enabled: enabled)
         iconView.backgroundColor = backgroundColor
+        sizeToFit()
     }
     
     // MARK: - Layout
@@ -106,13 +99,13 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
         addSubview(label)
         label.accessibilityIdentifier = "Style Menu Cell Label"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.alpha = 0
         
         let leadingMargin = Constants.circleDiameter + Constants.circleMargin
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: leadingMargin),
+            label.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             label.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            label.heightAnchor.constraint(equalToConstant: Constants.labelHeight),
+            label.heightAnchor.constraint(equalToConstant: StyleMenuRoundedLabel.height),
         ])
     }
     
@@ -125,34 +118,5 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
     
     @objc private func handleTap(recognizer: UITapGestureRecognizer) {
         delegate?.didTap(cell: self, recognizer: recognizer)
-    }
-}
-
-/// Custom label with horizontal inset and rounded corners.
-private class RoundedLabel: UILabel {
-    
-    init() {
-        super.init(frame: .zero)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupView() {
-        font = Constants.labelFont
-        layer.cornerRadius = Constants.labelHeight / 2
-        layer.masksToBounds = true
-    }
-    
-    override func drawText(in rect: CGRect) {
-        let insets = UIEdgeInsets(top: 0, left: Constants.labelInset, bottom: 0, right: Constants.labelInset)
-        super.drawText(in: rect.inset(by: insets))
-    }
-        
-    override var intrinsicContentSize: CGSize {
-        let size = super.intrinsicContentSize
-        return CGSize(width: size.width + Constants.labelInset * 2, height: size.height)
     }
 }

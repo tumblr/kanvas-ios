@@ -29,7 +29,7 @@ final class StyleMenuViewTests: FBSnapshotTestCase, StyleMenuViewDelegate {
     
     func newCollectionView() -> StyleMenuView {
         let collectionView = StyleMenuView(delegate: self)
-        collectionView.frame = CGRect(x: 0, y: 0, width: StyleMenuCell.width, height: StyleMenuCell.height * 10)
+        collectionView.frame = CGRect(x: 0, y: 0, width: 375, height: StyleMenuCell.height * 10)
         return collectionView
     }
     

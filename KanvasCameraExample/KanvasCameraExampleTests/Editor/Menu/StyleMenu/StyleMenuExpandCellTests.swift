@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-final class StyleMenuCellTests: FBSnapshotTestCase {
+final class StyleMenuExpandCellTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
@@ -18,16 +18,18 @@ final class StyleMenuCellTests: FBSnapshotTestCase {
         self.recordMode = false
     }
     
-    func newCell() -> StyleMenuCell {
-        let cell = StyleMenuCell()
-        cell.frame = CGRect(x: 0, y: 0, width: 122, height: StyleMenuCell.height)
-        return cell
+    func testOpenCell() {
+        let cell = StyleMenuExpandCell()
+        cell.frame = CGRect(x: 0, y: 0, width: 120, height: StyleMenuExpandCell.height)
+        cell.open()
+        cell.layoutIfNeeded()
+        FBSnapshotVerifyView(cell)
     }
     
-    func testCell() {
-        let cell = newCell()
-        let editionOption = EditionOption.media
-        cell.bindTo(editionOption, enabled: false)
+    func testClosedCell() {
+        let cell = StyleMenuExpandCell()
+        cell.frame = CGRect(x: 0, y: 0, width: 115, height: StyleMenuExpandCell.height)
+        cell.close()
         cell.layoutIfNeeded()
         FBSnapshotVerifyView(cell)
     }

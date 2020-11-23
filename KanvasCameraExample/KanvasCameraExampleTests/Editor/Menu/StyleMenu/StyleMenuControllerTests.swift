@@ -28,7 +28,7 @@ final class StyleMenuControllerTests: FBSnapshotTestCase {
     func newViewController() -> StyleMenuController {
         let settings = newCameraSettings()
         let controller = StyleMenuController(settings: settings, shouldExportMediaAsGIF: false)
-        controller.view.frame = CGRect(x: 0, y: 0, width: StyleMenuCell.width, height: StyleMenuCell.height * 10)
+        controller.view.frame = CGRect(x: 0, y: 0, width: 375, height: StyleMenuCell.height * 10)
         controller.view.setNeedsDisplay()
         return controller
     }

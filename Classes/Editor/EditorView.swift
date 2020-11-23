@@ -430,7 +430,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
                 collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
                 collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
                 collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.buttonHorizontalMargin),
-                collectionContainer.widthAnchor.constraint(equalToConstant: StyleMenuCell.width),
+                collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin),
             ])
         }
         else {

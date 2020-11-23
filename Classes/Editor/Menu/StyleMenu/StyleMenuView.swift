@@ -30,7 +30,7 @@ private enum State {
 }
 
 /// Collection view for StyleMenuController.
-final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellDelegate {
+final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuExpandCellDelegate {
     
     private weak var delegate: StyleMenuViewDelegate?
     
@@ -40,7 +40,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellD
     private let contentView: IgnoreTouchesView
     private let fadeView: IgnoreTouchesView
     private var cells: [StyleMenuCell]
-    private let expandCell: ExpandCell
+    private let expandCell: StyleMenuExpandCell
     
     
     private var showExpandCell: Bool {
@@ -62,7 +62,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellD
         self.scrollViewContent = IgnoreTouchesView()
         self.contentView = IgnoreTouchesView()
         self.fadeView = IgnoreTouchesView()
-        self.expandCell = ExpandCell()
+        self.expandCell = StyleMenuExpandCell()
         self.cells = []
         self.state = .closed
         super.init(frame: .zero)
@@ -127,7 +127,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellD
         let numberOfItems = CGFloat(delegate.numberOfItems())
         
         let itemHeight: CGFloat = numberOfItems * StyleMenuCell.height
-        let expandCellHeight = ExpandCell.height
+        let expandCellHeight = StyleMenuExpandCell.height
         let contentHeight: CGFloat = showExpandCell ? (itemHeight + expandCellHeight) : itemHeight
         
         contentHeightContraint.constant = contentHeight
@@ -181,7 +181,6 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellD
                 cell.topAnchor.constraint(equalTo: fadeView.safeAreaLayoutGuide.topAnchor, constant: topOffset),
                 cell.leadingAnchor.constraint(equalTo: fadeView.safeAreaLayoutGuide.leadingAnchor),
                 cell.heightAnchor.constraint(equalToConstant: StyleMenuCell.height),
-                cell.widthAnchor.constraint(equalToConstant: StyleMenuCell.width),
             ])
         }
     }
@@ -193,8 +192,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellD
         NSLayoutConstraint.activate([
             expandCell.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
             expandCell.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
-            expandCell.heightAnchor.constraint(equalToConstant: ExpandCell.height),
-            expandCell.widthAnchor.constraint(equalToConstant: ExpandCell.width),
+            expandCell.heightAnchor.constraint(equalToConstant: StyleMenuExpandCell.height),
         ])
     }
     
@@ -239,13 +237,13 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellD
     // MARK: - Expand & Collapse
     
     private func moveExpandCellUp() {
-        contentHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells) + ExpandCell.height
+        contentHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells) + StyleMenuExpandCell.height
         fadeViewHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells)
     }
     
     private func moveExpandCellDown() {
         guard let delegate = delegate else { return }
-        contentHeightContraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems()) + ExpandCell.height
+        contentHeightContraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems()) + StyleMenuExpandCell.height
         fadeViewHeightContraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems())
     }
     
@@ -350,9 +348,9 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, ExpandCellD
         delegate?.didSelect(cell: cell)
     }
     
-    // MARK: - ExpandCellDelegate
+    // MARK: - StyleMenuExpandCellDelegate
     
-    func didTap(cell: ExpandCell, recognizer: UITapGestureRecognizer) {
+    func didTap(cell: StyleMenuExpandCell, recognizer: UITapGestureRecognizer) {
         switch state {
         case .open:
             collapseCollection(animated: true)
