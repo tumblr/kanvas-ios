@@ -321,7 +321,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
         
         let extraCells = cells[Constants.maxVisibleCells..<cells.count]
-        let timeSlice = 1.0 / Double(extraCells.count + 1)
+        let timeSlice = 1.0 / Double(extraCells.count + 1) // The 'ExpandCell' is also counted
         
         let actions = {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1.0, animations: action)
@@ -366,7 +366,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
         
         let extraCells = cells[Constants.maxVisibleCells..<cells.count]
-        let timeSlice = 1.0 / Double(extraCells.count + 1)
+        let timeSlice = 1.0 / Double(extraCells.count + 1) // The 'ExpandCell' is also counted
         
         let actions = {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1.0, animations: action)
