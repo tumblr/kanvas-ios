@@ -836,7 +836,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fakeOptionCell.transform = CGAffineTransform(scaleX: 0, y: 0).concatenating(translationTransform)
         fakeQuickPostButton.image = quickPostButton.asImage()
         fakeQuickPostButton.alpha = 1
-        quickPostButton.alpha = 0
+        quickPostButton.isHidden = true
         
         let duration = EditorViewConstants.editionOptionAnimationDuration
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
@@ -875,13 +875,16 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fakeOptionCell.backgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
         fakeOptionCell.alpha = 1
         fakeOptionCell.transform = translationTransform
-        quickPostButton.alpha = 1
-        fakeQuickPostButton.image = quickPostButton.asImage()
-        quickPostButton.alpha = 0
         fakeQuickPostButton.transform = CGAffineTransform(scaleX: 0, y: 0)
         fakeQuickPostButton.alpha = 1
         
-        let duration = EditorViewConstants.editionOptionAnimationDuration * 2
+        // Necessary to get the image of the button
+        quickPostButton.isHidden = false
+        fakeQuickPostButton.image = quickPostButton.asImage()
+        quickPostButton.isHidden = true
+        
+        
+        let duration = EditorViewConstants.editionOptionAnimationDuration
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.05 / duration, animations: {
                 let scale = EditorViewConstants.editionOptionAnimationBouncingFactor * EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
@@ -900,7 +903,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }, completion: { _ in
             self.fakeOptionCell.alpha = 0
             self.fakeQuickPostButton.alpha = 0
-            self.quickPostButton.alpha = 1
+            self.quickPostButton.isHidden = false
         })
     }
     
