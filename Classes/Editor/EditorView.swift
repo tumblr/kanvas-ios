@@ -127,11 +127,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         case postOptions
     }
     
-    enum OpenMenuAnimation {
-        case translation
-        case pop
-    }
-    
     weak var playerView: MediaPlayerView?
 
     private let mainActionMode: MainActionMode
@@ -429,8 +424,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             NSLayoutConstraint.activate([
                 collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
                 collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.buttonHorizontalMargin),
-                collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin),
+                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+                collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             ])
         }
         else {

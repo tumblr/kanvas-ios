@@ -11,6 +11,7 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.5
     static let maxVisibleCells: Int = 3
     static let timerInterval: TimeInterval = 3
+    static let horizontalPadding: CGFloat = 16
 }
 
 protocol StyleMenuViewDelegate: class {
@@ -124,8 +125,8 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         
         NSLayoutConstraint.activate([
             scrollViewContent.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
-            scrollViewContent.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor),
-            scrollViewContent.trailingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.trailingAnchor),
+            scrollViewContent.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: Constants.horizontalPadding),
+            scrollViewContent.trailingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.horizontalPadding),
         ])
     }
        
