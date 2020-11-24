@@ -14,7 +14,7 @@ final class KanvasCameraDesignTests: XCTestCase {
         XCTAssertFalse(KanvasCameraDesign.original.isBottomPicker, "The result should be false.")
     }
     
-    func testRedesign() {
+    func testBottomPicker() {
         XCTAssertTrue(KanvasCameraDesign.bottomPicker.isBottomPicker, "The result should be true.")
     }
 
