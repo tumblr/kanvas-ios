@@ -36,17 +36,17 @@ private struct Constants {
 
 /// State of the menu.
 private enum State {
-    case open
-    case closed
+    case expanded
+    case collapsed
 }
 
 /// View for StyleMenuController.
-final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuExpandCellDelegate, IgnoreTouchesScrollViewDelegate {
+final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuExpandCellDelegate, StyleMenuScrollViewDelegate {
     
     private weak var delegate: StyleMenuViewDelegate?
     
     private var state: State
-    private let scrollView: IgnoreTouchesScrollView
+    private let scrollView: StyleMenuScrollView
     private let scrollViewContent: IgnoreTouchesView
     private let contentView: IgnoreTouchesView
     private let fadeView: IgnoreTouchesView
@@ -80,13 +80,13 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     
     init(delegate: StyleMenuViewDelegate) {
         self.delegate = delegate
-        self.scrollView = IgnoreTouchesScrollView()
+        self.scrollView = StyleMenuScrollView()
         self.scrollViewContent = IgnoreTouchesView()
         self.contentView = IgnoreTouchesView()
         self.fadeView = IgnoreTouchesView()
         self.expandCell = StyleMenuExpandCell()
         self.cells = []
-        self.state = .closed
+        self.state = .collapsed
         super.init(frame: .zero)
         self.expandCell.delegate = self
         self.scrollView.touchDelegate = self
@@ -161,7 +161,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             contentView.leadingAnchor.constraint(equalTo: scrollViewContent.safeAreaLayoutGuide.leadingAnchor),
         ])
         
-        setConstraints(for: .open)
+        setConstraints(for: .expanded)
     }
     
     /// Sets up the view that contains the actual cells.
@@ -280,10 +280,10 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     /// - Parameter state: whether the collection is expanded or collapsed.
     private func setConstraints(for state: State) {
         switch state {
-        case .open:
+        case .expanded:
             menuOpenContentViewWidthConstraint.isActive = true
             menuClosedContentViewWidthConstraint.isActive = false
-        case .closed:
+        case .collapsed:
             menuOpenContentViewWidthConstraint.isActive = false
             menuClosedContentViewWidthConstraint.isActive = true
         }
@@ -308,7 +308,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     ///
     /// - Parameter animated: whether to animate the transition or not.
     func collapseCollection(animated: Bool = false) {
-        state = .closed
+        state = .collapsed
         stopTimer()
         
         let action: () -> Void = { [weak self] in
@@ -316,7 +316,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             self.expandCell.rotateDown()
             self.moveExpandCellUp()
             self.showLabels(false)
-            self.setConstraints(for: .closed)
+            self.setConstraints(for: .collapsed)
             self.layoutIfNeeded()
         }
         
@@ -352,7 +352,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     ///
     /// - Parameter animated: whether to animate the transition or not.
     func expandCollection(animated: Bool = false) {
-        state = .open
+        state = .expanded
         expandCell.changeLabel(to: NSLocalizedString("EditorClose", comment: "Label for the 'Close' option in the editor tools"))
         stopTimer()
         
@@ -361,7 +361,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             self.expandCell.rotateUp()
             self.moveExpandCellDown()
             self.showLabels(true)
-            self.setConstraints(for: .open)
+            self.setConstraints(for: .expanded)
             self.layoutIfNeeded()
         }
         
@@ -442,12 +442,12 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     /// Shows the labels for a period of time and then hides them.
     func showTemporalLabels() {
         showLabels(true, animated: false)
-        setConstraints(for: .open)
+        setConstraints(for: .expanded)
         
         let timer = Timer(fire: .init(timeIntervalSinceNow: Constants.timerInterval), interval: 0, repeats: false) { [weak self] timer in
             guard let self = self else { return }
             self.showLabels(false, animated: true)
-            self.setConstraints(for: .closed)
+            self.setConstraints(for: .collapsed)
             self.stopTimer()
         }
         timer.tolerance = 1.0
@@ -465,9 +465,9 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     
     func didTap(cell: StyleMenuExpandCell, recognizer: UITapGestureRecognizer) {
         switch state {
-        case .open:
+        case .expanded:
             collapseCollection(animated: true)
-        case .closed:
+        case .collapsed:
             expandCollection(animated: true)
         }
     }
@@ -475,23 +475,23 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     // MARK: - IgnoreTouchesScrollViewDelegate
     
     func didTouchEmptySpace() {
-        if state == .open {
+        if state == .expanded {
             collapseCollection(animated: true)
         }
     }
 }
 
 /// Protocol for touch events.
-private protocol IgnoreTouchesScrollViewDelegate: class {
+private protocol StyleMenuScrollViewDelegate: class {
     
     /// Called when the scroll view is touched outside its content.
     func didTouchEmptySpace()
 }
 
 /// Scroll view that detects touches outside its content.
-private final class IgnoreTouchesScrollView: UIScrollView {
+private final class StyleMenuScrollView: UIScrollView {
     
-    weak var touchDelegate: IgnoreTouchesScrollViewDelegate?
+    weak var touchDelegate: StyleMenuScrollViewDelegate?
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
