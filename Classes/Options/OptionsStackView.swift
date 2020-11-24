@@ -95,7 +95,7 @@ final class OptionsStackView<Item>: IgnoreTouchesView {
             oldStack.removeFromSuperview()
         }
         
-        if KanvasCameraDesign.shared.isRedesign {
+        if KanvasCameraDesign.shared.isBottomPicker {
             animation()
             completion(true)
         }

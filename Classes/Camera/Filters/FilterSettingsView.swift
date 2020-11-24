@@ -116,7 +116,7 @@ private extension FilterSettingsView {
         addSubview(visibilityButton)
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if KanvasCameraDesign.shared.isRedesign {
+        if KanvasCameraDesign.shared.isBottomPicker {
             visibilityButton.backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundColor
             visibilityButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
             visibilityButton.layer.masksToBounds = true

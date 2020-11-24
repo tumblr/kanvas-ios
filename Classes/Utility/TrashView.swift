@@ -189,7 +189,7 @@ final class TrashView: IgnoreTouchesView {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.borderCircle.alpha = 1
             self.backgroundCircle.alpha = 0
-            self.translucentBackgroundCircle.alpha = KanvasCameraDesign.shared.isRedesign ? 1 : 0
+            self.translucentBackgroundCircle.alpha = KanvasCameraDesign.shared.isBottomPicker ? 1 : 0
             self.openedTrash.alpha = 0
             self.closedTrash.alpha = 1
         }

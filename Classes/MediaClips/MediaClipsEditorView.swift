@@ -90,7 +90,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         
         let trailingMargin: CGFloat
-        if KanvasCameraDesign.shared.isRedesign {
+        if KanvasCameraDesign.shared.isBottomPicker {
             trailingMargin = Constants.nextButtonSize + Constants.buttonLeadingMargin + Constants.buttonTrailingMargin
         }
         else {
@@ -112,7 +112,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if KanvasCameraDesign.shared.isRedesign {
+        if KanvasCameraDesign.shared.isBottomPicker {
             let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: KanvasCameraColors.shared.cameraNextButtonBackgroundColor)
             nextButton.setBackgroundImage(circle, for: .normal)
         }

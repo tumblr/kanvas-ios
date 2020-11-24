@@ -120,7 +120,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     ///
     /// - Parameter show: true to show, false to hide
     func showModeButton(_ show: Bool) {
-        let modeSelector = KanvasCameraDesign.shared.isRedesign ? modeSelectorView : modeSelectorButton
+        let modeSelector = KanvasCameraDesign.shared.isBottomPicker ? modeSelectorView : modeSelectorButton
         if show {
             showViews(shownViews: [modeSelector], hiddenViews: [], animated: true)
         }
@@ -145,7 +145,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        let targetView = KanvasCameraDesign.shared.isRedesign ? shootButton : modeSelectorButton
+        let targetView = KanvasCameraDesign.shared.isBottomPicker ? shootButton : modeSelectorButton
         if let tooltip = tooltip, !tooltip.isVisible() {
             tooltip.show(animated: true, forView: targetView, withinSuperview: self)
         }
@@ -216,7 +216,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         var preferences = EasyTipView.Preferences()
         let text: String
         
-        if KanvasCameraDesign.shared.isRedesign {
+        if KanvasCameraDesign.shared.isBottomPicker {
             preferences.drawing.foregroundColor = .black
             preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
             preferences.drawing.arrowPosition = .bottom
@@ -250,7 +250,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         setUpShootButton()
         setUpMediaPickerButton()
         
-        if KanvasCameraDesign.shared.isRedesign {
+        if KanvasCameraDesign.shared.isBottomPicker {
             setUpModeSelectorView()
         }
         else {
@@ -288,7 +288,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.accessibilityIdentifier = "Shoot Button"
 
         shootButton.translatesAutoresizingMaskIntoConstraints = false
-        let bottomMargin = KanvasCameraDesign.shared.isRedesign ? ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.modeSelectorTopMargin + ModeSelectorAndShootViewConstants.modeSelectorHeight : ModeSelectorAndShootViewConstants.shootButtonBottomMargin
+        let bottomMargin = KanvasCameraDesign.shared.isBottomPicker ? ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.modeSelectorTopMargin + ModeSelectorAndShootViewConstants.modeSelectorHeight : ModeSelectorAndShootViewConstants.shootButtonBottomMargin
         NSLayoutConstraint.activate([
             shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             shootButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),

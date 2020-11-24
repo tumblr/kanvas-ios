@@ -7,7 +7,7 @@
 public struct KanvasCameraDesign {
     
     // MARK: - General
-    public let isRedesign: Bool
+    public let isBottomPicker: Bool
     
     // MARK: - Camera View
     let cameraViewButtonBackgroundColor: UIColor
@@ -88,7 +88,7 @@ public struct KanvasCameraDesign {
     let mediaClipsCollectionCellLabelVerticalPadding: CGFloat
     let mediaClipsCollectionCellLabelHorizontalPadding: CGFloat
     
-    public init(isRedesign: Bool,
+    public init(isBottomPicker: Bool,
                 cameraViewButtonBackgroundColor: UIColor,
                 cameraViewButtonInvertedBackgroundColor: UIColor,
                 cameraViewOptionVerticalMargin: CGFloat,
@@ -146,7 +146,7 @@ public struct KanvasCameraDesign {
                 mediaClipsCollectionCellLabelVerticalPadding: CGFloat,
                 mediaClipsCollectionCellLabelHorizontalPadding: CGFloat) {
         
-        self.isRedesign = isRedesign
+        self.isBottomPicker = isBottomPicker
         self.cameraViewOptionVerticalMargin = cameraViewOptionVerticalMargin
         self.cameraViewOptionHorizontalMargin = cameraViewOptionHorizontalMargin
         self.cameraViewOptionButtonSize = cameraViewOptionButtonSize
@@ -206,13 +206,13 @@ public struct KanvasCameraDesign {
     }
     
     public static var shared: KanvasCameraDesign = {
-        return KanvasCameraDesign.original
+        return .original
     }()
     
     
     public static var original: KanvasCameraDesign = {
         return KanvasCameraDesign(
-            isRedesign: false,
+            isBottomPicker: false,
             cameraViewButtonBackgroundColor: .clear,
             cameraViewButtonInvertedBackgroundColor: .clear,
             cameraViewOptionVerticalMargin: 24,
@@ -273,9 +273,9 @@ public struct KanvasCameraDesign {
     }()
     
     
-    public static var redesign: KanvasCameraDesign = {
+    public static var bottomPicker: KanvasCameraDesign = {
         return KanvasCameraDesign(
-            isRedesign: true,
+            isBottomPicker: true,
             cameraViewButtonBackgroundColor: UIColor.black.withAlphaComponent(0.4),
             cameraViewButtonInvertedBackgroundColor: UIColor.white,
             cameraViewOptionVerticalMargin: 16,

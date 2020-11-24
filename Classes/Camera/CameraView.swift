@@ -153,7 +153,7 @@ final class CameraView: UIView {
     private func setupModeLayoutGuide() {
         addLayoutGuide(modeLayoutGuide)
         
-        let bottomMargin: CGFloat = KanvasCameraDesign.shared.isRedesign ? MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin) : MediaClipsEditorView.height
+        let bottomMargin: CGFloat = KanvasCameraDesign.shared.isBottomPicker ? MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin) : MediaClipsEditorView.height
         
         modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
@@ -226,7 +226,7 @@ final class CameraView: UIView {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
         
-        if KanvasCameraDesign.shared.isRedesign {
+        if KanvasCameraDesign.shared.isBottomPicker {
             closeButton.backgroundColor = CameraConstants.buttonBackgroundColor
             closeButton.layer.cornerRadius = CameraConstants.buttonCornerRadius
             closeButton.layer.masksToBounds = true
