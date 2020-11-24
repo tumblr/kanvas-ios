@@ -10,8 +10,8 @@ import XCTest
 
 final class KanvasCameraDesignTests: XCTestCase {
 
-    func testDefaultDesign() {
-        XCTAssertFalse(KanvasCameraDesign.defaultDesign.isRedesign, "The result should be false.")
+    func testOriginal() {
+        XCTAssertFalse(KanvasCameraDesign.original.isRedesign, "The result should be false.")
     }
     
     func testRedesign() {

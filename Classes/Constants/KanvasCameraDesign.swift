@@ -206,11 +206,11 @@ public struct KanvasCameraDesign {
     }
     
     public static var shared: KanvasCameraDesign = {
-        return KanvasCameraDesign.defaultDesign
+        return KanvasCameraDesign.original
     }()
     
     
-    public static var defaultDesign: KanvasCameraDesign = {
+    public static var original: KanvasCameraDesign = {
         return KanvasCameraDesign(
             isRedesign: false,
             cameraViewButtonBackgroundColor: .clear,
