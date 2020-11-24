@@ -7,6 +7,26 @@
 import Foundation
 import UIKit
 
+/// Protocol for cell binding and touch events.
+protocol StyleMenuViewDelegate: class {
+    
+    /// Called to obtain the size of the collection.
+    func numberOfItems() -> Int
+    
+    /// Called to bind a cell to an option.
+    ///
+    /// - Parameters
+    ///  - index: the position of the cell in the collection.
+    ///  - cell: the collection cell.
+    func bindItem(at index: Int, cell: StyleMenuCell)
+    
+    /// Callback method when selecting a cell.
+    ///
+    /// - Parameter cell: the cell that was tapped.
+    func didSelect(cell: StyleMenuCell)
+}
+
+/// Constants for the view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.3
     static let maxVisibleCells: Int = 3
@@ -14,24 +34,13 @@ private struct Constants {
     static let horizontalPadding: CGFloat = 16
 }
 
-protocol StyleMenuViewDelegate: class {
-    
-    func numberOfItems() -> Int
-    
-    func bindItem(at index: Int, cell: StyleMenuCell)
-    
-    /// Callback method when selecting a cell.
-    ///
-    /// - Parameter cell: the cell that was tapped
-    func didSelect(cell: StyleMenuCell)
-}
-
+/// State of the menu.
 private enum State {
     case open
     case closed
 }
 
-/// Collection view for StyleMenuController.
+/// View for StyleMenuController.
 final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuExpandCellDelegate, IgnoreTouchesScrollViewDelegate {
     
     private weak var delegate: StyleMenuViewDelegate?
@@ -66,6 +75,8 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     private lazy var menuClosedContentViewWidthConstraint: NSLayoutConstraint = {
         contentView.widthAnchor.constraint(equalToConstant: StyleMenuCell.iconWidth)
     }()
+    
+    // MARK: - Initializers
     
     init(delegate: StyleMenuViewDelegate) {
         self.delegate = delegate
@@ -129,7 +140,8 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             scrollViewContent.trailingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.horizontalPadding),
         ])
     }
-       
+    
+    /// Sets up the view that contains the actual cells and the expand/collapse cell.
     private func setupContentView() {
         guard let delegate = delegate else { return }
         
@@ -152,6 +164,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         setConstraints(for: .open)
     }
     
+    /// Sets up the view that contains the actual cells.
     private func setupFadeView() {
         guard let delegate = delegate else { return }
         
@@ -170,6 +183,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         ])
     }
     
+    /// Adds cells in the collection.
     private func setupCollection() {
         guard let delegate = delegate else { return }
         
@@ -180,6 +194,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
+    /// Adds contraints to the cells.
     private func setupCells() {
         guard let delegate = delegate else { return }
         
@@ -198,6 +213,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
+    /// Adds the cell that allows to expand/collapse the collection.
     private func setupExpandCell() {
         contentView.addSubview(expandCell)
         expandCell.translatesAutoresizingMaskIntoConstraints = false
@@ -209,6 +225,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         ])
     }
     
+    /// Binds the cells to the options.
     private func bindCells() {
         guard let delegate = delegate else { return }
         
@@ -217,6 +234,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
+    /// Resets the collection by removing the cells and their containers.
     private func resetCollection() {
         expandCell.removeFromSuperview()
         
@@ -233,6 +251,15 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         contentView.removeFromSuperview()
     }
     
+    /// Invalidates and removes the current timer.
+    private func stopTimer() {
+        labelTimer?.invalidate()
+        labelTimer = nil
+    }
+    
+    // MARK: - Expand & Collapse
+    
+    /// Hides the extra cells that should not be shown when the collection is collapsed.
     private func hideExtraCells() {
         let extraCells = cells[Constants.maxVisibleCells..<cells.count]
         extraCells.forEach {
@@ -240,6 +267,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
+    /// Shows the extra cells that should be shown when the collection is expanded.
     private func showExtraCells() {
         let extraCells = cells[Constants.maxVisibleCells..<cells.count]
         extraCells.forEach {
@@ -247,11 +275,9 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
-    private func stopTimer() {
-        labelTimer?.invalidate()
-        labelTimer = nil
-    }
-    
+    /// Changes the width contraints of the cell container in order to allow or not touches on the 'label' area.
+    ///
+    /// - Parameter state: whether the collection is expanded or collapsed.
     private func setConstraints(for state: State) {
         switch state {
         case .open:
@@ -262,14 +288,14 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             menuClosedContentViewWidthConstraint.isActive = true
         }
     }
-        
-    // MARK: - Expand & Collapse
     
+    /// Changes the height constraints to keep the content centered when the collection is collapsed.
     private func moveExpandCellUp() {
         contentHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells) + StyleMenuExpandCell.height
         fadeViewHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells)
     }
     
+    /// Changes the height constraints to keep the content centered when the collection is expanded.
     private func moveExpandCellDown() {
         guard let delegate = delegate else { return }
         contentHeightContraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems()) + StyleMenuExpandCell.height
@@ -278,6 +304,9 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     
     // MARK: - Public interface
     
+    /// Collapses the collection.
+    ///
+    /// - Parameter animated: whether to animate the transition or not.
     func collapseCollection(animated: Bool = false) {
         state = .closed
         stopTimer()
@@ -319,6 +348,9 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
+    /// Expands the collection.
+    ///
+    /// - Parameter animated: whether to animate the transition or not.
     func expandCollection(animated: Bool = false) {
         state = .open
         expandCell.changeLabel(to: NSLocalizedString("EditorClose", comment: "Label for the 'Close' option in the editor tools"))
@@ -357,6 +389,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
+    /// Loads the content of the collection.
     func load() {
         resetCollection()
         setupContentView()
@@ -371,19 +404,33 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
+    /// Obtains a cell by its index.
+    ///
+    /// - Parameter index: the position of the cell in the collection.
     func getCell(at index: Int) -> StyleMenuCell? {
         return cells.object(at: index)
     }
     
+    /// Obtains the index of a cell in the collection.
+    ///
+    /// - Parameter cell: the cell.
     func getIndex(for cell: StyleMenuCell) -> Int? {
         return cells.index(of: cell)
     }
     
+    /// Reloads a specific cell.
+    ///
+    /// - Parameter index: the position of the cell in the collection.
     func reloadItem(at index: Int) {
         guard let cell = cells.object(at: index) else { return }
         delegate?.bindItem(at: index, cell: cell)
     }
     
+    /// Shows or hides the labels next to the cells.
+    ///
+    /// - Parameters
+    ///  - show: true to show, false to hide.
+    ///  - animated: whether to animate the transition or not.
     func showLabels(_ show: Bool, animated: Bool = false) {
         cells.forEach { cell in
             cell.showLabel(show, animated: animated)
@@ -392,6 +439,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         expandCell.showLabel(show, animated: animated)
     }
     
+    /// Shows the labels for a period of time and then hides them.
     func showTemporalLabels() {
         showLabels(true, animated: false)
         setConstraints(for: .open)
@@ -433,10 +481,14 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     }
 }
 
+/// Protocol for touch events.
 private protocol IgnoreTouchesScrollViewDelegate: class {
+    
+    /// Called when the scroll view is touched outside its content.
     func didTouchEmptySpace()
 }
 
+/// Scroll view that detects touches outside its content.
 private final class IgnoreTouchesScrollView: UIScrollView {
     
     weak var touchDelegate: IgnoreTouchesScrollViewDelegate?
