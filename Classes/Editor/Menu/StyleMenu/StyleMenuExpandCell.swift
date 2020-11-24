@@ -18,6 +18,7 @@ protocol StyleMenuExpandCellDelegate: class {
     func didTap(cell: StyleMenuExpandCell, recognizer: UITapGestureRecognizer)
 }
 
+/// Constants for the cell.
 private struct Constants {
     static let circleDiameter: CGFloat = 48
     static let circleMargin: CGFloat = 4
@@ -33,7 +34,7 @@ private struct Constants {
     }
 }
 
-/// The cell in StyleMenuView to display an individual option.
+/// The cell in StyleMenuView to display that allows to expand/collapse the options.
 final class StyleMenuExpandCell: UIView {
     
     static let height = Constants.height
@@ -43,6 +44,8 @@ final class StyleMenuExpandCell: UIView {
     
     weak var delegate: StyleMenuExpandCellDelegate?
         
+    // MARK: - Initializers
+    
     init() {
         iconView = UIImageView()
         label = StyleMenuRoundedLabel()
@@ -63,9 +66,10 @@ final class StyleMenuExpandCell: UIView {
         rotateDown()
     }
     
+    /// Sets up the circular image view that contains the caret icon.
     private func setupIconView() {
         addSubview(iconView)
-        iconView.accessibilityIdentifier = "Style Menu Cell Icon View"
+        iconView.accessibilityIdentifier = "Style Menu Expand Cell Icon View"
         iconView.translatesAutoresizingMaskIntoConstraints = false
         iconView.clipsToBounds = true
         iconView.layer.cornerRadius = Constants.circleDiameter / 2
@@ -82,9 +86,10 @@ final class StyleMenuExpandCell: UIView {
         ])
     }
     
+    /// Sets up the label that appears next to the icon view.
     private func setupLabel() {
         addSubview(label)
-        label.accessibilityIdentifier = "Style Menu Cell Label"
+        label.accessibilityIdentifier = "Style Menu Expand Cell Label"
         label.textColor = Constants.labelTextColor
         label.backgroundColor = Constants.backgroundColor
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -111,18 +116,28 @@ final class StyleMenuExpandCell: UIView {
     
     // MARK: - Public interface
     
+    /// Rotates the caret so that it points up.
     func rotateUp() {
         iconView.transform = CGAffineTransform(rotationAngle: Constants.upAngle)
     }
     
+    /// Rotates the caret so that it points down.
     func rotateDown() {
         iconView.transform = CGAffineTransform(rotationAngle: Constants.downAngle)
     }
     
+    /// Modifies the text of the label.
+    ///
+    /// - Parameter text: the new text.
     func changeLabel(to text: String) {
         label.text = text
     }
     
+    /// shows or hides the label.
+    ///
+    /// - Parameters
+    ///  - show: true to show, false to hide.
+    ///  - animated: whether to animate the transition or not.
     func showLabel(_ show: Bool, animated: Bool = false) {
         let action: () -> Void = { [weak self] in
             self?.label.alpha = show ? 1 : 0

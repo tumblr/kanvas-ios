@@ -18,6 +18,7 @@ protocol StyleMenuCellDelegate: class {
     func didTap(cell: StyleMenuCell, recognizer: UITapGestureRecognizer)
 }
 
+/// Constants for the cell.
 private struct Constants {
     static let circleDiameter: CGFloat = 48
     static let circleMargin: CGFloat = 4
@@ -43,7 +44,9 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
     private let label: UILabel
     
     weak var delegate: StyleMenuCellDelegate?
-        
+    
+    // MARK: - Initializers
+    
     init() {
         iconView = UIImageView()
         label = StyleMenuRoundedLabel()
@@ -63,6 +66,7 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
         setupLabel()
     }
     
+    /// Sets up the circular image view that contains the option icon.
     private func setupIconView() {
         addSubview(iconView)
         iconView.accessibilityIdentifier = "Style Menu Cell Icon View"
@@ -80,6 +84,7 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
         ])
     }
     
+    /// Sets up the label that appears next to the icon view.
     private func setupLabel() {
         addSubview(label)
         label.accessibilityIdentifier = "Style Menu Cell Label"
@@ -107,10 +112,10 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
     
     // MARK: - Public interface
     
-    /// Updates the cell according to EditionOption properties
+    /// Updates the cell according to the edition option properties.
     ///
     /// - Parameters
-    ///  - option: The style menu to display
+    ///  - option: The edition option to display.
     ///  - enabled: Whether the option is on or off.
     func bindTo(_ option: EditionOption, enabled: Bool) {
         let backgroundColor = enabled ? Constants.backgroundColorOn : Constants.backgroundColorOff
@@ -123,6 +128,11 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
 
     }
     
+    /// shows or hides the label.
+    ///
+    /// - Parameters
+    ///  - show: true to show, false to hide.
+    ///  - animated: whether to animate the transition or not.
     func showLabel(_ show: Bool, animated: Bool = false) {
         let action: () -> Void = { [weak self] in
             self?.label.alpha = show ? 1 : 0

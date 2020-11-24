@@ -7,6 +7,7 @@
 import Foundation
 import UIKit
 
+/// Constants for the label.
 private struct Constants {
     static let height: CGFloat = 24
     static let font: UIFont = .boldSystemFont(ofSize: 16)

@@ -7,12 +7,12 @@
 import Foundation
 import UIKit
 
-/// Constants for the controller
+/// Constants for the controller.
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
 }
 
-/// Controller for handling the filter item collection.
+/// Controller that handles the option collection.
 final class StyleMenuController: UIViewController, KanvasEditorMenuController, StyleMenuViewDelegate {
         
     private var editionOptions: [EditionOption]
@@ -29,9 +29,13 @@ final class StyleMenuController: UIViewController, KanvasEditorMenuController, S
         }
     }
     
-    /// Initializes the option collection
-    /// - Parameter settings: Camera settings
-    /// - Parameter shouldExportMediaAsGIF: initial value for GIF export toggle button. `nil` means the button is disabled.
+    // MARK: - Initializers
+    
+    /// Initializes the option collection.
+    ///
+    /// - Parameters
+    ///   - settings: the camera settings.
+    ///   - shouldExportMediaAsGIF: initial value for GIF export toggle button. `nil` means the button is disabled.
     init(settings: CameraSettings, shouldExportMediaAsGIF: Bool?) {
         self.editionOptions = []
         self.shouldExportMediaAsGIF = shouldExportMediaAsGIF ?? false
@@ -112,10 +116,11 @@ final class StyleMenuController: UIViewController, KanvasEditorMenuController, S
     
     // MARK: - Option selection
     
-    /// Selects an option
+    /// Selects an option.
     ///
-    /// - Parameter index: position of the option in the collection
-    /// - Parameter cell: the selected cell
+    /// - Parameters
+    ///   - index: position of the option in the collection.
+    ///   - cell: the selected cell.
     private func selectEditionOption(index: Int, cell: StyleMenuCell) {
         guard let option = editionOptions.object(at: index) else { return }
         delegate?.didSelectEditionOption(option, cell: cell)

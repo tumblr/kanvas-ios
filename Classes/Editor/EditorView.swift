@@ -530,6 +530,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         fakeOptionCell.alpha = 0
     }
     
+    /// Sets up the image used for the animation that transforms the quick post button into a confirm button
     private func setupFakeQuickPostButton() {
         fakeQuickPostButton.accessibilityLabel = "Fake Quick Post Button"
         
@@ -790,11 +791,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
     }
     
-    /// transforms an option cell into a checkmark button with an animation
+    /// animates the transition between the main editor tools and a specific menu
     ///
-    /// - Parameter cell: the cell to be transformed
-    /// - Parameter finalLocation: the location where the checkmark button will be
-    /// - Parameter completion: a closure to execute when the animation ends
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - finalLocation: the location where animation will end
+    ///   - completion: a closure to execute when the animation ends
     func animateEditionOption(cell: KanvasEditorMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
         if KanvasEditorDesign.shared.isVerticalMenu {
             animateFakeCellPop(cell: cell, finalLocation: finalLocation, completion: completion)
@@ -804,9 +806,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
     }
     
-    /// transforms the checkmark button of the current menu into its option cell with an animation
+    /// animates the transition between a specific menu and the main editor tools
     ///
-    /// - Parameter cell: the cell in which the checkmark button will be tranformed
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - initialLocation: the location where the checkmark button starts the animation
     func animateReturnOfEditionOption(cell: KanvasEditorMenuCollectionCell?, initialLocation: CGPoint) {
         if KanvasEditorDesign.shared.isVerticalMenu {
             animateFakeCellPopBackwards(cell: cell, initialLocation: initialLocation)
@@ -816,6 +820,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
     }
     
+    /// animates the transition between the main editor tools and a specific menu with a pop-out effect.
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - finalLocation: the location where animation will end
+    ///   - completion: a closure to execute when the animation ends
     private func animateFakeCellPop(cell: KanvasEditorMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
         let distance = finalLocation - fakeOptionCell.center
         let translationTransform = CGAffineTransform(translationX: distance.x, y: distance.y)
@@ -852,6 +862,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         })
     }
     
+    /// animates the transition between a specific menu and the main editor tools with a pop-out effect.
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - initialLocation: the location where the checkmark button starts the animation
     private func animateFakeCellPopBackwards(cell: KanvasEditorMenuCollectionCell?, initialLocation: CGPoint) {
         let distance = initialLocation - fakeOptionCell.center
         let translationTransform = CGAffineTransform(translationX: distance.x, y: distance.y)
@@ -889,6 +904,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         })
     }
     
+    /// animates the transition between the main editor tools and a specific menu with a translation effect.
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - finalLocation: the location where animation will end
+    ///   - completion: a closure to execute when the animation ends
     private func animateFakeCellTranslation(cell: KanvasEditorMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
         guard let cell = cell, let cellParent = cell.superview else {
             completion(false)
@@ -915,6 +936,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         })
     }
     
+    /// animates the transition between a specific menu and the main editor tools with a translation effect.
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - initialLocation: the location where the checkmark button starts the animation
     private func animateFakeCellTranslationBackwards(cell: KanvasEditorMenuCollectionCell?, initialLocation: CGPoint) {
         guard let cell = cell, let cellParent = cell.superview else { return }
         fakeOptionCell.center = initialLocation
