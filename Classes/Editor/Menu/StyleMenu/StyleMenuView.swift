@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 private struct Constants {
-    static let animationDuration: TimeInterval = 0.5
+    static let animationDuration: TimeInterval = 0.3
     static let maxVisibleCells: Int = 3
     static let timerInterval: TimeInterval = 3
     static let horizontalPadding: CGFloat = 16
