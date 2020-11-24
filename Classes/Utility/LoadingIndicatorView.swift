@@ -16,7 +16,7 @@ private struct LoadingIndicatorConstants {
 /// but it will eventually be replaced with a custom animation
 final class LoadingIndicatorView: UIView {
 
-    private let indicator = UIActivityIndicatorView(style: .whiteLarge)
+    private let indicator = UIActivityIndicatorView(style: .large)
     
     var indicatorColor: UIColor {
         set { indicator.color = newValue }
@@ -32,6 +32,7 @@ final class LoadingIndicatorView: UIView {
         super.init(frame: .zero)
 
         backgroundColor = LoadingIndicatorConstants.backgroundColor
+        indicatorColor = .white
         addSubview(indicator)
         setupConstraints()
     }

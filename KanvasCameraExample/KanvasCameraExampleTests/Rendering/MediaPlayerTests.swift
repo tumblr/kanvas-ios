@@ -85,7 +85,6 @@ class MediaPlayerTests: XCTestCase {
             XCTFail("Could not find a video track")
             return
         }
-        let frameRate = videoTrack.nominalFrameRate
 
         let renderer = mockRenderer()
         let player = MediaPlayer(renderer: renderer)
@@ -98,7 +97,11 @@ class MediaPlayerTests: XCTestCase {
         // Using greater-than since we'll most likely be called faster than the framerate.
         // Also, always checking processedSampleBufferCallCount - 1 since the first call is initialization.
         // AAAlso, compare against frameRate - 10, since the tests could be slow...
-        XCTAssertGreaterThan(renderer.processedSampleBufferCallCount - 1, UInt(frameRate - 10), "Expected processSampleBuffer to be called for approximately each frame of video")
+        XCTAssertGreaterThanOrEqual(renderer.processedSampleBufferCallCount, 1)
+        if renderer.processedSampleBufferCallCount >= 1 { // to prevent the unsigned int overflow crash when processedSampleBufferCallCount is zero
+            let frameRate = videoTrack.nominalFrameRate
+            XCTAssertGreaterThan(renderer.processedSampleBufferCallCount - 1, UInt(frameRate - 10), "Expected processSampleBuffer to be called for approximately each frame of video")
+        }
         XCTAssertNotNil(renderer.processedSampleBuffer, "Expected processSampleBuffer to be called")
     }
 
