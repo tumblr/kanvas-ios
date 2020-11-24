@@ -179,12 +179,24 @@ final class ModeSelectorAndShootController: UIViewController {
     
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        modeView.showTooltip()
+        if settings.features.modeSelectorTooltip {
+            modeView.showModeSelectorTooltip()
+        }
+        
+        if settings.features.shutterButtonTooltip {
+            modeView.showShutterButtonTooltip()
+        }
     }
     
     /// dismisses the tooltip below the mode selector
     func dismissTooltip() {
-        modeView.dismissTooltip()
+        if settings.features.modeSelectorTooltip {
+            modeView.dismissModeSelectorTooltip()
+        }
+        
+        if settings.features.shutterButtonTooltip {
+            modeView.dismissShutterButtonTooltip()
+        }
     }
     
     /// shows the inner circle used for the press effect

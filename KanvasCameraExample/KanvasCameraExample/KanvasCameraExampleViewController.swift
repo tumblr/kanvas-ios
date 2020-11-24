@@ -144,6 +144,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorPostOptions = false
         settings.features.newCameraModes = true
         settings.features.gifs = true
+        settings.features.modeSelectorTooltip = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
@@ -269,6 +270,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
+            .modeSelectorTooltip(settings.features.modeSelectorTooltip),
+            .shutterButtonTooltip(settings.features.shutterButtonTooltip),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
             .editToolsRedesign(settings.editToolsRedesign),
@@ -315,6 +318,10 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         case .editorPostOptions(_):
             settings.features.editorPostOptions = value
+        case .modeSelectorTooltip(_):
+            settings.features.modeSelectorTooltip = value
+        case .shutterButtonTooltip(_):
+            settings.features.shutterButtonTooltip = value
         case .gifs(_):
             settings.features.gifs = value
         case .editorShouldStartGIFMaker(_):

@@ -58,7 +58,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     private let shootButton: ShootButtonView
     private let modeSelectorButton: ModeButtonView
     private let mediaPickerButton: MediaPickerButtonView
-    private var tooltip: EasyTipView?
+    private var modeSelectorTooltip: EasyTipView?
+    private var shutterButtonTooltip: EasyTipView?
     let modeSelectorView: UIView
     
     
@@ -74,7 +75,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
 
         super.init(frame: .zero)
         backgroundColor = .clear
-        tooltip = createTooltip()
+        modeSelectorTooltip = createModeSelectorTooltip()
+        shutterButtonTooltip = createShutterButtonTooltip()
         
         setUpButtons()
     }
@@ -143,17 +145,31 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.enableGestureRecognizers(enabled)
     }
 
-    /// shows the tooltip below the mode selector
-    func showTooltip() {
-        let targetView = KanvasCameraDesign.shared.isBottomPicker ? shootButton : modeSelectorButton
-        if let tooltip = tooltip, !tooltip.isVisible() {
+    /// shows a tooltip below the mode selector
+    func showModeSelectorTooltip() {
+        let targetView = KanvasCameraDesign.shared.isBottomPicker ? modeSelectorView : modeSelectorButton
+        if let tooltip = modeSelectorTooltip, !tooltip.isVisible() {
             tooltip.show(animated: true, forView: targetView, withinSuperview: self)
         }
     }
     
+    /// shows a tooltip above the shutter button
+    func showShutterButtonTooltip() {
+        if let tooltip = shutterButtonTooltip, !tooltip.isVisible() {
+            tooltip.show(animated: true, forView: shootButton, withinSuperview: self)
+        }
+    }
+    
     /// dismisses the tooltip below the mode selector
-    func dismissTooltip() {
-        if let tooltip = tooltip, tooltip.isVisible() {
+    func dismissModeSelectorTooltip() {
+        if let tooltip = modeSelectorTooltip, tooltip.isVisible() {
+            tooltip.dismiss()
+        }
+    }
+    
+    /// dismisses the tooltip above the shutter button
+    func dismissShutterButtonTooltip() {
+        if let tooltip = shutterButtonTooltip, tooltip.isVisible() {
             tooltip.dismiss()
         }
     }
@@ -211,37 +227,37 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
 
     // MARK: - UI Layout
-
-    private func createTooltip() -> EasyTipView {
+    
+    private func createModeSelectorTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
-        let text: String
+        preferences.drawing.foregroundColor = .white
+        preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
+        preferences.drawing.arrowPosition = .top
+        preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
+        preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight
+        preferences.drawing.cornerRadius = ModeSelectorAndShootViewConstants.tooltipCornerRadius
+        preferences.drawing.font = ModeSelectorAndShootViewConstants.tooltipTextFont
+        preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
+        preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
+        preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
+        let text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
         
-        if KanvasCameraDesign.shared.isBottomPicker {
-            preferences.drawing.foregroundColor = .black
-            preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
-            preferences.drawing.arrowPosition = .bottom
-            preferences.drawing.arrowWidth = 8.5
-            preferences.drawing.arrowHeight = 6
-            preferences.drawing.cornerRadius = 23
-            preferences.drawing.font = UIFont.boldSystemFont(ofSize: 16)
-            preferences.positioning.textHInset = 18
-            preferences.positioning.textVInset = 14
-            preferences.positioning.margin = 4
-            text = NSLocalizedString("Tap and hold to record", comment: "Indicates to the user that they can tap and hold to record")
-        }
-        else {
-            preferences.drawing.foregroundColor = .white
-            preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
-            preferences.drawing.arrowPosition = .top
-            preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
-            preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight
-            preferences.drawing.cornerRadius = ModeSelectorAndShootViewConstants.tooltipCornerRadius
-            preferences.drawing.font = ModeSelectorAndShootViewConstants.tooltipTextFont
-            preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
-            preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
-            preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
-            text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
-        }
+        return EasyTipView(text: text, preferences: preferences, delegate: self)
+    }
+    
+    private func createShutterButtonTooltip() -> EasyTipView {
+        var preferences = EasyTipView.Preferences()
+        preferences.drawing.foregroundColor = .black
+        preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
+        preferences.drawing.arrowPosition = .bottom
+        preferences.drawing.arrowWidth = 8.5
+        preferences.drawing.arrowHeight = 6
+        preferences.drawing.cornerRadius = 23
+        preferences.drawing.font = UIFont.boldSystemFont(ofSize: 16)
+        preferences.positioning.textHInset = 18
+        preferences.positioning.textVInset = 14
+        preferences.positioning.margin = 4
+        let text = NSLocalizedString("Tap and hold to record", comment: "Indicates to the user that they can tap and hold to record")
         
         return EasyTipView(text: text, preferences: preferences, delegate: self)
     }

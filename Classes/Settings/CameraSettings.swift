@@ -146,6 +146,14 @@ public struct CameraFeatures {
     /// GIF support
     /// This enables GIFs to be picked from the media picker, and exported from the Editor.
     public var gifs = false
+    
+    /// Mode selector tooltip
+    /// This enables a tooltip to appear below the mode selector when the camera launches for the first time.
+    public var modeSelectorTooltip: Bool = false
+    
+    /// Shutter button tooltip
+    /// This enables a tooltip to appear above the shutter button when the camera launches for the first time.
+    public var shutterButtonTooltip: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera
