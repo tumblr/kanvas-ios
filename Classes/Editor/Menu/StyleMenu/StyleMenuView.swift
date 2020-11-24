@@ -49,7 +49,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     private let scrollView: StyleMenuScrollView
     private let scrollViewContent: IgnoreTouchesView
     private let contentView: IgnoreTouchesView
-    private let fadeView: IgnoreTouchesView
+    private let itemsView: IgnoreTouchesView
     private var cells: [StyleMenuCell]
     private let expandCell: StyleMenuExpandCell
     private var labelTimer: Timer?
@@ -60,12 +60,12 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         return delegate.numberOfItems() > Constants.maxVisibleCells
     }
     
-    private lazy var contentHeightContraint: NSLayoutConstraint = {
+    private lazy var contentHeightConstraint: NSLayoutConstraint = {
         contentView.heightAnchor.constraint(equalToConstant: 0)
     }()
     
-    private lazy var fadeViewHeightContraint: NSLayoutConstraint = {
-        fadeView.heightAnchor.constraint(equalToConstant: 0)
+    private lazy var itemsViewHeightConstraint: NSLayoutConstraint = {
+        itemsView.heightAnchor.constraint(equalToConstant: 0)
     }()
     
     private lazy var menuOpenContentViewWidthConstraint: NSLayoutConstraint = {
@@ -83,7 +83,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         self.scrollView = StyleMenuScrollView()
         self.scrollViewContent = IgnoreTouchesView()
         self.contentView = IgnoreTouchesView()
-        self.fadeView = IgnoreTouchesView()
+        self.itemsView = IgnoreTouchesView()
         self.expandCell = StyleMenuExpandCell()
         self.cells = []
         self.state = .collapsed
@@ -154,9 +154,9 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         let expandCellHeight = StyleMenuExpandCell.height
         let contentHeight: CGFloat = showExpandCell ? (itemHeight + expandCellHeight) : itemHeight
         
-        contentHeightContraint.constant = contentHeight
+        contentHeightConstraint.constant = contentHeight
         NSLayoutConstraint.activate([
-            contentHeightContraint,
+            contentHeightConstraint,
             contentView.centerYAnchor.constraint(equalTo: scrollViewContent.safeAreaLayoutGuide.centerYAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollViewContent.safeAreaLayoutGuide.leadingAnchor),
         ])
@@ -164,22 +164,22 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         setConstraints(for: .expanded)
     }
     
-    /// Sets up the view that contains the actual cells.
-    private func setupFadeView() {
+    /// Sets up the view that contains the actual item cells.
+    private func setupItemsView() {
         guard let delegate = delegate else { return }
         
-        contentView.addSubview(fadeView)
-        fadeView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(itemsView)
+        itemsView.translatesAutoresizingMaskIntoConstraints = false
         
         let numberOfItems = CGFloat(delegate.numberOfItems())
         let contentHeight: CGFloat = numberOfItems * StyleMenuCell.height
         
-        fadeViewHeightContraint.constant = contentHeight
+        itemsViewHeightConstraint.constant = contentHeight
         NSLayoutConstraint.activate([
-            fadeViewHeightContraint,
-            fadeView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
-            fadeView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
-            fadeView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor),
+            itemsViewHeightConstraint,
+            itemsView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+            itemsView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
+            itemsView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor),
         ])
     }
     
@@ -189,12 +189,12 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         
         for _ in 0..<delegate.numberOfItems() {
             let cell = StyleMenuCell()
-            fadeView.addSubview(cell)
+            itemsView.addSubview(cell)
             cells.append(cell)
         }
     }
     
-    /// Adds contraints to the cells.
+    /// Adds constraints to the cells.
     private func setupCells() {
         guard let delegate = delegate else { return }
         
@@ -206,8 +206,8 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
             
             let topOffset: CGFloat = StyleMenuCell.height * CGFloat(index)
             NSLayoutConstraint.activate([
-                cell.topAnchor.constraint(equalTo: fadeView.safeAreaLayoutGuide.topAnchor, constant: topOffset),
-                cell.leadingAnchor.constraint(equalTo: fadeView.safeAreaLayoutGuide.leadingAnchor),
+                cell.topAnchor.constraint(equalTo: itemsView.safeAreaLayoutGuide.topAnchor, constant: topOffset),
+                cell.leadingAnchor.constraint(equalTo: itemsView.safeAreaLayoutGuide.leadingAnchor),
                 cell.heightAnchor.constraint(equalToConstant: StyleMenuCell.height),
             ])
         }
@@ -244,10 +244,10 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         
         cells.removeAll()
         
-        fadeViewHeightContraint.constant = 0
-        fadeView.removeFromSuperview()
+        itemsViewHeightConstraint.constant = 0
+        itemsView.removeFromSuperview()
         
-        contentHeightContraint.constant = 0
+        contentHeightConstraint.constant = 0
         contentView.removeFromSuperview()
     }
     
@@ -275,7 +275,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
     }
     
-    /// Changes the width contraints of the cell container in order to allow or not touches on the 'label' area.
+    /// Changes the width constraints of the cell container in order to allow or not touches on the 'label' area.
     ///
     /// - Parameter state: whether the collection is expanded or collapsed.
     private func setConstraints(for state: State) {
@@ -291,15 +291,15 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     
     /// Changes the height constraints to keep the content centered when the collection is collapsed.
     private func moveExpandCellUp() {
-        contentHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells) + StyleMenuExpandCell.height
-        fadeViewHeightContraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells)
+        contentHeightConstraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells) + StyleMenuExpandCell.height
+        itemsViewHeightConstraint.constant = StyleMenuCell.height * CGFloat(Constants.maxVisibleCells)
     }
     
     /// Changes the height constraints to keep the content centered when the collection is expanded.
     private func moveExpandCellDown() {
         guard let delegate = delegate else { return }
-        contentHeightContraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems()) + StyleMenuExpandCell.height
-        fadeViewHeightContraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems())
+        contentHeightConstraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems()) + StyleMenuExpandCell.height
+        itemsViewHeightConstraint.constant = StyleMenuCell.height * CGFloat(delegate.numberOfItems())
     }
     
     // MARK: - Public interface
@@ -393,7 +393,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     func load() {
         resetCollection()
         setupContentView()
-        setupFadeView()
+        setupItemsView()
         setupCollection()
         setupCells()
         bindCells()
