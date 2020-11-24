@@ -282,7 +282,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         let primaryBackgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
         let secondaryBackgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         
-        if KanvasEditorDesign.shared.isRedesign {
+        if KanvasEditorDesign.shared.isVerticalMenu {
             confirmButton.setImage(checkmarkImage, for: .normal)
             undoButton.setImage(undoImage, for: .normal)
             eraseButton.setImage(eraserUnselectedImage, for: .normal)
@@ -571,7 +571,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         }
         
         UIView.transition(with: eraseButton, duration: Constants.animationDuration, options: .transitionCrossDissolve, animations: {
-            if KanvasEditorDesign.shared.isRedesign {
+            if KanvasEditorDesign.shared.isVerticalMenu {
                 self.eraseButton.setImage(image, for: .normal)
                 self.eraseButton.backgroundColor = backgroundColor
             }

@@ -7,7 +7,7 @@
 public struct KanvasEditorDesign {
     
     // MARK: - General
-    public let isRedesign: Bool
+    public let isVerticalMenu: Bool
     
     // MARK: - Menu
     let checkmarkImage: UIImage?
@@ -44,7 +44,7 @@ public struct KanvasEditorDesign {
     let editorTextViewAlignmentImage: [NSTextAlignment: UIImage?]
     let editorTextViewHighlightImage: (Bool) -> UIImage?
     
-    public init(isRedesign: Bool,
+    public init(isVerticalMenu: Bool,
                 checkmarkImage: UIImage?,
                 buttonBackgroundColor: UIColor,
                 buttonInvertedBackgroundColor: UIColor,
@@ -73,7 +73,7 @@ public struct KanvasEditorDesign {
                 editorTextViewAlignmentImage: [NSTextAlignment: UIImage?],
                 editorTextViewHighlightImage: @escaping (Bool) -> UIImage?) {
         
-        self.isRedesign = isRedesign
+        self.isVerticalMenu = isVerticalMenu
         self.checkmarkImage = checkmarkImage
         self.buttonBackgroundColor = buttonBackgroundColor
         self.buttonInvertedBackgroundColor = buttonInvertedBackgroundColor
@@ -104,13 +104,13 @@ public struct KanvasEditorDesign {
     }
     
     public static var shared: KanvasEditorDesign = {
-        return .defaultDesign
+        return .original
     }()
     
     
-    public static var defaultDesign: KanvasEditorDesign = {
+    public static var original: KanvasEditorDesign = {
         return KanvasEditorDesign(
-            isRedesign: false,
+            isVerticalMenu: false,
             checkmarkImage: UIImage.imageFromCameraBundle(named: "editorConfirm"),
             buttonBackgroundColor: .clear,
             buttonInvertedBackgroundColor: .clear,
@@ -148,9 +148,9 @@ public struct KanvasEditorDesign {
     }()
     
     
-    public static var redesign: KanvasEditorDesign = {
+    public static var verticalMenu: KanvasEditorDesign = {
         return KanvasEditorDesign(
-            isRedesign: true,
+            isVerticalMenu: true,
             checkmarkImage: UIImage.imageFromCameraBundle(named: "longCheckmark"),
             buttonBackgroundColor: UIColor.black.withAlphaComponent(0.4),
             buttonInvertedBackgroundColor: .white,

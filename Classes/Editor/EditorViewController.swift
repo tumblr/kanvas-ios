@@ -89,7 +89,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
         let controller: KanvasEditorMenuController
         
-        if KanvasEditorDesign.shared.isRedesign {
+        if KanvasEditorDesign.shared.isVerticalMenu {
             controller = StyleMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
         }
         else {

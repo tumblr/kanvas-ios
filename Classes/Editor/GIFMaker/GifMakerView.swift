@@ -126,7 +126,7 @@ final class GifMakerView: UIView {
         topButtonsContainer.addSubview(confirmButton)
         
         let checkmark = KanvasEditorDesign.shared.checkmarkImage
-        if KanvasEditorDesign.shared.isRedesign {
+        if KanvasEditorDesign.shared.isVerticalMenu {
             let backgroundImage = UIImage.circle(diameter: Constants.topButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
             confirmButton.setBackgroundImage(backgroundImage, for: .normal)
             confirmButton.setImage(checkmark, for: .normal)

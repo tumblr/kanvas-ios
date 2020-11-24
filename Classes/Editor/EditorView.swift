@@ -350,7 +350,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if KanvasEditorDesign.shared.isRedesign {
+        if KanvasEditorDesign.shared.isVerticalMenu {
             closeButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
             closeButton.layer.cornerRadius = EditorViewConstants.buttonSize / 2
             closeButton.layer.masksToBounds = true
@@ -416,7 +416,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         collectionContainer.clipsToBounds = false
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        if KanvasEditorDesign.shared.isRedesign {
+        if KanvasEditorDesign.shared.isVerticalMenu {
             
             NSLayoutConstraint.activate([
                 collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),

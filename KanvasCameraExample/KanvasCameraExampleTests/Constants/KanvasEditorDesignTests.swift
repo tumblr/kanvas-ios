@@ -10,12 +10,12 @@ import XCTest
 
 final class KanvasEditorDesignTests: XCTestCase {
 
-    func testDefaultDesign() {
-        XCTAssertFalse(KanvasEditorDesign.defaultDesign.isRedesign, "The result should be false.")
+    func testOriginal() {
+        XCTAssertFalse(KanvasEditorDesign.original.isVerticalMenu, "The result should be false.")
     }
     
-    func testRedesign() {
-        XCTAssertTrue(KanvasEditorDesign.redesign.isRedesign, "The result should be true.")
+    func testVerticalMenu() {
+        XCTAssertTrue(KanvasEditorDesign.verticalMenu.isVerticalMenu, "The result should be true.")
     }
 
 }
