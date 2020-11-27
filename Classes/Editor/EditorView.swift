@@ -325,7 +325,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         tagButton.addTarget(self, action: #selector(tagButtonPressed), for: .touchUpInside)
         tagButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tagButton.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor, constant: EditorViewConstants.confirmButtonHorizontalMargin),
+            tagButton.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor, constant: EditorViewConstants.buttonHorizontalMargin),
             tagButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
             tagButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
             tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize)
