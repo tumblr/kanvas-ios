@@ -393,22 +393,29 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         navigationContainer.addSubview(confirmButton)
         confirmButton.addTarget(self, action: #selector(postOptionsButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
-            confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
-        ])
         
         if showCogIcon {
             confirmButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
             confirmButton.setImage(KanvasCameraImages.cogImage, for: .normal)
             confirmButton.layer.cornerRadius = EditorViewConstants.confirmButtonSize / 2
             confirmButton.layer.masksToBounds = true
+            
+            NSLayoutConstraint.activate([
+                confirmButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin),
+                confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+                confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+                confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
+            ])
         }
         else {
             confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+            
+            NSLayoutConstraint.activate([
+                confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+                confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+                confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+                confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
+            ])
         }
     }
     
