@@ -2,7 +2,7 @@
 
 # Kanvas
 
-<img src="https://circleci.com/gh/tumblr/kanvas-ios.svg?style=svg" alt="Kanvas Build Status">
+<a href="https://app.circleci.com/pipelines/github/tumblr/kanvas-ios?branch=main"><img src="https://circleci.com/gh/tumblr/kanvas-ios.svg?branch=main&style=svg" alt="Kanvas Build Status"></a>
 
 Kanvas is an [open-source](https://github.com/tumblr/kanvas-ios/blob/main/LICENSE) iOS library for adding effects, drawings, text, stickers, and making GIFs from existing media or the camera.
 
