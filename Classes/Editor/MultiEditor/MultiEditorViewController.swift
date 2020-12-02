@@ -1,9 +1,10 @@
 import Foundation
 
 protocol MultiEditorComposerDelegate: class {
-    func didFinishExporting(media: [Result<(UIImage?, URL?, MediaInfo), Error>])
+    func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
     func addButtonWasPressed(clips: [MediaClip])
     func editor(segment: CameraSegment, views: [View]?, canvas: MovableViewCanvas?, drawingView: IgnoreTouchesView?) -> EditorViewController
+    func dismissButtonPressed()
 }
 
 class MultiEditorViewController: UIViewController {
@@ -82,7 +83,8 @@ class MultiEditorViewController: UIViewController {
          analyticsProvider: KanvasCameraAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          delegate: MultiEditorComposerDelegate,
-         selected: Array<CameraSegment>.Index?) {
+         selected: Array<CameraSegment>.Index?,
+         edits: [Data]?) {
         
         self.settings = settings
         self.segments = segments
@@ -94,6 +96,12 @@ class MultiEditorViewController: UIViewController {
         self.analyticsProvider = analyticsProvider
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.delegate = delegate
+
+        if let edits = edits {
+            self.edits = edits.map({ data in
+                return (data, nil, EditOptions(soundEnabled: true))
+            })
+        }
 
         exportHandler = MultiEditorExportHandler({ [weak delegate] result in
             delegate?.didFinishExporting(media: result)
@@ -270,10 +278,10 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 }
 
 extension MultiEditorViewController: EditorControllerDelegate {
-    func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
     }
     
-    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
 //        if let image = image {
 //            var clips = clipsController.getClips()
 //            if let selected = selected {
@@ -284,11 +292,11 @@ extension MultiEditorViewController: EditorControllerDelegate {
 //        }
     }
     
-    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
     }
     
     func dismissButtonPressed() {
-        presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+        delegate?.dismissButtonPressed()
     }
     
     func didDismissColorSelectorTooltip() {

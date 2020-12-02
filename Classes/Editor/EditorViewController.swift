@@ -12,13 +12,13 @@ import UIKit
 
 public protocol EditorControllerDelegate: class {
     /// callback when finished exporting video clips.
-    func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting image
-    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting frames
-    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -164,8 +164,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private var editingNewText: Bool = true
 
     public weak var delegate: EditorControllerDelegate?
+
+    enum Media {
+        case image(UIImage)
+        case video(URL)
+    }
+
+    public struct ExportResult {
+        let original: Media?
+        let result: Media
+        let info: MediaInfo
+        let archive: Data
+    }
     
-    private var exportCompletion: ((Result<(UIImage?, URL?, MediaInfo), Error>) -> Void)?
+    private var exportCompletion: ((Result<ExportResult, Error>) -> Void)?
 
     private static func editor(delegate: EditorViewDelegate?,
                                settings: CameraSettings,
@@ -743,9 +755,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    public func export(_ completion: @escaping (Result<(UIImage?, URL?, MediaInfo), Error>) -> Void) {
+    public func export(_ completion: @escaping (Result<ExportResult, Error>) -> Void) {
         exportCompletion = completion
         startExporting(action: .post)
+    }
+
+    var archive: Data {
+        return try! NSKeyedArchiver.archivedData(withRootObject: editorView.movableViewCanvas, requiringSecureCoding: true)
     }
 
     private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
@@ -756,13 +772,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
         exporter.export(frames: frames) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
+            let archive = self.archive
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
                 var size: CGSize? = nil
                 if let gifURL = gifURL {
                     size = GIFDecoderFactory.main().size(of: gifURL)
                 }
-                self.exportCompletion?(.success((nil, gifURL, mediaInfo)))
-                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                let result = ExportResult(original: nil, result: .video(gifURL!), info: mediaInfo, archive: archive)
+                self.exportCompletion?(.success(result))
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
                 }
@@ -792,8 +810,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     return
                 }
                 let size = GIFDecoderFactory.main().size(of: gifURL)
-                self.exportCompletion?(.success((nil, gifURL, mediaInfo)))
-                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo, archive: self.archive)
+                self.exportCompletion?(.success(result))
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: self.archive, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
                 }
@@ -823,8 +842,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.hideLoading()
                 }
             }
-            self.exportCompletion?(.success((nil, url, mediaInfo)))
-            self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+            let result = ExportResult(original: .video(videoURL), result: .video(url), info: mediaInfo, archive: self.archive)
+            self.exportCompletion?(.success(result))
+            self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, archive: self.archive, action: exportAction, mediaChanged: self.mediaChanged)
         }
     }
 
@@ -833,10 +853,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.dimensions = UIScreen.main.bounds.size
+        let archive = self.archive
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
             performUIUpdate {
                 guard Device.isRunningInSimulator == false else {
-                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
                     self.hideLoading()
                     return
                 }
@@ -845,8 +866,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.handleExportError()
                     return
                 }
-                self.exportCompletion?(.success((unwrappedImage, nil, mediaInfo)))
-                self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
+                let result = ExportResult(original: .image(image), result: .image(unwrappedImage), info: mediaInfo, archive: archive)
+                self.exportCompletion?(.success(result))
+                self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
                 self.hideLoading()
             }
         }

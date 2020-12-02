@@ -10,7 +10,7 @@ import os
 
 class MultiEditorExportHandler {
     
-    typealias ExportResult = Result<(UIImage?, URL?, MediaInfo), Error>
+    typealias ExportResult = Result<EditorViewController.ExportResult, Error>
     
     init(_ completion: @escaping ([ExportResult]) -> Void) {
         self.completion = completion
@@ -28,7 +28,7 @@ class MultiEditorExportHandler {
     
     func startWaiting(for count: Int) {
         waitingFor = count
-        exports = Array<Result<(UIImage?, URL?, MediaInfo), Error>?>(repeating: nil, count: count)
+        exports = Array<ExportResult?>(repeating: nil, count: count)
     }
     
     func handleExport(_ result: ExportResult, for index: Int) {
@@ -46,11 +46,11 @@ class MultiEditorExportHandler {
     
     private func log(result: ExportResult, for index: Int) {
         switch result {
-        case .success((let image, _, _)):
-            if let _ = image {
+        case .success(let result):
+            switch result.result {
+            case .image(_):
                 os_log("Exported image %d", log: logger, type: .debug, index)
-            }
-            else {
+            case .video(_):
                 os_log("Exported video %d", log: logger, type: .debug, index)
             }
         case .failure:
