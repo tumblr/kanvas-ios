@@ -66,7 +66,7 @@ fileprivate extension UIImage {
             guard let jpgImageData = jpegData(compressionQuality: 1.0) else {
                 return nil
             }
-            let fileURL = try jpgImageData.save(to: "\(hashValue)", ext: "jpg")
+            let fileURL = try jpgImageData.save(to: "\(hashValue)", in: FileManager.default.temporaryDirectory, ext: "jpg")
             info.write(toImage: fileURL)
             return fileURL
         } catch {
@@ -77,8 +77,8 @@ fileprivate extension UIImage {
 }
 
 fileprivate extension Data {
-    func save(to filename: String, ext fileExtension: String) throws -> URL {
-        let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent(filename).appendingPathExtension(fileExtension)
+    func save(to filename: String, in directory: URL, ext fileExtension: String) throws -> URL {
+        let fileURL = directory.appendingPathComponent(filename).appendingPathExtension(fileExtension)
         try write(to: fileURL, options: .atomic)
         return fileURL
     }
@@ -291,6 +291,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
+    private let saveDirectory: URL
 
     private weak var mediaPlayerController: MediaPlayerController?
 
@@ -304,7 +305,12 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     /// and which should be the result of the interaction.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, tagCollection: UIView?) {
+    public init(settings: CameraSettings,
+                stickerProvider: StickerProvider?,
+                analyticsProvider: KanvasCameraAnalyticsProvider?,
+                quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+                tagCollection: UIView?,
+                saveDirectory: URL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
@@ -315,6 +321,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         self.analyticsProvider = analyticsProvider
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
+        self.saveDirectory = saveDirectory
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
@@ -341,7 +348,8 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-         tagCollection: UIView?) {
+         tagCollection: UIView?,
+         saveDirectory: URL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
@@ -354,6 +362,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         self.tagCollection = tagCollection
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
+        self.saveDirectory = saveDirectory
         super.init(nibName: .none, bundle: .none)
         cameraZoomHandler.delegate = self
     }
@@ -1002,7 +1011,9 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             asset = nil
         }
 
-        if let asset = asset, let info = info, let archiveURL = try! archive?.save(to: UUID().uuidString, ext: "") {
+        let fileName = url?.deletingPathExtension().lastPathComponent ?? UUID().uuidString
+
+        if let asset = asset, let info = info, let archiveURL = try! archive?.save(to: fileName, in: saveDirectory, ext: "") {
             let media = KanvasCameraMedia(asset: asset, original: url!, info: info, archive: archiveURL)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
@@ -1024,7 +1035,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
 
     public func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
         guard settings.features.multipleExports == false else { return }
-        if let image = image, let info = info, let url = image.save(info: info), let archiveURL = try! archive?.save(to: UUID().uuidString, ext: "") {
+        if let image = image, let info = info, let url = image.save(info: info), let archiveURL = try! archive?.save(to: UUID().uuidString, in: saveDirectory, ext: "") {
             let media = KanvasCameraMedia(image: image, url: url, original: url, info: info, archive: archiveURL)
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
@@ -1046,7 +1057,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
 
     public func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
         guard settings.features.multipleExports == false else { return }
-        guard let url = url, let info = info, let size = size, size != .zero, let archiveURL = try! archive?.save(to: UUID().uuidString, ext: "") else {
+        guard let url = url, let info = info, let size = size, size != .zero, let archiveURL = try! archive?.save(to: UUID().uuidString, in: saveDirectory, ext: "") else {
             performUIUpdate {
                 self.handleCloseSoon(action: action)
                 self.delegate?.didCreateMedia(self, media: [(nil, CameraControllerError.exportFailure)], exportAction: action)
@@ -1067,16 +1078,12 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                 switch (result.result, result.original) {
                 case (.image(let image), .image(let original)):
                     if let url = image.save(info: result.info), let originalURL = original.save(info: result.info) {
-                        let archive = Archive(image: original, data: result.archive)
-                        let data = try! NSKeyedArchiver.archivedData(withRootObject: archive, requiringSecureCoding: true)
-                        let archiveURL = try! data.save(to: url.deletingPathExtension().lastPathComponent, ext: "")
+                        let archiveURL = archive(media: result.original!, archive: result.archive, to: url.deletingPathExtension().lastPathComponent)
                         return (KanvasCameraMedia(image: image, url: url, original: originalURL, info: result.info, archive: archiveURL), nil)
                     }
                 case (.video(let url), .video(let original)):
-                    let archive = Archive(video: original, data: result.archive)
-                    let data = try! NSKeyedArchiver.archivedData(withRootObject: archive, requiringSecureCoding: true)
+                    let archiveURL = archive(media: result.original!, archive: result.archive, to: url.deletingPathExtension().lastPathComponent)
                     let asset = AVURLAsset(url: url)
-                    let archiveURL = try! data.save(to: url.deletingPathExtension().lastPathComponent, ext: "")
                     return (KanvasCameraMedia(asset: asset, original: original, info: result.info, archive: archiveURL), nil)
                 default:
                     ()
@@ -1089,6 +1096,23 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
 
         handleCloseSoon(action: .previewConfirm)
         delegate?.didCreateMedia(self, media: items, exportAction: .post)
+    }
+
+    private func archive(media: EditorViewController.Media, archive data: Data, to path: String) -> URL {
+
+        let archive: Archive
+
+        switch media {
+        case .image(let image):
+            archive = Archive(image: image, data: data)
+        case .video(let url):
+            archive = Archive(video: url, data: data)
+        }
+
+        let data = try! NSKeyedArchiver.archivedData(withRootObject: archive, requiringSecureCoding: true)
+        let archiveURL = try! data.save(to: path, in: saveDirectory, ext: "")
+
+        return archiveURL
     }
         
     func handleCloseSoon(action: KanvasExportAction) {
