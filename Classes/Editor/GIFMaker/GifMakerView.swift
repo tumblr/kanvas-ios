@@ -182,7 +182,7 @@ final class GifMakerView: UIView {
 
         revertButton.contentHorizontalAlignment = .center
         revertButton.backgroundColor = Constants.revertBackgroundColor
-        revertButton.setTitle("Revert", for: .normal)
+        revertButton.setTitle(NSLocalizedString("GIFRevert", comment:"Revert button title in the GIF menu"), for: .normal)
         revertButton.setTitleColor(Constants.revertFontColor, for: .normal)
         revertButton.titleLabel?.font = Constants.font
         revertButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
