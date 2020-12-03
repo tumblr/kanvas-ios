@@ -31,7 +31,7 @@ class MultiEditorViewController: UIViewController {
                 return
             }
             if let old = selected {
-                archive(index: migratedIndex ?? old)
+                try! archive(index: migratedIndex ?? old)
                 migratedIndex = nil
             }
             if let new = newValue { // If the new index is the same as the old just keep the current editor
@@ -258,7 +258,7 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
     
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         if let index = selected {
-            archive(index: index)
+            try! archive(index: index)
         }
         segments.move(from: originIndex, to: destinationIndex)
         edits.move(from: originIndex, to: destinationIndex)
@@ -323,12 +323,13 @@ extension MultiEditorViewController: EditorControllerDelegate {
         let soundEnabled: Bool
     }
 
-    func archive(index: Int) {
-        let currentCanvas = try! NSKeyedArchiver.archivedData(withRootObject: currentEditor!.editorView.movableViewCanvas, requiringSecureCoding: true)
-//        let encoder = JSONEncoder()
-//        let currentCanvas = try! encoder.encode(currentEditor!.editorView.movableViewCanvas)
-        let drawingLayer = currentEditor?.editorView.drawingCanvas
-        let options = EditOptions(soundEnabled: currentEditor?.shouldExportSound ?? true)
+    func archive(index: Int) throws {
+        guard let currentEditor = currentEditor else {
+            return
+        }
+        let currentCanvas = try NSKeyedArchiver.archivedData(withRootObject: currentEditor.editorView.movableViewCanvas, requiringSecureCoding: true)
+        let drawingLayer = currentEditor.editorView.drawingCanvas
+        let options = EditOptions(soundEnabled: currentEditor.shouldExportSound ?? true)
         if edits.indices ~= index {
             edits[index] = (currentCanvas, drawingLayer, options)
         } else {
@@ -341,11 +342,6 @@ extension MultiEditorViewController: EditorControllerDelegate {
             let edit = edits[index] 
             let canvas: MovableViewCanvas?
             if let edit = edit.0 {
-//                let unarchiver = try! NSKeyedUnarchiver(forReadingFrom: edit)
-//                unarchiver.requiresSecureCoding = false
-//                canvas = unarchiver.decodeObject(of: MovableViewCanvas.self, forKey: NSKeyedArchiveRootObjectKey)
-//                let decoder = JSONDecoder()
-//                canvas = try! decoder.decode(MovableViewCanvas.self, from: edit)
                 canvas = try! NSKeyedUnarchiver.unarchivedObject(ofClass: MovableViewCanvas.self, from: edit)
             } else {
                 canvas = nil
@@ -378,7 +374,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
     func shouldExport() -> Bool {
 
         if let selected = selected {
-            archive(index: selected)
+            try! archive(index: selected)
         }
 
         exportHandler.startWaiting(for: segments.count)
