@@ -846,9 +846,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.hideLoading()
                 }
             }
-            let result = ExportResult(original: .video(videoURL), result: .video(url), info: mediaInfo, archive: self.archive)
-            self.exportCompletion?(.success(result))
-            self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, archive: self.archive, action: exportAction, mediaChanged: self.mediaChanged)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                let result = ExportResult(original: .video(videoURL), result: .video(url), info: mediaInfo, archive: self.archive)
+                self.exportCompletion?(.success(result))
+                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, archive: self.archive, action: exportAction, mediaChanged: self.mediaChanged)
+            }
         }
     }
 
