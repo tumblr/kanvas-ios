@@ -217,9 +217,18 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             }
             return nil
         }
-        self.segments = segments
         self.edits = archives.compactMap { $0.data }
+        self.segments = segments
         showPreview = true
+    }
+
+    public func show(segments: [CameraSegment]) {
+        showPreview = true
+        self.segments = segments
+
+        if view.superview != nil {
+            showPreviewWithSegments(segments, selected: segments.startIndex, edits: nil, animated: false)
+        }
     }
 
     /// The delegate for camera callback methods

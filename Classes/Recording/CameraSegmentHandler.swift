@@ -4,11 +4,12 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import UIKit
 import AVFoundation
 import Foundation
 
 /// A container for segments
-enum CameraSegment {
+public enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
     case image(UIImage, URL?, TimeInterval?, MediaInfo)
     case video(URL, MediaInfo?)
