@@ -703,6 +703,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func stopPlayback() {
         player.stop()
     }
+
+    deinit {
+        player.stop()
+    }
     
     // MARK: - Media Exporting
 
