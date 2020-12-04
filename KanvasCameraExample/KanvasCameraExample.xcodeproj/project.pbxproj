@@ -1224,7 +1224,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PODS_ROOT=\"${PODS_ASSETS}\" \n \"${SRCROOT}/Pods/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-resources.sh\"";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KanvasCameraExample/Pods-KanvasCameraExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		738F75634A37BF5EA6832A11 /* [CP] Check Pods Manifest.lock */ = {
