@@ -231,6 +231,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         }
     }
 
+    public func hideLoading() {
+        multiEditorViewController?.hideLoading()
+    }
+
     /// The delegate for camera callback methods
     public weak var delegate: CameraControllerDelegate?
 

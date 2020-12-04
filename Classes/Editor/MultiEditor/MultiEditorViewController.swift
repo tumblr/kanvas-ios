@@ -370,8 +370,18 @@ extension MultiEditorViewController: EditorControllerDelegate {
         }
     }
 
+    func showLoading() {
+        currentEditor?.showLoading()
+    }
+
+    func hideLoading() {
+        currentEditor?.hideLoading()
+    }
+
     // This overrides the export behavior of the EditorViewControllers.
     func shouldExport() -> Bool {
+
+        showLoading()
 
         if let selected = selected {
             try! archive(index: selected)
