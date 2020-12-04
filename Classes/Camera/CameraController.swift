@@ -61,12 +61,12 @@ public enum KanvasCameraMediaType {
 }
 
 fileprivate extension UIImage {
-    func save(info: MediaInfo) -> URL? {
+    func save(info: MediaInfo, in directory: URL = FileManager.default.temporaryDirectory) -> URL? {
         do {
             guard let jpgImageData = jpegData(compressionQuality: 1.0) else {
                 return nil
             }
-            let fileURL = try jpgImageData.save(to: "\(hashValue)", in: FileManager.default.temporaryDirectory, ext: "jpg")
+            let fileURL = try jpgImageData.save(to: "\(hashValue)", in: directory, ext: "jpg")
             info.write(toImage: fileURL)
             return fileURL
         } catch {
@@ -196,35 +196,34 @@ class Archive: NSObject, NSSecureCoding {
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
 open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, KanvasMediaPickerViewControllerDelegate, MediaPickerThumbnailFetcherDelegate, MultiEditorComposerDelegate {
 
-    public func unarchive(_ archives: [URL]) throws {
-        let archives: [Archive] = try archives.compactMap { url in
-            let data = try Data(contentsOf: url)
-            let archive = try NSKeyedUnarchiver.unarchivedObject(ofClass: Archive.self, from: data)
-            return archive
-        }
-        let segments: [CameraSegment] = archives.compactMap { archive in
-            if let image = archive.image {
-                let info: MediaInfo
-                if let imageData = image.jpegData(compressionQuality: 1.0), let mInfo = MediaInfo(fromImageData: imageData) {
-                    info = mInfo
-                } else {
-                    info = MediaInfo(source: .kanvas_camera)
-                }
-                return CameraSegment.image(image, nil, nil, info)
-            }
-            if let video = archive.video {
-                return CameraSegment.video(video, MediaInfo(fromVideoURL: video))
-            }
-            return nil
-        }
-        self.edits = archives.compactMap { $0.data }
-        self.segments = segments
-        showPreview = true
+    enum ArchiveErrors: Error {
+        case unknownMedia
     }
 
-    public func show(segments: [CameraSegment]) {
+    public static func unarchive(_ url: URL) throws -> (CameraSegment, Data?) {
+        let data = try Data(contentsOf: url)
+        let archive = try NSKeyedUnarchiver.unarchivedObject(ofClass: Archive.self, from: data)
+        let segment: CameraSegment
+        if let image = archive?.image {
+            let info: MediaInfo
+            if let imageData = image.jpegData(compressionQuality: 1.0), let mInfo = MediaInfo(fromImageData: imageData) {
+                info = mInfo
+            } else {
+                info = MediaInfo(source: .kanvas_camera)
+            }
+            segment = CameraSegment.image(image, nil, nil, info)
+        } else if let video = archive?.video {
+            segment = CameraSegment.video(video, MediaInfo(fromVideoURL: video))
+        } else {
+            throw ArchiveErrors.unknownMedia
+        }
+        return (segment, archive?.data)
+    }
+
+    public func show(media: [(CameraSegment, Data?)]) {
         showPreview = true
-        self.segments = segments
+        self.segments = media.map({ return $0.0 })
+        self.edits = media.map({ return $0.1 })
 
         if view.superview != nil {
             showPreviewWithSegments(segments, selected: segments.startIndex, edits: nil, animated: false)
@@ -469,10 +468,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     // MARK: - navigation
 
     private var segments: [CameraSegment] = []
-    private var edits: [Data]?
+    private var edits: [Data?]?
     private var showPreview: Bool = false
     
-    private func showPreviewWithSegments(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [Data]? = nil, animated: Bool = true) {
+    private func showPreviewWithSegments(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [Data?]? = nil, animated: Bool = true) {
         guard view.superview != nil else {
             return
         }
@@ -489,7 +488,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         }
     }
     
-    private func createNextStepViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [Data]?) -> MediaPlayerController {
+    private func createNextStepViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [Data?]?) -> MediaPlayerController {
         let controller: MediaPlayerController
         if settings.features.multipleExports {
             if segments.indices.contains(selected) {
@@ -528,7 +527,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         return controller
     }
 
-    private func createStoryViewController(_ segments: [CameraSegment], selected: Int, edits: [Data]?) -> MultiEditorViewController {
+    private func createStoryViewController(_ segments: [CameraSegment], selected: Int, edits: [Data?]?) -> MultiEditorViewController {
         let controller = MultiEditorViewController(settings: settings,
                                                      segments: segments,
                                                      assetsHandler: segmentsHandler,
@@ -1090,12 +1089,17 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             case .success(let result):
                 switch (result.result, result.original) {
                 case (.image(let image), .image(let original)):
-                    if let url = image.save(info: result.info), let originalURL = original.save(info: result.info) {
+                    if let url = image.save(info: result.info), let originalURL = original.save(info: result.info, in: saveDirectory) {
+                        print("Original image URL: \(originalURL)")
                         let archiveURL = archive(media: result.original!, archive: result.archive, to: url.deletingPathExtension().lastPathComponent)
                         return (KanvasCameraMedia(image: image, url: url, original: originalURL, info: result.info, archive: archiveURL), nil)
                     }
                 case (.video(let url), .video(let original)):
                     let archiveURL = archive(media: result.original!, archive: result.archive, to: url.deletingPathExtension().lastPathComponent)
+//                    let originalURL =  saveDirectory.appendingPathComponent(url.lastPathComponent)
+                    print("Original video URL: \(original)")
+//                    try? FileManager.default.removeItem(at: originalURL)
+//                    try! FileManager.default.moveItem(at: original, to: originalURL)
                     let asset = AVURLAsset(url: url)
                     return (KanvasCameraMedia(asset: asset, original: original, info: result.info, archive: archiveURL), nil)
                 default:

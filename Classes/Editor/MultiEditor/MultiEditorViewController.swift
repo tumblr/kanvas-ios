@@ -84,7 +84,7 @@ class MultiEditorViewController: UIViewController {
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          delegate: MultiEditorComposerDelegate,
          selected: Array<CameraSegment>.Index?,
-         edits: [Data]?) {
+         edits: [Data?]?) {
         
         self.settings = settings
         self.segments = segments

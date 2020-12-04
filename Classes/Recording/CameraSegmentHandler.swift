@@ -31,7 +31,7 @@ public enum CameraSegment {
                 let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
                 return UIImage(cgImage: image)
             } catch let error {
-                assertionFailure("Failed to generate CameraSegment thumbnail: \(error)")
+                assertionFailure("Failed to generate CameraSegment thumbnail \(url): \(error)")
                 return UIImage()
             }
         }
