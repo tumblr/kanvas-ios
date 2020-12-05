@@ -72,7 +72,11 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     private var innerViews: [MovableViewInnerElement] = []
     
     var isEmpty: Bool {
-        return subviews.compactMap{ $0 as? MovableView }.count == 0
+        return movableViews.isEmpty
+    }
+
+    var movableViews: [MovableView] {
+        return subviews.compactMap { $0 as? MovableView }
     }
     
     init() {
@@ -204,7 +208,6 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     
     /// Sets up the trash bin used during deletion
     private func setUpTrashView() {
-        trashView.isHidden = false
         trashView.accessibilityIdentifier = "Editor Movable View Canvas Trash View"
         trashView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(trashView)
@@ -384,8 +387,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         switch recognizer.state {
         case .began:
             onRecognizerBegan(view: movableView)
-            showOverlay(true)
-            movableView.fadeOut()
+            showTrash()
             touchPosition = recognizer.touchLocations
             trashView.changeStatus(touchPosition)
         case .changed:
@@ -398,8 +400,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
             else {
                 movableView.fadeIn()
             }
-            showOverlay(false)
-            trashView.hide()
+            hideTrash()
             onRecognizerEnded()
         case .possible:
             break
@@ -421,15 +422,22 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     }
 
     /// shows the trash icon closed
-    func closeTrash() {
-        trashView.isHidden = false
+    func showTrash() {
+        showOverlay(true)
+        trashView.superview?.bringSubviewToFront(trashView)
+        movableViews.forEach { movableView in
+            movableView.fadeOut()
+        }
         trashView.close()
     }
 
     /// hides the trash icon with its red background
     func hideTrash() {
+        showOverlay(false)
+        movableViews.forEach { movableView in
+            movableView.fadeIn()
+        }
         trashView.hide()
-        trashView.isHidden = true
     }
     
     // MARK: - MovableViewDelegate

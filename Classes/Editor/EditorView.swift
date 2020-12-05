@@ -251,7 +251,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
     func updateUI(forDraggingClip: Bool) {
         if forDraggingClip {
-            self.movableViewCanvas.closeTrash()
+            self.movableViewCanvas.showTrash()
         } else {
             self.movableViewCanvas.hideTrash()
         }

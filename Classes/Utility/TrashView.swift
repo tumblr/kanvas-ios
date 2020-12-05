@@ -47,7 +47,6 @@ final class TrashView: IgnoreTouchesView {
         addInteraction(dropInteraction)
 
         isUserInteractionEnabled = true
-        isHidden = true
     }
     
     required init?(coder aDecoder: NSCoder) {
