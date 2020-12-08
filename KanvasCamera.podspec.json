@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "summary": "A custom camera built for iOS.",
   "homepage": "https://github.com/tumblr/kanvas-ios",
-  "license": { 
+  "license": {
     "type": "MPLv2",
     "file": "LICENSE"
   },
