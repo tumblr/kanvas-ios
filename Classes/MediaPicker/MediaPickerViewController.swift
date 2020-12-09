@@ -30,42 +30,42 @@ final class KanvasUIImagePickerController: UIImagePickerController {
 
 fileprivate extension UIImage {
     func scale(size: CGSize) -> UIImage? {
-//        var scaledImageRect = CGRect.zero
-//
-//        let aspectWidth:CGFloat = size.width / self.size.width
-//        let aspectHeight:CGFloat = size.height / self.size.height
-//        let aspectRatio:CGFloat = min(aspectWidth, aspectHeight)
-//
-//        scaledImageRect.size.width = self.size.width * aspectRatio
-//        scaledImageRect.size.height = self.size.height * aspectRatio
-//        scaledImageRect.origin.x = (size.width - scaledImageRect.size.width) / 2.0
-//        scaledImageRect.origin.y = (size.height - scaledImageRect.size.height) / 2.0
-//
-//
-//        let renderer = UIGraphicsImageRenderer(size: size)
-//        return renderer.image { (context) in
-//            UIColor.black.setFill()
-//            context.fill(CGRect(origin: .zero, size: size))
-//            draw(in: scaledImageRect)
-//        }
-        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        let imageSource = CGImageSourceCreateWithData(self.jpegData(compressionQuality: 1) as! CFData, imageSourceOptions)!
+        var scaledImageRect = CGRect.zero
 
-        let maxDimensionsInPixels = max(size.width, size.height) * scale
-        let downsampleOptions = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxDimensionsInPixels
-        ] as CFDictionary
+        let aspectWidth:CGFloat = size.width / self.size.width
+        let aspectHeight:CGFloat = size.height / self.size.height
+        let aspectRatio:CGFloat = min(aspectWidth, aspectHeight)
 
-        let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)!
-//        let type = CGImageSourceGetType(imageSource)!
-//        let data = NSMutableData()
-//        let destination = CGImageDestinationCreateWithData(data as CFMutableData, type as CFString, 1, [
-//            kCGImageDestinationBackgroundColor: UIColor.black.cgColor
-//        ] as CFDictionary)
-        return UIImage(cgImage: downsampledImage)
+        scaledImageRect.size.width = self.size.width * aspectRatio
+        scaledImageRect.size.height = self.size.height * aspectRatio
+        scaledImageRect.origin.x = (size.width - scaledImageRect.size.width) / 2.0
+        scaledImageRect.origin.y = (size.height - scaledImageRect.size.height) / 2.0
+
+
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { (context) in
+            UIColor.black.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            draw(in: scaledImageRect)
+        }
+//        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+//        let imageSource = CGImageSourceCreateWithData(self.jpegData(compressionQuality: 1) as! CFData, imageSourceOptions)!
+//
+//        let maxDimensionsInPixels = max(size.width, size.height) * scale
+//        let downsampleOptions = [
+//            kCGImageSourceCreateThumbnailFromImageAlways: true,
+//            kCGImageSourceShouldCacheImmediately: true,
+//            kCGImageSourceCreateThumbnailWithTransform: true,
+//            kCGImageSourceThumbnailMaxPixelSize: maxDimensionsInPixels
+//        ] as CFDictionary
+//
+//        let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)!
+////        let type = CGImageSourceGetType(imageSource)!
+////        let data = NSMutableData()
+////        let destination = CGImageDestinationCreateWithData(data as CFMutableData, type as CFString, 1, [
+////            kCGImageDestinationBackgroundColor: UIColor.black.cgColor
+////        ] as CFDictionary)
+//        return UIImage(cgImage: downsampledImage)
     }
 }
 
@@ -209,7 +209,8 @@ private extension KanvasMediaPickerViewController {
     }
 
     private func pick(livePhotoStill: UIImage, pairedVideo: URL) {
-        delegate?.didPick(livePhotoStill: livePhotoStill, pairedVideo: pairedVideo)
+        let newStill = livePhotoStill.scale(size: UIScreen.main.nativeBounds.size)!
+        delegate?.didPick(livePhotoStill: newStill, pairedVideo: pairedVideo)
     }
 
     private func canPick(image: UIImage) -> Bool {
