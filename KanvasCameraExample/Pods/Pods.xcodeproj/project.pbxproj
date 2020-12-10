@@ -357,6 +357,7 @@
 		2962D2CACA3C6A25D923286AE5D8E19E /* Pods-KanvasCameraExampleTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-KanvasCameraExampleTests.modulemap"; sourceTree = "<group>"; };
 		2A7ACE86E11820EF38C71EEBEC340E31 /* FBSnapshotTestCase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FBSnapshotTestCase.release.xcconfig; sourceTree = "<group>"; };
 		2A90BCB22B54F3AB1A840D3D4DCE93A2 /* OpenGLFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpenGLFilter.swift; sourceTree = "<group>"; };
+		2B4A7986F7AD0DEA48F30990B63EC383 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
 		2B7A2B4407A222473BDB3D670C560F58 /* IgnoreBackgroundTouchesStackView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IgnoreBackgroundTouchesStackView.swift; sourceTree = "<group>"; };
 		2D0D38892A507877C3FD4450D5C4E4CA /* ShootButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShootButtonView.swift; sourceTree = "<group>"; };
 		2D29FD82BE71B7A2623C24854B0EE866 /* GifMakerSettings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GifMakerSettings.swift; sourceTree = "<group>"; };
@@ -501,7 +502,6 @@
 		A970BCAA5D188C1D86A99E590E1DDDC0 /* MTLDevice+KanvasCamera.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MTLDevice+KanvasCamera.swift"; sourceTree = "<group>"; };
 		A97B20D6998E9AFADB80B1F78D6EDAB0 /* MediaInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaInfo.swift; sourceTree = "<group>"; };
 		A98C2EEDEA55F322231AC50EBE621569 /* ToonOpenGLFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ToonOpenGLFilter.swift; sourceTree = "<group>"; };
-		A9DE387D4B08B134F2D435E7C4CDB902 /* KanvasCamera.podspec.json */ = {isa = PBXFileReference; includeInIndex = 1; path = KanvasCamera.podspec.json; sourceTree = "<group>"; };
 		AA0C30AD335AE29FEC01366768860883 /* KanvasCamera.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = KanvasCamera.debug.xcconfig; sourceTree = "<group>"; };
 		AA172EA1A198EEFBE0794EACF7993C02 /* UIImage+Snapshot.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Snapshot.m"; path = "FBSnapshotTestCase/Categories/UIImage+Snapshot.m"; sourceTree = "<group>"; };
 		AA1BC56C8F349BF76EDA60697C8FAEDB /* IgnoreTouchesCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IgnoreTouchesCollectionView.swift; sourceTree = "<group>"; };
@@ -726,14 +726,6 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		2A65C53A34B30CEEF1E90B398EF08739 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				A9DE387D4B08B134F2D435E7C4CDB902 /* KanvasCamera.podspec.json */,
-			);
-			name = Pod;
-			sourceTree = "<group>";
-		};
 		2B82708CC61E40BFC8FF915E3964FEDF /* StyleMenu */ = {
 			isa = PBXGroup;
 			children = (
@@ -815,6 +807,14 @@
 			path = Menu;
 			sourceTree = "<group>";
 		};
+		412F32E36D496D455320871C1E83577E /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				2B4A7986F7AD0DEA48F30990B63EC383 /* LICENSE */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
 		464B372071959BAD2C026B1A0A1B2AFE /* KanvasCamera */ = {
 			isa = PBXGroup;
 			children = (
@@ -829,7 +829,7 @@
 				1A20C4404FF6B387BFEF0470789E3FA9 /* MediaPicker */,
 				F6DB9D6B7DCD79C6B17AF6DD7FA91527 /* ModeSelector */,
 				5DFB2DD41553996E8A087BB5CEE60925 /* Options */,
-				2A65C53A34B30CEEF1E90B398EF08739 /* Pod */,
+				412F32E36D496D455320871C1E83577E /* Pod */,
 				B55629491EB9946C2939958D45A8FDBF /* Preview */,
 				7AAD884D7E4FF022FD05A26566DD7652 /* Recording */,
 				AA0EABD47376CA9D031AD7058CE0FCA7 /* Rendering */,
