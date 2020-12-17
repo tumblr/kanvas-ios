@@ -103,6 +103,10 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         return collectionController.getClips()
     }
 
+    func select(index: Int) {
+        collectionController.select(index: index)
+    }
+
     /// Deletes the clip on the current dragging session
     func removeDraggingClip() {
         if let index = collectionController.removeDraggingClip() {

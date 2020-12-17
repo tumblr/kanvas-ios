@@ -66,6 +66,10 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         }
     }
 
+    func select(index: Int) {
+        mediaClipsCollectionView.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .left)
+    }
+
     func removeAllClips() {
         while clips.count > 0 {
             clips.remove(at: 0)
