@@ -150,7 +150,7 @@ class MultiEditorViewController: UIViewController {
             editor.editorView.movableViewCanvas.trashCompletion = { [weak self] in
                 self?.clipsController.removeDraggingClip()
             }
-//            unarchive(editor: editor, index: index)
+            unarchive(editor: editor, index: index)
             load(childViewController: editor, into: editorContainer)
             currentEditor = editor
         }
@@ -257,11 +257,11 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
     }
     
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
-        if let index = selected {
-            try! archive(index: index)
-        }
+        try! archive(index: originIndex)
+        selected = nil
         segments.move(from: originIndex, to: destinationIndex)
         edits.move(from: originIndex, to: destinationIndex)
+        selected = destinationIndex
     }
     
     func mediaClipWasSelected(at: Int) {
