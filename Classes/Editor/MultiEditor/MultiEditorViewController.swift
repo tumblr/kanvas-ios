@@ -145,7 +145,14 @@ class MultiEditorViewController: UIViewController {
         if let editor = delegate?.editor(segment: segments[index], views: nil, canvas: views?.0, drawingView: views?.1) {
             currentEditor?.stopPlayback()
             currentEditor?.unloadFromParentViewController()
-            editor.additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 0, bottom: MediaClipsCollectionView.height + 10, right: 0)
+            let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
+            let bottom: CGFloat
+            if view.safeAreaInsets.bottom > 0 {
+                bottom = MediaClipsCollectionView.height + 10
+            } else {
+                bottom = MediaClipsCollectionView.height + 10 + additionalPadding
+            }
+            editor.additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
             editor.delegate = self
             editor.editorView.movableViewCanvas.trashCompletion = { [weak self] in
                 self?.clipsController.removeDraggingClip()
