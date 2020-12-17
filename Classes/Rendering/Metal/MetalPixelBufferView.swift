@@ -67,12 +67,16 @@ final class MetalPixelBufferView: MTKView {
         if isPortrait && width > height {
             (width, height) = (height, width)
         }
+
+        let aspectRatio = CGFloat(height) / CGFloat(width)
+
+//        let transform = GLKMatrix4Scale(mediaTransform, <#T##sx: Float##Float#>, <#T##sy: Float##Float#>, <#T##sz: Float##Float#>)
         
         renderEncoder.encode(commandBuffer: commandBuffer,
                              inputTexture: metalTexture,
                              currentRenderPassDescriptor: currentRenderPassDescriptor,
                              shaderContext: shaderContext,
-                             aspectRatio: CGFloat(height) / CGFloat(width),
+                             aspectRatio: aspectRatio,
                              textureTransform: mediaTransform)
         commandBuffer.present(drawable)
         commandBuffer.commit()

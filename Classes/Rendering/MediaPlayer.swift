@@ -55,6 +55,22 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
     weak var delegate: MediaPlayerViewDelegate?
 
+    var mediaTransform: GLKMatrix4? {
+         didSet {
+             if let metalPixelBufferView = pixelBufferView as? MetalPixelBufferView {
+                 metalPixelBufferView.mediaTransform = mediaTransform
+             }
+         }
+     }
+
+      var isPortrait: Bool = true {
+         didSet {
+             if let metalPixelBufferView = pixelBufferView as? MetalPixelBufferView {
+                 metalPixelBufferView.isPortrait = isPortrait
+             }
+         }
+     }
+
     init(metalContext: MetalContext?=nil) {
         super.init(frame: .zero)
 
@@ -472,6 +488,8 @@ final class MediaPlayer {
         if let track = currentlyPlayingMedia.asset?.tracks(withMediaType: .video).first {
             renderer.switchInputDimensions = track.orientation.isPortrait
             renderer.mediaTransform = track.glPreferredTransform
+            playerView?.isPortrait = track.orientation.isPortrait
+            playerView?.mediaTransform = track.glPreferredTransform
         }
 
         avPlayer.replaceCurrentItem(with: playerItem)
