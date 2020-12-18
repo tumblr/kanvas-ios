@@ -412,10 +412,14 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
     func showLoading() {
         currentEditor?.showLoading()
+        clipsContainer.alpha = 0.5
+        clipsContainer.isUserInteractionEnabled = false
     }
 
     func hideLoading() {
         currentEditor?.hideLoading()
+        clipsContainer.alpha = 1.0
+        clipsContainer.isUserInteractionEnabled = true
     }
 
     // This overrides the export behavior of the EditorViewControllers.
