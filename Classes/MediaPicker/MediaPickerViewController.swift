@@ -29,7 +29,7 @@ final class KanvasUIImagePickerController: UIImagePickerController {
 }
 
 fileprivate extension UIImage {
-    func scale(size: CGSize) -> UIImage? {
+    func scaledImageRect(for size: CGSize) -> CGRect {
         var scaledImageRect = CGRect.zero
 
         let aspectWidth:CGFloat = size.width / self.size.width
@@ -41,12 +41,15 @@ fileprivate extension UIImage {
         scaledImageRect.origin.x = (size.width - scaledImageRect.size.width) / 2.0
         scaledImageRect.origin.y = (size.height - scaledImageRect.size.height) / 2.0
 
+        return scaledImageRect
+    }
 
+    func scale(size: CGSize) -> UIImage? {
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { (context) in
             UIColor.black.setFill()
             context.fill(CGRect(origin: .zero, size: size))
-            draw(in: scaledImageRect)
+            draw(in: scaledImageRect(for: size))
         }
 //        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
 //        let imageSource = CGImageSourceCreateWithData(self.jpegData(compressionQuality: 1) as! CFData, imageSourceOptions)!
@@ -67,6 +70,15 @@ fileprivate extension UIImage {
 ////        ] as CFDictionary)
 //        return UIImage(cgImage: downsampledImage)
     }
+
+    func letterboxedImage(size: CGSize, drawingRect: CGRect) -> UIImage? {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { (context) in
+            UIColor.black.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            draw(in: drawingRect)
+        }
+    }
 }
 
 final class KanvasMediaPickerViewController: UIViewController {
@@ -80,6 +92,7 @@ final class KanvasMediaPickerViewController: UIViewController {
         picker.delegate = self
         picker.sourceType = .photoLibrary
         picker.allowsEditing = false
+        picker.videoQuality = .typeIFrame1280x720
         picker.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
         return picker
     }()
@@ -185,7 +198,7 @@ private extension KanvasMediaPickerViewController {
                 cannotPick(reason: message)
                 return
             }
-            pick(image: image, url: mediaURL)
+            pick(image: image, url: imageURL)
         }
         else if let mediaURL = mediaURL {
             pick(video: mediaURL)
@@ -199,9 +212,35 @@ private extension KanvasMediaPickerViewController {
         delegate?.didPick(gif: imageURL)
     }
 
+    // See 2018 WWDC for image performance optimization code
+    private func downsample(imageAt imageURL: URL, to pointSize: CGSize, scale: CGFloat) -> UIImage {
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        let imageSource = CGImageSourceCreateWithURL(imageURL as CFURL, imageSourceOptions)!
+
+        let maxDimensionsInPixels = max(pointSize.width, pointSize.height) * scale
+        let downsampleOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxDimensionsInPixels
+        ] as CFDictionary
+
+        let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)!
+        return UIImage(cgImage: downsampledImage)
+    }
+
     private func pick(image: UIImage, url: URL?) {
-        let newImage = image.scale(size: UIScreen.main.nativeBounds.size)!
-        delegate?.didPick(image: newImage, url: url)
+        let scaledImage: UIImage
+        if let url = url {
+            let scaledRect = image.scaledImageRect(for: UIScreen.main.nativeBounds.size)
+            let newImage = downsample(imageAt: url, to: scaledRect.size, scale: 1)
+            scaledImage = newImage.letterboxedImage(size: UIScreen.main.nativeBounds.size, drawingRect: scaledRect)!
+//            scaledImage = downsample(imageAt: url, to: UIScreen.main.nativeBounds.size, scale: 1)
+        } else {
+            scaledImage = image.scale(size: UIScreen.main.nativeBounds.size) ?? image
+        }
+
+        delegate?.didPick(image: scaledImage, url: url)
     }
 
     private func pick(video url: URL) {
