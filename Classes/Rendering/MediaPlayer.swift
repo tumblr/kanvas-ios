@@ -101,12 +101,12 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 final class MediaPlayer {
 
     private enum MediaPlayerContentLoaded {
-        case image(UIImage, CMSampleBuffer, TimeInterval?)
+        case image(CMSampleBuffer, TimeInterval?)
         case video(URL, AVPlayerItem, AVPlayerItemVideoOutput)
 
         var sampleBuffer: CMSampleBuffer? {
             switch self {
-            case .image(_, let sampleBuffer, _):
+            case .image(let sampleBuffer, _):
                 return sampleBuffer
             default:
                 return nil
@@ -142,7 +142,7 @@ final class MediaPlayer {
 
         var interval: TimeInterval? {
             switch self {
-            case .image(_, _, let interval):
+            case .image(_, let interval):
                 return interval
             case .video(_, _, _):
                 return .zero
@@ -202,17 +202,6 @@ final class MediaPlayer {
         }
     }
 
-    func getFrame(at index: Int) -> UIImage? {
-        guard index >= 0 && index < playableMedia.count else {
-            return nil
-        }
-        switch playableMedia[index] {
-        case .image(let image, _, _):
-            return image
-        case .video(_, _, _):
-            return nil
-        }
-    }
 
     /// Default initializer
     /// - Parameter renderer: Rendering instance for this player to use.
@@ -351,7 +340,7 @@ final class MediaPlayer {
         guard playableMedia.count == 1, let onlyMedia = playableMedia.first else { return false }
         
         switch onlyMedia {
-        case .image(_, _, _):
+        case .image(_, _):
             return true
         case .video(_, _, _):
             return false
@@ -392,7 +381,7 @@ final class MediaPlayer {
         guard let sampleBuffer = image.pixelBuffer()?.sampleBuffer() else {
             return nil
         }
-        return .image(image, sampleBuffer, interval)
+        return .image(sampleBuffer, interval)
     }
 
     // MARK: - Playback
@@ -402,7 +391,7 @@ final class MediaPlayer {
             return
         }
         switch currentlyPlayingMedia {
-        case .image(_, _, _):
+        case .image(_, _):
             playStill()
         case .video(_, _, _):
             playVideo()
@@ -554,7 +543,7 @@ final class MediaPlayer {
             return
         }
         switch currentlyPlayingMedia {
-        case .image(_, _, _):
+        case .image(_, _):
             lastStillFilterTime = Date.timeIntervalSinceReferenceDate - startTime
             playCurrentMedia()
         default:

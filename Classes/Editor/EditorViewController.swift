@@ -827,7 +827,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.imageOverlays = imageOverlays()
-        let firstImage = UIImage(cgImage: exporter.imageOverlays.first!)
         exporter.filterType = filterType ?? .passthrough
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { [weak self] (exportedVideoURL, _) in
             guard let self = self else { return }
