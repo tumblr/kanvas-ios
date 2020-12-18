@@ -432,23 +432,29 @@ extension MultiEditorViewController: EditorControllerDelegate {
         }
 
         exportHandler.startWaiting(for: frames.count)
-        exportingEditors = frames.enumerated().compactMap { (idx, frame) in
-            let canvas: MovableViewCanvas?
-            if let edit = frame.edit?.data {
-                canvas = try! NSKeyedUnarchiver.unarchivedObject(ofClass: MovableViewCanvas.self, from: edit)
-            } else {
-                canvas = nil
+
+        guard let delegate = delegate else { return true }
+
+        frames.enumerated().forEach({ (idx, frame) in
+//            let semaphore = DispatchSemaphore(value: 1)
+            autoreleasepool {
+                let canvas: MovableViewCanvas?
+                if let edit = frame.edit?.data {
+                    canvas = try! NSKeyedUnarchiver.unarchivedObject(ofClass: MovableViewCanvas.self, from: edit)
+                } else {
+                    canvas = nil
+                }
+                let editor = delegate.editor(segment: frame.segment, views: nil, canvas: canvas, drawingView: frame.edit?.canvasView)
+                editor.shouldExportSound = frame.edit?.options.soundEnabled ?? true
+
+                unarchive(editor: editor, index: idx)
+                editor.export { [weak self] result in
+//                    semaphore.signal()
+                    self?.exportHandler.handleExport(result, for: idx)
+                }
             }
-            let editor = delegate?.editor(segment: frame.segment, views: nil, canvas: canvas, drawingView: frame.edit?.canvasView)
-            editor?.shouldExportSound = frame.edit?.options.soundEnabled ?? true
-            return editor
-        }
-        exportingEditors?.enumerated().forEach { (idx, editor) in
-            unarchive(editor: editor, index: idx)
-            editor.export { [weak self] result in
-                self?.exportHandler.handleExport(result, for: idx)
-            }
-        }
+//            semaphore.wait()
+        })
         return false
     }
 
