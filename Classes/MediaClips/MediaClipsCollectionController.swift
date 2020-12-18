@@ -55,11 +55,19 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         fatalError("init(nibName:bundle:) has not been implemented")
     }
 
+    private func resize(clip: MediaClip) -> MediaClip {
+        let lastFrame = clip.lastFrame.scale(size: CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)) ?? clip.lastFrame
+        let repFrame = clip.representativeFrame.scale(size: CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)) ?? clip.representativeFrame
+
+        let newClip = MediaClip(representativeFrame: repFrame, overlayText: clip.overlayText, lastFrame: lastFrame)
+        return newClip
+    }
+
     /// Adds a new clip and updates the UI
     ///
     /// - Parameter clip: The media clip to display
     func addNewClip(_ clip: MediaClip) {
-        clips.append(clip)
+        clips.append(resize(clip: clip))
         mediaClipsCollectionView.collectionView.insertItems(at: [IndexPath(item: clips.count - 1, section: 0)])
         if mediaClipsCollectionView.collectionView.numberOfItems(inSection: 0) > 0 {
             scrollToLast(animated: true)
@@ -79,7 +87,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     }
     
     func replace(clips: [MediaClip]) {
-        self.clips = clips
+        self.clips = clips.map({ resize(clip: $0) })
         mediaClipsCollectionView.collectionView.reloadData()
     }
     

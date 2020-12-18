@@ -28,7 +28,7 @@ final class KanvasUIImagePickerController: UIImagePickerController {
     }
 }
 
-fileprivate extension UIImage {
+internal extension UIImage {
     func scaledImageRect(for size: CGSize) -> CGRect {
         var scaledImageRect = CGRect.zero
 
