@@ -147,6 +147,7 @@ final class MediaExporter: MediaExporting {
             completion(nil, MediaExporterError.noCompositor)
             return
         }
+        videoCompositor.renderer.filterPlatform = settings.features.metalFilters == true ? FilterPlatform.metal : FilterPlatform.openGL
         videoCompositor.dimensions = dimensions
         videoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
         videoCompositor.renderer.mediaTransform = track.glPreferredTransform
