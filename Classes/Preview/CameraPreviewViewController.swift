@@ -135,25 +135,26 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
             return
         }
         let segment = segments[currentSegmentIndex]
-        if let image = segment.image {
-            playImage(image: image, duration: segment.timeInterval)
-        }
-        else if segment.videoURL != nil {
+        switch segment {
+        case .image(let url, _, let timeInterval, _):
+            playImage(url, duration: timeInterval)
+        case .video(_, _):
             currentPlayer.play()
         }
     }
 
     private func playSegment(segment: CameraSegment) {
-        if let image = segment.image {
-            playImage(image: image, duration: segment.timeInterval)
-        }
-        else if let url = segment.videoURL {
+        switch segment {
+        case .image(let image, _, let timeInterval, _):
+            playImage(image, duration: timeInterval)
+        case .video(let url, _):
             playVideo(url: url)
         }
         queueNextSegment()
     }
 
-    private func playImage(image: UIImage, duration: TimeInterval?) {
+    private func playImage(_ imageSource: CGImageSource, duration: TimeInterval?) {
+        let image = imageSource.image(size: cameraPreviewView.frame.size)
         cameraPreviewView.setImage(image: image)
         let displayTime = duration ?? CameraPreviewViewController.defaultTimeIntervalForImageSegments(segments)
         timer = Timer.scheduledTimer(withTimeInterval: displayTime, repeats: false, block: { [weak self] _ in
@@ -189,8 +190,11 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         guard nextSegmentIndex < segments.count else { return }
         let nextSegment = segments[nextSegmentIndex]
         var playerItem: AVPlayerItem? = nil
-        if let url = nextSegment.videoURL, nextSegment.image == nil {
+        switch nextSegment {
+        case .video(let url, _):
             playerItem = AVPlayerItem(url: url)
+        case .image:
+            ()
         }
         if currentPlayer == firstPlayer {
             secondPlayer.replaceCurrentItem(with: playerItem)
@@ -239,29 +243,30 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
     func confirmButtonPressed() {
         stopPlayback()
         showLoading()
-        if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
-            // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
-            // then single photos from that mode should still export as video.
-            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
-                performUIUpdate {
-                    self.delegate?.didFinishExportingVideo(url: videoURL)
-                    self.hideLoading()
+        if segments.count == 1, let firstSegment = segments.first {
+            switch firstSegment {
+            case .image(let image, let videoURL, _, _):
+                if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = videoURL {
+                    performUIUpdate {
+                        self.delegate?.didFinishExportingVideo(url: videoURL)
+                        self.hideLoading()
+                    }
+                } else {
+                    let image = UIImage(cgImage: CGImageSourceCreateImageAtIndex(image, 0, nil)!)
+                    performUIUpdate {
+                        self.delegate?.didFinishExportingImage(image: image)
+                        self.hideLoading()
+                    }
                 }
-            }
-            else {
-                performUIUpdate {
-                    self.delegate?.didFinishExportingImage(image: image)
-                    self.hideLoading()
-                }
-            }
-        }
-        else if settings.features.gifs,
-            let group = cameraMode?.group, group == .gif, segments.count == 1, let segment = segments.first, let url = segment.videoURL {
-            // If one GIF/Loop video was captured, export it as a GIF
-            GIFEncoderImageIO().encode(video: url, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { gifURL in
-                performUIUpdate {
-                    self.delegate?.didFinishExportingFrames(url: gifURL)
-                    self.hideLoading()
+            case .video(let videoURL, _):
+                // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
+                // then single photos from that mode should still export as video.
+                if settings.features.gifs,
+                   let group = cameraMode?.group, group == .gif, let url = firstSegment.videoURL {
+                    performUIUpdate {
+                        self.delegate?.didFinishExportingVideo(url: videoURL)
+                        self.hideLoading()
+                    }
                 }
             }
         }

@@ -85,7 +85,8 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     ///
     /// - Parameter item: The MediaClip to display
     func bindTo(_ item: MediaClip) {
-        clipImage.image = item.representativeFrame
+        let image = item.representativeFrame.image(size: self.frame.size)
+        clipImage.image = image
         clipLabel.text = item.overlayText
     }
     

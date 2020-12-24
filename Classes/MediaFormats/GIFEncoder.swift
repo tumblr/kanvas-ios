@@ -12,7 +12,7 @@ import CoreGraphics
 protocol GIFEncoder {
     init()
     func encode(video url: URL, loopCount: Int, framesPerSecond: Int, completion: @escaping (URL?) -> Void)
-    func encode(frames: [(image: UIImage, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void)
+    func encode(frames: [(image: CGImageSource, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void)
 }
 
 enum GIFSize {
@@ -84,7 +84,7 @@ final class GIFEncoderImageIO: GIFEncoder {
 
     }
 
-    func encode(frames: [(image: UIImage, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void) {
+    func encode(frames: [(image: CGImageSource, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void) {
 
         guard frames.count > 0 else {
             assertionFailure("At least one frame is needed to encode a GIF")
@@ -128,14 +128,7 @@ final class GIFEncoderImageIO: GIFEncoder {
             CGImageDestinationSetProperties(destination, getFileProperties(loopCount) as CFDictionary)
 
             for frame in frames {
-                if let image = frame.image.cgImage {
-                    CGImageDestinationAddImage(destination, image, getFrameProperties(frame.interval) as CFDictionary)
-                }
-                else {
-                    assertionFailure("GIF frame missing")
-                    completionMain(nil)
-                    return
-                }
+                CGImageDestinationAddImageFromSource(destination, frame.image, 0, getFrameProperties(frame.interval) as CFDictionary)
             }
 
             guard CGImageDestinationFinalize(destination) else {

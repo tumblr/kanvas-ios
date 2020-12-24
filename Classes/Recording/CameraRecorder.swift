@@ -264,7 +264,8 @@ extension CameraRecorder: CameraRecordingProtocol {
             }
             
             if strongSelf.currentRecordingMode.quantity == .multiple {
-                strongSelf.segmentsHandler.addNewImageSegment(image: filteredImage, size: strongSelf.size, mediaInfo: MediaInfo(source: .kanvas_camera), completion: { (success, _) in
+                let source = CGImageSourceCreateWithData(filteredImage.jpegData(compressionQuality: 1)! as CFData, nil)!
+                strongSelf.segmentsHandler.addNewImageSegment(image: source, size: strongSelf.size, mediaInfo: MediaInfo(source: .kanvas_camera), completion: { (success, _) in
                     completion(success ? filteredImage : nil)
                 })
             }

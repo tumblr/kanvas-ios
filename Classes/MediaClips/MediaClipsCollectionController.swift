@@ -56,10 +56,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     }
 
     private func resize(clip: MediaClip) -> MediaClip {
-        let lastFrame = clip.lastFrame.scale(size: CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)) ?? clip.lastFrame
-        let repFrame = clip.representativeFrame.scale(size: CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)) ?? clip.representativeFrame
-
-        let newClip = MediaClip(representativeFrame: repFrame, overlayText: clip.overlayText, lastFrame: lastFrame)
+        let newClip = MediaClip(representativeFrame: clip.representativeFrame, overlayText: clip.overlayText, lastFrame: clip.lastFrame)
         return newClip
     }
 
@@ -115,7 +112,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     
     /// Returns the last frame from the last clip of the collection
     func getLastFrameFromLastClip() -> UIImage? {
-        return clips.last?.lastFrame
+        return clips.last?.lastFrame.image(size: CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight))
     }
 
     // MARK: - View Life Cycle
@@ -210,7 +207,7 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         draggingCell = collectionView.cellForItem(at: indexPath) as? MediaClipsCollectionCell
         let item = clips[indexPath.item]
         // Local object won't be used
-        let itemProvider = NSItemProvider(object: item.representativeFrame)
+        let itemProvider = NSItemProvider(object: item.representativeFrame.image(size: CGSize(width: MediaClipsCollectionCell.width, height: MediaClipsCollectionCell.minimumHeight)))
         let dragItem = UIDragItem(itemProvider: itemProvider)
         dragItem.localObject = item.representativeFrame
         return [dragItem]

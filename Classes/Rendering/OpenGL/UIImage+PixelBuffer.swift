@@ -9,6 +9,44 @@ import AVFoundation
 import Foundation
 import VideoToolbox
 
+import CoreImage
+
+extension CGImageSource {
+    func pixelBuffer(size: CGSize) -> CVPixelBuffer? {
+
+        var ciImage: CIImage
+        if #available(iOS 13.0, *) {
+            ciImage = CIImage(cgImageSource: self, index: 0, options: nil)
+        } else {
+            ciImage = CIImage(cgImage: self.image(size: size).cgImage!)
+        }
+        let scaleFactor = size.height / ciImage.extent.size.height
+        let scaleFilter = CIFilter(name: "CILanczosScaleTransform")
+        scaleFilter?.setValue(ciImage, forKey: kCIInputImageKey)
+        scaleFilter?.setValue(scaleFactor, forKey: kCIInputScaleKey)
+        scaleFilter?.setValue(1.0, forKey: kCIInputAspectRatioKey)
+        ciImage = scaleFilter?.outputImage ?? ciImage
+        let context = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
+
+        var initialBuffer: CVPixelBuffer?
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+        let attributes: NSDictionary = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferIOSurfacePropertiesKey: NSDictionary(),
+                                        kCVPixelBufferOpenGLESCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferOpenGLCompatibilityKey: kCFBooleanTrue as Any,
+                                        kCVPixelBufferMetalCompatibilityKey: kCFBooleanTrue as Any]
+
+        let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(size.width), Int(size.height), kCVPixelFormatType_32BGRA, attributes as CFDictionary, &initialBuffer)
+        guard status == kCVReturnSuccess, let pixelBuffer = initialBuffer else {
+            return nil
+        }
+
+        context.render(ciImage, to: pixelBuffer)
+        return pixelBuffer
+    }
+}
+
 extension UIImage {
 
     /// Create a new UIImage from a pixel buffer

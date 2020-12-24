@@ -28,6 +28,21 @@ final class KanvasUIImagePickerController: UIImagePickerController {
     }
 }
 
+internal extension CGImageSource {
+    func image(size: CGSize) -> UIImage {
+        let properties = CGImageSourceCopyPropertiesAtIndex(self, 0, nil)
+        let options: [CFString: Any] = [
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: max(size.width, size.height) * UIScreen.main.scale
+        ]
+        var cgImage = CGImageSourceCreateThumbnailAtIndex(self, 0, options as CFDictionary) ?? CGImageSourceCreateImageAtIndex(self, 0, nil)
+
+        return UIImage(cgImage: cgImage!)
+    }
+}
+
 internal extension UIImage {
     func scaledImageRect(for size: CGSize) -> CGRect {
         var scaledImageRect = CGRect.zero

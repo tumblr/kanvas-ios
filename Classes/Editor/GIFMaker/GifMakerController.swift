@@ -39,7 +39,7 @@ protocol GifMakerControllerDelegate: class {
     /// Obtains a thumbnail for the background of the trimming tool
     ///
     /// - Parameter timestamp: the time of the requested image.
-    func getThumbnail(at timestamp: TimeInterval) -> UIImage?
+    func getThumbnail(at timestamp: TimeInterval, size: CGSize) -> UIImage?
     
     /// Called when a new speed is selected.
     ///
@@ -192,8 +192,8 @@ final class GifMakerController: UIViewController, GifMakerViewDelegate, TrimCont
         return delegate?.getMediaDuration()
     }
     
-    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
-        return delegate?.getThumbnail(at: timestamp)
+    func getThumbnail(at timestamp: TimeInterval, size: CGSize) -> UIImage? {
+        return delegate?.getThumbnail(at: timestamp, size: size)
     }
     
     // MARK: - SpeedControllerDelegate

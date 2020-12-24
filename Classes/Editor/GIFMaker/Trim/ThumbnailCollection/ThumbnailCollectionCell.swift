@@ -13,7 +13,8 @@ protocol ThumbnailCollectionCellDelegate: class {
     /// Obtains a thumbnail for the background of the trimming tool
     ///
     /// - Parameter timestamp: the time of the requested image.
-    func getThumbnail(at timestamp: TimeInterval) -> UIImage?
+    /// - Parameter size: The size of the thumbnail image.
+    func getThumbnail(at timestamp: TimeInterval, size: CGSize) -> UIImage?
 }
 
 /// Constants for ThumbnailCollectionCell
@@ -92,7 +93,7 @@ final class ThumbnailCollectionCell: UICollectionViewCell {
         loadingView.startLoading()
         let workItem = DispatchWorkItem { [weak self] in
             guard let strongSelf = self, let delegate = strongSelf.delegate else { return }
-            let image = delegate.getThumbnail(at: timeInterval)
+            let image = delegate.getThumbnail(at: timeInterval, size: strongSelf.mainView.frame.size)
             strongSelf.loadingView.stopLoading()
             strongSelf.mainView.image = image
         }

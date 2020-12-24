@@ -29,7 +29,7 @@ protocol MediaPlayerViewDelegate: class {
 
 /// Types of media the player can play.
 enum MediaPlayerContent {
-    case image(UIImage, TimeInterval?)
+    case image(CGImageSource, TimeInterval?)
     case video(URL)
 }
 
@@ -377,11 +377,17 @@ final class MediaPlayer {
         return .video(url, playerItem, videoOutput)
     }
 
-    private static func loadImageMedia(image: UIImage, interval: TimeInterval? = nil) -> MediaPlayerContentLoaded? {
-        guard let sampleBuffer = image.pixelBuffer()?.sampleBuffer() else {
+    private static func loadImageMedia(image source: CGImageSource, interval: TimeInterval? = nil) -> MediaPlayerContentLoaded? {
+        let sampleBuffer: CMSampleBuffer?
+        if #available(iOS 13.0, *) {
+            sampleBuffer = source.pixelBuffer(size: UIScreen.main.nativeBounds.size)?.sampleBuffer()
+        } else {
+            sampleBuffer = source.image(size: UIScreen.main.nativeBounds.size).pixelBuffer()?.sampleBuffer()
+        }
+        guard let buffer = sampleBuffer else {
             return nil
         }
-        return .image(sampleBuffer, interval)
+        return .image(buffer, interval)
     }
 
     // MARK: - Playback

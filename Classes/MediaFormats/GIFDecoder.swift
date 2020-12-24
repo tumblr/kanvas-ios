@@ -6,11 +6,11 @@
 
 import Foundation
 
-typealias GIFDecodeFrame = (image: CGImage, interval: TimeInterval)
+typealias GIFDecodeFrame = (image: CGImageSource, interval: TimeInterval)
 
 typealias GIFDecodeFrames = [GIFDecodeFrame]
 
-typealias GIFDecodeFramesUniformDelay = (frames: [CGImage], interval: TimeInterval)
+typealias GIFDecodeFramesUniformDelay = (frames: [CGImageSource], interval: TimeInterval)
 
 enum GIFDecoderType {
     case imageIO
@@ -98,9 +98,12 @@ class GIFDecoderImageIO: GIFDecoder {
         return frames
     }
 
-    private func getImagesAndDelays(for source: CGImageSource) -> ([CGImage], [Int]) {
+    private func getImagesAndDelays(for source: CGImageSource) -> ([CGImageSource], [Int]) {
         let count = CGImageSourceGetCount(source)
-        let images = (0..<count).compactMap { CGImageSourceCreateImageAtIndex(source, $0, nil) }
+        let images = (0..<count).compactMap { i -> CGImageSource in
+            let image = CGImageSourceCreateImageAtIndex(source, i, nil)
+            return CGImageSourceCreateWithDataProvider(image!.dataProvider!, nil)!
+        }
         guard images.count == count else {
             assertionFailure("Failed to get a frame from an animated image")
             return ([], [])
@@ -127,7 +130,7 @@ class GIFDecoderImageIO: GIFDecoder {
         return delay
     }
 
-    private func getFramesWithConstantDelay(images: [CGImage], delays: [Int]) -> ([CGImage], Int) {
+    private func getFramesWithConstantDelay<T>(images: [T], delays: [Int]) -> ([T], Int) {
         guard images.count == delays.count else {
             assertionFailure("images and delays must be the same size")
             return ([], 0)
@@ -136,7 +139,7 @@ class GIFDecoderImageIO: GIFDecoder {
         let gcd = vectorGCD(delays)
         let frameCount = totalDuration / gcd
         var i = 0
-        var frames: [CGImage] = []
+        var frames: [T] = []
         while i < delays.count {
             let frame = images[i]
             var j = delays[i] / gcd

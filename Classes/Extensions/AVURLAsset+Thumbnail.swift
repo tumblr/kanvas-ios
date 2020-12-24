@@ -10,12 +10,11 @@ import Foundation
 extension AVURLAsset {
 
     //// returns a UIImage at a video URL, if available
-    func thumbnail() -> UIImage? {
+    func thumbnail() -> CGImageSource? {
         let imgGenerator = AVAssetImageGenerator(asset: self)
         do {
             let cgImage = try imgGenerator.copyCGImage(at: CMTime(value: 0, timescale: 1), actualTime: nil)
-            let uiImage = UIImage(cgImage: cgImage)
-            return uiImage
+            return CGImageSourceCreateWithDataProvider(cgImage.dataProvider!, nil)!
         } catch {
             assertionFailure("failed to get thumbnail")
         }

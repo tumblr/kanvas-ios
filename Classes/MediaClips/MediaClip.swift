@@ -11,9 +11,9 @@ import UIKit
 /// A representation for a camera segment to be presented in the MediaClipsEditorViewController
 struct MediaClip {
     /// The image to represent the photo or video
-    let representativeFrame: UIImage
+    let representativeFrame: CGImageSource
     /// Text to display for each clip
     let overlayText: String?
     /// The last frame of the clip (if it is an image it will be similar to representative frame)
-    var lastFrame: UIImage
+    var lastFrame: CGImageSource
 }

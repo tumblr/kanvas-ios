@@ -211,7 +211,8 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             } else {
                 info = MediaInfo(source: .kanvas_camera)
             }
-            segment = CameraSegment.image(image, nil, nil, info)
+            let source = CGImageSourceCreateWithData(image.jpegData(compressionQuality: 1.0)! as CFData, nil)
+            segment = CameraSegment.image(source!, nil, nil, info)
         } else if let video = archive?.video {
             segment = CameraSegment.video(video, MediaInfo(fromVideoURL: video))
         } else {
@@ -597,7 +598,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         return text
     }
     
-    private func getLastFrameFrom(_ url: URL) -> UIImage {
+    private func getLastFrameFrom(_ url: URL) -> CGImageSource? {
         let asset = AVURLAsset(url: url, options: nil)
         let generate = AVAssetImageGenerator(asset: asset)
         generate.appliesPreferredTrackTransform = true
@@ -605,10 +606,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         let time = CMTimeMake(value: Int64(lastFrameTime), timescale: 2)
         do {
             let cgImage = try generate.copyCGImage(at: time, actualTime: nil)
-            return UIImage(cgImage: cgImage)
+            return CGImageSourceCreateWithDataProvider(cgImage.dataProvider!, nil)!
         }
         catch {
-            return UIImage()
+            return nil
         }
     }
 
@@ -649,10 +650,12 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                                                            length: 0,
                                                            ghostFrameEnabled: strongSelf.imagePreviewVisible(),
                                                            filterType: strongSelf.cameraInputController.currentFilterType ?? .off)
+            let data = image?.jpegData(compressionQuality: 1)
+            let source = CGImageSourceCreateWithData(data! as CFData, nil)!
             performUIUpdate {
                 let simulatorImage = Device.isRunningInSimulator ? UIImage() : nil
                 if let image = image ?? simulatorImage {
-                    let clip = MediaClip(representativeFrame: image, overlayText: nil, lastFrame: image)
+                    let clip = MediaClip(representativeFrame: source, overlayText: nil, lastFrame: source)
                     if strongSelf.currentMode.quantity == .single {
                         let segments = [clip].map({ clip in
                             return CameraSegment.image(clip.representativeFrame, nil, nil, MediaInfo(source: .kanvas_camera))
@@ -666,9 +669,9 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                             strongSelf.clips.append(clip)
                         }
                         else {
-                            strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                            strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: source,
                             overlayText: nil,
-                            lastFrame: image))
+                            lastFrame: source))
                         }
                     }
                 }
@@ -848,7 +851,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                         else if let image = AVURLAsset(url: url).thumbnail() {
                             strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
                                                                             overlayText: strongSelf.durationStringForAssetAtURL(url),
-                                                                            lastFrame: strongSelf.getLastFrameFrom(url)))
+                                                                            lastFrame: strongSelf.getLastFrameFrom(url)!))
                             
                         }
                     }
@@ -1275,12 +1278,14 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         }()
         if currentMode.quantity == .single {
             performUIUpdate {
-                let segments = [CameraSegment.image(image, nil, nil, mediaInfo)]
+                let source = CGImageSourceCreateWithData(image.jpegData(compressionQuality: 1) as! CFData, nil)!
+                let segments = [CameraSegment.image(source, nil, nil, mediaInfo)]
                 self.showPreviewWithSegments(segments, selected: segments.startIndex)
             }
         }
         else {
-            segmentsHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo) { [weak self] success, segment in
+            let source = CGImageSourceCreateWithData(image.jpegData(compressionQuality: 1) as! CFData, nil)!
+            segmentsHandler.addNewImageSegment(image: source, size: image.size, mediaInfo: mediaInfo) { [weak self] success, segment in
                 guard let strongSelf = self else {
                     return
                 }
@@ -1288,9 +1293,9 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                     return
                 }
                 performUIUpdate {
-                    strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
+                    strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: source,
                                                                     overlayText: nil,
-                                                                    lastFrame: image))
+                                                                    lastFrame: source))
                 }
             }
         }
@@ -1311,7 +1316,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                 if let image = AVURLAsset(url: url).thumbnail() {
                     self.clipsController.addNewClip(MediaClip(representativeFrame: image,
                                                               overlayText: self.durationStringForAssetAtURL(url),
-                                                              lastFrame: self.getLastFrameFrom(url)))
+                                                              lastFrame: self.getLastFrameFrom(url)!))
                 }
             }
         }
@@ -1325,7 +1330,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             return MediaInfo(fromImage: url) ?? MediaInfo(source: .media_library)
         }()
         GIFDecoderFactory.main().decode(image: url) { frames in
-            let segments = frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
+            let segments = frames.map { CameraSegment.image($0.image, nil, $0.interval, mediaInfo) }
             self.showPreviewWithSegments(segments, selected: segments.endIndex)
         }
     }
@@ -1335,8 +1340,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .livePhoto)
         }
         let mediaInfo = MediaInfo(source: .media_library)
+        let imageData = livePhotoStill.jpegData(compressionQuality: 1)
+        let imageSource = CGImageSourceCreateWithData(imageData! as CFData, nil)!
         if currentMode.quantity == .single {
-            let segments = [CameraSegment.image(livePhotoStill, pairedVideo, nil, mediaInfo)]
+            let segments = [CameraSegment.image(imageSource, pairedVideo, nil, mediaInfo)]
             self.showPreviewWithSegments(segments, selected: segments.startIndex)
         }
         else {

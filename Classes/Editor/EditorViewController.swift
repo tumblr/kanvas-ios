@@ -229,7 +229,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         fatalError("init(nibName:bundle:) has not been implemented")
     }
     
-    public static func createEditor(for image: UIImage,
+    public static func createEditor(for image: CGImageSource,
                                     settings: CameraSettings,
                                     stickerProvider: StickerProvider,
                                     analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
@@ -330,7 +330,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let glContext = EAGLContext(api: .openGLES3)
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
-        let muteButtonShown = settings.features.muteButton && segments.first?.image == nil
+        let muteButtonShown = settings.features.muteButton && segments.first?.isVideo == true
         self.editorView = EditorViewController.editor(delegate: nil,
                                                       settings: settings,
                                                       canvas: canvas,
@@ -455,8 +455,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func startPlayerFromSegments() {
         let media: [MediaPlayerContent] = segments.compactMap { segment in
             switch segment {
-            case .image(let image, _, _, _):
-                return .image(image, segment.timeInterval)
+            case .image(let source, _, _, _):
+                return .image(source, segment.timeInterval)
             case .video(let url, _):
                 return .video(url)
             }
@@ -551,14 +551,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
 
         // More than one segment, or one video-only segment, enable it.
-        if segments.count > 1 || segments.first?.image == nil {
+        if segments.count > 1 || segments.first?.isVideo == true {
             return true
         }
 
         // A single segment that has both an image and a video (live photo), enabled it.
         if segments.count == 1,
             let firstSegment = segments.first,
-            firstSegment.image != nil,
+            firstSegment.isVideo == false,
             firstSegment.videoURL != nil {
             return true
         }
@@ -874,13 +874,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: CGImageSource, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.dimensions = UIScreen.main.bounds.size
         let archive = self.archive
-        exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
+        exporter.export(image: image, time: player.lastStillFilterTime) { [weak self] (exportedImage, _) in
+            guard let self = self else { return }
+            let originalImage = image.image(size: UIScreen.main.bounds.size)
             performUIUpdate {
                 guard Device.isRunningInSimulator == false else {
                     self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
@@ -892,7 +894,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.handleExportError()
                     return
                 }
-                let result = ExportResult(original: .image(image), result: .image(unwrappedImage), info: mediaInfo, archive: archive)
+                let result = ExportResult(original: .image(originalImage), result: .image(unwrappedImage), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
                 self.hideLoading()

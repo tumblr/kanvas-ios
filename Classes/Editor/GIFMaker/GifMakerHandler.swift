@@ -6,7 +6,7 @@
 
 import Foundation
 
-typealias MediaFrame = (image: UIImage, interval: TimeInterval)
+typealias MediaFrame = (image: CGImageSource, interval: TimeInterval)
 
 func MediaFrameGetFrame(_ frames: [MediaFrame], at timeInterval: TimeInterval) -> (Int, MediaFrame)? {
     var frameTime: TimeInterval = .zero
@@ -282,11 +282,11 @@ class GifMakerHandler {
 
         let segments = convertLivePhotoStillToVideo(inputSegments) ?? inputSegments
 
-        for (i, segment) in segments.enumerated() {
-            if let cgImage = segment.image?.cgImage {
-                frames[i] = [(image: cgImage, interval: segment.timeInterval ?? defaultInterval)]
-            }
-            else if let videoURL = segment.videoURL {
+        segments.enumerated().forEach { (i, segment) in
+            switch segment {
+            case .image(let image, _, _, _):
+                frames[i] = [(image: image, interval: segment.timeInterval ?? defaultInterval)]
+            case .video(let videoURL, _):
                 group.enter()
                 encoder.encode(video: videoURL, loopCount: 0, framesPerSecond: 10) { gifURL in
                     guard let gifURL = gifURL else {
@@ -305,21 +305,28 @@ class GifMakerHandler {
             let orderedFrames = frames.keys.sorted().reduce([]) { (partialOrderedFrames, index) in
                 return partialOrderedFrames + (frames[index] ?? [])
             }
-            let mediaFrames = orderedFrames.map { (image: UIImage(cgImage: $0.image), interval: $0.interval) }
+            let mediaFrames = orderedFrames.map { (image: $0.image, interval: $0.interval) }
             completion(mediaFrames, converted)
         }
     }
 
     private func convertLivePhotoStillToVideo(_ inputSegments: [CameraSegment]) -> [CameraSegment]? {
-        guard
-            inputSegments.count == 1,
-            let segment = inputSegments.first,
-            let _ = segment.image,
-            let livePhotoVideo = segment.videoURL
-        else {
+
+        guard inputSegments.count == 1,
+              let segment = inputSegments.first else {
             return nil
         }
-        return [CameraSegment.video(livePhotoVideo, segment.mediaInfo)]
+
+        switch segment {
+        case .image(let source, let url, _, let mediaInfo):
+            if let url = url {
+                return [CameraSegment.video(url, segment.mediaInfo)]
+            } else {
+                return nil
+            }
+        case .video(_, _):
+            return nil
+        }
     }
 
     func startIndex(from location: CGFloat) -> Int? {
@@ -386,15 +393,17 @@ extension GifMakerHandler: GifMakerControllerDelegate {
         analyticsProvider?.logEditorGIFChange(trimStart: startTime, trimEnd: endTime)
     }
 
-    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
+    func getThumbnail(at timestamp: TimeInterval, size: CGSize) -> UIImage? {
         if let thumbnail = thumbnails[timestamp] {
             return thumbnail
         }
         guard let frame = MediaFrameGetFrame(frames ?? [], at: timestamp) else {
             return nil
         }
-        thumbnails[timestamp] = frame.1.image
-        return frame.1.image
+        let source = frame.1.image
+        let image = source.image(size: size)
+        thumbnails[timestamp] = image
+        return image
     }
 
     func getMediaDuration() -> TimeInterval? {

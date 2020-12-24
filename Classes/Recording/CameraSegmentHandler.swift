@@ -7,35 +7,75 @@
 import UIKit
 import AVFoundation
 import Foundation
+import CoreServices
 
 /// A container for segments
 public enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
-    case image(UIImage, URL?, TimeInterval?, MediaInfo)
+    case image(CGImageSource, URL?, TimeInterval?, MediaInfo) // First URL is for the image, second URL is for the live video
     case video(URL, MediaInfo?)
 
-    var image: UIImage? {
+//    var image: UIImage? {
+//        switch self {
+//        case .image(let image, _, _, _): return image
+//        case .video: return nil
+//        }
+//    }
+
+    func lastFrame() -> CGImageSource? {
         switch self {
-        case .image(let image, _, _, _): return image
-        case .video: return nil
+            case .image(let source, _, _, _):
+                return source
+            case .video(let url, _):
+                let asset = AVAsset(url: url)
+
+//                    let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
+//                    return UIImage(cgImage: image)
+
+                let imageGenerator = AVAssetImageGenerator(asset: asset)
+                do {
+                    let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
+
+                    let uiImage = UIImage(cgImage: image)
+                    let data = uiImage.jpegData(compressionQuality: 1)
+
+//                    let destination = CGImageDestinationCreateWithURL(<#T##url: CFURL##CFURL#>, <#T##type: CFString##CFString#>, <#T##count: Int##Int#>, <#T##options: CFDictionary?##CFDictionary?#>)
+
+                    return CGImageSourceCreateWithData(data as! CFData, [kCGImageSourceTypeIdentifierHint: kUTTypeJPEG as String] as CFDictionary)!
+//                    return CGImageSourceCreateWithDataProvider(data.cgImage!.dataProvider!, [
+//                        kCGImageSourceTypeIdentifierHint: kUTTypeJPEG as String
+//                    ] as CFDictionary)!
+                } catch let error {
+                    assertionFailure("Failed to generate CameraSegment thumbnail \(url): \(error)")
+                    return nil
+                }
         }
     }
 
-    var lastFrame: UIImage {
+    var isVideo: Bool {
         switch self {
-        case .image(let image, _, _, _): return image
-        case .video(let url, _):
-            let asset = AVAsset(url: url)
-            let imageGenerator = AVAssetImageGenerator(asset: asset)
-            do {
-                let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
-                return UIImage(cgImage: image)
-            } catch let error {
-                assertionFailure("Failed to generate CameraSegment thumbnail \(url): \(error)")
-                return UIImage()
-            }
+        case .video:
+            return true
+        case .image:
+            return false
         }
     }
+
+//    var lastFrame: UIImage {
+//        switch self {
+//        case .image(_, _, _, _): return image
+//        case .video(let url, _):
+//            let asset = AVAsset(url: url)
+//            let imageGenerator = AVAssetImageGenerator(asset: asset)
+//            do {
+//                let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
+//                return UIImage(cgImage: image)
+//            } catch let error {
+//                assertionFailure("Failed to generate CameraSegment thumbnail \(url): \(error)")
+//                return UIImage()
+//            }
+//        }
+//    }
 
     var videoURL: URL? {
         switch self {
@@ -62,9 +102,9 @@ public enum CameraSegment {
     static func defaultTimeInterval(segments: [CameraSegment]) -> TimeInterval {
         for media in segments {
             switch media {
-            case .image(_, _, _, _):
+            case .image:
                 break
-            case .video(_, _):
+            case .video:
                 return KanvasCameraTimes.stopMotionFrameTimeInterval
             }
         }
@@ -72,16 +112,16 @@ public enum CameraSegment {
     }
 
     func mediaFrame(defaultTimeInterval: TimeInterval) -> MediaFrame? {
-        if let image = self.image {
+        switch self {
+        case .image(let image, _, let timeInterval, _):
             return (image: image, interval: self.timeInterval ?? defaultTimeInterval)
-        }
-        else {
+        case .video:
             return nil
         }
     }
 
     init(from frame: GIFDecodeFrame, info: MediaInfo) {
-        self = .image(UIImage(cgImage: frame.image), nil, frame.interval, info)
+        self = .image(frame.image, nil, frame.interval, info)
     }
 
     static func from(frames: GIFDecodeFrames, info: MediaInfo) -> [CameraSegment] {
@@ -110,12 +150,13 @@ extension AssetsHandlerType {
     ///   - segments: the CameraSegments
     /// - Returns: true if all images, false otherwise
     func containsOnlyImages(segments: [CameraSegment]) -> Bool {
-        for segment in segments {
-            if segment.image == nil {
+        return segments.contains(where: { segment in
+            if case let .video = segment {
+                return true
+            } else {
                 return false
             }
-        }
-        return true
+        }) == false
     }
 }
 
@@ -145,7 +186,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
     ///   - size: dimensions of the image
     ///   - mediaInfo: metadata about the segment
     ///   - completion: completion handler, success bool and URL of video
-    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: MediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void)
+    func addNewImageSegment(image: CGImageSource, size: CGSize, mediaInfo: MediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void)
 
     /// Deletes a segment and removes from local storage. When running tests, it should be false
     ///
@@ -238,7 +279,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - size: size (resolution) of the video
     ///   - mediaInfo: media info metadata
     ///   - completion: completion handler, success bool and URL of video
-    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: MediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
+    func addNewImageSegment(image: CGImageSource, size: CGSize, mediaInfo: MediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
         addNewImageSegment(image: image, size: size, mediaInfo: mediaInfo, createVideoClip: false, completion: completion)
     }
 
@@ -250,7 +291,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - mediaInfo: media info metadata
     ///   - createVideoClip: an optimization flag for creating a video clip from the image, for later use in making stitch video
     ///   - completion: completion handler, success bool and URL of video
-    func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: MediaInfo, createVideoClip: Bool, completion: @escaping (Bool, CameraSegment?) -> Void) {
+    func addNewImageSegment(image: CGImageSource, size: CGSize, mediaInfo: MediaInfo, createVideoClip: Bool, completion: @escaping (Bool, CameraSegment?) -> Void) {
 
         guard createVideoClip else {
             let segment = CameraSegment.image(image, nil, nil, mediaInfo)
@@ -314,13 +355,13 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         var totalDuration: CMTime = CMTime.zero
         let allImages = containsOnlyImages(segments: segments)
         for segment in segments {
-            if let segmentURL = segment.videoURL {
-                let asset = AVURLAsset(url: segmentURL)
+            switch segment {
+            case .video(let url, _):
+                let asset = AVURLAsset(url: url)
                 totalDuration = CMTimeAdd(totalDuration, asset.duration)
-            }
-            else if segment.image != nil {
+            case .image(_, _, let timeInterval, _):
                 let duration: CMTime = {
-                    if let timeInterval = segment.timeInterval {
+                    if let timeInterval = timeInterval {
                         return CMTime(seconds: timeInterval, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
                     }
                     else if allImages {
@@ -433,23 +474,24 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         for segment in segments {
             if segment.videoURL != nil {
                 newSegments.append(segment)
-                continue
             }
-            guard let segmentImage = segment.image else {
-                assertionFailure("No video and no image?")
-                continue
-            }
-            dispatchGroup.enter()
 
-            self.videoQueue.async {
-                self.createVideoFromImage(image: segmentImage, duration: segment.timeInterval) { url in
-                    guard let url = url else {
-                        dispatchGroup.leave()
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        newSegments.append(.image(segmentImage, url, segment.timeInterval, segment.mediaInfo))
-                        dispatchGroup.leave()
+            switch segment {
+            case .video:
+                assertionFailure("Video without a video URL")
+            case .image(let imageURL, _, let timeInterval, let mediaInfo):
+                dispatchGroup.enter()
+
+                self.videoQueue.async {
+                    self.createVideoFromImage(image: imageURL, duration: segment.timeInterval) { url in
+                        guard let url = url else {
+                            dispatchGroup.leave()
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            newSegments.append(.image(imageURL, url, segment.timeInterval, segment.mediaInfo))
+                            dispatchGroup.leave()
+                        }
                     }
                 }
             }
@@ -461,7 +503,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
 
     private func allImagesHaveVideo(segments: [CameraSegment]) -> Bool {
         for segment in segments {
-            if segment.image != nil && segment.videoURL == nil {
+            if case let .image = segment, segment.videoURL == nil {
                 return false
             }
         }
@@ -568,7 +610,9 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///   - image: UIImage
     ///   - duration: The TimeInterval for the video to be created
     ///   - completion: returns URL of video
-    private func createVideoFromImage(image: UIImage, duration: TimeInterval?, completion: @escaping (URL?) -> Void) {
+    private func createVideoFromImage(image: CGImageSource, duration: TimeInterval?, completion: @escaping (URL?) -> Void) {
+
+        let image = UIImage(cgImage: CGImageSourceCreateImageAtIndex(image, 0, nil)!)
 
         guard let url = setupAssetWriter(size: image.size), let assetWriter = assetWriter, let input = assetWriterVideoInput else {
             completion(nil)

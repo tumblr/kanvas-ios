@@ -26,7 +26,7 @@ protocol MediaExporting: class {
     var imageOverlays: [CGImage] { get set }
     var dimensions: CGSize { get set }
     init(settings: CameraSettings)
-    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
+    func export(image: CGImageSource, time: TimeInterval, completion: (UIImage?, Error?) -> Void)
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
     func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void)
 }
@@ -64,12 +64,13 @@ final class MediaExporter: MediaExporting {
     /// Exports an image
     /// - Parameter image: UIImage to export
     /// - Parameter completion: callback which is invoked with the processed UIImage
-    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
+    func export(image: CGImageSource, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
         guard needsProcessing else {
+            let image = image.image(size: UIScreen.main.nativeBounds.size)
             completion(image, nil)
             return
         }
-        guard let pixelBuffer = image.pixelBuffer() else {
+        guard let pixelBuffer = image.pixelBuffer(size: UIScreen.main.nativeBounds.size) else {
             completion(nil, MediaExporterError.noPixelBuffer)
             return
         }
@@ -97,13 +98,14 @@ final class MediaExporter: MediaExporting {
         var processedFrames: [MediaFrame] = []
         DispatchQueue.global(qos: .default).async {
             var time: TimeInterval = 0
-            for frame in frames {
-                self.export(image: frame.image, time: time) { (image, error) in
-                    guard error == nil, let image = image else {
+            frames.forEach { frame in
+                self.export(image: frame.image, time: time) { (exportedImage, error) in
+                    guard error == nil, let exportedImage = exportedImage else {
                         return
                     }
                     time += frame.interval
-                    processedFrames.append((image: image, interval: frame.interval))
+                    let imageSource = CGImageSourceCreateWithData(exportedImage.jpegData(compressionQuality: 1)! as CFData, nil)!
+                    processedFrames.append((image: imageSource, interval: frame.interval))
                 }
             }
             DispatchQueue.main.async {

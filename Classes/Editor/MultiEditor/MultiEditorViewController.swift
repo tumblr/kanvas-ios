@@ -58,9 +58,9 @@ class MultiEditorViewController: UIViewController {
 
         frames.append(Frame(segment: segment, edit: nil))
 
-        let clip = MediaClip(representativeFrame: segment.lastFrame,
+        let clip = MediaClip(representativeFrame: segment.lastFrame()!,
                                                         overlayText: nil,
-                                                        lastFrame: segment.lastFrame)
+                                                        lastFrame: segment.lastFrame()!)
         
         clipsController.addNewClip(clip)
         
@@ -129,9 +129,10 @@ class MultiEditorViewController: UIViewController {
         self.selected = selected
         super.init(nibName: nil, bundle: nil)
         let clips = segments.map { segment in
-            return MediaClip(representativeFrame: segment.lastFrame,
+            return MediaClip(representativeFrame:
+                                segment.lastFrame()!,
                                                             overlayText: nil,
-                                                            lastFrame: segment.lastFrame)
+                                                            lastFrame: segment.lastFrame()!)
         }
         clipsController.replace(clips: clips)
     }

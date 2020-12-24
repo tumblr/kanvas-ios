@@ -32,7 +32,8 @@ protocol TrimControllerDelegate: class {
     /// Obtains a thumbnail for the background of the trimming tool
     ///
     /// - Parameter timestamp: the time of the requested image.
-    func getThumbnail(at timestamp: TimeInterval) -> UIImage?
+    /// - Parameter size: The size of the thumbnail
+    func getThumbnail(at timestamp: TimeInterval, size: CGSize) -> UIImage?
 }
 
 /// Constants for TrimController
@@ -167,8 +168,8 @@ final class TrimController: UIViewController, TrimViewDelegate, ThumbnailCollect
         trimEnded()
     }
     
-    func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
-        return delegate?.getThumbnail(at: timestamp)
+    func getThumbnail(at timestamp: TimeInterval, size: CGSize) -> UIImage? {
+        return delegate?.getThumbnail(at: timestamp, size: size)
     }
     
     func getMediaDuration() -> TimeInterval? {
