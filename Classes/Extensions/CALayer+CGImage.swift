@@ -12,14 +12,11 @@ import UIKit
 extension CALayer {
 
     func cgImage() -> CGImage? {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.main.scale)
-        defer { UIGraphicsEndImageContext() }
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return nil
+        let renderer = UIGraphicsImageRenderer(size: bounds.size)
+        let image = renderer.image { context in
+            render(in: context.cgContext)
         }
-        render(in: context)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        return image?.cgImage
+        return image.cgImage
     }
 
 }
