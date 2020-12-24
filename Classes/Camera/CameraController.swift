@@ -509,7 +509,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         return controller
     }
     
-    private func createEditorViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, views: [View]? = nil, canvas: MovableViewCanvas? = nil, drawing: IgnoreTouchesView? = nil) -> EditorViewController {
+    private func createEditorViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, views: [View]? = nil, canvas: MovableViewCanvas? = nil, drawing: IgnoreTouchesView? = nil, cache: NSCache<NSString, NSData>? = nil) -> EditorViewController {
         let controller = EditorViewController(settings: settings,
                                               segments: segments,
                                               assetsHandler: segmentsHandler,
@@ -522,7 +522,8 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                                               views: views,
                                               canvas: canvas,
                                               drawingView: drawing,
-                                              tagCollection: tagCollection)
+                                              tagCollection: tagCollection,
+                                              cache: cache ?? MultiEditorViewController.freshCache())
         controller.delegate = self
         return controller
     }
@@ -985,10 +986,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         dismiss(animated: false, completion: nil)
     }
 
-    func editor(segment: CameraSegment, views: [View]?, canvas: MovableViewCanvas?, drawingView: IgnoreTouchesView?) -> EditorViewController {
+    func editor(segment: CameraSegment, views: [View]?, canvas: MovableViewCanvas?, drawingView: IgnoreTouchesView?, cache: NSCache<NSString, NSData>?) -> EditorViewController {
         let segments = [segment]
 
-        return createEditorViewController(segments, selected: segments.startIndex, views: views, canvas: canvas, drawing: drawingView)
+        return createEditorViewController(segments, selected: segments.startIndex, views: views, canvas: canvas, drawing: drawingView, cache: cache)
     }
     
     public func addButtonPressed() {

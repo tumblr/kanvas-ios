@@ -3,7 +3,7 @@ import Foundation
 protocol MultiEditorComposerDelegate: class {
     func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
     func addButtonWasPressed(clips: [MediaClip])
-    func editor(segment: CameraSegment, views: [View]?, canvas: MovableViewCanvas?, drawingView: IgnoreTouchesView?) -> EditorViewController
+    func editor(segment: CameraSegment, views: [View]?, canvas: MovableViewCanvas?, drawingView: IgnoreTouchesView?, cache: NSCache<NSString, NSData>?) -> EditorViewController
     func dismissButtonPressed()
 }
 
@@ -82,6 +82,7 @@ class MultiEditorViewController: UIViewController {
         let data: Data?
         let canvasView: IgnoreTouchesView?
         let options: EditOptions
+        let cache: NSCache<NSString, NSData>
     }
 
     private var exportingEditors: [EditorViewController]?
@@ -113,7 +114,7 @@ class MultiEditorViewController: UIViewController {
 
         if let edits = edits {
             frames = zip(segments, edits).map { (segment, data) in
-                return Frame(segment: segment, edit: Edit(data: data, canvasView: nil, options: EditOptions(soundEnabled: true)))
+                return Frame(segment: segment, edit: Edit(data: data, canvasView: nil, options: EditOptions(soundEnabled: true), cache: MultiEditorViewController.freshCache()))
             }
         } else {
             frames = segments.map({ segment in
@@ -133,6 +134,13 @@ class MultiEditorViewController: UIViewController {
                                                             lastFrame: segment.lastFrame)
         }
         clipsController.replace(clips: clips)
+    }
+
+    static func freshCache() -> NSCache<NSString, NSData> {
+        let cache = NSCache<NSString, NSData>()
+        cache.name = "Kanvas Editor Cache"
+        cache.totalCostLimit = 50_000_000
+        return cache
     }
         
     @available(*, unavailable, message: "use init() instead")
@@ -160,7 +168,7 @@ class MultiEditorViewController: UIViewController {
     func loadEditor(for index: Int) {
 //        let edit = edits.indices ~= index ? edits[index] : nil
         let views = edits(for: index)
-        if let editor = delegate?.editor(segment: frames[index].segment, views: nil, canvas: views?.0, drawingView: views?.1) {
+        if let editor = delegate?.editor(segment: frames[index].segment, views: nil, canvas: views?.0, drawingView: views?.1, cache: frames[index].edit?.cache) {
             currentEditor?.stopPlayback()
             currentEditor?.unloadFromParentViewController()
             let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
@@ -367,11 +375,12 @@ extension MultiEditorViewController: EditorControllerDelegate {
             return
         }
         let currentCanvas = try NSKeyedArchiver.archivedData(withRootObject: currentEditor.editorView.movableViewCanvas, requiringSecureCoding: true)
+        let cache = currentEditor.cache
         let drawingLayer = currentEditor.editorView.drawingCanvas
         let options = EditOptions(soundEnabled: currentEditor.shouldExportSound ?? true)
         if frames.indices ~= index {
             let frame = frames[index]
-            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas, canvasView: drawingLayer, options: options))
+            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas, canvasView: drawingLayer, options: options, cache: cache))
         } else {
             print("Invalid frame index")
 //            edits.insert((currentCanvas, drawingLayer, options), at: min(index, edits.endIndex))
@@ -444,7 +453,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
                 } else {
                     canvas = nil
                 }
-                let editor = delegate.editor(segment: frame.segment, views: nil, canvas: canvas, drawingView: frame.edit?.canvasView)
+                let editor = delegate.editor(segment: frame.segment, views: nil, canvas: canvas, drawingView: frame.edit?.canvasView, cache: frame.edit?.cache)
                 editor.shouldExportSound = frame.edit?.options.soundEnabled ?? true
 
                 unarchive(editor: editor, index: idx)
