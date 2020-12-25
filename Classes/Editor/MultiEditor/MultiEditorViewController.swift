@@ -458,8 +458,9 @@ extension MultiEditorViewController: EditorControllerDelegate {
                 editor.shouldExportSound = frame.edit?.options.soundEnabled ?? true
 
                 unarchive(editor: editor, index: idx)
-                editor.export { [weak self] result in
+                editor.export { [weak self, editor] result in
 //                    semaphore.signal()
+                    let _ = editor // string reference until the export completes
                     self?.exportHandler.handleExport(result, for: idx)
                 }
             }
