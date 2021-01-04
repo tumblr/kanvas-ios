@@ -1,0 +1,2626 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>KanvasCameraAnalyticsProvider Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Protocol/KanvasCameraAnalyticsProvider" class="dashAnchor"></a>
+    <a title="KanvasCameraAnalyticsProvider Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">KanvasCamera 1.0.0 Docs</a> (43% documented)</p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">KanvasCamera Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        KanvasCameraAnalyticsProvider Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/CameraController.html">CameraController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CameraSettings.html">CameraSettings</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EasyTipView.html">EasyTipView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EasyTipView/ArrowPosition.html">– ArrowPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EasyTipView/Preferences.html">– Preferences</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EditorViewController.html">EditorViewController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/CameraMode.html">CameraMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CameraMode/Group.html">– Group</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CameraMode/Quantity.html">– Quantity</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FilterType.html">FilterType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ImagePreviewMode.html">ImagePreviewMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasBrushType.html">KanvasBrushType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasCameraMedia.html">KanvasCameraMedia</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasColorSelectionTool.html">KanvasColorSelectionTool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasDashboardDismissAction.html">KanvasDashboardDismissAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasDashboardOpenAction.html">KanvasDashboardOpenAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasDrawingAction.html">KanvasDrawingAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasExportAction.html">KanvasExportAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasGIFPlaybackMode.html">KanvasGIFPlaybackMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasMediaType.html">KanvasMediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasTextAlignment.html">KanvasTextAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasTextFont.html">KanvasTextFont</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/AVAsset.html">AVAsset</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/AVCaptureDevice">AVCaptureDevice</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CGFloat.html">CGFloat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int32.html">Int32</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/MediaInfo.html">MediaInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UICollectionReusableView">UICollectionReusableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionView.html">UICollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIColor.html">UIColor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIImage.html">UIImage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewCell">UITableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewHeaderFooterView">UITableViewHeaderFooterView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt.html">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt32.html">UInt32</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt64.html">UInt64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt8.html">UInt8</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/CameraControllerDelegate.html">CameraControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EasyTipViewDelegate.html">EasyTipViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EditorControllerDelegate.html">EditorControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/Identifiable.html">Identifiable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KanvasCameraAnalyticsProvider.html">KanvasCameraAnalyticsProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KanvasCancelable.html">KanvasCancelable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KanvasQuickBlogSelectorCoordinating.html">KanvasQuickBlogSelectorCoordinating</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KanvasStickerLoader.html">KanvasStickerLoader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StickerProvider.html">StickerProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StickerProviderDelegate.html">StickerProviderDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/CameraFeatures.html">CameraFeatures</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/GLU.html">GLU</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraColors.html">KanvasCameraColors</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraFonts.html">KanvasCameraFonts</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraFonts/CameraPermissions.html">– CameraPermissions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraFonts/Drawer.html">– Drawer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraFonts/Padding.html">– Padding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasDevice.html">KanvasDevice</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaInfoSimple.html">MediaInfoSimple</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaInfoSimple/Source.html">– Source</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Sticker.html">Sticker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/StickerType.html">StickerType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:12KanvasCamera9MediaInfoa">MediaInfo</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>KanvasCameraAnalyticsProvider</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">KanvasCameraAnalyticsProvider</span></code></pre>
+
+                </div>
+              </div>
+            <p>A protocol for injecting analytics into the KanvasCamera module</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logCameraOpenWithMode:"></a>
+                    <a name="//apple_ref/swift/Method/logCameraOpen(mode:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logCameraOpenWithMode:">logCameraOpen(mode:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the camera is opened</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logCameraOpen</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/CameraMode.html">CameraMode</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>what photo mode was opened</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logDismiss"></a>
+                    <a name="//apple_ref/swift/Method/logDismiss()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logDismiss">logDismiss()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the camera is dismissed without exporting media</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logDismiss</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logCapturedMediaWithType:cameraPosition:length:ghostFrameEnabled:filterType:"></a>
+                    <a name="//apple_ref/swift/Method/logCapturedMedia(type:cameraPosition:length:ghostFrameEnabled:filterType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logCapturedMediaWithType:cameraPosition:length:ghostFrameEnabled:filterType:">logCapturedMedia(type:<wbr>cameraPosition:<wbr>length:<wbr>ghostFrameEnabled:<wbr>filterType:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when media is captured</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logCapturedMedia</span><span class="p">(</span><span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/CameraMode.html">CameraMode</a></span><span class="p">,</span> <span class="nv">cameraPosition</span><span class="p">:</span> <span class="kt">AVCaptureDevice</span><span class="o">.</span><span class="kt">Position</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">ghostFrameEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">filterType</span><span class="p">:</span> <span class="kt"><a href="../Enums/FilterType.html">FilterType</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the camera mode used to capture media.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cameraPosition</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the back or front camera</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>length</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the duration of the video created, in seconds</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ghostFrameEnabled</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>whether the ghost frame feature is enabled or not</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>filterType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>what filter was applied when capturing media. nil when feature is disabled</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logFlipCamera"></a>
+                    <a name="//apple_ref/swift/Method/logFlipCamera()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logFlipCamera">logFlipCamera()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the flip camera button is tapped</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logFlipCamera</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logDeleteSegment"></a>
+                    <a name="//apple_ref/swift/Method/logDeleteSegment()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logDeleteSegment">logDeleteSegment()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when a segment is deleted</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logDeleteSegment</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logFlashToggled"></a>
+                    <a name="//apple_ref/swift/Method/logFlashToggled()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logFlashToggled">logFlashToggled()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the flash button is tapped</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logFlashToggled</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logImagePreviewToggledWithEnabled:"></a>
+                    <a name="//apple_ref/swift/Method/logImagePreviewToggled(enabled:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logImagePreviewToggledWithEnabled:">logImagePreviewToggled(enabled:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the image preview button is tapped</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logImagePreviewToggled</span><span class="p">(</span><span class="nv">enabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logUndoTapped"></a>
+                    <a name="//apple_ref/swift/Method/logUndoTapped()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logUndoTapped">logUndoTapped()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the undo button is tapped</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logUndoTapped</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logNextTapped"></a>
+                    <a name="//apple_ref/swift/Method/logNextTapped()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logNextTapped">logNextTapped()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the preview button is tapped</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logNextTapped</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logPreviewDismissed"></a>
+                    <a name="//apple_ref/swift/Method/logPreviewDismissed()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logPreviewDismissed">logPreviewDismissed()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event if the preview screen is closed without exporting media</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logPreviewDismissed</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logMovedClip"></a>
+                    <a name="//apple_ref/swift/Method/logMovedClip()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logMovedClip">logMovedClip()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when a media clip is moved</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logMovedClip</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logPinchedZoom"></a>
+                    <a name="//apple_ref/swift/Method/logPinchedZoom()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logPinchedZoom">logPinchedZoom()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the user pinches to zoom</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logPinchedZoom</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logSwipedZoom"></a>
+                    <a name="//apple_ref/swift/Method/logSwipedZoom()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logSwipedZoom">logSwipedZoom()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the user swipes up while recording to zoom</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logSwipedZoom</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logConfirmedMediaWithMode:clipsCount:length:"></a>
+                    <a name="//apple_ref/swift/Method/logConfirmedMedia(mode:clipsCount:length:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logConfirmedMediaWithMode:clipsCount:length:">logConfirmedMedia(mode:<wbr>clipsCount:<wbr>length:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the confirm button is tapped</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logConfirmedMedia</span><span class="p">(</span><span class="nv">mode</span><span class="p">:</span> <span class="kt"><a href="../Enums/CameraMode.html">CameraMode</a></span><span class="p">,</span> <span class="nv">clipsCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the mode used to create the media</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clipsCount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the number of clips used, if a video</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>length</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the duration of the video created, in seconds</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logOpenFiltersSelector"></a>
+                    <a name="//apple_ref/swift/Method/logOpenFiltersSelector()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logOpenFiltersSelector">logOpenFiltersSelector()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the filters selector is opened</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logOpenFiltersSelector</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logFilterSelectedWithFilterType:"></a>
+                    <a name="//apple_ref/swift/Method/logFilterSelected(filterType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logFilterSelectedWithFilterType:">logFilterSelected(filterType:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when a filter is selected</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logFilterSelected</span><span class="p">(</span><span class="nv">filterType</span><span class="p">:</span> <span class="kt"><a href="../Enums/FilterType.html">FilterType</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>filterType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The selected filter</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logMediaPickerOpen"></a>
+                    <a name="//apple_ref/swift/Method/logMediaPickerOpen()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logMediaPickerOpen">logMediaPickerOpen()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logMediaPickerOpen</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logMediaPickerDismiss"></a>
+                    <a name="//apple_ref/swift/Method/logMediaPickerDismiss()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logMediaPickerDismiss">logMediaPickerDismiss()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logMediaPickerDismiss</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logMediaPickerPickedMediaOfType:"></a>
+                    <a name="//apple_ref/swift/Method/logMediaPickerPickedMedia(ofType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logMediaPickerPickedMediaOfType:">logMediaPickerPickedMedia(ofType:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logMediaPickerPickedMedia</span><span class="p">(</span><span class="n">ofType</span> <span class="nv">mediaType</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasMediaType.html">KanvasMediaType</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorOpen"></a>
+                    <a name="//apple_ref/swift/Method/logEditorOpen()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorOpen">logEditorOpen()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorOpen</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorBack"></a>
+                    <a name="//apple_ref/swift/Method/logEditorBack()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorBack">logEditorBack()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorBack</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorFiltersOpen"></a>
+                    <a name="//apple_ref/swift/Method/logEditorFiltersOpen()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorFiltersOpen">logEditorFiltersOpen()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the filters button is tapped in the editor</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorFiltersOpen</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorFilterSelectedWithFilterType:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorFilterSelected(filterType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorFilterSelectedWithFilterType:">logEditorFilterSelected(filterType:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when a filter is selected in the editor</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorFilterSelected</span><span class="p">(</span><span class="nv">filterType</span><span class="p">:</span> <span class="kt"><a href="../Enums/FilterType.html">FilterType</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingOpen"></a>
+                    <a name="//apple_ref/swift/Method/logEditorDrawingOpen()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingOpen">logEditorDrawingOpen()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the drawing button is tapped in the editor</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorDrawingOpen</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingChangeStrokeSizeWithStrokeSize:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorDrawingChangeStrokeSize(strokeSize:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingChangeStrokeSizeWithStrokeSize:">logEditorDrawingChangeStrokeSize(strokeSize:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the stroke size is changed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorDrawingChangeStrokeSize</span><span class="p">(</span><span class="nv">strokeSize</span><span class="p">:</span> <span class="kt">Float</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>strokeSize</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the size of the stroke, between 0 and 1</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingChangeBrushWithBrushType:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorDrawingChangeBrush(brushType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingChangeBrushWithBrushType:">logEditorDrawingChangeBrush(brushType:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the brush is changed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorDrawingChangeBrush</span><span class="p">(</span><span class="nv">brushType</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasBrushType.html">KanvasBrushType</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>brushType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the brush that was selected</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingChangeColorWithSelectionTool:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorDrawingChangeColor(selectionTool:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingChangeColorWithSelectionTool:">logEditorDrawingChangeColor(selectionTool:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when someone selects a color</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorDrawingChangeColor</span><span class="p">(</span><span class="nv">selectionTool</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasColorSelectionTool.html">KanvasColorSelectionTool</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>selectionTool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the color selection tool used</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawStrokeWithBrushType:strokeSize:drawType:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorDrawStroke(brushType:strokeSize:drawType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawStrokeWithBrushType:strokeSize:drawType:">logEditorDrawStroke(brushType:<wbr>strokeSize:<wbr>drawType:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when someone draws</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorDrawStroke</span><span class="p">(</span><span class="nv">brushType</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasBrushType.html">KanvasBrushType</a></span><span class="p">,</span> <span class="nv">strokeSize</span><span class="p">:</span> <span class="kt">Float</span><span class="p">,</span> <span class="nv">drawType</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasDrawingAction.html">KanvasDrawingAction</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>brushType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the brush that was selected</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>strokeSize</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the size of the stroke, between 0 and 1</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>drawType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the type of drawing action performed</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingUndo"></a>
+                    <a name="//apple_ref/swift/Method/logEditorDrawingUndo()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingUndo">logEditorDrawingUndo()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when someone undoes a drawing or erasing action</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorDrawingUndo</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingEraserWithBrushType:strokeSize:drawType:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorDrawingEraser(brushType:strokeSize:drawType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingEraserWithBrushType:strokeSize:drawType:">logEditorDrawingEraser(brushType:<wbr>strokeSize:<wbr>drawType:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when someone uses the eraser</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorDrawingEraser</span><span class="p">(</span><span class="nv">brushType</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasBrushType.html">KanvasBrushType</a></span><span class="p">,</span> <span class="nv">strokeSize</span><span class="p">:</span> <span class="kt">Float</span><span class="p">,</span> <span class="nv">drawType</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasDrawingAction.html">KanvasDrawingAction</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>brushType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the brush that was selected</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>strokeSize</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the size of the stroke, between 0 and 1</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>drawType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the type of erasing action performed</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingConfirm"></a>
+                    <a name="//apple_ref/swift/Method/logEditorDrawingConfirm()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorDrawingConfirm">logEditorDrawingConfirm()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when someone confirms drawing</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorDrawingConfirm</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextAdd"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextAdd()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextAdd">logEditorTextAdd()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when tapping the text tool to add a new text overlay</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextAdd</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextEdit"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextEdit()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextEdit">logEditorTextEdit()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when tapping on an existing text overlay to edit it</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextEdit</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextConfirmWithIsNew:font:alignment:highlighted:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextConfirm(isNew:font:alignment:highlighted:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextConfirmWithIsNew:font:alignment:highlighted:">logEditorTextConfirm(isNew:<wbr>font:<wbr>alignment:<wbr>highlighted:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when a text overlay is confirmed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextConfirm</span><span class="p">(</span><span class="nv">isNew</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">font</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasTextFont.html">KanvasTextFont</a></span><span class="p">,</span> <span class="nv">alignment</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasTextAlignment.html">KanvasTextAlignment</a></span><span class="p">,</span> <span class="nv">highlighted</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isNew</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>whether this text overlay is newly added or not</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>font</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the font</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>alignment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the text alignment</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>highlighted</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>whether the text is highlighted or not</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextMove"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextMove()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextMove">logEditorTextMove()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when a text overlay is moved</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextMove</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextRemove"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextRemove()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextRemove">logEditorTextRemove()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when a text overlay is removed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextRemove</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextChangeWithFont:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextChange(font:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextChangeWithFont:">logEditorTextChange(font:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the font is changed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextChange</span><span class="p">(</span><span class="nv">font</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasTextFont.html">KanvasTextFont</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>font</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the font</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextChangeWithAlignment:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextChange(alignment:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextChangeWithAlignment:">logEditorTextChange(alignment:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the text alignment is changed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextChange</span><span class="p">(</span><span class="nv">alignment</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasTextAlignment.html">KanvasTextAlignment</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>alignment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the text alignment</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextChangeWithHighlighted:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextChange(highlighted:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextChangeWithHighlighted:">logEditorTextChange(highlighted:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the text highlight is changed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextChange</span><span class="p">(</span><span class="nv">highlighted</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>highlighted</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>whether the text is highlighted</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextChangeWithColor:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTextChange(color:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTextChangeWithColor:">logEditorTextChange(color:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when the text color changes</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTextChange</span><span class="p">(</span><span class="nv">color</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>color</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Always true</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorCreatedMediaWithClipsCount:length:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorCreatedMedia(clipsCount:length:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorCreatedMediaWithClipsCount:length:">logEditorCreatedMedia(clipsCount:<wbr>length:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when media is created from the editor</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorCreatedMedia</span><span class="p">(</span><span class="nv">clipsCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">length</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logOpenFromDashboardWithOpenAction:"></a>
+                    <a name="//apple_ref/swift/Method/logOpenFromDashboard(openAction:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logOpenFromDashboardWithOpenAction:">logOpenFromDashboard(openAction:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when Kanvas is opened from the Dashboard</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logOpenFromDashboard</span><span class="p">(</span><span class="nv">openAction</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasDashboardOpenAction.html">KanvasDashboardOpenAction</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>openAction</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the way Kanvas was opened - either a swipe or a tap</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logDismissFromDashboardWithDismissAction:"></a>
+                    <a name="//apple_ref/swift/Method/logDismissFromDashboard(dismissAction:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logDismissFromDashboardWithDismissAction:">logDismissFromDashboard(dismissAction:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs an event when Kanvas is dismissed from the Dashboard</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logDismissFromDashboard</span><span class="p">(</span><span class="nv">dismissAction</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasDashboardDismissAction.html">KanvasDashboardDismissAction</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dismissAction</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the way Kanvas was dismissed - either a swipe or a tap</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logPostFromDashboard"></a>
+                    <a name="//apple_ref/swift/Method/logPostFromDashboard()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logPostFromDashboard">logPostFromDashboard()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when someone posts from Kanvas</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logPostFromDashboard</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logChangeBlogForPostFromDashboard"></a>
+                    <a name="//apple_ref/swift/Method/logChangeBlogForPostFromDashboard()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logChangeBlogForPostFromDashboard">logChangeBlogForPostFromDashboard()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when someone changes the blog to post to</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logChangeBlogForPostFromDashboard</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logSaveFromDashboard"></a>
+                    <a name="//apple_ref/swift/Method/logSaveFromDashboard()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logSaveFromDashboard">logSaveFromDashboard()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when someone only saves media from Kanvas</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logSaveFromDashboard</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logOpenComposeFromDashboard"></a>
+                    <a name="//apple_ref/swift/Method/logOpenComposeFromDashboard()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logOpenComposeFromDashboard">logOpenComposeFromDashboard()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when someone opens compose from Kanvas</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logOpenComposeFromDashboard</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTagTapped"></a>
+                    <a name="//apple_ref/swift/Method/logEditorTagTapped()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorTagTapped">logEditorTagTapped()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when someone taps the tag button in the Editor</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorTagTapped</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logIconPresentedOnDashboard"></a>
+                    <a name="//apple_ref/swift/Method/logIconPresentedOnDashboard()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logIconPresentedOnDashboard">logIconPresentedOnDashboard()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when the Create icon is presented in the Dashboard header</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logIconPresentedOnDashboard</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorMediaDrawerOpen"></a>
+                    <a name="//apple_ref/swift/Method/logEditorMediaDrawerOpen()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorMediaDrawerOpen">logEditorMediaDrawerOpen()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when the Media Drawer is opened</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorMediaDrawerOpen</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorMediaDrawerClosed"></a>
+                    <a name="//apple_ref/swift/Method/logEditorMediaDrawerClosed()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorMediaDrawerClosed">logEditorMediaDrawerClosed()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when the Media Drawer is closed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorMediaDrawerClosed</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorMediaDrawerSelectStickers"></a>
+                    <a name="//apple_ref/swift/Method/logEditorMediaDrawerSelectStickers()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorMediaDrawerSelectStickers">logEditorMediaDrawerSelectStickers()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when the stickers tab is selected in the Media Drawer</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorMediaDrawerSelectStickers</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorStickerPackSelectWithStickerPackId:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorStickerPackSelect(stickerPackId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorStickerPackSelectWithStickerPackId:">logEditorStickerPackSelect(stickerPackId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when a sticker pack is selected in the Media Drawer</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorStickerPackSelect</span><span class="p">(</span><span class="nv">stickerPackId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>stickerPackId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the ID of the sticker pack that was selected</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorStickerAddWithStickerId:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorStickerAdd(stickerId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorStickerAddWithStickerId:">logEditorStickerAdd(stickerId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when a sticker is added in the canvas</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorStickerAdd</span><span class="p">(</span><span class="nv">stickerId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>stickerId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the ID of the sticker that was added</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorStickerRemoveWithStickerId:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorStickerRemove(stickerId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorStickerRemoveWithStickerId:">logEditorStickerRemove(stickerId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when a sticker is removed from the canvas</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorStickerRemove</span><span class="p">(</span><span class="nv">stickerId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>stickerId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the ID of the sticker that was removed</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorStickerMoveWithStickerId:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorStickerMove(stickerId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorStickerMoveWithStickerId:">logEditorStickerMove(stickerId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when a sticker is moved through the canvas</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorStickerMove</span><span class="p">(</span><span class="nv">stickerId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>stickerId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the ID of the sticker that was moved</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFButtonToggle:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFButtonToggle(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFButtonToggle:">logEditorGIFButtonToggle(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFButtonToggle</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFOpen"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFOpen()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFOpen">logEditorGIFOpen()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFOpen</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFOpenTrim"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFOpenTrim()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFOpenTrim">logEditorGIFOpenTrim()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFOpenTrim</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFOpenSpeed"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFOpenSpeed()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFOpenSpeed">logEditorGIFOpenSpeed()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFOpenSpeed</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFRevert"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFRevert()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFRevert">logEditorGIFRevert()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFRevert</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFConfirmWithDuration:playbackMode:speed:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFConfirm(duration:playbackMode:speed:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFConfirmWithDuration:playbackMode:speed:">logEditorGIFConfirm(duration:<wbr>playbackMode:<wbr>speed:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFConfirm</span><span class="p">(</span><span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">playbackMode</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasGIFPlaybackMode.html">KanvasGIFPlaybackMode</a></span><span class="p">,</span> <span class="nv">speed</span><span class="p">:</span> <span class="kt">Float</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFChangeWithPlaybackMode:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFChange(playbackMode:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFChangeWithPlaybackMode:">logEditorGIFChange(playbackMode:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFChange</span><span class="p">(</span><span class="nv">playbackMode</span><span class="p">:</span> <span class="kt"><a href="../Enums/KanvasGIFPlaybackMode.html">KanvasGIFPlaybackMode</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFChangeWithSpeed:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFChange(speed:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFChangeWithSpeed:">logEditorGIFChange(speed:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFChange</span><span class="p">(</span><span class="nv">speed</span><span class="p">:</span> <span class="kt">Float</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFChangeWithTrimStart:trimEnd:"></a>
+                    <a name="//apple_ref/swift/Method/logEditorGIFChange(trimStart:trimEnd:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logEditorGIFChangeWithTrimStart:trimEnd:">logEditorGIFChange(trimStart:<wbr>trimEnd:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logEditorGIFChange</span><span class="p">(</span><span class="nv">trimStart</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">trimEnd</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logAdvancedOptionsOpenWithPage:"></a>
+                    <a name="//apple_ref/swift/Method/logAdvancedOptionsOpen(page:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KanvasCamera@objc(pl)KanvasCameraAnalyticsProvider(im)logAdvancedOptionsOpenWithPage:">logAdvancedOptionsOpen(page:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs when the &ldquo;next&rdquo; button that opens APO is pressed in the Editor</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logAdvancedOptionsOpen</span><span class="p">(</span><span class="nv">page</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>page</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>page presenting the post options</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2021 <a class="link" href="https://github.com/tumblr/kanvas-ios" target="_blank" rel="external">Tony Cheng and Jimmy Schementi</a>. All rights reserved. (Last updated: 2021-01-04)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
