@@ -111,7 +111,7 @@ final class ModeSelectorAndShootController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if settings.horizontalModeSelector {
+        if KanvasCameraDesign.shared.isBottomPicker {
             if let mode = selectedMode {
                 setMode(mode, from: nil)
             }
@@ -179,12 +179,24 @@ final class ModeSelectorAndShootController: UIViewController {
     
     /// shows the tooltip below the mode selector
     func showTooltip() {
-        modeView.showTooltip()
+        if settings.features.modeSelectorTooltip {
+            modeView.showModeSelectorTooltip()
+        }
+        
+        if settings.features.shutterButtonTooltip {
+            modeView.showShutterButtonTooltip()
+        }
     }
     
     /// dismisses the tooltip below the mode selector
     func dismissTooltip() {
-        modeView.dismissTooltip()
+        if settings.features.modeSelectorTooltip {
+            modeView.dismissModeSelectorTooltip()
+        }
+        
+        if settings.features.shutterButtonTooltip {
+            modeView.dismissShutterButtonTooltip()
+        }
     }
     
     /// shows the inner circle used for the press effect
@@ -273,7 +285,7 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     }
 
     func setMode(_ newMode: CameraMode, from oldMode: CameraMode?) {
-        if settings.horizontalModeSelector {
+        if KanvasCameraDesign.shared.isBottomPicker {
             modeSelector.select(option: newMode, animated: false)
         }
         
@@ -284,7 +296,7 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     // MARK: - ShootButtonViewDelegate
     
     func shootButtonViewDidTap() {
-        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        let modeMaybe = KanvasCameraDesign.shared.isBottomPicker ? selectedMode : currentMode
         if let mode = modeMaybe {
             dismissTooltip()
             delegate?.didTapForMode(mode)
@@ -292,7 +304,7 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     }
 
     func shootButtonViewDidStartLongPress() {
-        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        let modeMaybe = KanvasCameraDesign.shared.isBottomPicker ? selectedMode : currentMode
         if let mode = modeMaybe {
             dismissTooltip()
             delegate?.didStartPressingForMode(mode)
@@ -300,28 +312,28 @@ extension ModeSelectorAndShootController: ModeSelectorAndShootViewDelegate {
     }
 
     func shootButtonViewDidEndLongPress() {
-        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        let modeMaybe = KanvasCameraDesign.shared.isBottomPicker ? selectedMode : currentMode
         if let mode = modeMaybe {
             delegate?.didEndPressingForMode(mode)
         }
     }
 
     func shootButtonReachedMaximumTime() {
-        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        let modeMaybe = KanvasCameraDesign.shared.isBottomPicker ? selectedMode : currentMode
         if let mode = modeMaybe {
             delegate?.didEndPressingForMode(mode)
         }
     }
     
     func shootButtonDidReceiveDropInteraction() {
-        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        let modeMaybe = KanvasCameraDesign.shared.isBottomPicker ? selectedMode : currentMode
         if let mode = modeMaybe {
             delegate?.didDropToDelete(mode)
         }
     }
     
     func shootButtonDidZoom(currentPoint: CGPoint, gesture: UILongPressGestureRecognizer) {
-        let modeMaybe = settings.horizontalModeSelector ? selectedMode : currentMode
+        let modeMaybe = KanvasCameraDesign.shared.isBottomPicker ? selectedMode : currentMode
         if let mode = modeMaybe {
             delegate?.didPanForZoom(mode, currentPoint, gesture)
         }

@@ -93,3 +93,9 @@
 
 /* Label for the drawing option in the editor tools */
 "EditorDrawing" = "Drawing";
+
+/* Label for the 'More' option in the editor tools */
+"EditorMore" = "More";
+
+/* Label for the 'Close' option in the editor tools */
+"EditorClose" = "Close";

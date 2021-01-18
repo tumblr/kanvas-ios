@@ -86,10 +86,22 @@ final class OptionsStackView<Item>: IgnoreTouchesView {
         let newStack = ExtendedStackView(inset: OptionsStackViewConstants.inset)
         stackView = newStack
         setUpStackView(newOptions)
-        UIView.animate(withDuration: OptionsStackViewConstants.optionsChangeAnimationDuration, animations: {
+        let animation: () -> Void = {
             self.addStackView(newStack)
             oldStack.alpha = 0
-        }, completion: { _ in oldStack.removeFromSuperview() })
+        }
+        
+        let completion: (Bool) -> Void = { _ in
+            oldStack.removeFromSuperview()
+        }
+        
+        if KanvasCameraDesign.shared.isBottomPicker {
+            animation()
+            completion(true)
+        }
+        else {
+            UIView.animate(withDuration: OptionsStackViewConstants.optionsChangeAnimationDuration, animations: animation, completion: completion)
+        }
     }
 
     // MARK: - private functions
@@ -127,7 +139,8 @@ final class OptionsStackView<Item>: IgnoreTouchesView {
 
     private func addOptions(_ options: [Option<Item>]) {
         options.enumerated().forEach { (index, option) in
-            let optionView = OptionView(image: option.image, inset: OptionsStackViewConstants.inset)
+            let optionView = OptionView(image: option.image, inset: OptionsStackViewConstants.inset,
+                                        backgroundColor: option.backgroundColor)
             optionView.button.tag = index
             optionView.accessibilityIdentifier = "Options Option View #\(index + 1)"
             optionView.button.addTarget(self, action: #selector(optionTapped(_:)), for: .touchUpInside)

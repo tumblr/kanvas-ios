@@ -148,7 +148,7 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         circleView.clipsToBounds = true
         circleView.layer.masksToBounds = true
         circleView.layer.cornerRadius = dimensions.circleDiameter / 2
-        circleView.layer.borderWidth = 3 * (dimensions.circleDiameter/dimensions.circleMaxDiameter)
+        circleView.layer.borderWidth = KanvasCameraDesign.shared.filterCollectionInnerCellBorderWidth * (dimensions.circleDiameter/dimensions.circleMaxDiameter)
         circleView.layer.borderColor = UIColor.white.cgColor
     }
     

@@ -18,13 +18,23 @@ final class OptionView: UIView {
     /// - Parameters:
     ///   - image: image to describe the option
     ///   - inset: use a negative value to "outset"
-    init(image: UIImage?, inset: CGFloat = 0) {
+    ///   - backgroundColor: the background color for the option
+    init(image: UIImage?, inset: CGFloat = 0, backgroundColor: UIColor) {
         self.inset = inset
         button = ExtendedButton(inset: inset)
-        button.contentMode = .scaleAspectFit
         button.setImage(image, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
+        
+        if KanvasCameraDesign.shared.isBottomPicker {
+            button.layer.cornerRadius = CameraConstants.optionButtonSize / 2
+            button.layer.masksToBounds = true
+            button.backgroundColor = backgroundColor
+        }
+        else {
+            button.contentMode = .scaleAspectFit
+            button.imageView?.contentMode = .scaleAspectFit
+            button.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
+        }
+        
         super.init(frame: .zero)
         setUpButton()
     }

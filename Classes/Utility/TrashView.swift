@@ -10,12 +10,15 @@ import UIKit
 /// Constants for trash view
 private struct Constants {
     static let animationDuration: TimeInterval = 0.5
-    static let size: CGFloat = 98
-    static let borderImageSize: CGFloat = 90
-    static let closedIconSize: CGFloat = 33
-    static let openedIconSize: CGFloat = 38
-    static let borderWidth: CGFloat = 3.0
-    static let openedIconCenterYOffset: CGFloat = 2.5
+    static let size: CGFloat = KanvasCameraDesign.shared.trashViewSize
+    static let borderImageSize: CGFloat = KanvasCameraDesign.shared.trashViewBorderImageSize
+    static let closedIconHeight: CGFloat = KanvasCameraDesign.shared.trashViewClosedIconHeight
+    static let closedIconWidth: CGFloat = KanvasCameraDesign.shared.trashViewClosedIconWidth
+    static let openedIconHeight: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconHeight
+    static let openedIconWidth: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconWidth
+    static let openedIconCenterYOffset: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconCenterYOffset
+    static let openedIconCenterXOffset: CGFloat = KanvasCameraDesign.shared.trashViewOpenedIconCenterXOffset
+    static let borderWidth: CGFloat = KanvasCameraDesign.shared.trashViewBorderWidth
 }
 
 /// View that shows an open or closed trash bin with a red circle as background
@@ -25,14 +28,16 @@ final class TrashView: IgnoreTouchesView {
     
     private let borderCircle: UIImageView
     private let backgroundCircle: UIImageView
+    private let translucentBackgroundCircle: UIImageView
     private let openedTrash: UIImageView
     private let closedTrash: UIImageView
     
     init() {
-        borderCircle = UIImageView()
-        backgroundCircle = UIImageView()
-        openedTrash = UIImageView()
-        closedTrash = UIImageView()
+        self.borderCircle = UIImageView()
+        self.backgroundCircle = UIImageView()
+        self.translucentBackgroundCircle = UIImageView()
+        self.openedTrash = UIImageView()
+        self.closedTrash = UIImageView()
         super.init(frame: .zero)
         
         setUpViews()
@@ -45,10 +50,33 @@ final class TrashView: IgnoreTouchesView {
     // MARK: - Layout
     
     private func setUpViews() {
+        setUpTranslucentBackgroundCircle()
         setUpBorderCircle()
         setUpBackgroundCircle()
         setUpTrashOpened()
         setUpTrashClosed()
+    }
+    
+    /// Sets up the red translucent circle on the background
+    private func setUpTranslucentBackgroundCircle() {
+        addSubview(translucentBackgroundCircle)
+        translucentBackgroundCircle.accessibilityIdentifier = "Trash Translucent Background Circle"
+        translucentBackgroundCircle.translatesAutoresizingMaskIntoConstraints = false
+        translucentBackgroundCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
+        translucentBackgroundCircle.tintColor = KanvasCameraColors.shared.trashColor.withAlphaComponent(0.4)
+        
+        translucentBackgroundCircle.contentMode = .scaleAspectFit
+        translucentBackgroundCircle.clipsToBounds = true
+
+        
+        NSLayoutConstraint.activate([
+            translucentBackgroundCircle.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor),
+            translucentBackgroundCircle.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor),
+            translucentBackgroundCircle.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
+            translucentBackgroundCircle.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor)
+        ])
+        
+        translucentBackgroundCircle.alpha = 0
     }
     
     /// Sets up the white border of the circle
@@ -103,13 +131,18 @@ final class TrashView: IgnoreTouchesView {
         openedTrash.translatesAutoresizingMaskIntoConstraints = false
         openedTrash.contentMode = .scaleAspectFit
         openedTrash.clipsToBounds = true
-        openedTrash.image = KanvasCameraImages.trashOpened
+        openedTrash.image = KanvasCameraDesign.shared.trashViewOpenedImage
+        
+        let yOffset = KanvasCameraDesign.shared.trashViewOpenedIconCenterYOffset
+        let xOffset = KanvasCameraDesign.shared.trashViewOpenedIconCenterXOffset
+        let height = KanvasCameraDesign.shared.trashViewOpenedIconHeight
+        let width = KanvasCameraDesign.shared.trashViewOpenedIconWidth
         
         NSLayoutConstraint.activate([
-            openedTrash.heightAnchor.constraint(equalToConstant: Constants.openedIconSize),
-            openedTrash.widthAnchor.constraint(equalToConstant: Constants.openedIconSize),
-            openedTrash.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
-            openedTrash.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor, constant: -Constants.openedIconCenterYOffset)
+            openedTrash.heightAnchor.constraint(equalToConstant: height),
+            openedTrash.widthAnchor.constraint(equalToConstant: width),
+            openedTrash.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor, constant: -xOffset),
+            openedTrash.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor, constant: -yOffset)
         ])
         
         openedTrash.alpha = 0
@@ -122,11 +155,14 @@ final class TrashView: IgnoreTouchesView {
         closedTrash.translatesAutoresizingMaskIntoConstraints = false
         closedTrash.contentMode = .scaleAspectFit
         closedTrash.clipsToBounds = true
-        closedTrash.image = KanvasCameraImages.trashClosed
+        closedTrash.image = KanvasCameraDesign.shared.trashViewClosedImage
+        
+        let height = KanvasCameraDesign.shared.trashViewClosedIconHeight
+        let width = KanvasCameraDesign.shared.trashViewClosedIconWidth
         
         NSLayoutConstraint.activate([
-            closedTrash.heightAnchor.constraint(equalToConstant: Constants.closedIconSize),
-            closedTrash.widthAnchor.constraint(equalToConstant: Constants.closedIconSize),
+            closedTrash.heightAnchor.constraint(equalToConstant: height),
+            closedTrash.widthAnchor.constraint(equalToConstant: width),
             closedTrash.centerXAnchor.constraint(equalTo: safeLayoutGuide.centerXAnchor),
             closedTrash.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor)
         ])
@@ -142,6 +178,7 @@ final class TrashView: IgnoreTouchesView {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.borderCircle.alpha = 0
             self.backgroundCircle.alpha = 1
+            self.translucentBackgroundCircle.alpha = 0
             self.openedTrash.alpha = 1
             self.closedTrash.alpha = 0
         }
@@ -152,6 +189,7 @@ final class TrashView: IgnoreTouchesView {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.borderCircle.alpha = 1
             self.backgroundCircle.alpha = 0
+            self.translucentBackgroundCircle.alpha = KanvasCameraDesign.shared.isBottomPicker ? 1 : 0
             self.openedTrash.alpha = 0
             self.closedTrash.alpha = 1
         }
@@ -162,6 +200,7 @@ final class TrashView: IgnoreTouchesView {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.borderCircle.alpha = 0
             self.backgroundCircle.alpha = 0
+            self.translucentBackgroundCircle.alpha = 0
             self.openedTrash.alpha = 0
             self.closedTrash.alpha = 0
         }

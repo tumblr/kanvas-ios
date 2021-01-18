@@ -15,6 +15,7 @@ private let brightYellow = UIColor.systemYellow
 private let brightGreen = UIColor.systemGreen
 private let brightRed = UIColor.systemRed
 private let brightOrange = UIColor.systemOrange
+private let deepBlue = UIColor.systemBlue
 private let white = UIColor.white
 
 private let white65 = UIColor(white: 1, alpha: 0.65)
@@ -73,6 +74,8 @@ public struct KanvasCameraColors {
             trashColor: brightRed,
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
+            primaryButtonBackgroundColor: brightBlue,
+            overlayColor: deepBlue,
             filterColors: [
                 .manga: brightPink,
                 .toon: brightOrange,
@@ -105,6 +108,8 @@ public struct KanvasCameraColors {
         trashColor: UIColor,
         tooltipBackgroundColor: UIColor,
         closeButtonColor: UIColor,
+        primaryButtonBackgroundColor: UIColor,
+        overlayColor: UIColor,
         filterColors: [FilterType: UIColor]) {
         self.drawingDefaultColor = drawingDefaultColor
         self.colorPickerColors = colorPickerColors
@@ -118,6 +123,8 @@ public struct KanvasCameraColors {
         self.trashColor = trashColor
         self.tooltipBackgroundColor = tooltipBackgroundColor
         self.closeButtonColor = closeButtonColor
+        self.primaryButtonBackgroundColor = primaryButtonBackgroundColor
+        self.overlayColor = overlayColor
         self.filterColors = filterColors
     }
     
@@ -135,6 +142,10 @@ public struct KanvasCameraColors {
     let tooltipBackgroundColor: UIColor // ColorPickerController:29
     
     let closeButtonColor: UIColor // MediaDrawerView:130
+    
+    let primaryButtonBackgroundColor: UIColor
+    
+    let overlayColor: UIColor // EditorView:102
     
     let filterColors: [FilterType: UIColor] // FilterCollectionInnerCell:82
 }

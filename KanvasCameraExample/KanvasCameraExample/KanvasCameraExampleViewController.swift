@@ -144,10 +144,10 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorPostOptions = false
         settings.features.newCameraModes = true
         settings.features.gifs = true
+        settings.features.modeSelectorTooltip = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
-        settings.editToolsRedesign = true
         return settings
     }
 
@@ -269,11 +269,10 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
+            .modeSelectorTooltip(settings.features.modeSelectorTooltip),
+            .shutterButtonTooltip(settings.features.shutterButtonTooltip),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
-            .editToolsRedesign(settings.editToolsRedesign),
-            .shutterButtonTooltip(settings.shutterButtonTooltip),
-            .horizontalModeSelector(settings.horizontalModeSelector),
         ]
     }
 
@@ -317,18 +316,16 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         case .editorPostOptions(_):
             settings.features.editorPostOptions = value
+        case .modeSelectorTooltip(_):
+            settings.features.modeSelectorTooltip = value
+        case .shutterButtonTooltip(_):
+            settings.features.shutterButtonTooltip = value
         case .gifs(_):
             settings.features.gifs = value
         case .editorShouldStartGIFMaker(_):
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
-        case .editToolsRedesign(_):
-            settings.editToolsRedesign = value
-        case .shutterButtonTooltip(_):
-            settings.shutterButtonTooltip = value
-        case .horizontalModeSelector(_):
-            settings.horizontalModeSelector = value
         }
     }
 }
@@ -351,7 +348,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         // Only supported in Orangina
     }
     
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    func getQuickPostButton() -> UIView {
         // Only supported in Orangina
         return UIView()
     }

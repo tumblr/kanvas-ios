@@ -10,7 +10,7 @@ import KanvasCamera
 /// Contains custom colors and fonts for the KanvasCamera framework
 public class KanvasCameraCustomUI {
     
-   public static let shared = KanvasCameraCustomUI()
+    public static let shared = KanvasCameraCustomUI()
             
     private static let brightBlue = UIColor.tumblrBrightBlue
     private static let brightPurple = UIColor.tumblrBrightPurple
@@ -19,6 +19,7 @@ public class KanvasCameraCustomUI {
     private static let brightGreen = UIColor.tumblrBrightGreen
     private static let brightRed = UIColor.tumblrBrightRed
     private static let brightOrange = UIColor.tumblrBrightOrange
+    private static let deepBlue = UIColor.tumblrDeepBlue
     private static let white = UIColor.tumblrWhite
     
     private let pickerColors = [brightBlue,
@@ -74,6 +75,8 @@ public class KanvasCameraCustomUI {
             trashColor: Self.brightRed,
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
+            primaryButtonBackgroundColor: Self.brightBlue,
+            overlayColor: Self.deepBlue,
             filterColors: [
                 .manga: mangaColor,
                 .toon: toonColor,
@@ -105,6 +108,7 @@ public class KanvasCameraCustomUI {
                                  editorFonts: [.fairwater(fontSize: 48), UIFont.favoritTumblr85(fontSize: 48)],
                                  optionSelectorCellFont: .guavaMedium(),
                                  mediaClipsFont: UIFont.favoritTumblrMedium(fontSize: 9.5),
+                                 mediaClipsSmallFont: UIFont.favoritTumblrMedium(fontSize: 8.5),
                                  modeButtonFont: UIFont.favoritTumblr85(fontSize: 18.5),
                                  speedLabelFont: Self.guavaMedium,
                                  timeIndicatorFont: Self.guavaMedium,

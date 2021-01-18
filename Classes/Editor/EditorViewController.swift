@@ -44,9 +44,8 @@ public protocol EditorControllerDelegate: class {
     
     /// Obtains the quick post button.
     ///
-    /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
-    func getQuickPostButton(enableLongPress: Bool) -> UIView
+    func getQuickPostButton() -> UIView
     
     /// Obtains the blog switcher.
     ///
@@ -78,9 +77,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showTagButton: settings.showTagButtonInEditor,
                                     showTagCollection: settings.showTagCollectionInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
-                                    enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
-                                    editToolsRedesign: settings.editToolsRedesign,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
                                     tagCollection: tagCollection,
                                     metalContext: settings.features.metalPreview ? metalContext : nil)
@@ -92,8 +89,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
         let controller: KanvasEditorMenuController
         
-        if settings.editToolsRedesign {
-            controller = StyleMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            controller = StyleMenuController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
         }
         else {
             controller = EditionMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
@@ -411,13 +408,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else {
+            editorView.showQuickPostButton(false)
             gifMakerController.showConfirmButton(true)
         }
         analyticsProvider?.logEditorGIFOpen()
     }
 
     private func revertGIF() {
-        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
         gifMakerController.showView(false)
         gifMakerController.showConfirmButton(false)
         gifMakerHandler.revert { reverted in
@@ -597,11 +595,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didBeginTouchesOnText() {
-        showNavigationContainer(false)
+        editorView.showNavigationItems(false)
     }
     
     func didEndTouchesOnText() {
-        showNavigationContainer(true)
+        editorView.showNavigationItems(true)
     }
 
     func didRenderRectChange(rect: CGRect) {
@@ -613,9 +611,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         delegate?.dismissButtonPressed()
     }
     
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    func getQuickPostButton() -> UIView {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton(enableLongPress: enableLongPress)
+        return delegate.getQuickPostButton()
     }
     
     func getBlogSwitcher() -> UIView {
@@ -797,7 +795,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             if settings.features.editorGIFMaker {
                 shouldExportMediaAsGIF = gifMakerHandler.shouldExport
-                editorView.animateReturnOfEditionOption(cell: selectedCell)
+                editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
@@ -809,14 +807,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         case .filter:
             filterController.showView(false)
+            editorView.showQuickPostButton(true)
             showMainUI(true)
         case .text:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: textController.confirmButtonLocation)
             textController.showView(false)
             textController.showConfirmButton(false)
             showMainUI(true)
         case .drawing:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: drawingController.confirmButtonLocation)
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
             showMainUI(true)
@@ -849,6 +848,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         case .filter:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
+            editorView.showQuickPostButton(false)
             showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
@@ -1088,46 +1088,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameter show: true to show, false to hide
     private func showMainUI(_ show: Bool) {
         collectionController.showView(show)
-        showConfirmButton(show)
-        showCloseButton(show)
-        showTagButton(show)
-        showTagCollection(show)
-    }
-    
-    // MARK: - Public interface
-    
-    /// shows or hides the confirm button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showConfirmButton(_ show: Bool) {
         editorView.showConfirmButton(show)
-    }
-    
-    /// shows or hides the close button (back caret)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
-    }
-
-    /// shows or hides the tag button (#)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTagButton(_ show: Bool) {
         editorView.showTagButton(show)
-    }
-    
-    /// shows or hides the tag collection
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTagCollection(_ show: Bool) {
         editorView.showTagCollection(show)
-    }
-    
-    /// shows or hides the editor menu and the back button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showNavigationContainer(_ show: Bool) {
-        editorView.showNavigationContainer(show)
+        editorView.showBlogSwitcher(show)
     }
 }
