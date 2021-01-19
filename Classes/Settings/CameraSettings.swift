@@ -239,6 +239,8 @@ public struct CameraFeatures {
     /// MARK: - Camera features
     public var features = DefaultCameraSettings.features
 
+    public var mediaImportSizeLimit: Double? = DefaultCameraSettings.mediaImportSizeLimit
+
     /// Buttons Swapped on the Camera View
     /// This changes the position between the close icon and the rotate, flash, and ghost icons
     public var topButtonsSwapped = DefaultCameraSettings.topButtonsSwapped
@@ -334,6 +336,7 @@ private struct DefaultCameraSettings {
     static let defaultImagePreviewOption: ImagePreviewMode = .off
     static let landscapeIsSupported: Bool = false
     static let exportStopMotionPhotoAsVideo: Bool = false
+    static let mediaImportSizeLimit: Double? = 100000000 // 100MB
     static let features = CameraFeatures()
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false

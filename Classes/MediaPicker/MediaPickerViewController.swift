@@ -171,13 +171,15 @@ private extension KanvasMediaPickerViewController {
     }
 
     private func canPick(image: UIImage) -> Bool {
-        // image pixels must be less than 100MB
+        guard let sizeLimit = settings.mediaImportSizeLimit else {
+            return true
+        }
         guard let cgImage = image.cgImage else {
             return false
         }
         let bytesPerFrame = cgImage.bytesPerRow * cgImage.height
         let frameCount = image.images?.count ?? 1
-        return Double(bytesPerFrame * frameCount) < 100000000.0
+        return Double(bytesPerFrame * frameCount) < sizeLimit
     }
 
     private func cannotPick(reason: String) {
