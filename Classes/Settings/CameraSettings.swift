@@ -154,6 +154,11 @@ public struct CameraFeatures {
     /// Shutter button tooltip
     /// This enables a tooltip to appear above the shutter button when the camera launches for the first time.
     public var shutterButtonTooltip: Bool = false
+
+
+    /// Multi-Export support
+    /// This enables multiple images/videos to be taken, edited, and then exported
+    public var multipleExports = false
 }
 
 // A class that defines the settings for the Kanvas Camera

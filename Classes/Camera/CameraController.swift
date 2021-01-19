@@ -282,7 +282,10 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             cameraView.addFiltersView(filterSettingsController.view)
         }
         cameraView.addModeView(modeAndShootController.view)
-        cameraView.addClipsView(clipsController.view)
+        
+        if settings.features.multipleExports == false {
+            cameraView.addClipsView(clipsController.view)
+        }
 
         addChild(cameraInputController)
         cameraView.addCameraInputView(cameraInputController.view)
@@ -316,7 +319,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     private func createNextStepViewController(_ segments: [CameraSegment]) -> MediaPlayerController {
         let controller: MediaPlayerController
-        if settings.features.editor {
+        if settings.features.multipleExports {
+            //TODO: Add multi-editor UI
+            controller = createEditorViewController(segments)
+        }
+        else if settings.features.editor {
             controller = createEditorViewController(segments)
         }
         else {

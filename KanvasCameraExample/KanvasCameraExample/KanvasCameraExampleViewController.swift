@@ -148,6 +148,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
+        settings.features.multipleExports = false
         return settings
     }
 
@@ -273,6 +274,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .shutterButtonTooltip(settings.features.shutterButtonTooltip),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
+            .multipleExport(settings.features.multipleExports),
         ]
     }
 
@@ -326,6 +328,8 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
+        case .multipleExport(_):
+            settings.features.multipleExports = value
         }
     }
 }
