@@ -24,7 +24,7 @@ enum MediaExporterError: Error {
 protocol MediaExporting: class {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
-    init(settings: CameraSettings)
+    init(context: RenderingContext)
     func export(image: UIImage, time: TimeInterval, completion: @escaping (UIImage?, Error?) -> Void)
     func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
     func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void)
@@ -53,11 +53,11 @@ final class MediaExporter: MediaExporting {
         // so there needs to be some refactoring to make this work well.
         return true
     }
-    
-    private let settings: CameraSettings
-    
-    init(settings: CameraSettings) {
-        self.settings = settings
+
+    private let context: RenderingContext
+
+    init(context: RenderingContext) {
+        self.context = context
     }
 
     /// Exports an image
@@ -76,7 +76,7 @@ final class MediaExporter: MediaExporting {
             completion(nil, MediaExporterError.noSampleBuffer)
             return
         }
-        let renderer = Renderer(settings: settings, metalContext: MetalContext.createContext())
+        let renderer = Renderer(context: context)
         renderer.imageOverlays = imageOverlays
         renderer.filterType = filterType
         renderer.refreshFilter()
@@ -146,6 +146,7 @@ final class MediaExporter: MediaExporting {
             completion(nil, MediaExporterError.noCompositor)
             return
         }
+        videoCompositor.renderer.context = context
         videoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
         videoCompositor.renderer.mediaTransform = track.glPreferredTransform
         videoCompositor.imageOverlays = imageOverlays

@@ -8,8 +8,24 @@ import Foundation
 import CoreMedia
 import GLKit
 
+enum RenderingContext {
+    case metal(MetalContext?)
+    case openGL(EAGLContext?)
+
+    var platform: FilterPlatform {
+        switch self {
+        case .metal:
+            return .metal
+        case .openGL:
+            return .openGL
+        }
+    }
+}
+
 protocol Rendering: class {
+
     var delegate: RendererDelegate? { get set }
+    var context: RenderingContext! { get set }
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     var mediaTransform: GLKMatrix4? { get set }

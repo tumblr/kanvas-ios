@@ -27,7 +27,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
         return context
     }()
     private lazy var renderer: Renderer = {
-        let renderer = Renderer(settings: settings, metalContext: metalContext)
+        let renderer = Renderer(context: .metal(metalContext))
         renderer.delegate = self
         return renderer
     }()

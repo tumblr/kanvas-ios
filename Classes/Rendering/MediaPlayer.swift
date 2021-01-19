@@ -213,8 +213,8 @@ final class MediaPlayer {
 
     /// Default initializer
     /// - Parameter renderer: Rendering instance for this player to use.
-    init(renderer: Rendering?) {
-        self.renderer = renderer ?? Renderer()
+    init(renderer: Rendering) {
+        self.renderer = renderer
         self.renderer.delegate = self
     }
 

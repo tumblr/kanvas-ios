@@ -31,17 +31,35 @@ protocol RendererDelegate: class {
     func rendererRanOutOfBuffers()
 }
 
-/// Renders pixel buffers with open gl
+/// Renders pixel buffers with open gl or metal
 final class Renderer: Rendering {
 
     /// Optional delegate
     weak var delegate: RendererDelegate?
 
     /// OpenGL Context
-    let glContext: EAGLContext?
+    var glContext: EAGLContext? {
+        switch context {
+        case .openGL(let context):
+            return context
+        case .metal:
+            return nil
+        case .none:
+            return nil
+        }
+    }
 
     /// Metal Context
-    let metalContext: MetalContext?
+    var metalContext: MetalContext? {
+        switch context {
+        case .metal(let context):
+            return context
+        case .openGL:
+            return nil
+        case .none:
+            return nil
+        }
+    }
 
     /// Image overlays
     var imageOverlays: [CGImage] = []
@@ -61,26 +79,46 @@ final class Renderer: Rendering {
         }
     }
 
-    private let settings: CameraSettings?
     private let callbackQueue: DispatchQueue = DispatchQueue.main
-    private var filter: FilterProtocol
-    private let filterFactory: FilterFactory
+    private var filter: FilterProtocol!
+    private var filterFactory: FilterFactory!
     private var processingImage = false
     private var filteredPixelBuffer: CVPixelBuffer?
 
+    var context: RenderingContext! {
+        didSet {
+            let filterFactory = FilterFactory(glContext: glContext,
+                                              metalContext: metalContext,
+                                              filterPlatform: context.platform)
+            filter = filterFactory.createFilter(type: self.filterType)
+            self.filterFactory = filterFactory
+        }
+    }
+
     /// Designated initializer
     ///
-    /// - Parameter delegate: the callback
-    init(settings: CameraSettings?=nil, metalContext: MetalContext?=nil) {
-        glContext = EAGLContext(api: .openGLES3)
-        self.settings = settings
-        self.metalContext = metalContext
-        let filterFactory = FilterFactory(glContext: glContext,
-                                          metalContext: metalContext,
-                                          filterPlatform: settings?.features.metalFilters == true ? .metal : .openGL)
-        filter = filterFactory.createFilter(type: self.filterType)
-        self.filterFactory = filterFactory
-        switchInputDimensions = false
+    /// - Parameter context: The `RenderingContext` to use for rendering content. If this propery is `nil`, you should set it later on the `context` property to ensure that the metal or openGL contexts are available.
+    init(context: RenderingContext?) {
+        self.switchInputDimensions = false
+        self.context = context
+
+        if let context = context {
+            let metalContext: MetalContext?
+            let glContext: EAGLContext?
+            switch context {
+            case .metal(let context):
+                metalContext = context
+                glContext = nil
+            case .openGL(let context):
+                glContext = context
+                metalContext = nil
+            }
+            let filterFactory = FilterFactory(glContext: glContext,
+                                              metalContext: metalContext,
+                                              filterPlatform: context.platform)
+            filter = filterFactory.createFilter(type: self.filterType)
+            self.filterFactory = filterFactory
+        }
     }
 
     /// Processes a sample buffer, but swallows the completion

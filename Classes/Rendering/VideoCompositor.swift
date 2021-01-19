@@ -80,7 +80,7 @@ final class VideoCompositor: NSObject, AVVideoCompositing {
         self.init(
             renderingQueue: DispatchQueue(label: "kanvas.videocompositor.renderingqueue"),
             renderContextQueue: DispatchQueue(label: "kanvas.videocompositor.rendercontextqueue"),
-            renderer: Renderer()
+            renderer: Renderer(context: nil)
         )
     }
 

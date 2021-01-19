@@ -59,31 +59,6 @@ private struct Constants {
 
 /// A view controller to edit the segments
 public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
-
-    private lazy var editorView: EditorView = {
-        var mainActionMode: EditorView.MainActionMode = .confirm
-        if settings.features.editorPostOptions {
-            mainActionMode = .postOptions
-        }
-        else if settings.features.editorPosting {
-            mainActionMode = .post
-        }
-
-        let editorView = EditorView(delegate: self,
-                                    mainActionMode: mainActionMode,
-                                    showSaveButton: settings.features.editorSaving,
-                                    showCrossIcon: settings.crossIconInEditor,
-                                    showCogIcon: settings.showCogIconInEditor,
-                                    showTagButton: settings.showTagButtonInEditor,
-                                    showTagCollection: settings.showTagCollectionInEditor,
-                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
-                                    showBlogSwitcher: settings.showBlogSwitcherInEditor,
-                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
-                                    tagCollection: tagCollection,
-                                    metalContext: settings.features.metalPreview ? metalContext : nil)
-        player.playerView = editorView.playerView
-        return editorView
-    }()
     
     private lazy var collectionController: KanvasEditorMenuController = {
         let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
@@ -153,7 +128,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
     private var selectedCell: KanvasEditorMenuCollectionCell?
-    private let metalContext = MetalContext.createContext()
+    private let renderingContext: RenderingContext
 
     private var shouldExportMediaAsGIF: Bool {
         get {
@@ -164,9 +139,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private lazy var player: MediaPlayer = {
-        return MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
-    }()
+    private var player: MediaPlayer
+    private var editorView: EditorView
     
     private var filterType: FilterType? {
         didSet {
@@ -195,6 +169,35 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
+
+    private static func editor(delegate: EditorViewDelegate?,
+                               settings: CameraSettings,
+                               quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+                               tagCollection: UIView?,
+                               metalContext: MetalContext?) -> EditorView {
+        var mainActionMode: EditorView.MainActionMode = .confirm
+        if settings.features.editorPostOptions {
+            mainActionMode = .postOptions
+        }
+        else if settings.features.editorPosting {
+            mainActionMode = .post
+        }
+
+        let editorView: EditorView = EditorView(delegate: delegate,
+                                    mainActionMode: mainActionMode,
+                                    showSaveButton: settings.features.editorSaving,
+                                    showCrossIcon: settings.crossIconInEditor,
+                                    showCogIcon: settings.showCogIconInEditor,
+                                    showTagButton: settings.showTagButtonInEditor,
+                                    showTagCollection: settings.showTagCollectionInEditor,
+                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
+                                    showBlogSwitcher: settings.showBlogSwitcherInEditor,
+                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                    tagCollection: tagCollection,
+                                    metalContext: metalContext)
+        return editorView
+    }
+
     
     public static func createEditor(for image: UIImage,
                                     settings: CameraSettings,
@@ -287,6 +290,23 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
 
+        let metalContext: MetalContext?
+        if settings.features.metalPreview || settings.features.metalFilters {
+            metalContext = MetalContext.createContext()
+        } else {
+            metalContext = nil
+        }
+
+        let previewContext = settings.features.metalPreview ? metalContext : nil
+
+        self.renderingContext = settings.features.metalFilters ? RenderingContext.metal(metalContext) : RenderingContext.openGL(EAGLContext(api: .openGLES3))
+
+        self.player = MediaPlayer(renderer: Renderer(context: renderingContext))
+        self.editorView = EditorViewController.editor(delegate: nil,
+                                                      settings: settings,
+                                                      quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                                      tagCollection: tagCollection,
+                                                      metalContext: previewContext)
         super.init(nibName: .none, bundle: .none)
         
         self.player.delegate = self
@@ -676,7 +696,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init(settings: settings)
+        let exporter = exporterClass.init(context: renderingContext)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
@@ -697,7 +717,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init(settings: settings)
+        let exporter = exporterClass.init(context: renderingContext)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
@@ -727,7 +747,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init(settings: settings)
+        let exporter = exporterClass.init(context: renderingContext)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
@@ -744,7 +764,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init(settings: settings)
+        let exporter = exporterClass.init(context: renderingContext)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
