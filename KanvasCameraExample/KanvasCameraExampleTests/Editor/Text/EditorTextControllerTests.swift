@@ -19,7 +19,8 @@ final class EditorTextControllerTests: FBSnapshotTestCase {
     }
     
     func newViewController() -> EditorTextController {
-        let controller = EditorTextController()
+        let editorSettings = EditorTextController.Settings(textViewSettings: EditorTextView.Settings(fontSelectorUsesFont: false))
+        let controller = EditorTextController(settings: editorSettings)
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         controller.view.setNeedsDisplay()
         return controller

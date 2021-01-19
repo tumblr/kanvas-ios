@@ -20,7 +20,8 @@ final class EditorTextViewTests: FBSnapshotTestCase {
     }
     
     func newView() -> EditorTextView {
-        let view = EditorTextView()
+        let textViewSettings = EditorTextView.Settings(fontSelectorUsesFont: false)
+        let view = EditorTextView(settings: textViewSettings)
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return view
     }
