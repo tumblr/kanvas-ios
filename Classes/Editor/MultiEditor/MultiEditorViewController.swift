@@ -326,6 +326,15 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 }
 
 extension MultiEditorViewController: EditorControllerDelegate {
+
+    func getBlogSwitcher() -> UIView {
+        return UIView()
+    }
+
+    func getQuickPostButton() -> UIView {
+        return UIView()
+    }
+
     func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
     }
     

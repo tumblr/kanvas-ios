@@ -42,6 +42,15 @@ public protocol EditorControllerDelegate: class {
     /// Called when the tag button is pressed
     func tagButtonPressed()
     
+    /// Obtains the quick post button.
+    ///
+    /// - Returns: the quick post button.
+    func getQuickPostButton() -> UIView
+    
+    /// Obtains the blog switcher.
+    ///
+    /// - Returns: the blog switcher.
+    func getBlogSwitcher() -> UIView
     /// Called when the Post Button is pressed to indicate whether export should occur
     /// The return value indicates whether the export should be run
     /// This is partly temporary, I think the export functionality should be passed into this controller to decouple things
@@ -69,8 +78,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
         let controller: KanvasEditorMenuController
         
-        if settings.editToolsRedesign {
-            controller = StyleMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            controller = StyleMenuController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
         }
         else {
             controller = EditionMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
@@ -208,9 +217,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showTagButton: settings.showTagButtonInEditor,
                                     showTagCollection: settings.showTagCollectionInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
-                                    enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
-                                    editToolsRedesign: settings.editToolsRedesign,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                     tagCollection: tagCollection,
                                     metalContext: metalContext,
@@ -500,6 +507,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else {
+            editorView.showQuickPostButton(false)
             gifMakerController.showConfirmButton(true)
         }
         analyticsProvider?.logEditorGIFOpen()
@@ -507,7 +515,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private func revertGIF() {
         if settings.animateEditorControls {
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
         }
         gifMakerController.showView(false)
         gifMakerController.showConfirmButton(false)
@@ -699,11 +707,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didBeginTouchesOnText() {
-        showNavigationContainer(false)
+        editorView.showNavigationItems(false)
     }
     
     func didEndTouchesOnText() {
-        showNavigationContainer(true)
+        editorView.showNavigationItems(true)
     }
 
     func didRenderRectChange(rect: CGRect) {
@@ -714,7 +722,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         player.stop()
         delegate?.dismissButtonPressed()
     }
+
+    func getBlogSwitcher() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getBlogSwitcher()
+    }
     
+    func getQuickPostButton() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getQuickPostButton()
+    }
+
     func restartPlayback() {
         player.stop()
         startPlayerFromSegments()
@@ -933,7 +951,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             if settings.features.editorGIFMaker {
                 shouldExportMediaAsGIF = gifMakerHandler.shouldExport
                 if settings.animateEditorControls {
-                    editorView.animateReturnOfEditionOption(cell: selectedCell)
+                editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
                 } else {
                     selectedCell?.alpha = 1
                 }
@@ -948,10 +966,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         case .filter:
             filterController.showView(false)
+            editorView.showQuickPostButton(true)
             showMainUI(true)
         case .text:
             if settings.animateEditorControls {
-                editorView.animateReturnOfEditionOption(cell: selectedCell)
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: textController.confirmButtonLocation)
             } else {
                 selectedCell?.alpha = 1
             }
@@ -960,7 +979,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             showMainUI(true)
         case .drawing:
             if settings.animateEditorControls {
-                editorView.animateReturnOfEditionOption(cell: selectedCell)
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: drawingController.confirmButtonLocation)
             } else {
                 selectedCell?.alpha = 1
             }
@@ -996,6 +1015,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         case .filter:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
+            editorView.showQuickPostButton(false)
             showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
@@ -1241,46 +1261,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameter show: true to show, false to hide
     private func showMainUI(_ show: Bool) {
         collectionController.showView(show)
-        showConfirmButton(show)
-        showCloseButton(show)
-        showTagButton(show)
-        showTagCollection(show)
-    }
-    
-    // MARK: - Public interface
-    
-    /// shows or hides the confirm button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showConfirmButton(_ show: Bool) {
         editorView.showConfirmButton(show)
-    }
-    
-    /// shows or hides the close button (back caret)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
-    }
-
-    /// shows or hides the tag button (#)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTagButton(_ show: Bool) {
         editorView.showTagButton(show)
-    }
-    
-    /// shows or hides the tag collection
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTagCollection(_ show: Bool) {
         editorView.showTagCollection(show)
-    }
-    
-    /// shows or hides the editor menu and the back button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showNavigationContainer(_ show: Bool) {
-        editorView.showNavigationContainer(show)
+        editorView.showBlogSwitcher(show)
     }
 }

@@ -11,16 +11,16 @@ import UIKit
 private struct MediaClipsCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
     static let cellPadding: CGFloat = 2.9
-    static let clipHeight: CGFloat = 60
-    static let clipWidth: CGFloat = 40
-    static let borderWidth: CGFloat = 1.1
-    static let selectedBorderWidth: CGFloat = 2.0
-    static let cornerRadius: CGFloat = 8
-    static let font: UIFont = KanvasCameraFonts.shared.mediaClipsFont
-    static let labelHorizontalPadding: CGFloat = 5.5
-    static let labelVerticalPadding: CGFloat = 3.5
+    static let clipHeight: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipHeight
+    static let clipWidth: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipWidth
+    static let borderWidth: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellBorderWidth
+    static let selectedBorderWidth: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellSelectedBorderWidth
+    static let cornerRadius: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellCornerRadius
+    static let font: UIFont = KanvasCameraDesign.shared.mediaClipsCollectionCellFont
+    static let labelHorizontalPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellLabelHorizontalPadding
+    static let labelVerticalPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellLabelVerticalPadding
     static let labelHeight: CGFloat = 14
-    static let clipAlpha: CGFloat = 0.5
+    static let clipAlpha: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipAlpha
 
     static var minimumHeight: CGFloat {
         return clipHeight
@@ -89,9 +89,9 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         clipImage.image = image
         clipLabel.text = item.overlayText
     }
-    
+
     // MARK: - Public interface
-    
+
     /// shows or hides the cell
     ///
     /// - Parameter show: true to show, false to hide

@@ -126,7 +126,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         // Only supported in Orangina
     }
     
-    public func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    public func getQuickPostButton() -> UIView {
         // Only supported in Orangina
         return UIView()
     }
@@ -136,43 +136,44 @@ extension KanvasDashboardController: CameraControllerDelegate {
         return UIView()
     }
     
-    public func editorDismissed() {
+    public func editorDismissed(_ cameraController: CameraController) {
         // Only supported in Orangina
     }
 
-    public func didCreateMedia(_ cameraController: CameraController, media: [(KanvasCameraMedia?, Error?)], exportAction: KanvasExportAction) {
-        media.forEach { (media, error) in
-            if let error = error {
+    public func didCreateMedia(_ cameraController: CameraController, media: [Result<KanvasCameraMedia?, Error>], exportAction: KanvasExportAction) {
+        media.forEach { result in
+            switch result {
+            case .failure(let error):
                 assertionFailure("Error creating Kanvas media: \(error)")
-                return
-            }
-            guard let media = media else {
-                assertionFailure("No error, but no media!?")
-                return
-            }
+            case .success(let media):
+                guard let media = media else {
+                    assertionFailure("No error, but no media!?")
+                    return
+                }
 
-            save(media: media, moveFile: false) { error in
-                DispatchQueue.main.async {
-                    guard error == nil else {
-                        print("Error saving media to the photo library")
-                        return
-                    }
+                save(media: media, moveFile: false) { error in
+                    DispatchQueue.main.async {
+                        guard error == nil else {
+                            print("Error saving media to the photo library")
+                            return
+                        }
 
-                    switch exportAction {
-                    case .previewConfirm:
-                        assertionFailure("The Preview screen should never be shown from the Kanvas Dashboard")
-                    case .confirm:
-                        self.kanvasViewController.resetState()
-                        self.delegate?.kanvasDashboardOpenComposeRequest()
-                    case .post:
-                        self.kanvasViewController.resetState()
-                        self.delegate?.kanvasDashboardCreatePostRequest()
-                    case .save:
-                        break
-                    case .postOptions:
-                        self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
-                    case .confirmPostOptions:
-                        self.delegate?.kanvasDashboardConfirmPostingOptionsRequest()
+                        switch exportAction {
+                        case .previewConfirm:
+                            assertionFailure("The Preview screen should never be shown from the Kanvas Dashboard")
+                        case .confirm:
+                            self.kanvasViewController.resetState()
+                            self.delegate?.kanvasDashboardOpenComposeRequest()
+                        case .post:
+                            self.kanvasViewController.resetState()
+                            self.delegate?.kanvasDashboardCreatePostRequest()
+                        case .save:
+                            break
+                        case .postOptions:
+                            self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
+                        case .confirmPostOptions:
+                            self.delegate?.kanvasDashboardConfirmPostingOptionsRequest()
+                        }
                     }
                 }
             }
@@ -230,13 +231,13 @@ extension KanvasDashboardController: CameraControllerDelegate {
             case .notDetermined, .restricted, .denied:
                 completionMainThread(nil)
             case .authorized:
-                switch media {
-                case let .image(url, _, _):
-                    self.addToLibrary(url: url, resourceType: .photo, moveFile: moveFile, completion: completionMainThread)
-                case let .video(url, _, _):
-                    self.addToLibrary(url: url, resourceType: .video, moveFile: moveFile, completion: completionMainThread)
-                case let .frames(url, _, _):
-                    self.addToLibrary(url: url, resourceType: .photo, moveFile: moveFile, completion: completionMainThread)
+                switch media.type {
+                case .image:
+                    self.addToLibrary(url: media.output, resourceType: .photo, moveFile: moveFile, completion: completionMainThread)
+                case .video:
+                    self.addToLibrary(url: media.output, resourceType: .video, moveFile: moveFile, completion: completionMainThread)
+                case .frames:
+                    self.addToLibrary(url: media.output, resourceType: .photo, moveFile: moveFile, completion: completionMainThread)
                 }
             @unknown default:
                 completionMainThread(nil)

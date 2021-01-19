@@ -41,10 +41,10 @@ protocol ShootButtonViewDelegate: class {
 }
 
 private struct ShootButtonViewConstants {
-    static let imageWidth: CGFloat = 30
-    static let borderWidth: CGFloat = 3
-    static let innerCircleImageWidth: CGFloat = 64
-    static let outerCircleImageWidth: CGFloat = 95 + borderWidth
+    static let imageWidth: CGFloat = KanvasCameraDesign.shared.shootButtonImageWidth
+    static let borderWidth: CGFloat = KanvasCameraDesign.shared.shootButtonBorderWidth
+    static let innerCircleImageWidth: CGFloat = KanvasCameraDesign.shared.shootButtonInnerCircleImageWidth
+    static let outerCircleImageWidth: CGFloat = KanvasCameraDesign.shared.shootButtonOuterCircleImageWidth + borderWidth
     static let trashViewSize: CGFloat = TrashView.size
     static let longPressMinimumDuration: CFTimeInterval = 0.5
     static let buttonWidth: CGFloat = (imageWidth + 15) * 2
@@ -52,7 +52,7 @@ private struct ShootButtonViewConstants {
     static let buttonImageAnimationInDuration: TimeInterval = 0.5
     static let buttonImageAnimationInSpringDamping: CGFloat = 0.6
     static let buttonImageAnimationOutDuration: TimeInterval = 0.15
-    static var buttonMaximumWidth: CGFloat = 100
+    static var buttonMaximumWidth: CGFloat = KanvasCameraDesign.shared.shootButtonMaximumWidth
     static let animationDuration: TimeInterval = 0.5
 }
 

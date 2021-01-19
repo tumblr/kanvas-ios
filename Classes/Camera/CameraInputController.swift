@@ -595,8 +595,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 camera.unlockForConfiguration()
             }
         }
-        currentCameraPosition = rearCamera != nil ? .back : .front
-
+        
         let microphoneSession =  AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone], mediaType: AVMediaType.audio, position: .unspecified)
         microphone = microphoneSession.devices.first
     }

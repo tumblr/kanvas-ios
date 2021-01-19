@@ -128,6 +128,16 @@ public protocol CameraControllerDelegate: class {
     func didEndDragInteraction()
 
     func openAppSettings(completion: ((Bool) -> ())?)
+    
+    /// Obtains the quick post button for the editor.
+    ///
+    /// - Returns: the quick post button.
+    func getQuickPostButton() -> UIView
+    
+    /// Obtains the blog switcher for the editor.
+    ///
+    /// - Returns: the blog switcher.
+    func getBlogSwitcher() -> UIView
 }
 
 class Archive: NSObject, NSSecureCoding {
@@ -1162,6 +1172,16 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     
     public func didEndStrokeSelectorAnimation() {
         delegate?.didEndStrokeSelectorAnimation()
+    }
+    
+    public func getQuickPostButton() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getQuickPostButton()
+    }
+    
+    public func getBlogSwitcher() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getBlogSwitcher()
     }
     
     // MARK: CameraZoomHandlerDelegate

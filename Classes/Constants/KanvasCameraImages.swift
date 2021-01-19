@@ -30,24 +30,39 @@ struct KanvasCameraImages {
     // MARK: - Top options
     static let flashOnImage = UIImage.imageFromCameraBundle(named: "flashOn")
     static let flashOffImage = UIImage.imageFromCameraBundle(named: "flashOff")
+    static let cameraFlashOnImage = UIImage.imageFromCameraBundle(named: "cameraFlashOn")
+    static let cameraFlashOffImage = UIImage.imageFromCameraBundle(named: "cameraFlashOff")
     static let cameraPositionImage = UIImage.imageFromCameraBundle(named: "cameraPosition")
+    static let cameraRotateImage = UIImage.imageFromCameraBundle(named: "cameraRotate")
     static let imagePreviewOnImage = UIImage.imageFromCameraBundle(named: "imagePreviewOn")
     static let imagePreviewOffImage = UIImage.imageFromCameraBundle(named: "imagePreviewOff")
+    static let ghostFrameOnImage = UIImage.imageFromCameraBundle(named: "ghostFrameOn")
+    static let ghostFrameOffImage = UIImage.imageFromCameraBundle(named: "ghostFrameOff")
+    
     
     // MARK: - General
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
+    static let crossImage = UIImage.imageFromCameraBundle(named: "cross")
     static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
-    static let backImage = UIImage.imageFromCameraBundle(named: "backArrow")
+    static let longCheckmarkImage = UIImage.imageFromCameraBundle(named: "longCheckmark")
+    static let backImage = UIImage.imageFromCameraBundle(named: "back")
+    static let backArrowImage = UIImage.imageFromCameraBundle(named: "backArrow")
+    static let chevron = UIImage.imageFromCameraBundle(named: "chevron")
     static let forwardImage = UIImage.imageFromCameraBundle(named: "forwardArrow")
     static let trashClosed = UIImage.imageFromCameraBundle(named: "trashClosed")
     static let trashOpened = UIImage.imageFromCameraBundle(named: "trashOpened")
+    static let trashBinClosed = UIImage.imageFromCameraBundle(named: "trashBinClosed")
+    static let trashBinOpened = UIImage.imageFromCameraBundle(named: "trashBinOpened")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
     static let nextImage = UIImage.imageFromCameraBundle(named: "next")
+    static let nextArrowImage = UIImage.imageFromCameraBundle(named: "nextArrow")
     static let saveImage = UIImage.imageFromCameraBundle(named: "save")
     static let cogImage = UIImage.imageFromCameraBundle(named: "cog")
     static let tagImage = UIImage.imageFromCameraBundle(named: "tag")
 
     // MARK: - Filters
+    static let filtersImage =  UIImage.imageFromCameraBundle(named: "menuFilters")
+    static let filtersInvertedImage =  UIImage.imageFromCameraBundle(named: "menuFiltersInverted")
     static let discoballUntappedImage = UIImage.imageFromCameraBundle(named: "discoballUntapped")
     static let discoballTappedImage = UIImage.imageFromCameraBundle(named: "discoballTapped")
     static let filterTypes: [FilterType: UIImage?] = [
@@ -108,26 +123,45 @@ struct KanvasCameraImages {
     
     // MARK: - Draw
     static let undoImage = UIImage.imageFromCameraBundle(named: "undo")
+    static let undoLongImage = UIImage.imageFromCameraBundle(named: "undoLong")
     static let eraserUnselectedImage = UIImage.imageFromCameraBundle(named: "eraserUnselected")
     static let eraserSelectedImage = UIImage.imageFromCameraBundle(named: "eraserSelected")
+    static let eraserOffImage = UIImage.imageFromCameraBundle(named: "eraserOff")
+    static let eraserOnImage = UIImage.imageFromCameraBundle(named: "eraserOn")
     static let markerImage = UIImage.imageFromCameraBundle(named: "marker")
+    static let markerRoundedImage = UIImage.imageFromCameraBundle(named: "markerRounded")
     static let sharpieImage = UIImage.imageFromCameraBundle(named: "sharpie")
+    static let sharpieRoundedImage = UIImage.imageFromCameraBundle(named: "sharpieRounded")
     static let pencilImage = UIImage.imageFromCameraBundle(named: "pencil")
+    static let pencilRoundedImage = UIImage.imageFromCameraBundle(named: "pencilRounded")
     static let gradientImage = UIImage.imageFromCameraBundle(named: "gradient")
     static let closeGradientImage = UIImage.imageFromCameraBundle(named: "closeGradient")
+    static let closeGradientRoundedImage = UIImage.imageFromCameraBundle(named: "closeGradientRounded")
     static let eyeDropperImage = UIImage.imageFromCameraBundle(named: "eyeDropper")
+    static let eyeDropperRoundedImage = UIImage.imageFromCameraBundle(named: "eyeDropperRounded")
     static let dropImage = UIImage.imageFromCameraBundle(named: "drop")
     
     // MARK: - Text
     static let fontImage = UIImage.imageFromCameraBundle(named: "font")
+    static let fontBlockImage = UIImage.imageFromCameraBundle(named: "fontBlock")
     static let aligmentImages: [NSTextAlignment: UIImage?] = [
         .left: UIImage.imageFromCameraBundle(named: "leftAlignment"),
         .center: UIImage.imageFromCameraBundle(named: "centerAlignment"),
         .right: UIImage.imageFromCameraBundle(named: "rightAlignment"),
     ]
+    static let aligmentRoundedImages: [NSTextAlignment: UIImage?] = [
+        .left: UIImage.imageFromCameraBundle(named: "leftAlignmentRounded"),
+        .center: UIImage.imageFromCameraBundle(named: "centerAlignmentRounded"),
+        .right: UIImage.imageFromCameraBundle(named: "rightAlignmentRounded"),
+    ]
     static let highlightUnselected = UIImage.imageFromCameraBundle(named: "highlightUnselected")
+    static let highlightRoundedUnselected = UIImage.imageFromCameraBundle(named: "highlightRoundedUnselected")
     static let highlightSelected = UIImage.imageFromCameraBundle(named: "highlightSelected")
+    static let highlightRoundedSelected = UIImage.imageFromCameraBundle(named: "highlightRoundedSelected")
     static func highlightImage(for selected: Bool) -> UIImage? {
+        return selected ? highlightSelected : highlightUnselected
+    }
+    static func highlightRoundedImage(for selected: Bool) -> UIImage? {
         return selected ? highlightSelected : highlightUnselected
     }
     

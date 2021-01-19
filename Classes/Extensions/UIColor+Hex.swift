@@ -19,10 +19,10 @@ public extension UIColor {
         let hexString: String = hex.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let scanner = Scanner(string: hex)
         if hexString.hasPrefix("#") {
-            scanner.scanLocation = 1
+            scanner.currentIndex = scanner.string.index(scanner.string.startIndex, offsetBy: 1)
         }
-        var color: UInt32 = 0
-        scanner.scanHexInt32(&color)
+        var color: UInt64 = 0
+        scanner.scanHexInt64(&color)
         let mask = 0x000000FF
         let r = Int(color >> 16) & mask
         let g = Int(color >> 8) & mask

@@ -144,10 +144,11 @@ final class KanvasCameraExampleViewController: UIViewController {
         settings.features.editorPostOptions = false
         settings.features.newCameraModes = true
         settings.features.gifs = true
+        settings.features.modeSelectorTooltip = true
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
-        settings.editToolsRedesign = true
+        settings.features.multipleExports = false
         return settings
     }
 
@@ -269,11 +270,11 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
             .newCameraModes(settings.features.newCameraModes),
+            .modeSelectorTooltip(settings.features.modeSelectorTooltip),
+            .shutterButtonTooltip(settings.features.shutterButtonTooltip),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
-            .editToolsRedesign(settings.editToolsRedesign),
-            .shutterButtonTooltip(settings.shutterButtonTooltip),
-            .horizontalModeSelector(settings.horizontalModeSelector),
+            .multipleExport(settings.features.multipleExports),
         ]
     }
 
@@ -317,18 +318,18 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         case .editorPostOptions(_):
             settings.features.editorPostOptions = value
+        case .modeSelectorTooltip(_):
+            settings.features.modeSelectorTooltip = value
+        case .shutterButtonTooltip(_):
+            settings.features.shutterButtonTooltip = value
         case .gifs(_):
             settings.features.gifs = value
         case .editorShouldStartGIFMaker(_):
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
-        case .editToolsRedesign(_):
-            settings.editToolsRedesign = value
-        case .shutterButtonTooltip(_):
-            settings.shutterButtonTooltip = value
-        case .horizontalModeSelector(_):
-            settings.horizontalModeSelector = value
+        case .multipleExport(_):
+            settings.features.multipleExports = value
         }
     }
 }
@@ -347,8 +348,18 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         // Only supported in Orangina
     }
 
-    func editorDismissed() {
+    func editorDismissed(_ cameraController: CameraController) {
         // Only supported in Orangina
+    }
+
+    func getBlogSwitcher() -> UIView {
+        // Only supported in Orangina
+        return UIView()
+    }
+    
+    func getQuickPostButton() -> UIView {
+        // Only supported in Orangina
+        return UIView()
     }
 
     func cameraShouldShowWelcomeTooltip() -> Bool {
@@ -383,38 +394,42 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         
     }
 
-    func didCreateMedia(_ cameraController: CameraController, media: [(KanvasCameraMedia?, Error?)], exportAction: KanvasExportAction) {
-        media.forEach { (media, error) in
-            guard let media = media else {
-                if let error = error {
-                    assertionFailure("Error creating Kanvas Media: \(error)")
+    func didCreateMedia(_ cameraController: CameraController, media: [Result<KanvasCameraMedia?, Error>], exportAction: KanvasExportAction) {
+        media.forEach { result in
+            switch result {
+            case .failure(let error):
+                assertionFailure("Error creating Kanvas Media: \(error)")
+            case .success(let media):
+                guard let media = media else {
+                    assertionFailure("No Kanvas Media but no Error")
+                    return
                 }
-                return
-            }
-            save(media: media) { err in
-                DispatchQueue.main.async {
-                    if KanvasDevice.isRunningInSimulator == false {
-                        guard err == nil else {
-                            assertionFailure("Error saving to photo library")
-                            return
+
+                save(media: media) { err in
+                    DispatchQueue.main.async {
+                        if KanvasDevice.isRunningInSimulator == false {
+                            guard err == nil else {
+                                assertionFailure("Error saving to photo library")
+                                return
+                            }
                         }
+
+                    switch exportAction {
+                    case .previewConfirm:
+                        self.dismissCamera()
+                    case .confirm:
+                        self.dismissCamera()
+                    case .post:
+                        self.dismissCamera()
+                    case .save:
+                        break
+                    case .postOptions:
+                        self.dismissCamera()
+                    case .confirmPostOptions:
+                        self.dismissCamera()
                     }
 
-                switch exportAction {
-                case .previewConfirm:
-                    self.dismissCamera()
-                case .confirm:
-                    self.dismissCamera()
-                case .post:
-                    self.dismissCamera()
-                case .save:
-                    break
-                case .postOptions:
-                    self.dismissCamera()
-                case .confirmPostOptions:
-                    self.dismissCamera()
-                }
-
+                    }
                 }
             }
         }
@@ -443,13 +458,13 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                 fallthrough
 #endif
             case .authorized:
-                switch media {
-                case let .image(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
-                case let .video(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .video, completion: completionMainThread)
-                case let .frames(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
+                switch media.type {
+                case .image:
+                    self.moveToLibrary(url: media.output, resourceType: .photo, completion: completionMainThread)
+                case .video:
+                    self.moveToLibrary(url: media.output, resourceType: .video, completion: completionMainThread)
+                case .frames:
+                    self.moveToLibrary(url: media.output, resourceType: .photo, completion: completionMainThread)
                 }
             @unknown default:
                 break

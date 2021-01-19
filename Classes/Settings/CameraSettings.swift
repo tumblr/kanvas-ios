@@ -148,14 +148,23 @@ public struct CameraFeatures {
     /// GIF support
     /// This enables GIFs to be picked from the media picker, and exported from the Editor.
     public var gifs = false
-
-    /// Multi-Export support
-    /// This enables multiple images/videos to be taken, edited, and then exported
-    public var multipleExports = false
+    
+    /// Mode selector tooltip
+    /// This enables a tooltip to appear below the mode selector when the camera launches for the first time.
+    public var modeSelectorTooltip: Bool = false
+    
+    /// Shutter button tooltip
+    /// This enables a tooltip to appear above the shutter button when the camera launches for the first time.
+    public var shutterButtonTooltip: Bool = false
 
     /// Button to Mute Sound
     /// This adds an option to mute sounds from videos during editing and in export.
     public var muteButton = false
+
+
+    /// Multi-Export support
+    /// This enables multiple images/videos to be taken, edited, and then exported
+    public var multipleExports = false
 }
 
 // A class that defines the settings for the Kanvas Camera
@@ -267,25 +276,9 @@ public struct CameraFeatures {
     /// This shows a post button that makes quick options appear when long pressed
     public var showQuickPostButtonInEditor = DefaultCameraSettings.showQuickPostButtonInEditor
     
-    /// Long press for post button in Editor
-    /// This enables the long press for the quick post button.
-    public var enableQuickPostLongPress = DefaultCameraSettings.enableQuickPostLongPress
-    
     /// Blog Switcher in Editor
     /// This shows a blog switcher that makes quick options appear when long pressed
     public var showBlogSwitcherInEditor = DefaultCameraSettings.showBlogSwitcherInEditor
-    
-    /// Edit Tools Redesign
-    /// This shows the editor tools as a vertical collection.
-    public var editToolsRedesign = DefaultCameraSettings.editToolsRedesign
-    
-    /// Shutter Button Tooltip
-    /// This shows the tooltip above the shutter.
-    public var shutterButtonTooltip = DefaultCameraSettings.shutterButtonTooltip
-    
-    /// Horizontal Mode Selector
-    /// This shows a horizontal mode selector in the camera.
-    public var horizontalModeSelector = DefaultCameraSettings.horizontalModeSelector
     
     /// Auto-open GIF Maker in Editor
     public func editorShouldStartGIFMaker(mode: CameraMode?) -> Bool {
@@ -368,7 +361,6 @@ private struct DefaultCameraSettings {
     static let showTagButtonInEditor: Bool = false
     static let showTagCollectionInEditor: Bool = false
     static let showQuickPostButtonInEditor: Bool = false
-    static let enableQuickPostLongPress: Bool = false
     static let showBlogSwitcherInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false

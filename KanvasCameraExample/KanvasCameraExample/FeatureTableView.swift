@@ -34,11 +34,11 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case editorPostOptions(Bool)
         case newCameraModes(Bool)
         case gifs(Bool)
+        case modeSelectorTooltip(Bool)
+        case shutterButtonTooltip(Bool)
         case editorShouldStartGIFMaker(Bool)
         case gifCameraShouldStartGIFMaker(Bool)
-        case editToolsRedesign(Bool)
-        case shutterButtonTooltip(Bool)
-        case horizontalModeSelector(Bool)
+        case multipleExport(Bool)
 
         var name: String {
             switch self {
@@ -80,16 +80,16 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor Post Options"
             case .gifs(_):
                 return "GIF support"
+            case .modeSelectorTooltip(_):
+                return "Show Mode Selector Tooltip"
+            case .shutterButtonTooltip(_):
+                return "Show Shutter Button Tooltip"
             case .editorShouldStartGIFMaker:
                 return "Editor auto-starts GIF Maker"
             case .gifCameraShouldStartGIFMaker:
                 return "GIF Camera auto-starts Editor GIF Maker"
-            case .editToolsRedesign(_):
-                return "Edit Tools Redesign"
-            case .shutterButtonTooltip(_):
-                return "Shutter Button Tooltip"
-            case .horizontalModeSelector(_):
-                return "Horizontal Mode Selector"
+            case .multipleExport:
+                return "Multiple Exports"
             }
         }
 
@@ -133,18 +133,17 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return enabled
             case .gifs(let enabled):
                 return enabled
+            case .modeSelectorTooltip(let enabled):
+                return enabled
+            case .shutterButtonTooltip(let enabled):
+                return enabled
             case .editorShouldStartGIFMaker(let enabled):
                 return enabled
             case .gifCameraShouldStartGIFMaker(let enabled):
                 return enabled
-            case .editToolsRedesign(let enabled):
-                return enabled
-            case .shutterButtonTooltip(let enabled):
-                return enabled
-            case .horizontalModeSelector(let enabled):
+            case .multipleExport(let enabled):
                 return enabled
             }
-
         }
     }
 
@@ -224,16 +223,16 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editorPostOptions(value)
         case .gifs(_):
             featuresData[indexPath.row] = .gifs(value)
+        case .modeSelectorTooltip(_):
+            featuresData[indexPath.row] = .modeSelectorTooltip(value)
+        case .shutterButtonTooltip(_):
+            featuresData[indexPath.row] = .shutterButtonTooltip(value)
         case .editorShouldStartGIFMaker(_):
             featuresData[indexPath.row] = .editorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             featuresData[indexPath.row] = .gifCameraShouldStartGIFMaker(value)
-        case .editToolsRedesign(_):
-            featuresData[indexPath.row] = .editToolsRedesign(value)
-        case .shutterButtonTooltip(_):
-            featuresData[indexPath.row] = .shutterButtonTooltip(value)
-        case .horizontalModeSelector(_):
-            featuresData[indexPath.row] = .horizontalModeSelector(value)
+        case .multipleExport(_):
+            featuresData[indexPath.row] = .multipleExport(value)
         }
         delegate?.featureTableView(didUpdateFeature: featuresData[indexPath.row], withValue: value)
     }

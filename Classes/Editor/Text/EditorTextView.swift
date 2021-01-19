@@ -50,7 +50,7 @@ private struct Constants {
     static let circularIconCornerRadius: CGFloat = circularIconSize / 2
 
     // Confirm button
-    static let confirmButtonSize: CGFloat = 36
+    static let confirmButtonSize: CGFloat = KanvasEditorDesign.shared.topButtonSize
     static let confirmButtonInset: CGFloat = -10
 }
 
@@ -131,7 +131,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     var highlightColor: UIColor? {
         get { return mainTextView.highlightColor }
         set {
-            guard let newColor = newValue, let image = KanvasCameraImages.highlightImage(for: newColor.isVisible()) else { return }
+            guard let newColor = newValue, let image = KanvasEditorDesign.shared.editorTextViewHighlightImage(newColor.isVisible()) else { return }
             highlightSelector.setImage(image, for: .normal)
             mainTextView.highlightColor = newColor
         }
@@ -149,7 +149,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     var alignment: NSTextAlignment {
         get { return mainTextView.textAlignment }
         set {
-            guard let image = KanvasCameraImages.aligmentImages[newValue] else { return }
+            guard let image = KanvasEditorDesign.shared.editorTextViewAlignmentImage[newValue] else { return }
             alignmentSelector.setImage(image, for: .normal)
             mainTextView.textAlignment = newValue
         }
@@ -282,9 +282,18 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
         confirmButton.accessibilityIdentifier = "Editor Text Confirm Button"
-        confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
+        
+        let checkmark = KanvasEditorDesign.shared.checkmarkImage
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            let backgroundImage = UIImage.circle(diameter: Constants.confirmButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
+            confirmButton.setBackgroundImage(backgroundImage, for: .normal)
+            confirmButton.setImage(checkmark, for: .normal)
+        }
+        else {
+            confirmButton.setBackgroundImage(checkmark, for: .normal)
+        }
         
         NSLayoutConstraint.activate([
             confirmButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor),
@@ -337,6 +346,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the font selector button
     private func setUpFontSelector() {
         fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
+        fontSelector.layer.cornerRadius = Constants.customIconSize / 2
+        fontSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         if settings.fontSelectorUsesFont {
             refreshFontSelector()
         } else {
@@ -359,6 +370,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the alignment selector button
     private func setUpAlignmentSelector() {
         alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
+        alignmentSelector.layer.cornerRadius = Constants.customIconSize / 2
+        alignmentSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(alignmentSelector)
         
@@ -376,6 +389,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the highlight selector button
     private func setUpHighlightSelector() {
         highlightSelector.accessibilityIdentifier = "Editor Text Font Selector"
+        highlightSelector.layer.cornerRadius = Constants.customIconSize / 2
+        highlightSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         highlightSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(highlightSelector)
         
@@ -430,7 +445,10 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the cross button to close the color picker menu
     private func setUpCloseColorPicker() {
         closeColorPicker.accessibilityIdentifier = "Editor Text Close Color Picker"
-        closeColorPicker.setImage(KanvasCameraImages.closeGradientImage, for: .normal)
+        closeColorPicker.setImage(KanvasEditorDesign.shared.closeGradientImage, for: .normal)
+        closeColorPicker.contentMode = .center
+        closeColorPicker.backgroundColor = KanvasEditorDesign.shared.buttonInvertedBackgroundColor
+        closeColorPicker.layer.cornerRadius = Constants.circularIconSize / 2
         closeColorPicker.translatesAutoresizingMaskIntoConstraints = false
         colorPickerContainer.addSubview(closeColorPicker)
         
@@ -448,7 +466,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the eye dropper button in the color picker menu
     private func setUpEyeDropper() {
         eyeDropper.accessibilityIdentifier = "Editor Text Eye Dropper"
-        let image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
+        let image = KanvasEditorDesign.shared.drawingViewEyeDropperImage?.withRenderingMode(.alwaysTemplate)
         eyeDropper.setImage(image, for: .normal)
         eyeDropper.layer.borderColor = Constants.circularIconBorderColor.cgColor
         eyeDropper.layer.borderWidth = Constants.circularIconBorderWidth

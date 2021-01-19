@@ -163,7 +163,7 @@ private extension KanvasMediaPickerViewController {
         options.version = .original
         options.deliveryMode = .highQualityFormat
         options.isNetworkAccessAllowed = true
-        PHImageManager.default().requestImageData(for: phAsset, options: options) { (data, str, orientation, opts) in
+        PHImageManager.default().requestImageDataAndOrientation(for: phAsset, options: options) { (data, str, orientation, opts) in
             completion(data)
         }
     }

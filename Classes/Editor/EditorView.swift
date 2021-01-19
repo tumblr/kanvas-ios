@@ -70,16 +70,23 @@ protocol EditorViewDelegate: class {
     /// Called when the rendering rectangle has changed
     /// - Parameter rect: the rendering rectangle
     func didRenderRectChange(rect: CGRect)
+    /// Obtains the quick post button.
+    ///
+    /// - Returns: the quick post button.
+    func getQuickPostButton() -> UIView
+    /// Obtains the blog switcher.
+    ///
+    /// - Returns: the blog switcher.
+    func getBlogSwitcher() -> UIView
 }
 
 /// Constants for EditorView
 private struct EditorViewConstants {
     static let animationDuration: TimeInterval = 0.25
-    static let horizontalMargin: CGFloat = 16
     static let editionOptionAnimationDuration: TimeInterval = 0.5
+    static let editionOptionAnimationBouncingFactor: CGFloat = 1.1
     static let confirmButtonSize: CGFloat = 49
     static let confirmButtonHorizontalMargin: CGFloat = 20
-    static let confirmButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 14 : 19.5
     static let postButtonSize: CGFloat = 54
     static let postButtonHorizontalMargin: CGFloat = 18
     static let postButtonVerticalMargin: CGFloat = Device.belongsToIPhoneXGroup ? 13 : 29
@@ -88,16 +95,24 @@ private struct EditorViewConstants {
     static let muteButtonBackgroundColor = UIColor.black.withAlphaComponent(0.49) // Matches the edition option buttons but they include their backgrounds in the asset.
     static let saveButtonSize: CGFloat = 34
     static let saveButtonHorizontalMargin: CGFloat = 20
-    static let fakeOptionCellMinSize: CGFloat = 36
-    static let fakeOptionCellMaxSize: CGFloat = 45
-    static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
-    static let overlayColor: UIColor = UIColor(hex: "#001935").withAlphaComponent(0.87)
+    static let fakeOptionCellMinSize: CGFloat = KanvasEditorDesign.shared.editorViewFakeOptionCellMinSize
+    static let fakeOptionCellMaxSize: CGFloat = KanvasEditorDesign.shared.editorViewFakeOptionCellMaxSize
+    
+    static let overlayColor: UIColor = KanvasCameraColors.shared.overlayColor.withAlphaComponent(0.87)
     static let overlayLabelMargin: CGFloat = 20
     static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
-    static let topMenuElementHeight: CGFloat = 36
+    static let buttonSize: CGFloat = 48
     static let buttonBackgroundColor = UIColor.black.withAlphaComponent(0.4)
-    static let blogSwitcherHorizontalMargin: CGFloat = 8
+    static let buttonTopMargin: CGFloat = KanvasEditorDesign.shared.editorViewButtonTopMargin
+    static let buttonBottomMargin: CGFloat = KanvasEditorDesign.shared.editorViewButtonBottomMargin
+    static let buttonHorizontalMargin: CGFloat = 16
+    static let topElementsInterspace: CGFloat = 8
+    static let bottomElementsInterspace: CGFloat = 6
+    static let closeButtonSize: CGFloat = KanvasEditorDesign.shared.editorViewCloseButtonSize
+    static let closeButtonHorizontalMargin: CGFloat = KanvasEditorDesign.shared.editorViewCloseButtonHorizontalMargin
+    
+    static let frame: CGRect = .init(x: 0, y: 0, width: EditorViewConstants.postButtonSize, height: EditorViewConstants.postButtonSize)
 }
 
 /// A UIView to preview the contents of segments without exporting
@@ -153,13 +168,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let postLabel = UILabel()
     private let tagButton = UIButton()
     private let fakeOptionCell = UIImageView()
+    private let fakeQuickPostButton = UIImageView()
     private let showCogIcon: Bool
     private let showTagButton: Bool
     private let showTagCollection: Bool
     private let showQuickPostButton: Bool
-    private let enableQuickPostLongPress: Bool
     private let showBlogSwitcher: Bool
-    private let editToolsRedesign: Bool
     private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
@@ -202,6 +216,16 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         return quickBlogSelectorCoordinator?.avatarView(frame: EditorViewConstants.frame)
     }
     
+    private lazy var quickPostButton: UIView = {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getQuickPostButton()
+    }()
+    
+    private lazy var blogSwitcher: UIView = {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getBlogSwitcher()
+    }()
+    
     weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
@@ -218,9 +242,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showTagButton: Bool,
          showTagCollection: Bool,
          showQuickPostButton: Bool,
-         enableQuickPostLongPress: Bool,
          showBlogSwitcher: Bool,
-         editToolsRedesign: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
          metalContext: MetalContext?,
@@ -235,9 +257,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showTagCollection = showTagCollection
         self.showCrossIcon = showCrossIcon
         self.showQuickPostButton = showQuickPostButton
-        self.enableQuickPostLongPress = enableQuickPostLongPress
         self.showBlogSwitcher = showBlogSwitcher
-        self.editToolsRedesign = editToolsRedesign
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
         self.metalContext = metalContext
@@ -295,6 +315,17 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupDrawingMenu()
         setupGifMakerMenu()
         setupFakeOptionCell()
+        
+        if showQuickPostButton {
+            setupQuickPostButton()
+            setupFakeQuickPostButton()
+        }
+        if showBlogSwitcher {
+            setupBlogSwitcher()
+        }
+        
+        setupOverlay()
+        setupOverlayLabel()
     }
 
     // MARK: - views
@@ -342,18 +373,17 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         tagButton.accessibilityLabel = "Tag Button"
         tagButton.setImage(KanvasCameraImages.tagImage, for: .normal)
         tagButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
-        tagButton.layer.cornerRadius = EditorViewConstants.confirmButtonSize / 2
+        tagButton.layer.cornerRadius = EditorViewConstants.buttonSize / 2
         tagButton.layer.masksToBounds = true
         navigationContainer.addSubview(tagButton)
 
         tagButton.addTarget(self, action: #selector(tagButtonPressed), for: .touchUpInside)
         tagButton.translatesAutoresizingMaskIntoConstraints = false
-        let bottomMargin = EditorViewConstants.confirmButtonVerticalMargin + EditorViewConstants.confirmButtonSize + 13
         NSLayoutConstraint.activate([
-            tagButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
-            tagButton.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -bottomMargin),
-            tagButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize)
+            tagButton.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor, constant: EditorViewConstants.buttonHorizontalMargin),
+            tagButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
+            tagButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
+            tagButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize)
         ])
     }
     
@@ -363,31 +393,38 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         navigationContainer.addSubview(tagCollection)
 
         tagCollection.translatesAutoresizingMaskIntoConstraints = false
-        let bottomMargin = EditorViewConstants.confirmButtonVerticalMargin + EditorViewConstants.confirmButtonSize + 13
-        let trailingMargin = EditorViewConstants.confirmButtonHorizontalMargin + EditorViewConstants.confirmButtonSize
+        let horizontalMargin = EditorViewConstants.buttonHorizontalMargin + EditorViewConstants.buttonSize + EditorViewConstants.bottomElementsInterspace
         NSLayoutConstraint.activate([
-            tagCollection.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor),
-            tagCollection.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -trailingMargin),
-            tagCollection.bottomAnchor.constraint(equalTo: navigationContainer.bottomAnchor, constant: -bottomMargin),
-            tagCollection.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+            tagCollection.leadingAnchor.constraint(equalTo: navigationContainer.leadingAnchor, constant: horizontalMargin),
+            tagCollection.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -horizontalMargin),
+            tagCollection.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin),
+            tagCollection.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
         ])
     }
     
     private func setupCloseButton() {
-        closeButton.accessibilityLabel = "Close Button"
-        closeButton.layer.applyShadows()
-        let backIcon = showCrossIcon ? KanvasCameraImages.closeImage : KanvasCameraImages.backImage
-        closeButton.setImage(backIcon, for: .normal)
-        closeButton.imageView?.contentMode = .scaleAspectFit
-        
         navigationContainer.addSubview(closeButton)
+        closeButton.accessibilityLabel = "Close Button"
         closeButton.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            closeButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
+            closeButton.layer.cornerRadius = EditorViewConstants.buttonSize / 2
+            closeButton.layer.masksToBounds = true
+        }
+        else {
+            closeButton.layer.applyShadows()
+            closeButton.imageView?.contentMode = .scaleAspectFit
+        }
+        
+        let image = showCrossIcon ? KanvasEditorDesign.shared.editorViewCloseImage : KanvasEditorDesign.shared.editorViewBackImage
+        closeButton.setImage(image, for: .normal)
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),
-            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
+            closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: EditorViewConstants.closeButtonHorizontalMargin),
+            closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: EditorViewConstants.buttonTopMargin),
             closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: CameraConstants.optionButtonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.closeButtonSize)
         ])
     }
     
@@ -402,7 +439,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
             confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.confirmButtonVerticalMargin)
+            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
         ])
     }
 
@@ -411,22 +448,29 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         navigationContainer.addSubview(confirmButton)
         confirmButton.addTarget(self, action: #selector(postOptionsButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
-            confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.confirmButtonVerticalMargin)
-        ])
         
         if showCogIcon {
             confirmButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
             confirmButton.setImage(KanvasCameraImages.cogImage, for: .normal)
             confirmButton.layer.cornerRadius = EditorViewConstants.confirmButtonSize / 2
             confirmButton.layer.masksToBounds = true
+            
+            NSLayoutConstraint.activate([
+                confirmButton.trailingAnchor.constraint(equalTo: navigationContainer.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin),
+                confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+                confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+                confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
+            ])
         }
         else {
             confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+            
+            NSLayoutConstraint.activate([
+                confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+                confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+                confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
+                confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
+            ])
         }
     }
     
@@ -458,13 +502,13 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             trailingMargin = confirmOrPostButtonHorizontalMargin()
         }
         
-        if editToolsRedesign {
+        if KanvasEditorDesign.shared.isVerticalMenu {
             
             NSLayoutConstraint.activate([
                 collectionContainer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
                 collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.horizontalMargin),
-                collectionContainer.widthAnchor.constraint(equalToConstant: StyleMenuCollectionCell.width)
+                collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+                collectionContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             ])
         }
         else {
@@ -564,7 +608,22 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         fakeOptionCell.alpha = 0
     }
-
+    
+    /// Sets up the image used for the animation that transforms the quick post button into a confirm button
+    private func setupFakeQuickPostButton() {
+        fakeQuickPostButton.accessibilityLabel = "Fake Quick Post Button"
+        
+        addSubview(fakeQuickPostButton)
+        fakeQuickPostButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            fakeQuickPostButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: EditorViewConstants.buttonTopMargin),
+            fakeQuickPostButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin),
+            fakeQuickPostButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
+        ])
+        
+        fakeQuickPostButton.alpha = 0
+    }
+    
     func setupPublishButton() {
 //        publishButton.translatesAutoresizingMaskIntoConstraints = false
 //        button.setTitleColor(.white, for: .normal)
@@ -583,7 +642,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     }
 
     @objc func nextPressed() {
-
         delegate?.didTapPostButton()
     }
 
@@ -697,6 +755,70 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
     }
     
+    private func setupOverlay() {
+        overlay.accessibilityLabel = "Overlay"
+        overlay.backgroundColor = EditorViewConstants.overlayColor
+        overlay.alpha = 0
+        
+        addSubview(overlay)
+        overlay.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            overlay.topAnchor.constraint(equalTo: topAnchor),
+            overlay.bottomAnchor.constraint(equalTo: bottomAnchor),
+            overlay.leadingAnchor.constraint(equalTo: leadingAnchor),
+            overlay.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+    
+    private func setupOverlayLabel() {
+        overlayLabel.accessibilityLabel = "Overlay Label"
+        overlay.addSubview(overlayLabel)
+        overlayLabel.textColor = EditorViewConstants.overlayLabelTextColor
+        overlayLabel.font = EditorViewConstants.overlayLabelFont
+        overlayLabel.textAlignment = .right
+        
+        overlayLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let centerYOffset = EditorViewConstants.buttonTopMargin + EditorViewConstants.buttonSize / 2
+        NSLayoutConstraint.activate([
+            overlayLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: centerYOffset),
+            overlayLabel.leadingAnchor.constraint(equalTo: overlay.leadingAnchor),
+        ])
+    }
+    
+    private func setupQuickPostButton() {
+        quickPostButton.accessibilityLabel = "Quick Post Button"
+        
+        addSubview(quickPostButton)
+        quickPostButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            quickPostButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: EditorViewConstants.buttonTopMargin),
+            quickPostButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin),
+            quickPostButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
+        ])
+    }
+    
+    private func setupBlogSwitcher() {
+        accessibilityLabel = "Blog Switcher"
+        addSubview(blogSwitcher)
+        blogSwitcher.translatesAutoresizingMaskIntoConstraints = false
+        
+        let trailingAnchor: NSLayoutConstraint
+        if quickPostButton.isDescendant(of: self) {
+            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: quickPostButton.leadingAnchor, constant: -EditorViewConstants.topElementsInterspace)
+        }
+        else {
+            trailingAnchor = blogSwitcher.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -EditorViewConstants.buttonHorizontalMargin)
+        }
+        
+        NSLayoutConstraint.activate([
+            trailingAnchor,
+            blogSwitcher.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: EditorViewConstants.buttonTopMargin),
+            blogSwitcher.heightAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
+            blogSwitcher.widthAnchor.constraint(equalToConstant: EditorViewConstants.buttonSize),
+        ])
+    }
+    
     // MARK: - buttons
     @objc private func closeButtonPressed() {
         delegate?.didTapCloseButton()
@@ -758,21 +880,174 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
     // MARK: - Public interface
     
+    /// shows or hides the navigation container, quick post button and blog switcher
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showNavigationItems(_ show: Bool) {
+        showNavigationContainer(show)
+        showQuickPostButton(show)
+        showBlogSwitcher(show)
+    }
+    
     /// shows or hides the navigation container
     ///
     /// - Parameter show: true to show, false to hide
     func showNavigationContainer(_ show: Bool) {
         UIView.animate(withDuration: EditorViewConstants.animationDuration) {
             self.navigationContainer.alpha = show ? 1 : 0
+            self.blogSwitcher.alpha = self.showBlogSwitcher && show ? 1 : 0
+            self.quickPostButton.alpha = self.showQuickPostButton && show ? 1 : 0
         }
     }
     
-    /// transforms an option cell into a checkmark button with an animation
+    /// shows or hides the quick post button
     ///
-    /// - Parameter cell: the cell to be transformed
-    /// - Parameter finalLocation: the location where the checkmark button will be
-    /// - Parameter completion: a closure to execute when the animation ends
+    /// - Parameter show: true to show, false to hide
+    func showQuickPostButton(_ show: Bool, animated: Bool = true) {
+        let action: () -> Void = {
+            self.quickPostButton.alpha = self.showQuickPostButton && show ? 1 : 0
+        }
+        
+        if animated {
+            UIView.animate(withDuration: EditorViewConstants.animationDuration, animations: action)
+        }
+        else {
+            action()
+        }
+    }
+    
+    /// shows or hides the blog switcher
+    ///
+    /// - Parameter show: true to show, false to hide
+    func showBlogSwitcher(_ show: Bool) {
+        UIView.animate(withDuration: EditorViewConstants.animationDuration) {
+            self.blogSwitcher.alpha = self.showBlogSwitcher && show ? 1 : 0
+        }
+    }
+    
+    /// animates the transition between the main editor tools and a specific menu
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - finalLocation: the location where animation will end
+    ///   - completion: a closure to execute when the animation ends
     func animateEditionOption(cell: KanvasEditorMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            animateFakeCellPop(cell: cell, finalLocation: finalLocation, completion: completion)
+        }
+        else {
+            animateFakeCellTranslation(cell: cell, finalLocation: finalLocation, completion: completion)
+        }
+    }
+    
+    /// animates the transition between a specific menu and the main editor tools
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - initialLocation: the location where the checkmark button starts the animation
+    func animateReturnOfEditionOption(cell: KanvasEditorMenuCollectionCell?, initialLocation: CGPoint) {
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            animateFakeCellPopBackwards(cell: cell, initialLocation: initialLocation)
+        }
+        else {
+            animateFakeCellTranslationBackwards(cell: cell, initialLocation: initialLocation)
+        }
+    }
+    
+    /// animates the transition between the main editor tools and a specific menu with a pop-out effect.
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - finalLocation: the location where animation will end
+    ///   - completion: a closure to execute when the animation ends
+    private func animateFakeCellPop(cell: KanvasEditorMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
+        let distance = finalLocation - fakeOptionCell.center
+        let translationTransform = CGAffineTransform(translationX: distance.x, y: distance.y)
+        
+        fakeOptionCell.image = KanvasEditorDesign.shared.checkmarkImage
+        fakeOptionCell.backgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
+        fakeOptionCell.alpha = 1
+        fakeOptionCell.transform = CGAffineTransform(scaleX: 0, y: 0).concatenating(translationTransform)
+        fakeQuickPostButton.image = quickPostButton.asImage()
+        fakeQuickPostButton.alpha = 1
+        quickPostButton.isHidden = true
+        
+        let duration = EditorViewConstants.editionOptionAnimationDuration
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.05 / duration, animations: {
+                let scale = EditorViewConstants.editionOptionAnimationBouncingFactor
+                self.fakeQuickPostButton.transform = CGAffineTransform(scaleX: scale, y: scale)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.05 / duration, relativeDuration: 0.2 / duration, animations: {
+                self.fakeQuickPostButton.transform = CGAffineTransform(scaleX: 0, y: 0)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.25 / duration, relativeDuration: 0.2 / duration, animations: {
+                let scale = EditorViewConstants.editionOptionAnimationBouncingFactor * EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
+                self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale).concatenating(translationTransform)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.45 / duration, relativeDuration: 0.05 / duration, animations: {
+                let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
+                self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale).concatenating(translationTransform)
+            })
+        }, completion: { _ in
+            completion(true)
+            self.fakeOptionCell.alpha = 0
+            self.fakeQuickPostButton.alpha = 0
+        })
+    }
+    
+    /// animates the transition between a specific menu and the main editor tools with a pop-out effect.
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - initialLocation: the location where the checkmark button starts the animation
+    private func animateFakeCellPopBackwards(cell: KanvasEditorMenuCollectionCell?, initialLocation: CGPoint) {
+        let distance = initialLocation - fakeOptionCell.center
+        let translationTransform = CGAffineTransform(translationX: distance.x, y: distance.y)
+        
+        fakeOptionCell.image = KanvasEditorDesign.shared.checkmarkImage
+        fakeOptionCell.backgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
+        fakeOptionCell.alpha = 1
+        fakeOptionCell.transform = translationTransform
+        fakeQuickPostButton.transform = CGAffineTransform(scaleX: 0, y: 0)
+        fakeQuickPostButton.alpha = 1
+        
+        // Necessary to get the image of the button
+        quickPostButton.isHidden = false
+        fakeQuickPostButton.image = quickPostButton.asImage()
+        quickPostButton.isHidden = true
+        
+        
+        let duration = EditorViewConstants.editionOptionAnimationDuration
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.05 / duration, animations: {
+                let scale = EditorViewConstants.editionOptionAnimationBouncingFactor * EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
+                self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale).concatenating(translationTransform)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.05 / duration, relativeDuration: 0.2 / duration, animations: {
+                self.fakeOptionCell.transform = CGAffineTransform(scaleX: 0, y: 0).concatenating(translationTransform)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.25 / duration, relativeDuration: 0.2 / duration, animations: {
+                let scale = EditorViewConstants.editionOptionAnimationBouncingFactor
+                self.fakeQuickPostButton.transform = CGAffineTransform(scaleX: scale, y: scale)
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.45 / duration, relativeDuration: 0.05 / duration, animations: {
+                self.fakeQuickPostButton.transform = .identity
+            })
+        }, completion: { _ in
+            self.fakeOptionCell.alpha = 0
+            self.fakeQuickPostButton.alpha = 0
+            self.quickPostButton.isHidden = false
+        })
+    }
+    
+    /// animates the transition between the main editor tools and a specific menu with a translation effect.
+    ///
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - finalLocation: the location where animation will end
+    ///   - completion: a closure to execute when the animation ends
+    private func animateFakeCellTranslation(cell: KanvasEditorMenuCollectionCell?, finalLocation: CGPoint, completion: @escaping (Bool) -> Void) {
         guard let cell = cell, let cellParent = cell.superview else {
             completion(false)
             return
@@ -786,7 +1061,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         let duration = EditorViewConstants.editionOptionAnimationDuration
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
-                self.fakeOptionCell.image = KanvasCameraImages.confirmImage
+                self.fakeOptionCell.image = KanvasEditorDesign.shared.checkmarkImage
+                self.fakeOptionCell.backgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
                 let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
                 self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale)
                 self.fakeOptionCell.center = finalLocation
@@ -797,11 +1073,14 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         })
     }
     
-    /// transforms the checkmark button of the current menu into its option cell with an animation
+    /// animates the transition between a specific menu and the main editor tools with a translation effect.
     ///
-    /// - Parameter cell: the cell in which the checkmark button will be tranformed
-    func animateReturnOfEditionOption(cell: KanvasEditorMenuCollectionCell?) {
+    /// - Parameters
+    ///   - cell: the cell of the edition option
+    ///   - initialLocation: the location where the checkmark button starts the animation
+    private func animateFakeCellTranslationBackwards(cell: KanvasEditorMenuCollectionCell?, initialLocation: CGPoint) {
         guard let cell = cell, let cellParent = cell.superview else { return }
+        fakeOptionCell.center = initialLocation
         fakeOptionCell.alpha = 1
         
         let duration = EditorViewConstants.editionOptionAnimationDuration

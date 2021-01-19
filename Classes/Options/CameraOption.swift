@@ -84,24 +84,29 @@ extension CameraController {
         var options = [
             [
                 Option(option: settings.defaultCameraPositionOption.cameraOption,
-                       image: KanvasCameraImages.cameraPositionImage,
+                       image: KanvasCameraDesign.shared.cameraOptionCameraPositionImage,
+                       backgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor,
                        type: .twoOptionsAnimation(animation: animation,
                                                   duration: CameraOptionsConstants.cameraFlipAnimationsDuration,
                                                   completion: completion))
             ],
             [
                 Option(option: settings.preferredFlashOption.cameraOption,
-                       image: getImage(for: settings.preferredFlashOption),
+                       image: getImage(for: settings.preferredFlashOption, with: settings),
+                       backgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor,
                        type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.cameraOption,
-                                               alternateImage: getImage(for: settings.notDefaultFlashOption))),
+                                               alternateImage: getImage(for: settings.notDefaultFlashOption, with: settings),
+                                               alternateBackgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor)),
             ],
         ]
         if settings.features.ghostFrame {
             options.append([
                 Option(option: settings.imagePreviewOption.cameraOption,
-                       image: getImage(for: settings.imagePreviewOption),
+                       image: getImage(for: settings.imagePreviewOption, with: settings),
+                       backgroundColor: getBackgroundColor(for: settings.imagePreviewOption, with: settings),
                        type: .twoOptionsImages(alternateOption: settings.notDefaultImagePreviewOption.cameraOption,
-                                               alternateImage: getImage(for: settings.notDefaultImagePreviewOption)))
+                                               alternateImage: getImage(for: settings.notDefaultImagePreviewOption, with: settings),
+                                               alternateBackgroundColor: getBackgroundColor(for: settings.notDefaultImagePreviewOption, with: settings)))
             ])
         }
         return options
@@ -111,12 +116,12 @@ extension CameraController {
     ///
     /// - Parameter option: AVCaptureDevice.FlashMode, on or off / auto
     /// - Returns: an optional image
-    func getImage(for option: AVCaptureDevice.FlashMode) -> UIImage? {
+    func getImage(for option: AVCaptureDevice.FlashMode, with settings: CameraSettings) -> UIImage? {
         if option == .on {
-            return KanvasCameraImages.flashOnImage
+            return KanvasCameraDesign.shared.cameraOptionFlashOnImage
         }
         else {
-            return KanvasCameraImages.flashOffImage
+            return KanvasCameraDesign.shared.cameraOptionFlashOffImage
         }
     }
     
@@ -124,12 +129,25 @@ extension CameraController {
     ///
     /// - Parameter option: ImagePreviewMode, on or off
     /// - Returns: an optional image
-    func getImage(for option: ImagePreviewMode) -> UIImage? {
+    func getImage(for option: ImagePreviewMode, with settings: CameraSettings) -> UIImage? {
         if option == .on {
-            return KanvasCameraImages.imagePreviewOnImage
+            return KanvasCameraDesign.shared.cameraOptionGhostFrameOnImage
         }
         else {
-            return KanvasCameraImages.imagePreviewOffImage
+            return KanvasCameraDesign.shared.cameraOptionGhostFrameOffImage
+        }
+    }
+    
+    /// function to get the background color for the image preview button
+    ///
+    /// - Parameter option: ImagePreviewMode, on or off
+    /// - Returns: the background color
+    func getBackgroundColor(for option: ImagePreviewMode, with settings: CameraSettings) -> UIColor {
+        if option == .on {
+            return CameraConstants.buttonInvertedBackgroundColor
+        }
+        else {
+            return CameraConstants.buttonBackgroundColor
         }
     }
     

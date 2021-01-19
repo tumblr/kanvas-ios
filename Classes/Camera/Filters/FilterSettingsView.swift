@@ -9,8 +9,8 @@ import UIKit
 
 private struct FilterSettingsViewConstants {
     static let animationDuration: TimeInterval = 0.25
-    static let iconSize: CGFloat = 39
-    static let padding: CGFloat = 4
+    static let iconSize: CGFloat = KanvasCameraDesign.shared.filterSettingsViewIconSize
+    static let padding: CGFloat = KanvasCameraDesign.shared.filterSettingsViewPadding
     static let collectionViewHeight = CameraFilterCollectionCell.minimumHeight + 10
     static let height: CGFloat = collectionViewHeight + padding + iconSize
 }
@@ -31,15 +31,16 @@ final class FilterSettingsView: IgnoreTouchesView {
     
     weak var delegate: FilterSettingsViewDelegate?
     
-    init() {
+    init() {        
         collectionContainer = IgnoreTouchesView()
         collectionContainer.backgroundColor = .clear
         collectionContainer.accessibilityIdentifier = "Filter Collection Container"
         collectionContainer.clipsToBounds = false
         
+        let defaultImage = KanvasCameraDesign.shared.filterSettingsViewFiltersOffImage
         visibilityButton = UIButton()
         visibilityButton.accessibilityIdentifier = "Filter Visibility Button"
-        visibilityButton.setImage(KanvasCameraImages.discoballUntappedImage, for: .normal)
+        visibilityButton.setImage(defaultImage, for: .normal)
         super.init(frame: .zero)
         
         clipsToBounds = false
@@ -64,8 +65,21 @@ final class FilterSettingsView: IgnoreTouchesView {
     /// - Parameter shown: whether the filter collection is now shown or hidden
     func onFilterCollectionShown(_ shown: Bool) {
         UIView.animate(withDuration: FilterSettingsViewConstants.animationDuration) { [weak self] in
-            let image = shown ? KanvasCameraImages.discoballTappedImage : KanvasCameraImages.discoballUntappedImage
-            self?.visibilityButton.setImage(image, for: .normal)
+            guard let self = self else { return }
+            let image: UIImage?
+            let backgroundColor: UIColor
+            
+            if shown {
+                image = KanvasCameraDesign.shared.filterSettingsViewFiltersOnImage
+                backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundInvertedColor
+            }
+            else {
+                image = KanvasCameraDesign.shared.filterSettingsViewFiltersOffImage
+                backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundColor
+            }
+            
+            self.visibilityButton.backgroundColor = backgroundColor
+            self.visibilityButton.setImage(image, for: .normal)
         }
     }
     
@@ -101,6 +115,13 @@ private extension FilterSettingsView {
     func setUpVisibilityButton() {
         addSubview(visibilityButton)
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        if KanvasCameraDesign.shared.isBottomPicker {
+            visibilityButton.backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundColor
+            visibilityButton.layer.cornerRadius = FilterSettingsViewConstants.iconSize / 2
+            visibilityButton.layer.masksToBounds = true
+        }
+
         NSLayoutConstraint.activate([
             visibilityButton.heightAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),
             visibilityButton.widthAnchor.constraint(equalToConstant: FilterSettingsViewConstants.iconSize),

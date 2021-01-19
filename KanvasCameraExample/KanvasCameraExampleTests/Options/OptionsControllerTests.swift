@@ -26,8 +26,8 @@ final class OptionsControllerTests: FBSnapshotTestCase {
 
     func getOptions() -> [[Option<String>]] {
         let image = KanvasCameraImages.flashOnImage
-        return [[Option(option: "Option 1.1", image: image, type: .twoOptionsImages(alternateOption: "Option 1.2", alternateImage: image)),
-                Option(option: "Option 2", image: image, type: .twoOptionsAnimation(animation: { [weak self] _ in self?.animationCalled = true },
+        return [[Option(option: "Option 1.1", image: image, backgroundColor: .clear, type: .twoOptionsImages(alternateOption: "Option 1.2", alternateImage: image, alternateBackgroundColor: .clear)),
+                 Option(option: "Option 2", image: image, backgroundColor: .clear, type: .twoOptionsAnimation(animation: { [weak self] _ in self?.animationCalled = true },
                                                                                     duration: AnimationDuration,
                                                                                     completion: nil))]]
     }
@@ -53,7 +53,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(viewController.view)
         // Test that the option was correctly changed
         XCTAssertEqual(options[0][0].option, "Option 1.2")
-        if case let .twoOptionsImages(alternateOption: otherOption, alternateImage: _) = options[0][0].type {
+        if case let .twoOptionsImages(alternateOption: otherOption, alternateImage: _, alternateBackgroundColor: _) = options[0][0].type {
             XCTAssertEqual(otherOption, "Option 1.1")
         }
         else {
