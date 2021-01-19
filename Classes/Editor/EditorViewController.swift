@@ -107,7 +107,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
     
     private lazy var textController: EditorTextController = {
-        let controller = EditorTextController()
+        let textViewSettings = EditorTextView.Settings(fontSelectorUsesFont: settings.fontSelectorUsesFont)
+        let settings = EditorTextController.Settings(textViewSettings: textViewSettings)
+        let controller = EditorTextController(settings: settings)
         controller.delegate = self
         return controller
     }()

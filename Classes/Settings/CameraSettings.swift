@@ -284,6 +284,10 @@ public struct CameraFeatures {
     /// Auto-open GIF Maker after GIF Camera
     public var gifCameraShouldStartGIFMaker: Bool = DefaultCameraSettings.editorShouldStartGIFMaker
 
+
+    /// The Font Selector button uses the currently selected font for its label
+    public var fontSelectorUsesFont: Bool = DefaultCameraSettings.fontFamilyUsesFont
+
     override public init() { }
 
 }
@@ -344,4 +348,5 @@ private struct DefaultCameraSettings {
     static let showBlogSwitcherInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
+    static let fontFamilyUsesFont: Bool = false
 }

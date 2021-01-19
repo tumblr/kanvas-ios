@@ -116,6 +116,10 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         set {
             mainTextView.font = newValue
             mainTextView.resizeFont()
+
+            if settings.fontSelectorUsesFont {
+                refreshFontSelector()
+            }
         }
     }
     
@@ -188,13 +192,20 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         croppedView.sizeToFit()
         return croppedView.contentSize
     }
+
+    struct Settings {
+        /// The Font Selector button uses the current selected font (`font`) for its label
+        let fontSelectorUsesFont: Bool
+    }
+
+    private let settings: Settings
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    init() {
+
+    init(settings inSettings: Settings) {
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
         mainTextView = MainTextView()
         toolsContainer = UIView()
@@ -210,6 +221,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         eyeDropper = UIButton()
         colorGradient = UIView()
         colorSelector = IgnoreTouchesView()
+        settings = inSettings
         super.init(frame: .zero)
         mainTextView.textViewDelegate = self
         setupViews()
@@ -295,6 +307,12 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         confirmButton.alpha = 0
     }
+
+    private func refreshFontSelector() {
+        if let attributedFont = font?.withSize(18) {
+            fontSelector.setAttributedTitle(NSAttributedString(string: "Aa", attributes: [.font: attributedFont]), for: .normal)
+        }
+    }
     
     /// Sets up the container that holds the main menu and the color picker menu
     private func setUpToolsContainer() {
@@ -328,7 +346,11 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the font selector button
     private func setUpFontSelector() {
         fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
-        fontSelector.setImage(KanvasEditorDesign.shared.editorTextViewFontImage, for: .normal)
+        if settings.fontSelectorUsesFont {
+            refreshFontSelector()
+        } else {
+            fontSelector.setImage(KanvasCameraImages.fontImage, for: .normal)
+        }
         fontSelector.layer.cornerRadius = Constants.customIconSize / 2
         fontSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         fontSelector.translatesAutoresizingMaskIntoConstraints = false
