@@ -36,6 +36,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case gifs(Bool)
         case modeSelectorTooltip(Bool)
         case shutterButtonTooltip(Bool)
+        case editorFontSelectorUsesFont(Bool)
         case editorShouldStartGIFMaker(Bool)
         case gifCameraShouldStartGIFMaker(Bool)
 
@@ -83,6 +84,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Show Mode Selector Tooltip"
             case .shutterButtonTooltip(_):
                 return "Show Shutter Button Tooltip"
+            case .editorFontSelectorUsesFont(_):
+                return "Editor uses font for font selector"
             case .editorShouldStartGIFMaker:
                 return "Editor auto-starts GIF Maker"
             case .gifCameraShouldStartGIFMaker:
@@ -133,6 +136,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .modeSelectorTooltip(let enabled):
                 return enabled
             case .shutterButtonTooltip(let enabled):
+                return enabled
+            case .editorFontSelectorUsesFont(let enabled):
                 return enabled
             case .editorShouldStartGIFMaker(let enabled):
                 return enabled
@@ -222,6 +227,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .modeSelectorTooltip(value)
         case .shutterButtonTooltip(_):
             featuresData[indexPath.row] = .shutterButtonTooltip(value)
+        case .editorFontSelectorUsesFont(_):
+            featuresData[indexPath.row] = .editorFontSelectorUsesFont(value)
         case .editorShouldStartGIFMaker(_):
             featuresData[indexPath.row] = .editorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
