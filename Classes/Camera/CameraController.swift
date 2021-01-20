@@ -139,7 +139,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return controller
     }()
     private lazy var clipsController: MediaClipsEditorViewController = {
-        let controller = MediaClipsEditorViewController()
+        let controller = MediaClipsEditorViewController(showsAddButton: false)
         controller.delegate = self
         return controller
     }()
@@ -837,10 +837,20 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var existingEditor: EditorViewController?
     private var multiEditorViewController: MultiEditorViewController?
 
+    func addButtonWasPressed(clips: [MediaClip]) {
+        self.clips = clips
+        existingEditor = presentedViewController as? EditorViewController
+        dismiss(animated: false, completion: nil)
+    }
+
     func editor(segment: CameraSegment) -> EditorViewController {
         let segments = [segment]
 
         return createEditorViewController(segments, selected: segments.startIndex)
+    }
+    
+    public func addButtonPressed() {
+        didOpenMode(.normal, andClosed: nil)
     }
 
     func didFinishExportingVideo(url: URL?) {

@@ -35,6 +35,8 @@ protocol MediaClipsEditorDelegate: class {
     
     /// Callback for when the next button is selected
     func nextButtonWasPressed()
+    
+    func addButtonWasPressed(clips: [MediaClip])
 }
 
 /// Controller for handling media clips edition (showing, adding, removing, etc)
@@ -48,7 +50,7 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     /// This needs to be dynamic because it will be observed
     @objc private(set) dynamic var hasClips: Bool = false
 
-    init() {
+    init(showsAddButton: Bool = false) {
         editorView = MediaClipsEditorView(showsAddButton: showsAddButton)
         collectionController = MediaClipsCollectionController()
         super.init(nibName: .none, bundle: .none)
@@ -157,5 +159,10 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     
     func nextButtonWasPressed() {
         delegate?.nextButtonWasPressed()
+    }
+    
+    func addButtonWasPressed() {
+        let clips = collectionController.getClips()
+        delegate?.addButtonWasPressed(clips: clips)
     }
 }
