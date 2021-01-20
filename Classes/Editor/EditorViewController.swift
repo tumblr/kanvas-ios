@@ -169,13 +169,16 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         if settings.features.editorPostOptions {
             mainActionMode = .postOptions
         }
+        else if settings.features.multipleExports {
+            mainActionMode = .publish
+        }
         else if settings.features.editorPosting {
             mainActionMode = .post
         }
 
         let editorView: EditorView = EditorView(delegate: delegate,
                                     mainActionMode: mainActionMode,
-                                    showSaveButton: settings.features.editorSaving,
+                                    showSaveButton: settings.features.editorSaving && settings.features.multipleExports == false,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showCogIcon: settings.showCogIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
