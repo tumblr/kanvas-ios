@@ -66,9 +66,15 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     
     // Values from which the different gestures start
     private var originTransformations: ViewTransformations
+
+    private var innerViews: [MovableViewInnerElement] = []
     
     var isEmpty: Bool {
-        return subviews.compactMap{ $0 as? MovableView }.count == 0
+        return movableViews.isEmpty
+    }
+
+    var movableViews: [MovableView] {
+        return subviews.compactMap { $0 as? MovableView }
     }
     
     init() {
@@ -79,8 +85,17 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         setUpViews()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    var trashCompletion: (() -> Void)? {
+        set {
+            trashView.completion = newValue
+        }
+        get {
+            return trashView.completion
+        }
     }
     
     // MARK: - Layout
@@ -120,6 +135,13 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         
         overlay.alpha = 0
     }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        subviews.compactMap({ return $0 as? MovableView }).forEach({ view in
+            view.moveToDefinedPosition()
+        })
+    }
     
     // MARK: - Public interface
     
@@ -129,7 +151,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     ///  - transformations: transformations for the view
     ///  - location: location of the view before transformations
     ///  - size: size of the view
-    func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
+    func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, origin: CGPoint? = nil, size: CGSize) {
         let movableView = MovableView(view: view, transformations: transformations)
         movableView.delegate = self
         movableView.isUserInteractionEnabled = true
@@ -141,8 +163,6 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         NSLayoutConstraint.activate([
             movableView.heightAnchor.constraint(equalToConstant: size.height),
             movableView.widthAnchor.constraint(equalToConstant: size.width),
-            movableView.topAnchor.constraint(equalTo: topAnchor, constant: location.y - (size.height / 2)),
-            movableView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: location.x - (size.width / 2))
         ])
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(movableViewTapped(recognizer:)))
@@ -162,10 +182,12 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         movableView.addGestureRecognizer(pinchRecognizer)
         movableView.addGestureRecognizer(panRecognizer)
         movableView.addGestureRecognizer(longPressRecognizer)
-        
-        UIView.animate(withDuration: Constants.animationDuration) {
+
+        let move: () -> Void = {
             movableView.moveToDefinedPosition()
         }
+        move()
+        innerViews.append(view)
     }
     
     /// Removes the tapped view from the canvas
@@ -253,8 +275,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         switch recognizer.state {
         case .began:
             onRecognizerBegan(view: movableView)
-            showOverlay(true)
-            movableView.fadeOut()
+            showTrash()
             touchPosition = recognizer.touchLocations
             trashView.changeStatus(touchPosition)
         case .changed:
@@ -267,8 +288,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
             else {
                 movableView.fadeIn()
             }
-            showOverlay(false)
-            trashView.hide()
+            hideTrash()
             onRecognizerEnded()
         case .possible:
             break
@@ -282,6 +302,30 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         let oneIsTapGesture = gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer
         return !oneIsTapGesture
+    }
+
+    /// shows the trash icon opened with its red background
+    func openTrash() {
+        trashView.open()
+    }
+
+    /// shows the trash icon closed
+    func showTrash() {
+        showOverlay(true)
+        trashView.superview?.bringSubviewToFront(trashView)
+        movableViews.forEach { movableView in
+            movableView.fadeOut()
+        }
+        trashView.close()
+    }
+
+    /// hides the trash icon with its red background
+    func hideTrash() {
+        showOverlay(false)
+        movableViews.forEach { movableView in
+            movableView.fadeIn()
+        }
+        trashView.hide()
     }
     
     // MARK: - MovableViewDelegate

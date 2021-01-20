@@ -75,6 +75,10 @@ final class MovableView: UIView {
             applyTransform()
         }
     }
+
+    var originLocation: CGPoint = .zero
+
+    var size: CGSize = .zero
     
     var transformations: ViewTransformations {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
