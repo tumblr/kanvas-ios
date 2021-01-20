@@ -31,6 +31,8 @@ protocol MediaClipsEditorDelegate: class {
     ///   - destinationIndex: Index where the clips is ar after the moving around action
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
     
+    func mediaClipWasSelected(at: Int)
+    
     /// Callback for when the next button is selected
     func nextButtonWasPressed()
 }
@@ -39,23 +41,19 @@ protocol MediaClipsEditorDelegate: class {
 final class MediaClipsEditorViewController: UIViewController, MediaClipsCollectionControllerDelegate, MediaClipsEditorViewDelegate {
     weak var delegate: MediaClipsEditorDelegate?
 
-    private lazy var editorView: MediaClipsEditorView = {
-        let view = MediaClipsEditorView()
-        view.delegate = self
-        return view
-    }()
-    private lazy var collectionController: MediaClipsCollectionController = {
-        let controller = MediaClipsCollectionController()
-        controller.delegate = self
-        return controller
-    }()
-    
+    private var editorView: MediaClipsEditorView
+    private var collectionController: MediaClipsCollectionController
+
     /// Is there any clip?
     /// This needs to be dynamic because it will be observed
     @objc private(set) dynamic var hasClips: Bool = false
 
     init() {
+        editorView = MediaClipsEditorView()
+        collectionController = MediaClipsCollectionController()
         super.init(nibName: .none, bundle: .none)
+        collectionController.delegate = self
+        editorView.delegate = self
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -92,6 +90,19 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     func removeAllClips() {
         hasClips = false
         collectionController.removeAllClips()
+    }
+    
+    func replace(clips: [MediaClip]) {
+        hasClips = !clips.isEmpty
+        collectionController.replace(clips: clips)
+    }
+    
+    func getClips() -> [MediaClip] {
+        return collectionController.getClips()
+    }
+
+    func select(index: Int) {
+        collectionController.select(index: index)
     }
 
     /// Deletes the clip on the current dragging session
@@ -138,6 +149,10 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
 
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         delegate?.mediaClipWasMoved(from: originIndex, to: destinationIndex)
+    }
+    
+    func mediaClipWasSelected(at: Int) {
+        delegate?.mediaClipWasSelected(at: at)
     }
     
     func nextButtonWasPressed() {
