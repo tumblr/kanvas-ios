@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 
 /// A container for segments
-enum CameraSegment {
+public enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
     case image(UIImage, URL?, TimeInterval?, MediaInfo)
     case video(URL, MediaInfo?)
@@ -52,6 +52,22 @@ enum CameraSegment {
             }
         }
         return KanvasCameraTimes.onlyImagesFrameTimeInterval
+    }
+
+    var lastFrame: UIImage {
+        switch self {
+        case .image(let image, _, _, _): return image
+        case .video(let url, _):
+            let asset = AVAsset(url: url)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            do {
+                let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
+                return UIImage(cgImage: image)
+            } catch let error {
+                assertionFailure("Failed to generate CameraSegment thumbnail \(url): \(error)")
+                return UIImage()
+            }
+        }
     }
 
     func mediaFrame(defaultTimeInterval: TimeInterval) -> MediaFrame? {
