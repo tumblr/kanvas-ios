@@ -1,13 +1,14 @@
 import Foundation
 
 protocol MultiEditorComposerDelegate: class {
+    func addButtonWasPressed()
     func editor(segment: CameraSegment) -> EditorViewController
     func dismissButtonPressed()
 }
 
 class MultiEditorViewController: UIViewController {
     private lazy var clipsController: MediaClipsEditorViewController = {
-        let clipsEditor = MediaClipsEditorViewController()
+        let clipsEditor = MediaClipsEditorViewController(showsAddButton: true)
         clipsEditor.delegate = self
         clipsEditor.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         return clipsEditor
@@ -310,5 +311,9 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
     func addButtonPressed() {
         dismiss(animated: true, completion: nil)
+    }
+
+    func addButtonWasPressed() {
+        delegate?.addButtonWasPressed()
     }
 }
