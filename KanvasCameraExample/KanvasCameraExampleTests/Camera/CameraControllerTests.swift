@@ -39,7 +39,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     }
 
     func newController(delegate: CameraControllerDelegate, settings: CameraSettings) -> CameraController {
-        let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, captureDeviceAuthorizer: MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .authorized, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized), stickerProvider: StickerProviderStub(), analyticsProvider: KanvasCameraAnalyticsStub(), quickBlogSelectorCoordinator: nil)
+        let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, captureDeviceAuthorizer: MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .authorized, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized), stickerProvider: StickerProviderStub(), analyticsProvider: KanvasCameraAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
         controller.delegate = delegate
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         UIView.setAnimationsEnabled(false)
@@ -345,7 +345,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
         
     }
     
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    func getQuickPostButton() -> UIView {
         return UIView()
     }
     

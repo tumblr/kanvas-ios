@@ -65,13 +65,13 @@ final class TextureSelectorController: UIViewController, TextureSelectorViewDele
         switch textureType {
         case .pencil:
             newTexture = Pencil()
-            newImage = KanvasCameraImages.pencilImage
+            newImage = KanvasEditorDesign.shared.drawingViewPencilImage
         case .marker:
             newTexture = Marker()
-            newImage = KanvasCameraImages.markerImage
+            newImage = KanvasEditorDesign.shared.drawingViewMarkerImage
         case .sharpie:
             newTexture = Sharpie()
-            newImage = KanvasCameraImages.sharpieImage
+            newImage = KanvasEditorDesign.shared.drawingViewSharpieImage
         }
         
         textureSelectorView.changeMainButtonIcon(image: newImage)

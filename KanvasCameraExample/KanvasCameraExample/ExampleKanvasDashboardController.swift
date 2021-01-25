@@ -30,6 +30,8 @@ public protocol KanvasDashboardControllerDelegate: class {
     func kanvasDashboardCreatePostRequest()
 
     func kanvasDashboardOpenPostingOptionsRequest()
+    
+    func kanvasDashboardConfirmPostingOptionsRequest()
 }
 
 /// Protocol for the KanvasDashboardController to get state from
@@ -124,7 +126,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         // Only supported in Orangina
     }
     
-    public func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    public func getQuickPostButton() -> UIView {
         // Only supported in Orangina
         return UIView()
     }
@@ -133,7 +135,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         // Only supported in Orangina
         return UIView()
     }
-
+    
     public func editorDismissed() {
         // Only supported in Orangina
     }
@@ -168,6 +170,8 @@ extension KanvasDashboardController: CameraControllerDelegate {
                     break
                 case .postOptions:
                     self.delegate?.kanvasDashboardOpenPostingOptionsRequest()
+                case .confirmPostOptions:
+                    self.delegate?.kanvasDashboardConfirmPostingOptionsRequest()
                 }
             }
         }
@@ -260,7 +264,7 @@ private extension KanvasDashboardController {
     func createCameraController() -> CameraController {
         let kanvasAnalyticsProvider = stateDelegate?.kanvasDashboardAnalyticsProvider
         let stickerProvider = ExperimentalStickerProvider()
-        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider, quickBlogSelectorCoordinator: nil)
+        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider, quickBlogSelectorCoordinator: nil, tagCollection: nil)
         kanvasViewController.delegate = self
         return kanvasViewController
     }

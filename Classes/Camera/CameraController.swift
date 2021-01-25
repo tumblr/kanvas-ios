@@ -29,6 +29,7 @@ public enum KanvasExportAction {
     case post
     case save
     case postOptions
+    case confirmPostOptions
 }
 
 // Error handling
@@ -92,9 +93,8 @@ public protocol CameraControllerDelegate: class {
     
     /// Obtains the quick post button for the editor.
     ///
-    /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
-    func getQuickPostButton(enableLongPress: Bool) -> UIView
+    func getQuickPostButton() -> UIView
     
     /// Obtains the blog switcher for the editor.
     ///
@@ -171,6 +171,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let feedbackGenerator: UINotificationFeedbackGenerator
     private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
+    private let tagCollection: UIView?
 
     private weak var mediaPlayerController: MediaPlayerController?
 
@@ -184,8 +185,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// and which should be the result of the interaction.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator)
+    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, tagCollection: UIView?) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, tagCollection: tagCollection)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -207,7 +208,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
          captureDeviceAuthorizer: CaptureDeviceAuthorizing,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?,
-         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         tagCollection: UIView?) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
@@ -217,6 +219,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.stickerProvider = stickerProvider
         self.analyticsProvider = analyticsProvider
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
+        self.tagCollection = tagCollection
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
@@ -333,7 +336,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                               cameraMode: currentMode,
                                               stickerProvider: stickerProvider,
                                               analyticsProvider: analyticsProvider,
-                                              quickBlogSelectorCoordinator: quickBlogSelectorCoordinator)
+                                              quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                              tagCollection: tagCollection)
         controller.delegate = self
         return controller
     }
@@ -844,7 +848,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         switch action {
         case .previewConfirm:
             analyticsProvider?.logConfirmedMedia(mode: currentMode, clipsCount: clipsCount, length: length)
-        case .confirm, .post, .save, .postOptions:
+        case .confirm, .post, .save, .postOptions, .confirmPostOptions:
             analyticsProvider?.logEditorCreatedMedia(clipsCount: clipsCount, length: length)
         }
     }
@@ -884,9 +888,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         delegate?.didEndStrokeSelectorAnimation()
     }
     
-    public func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    public func getQuickPostButton() -> UIView {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton(enableLongPress: enableLongPress)
+        return delegate.getQuickPostButton()
     }
     
     public func getBlogSwitcher() -> UIView {

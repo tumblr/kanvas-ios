@@ -34,6 +34,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case editorPostOptions(Bool)
         case newCameraModes(Bool)
         case gifs(Bool)
+        case modeSelectorTooltip(Bool)
+        case shutterButtonTooltip(Bool)
         case editorShouldStartGIFMaker(Bool)
         case gifCameraShouldStartGIFMaker(Bool)
 
@@ -77,6 +79,10 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor Post Options"
             case .gifs(_):
                 return "GIF support"
+            case .modeSelectorTooltip(_):
+                return "Show Mode Selector Tooltip"
+            case .shutterButtonTooltip(_):
+                return "Show Shutter Button Tooltip"
             case .editorShouldStartGIFMaker:
                 return "Editor auto-starts GIF Maker"
             case .gifCameraShouldStartGIFMaker:
@@ -124,12 +130,15 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return enabled
             case .gifs(let enabled):
                 return enabled
+            case .modeSelectorTooltip(let enabled):
+                return enabled
+            case .shutterButtonTooltip(let enabled):
+                return enabled
             case .editorShouldStartGIFMaker(let enabled):
                 return enabled
             case .gifCameraShouldStartGIFMaker(let enabled):
                 return enabled
             }
-
         }
     }
 
@@ -209,6 +218,10 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editorPostOptions(value)
         case .gifs(_):
             featuresData[indexPath.row] = .gifs(value)
+        case .modeSelectorTooltip(_):
+            featuresData[indexPath.row] = .modeSelectorTooltip(value)
+        case .shutterButtonTooltip(_):
+            featuresData[indexPath.row] = .shutterButtonTooltip(value)
         case .editorShouldStartGIFMaker(_):
             featuresData[indexPath.row] = .editorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):

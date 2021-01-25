@@ -36,9 +36,9 @@ private struct Constants {
     static let speedMenuMargin: CGFloat = 34
     
     // Top options
-    static let topButtonSize: CGFloat = 36
+    static let topButtonSize: CGFloat = KanvasEditorDesign.shared.topButtonSize
     static let topButtonInset: CGFloat = -10
-    static let topButtonsInterspace: CGFloat = 30
+    static let topButtonsInterspace: CGFloat = KanvasEditorDesign.shared.topButtonInterspace
     static let topButtonsCount: CGFloat = 3
 
     static let font = KanvasCameraFonts.shared.gifMakerRevertButtonFont
@@ -121,9 +121,19 @@ final class GifMakerView: UIView {
     /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
         confirmButton.accessibilityIdentifier = "GIF Maker Confirm Button"
-        confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
+        
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
+        
+        let checkmark = KanvasEditorDesign.shared.checkmarkImage
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            let backgroundImage = UIImage.circle(diameter: Constants.topButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
+            confirmButton.setBackgroundImage(backgroundImage, for: .normal)
+            confirmButton.setImage(checkmark, for: .normal)
+        }
+        else {
+            confirmButton.setBackgroundImage(checkmark, for: .normal)
+        }
         
         let index: CGFloat = 0
         let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index
@@ -219,7 +229,7 @@ final class GifMakerView: UIView {
         trimMenuContainer.clipsToBounds = false
         addSubview(trimMenuContainer)
         
-        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.trimMenuMargin
+        let bottomMargin = Constants.bottomMargin + OptionSelectorView.height + Constants.trimMenuMargin
         NSLayoutConstraint.activate([
             trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
@@ -236,7 +246,7 @@ final class GifMakerView: UIView {
         speedMenuContainer.clipsToBounds = false
         addSubview(speedMenuContainer)
         
-        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.speedMenuMargin
+        let bottomMargin = Constants.bottomMargin + OptionSelectorView.height + Constants.speedMenuMargin
         NSLayoutConstraint.activate([
             speedMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             speedMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
@@ -257,7 +267,7 @@ final class GifMakerView: UIView {
             playbackMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             playbackMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
             playbackMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
-            playbackMenuContainer.heightAnchor.constraint(equalToConstant: PlaybackView.height),
+            playbackMenuContainer.heightAnchor.constraint(equalToConstant: OptionSelectorView.height),
         ])
     }
     

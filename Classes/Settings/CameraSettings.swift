@@ -16,7 +16,7 @@ import Foundation
 /// - stitch: Capturing stop motions, a sequence of images and/or videos
 /// - gif: Capturing gifs, a sequence of photos
 
-@objc public enum CameraMode: Int {
+@objc public enum CameraMode: Int, OptionSelectorItem {
     case stopMotion = 0
     case photo
     case loop
@@ -66,6 +66,10 @@ import Foundation
     
     private var order: Int {
         return self.rawValue
+    }
+    
+    var description: String {
+        return KanvasCameraStrings.name(for: self)
     }
 }
 
@@ -142,6 +146,14 @@ public struct CameraFeatures {
     /// GIF support
     /// This enables GIFs to be picked from the media picker, and exported from the Editor.
     public var gifs = false
+    
+    /// Mode selector tooltip
+    /// This enables a tooltip to appear below the mode selector when the camera launches for the first time.
+    public var modeSelectorTooltip: Bool = false
+    
+    /// Shutter button tooltip
+    /// This enables a tooltip to appear above the shutter button when the camera launches for the first time.
+    public var shutterButtonTooltip: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera
@@ -235,17 +247,21 @@ public struct CameraFeatures {
     /// This changes back carat in the editor to a cross icon
     public var crossIconInEditor = DefaultCameraSettings.crossIconInEditor
 
+    /// Cog icon in Editor
+    /// This sets a cog icon for the posting options button in the editor
+    public var showCogIconInEditor = DefaultCameraSettings.showCogIconInEditor
+    
     /// Tag button in Editor
     /// This shows a # button in the editor to enable adding tags
     public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
     
+    /// Tag collection in Editor
+    /// This shows a collection of tags in the editor
+    public var showTagCollectionInEditor = DefaultCameraSettings.showTagCollectionInEditor
+    
     /// Quick post button in Editor
     /// This shows a post button that makes quick options appear when long pressed
     public var showQuickPostButtonInEditor = DefaultCameraSettings.showQuickPostButtonInEditor
-    
-    /// Long press for post button in Editor
-    /// This enables the long press for the quick post button.
-    public var enableQuickPostLongPress = DefaultCameraSettings.enableQuickPostLongPress
     
     /// Blog Switcher in Editor
     /// This shows a blog switcher that makes quick options appear when long pressed
@@ -321,11 +337,11 @@ private struct DefaultCameraSettings {
     static let features = CameraFeatures()
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
+    static let showCogIconInEditor: Bool = false
     static let showTagButtonInEditor: Bool = false
+    static let showTagCollectionInEditor: Bool = false
     static let showQuickPostButtonInEditor: Bool = false
-    static let enableQuickPostLongPress: Bool = false
     static let showBlogSwitcherInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
-
 }

@@ -24,16 +24,22 @@ jobs:
     steps:
       - fix-image
       - git/shallow-checkout
+      - ios/install-dependencies:
+          bundle-install: true
+          bundler-working-directory: KanvasCameraExample
+          pod-install: true
+          cocoapods-working-directory: KanvasCameraExample
+      - run:
+          name: Pod Install
+          when: always
+          working_directory: ./KanvasCameraExample
+          command: bundle exec pod install
       - ios/test:
           xcode-version: 11.2.1
           workspace: KanvasCameraExample/KanvasCameraExample.xcworkspace
           scheme: KanvasCameraExample
           device: iPhone 8
           ios-version: "14.0"
-          bundle-install: true
-          bundler-working-directory: KanvasCameraExample
-          pod-install: true
-          cocoapods-working-directory: KanvasCameraExample
       - run:
           name: Zip failed diffs
           when: always
@@ -45,9 +51,3 @@ jobs:
           destination: testresults
       - ios/save-xcodebuild-artifacts:
           result-bundle-path: build/results
-          #- ios/validate-podspec:
-          #name: Validate Podspec
-          #xcode-version: '11.5'
-          #podspec-path: KanvasCamera.podspec.json
-          #bundle-install: true
-

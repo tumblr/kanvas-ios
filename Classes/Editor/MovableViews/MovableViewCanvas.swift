@@ -41,7 +41,7 @@ protocol MovableViewCanvasDelegate: class {
 /// Constants for the canvas
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let trashViewSize: CGFloat = 98
+    static let trashViewSize: CGFloat = KanvasCameraDesign.shared.trashViewSize
     static let trashViewBottomMargin: CGFloat = 93
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
 }
@@ -50,7 +50,7 @@ private struct Constants {
 final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, MovableViewDelegate {
     
     weak var delegate: MovableViewCanvasDelegate?
-    
+
     // View that has been tapped
     private var selectedMovableView: MovableView?
     
@@ -93,6 +93,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     /// Sets up the trash bin used during deletion
     private func setUpTrashView() {
         trashView.accessibilityIdentifier = "Editor Movable View Canvas Trash View"
+        trashView.layer.zPosition = 1
         trashView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(trashView)
         

@@ -44,9 +44,8 @@ public protocol EditorControllerDelegate: class {
     
     /// Obtains the quick post button.
     ///
-    /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
-    func getQuickPostButton(enableLongPress: Bool) -> UIView
+    func getQuickPostButton() -> UIView
     
     /// Obtains the blog switcher.
     ///
@@ -59,7 +58,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
 
     private lazy var editorView: EditorView = {
         var mainActionMode: EditorView.MainActionMode = .confirm
@@ -74,19 +73,29 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
                                     showCrossIcon: settings.crossIconInEditor,
+                                    showCogIcon: settings.showCogIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
+                                    showTagCollection: settings.showTagCollectionInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
-                                    enableQuickPostLongPress: settings.enableQuickPostLongPress,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
+                                    tagCollection: tagCollection,
                                     metalContext: settings.features.metalPreview ? metalContext : nil)
         player.playerView = editorView.playerView
         return editorView
     }()
     
-    private lazy var collectionController: EditionMenuCollectionController = {
-        let controller = EditionMenuCollectionController(settings: self.settings,
-                                                         shouldExportMediaAsGIF: shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil)
+    private lazy var collectionController: KanvasEditorMenuController = {
+        let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
+        let controller: KanvasEditorMenuController
+        
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            controller = StyleMenuController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+        }
+        else {
+            controller = EditionMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+        }
+        
         controller.delegate = self
         return controller
     }()
@@ -130,6 +139,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
 
     private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
+    private let tagCollection: UIView?
     private let analyticsProvider: KanvasCameraAnalyticsProvider?
     private let settings: CameraSettings
     private var originalSegments: [CameraSegment]
@@ -142,7 +152,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let stickerProvider: StickerProvider?
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
-    private var selectedCell: EditionMenuCollectionCell?
+    private var selectedCell: KanvasEditorMenuCollectionCell?
     private let metalContext = MetalContext.createContext()
 
     private var shouldExportMediaAsGIF: Bool {
@@ -198,7 +208,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: analyticsProvider,
-                             quickBlogSelectorCoordinator: nil)
+                             quickBlogSelectorCoordinator: nil,
+                             tagCollection: nil)
     }
     
     public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
@@ -210,7 +221,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: nil,
-                             quickBlogSelectorCoordinator: nil)
+                             quickBlogSelectorCoordinator: nil,
+                             tagCollection: nil)
     }
 
     public static func createEditor(forGIF url: URL,
@@ -241,7 +253,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                   cameraMode: nil,
                   stickerProvider: stickerProvider,
                   analyticsProvider: analyticsProvider,
-                  quickBlogSelectorCoordinator: nil)
+                  quickBlogSelectorCoordinator: nil,
+                  tagCollection: nil)
     }
     
     /// The designated initializer for the editor controller
@@ -261,7 +274,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          cameraMode: CameraMode?,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?,
-         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         tagCollection: UIView?) {
         self.settings = settings
         self.originalSegments = segments
         self.assetsHandler = assetsHandler
@@ -271,6 +285,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.gifEncoderClass = gifEncoderClass
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
+        self.tagCollection = tagCollection
 
         super.init(nibName: .none, bundle: .none)
         
@@ -381,7 +396,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         openGIFMaker(cell: cell, animated: animated, permanent: true)
     }
 
-    private func openGIFMaker(cell: EditionMenuCollectionCell, animated: Bool, permanent: Bool) {
+    private func openGIFMaker(cell: KanvasEditorMenuCollectionCell, animated: Bool, permanent: Bool) {
         let editionOption = EditionOption.gif
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         showMainUI(false)
@@ -393,13 +408,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else {
+            editorView.showQuickPostButton(false)
             gifMakerController.showConfirmButton(true)
         }
         analyticsProvider?.logEditorGIFOpen()
     }
 
     private func revertGIF() {
-        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
         gifMakerController.showView(false)
         gifMakerController.showConfirmButton(false)
         gifMakerHandler.revert { reverted in
@@ -546,7 +562,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
-        let cell = collectionController.textCell
+        let cell = collectionController.getCell(for: .text)
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
@@ -579,11 +595,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didBeginTouchesOnText() {
-        showNavigationContainer(false)
+        editorView.showNavigationItems(false)
     }
     
     func didEndTouchesOnText() {
-        showNavigationContainer(true)
+        editorView.showNavigationItems(true)
     }
 
     func didRenderRectChange(rect: CGRect) {
@@ -595,9 +611,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         delegate?.dismissButtonPressed()
     }
     
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    func getQuickPostButton() -> UIView {
         guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton(enableLongPress: enableLongPress)
+        return delegate.getQuickPostButton()
     }
     
     func getBlogSwitcher() -> UIView {
@@ -779,7 +795,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             if settings.features.editorGIFMaker {
                 shouldExportMediaAsGIF = gifMakerHandler.shouldExport
-                editorView.animateReturnOfEditionOption(cell: selectedCell)
+                editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
@@ -791,14 +807,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         case .filter:
             filterController.showView(false)
+            editorView.showQuickPostButton(true)
             showMainUI(true)
         case .text:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: textController.confirmButtonLocation)
             textController.showView(false)
             textController.showConfirmButton(false)
             showMainUI(true)
         case .drawing:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: drawingController.confirmButtonLocation)
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
             showMainUI(true)
@@ -815,9 +832,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         selectedCell = nil
     }
     
-    // MARK: - EditionMenuCollectionControllerDelegate
+    // MARK: - KanvasEditionMenuControllerDelegate
 
-    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
+    func didSelectEditionOption(_ editionOption: EditionOption, cell: KanvasEditorMenuCollectionCell) {
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
@@ -831,6 +848,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         case .filter:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
+            editorView.showQuickPostButton(false)
             showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
@@ -863,7 +881,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameters
     ///  - editionOption: the selected edition option
     ///  - cell: the cell of the selected edition option
-    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: KanvasEditorMenuCollectionCell? = nil) {
         selectedCell = cell
         openedMenu = editionOption
     }
@@ -1038,7 +1056,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func onQuickPostButtonSubmitted() {
-        startExporting(action: .post)
+        startExporting(action: .confirmPostOptions)
     }
     
     public func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
@@ -1068,38 +1086,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameter show: true to show, false to hide
     private func showMainUI(_ show: Bool) {
         collectionController.showView(show)
-        showConfirmButton(show)
-        showCloseButton(show)
-        showTagButton(show)
-    }
-    
-    // MARK: - Public interface
-    
-    /// shows or hides the confirm button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showConfirmButton(_ show: Bool) {
         editorView.showConfirmButton(show)
-    }
-    
-    /// shows or hides the close button (back caret)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
-    }
-
-    /// shows or hides the tag button (#)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTagButton(_ show: Bool) {
         editorView.showTagButton(show)
-    }
-    
-    /// shows or hides the editor menu and the back button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showNavigationContainer(_ show: Bool) {
-        editorView.showNavigationContainer(show)
+        editorView.showTagCollection(show)
+        editorView.showBlogSwitcher(show)
     }
 }

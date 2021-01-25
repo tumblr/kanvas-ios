@@ -595,8 +595,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 camera.unlockForConfiguration()
             }
         }
-        currentCameraPosition = rearCamera != nil ? .back : .front
-
+        
         let microphoneSession =  AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone], mediaType: AVMediaType.audio, position: .unspecified)
         microphone = microphoneSession.devices.first
     }
@@ -783,7 +782,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         else if output == videoDataOutput {
             filteredInputViewControllerInstance?.filterSampleBuffer(sampleBuffer)
-            if !settings.features.openGLCapture {
+            if !(settings.features.openGLCapture || settings.features.metalFilters) {
                 recorder?.processVideoSampleBuffer(sampleBuffer)
             }
         }
@@ -846,7 +845,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     // MARK: - FilteredInputViewControllerDelegate
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        if settings.features.openGLCapture {
+        if settings.features.openGLCapture || settings.features.metalFilters {
             recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
         }
     }

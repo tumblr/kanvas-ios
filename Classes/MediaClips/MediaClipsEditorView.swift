@@ -9,12 +9,13 @@ import UIKit
 
 private struct Constants {
     static let animationDuration: TimeInterval = 0.5
-    static let buttonHorizontalMargin: CGFloat = 16
     static let buttonRadius: CGFloat = 25
     static let nextButtonSize: CGFloat = 49
-    static let nextButtonCenterYOffset: CGFloat = 3
-    static let topPadding: CGFloat = 6
-    static let bottomPadding: CGFloat = 6 + (Device.belongsToIPhoneXGroup ? 28 : 0)
+    static let buttonLeadingMargin: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewButtonLeadingMargin
+    static let buttonTrailingMargin: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewButtonTrailingMargin
+    static let topPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewTopPadding
+    static let bottomPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewBottomPadding
+    static let nextButtonCenterYOffset: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewNextButtonCenterYOffset
 }
 
 protocol MediaClipsEditorViewDelegate: class {
@@ -28,7 +29,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     static let height = MediaClipsCollectionView.height +
                         Constants.topPadding +
                         Constants.bottomPadding
-
+    
     weak var delegate: MediaClipsEditorViewDelegate?
     
     private let mainContainer: IgnoreTouchesView
@@ -39,7 +40,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     
     init() {
         mainContainer = IgnoreTouchesView()
-        mainContainer.backgroundColor = KanvasCameraColors.shared.translucentBlack
+        mainContainer.backgroundColor = KanvasCameraDesign.shared.mediaClipsEditorViewBackgroundColor
         
         collectionContainer = IgnoreTouchesView()
 
@@ -88,7 +89,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.clipsToBounds = false
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        let trailingMargin = Constants.nextButtonSize + Constants.buttonHorizontalMargin * 1.5
+        let trailingMargin: CGFloat
+        if KanvasCameraDesign.shared.isBottomPicker {
+            trailingMargin = Constants.nextButtonSize + Constants.buttonLeadingMargin + Constants.buttonTrailingMargin
+        }
+        else {
+            trailingMargin = Constants.nextButtonSize + Constants.buttonTrailingMargin * 1.5
+        }
+        
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
@@ -101,12 +109,18 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         mainContainer.addSubview(nextButton)
         nextButton.accessibilityIdentifier = "Media Clips Next Button"
         nextButton.accessibilityLabel = "Next Button"
-        nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         
+        if KanvasCameraDesign.shared.isBottomPicker {
+            let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
+            nextButton.setBackgroundImage(circle, for: .normal)
+        }
+        
+        nextButton.setImage(KanvasCameraDesign.shared.mediaClipsEditorViewNextImage, for: .normal)
+        
         NSLayoutConstraint.activate([
-            nextButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonHorizontalMargin),
+            nextButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonTrailingMargin),
             nextButton.heightAnchor.constraint(equalToConstant: Constants.nextButtonSize),
             nextButton.widthAnchor.constraint(equalToConstant: Constants.nextButtonSize),
             nextButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor, constant: -Constants.nextButtonCenterYOffset)

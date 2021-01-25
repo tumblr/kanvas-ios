@@ -20,7 +20,7 @@ final class OptionViewTests: FBSnapshotTestCase {
 
     func testNewButton() {
         if let image = KanvasCameraImages.flashOffImage {
-            let button = OptionView(image: image)
+            let button = OptionView(image: image, backgroundColor: .clear)
             button.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
             FBSnapshotVerifyView(button)
         }
@@ -35,7 +35,7 @@ final class OptionViewTests: FBSnapshotTestCase {
             return
         }
 
-        let button = OptionView(image: image)
+        let button = OptionView(image: image, backgroundColor: .clear)
         button.frame = CGRect(x: 10, y: 10, width: 100, height: 100)
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 120, height: 120))
         view.addSubview(button)

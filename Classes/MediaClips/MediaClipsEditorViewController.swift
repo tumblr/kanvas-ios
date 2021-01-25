@@ -49,7 +49,7 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
         controller.delegate = self
         return controller
     }()
-
+    
     /// Is there any clip?
     /// This needs to be dynamic because it will be observed
     @objc private(set) dynamic var hasClips: Bool = false

@@ -135,7 +135,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let cameraSettings = settings ?? getCameraSettings()
         let handler = assetsHandler ?? AssetsHandlerStub()
         let analytics = analyticsProvider ?? KanvasCameraAnalyticsStub()
-        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, exporterClass: MediaExporterStub.self, gifEncoderClass: GIFEncoderStub.self, cameraMode: cameraMode, stickerProvider: StickerProviderStub(), analyticsProvider: analytics, quickBlogSelectorCoordinator: nil)
+        let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, exporterClass: MediaExporterStub.self, gifEncoderClass: GIFEncoderStub.self, cameraMode: cameraMode, stickerProvider: StickerProviderStub(), analyticsProvider: analytics, quickBlogSelectorCoordinator: nil, tagCollection: nil)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
@@ -354,7 +354,7 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
 
     }
     
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
+    func getQuickPostButton() -> UIView {
         return UIView()
     }
     

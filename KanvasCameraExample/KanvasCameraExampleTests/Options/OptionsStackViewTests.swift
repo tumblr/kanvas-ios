@@ -20,8 +20,8 @@ final class OptionsStackViewTests: FBSnapshotTestCase {
 
     func options() -> [Option<CameraOption>] {
         var options: [Option<CameraOption>] = []
-        options.append(Option(option: CameraOption.flashOff, image: KanvasCameraImages.flashOffImage, type: .twoOptionsImages(alternateOption: CameraOption.flashOn, alternateImage: KanvasCameraImages.flashOnImage)))
-        options.append(Option(option: CameraOption.frontCamera, image: KanvasCameraImages.cameraPositionImage, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
+        options.append(Option(option: CameraOption.flashOff, image: KanvasCameraImages.flashOffImage, backgroundColor: .clear, type: .twoOptionsImages(alternateOption: CameraOption.flashOn, alternateImage: KanvasCameraImages.flashOnImage, alternateBackgroundColor: .clear)))
+        options.append(Option(option: CameraOption.frontCamera, image: KanvasCameraImages.cameraPositionImage, backgroundColor: .clear, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
         return options
     }
 
