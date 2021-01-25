@@ -93,6 +93,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     /// Sets up the trash bin used during deletion
     private func setUpTrashView() {
         trashView.accessibilityIdentifier = "Editor Movable View Canvas Trash View"
+        trashView.layer.zPosition = 1
         trashView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(trashView)
         
