@@ -19,7 +19,7 @@ final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
     }
 
     func newViewController(delegate: MediaClipsEditorDelegate = MediaClipsEditorViewControllerDelegateStub()) -> MediaClipsEditorViewController {
-        let viewController = MediaClipsEditorViewController()
+        let viewController = MediaClipsEditorViewController(showsAddButton: false)
         viewController.delegate = delegate
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         viewController.view.layoutIfNeeded()
@@ -55,6 +55,18 @@ final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(true)
         XCTAssert(delegate.movedWasCalled, "Move failed to call delegate")
     }
+
+    func testSelectedClipCallsDelegate() {
+        guard let clip1 = newMediaClip(), let clip2 = newMediaClip() else { return }
+        let delegate = MediaClipsEditorViewControllerDelegateStub()
+        let viewController = newViewController(delegate: delegate)
+        UIView.setAnimationsEnabled(false)
+        viewController.addNewClip(clip1)
+        viewController.addNewClip(clip2)
+        viewController.mediaClipWasSelected(at: 0)
+        UIView.setAnimationsEnabled(true)
+        XCTAssert(delegate.selectedWasCalled, "Selected failed to call delegate")
+    }
     
     func testDragStartedFinishedDelegate() {
         let delegate = MediaClipsEditorViewControllerDelegateStub()
@@ -67,10 +79,11 @@ final class MediaClipsEditorViewControllerTests: FBSnapshotTestCase {
 }
 
 final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate {
-    
+
     var movedWasCalled = false
     var dragStarted = false
     var dragFinished = false
+    var selectedWasCalled = false
     
     func mediaClipWasAdded(at index: Int) {
         
@@ -90,8 +103,16 @@ final class MediaClipsEditorViewControllerDelegateStub: MediaClipsEditorDelegate
     func mediaClipFinishedMoving() {
         dragFinished = true
     }
+
+    func mediaClipWasSelected(at: Int) {
+        selectedWasCalled = true
+    }
     
     func nextButtonWasPressed() {
+        
+    }
+
+    func addButtonWasPressed() {
         
     }
 }
