@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
   spec.name         = "KanvasCamera"
-  spec.version      = "1.0.0"
+  spec.version      = "1.0.1"
   spec.summary      = "A custom camera built for iOS."
   spec.homepage     = "https://github.com/tumblr/kanvas-ios"
   spec.license      = "MPLv2"
   spec.source       = { :git => "https://github.com/tumblr/kanvas-ios.git",
-  		        :tag => "v#{spec.version}" }
+  		        :tag => "#{spec.version}" }
   spec.authors      = { "Jimmy Schementi" => "jimmys@tumblr.com",
                         "Tony Cheng" => "tony@getkanvas.com" }
   spec.platform     = :ios, "13.0"
