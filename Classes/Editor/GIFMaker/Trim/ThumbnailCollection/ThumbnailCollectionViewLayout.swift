@@ -4,6 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import UIKit
+
 protocol ThumbnailCollectionViewLayoutDelegate: class {
     func collectionView(_ collectionView: UICollectionView, widthForCellAt indexPath: IndexPath) -> CGFloat
 }

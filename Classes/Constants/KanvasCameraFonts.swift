@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 public struct KanvasCameraFonts {
     

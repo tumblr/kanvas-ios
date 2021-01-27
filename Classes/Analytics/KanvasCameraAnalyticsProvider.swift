@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import UIKit
 
 @objc public enum KanvasBrushType: Int {
     case pencil, marker, sharpie

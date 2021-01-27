@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import ImageIO
 
 typealias GIFDecodeFrame = (image: CGImage, interval: TimeInterval)
 

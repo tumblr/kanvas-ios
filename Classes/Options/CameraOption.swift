@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import UIKit
 
 private struct CameraOptionsConstants {
     static let cameraFlipAnimationsDuration: TimeInterval = 0.15

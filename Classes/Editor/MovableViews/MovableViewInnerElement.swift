@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Protocol for the view inside MovableView
 protocol MovableViewInnerElement: UIView {

@@ -7,7 +7,7 @@
 import Foundation
 import AVFoundation
 import CoreServices
-import CoreGraphics
+import UIKit
 
 protocol GIFEncoder {
     init()

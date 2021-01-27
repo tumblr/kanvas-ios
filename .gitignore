@@ -28,6 +28,8 @@ DerivedData
 # ignore snapshot failure files
 **/FailureDiffs/*
 
+.build
+
 KanvasCameraExample/Pods/*
 !KanvasCameraExample/Pods/Target\ Support\ Files/
 

@@ -5,7 +5,7 @@
 //
 
 import Foundation
-
+import UIKit
 import Photos
 
 protocol MediaPickerThumbnailFetcherDelegate: class {
