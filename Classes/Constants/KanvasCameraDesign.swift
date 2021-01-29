@@ -82,6 +82,7 @@ public struct KanvasCameraDesign {
     let mediaClipsCollectionCellClipHeight: CGFloat
     let mediaClipsCollectionCellClipWidth: CGFloat
     let mediaClipsCollectionCellBorderWidth: CGFloat
+    let mediaClipsCollectionCellSelectedBorderWidth: CGFloat
     let mediaClipsCollectionCellCornerRadius: CGFloat
     let mediaClipsCollectionCellClipAlpha: CGFloat
     let mediaClipsCollectionCellFont: UIFont
@@ -140,6 +141,7 @@ public struct KanvasCameraDesign {
                 mediaClipsCollectionCellClipHeight: CGFloat,
                 mediaClipsCollectionCellClipWidth: CGFloat,
                 mediaClipsCollectionCellBorderWidth: CGFloat,
+                mediaClipsCollectionCellSelectedBorderWidth: CGFloat,
                 mediaClipsCollectionCellCornerRadius: CGFloat,
                 mediaClipsCollectionCellClipAlpha: CGFloat,
                 mediaClipsCollectionCellFont: UIFont,
@@ -198,6 +200,7 @@ public struct KanvasCameraDesign {
         self.mediaClipsCollectionCellClipHeight = mediaClipsCollectionCellClipHeight
         self.mediaClipsCollectionCellClipWidth = mediaClipsCollectionCellClipWidth
         self.mediaClipsCollectionCellBorderWidth = mediaClipsCollectionCellBorderWidth
+        self.mediaClipsCollectionCellSelectedBorderWidth = mediaClipsCollectionCellSelectedBorderWidth
         self.mediaClipsCollectionCellCornerRadius = mediaClipsCollectionCellCornerRadius
         self.mediaClipsCollectionCellClipAlpha = mediaClipsCollectionCellClipAlpha
         self.mediaClipsCollectionCellFont = mediaClipsCollectionCellFont
@@ -264,6 +267,7 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionCellClipHeight: 60,
             mediaClipsCollectionCellClipWidth: 40,
             mediaClipsCollectionCellBorderWidth: 1.1,
+            mediaClipsCollectionCellSelectedBorderWidth: 2.0,
             mediaClipsCollectionCellCornerRadius: 8,
             mediaClipsCollectionCellClipAlpha: 0.5,
             mediaClipsCollectionCellFont: KanvasCameraFonts.shared.mediaClipsFont,
@@ -327,6 +331,7 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionCellClipHeight: 48,
             mediaClipsCollectionCellClipWidth: 33,
             mediaClipsCollectionCellBorderWidth: 2,
+            mediaClipsCollectionCellSelectedBorderWidth: 3,
             mediaClipsCollectionCellCornerRadius: 4,
             mediaClipsCollectionCellClipAlpha: 0.87,
             mediaClipsCollectionCellFont: KanvasCameraFonts.shared.mediaClipsSmallFont,

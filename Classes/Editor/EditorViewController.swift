@@ -60,30 +60,7 @@ private struct Constants {
 /// A view controller to edit the segments
 public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
 
-    private lazy var editorView: EditorView = {
-        var mainActionMode: EditorView.MainActionMode = .confirm
-        if settings.features.editorPostOptions {
-            mainActionMode = .postOptions
-        }
-        else if settings.features.editorPosting {
-            mainActionMode = .post
-        }
-
-        let editorView = EditorView(delegate: self,
-                                    mainActionMode: mainActionMode,
-                                    showSaveButton: settings.features.editorSaving,
-                                    showCrossIcon: settings.crossIconInEditor,
-                                    showCogIcon: settings.showCogIconInEditor,
-                                    showTagButton: settings.showTagButtonInEditor,
-                                    showTagCollection: settings.showTagCollectionInEditor,
-                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
-                                    showBlogSwitcher: settings.showBlogSwitcherInEditor,
-                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
-                                    tagCollection: tagCollection,
-                                    metalContext: settings.features.metalPreview ? metalContext : nil)
-        player.playerView = editorView.playerView
-        return editorView
-    }()
+    var editorView: EditorView
     
     private lazy var collectionController: KanvasEditorMenuController = {
         let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
@@ -164,10 +141,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private lazy var player: MediaPlayer = {
-        return MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
-    }()
-    
+    private let player: MediaPlayer
     private var filterType: FilterType? {
         didSet {
             player.filterType = filterType
@@ -186,6 +160,34 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     public weak var delegate: EditorControllerDelegate?
     
+    private static func editor(delegate: EditorViewDelegate?,
+                               settings: CameraSettings,
+                               quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+                               tagCollection: UIView?,
+                               metalContext: MetalContext?) -> EditorView {
+        var mainActionMode: EditorView.MainActionMode = .confirm
+        if settings.features.editorPostOptions {
+            mainActionMode = .postOptions
+        }
+        else if settings.features.editorPosting {
+            mainActionMode = .post
+        }
+
+        let editorView: EditorView = EditorView(delegate: delegate,
+                                    mainActionMode: mainActionMode,
+                                    showSaveButton: settings.features.editorSaving,
+                                    showCrossIcon: settings.crossIconInEditor,
+                                    showCogIcon: settings.showCogIconInEditor,
+                                    showTagButton: settings.showTagButtonInEditor,
+                                    showTagCollection: settings.showTagCollectionInEditor,
+                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
+                                    showBlogSwitcher: settings.showBlogSwitcherInEditor,
+                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                    tagCollection: tagCollection,
+                                    metalContext: metalContext)
+        return editorView
+    }
+
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -287,7 +289,19 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
 
+        let glContext = EAGLContext(api: .openGLES3)
+        let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
+        self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
+        self.editorView = EditorViewController.editor(delegate: nil,
+                                                      settings: settings,
+                                                      quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                                      tagCollection: tagCollection,
+                                                      metalContext: metalContext)
         super.init(nibName: .none, bundle: .none)
+        self.editorView.delegate = self
+
+        editorView.delegate = self
+        player.playerView = editorView.playerView
         
         self.player.delegate = self
 
@@ -621,6 +635,19 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         return delegate.getBlogSwitcher()
     }
 
+    func restartPlayback() {
+        player.stop()
+        startPlayerFromSegments()
+    }
+    
+    func stopPlayback() {
+        player.stop()
+    }
+
+    deinit {
+        player.stop()
+    }
+    
     // MARK: - Media Exporting
 
     private func startExporting(action: KanvasExportAction) {
