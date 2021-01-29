@@ -1,6 +1,6 @@
 import Foundation
 
-protocol MultiEditorComposerDelegate: class {
+protocol MultiEditorComposerDelegate: class, EditorControllerDelegate {
     func addButtonWasPressed()
     func editor(segment: CameraSegment) -> EditorViewController
     func dismissButtonPressed()
@@ -273,23 +273,23 @@ extension MultiEditorViewController: EditorControllerDelegate {
     }
     
     func didDismissColorSelectorTooltip() {
-        
+        delegate?.didDismissColorSelectorTooltip()
     }
     
     func editorShouldShowColorSelectorTooltip() -> Bool {
-        return true
+        return delegate?.editorShouldShowColorSelectorTooltip() == true
     }
     
     func didEndStrokeSelectorAnimation() {
-        
+        delegate?.didEndStrokeSelectorAnimation()
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
-        return true
+        return delegate?.editorShouldShowStrokeSelectorAnimation() == true
     }
     
     func tagButtonPressed() {
-        
+        delegate?.tagButtonPressed()
     }
 
     struct EditOptions {

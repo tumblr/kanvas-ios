@@ -344,7 +344,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     private func createNextStepViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [Data?]?) -> MediaPlayerController {
         let controller: MediaPlayerController
-        if settings.features.multipleExports {
+        if settings.features.multipleExports && settings.features.editor {
             if segments.indices.contains(selected) {
                 multiEditorViewController?.addSegment(segments[selected])
             }
