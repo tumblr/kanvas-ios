@@ -4,13 +4,13 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import XCTest
 
 final class UIImageDominantColorsTests: XCTestCase {
     
     func testDominantColors() {
-        guard let image = KanvasCameraImages.confirmImage else { return }
+        guard let image = KanvasImages.confirmImage else { return }
         let colors = image.getDominantColors(count: 3)
                 
         let expectedColors = [UIColor(hex: "#24bbfa"),

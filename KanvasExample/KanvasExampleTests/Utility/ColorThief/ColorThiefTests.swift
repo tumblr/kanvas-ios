@@ -4,14 +4,14 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import Foundation
 import UIKit
 import XCTest
 
 final class ColorThieftTests: XCTestCase {
     
-    private let testImage = KanvasCameraImages.confirmImage
+    private let testImage = KanvasImages.confirmImage
     
     func testGetPalette() {
         guard let image = testImage,

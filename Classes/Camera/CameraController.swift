@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 // Media wrapper for media generated from the CameraController
-public enum KanvasCameraMedia {
+public enum KanvasMedia {
     case image(URL, MediaInfo, CGSize)
     case video(URL, MediaInfo, CGSize)
     case frames(URL, MediaInfo, CGSize)
@@ -43,10 +43,10 @@ enum CameraControllerError: Swift.Error {
 public protocol CameraControllerDelegate: class {
     /**
      A function that is called when an image is exported. Can be nil if the export fails
-     - parameter media: KanvasCameraMedia - this is the media created in the controller (can be image, video, etc)
-     - seealso: enum KanvasCameraMedia
+     - parameter media: KanvasMedia - this is the media created in the controller (can be image, video, etc)
+     - seealso: enum KanvasMedia
      */
-    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
+    func didCreateMedia(_ cameraController: CameraController, media: KanvasMedia?, exportAction: KanvasExportAction, error: Error?)
 
     /**
      A function that is called when the main camera dismiss button is pressed
@@ -172,7 +172,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }()
         
     private let settings: CameraSettings
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    private let analyticsProvider: KanvasAnalyticsProvider?
     private var currentMode: CameraMode
     private var isRecording: Bool
     private var disposables: [NSKeyValueObservation] = []
@@ -196,8 +196,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// interact with the user, which options should the controller give the user
     /// and which should be the result of the interaction.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
-    ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, tagCollection: UIView?) {
+    ///   - analyticsProvider: An class conforming to KanvasAnalyticsProvider
+    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, tagCollection: UIView?) {
         self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, tagCollection: tagCollection)
     }
 
@@ -213,13 +213,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// motion segments and constructing final input.
     ///   - captureDeviceAuthorizer: Class responsible for authorizing access to capture devices.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
-    ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
+    ///   - analyticsProvider: A class conforming to KanvasAnalyticsProvider
     init(settings: CameraSettings,
          recorderClass: CameraRecordingProtocol.Type,
          segmentsHandlerClass: SegmentsHandlerType.Type,
          captureDeviceAuthorizer: CaptureDeviceAuthorizing,
          stickerProvider: StickerProvider?,
-         analyticsProvider: KanvasCameraAnalyticsProvider?,
+         analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?) {
         self.settings = settings
@@ -657,7 +657,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didTapForMode(_ mode: CameraMode) {
         switch mode.group {
         case .gif:
-            takeGif(numberOfFrames: KanvasCameraTimes.gifTapNumberOfFrames, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond)
+            takeGif(numberOfFrames: KanvasTimes.gifTapNumberOfFrames, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond)
         case .photo, .video:
             takePhoto()
         }
@@ -666,7 +666,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     func didStartPressingForMode(_ mode: CameraMode) {
         switch mode.group {
         case .gif:
-            takeGif(numberOfFrames: KanvasCameraTimes.gifHoldNumberOfFrames, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond)
+            takeGif(numberOfFrames: KanvasTimes.gifHoldNumberOfFrames, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond)
         case .video:
             prepareHapticFeedback()
             let _ = cameraInputController.startRecording(on: mode)

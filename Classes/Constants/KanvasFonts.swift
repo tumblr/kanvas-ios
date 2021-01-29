@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct KanvasCameraFonts {
+public struct KanvasFonts {
     
     private static let guavaMedium = UIFont.systemFont(ofSize: 16) // .guavaMedium
     private static let guava85 = UIFont.systemFont(ofSize: 16) // .guava85
@@ -21,7 +21,7 @@ public struct KanvasCameraFonts {
     }
     
     static let defaultCameraPermissions = CameraPermissions(titleFont: durianMedium, descriptionFont: guava85, buttonFont: guavaMedium)
-    static let defaultDrawer = Drawer(textSelectedFont: KanvasCameraFonts.favoritTumblrMedium(fontSize: 14), textUnselectedFont: KanvasCameraFonts.favoritTumblr85(fontSize: 14))
+    static let defaultDrawer = Drawer(textSelectedFont: KanvasFonts.favoritTumblrMedium(fontSize: 14), textUnselectedFont: KanvasFonts.favoritTumblr85(fontSize: 14))
     
     let paddingAdjustment: ((UIFont) -> Padding?)?
     
@@ -55,21 +55,21 @@ public struct KanvasCameraFonts {
             self.paddingAdjustment = paddingAdjustment
     }
     
-    public static var shared = KanvasCameraFonts(permissions: defaultCameraPermissions,
+    public static var shared = KanvasFonts(permissions: defaultCameraPermissions,
                                    drawer: defaultDrawer,
-                                   editorFonts: [UIFont.systemFont(ofSize: 48), KanvasCameraFonts.favoritTumblr85(fontSize: 48)],
+                                   editorFonts: [UIFont.systemFont(ofSize: 48), KanvasFonts.favoritTumblr85(fontSize: 48)],
                                    optionSelectorCellFont: guavaMedium,
-                                   mediaClipsFont: KanvasCameraFonts.favoritTumblrMedium(fontSize: 9.5),
-                                   mediaClipsSmallFont: KanvasCameraFonts.favoritTumblrMedium(fontSize: 8.5),
-                                   modeButtonFont: KanvasCameraFonts.favoritTumblr85(fontSize: 18.5),
+                                   mediaClipsFont: KanvasFonts.favoritTumblrMedium(fontSize: 9.5),
+                                   mediaClipsSmallFont: KanvasFonts.favoritTumblrMedium(fontSize: 8.5),
+                                   modeButtonFont: KanvasFonts.favoritTumblr85(fontSize: 18.5),
                                    speedLabelFont: guavaMedium,
                                    timeIndicatorFont: guavaMedium,
                                    colorSelectorTooltipFont:
-                                    KanvasCameraFonts.favoritTumblr85(fontSize: 14),
-                                   modeSelectorTooltipFont: KanvasCameraFonts.favoritTumblr85(fontSize: 15),
+                                    KanvasFonts.favoritTumblr85(fontSize: 14),
+                                   modeSelectorTooltipFont: KanvasFonts.favoritTumblr85(fontSize: 15),
                                    postLabelFont:
-                                    KanvasCameraFonts.favoritTumblrMedium(fontSize: 14),
-                                   gifMakerRevertButtonFont: KanvasCameraFonts.guavaMedium,
+                                    KanvasFonts.favoritTumblrMedium(fontSize: 14),
+                                   gifMakerRevertButtonFont: KanvasFonts.guavaMedium,
                                    paddingAdjustment: nil
    )
         

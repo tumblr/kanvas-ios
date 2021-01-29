@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import AVFoundation
 import FBSnapshotTestCase
 import UIKit
@@ -19,7 +19,7 @@ final class OptionViewTests: FBSnapshotTestCase {
     }
 
     func testNewButton() {
-        if let image = KanvasCameraImages.flashOffImage {
+        if let image = KanvasImages.flashOffImage {
             let button = OptionView(image: image, backgroundColor: .clear)
             button.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
             FBSnapshotVerifyView(button)
@@ -30,7 +30,7 @@ final class OptionViewTests: FBSnapshotTestCase {
     }
 
     func testTouchOutsideOfButton() {
-        guard let image = KanvasCameraImages.flashOffImage else {
+        guard let image = KanvasImages.flashOffImage else {
             XCTFail("Bundle image not found")
             return
         }

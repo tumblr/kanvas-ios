@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 import Photos
-import KanvasCamera
+import Kanvas
 import Photos
 
 private enum PhotoLibraryAccessError: Error {
@@ -39,7 +39,7 @@ public protocol KanvasDashboardControllerDelegate: class {
 public protocol KanvasDashboardStateDelegate: class {
 
     /// The EventBuffering for Kanvas Dashboard to use
-    var kanvasDashboardAnalyticsProvider: KanvasCameraAnalyticsProvider { get }
+    var kanvasDashboardAnalyticsProvider: KanvasAnalyticsProvider { get }
 
     var kanvasDashboardUnloadStrategy: KanvasDashboardController.UnloadStrategy { get }
 }
@@ -140,7 +140,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         // Only supported in Orangina
     }
 
-    public func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
+    public func didCreateMedia(_ cameraController: CameraController, media: KanvasMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let error = error {
             assertionFailure("Error creating Kanvas media: \(error)")
             return
@@ -213,7 +213,7 @@ extension KanvasDashboardController: CameraControllerDelegate {
         
     }
 
-    func save(media: KanvasCameraMedia, moveFile: Bool = true, completion: @escaping (Error?) -> ()) {
+    func save(media: KanvasMedia, moveFile: Bool = true, completion: @escaping (Error?) -> ()) {
         let completionMainThread: (Error?) -> () = { (error) in
             DispatchQueue.main.async {
                 completion(error)

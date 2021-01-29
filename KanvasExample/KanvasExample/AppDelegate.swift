@@ -5,7 +5,7 @@
 //
 
 import UIKit
-import KanvasCamera
+import Kanvas
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,11 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
-        KanvasCameraColors.shared = KanvasCameraCustomUI.shared.cameraColors()
-        KanvasCameraFonts.shared = KanvasCameraCustomUI.shared.cameraFonts()
-        KanvasCameraDesign.shared = .original
+        KanvasColors.shared = KanvasCustomUI.shared.cameraColors()
+        KanvasFonts.shared = KanvasCustomUI.shared.cameraFonts()
+        KanvasDesign.shared = .original
         KanvasEditorDesign.shared = .original
-        let applicationViewController = KanvasCameraExampleViewController(nibName: nil, bundle: nil)
+        let applicationViewController = KanvasExampleViewController(nibName: nil, bundle: nil)
         if #available(iOS 13.0, *) {
             applicationViewController.view.tintColor = .systemBackground
         }

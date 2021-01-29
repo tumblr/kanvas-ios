@@ -5,7 +5,7 @@
 //
 
 import Foundation
-import KanvasCamera
+import Kanvas
 import Photos
 
 @objc protocol DashboardPagingController: class {
@@ -164,8 +164,8 @@ extension SplitViewController: KanvasDashboardControllerDelegate {
 }
 
 extension SplitViewController: KanvasDashboardStateDelegate {
-    var kanvasDashboardAnalyticsProvider: KanvasCameraAnalyticsProvider {
-        return KanvasCameraAnalyticsStub()
+    var kanvasDashboardAnalyticsProvider: KanvasAnalyticsProvider {
+        return KanvasAnalyticsStub()
     }
 
     var kanvasDashboardUnloadStrategy: KanvasDashboardController.UnloadStrategy {

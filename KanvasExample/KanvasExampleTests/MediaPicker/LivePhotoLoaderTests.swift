@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 
 import Photos
-@testable import KanvasCamera
+@testable import Kanvas
 
 final class LivePhotoLoaderTests: XCTestCase {
     func test() {

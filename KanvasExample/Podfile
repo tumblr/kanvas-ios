@@ -3,12 +3,12 @@ source 'https://github.com/CocoaPods/Specs.git'
 use_modular_headers!
 platform :ios, '13.0'
 
-project "KanvasCameraExample.xcodeproj"
+project "KanvasExample.xcodeproj"
 
-target 'KanvasCameraExample' do
-    pod 'KanvasCamera', :path => '../'
+target 'KanvasExample' do
+    pod 'Kanvas', :path => '../'
     
-    target 'KanvasCameraExampleTests' do
+    target 'KanvasExampleTests' do
         inherit! :search_paths
         pod 'FBSnapshotTestCase', '2.1.4'
     end

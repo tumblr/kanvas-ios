@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import UIKit
@@ -25,13 +25,13 @@ final class StylableImageViewTests: FBSnapshotTestCase {
     
     func testImageViewWithExampleImage() {
         let view = newView()
-        let imageView = StylableImageView(id: "id", image: KanvasCameraImages.gradientImage)
+        let imageView = StylableImageView(id: "id", image: KanvasImages.gradientImage)
         imageView.add(into: view)
         FBSnapshotVerifyView(imageView)
     }
     
     func testHitInsideShape() {
-        let imageView = StylableImageView(id: "id", image: KanvasCameraImages.gradientImage)
+        let imageView = StylableImageView(id: "id", image: KanvasImages.gradientImage)
         imageView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
         let point = imageView.bounds.center
         let wasHitInside = imageView.hitInsideShape(point: point)
@@ -39,7 +39,7 @@ final class StylableImageViewTests: FBSnapshotTestCase {
     }
     
     func testHitOutsideShape() {
-        let imageView = StylableImageView(id: "id", image: KanvasCameraImages.gradientImage)
+        let imageView = StylableImageView(id: "id", image: KanvasImages.gradientImage)
         imageView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
         let point = CGPoint(x: 190, y: 190)
         let wasHitInside = imageView.hitInsideShape(point: point)

@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 
 // the values for timing and frame intervals throughout the module
-struct KanvasCameraTimes {
+struct KanvasTimes {
     // MARK: - Shooting
 
     /// VideoRecordingTime: the maximum recording time for each video clip
@@ -62,9 +62,9 @@ struct KanvasCameraTimes {
     static let gifPreferredFramesPerSecond = 10
 
     /// gifTapNumberOfFrames: the number of frames to record when tapping the shutter in GIF mode
-    static let gifTapNumberOfFrames = Int(KanvasCameraTimes.gifTapRecordingTime * Double(KanvasCameraTimes.gifPreferredFramesPerSecond))
+    static let gifTapNumberOfFrames = Int(KanvasTimes.gifTapRecordingTime * Double(KanvasTimes.gifPreferredFramesPerSecond))
 
     /// gifHoldNumberOfFrames: the number of frames to record when holding the shutter in GIF mode
-    static let gifHoldNumberOfFrames = Int(KanvasCameraTimes.gifHoldRecordingTime * Double(KanvasCameraTimes.gifPreferredFramesPerSecond))
+    static let gifHoldNumberOfFrames = Int(KanvasTimes.gifHoldRecordingTime * Double(KanvasTimes.gifPreferredFramesPerSecond))
 
 }

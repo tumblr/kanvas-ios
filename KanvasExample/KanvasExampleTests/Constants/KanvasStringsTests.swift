@@ -4,22 +4,22 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import Foundation
 import XCTest
 
-final class KanvasCameraStringsTests: XCTestCase {
+final class KanvasStringsTests: XCTestCase {
 
     func testPhotoName() {
-        XCTAssert(KanvasCameraStrings.name(for: .photo) == "Photo", "String does not match for photo")
+        XCTAssert(KanvasStrings.name(for: .photo) == "Photo", "String does not match for photo")
     }
 
     func testGifName() {
-        XCTAssert(KanvasCameraStrings.name(for: .loop) == "Loop", "String does not match for gif")
+        XCTAssert(KanvasStrings.name(for: .loop) == "Loop", "String does not match for gif")
     }
 
     func testStopMotionName() {
-        XCTAssert(KanvasCameraStrings.name(for: .stopMotion) == "Capture", "String does not match for stop motion")
+        XCTAssert(KanvasStrings.name(for: .stopMotion) == "Capture", "String does not match for stop motion")
     }
 
 }

@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import UIKit
@@ -36,7 +36,7 @@ private class ThumbnailCollectionControllerDelegateStub: ThumbnailCollectionCont
     }
     
     func getThumbnail(at timestamp: TimeInterval) -> UIImage? {
-        return KanvasCameraImages.flashOnImage
+        return KanvasImages.flashOnImage
     }
     
     func didBeginScrolling() {

@@ -9,8 +9,8 @@ import UIKit
 
 private struct FilterSettingsViewConstants {
     static let animationDuration: TimeInterval = 0.25
-    static let iconSize: CGFloat = KanvasCameraDesign.shared.filterSettingsViewIconSize
-    static let padding: CGFloat = KanvasCameraDesign.shared.filterSettingsViewPadding
+    static let iconSize: CGFloat = KanvasDesign.shared.filterSettingsViewIconSize
+    static let padding: CGFloat = KanvasDesign.shared.filterSettingsViewPadding
     static let collectionViewHeight = CameraFilterCollectionCell.minimumHeight + 10
     static let height: CGFloat = collectionViewHeight + padding + iconSize
 }
@@ -37,7 +37,7 @@ final class FilterSettingsView: IgnoreTouchesView {
         collectionContainer.accessibilityIdentifier = "Filter Collection Container"
         collectionContainer.clipsToBounds = false
         
-        let defaultImage = KanvasCameraDesign.shared.filterSettingsViewFiltersOffImage
+        let defaultImage = KanvasDesign.shared.filterSettingsViewFiltersOffImage
         visibilityButton = UIButton()
         visibilityButton.accessibilityIdentifier = "Filter Visibility Button"
         visibilityButton.setImage(defaultImage, for: .normal)
@@ -70,12 +70,12 @@ final class FilterSettingsView: IgnoreTouchesView {
             let backgroundColor: UIColor
             
             if shown {
-                image = KanvasCameraDesign.shared.filterSettingsViewFiltersOnImage
-                backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundInvertedColor
+                image = KanvasDesign.shared.filterSettingsViewFiltersOnImage
+                backgroundColor = KanvasDesign.shared.filterSettingsViewButtonBackgroundInvertedColor
             }
             else {
-                image = KanvasCameraDesign.shared.filterSettingsViewFiltersOffImage
-                backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundColor
+                image = KanvasDesign.shared.filterSettingsViewFiltersOffImage
+                backgroundColor = KanvasDesign.shared.filterSettingsViewButtonBackgroundColor
             }
             
             self.visibilityButton.backgroundColor = backgroundColor
@@ -116,8 +116,8 @@ private extension FilterSettingsView {
         addSubview(visibilityButton)
         visibilityButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if KanvasCameraDesign.shared.isBottomPicker {
-            visibilityButton.backgroundColor = KanvasCameraDesign.shared.filterSettingsViewButtonBackgroundColor
+        if KanvasDesign.shared.isBottomPicker {
+            visibilityButton.backgroundColor = KanvasDesign.shared.filterSettingsViewButtonBackgroundColor
             visibilityButton.layer.cornerRadius = FilterSettingsViewConstants.iconSize / 2
             visibilityButton.layer.masksToBounds = true
         }

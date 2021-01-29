@@ -69,7 +69,7 @@ import Foundation
     }
     
     var description: String {
-        return KanvasCameraStrings.name(for: self)
+        return KanvasStrings.name(for: self)
     }
 }
 

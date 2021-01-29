@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import AVFoundation
 import FBSnapshotTestCase
 import UIKit
@@ -28,7 +28,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tap, image: KanvasCameraImages.photoModeImage, timeLimit: KanvasCameraTimes.stopMotionFrameTimeInterval)
+        shootButton.configureFor(trigger: .tap, image: KanvasImages.photoModeImage, timeLimit: KanvasTimes.stopMotionFrameTimeInterval)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
@@ -38,7 +38,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tap, image: KanvasCameraImages.loopModeImage, timeLimit: KanvasCameraTimes.gifTapRecordingTime)
+        shootButton.configureFor(trigger: .tap, image: KanvasImages.loopModeImage, timeLimit: KanvasTimes.gifTapRecordingTime)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
@@ -48,7 +48,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        shootButton.configureFor(trigger: .tapOrHold(animateCircle: true), image: KanvasCameraImages.stopMotionModeImage, timeLimit: KanvasCameraTimes.videoRecordingTime)
+        shootButton.configureFor(trigger: .tapOrHold(animateCircle: true), image: KanvasImages.stopMotionModeImage, timeLimit: KanvasTimes.videoRecordingTime)
         FBSnapshotVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }

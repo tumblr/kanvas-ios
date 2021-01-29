@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import UIKit
@@ -27,7 +27,7 @@ final class UIImagePixelBufferTests: FBSnapshotTestCase {
 
     func testUIImageToPixelBufferToUIImage() {
         let view = newView()
-        guard let uiImage = KanvasCameraImages.filterTypes[.plasma] else {
+        guard let uiImage = KanvasImages.filterTypes[.plasma] else {
             XCTFail("Failed to load test image")
             return
         }

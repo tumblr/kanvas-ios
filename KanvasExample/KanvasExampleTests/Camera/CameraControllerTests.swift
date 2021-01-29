@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import UIKit
@@ -39,7 +39,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     }
 
     func newController(delegate: CameraControllerDelegate, settings: CameraSettings) -> CameraController {
-        let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, captureDeviceAuthorizer: MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .authorized, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized), stickerProvider: StickerProviderStub(), analyticsProvider: KanvasCameraAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
+        let controller = CameraController(settings: settings, recorderClass: CameraRecorderStub.self, segmentsHandlerClass: CameraSegmentHandlerStub.self, captureDeviceAuthorizer: MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .authorized, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized), stickerProvider: StickerProviderStub(), analyticsProvider: KanvasAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
         controller.delegate = delegate
         controller.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         UIView.setAnimationsEnabled(false)
@@ -360,7 +360,7 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     var creationError = false
     var creationEmpty = false
 
-    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
+    func didCreateMedia(_ cameraController: CameraController, media: KanvasMedia?, exportAction: KanvasExportAction, error: Error?) {
         switch (media, error) {
         case (.none, .none): creationEmpty = true
         case (_, .some): creationError = true

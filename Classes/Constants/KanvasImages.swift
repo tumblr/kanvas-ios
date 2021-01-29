@@ -7,7 +7,7 @@
 import Foundation
 
 // the images used throughout the module
-struct KanvasCameraImages {
+struct KanvasImages {
     // MARK: - Mode Selection
     static let photoModeImage: UIImage? = .none
     static let loopModeImage: UIImage? = .none

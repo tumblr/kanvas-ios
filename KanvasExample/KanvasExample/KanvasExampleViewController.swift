@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-import KanvasCamera
+import Kanvas
 import Photos
 import UIKit
 
@@ -15,7 +15,7 @@ private enum PhotoLibraryAccessError: Error {
 /// This class contains a button that launches the camera module
 /// It is also the delegate for the camera, and handles saving the exported media
 /// The camera can be customized with CameraSettings
-final class KanvasCameraExampleViewController: UIViewController {
+final class KanvasExampleViewController: UIViewController {
 
     private struct Constants {
         static let standardModes: Set<CameraMode> = [.photo, .loop, .stopMotion]
@@ -35,7 +35,7 @@ final class KanvasCameraExampleViewController: UIViewController {
         featureTableView.delegate = self
         return featureTableView
     }()
-    private var settings: CameraSettings = KanvasCameraExampleViewController.customCameraSettings()
+    private var settings: CameraSettings = KanvasExampleViewController.customCameraSettings()
     private var cameraSettings: CameraSettings {
         settings.exportStopMotionPhotoAsVideo = true
         settings.topButtonsSwapped = false
@@ -160,7 +160,7 @@ final class KanvasCameraExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasCameraAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
+        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
         controller.delegate = self
         controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
@@ -248,7 +248,7 @@ final class KanvasCameraExampleViewController: UIViewController {
 
 // MARK: - FeaturesTableViewDelegate
 
-extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
+extension KanvasExampleViewController: FeatureTableViewDelegate {
     func featureTableViewLoadFeatures() -> [FeatureTableView.KanvasFeature] {
         return [
             .ghostFrame(settings.features.ghostFrame),
@@ -336,7 +336,7 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 
 // MARK: - CameraControllerDelegate
 
-extension KanvasCameraExampleViewController: CameraControllerDelegate {
+extension KanvasExampleViewController: CameraControllerDelegate {
     
     func openAppSettings(completion: ((Bool) -> ())?) {
         if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -394,7 +394,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         
     }
     
-    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
+    func didCreateMedia(_ cameraController: CameraController, media: KanvasMedia?, exportAction: KanvasExportAction, error: Error?) {
         if let error = error {
             assertionFailure("Error creating Kanvas media: \(error)")
             return
@@ -436,7 +436,7 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         dismissCamera()
     }
 
-    private func save(media: KanvasCameraMedia, completion: @escaping (Error?) -> ()) {
+    private func save(media: KanvasMedia, completion: @escaping (Error?) -> ()) {
         let completionMainThread: (Error?) -> () = { error in
             DispatchQueue.main.async {
                 completion(error)

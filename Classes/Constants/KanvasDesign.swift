@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-public struct KanvasCameraDesign {
+public struct KanvasDesign {
     
     // MARK: - General
     public let isBottomPicker: Bool
@@ -208,13 +208,13 @@ public struct KanvasCameraDesign {
         self.mediaClipsCollectionCellLabelHorizontalPadding = mediaClipsCollectionCellLabelHorizontalPadding
     }
     
-    public static var shared: KanvasCameraDesign = {
+    public static var shared: KanvasDesign = {
         return .original
     }()
     
     
-    public static var original: KanvasCameraDesign = {
-        return KanvasCameraDesign(
+    public static var original: KanvasDesign = {
+        return KanvasDesign(
             isBottomPicker: false,
             cameraViewButtonBackgroundColor: .clear,
             cameraViewButtonInvertedBackgroundColor: .clear,
@@ -257,7 +257,7 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionControllerLeftInset: 11,
             mediaClipsCollectionControllerRightInset: 11,
             mediaClipsCollectionViewFadeOutGradientLocations: [0, 0.05, 0.9, 1.0],
-            mediaClipsEditorViewBackgroundColor: KanvasCameraColors.shared.translucentBlack,
+            mediaClipsEditorViewBackgroundColor: KanvasColors.shared.translucentBlack,
             mediaClipsEditorViewButtonLeadingMargin: 16,
             mediaClipsEditorViewButtonTrailingMargin: 16,
             mediaClipsEditorViewTopPadding: 6,
@@ -270,15 +270,15 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionCellSelectedBorderWidth: 2.0,
             mediaClipsCollectionCellCornerRadius: 8,
             mediaClipsCollectionCellClipAlpha: 0.5,
-            mediaClipsCollectionCellFont: KanvasCameraFonts.shared.mediaClipsFont,
+            mediaClipsCollectionCellFont: KanvasFonts.shared.mediaClipsFont,
             mediaClipsCollectionCellLabelVerticalPadding: 3.5,
             mediaClipsCollectionCellLabelHorizontalPadding: 5.5
         )
     }()
     
     
-    public static var bottomPicker: KanvasCameraDesign = {
-        return KanvasCameraDesign(
+    public static var bottomPicker: KanvasDesign = {
+        return KanvasDesign(
             isBottomPicker: true,
             cameraViewButtonBackgroundColor: UIColor.black.withAlphaComponent(0.4),
             cameraViewButtonInvertedBackgroundColor: UIColor.white,
@@ -334,7 +334,7 @@ public struct KanvasCameraDesign {
             mediaClipsCollectionCellSelectedBorderWidth: 3,
             mediaClipsCollectionCellCornerRadius: 4,
             mediaClipsCollectionCellClipAlpha: 0.87,
-            mediaClipsCollectionCellFont: KanvasCameraFonts.shared.mediaClipsSmallFont,
+            mediaClipsCollectionCellFont: KanvasFonts.shared.mediaClipsSmallFont,
             mediaClipsCollectionCellLabelVerticalPadding: 4.5,
             mediaClipsCollectionCellLabelHorizontalPadding: 3.5
         )

@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import AVFoundation
 import FBSnapshotTestCase
 import UIKit
@@ -20,8 +20,8 @@ final class OptionsStackViewTests: FBSnapshotTestCase {
 
     func options() -> [Option<CameraOption>] {
         var options: [Option<CameraOption>] = []
-        options.append(Option(option: CameraOption.flashOff, image: KanvasCameraImages.flashOffImage, backgroundColor: .clear, type: .twoOptionsImages(alternateOption: CameraOption.flashOn, alternateImage: KanvasCameraImages.flashOnImage, alternateBackgroundColor: .clear)))
-        options.append(Option(option: CameraOption.frontCamera, image: KanvasCameraImages.cameraPositionImage, backgroundColor: .clear, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
+        options.append(Option(option: CameraOption.flashOff, image: KanvasImages.flashOffImage, backgroundColor: .clear, type: .twoOptionsImages(alternateOption: CameraOption.flashOn, alternateImage: KanvasImages.flashOnImage, alternateBackgroundColor: .clear)))
+        options.append(Option(option: CameraOption.frontCamera, image: KanvasImages.cameraPositionImage, backgroundColor: .clear, type: .twoOptionsAnimation(animation: { UIView in }, duration: 0.15, completion: nil)))
         return options
     }
 

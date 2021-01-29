@@ -6,7 +6,7 @@
 
 import Foundation
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import XCTest
 import AVFoundation

@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import UIKit
@@ -25,7 +25,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
     }
 
     func getOptions() -> [[Option<String>]] {
-        let image = KanvasCameraImages.flashOnImage
+        let image = KanvasImages.flashOnImage
         return [[Option(option: "Option 1.1", image: image, backgroundColor: .clear, type: .twoOptionsImages(alternateOption: "Option 1.2", alternateImage: image, alternateBackgroundColor: .clear)),
                  Option(option: "Option 2", image: image, backgroundColor: .clear, type: .twoOptionsAnimation(animation: { [weak self] _ in self?.animationCalled = true },
                                                                                     duration: AnimationDuration,

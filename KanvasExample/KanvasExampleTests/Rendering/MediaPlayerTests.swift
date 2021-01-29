@@ -9,7 +9,7 @@ import XCTest
 import AVFoundation
 import GLKit
 
-@testable import KanvasCamera
+@testable import Kanvas
 
 class MediaPlayerTests: XCTestCase {
     

@@ -7,7 +7,7 @@
 import Foundation
 import XCTest
 import FBSnapshotTestCase
-@testable import KanvasCamera
+@testable import Kanvas
 
 final class MediaPickerButtonViewTests: FBSnapshotTestCase {
 

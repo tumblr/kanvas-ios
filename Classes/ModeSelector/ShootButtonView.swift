@@ -41,10 +41,10 @@ protocol ShootButtonViewDelegate: class {
 }
 
 private struct ShootButtonViewConstants {
-    static let imageWidth: CGFloat = KanvasCameraDesign.shared.shootButtonImageWidth
-    static let borderWidth: CGFloat = KanvasCameraDesign.shared.shootButtonBorderWidth
-    static let innerCircleImageWidth: CGFloat = KanvasCameraDesign.shared.shootButtonInnerCircleImageWidth
-    static let outerCircleImageWidth: CGFloat = KanvasCameraDesign.shared.shootButtonOuterCircleImageWidth + borderWidth
+    static let imageWidth: CGFloat = KanvasDesign.shared.shootButtonImageWidth
+    static let borderWidth: CGFloat = KanvasDesign.shared.shootButtonBorderWidth
+    static let innerCircleImageWidth: CGFloat = KanvasDesign.shared.shootButtonInnerCircleImageWidth
+    static let outerCircleImageWidth: CGFloat = KanvasDesign.shared.shootButtonOuterCircleImageWidth + borderWidth
     static let trashViewSize: CGFloat = TrashView.size
     static let longPressMinimumDuration: CFTimeInterval = 0.5
     static let buttonWidth: CGFloat = (imageWidth + 15) * 2
@@ -52,7 +52,7 @@ private struct ShootButtonViewConstants {
     static let buttonImageAnimationInDuration: TimeInterval = 0.5
     static let buttonImageAnimationInSpringDamping: CGFloat = 0.6
     static let buttonImageAnimationOutDuration: TimeInterval = 0.15
-    static var buttonMaximumWidth: CGFloat = KanvasCameraDesign.shared.shootButtonMaximumWidth
+    static var buttonMaximumWidth: CGFloat = KanvasDesign.shared.shootButtonMaximumWidth
     static let animationDuration: TimeInterval = 0.5
 }
 
@@ -162,7 +162,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         imageView.clipsToBounds = true
         
         addSubview(imageView)
-        imageView.image = KanvasCameraImages.circleImage
+        imageView.image = KanvasImages.circleImage
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: ShootButtonViewConstants.outerCircleImageWidth),
@@ -179,7 +179,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         imageView.clipsToBounds = true
         
         addSubview(imageView)
-        imageView.image = KanvasCameraImages.circleImage
+        imageView.image = KanvasImages.circleImage
         imageView.translatesAutoresizingMaskIntoConstraints = false
         let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: ShootButtonViewConstants.innerCircleImageWidth)
         NSLayoutConstraint.activate([
@@ -395,7 +395,7 @@ final class ShootButtonView: IgnoreTouchesView, UIDropInteractionDelegate {
         shape.lineJoin = CAShapeLayerLineJoin.bevel
         
         timeSegmentLayer.frame = containerView.bounds
-        timeSegmentLayer.colors = KanvasCameraColors.shared.timeSegmentColors
+        timeSegmentLayer.colors = KanvasColors.shared.timeSegmentColors
         timeSegmentLayer.mask = shape
         timeSegmentLayer.transform = CATransform3DMakeRotation(-.pi / 2, 0.0, 0.0, 1.0)
         containerView.layer.addSublayer(timeSegmentLayer)

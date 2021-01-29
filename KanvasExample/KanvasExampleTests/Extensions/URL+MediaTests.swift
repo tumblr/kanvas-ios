@@ -7,7 +7,7 @@
 import Foundation
 
 import XCTest
-@testable import KanvasCamera
+@testable import Kanvas
 
 class URLMediaTests: XCTestCase {
 

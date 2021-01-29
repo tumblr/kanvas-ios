@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import UIKit
@@ -131,10 +131,10 @@ final class EditorControllerTests: FBSnapshotTestCase {
         return []
     }
     
-    func newViewController(settings: CameraSettings? = nil, segments: [CameraSegment], delegate: EditorControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil, analyticsProvider: KanvasCameraAnalyticsProvider? = nil) -> EditorViewController {
+    func newViewController(settings: CameraSettings? = nil, segments: [CameraSegment], delegate: EditorControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil, analyticsProvider: KanvasAnalyticsProvider? = nil) -> EditorViewController {
         let cameraSettings = settings ?? getCameraSettings()
         let handler = assetsHandler ?? AssetsHandlerStub()
-        let analytics = analyticsProvider ?? KanvasCameraAnalyticsStub()
+        let analytics = analyticsProvider ?? KanvasAnalyticsStub()
         let viewController = EditorViewController(settings: cameraSettings, segments: segments, assetsHandler: handler, exporterClass: MediaExporterStub.self, gifEncoderClass: GIFEncoderStub.self, cameraMode: cameraMode, stickerProvider: StickerProviderStub(), analyticsProvider: analytics, quickBlogSelectorCoordinator: nil, tagCollection: nil)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)

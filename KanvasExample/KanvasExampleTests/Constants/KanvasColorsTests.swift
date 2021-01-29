@@ -4,10 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 
-final class KanvasCameraColorsTests: FBSnapshotTestCase {
+final class KanvasColorsTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         recordMode = false
@@ -15,7 +15,7 @@ final class KanvasCameraColorsTests: FBSnapshotTestCase {
 
     func testShootButtonBaseColor() {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = KanvasCameraColors.shared.shootButtonBaseColor
+        view.backgroundColor = KanvasColors.shared.shootButtonBaseColor
         
         FBSnapshotVerifyView(view)
     }

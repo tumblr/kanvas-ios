@@ -27,8 +27,8 @@ private struct MediaClipsCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.15
             
     /// Padding at each side of the clip collection
-    static let leftInset: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionControllerLeftInset
-    static let rightInset: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionControllerRightInset
+    static let leftInset: CGFloat = KanvasDesign.shared.mediaClipsCollectionControllerLeftInset
+    static let rightInset: CGFloat = KanvasDesign.shared.mediaClipsCollectionControllerRightInset
 
 }
 

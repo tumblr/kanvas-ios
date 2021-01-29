@@ -8,7 +8,7 @@ import Foundation
 
 import XCTest
 
-@testable import KanvasCamera
+@testable import Kanvas
 
 class KanvasMediaPickerViewControllerTests: XCTestCase {
     func test() {

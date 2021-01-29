@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import AVFoundation
 import FBSnapshotTestCase
 import UIKit
@@ -28,7 +28,7 @@ final class ModeButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         modeButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        modeButton.setTitle(KanvasCameraStrings.name(for: .photo))
+        modeButton.setTitle(KanvasStrings.name(for: .photo))
         FBSnapshotVerifyView(modeButton)
         UIView.setAnimationsEnabled(true)
     }
@@ -38,7 +38,7 @@ final class ModeButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         modeButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        modeButton.setTitle(KanvasCameraStrings.name(for: .loop))
+        modeButton.setTitle(KanvasStrings.name(for: .loop))
         FBSnapshotVerifyView(modeButton)
         UIView.setAnimationsEnabled(true)
     }
@@ -48,7 +48,7 @@ final class ModeButtonViewTests: FBSnapshotTestCase {
         let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         modeButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
-        modeButton.setTitle(KanvasCameraStrings.name(for: .stopMotion))
+        modeButton.setTitle(KanvasStrings.name(for: .stopMotion))
         FBSnapshotVerifyView(modeButton)
         UIView.setAnimationsEnabled(true)
     }

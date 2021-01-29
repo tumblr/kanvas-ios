@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import UIKit
@@ -26,7 +26,7 @@ final class FlipLeftMirroredTests: FBSnapshotTestCase {
     
     func testFlipImageHorizontally() {
         let view = newView()
-        let imageView = UIImageView(image: KanvasCameraImages.imagePreviewOnImage?.flipLeftMirrored())
+        let imageView = UIImageView(image: KanvasImages.imagePreviewOnImage?.flipLeftMirrored())
         imageView.add(into: view)
         FBSnapshotVerifyView(view)
     }

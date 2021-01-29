@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AB7F29422121F02A00B8D599"
-               BuildableName = "KanvasCameraExample.app"
-               BlueprintName = "KanvasCameraExample"
-               ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
+               BuildableName = "KanvasExample.app"
+               BlueprintName = "KanvasExample"
+               ReferencedContainer = "container:KanvasExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -31,9 +31,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AB7F29422121F02A00B8D599"
-            BuildableName = "KanvasCameraExample.app"
-            BlueprintName = "KanvasCameraExample"
-            ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
+            BuildableName = "KanvasExample.app"
+            BlueprintName = "KanvasExample"
+            ReferencedContainer = "container:KanvasExample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -42,9 +42,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AB7F295B2121F0ED00B8D599"
-               BuildableName = "KanvasCameraExampleTests.xctest"
-               BlueprintName = "KanvasCameraExampleTests"
-               ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
+               BuildableName = "KanvasExampleTests.xctest"
+               BlueprintName = "KanvasExampleTests"
+               ReferencedContainer = "container:KanvasExample.xcodeproj">
             </BuildableReference>
             <SkippedTests>
                <Test
@@ -93,9 +93,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AB7F29422121F02A00B8D599"
-            BuildableName = "KanvasCameraExample.app"
-            BlueprintName = "KanvasCameraExample"
-            ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
+            BuildableName = "KanvasExample.app"
+            BlueprintName = "KanvasExample"
+            ReferencedContainer = "container:KanvasExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -122,9 +122,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AB7F29422121F02A00B8D599"
-            BuildableName = "KanvasCameraExample.app"
-            BlueprintName = "KanvasCameraExample"
-            ReferencedContainer = "container:KanvasCameraExample.xcodeproj">
+            BuildableName = "KanvasExample.app"
+            BlueprintName = "KanvasExample"
+            ReferencedContainer = "container:KanvasExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -5,7 +5,7 @@
 //
 
 import XCTest
-@testable import KanvasCamera
+@testable import Kanvas
 
 class String_UTF16SubstringTests: XCTestCase {
 

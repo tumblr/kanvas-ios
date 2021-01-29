@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name         = "KanvasCamera"
+  spec.name         = "Kanvas"
   spec.version      = "1.0.1"
   spec.summary      = "A custom camera built for iOS."
   spec.homepage     = "https://github.com/tumblr/kanvas-ios"
@@ -13,7 +13,7 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
   spec.frameworks = "Foundation", "GLKit", "OpenGLES", "UIKit"
   spec.source_files  = "Classes/**/*.{h,m,swift,vsh,glsl}"
-  spec.resource_bundles = { "KanvasCamera" => "Resources/*" }
+  spec.resource_bundles = { "Kanvas" => "Resources/*" }
   spec.user_target_xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => "GLES_SILENCE_DEPRECATION=1" }
   spec.pod_target_xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => "GLES_SILENCE_DEPRECATION=1" }
 end

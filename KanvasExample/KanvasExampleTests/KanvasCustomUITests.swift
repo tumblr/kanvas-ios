@@ -4,15 +4,15 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import Foundation
 import XCTest
 
-final class KanvasCameraCustomUITests: XCTestCase {
+final class KanvasCustomUITests: XCTestCase {
 
-    // test that values are set by KanvasCameraCustomUI as part of the example app
+    // test that values are set by KanvasCustomUI as part of the example app
     func testDefaults() {
-        XCTAssertEqual(KanvasCameraFonts.shared.editorFonts, KanvasCameraCustomUI.shared.cameraFonts().editorFonts)
-        XCTAssertEqual(KanvasCameraColors.shared.backgroundColors, KanvasCameraCustomUI.shared.cameraColors().backgroundColors)
+        XCTAssertEqual(KanvasFonts.shared.editorFonts, KanvasCustomUI.shared.cameraFonts().editorFonts)
+        XCTAssertEqual(KanvasColors.shared.backgroundColors, KanvasCustomUI.shared.cameraColors().backgroundColors)
     }
 }

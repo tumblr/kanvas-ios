@@ -7,7 +7,7 @@
 import Foundation
 
 // the values for common string throughout the module
-struct KanvasCameraStrings {
+struct KanvasStrings {
     // MARK: - Camera Modes
 
     // photoModeName: used in the camera mode button
@@ -40,6 +40,6 @@ struct KanvasCameraStrings {
     }
 
     static func bundlePath(for aClass: AnyClass) -> String? {
-        return Bundle(for: aClass).path(forResource: "KanvasCamera", ofType: "bundle")
+        return Bundle(for: aClass).path(forResource: "Kanvas", ofType: "bundle")
     }
 }

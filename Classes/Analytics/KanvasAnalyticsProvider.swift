@@ -177,8 +177,8 @@ import Foundation
     }
 }
 
-/// A protocol for injecting analytics into the KanvasCamera module
-@objc public protocol KanvasCameraAnalyticsProvider {
+/// A protocol for injecting analytics into the Kanvas module
+@objc public protocol KanvasAnalyticsProvider {
 
     /// Logs an event when the camera is opened
     ///

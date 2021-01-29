@@ -6,7 +6,7 @@
 
 import XCTest
 
-@testable import KanvasCamera
+@testable import Kanvas
 class MediaMetadataTests: XCTestCase {
 
     func testWriteAndReadMetadataWithVideo() {

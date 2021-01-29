@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import UIKit
@@ -12,8 +12,8 @@ import XCTest
 
 final class ImagePreviewControllerTests: FBSnapshotTestCase {
     
-    private let testImage = KanvasCameraImages.confirmImage
-    private let secondTestImage = KanvasCameraImages.flashOnImage
+    private let testImage = KanvasImages.confirmImage
+    private let secondTestImage = KanvasImages.flashOnImage
     
     override func setUp() {
         super.setUp()

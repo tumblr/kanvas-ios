@@ -1,1 +1,1 @@
-{ "file_extensions" : [ "swift" ], "directories" : [ "KanvasCameraExampleTests", "../Classes"] }
+{ "file_extensions" : [ "swift" ], "directories" : [ "KanvasExampleTests", "../Classes"] }

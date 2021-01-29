@@ -58,10 +58,10 @@ private let backgroundColorCollection = [brightBlue,
 
 
 // The colors used throughout the module
-public struct KanvasCameraColors {
+public struct KanvasColors {
     
-    public static var shared: KanvasCameraColors = {
-        return KanvasCameraColors(
+    public static var shared: KanvasColors = {
+        return KanvasColors(
             drawingDefaultColor: brightBlue,
             colorPickerColors: pickerColors,
             selectedPickerColor: selectedColor,

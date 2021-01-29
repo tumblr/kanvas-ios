@@ -6,7 +6,7 @@
 
 import Foundation
 import XCTest
-@testable import KanvasCamera
+@testable import Kanvas
 
 final class KanvasUIImagePickerViewControllerTests: XCTestCase {
 

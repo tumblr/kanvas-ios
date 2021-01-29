@@ -11,16 +11,16 @@ import UIKit
 private struct MediaClipsCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
     static let cellPadding: CGFloat = 2.9
-    static let clipHeight: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipHeight
-    static let clipWidth: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipWidth
-    static let borderWidth: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellBorderWidth
-    static let selectedBorderWidth: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellSelectedBorderWidth
-    static let cornerRadius: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellCornerRadius
-    static let font: UIFont = KanvasCameraDesign.shared.mediaClipsCollectionCellFont
-    static let labelHorizontalPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellLabelHorizontalPadding
-    static let labelVerticalPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellLabelVerticalPadding
+    static let clipHeight: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellClipHeight
+    static let clipWidth: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellClipWidth
+    static let borderWidth: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellBorderWidth
+    static let selectedBorderWidth: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellSelectedBorderWidth
+    static let cornerRadius: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellCornerRadius
+    static let font: UIFont = KanvasDesign.shared.mediaClipsCollectionCellFont
+    static let labelHorizontalPadding: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellLabelHorizontalPadding
+    static let labelVerticalPadding: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellLabelVerticalPadding
     static let labelHeight: CGFloat = 14
-    static let clipAlpha: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionCellClipAlpha
+    static let clipAlpha: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellClipAlpha
 
     static var minimumHeight: CGFloat {
         return clipHeight
@@ -41,7 +41,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         let view = UIView()
         view.clipsToBounds = true
         view.layer.cornerRadius = MediaClipsCollectionCellConstants.cornerRadius
-        view.layer.borderColor = KanvasCameraColors.shared.mediaBorderColor.cgColor
+        view.layer.borderColor = KanvasColors.shared.mediaBorderColor.cgColor
         view.layer.borderWidth = MediaClipsCollectionCellConstants.borderWidth
         return view
     }()

@@ -4,12 +4,12 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import FBSnapshotTestCase
 import Foundation
 import XCTest
 
-final class KanvasCameraImagesTests: FBSnapshotTestCase {
+final class KanvasImagesTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         
@@ -18,7 +18,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
     
     func testPhotoModeImage() {
         let imageView = newImageView()
-        let image = KanvasCameraImages.photoModeImage
+        let image = KanvasImages.photoModeImage
         /// photo image can be nil.
         imageView.image = image
         FBSnapshotVerifyView(imageView)
@@ -26,7 +26,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
 
     func testStopMotionModeImage() {
         let imageView = newImageView()
-        let image = KanvasCameraImages.stopMotionModeImage
+        let image = KanvasImages.stopMotionModeImage
         /// stop motion image can be nil.
         imageView.image = image
         FBSnapshotVerifyView(imageView)
@@ -34,7 +34,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
 
     func testFlashOnImage() {
         let imageView = newImageView()
-        let image = KanvasCameraImages.flashOnImage
+        let image = KanvasImages.flashOnImage
         XCTAssert(image != nil, "Image not found")
         imageView.image = image
         FBSnapshotVerifyView(imageView)
@@ -42,7 +42,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
 
     func testFlashOffImage() {
         let imageView = newImageView()
-        let image = KanvasCameraImages.flashOffImage
+        let image = KanvasImages.flashOffImage
         XCTAssert(image != nil, "Image not found")
         imageView.image = image
         FBSnapshotVerifyView(imageView)
@@ -50,7 +50,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
 
     func testCameraPositionImage() {
         let imageView = newImageView()
-        let image = KanvasCameraImages.cameraPositionImage
+        let image = KanvasImages.cameraPositionImage
         XCTAssert(image != nil, "Image not found")
         imageView.image = image
         FBSnapshotVerifyView(imageView)
@@ -58,7 +58,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
 
     func testCloseImage() {
         let imageView = newImageView()
-        let image = KanvasCameraImages.closeImage
+        let image = KanvasImages.closeImage
         XCTAssert(image != nil, "Image not found")
         imageView.image = image
         FBSnapshotVerifyView(imageView)
@@ -66,7 +66,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
 
     func testConfirmImage() {
         let imageView = newImageView()
-        let image = KanvasCameraImages.confirmImage
+        let image = KanvasImages.confirmImage
         XCTAssert(image != nil, "Image not found")
         imageView.image = image
         FBSnapshotVerifyView(imageView)
@@ -74,7 +74,7 @@ final class KanvasCameraImagesTests: FBSnapshotTestCase {
 
     func testBackImage() {
         let imageView = newImageView()
-        let image = KanvasCameraImages.backImage
+        let image = KanvasImages.backImage
         XCTAssert(image != nil, "Image not found")
         imageView.image = image
         FBSnapshotVerifyView(imageView)

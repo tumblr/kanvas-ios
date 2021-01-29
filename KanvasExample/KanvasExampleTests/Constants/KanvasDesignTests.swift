@@ -4,18 +4,18 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-@testable import KanvasCamera
+@testable import Kanvas
 import Foundation
 import XCTest
 
-final class KanvasCameraDesignTests: XCTestCase {
+final class KanvasDesignTests: XCTestCase {
 
     func testOriginal() {
-        XCTAssertFalse(KanvasCameraDesign.original.isBottomPicker, "The result should be false.")
+        XCTAssertFalse(KanvasDesign.original.isBottomPicker, "The result should be false.")
     }
     
     func testBottomPicker() {
-        XCTAssertTrue(KanvasCameraDesign.bottomPicker.isBottomPicker, "The result should be true.")
+        XCTAssertTrue(KanvasDesign.bottomPicker.isBottomPicker, "The result should be true.")
     }
 
 }

@@ -5,12 +5,12 @@
 //
 
 import Foundation
-import KanvasCamera
+import Kanvas
 
-/// Contains custom colors and fonts for the KanvasCamera framework
-public class KanvasCameraCustomUI {
+/// Contains custom colors and fonts for the Kanvas framework
+public class KanvasCustomUI {
     
-    public static let shared = KanvasCameraCustomUI()
+    public static let shared = KanvasCustomUI()
             
     private static let brightBlue = UIColor.tumblrBrightBlue
     private static let brightPurple = UIColor.tumblrBrightPurple
@@ -61,8 +61,8 @@ public class KanvasCameraCustomUI {
     private let selectedColor = brightBlue // ColorPickerController:29
     private let black25 = UIColor.tumblrBlack25
     
-    func cameraColors() -> KanvasCameraColors {
-        return KanvasCameraColors(
+    func cameraColors() -> KanvasColors {
+        return KanvasColors(
             drawingDefaultColor: Self.brightBlue,
             colorPickerColors: pickerColors,
             selectedPickerColor: selectedColor,
@@ -87,14 +87,14 @@ public class KanvasCameraCustomUI {
     private static let guava85 = UIFont.guava85()
     private static let durianMedium = UIFont.durianMedium()
     
-    private static let cameraPermissions = KanvasCameraFonts.CameraPermissions(titleFont: durianMedium, descriptionFont: guava85, buttonFont: guavaMedium)
-    private static let drawer = KanvasCameraFonts.Drawer(textSelectedFont: UIFont.favoritTumblrMedium(fontSize: 14), textUnselectedFont: UIFont.favoritTumblr85(fontSize: 14))
+    private static let cameraPermissions = KanvasFonts.CameraPermissions(titleFont: durianMedium, descriptionFont: guava85, buttonFont: guavaMedium)
+    private static let drawer = KanvasFonts.Drawer(textSelectedFont: UIFont.favoritTumblrMedium(fontSize: 14), textUnselectedFont: UIFont.favoritTumblr85(fontSize: 14))
 
     
-    func cameraFonts() -> KanvasCameraFonts {
-        let paddingAdjustment: (UIFont) -> KanvasCameraFonts.Padding? = { font in
+    func cameraFonts() -> KanvasFonts {
+        let paddingAdjustment: (UIFont) -> KanvasFonts.Padding? = { font in
             if font == UIFont.favoritTumblr85(fontSize: font.pointSize) {
-                return KanvasCameraFonts.Padding(topMargin: 8.0,
+                return KanvasFonts.Padding(topMargin: 8.0,
                         leftMargin: 5.7,
                         extraVerticalPadding: 0.125 * font.pointSize,
                         extraHorizontalPadding: 0)
@@ -103,7 +103,7 @@ public class KanvasCameraCustomUI {
                 return nil
             }
         }
-        return KanvasCameraFonts(permissions: Self.cameraPermissions,
+        return KanvasFonts(permissions: Self.cameraPermissions,
                                  drawer: Self.drawer,
                                  editorFonts: [.fairwater(fontSize: 48), UIFont.favoritTumblr85(fontSize: 48)],
                                  optionSelectorCellFont: .guavaMedium(),
