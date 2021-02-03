@@ -189,7 +189,7 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
     }
     
     func addButtonWasPressed() {
-        
+        delegate?.addButtonWasPressed()
     }
 
     func mediaClipWasDeleted(at index: Int) {
@@ -336,7 +336,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
             autoreleasepool {
                 let editor = delegate.editor(segment: frame.segment)
                 editor.export { [weak self, editor] result in
-                    let _ = editor // string reference until the export completes
+                    let _ = editor // strong reference until the export completes
                     self?.exportHandler.handleExport(result, for: idx)
                 }
             }

@@ -79,7 +79,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
        let original: Media?
        let result: Media
        let info: MediaInfo
-       let archive: Data
     }
 
     var editorView: EditorView
@@ -776,6 +775,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     return
                 }
                 let size = GIFDecoderFactory.main().size(of: gifURL)
+                let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo)
+                self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
                     self.hideLoading()
@@ -795,6 +796,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.handleExportError()
                     return
                 }
+                let result = ExportResult(original: .video(videoURL), result: .video(url), info: mediaInfo)
+                self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 self.hideLoading()
             }
@@ -817,6 +820,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self.handleExportError()
                     return
                 }
+                let result = ExportResult(original: .image(image), result: .image(unwrappedImage), info: mediaInfo)
+                self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
                 self.hideLoading()
             }

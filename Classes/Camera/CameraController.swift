@@ -906,8 +906,6 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             asset = nil
         }
 
-        let fileName = url?.deletingPathExtension().lastPathComponent ?? UUID().uuidString
-
         if let asset = asset, let info = info {
             let media = KanvasCameraMedia(asset: asset, original: url!, info: info)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
