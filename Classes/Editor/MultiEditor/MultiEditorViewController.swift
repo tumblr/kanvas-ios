@@ -1,6 +1,7 @@
 import Foundation
 
-protocol MultiEditorComposerDelegate: class, EditorControllerDelegate {
+protocol MultiEditorComposerDelegate: EditorControllerDelegate {
+    func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
     func addButtonWasPressed()
     func editor(segment: CameraSegment) -> EditorViewController
     func dismissButtonPressed()
@@ -16,6 +17,9 @@ class MultiEditorViewController: UIViewController {
     
     private let clipsContainer = IgnoreTouchesView()
     private let editorContainer = IgnoreTouchesView()
+    
+    private let exportHandler: MultiEditorExportHandler
+    
     private weak var delegate: MultiEditorComposerDelegate?
 
     struct Frame {
@@ -58,6 +62,9 @@ class MultiEditorViewController: UIViewController {
     
     private let settings: CameraSettings
 
+
+    private var exportingEditors: [EditorViewController]?
+
     private weak var currentEditor: EditorViewController?
 
     init(settings: CameraSettings,
@@ -72,6 +79,10 @@ class MultiEditorViewController: UIViewController {
             return Frame(segment: segment)
         })
 
+        self.exportHandler = MultiEditorExportHandler({ [weak delegate] result in
+            delegate?.didFinishExporting(media: result)
+//            self?.exportingEditors = nil
+        })
         self.selected = selected
         super.init(nibName: nil, bundle: nil)
         let clips = segments.map { segment in
@@ -175,6 +186,10 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 
     func mediaClipFinishedMoving() {
         // No-op for the moment. UI is coming in a future commit.
+    }
+    
+    func addButtonWasPressed() {
+        
     }
 
     func mediaClipWasDeleted(at index: Int) {
@@ -308,12 +323,24 @@ extension MultiEditorViewController: EditorControllerDelegate {
         clipsContainer.isUserInteractionEnabled = true
     }
 
+    // This overrides the export behavior of the EditorViewControllers.
+    func shouldExport() -> Bool {
 
-    func addButtonPressed() {
-        dismiss(animated: true, completion: nil)
-    }
+        showLoading()
 
-    func addButtonWasPressed() {
-        delegate?.addButtonWasPressed()
+        exportHandler.startWaiting(for: frames.count)
+
+        guard let delegate = delegate else { return true }
+
+        frames.enumerated().forEach({ (idx, frame) in
+            autoreleasepool {
+                let editor = delegate.editor(segment: frame.segment)
+                editor.export { [weak self, editor] result in
+                    let _ = editor // string reference until the export completes
+                    self?.exportHandler.handleExport(result, for: idx)
+                }
+            }
+        })
+        return false
     }
 }

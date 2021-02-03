@@ -9,18 +9,48 @@ import Foundation
 import UIKit
 
 // Media wrapper for media generated from the CameraController
-public enum KanvasCameraMedia {
-    case image(URL, MediaInfo, CGSize)
-    case video(URL, MediaInfo, CGSize)
-    case frames(URL, MediaInfo, CGSize)
+public struct KanvasCameraMedia {
+    public let unmodified: URL
+    public let output: URL
+    public let info: MediaInfo
+    public let size: CGSize
+    public let type: KanvasCameraMediaType
 
-    public var info: MediaInfo {
-        switch self {
-        case .image(_, let info, _): return info
-        case .video(_, let info, _): return info
-        case .frames(_, let info, _): return info
-        }
+    init(unmodified: URL,
+         output: URL,
+         info: MediaInfo,
+         size: CGSize,
+         type: KanvasCameraMediaType) {
+        self.unmodified = unmodified
+        self.output = output
+        self.info = info
+        self.size = size
+        self.type = type
     }
+
+    init(asset: AVURLAsset, original: URL, info: MediaInfo) {
+        self.init(unmodified: original,
+             output: asset.url,
+             info: info,
+             size: asset.videoScreenSize ?? .zero,
+             type: KanvasCameraMediaType.video
+        )
+    }
+
+    init(image: UIImage, url: URL, original: URL, info: MediaInfo) {
+        self.init(unmodified: original,
+             output: url,
+             info: info,
+             size: image.size,
+             type: KanvasCameraMediaType.image
+        )
+    }
+}
+
+public enum KanvasCameraMediaType {
+    case image
+    case video
+    case frames
 }
 
 public enum KanvasExportAction {
@@ -46,7 +76,7 @@ public protocol CameraControllerDelegate: class {
      - parameter media: KanvasCameraMedia - this is the media created in the controller (can be image, video, etc)
      - seealso: enum KanvasCameraMedia
      */
-    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?)
+    func didCreateMedia(_ cameraController: CameraController, media: [Result<KanvasCameraMedia?, Error>], exportAction: KanvasExportAction)
 
     /**
      A function that is called when the main camera dismiss button is pressed
@@ -184,6 +214,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
+    private let saveDirectory: URL
 
     private weak var mediaPlayerController: MediaPlayerController?
 
@@ -197,7 +228,11 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     /// and which should be the result of the interaction.
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasCameraAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, tagCollection: UIView?) {
+    convenience public init(settings: CameraSettings,
+                            stickerProvider: StickerProvider?,
+                            analyticsProvider: KanvasCameraAnalyticsProvider?,
+                            quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+                            tagCollection: UIView?) {
         self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, tagCollection: tagCollection)
     }
 
@@ -221,7 +256,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasCameraAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-         tagCollection: UIView?) {
+         tagCollection: UIView?,
+         saveDirectory: URL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
@@ -232,6 +268,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.analyticsProvider = analyticsProvider
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
+        self.saveDirectory = saveDirectory
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
@@ -860,33 +897,45 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     public func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        if let url = url, let info = info {
-            let asset = AVURLAsset(url: url)
-            logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
-            performUIUpdate { [weak self] in
-                if let self = self, let videoSize = asset.videoScreenSize {
-                    self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: .video(url, info, videoSize), exportAction: action, error: nil)
-                }
-            }
+        guard settings.features.multipleExports == false else { return }
+        let asset: AVURLAsset?
+        if let url = url {
+            asset = AVURLAsset(url: url)
         }
         else {
+            asset = nil
+        }
+
+        let fileName = url?.deletingPathExtension().lastPathComponent ?? UUID().uuidString
+
+        if let asset = asset, let info = info {
+            let media = KanvasCameraMedia(asset: asset, original: url!, info: info)
+            logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
                 if let self = self {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                    self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
+                }
+            }
+        } else {
+            performUIUpdate { [weak self] in
+                if let self = self {
+                    self.handleCloseSoon(action: action)
+                    self.delegate?.didCreateMedia(self, media: [], exportAction: action)
                 }
             }
         }
     }
 
     public func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        if let info = info, let url = CameraController.save(image: image, info: info) {
+        guard settings.features.multipleExports == false else { return }
+        if let image = image, let info = info, let url = image.save(info: info) {
+            let media = KanvasCameraMedia(image: image, url: url, original: url, info: info)
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
-                if let self = self, let image = image {
+                if let self = self {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: .image(url, info, image.size), exportAction: action, error: nil)
+                    self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
                 }
             }
         }
@@ -894,7 +943,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             performUIUpdate { [weak self] in
                 if let self = self {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                    self.delegate?.didCreateMedia(self, media: [], exportAction: action)
                 }
             }
         }
@@ -904,13 +953,44 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         guard let url = url, let info = info, let size = size, size != .zero else {
             performUIUpdate {
                 self.handleCloseSoon(action: action)
-                self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                self.delegate?.didCreateMedia(self, media: [], exportAction: action)
             }
             return
         }
         performUIUpdate {
             self.handleCloseSoon(action: action)
-            self.delegate?.didCreateMedia(self, media: .frames(url, info, size), exportAction: action, error: nil)
+            let media = KanvasCameraMedia(unmodified: url, output: url, info: info, size: size, type: .frames)
+            self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
+        }
+    }
+
+    lazy var queue = DispatchQueue.global(qos: .background)
+
+    var exportCancellable: Any?
+
+    func didFinishExporting(media result: [Result<EditorViewController.ExportResult, Error>]) {
+
+        let archiver = Archiver(saveDirectory: saveDirectory)
+
+        let exports: [EditorViewController.ExportResult?] = result.map { result in
+            switch result {
+            case .success(let export):
+                return export
+            case .failure(let error):
+                return nil
+            }
+        }
+
+        queue.async { [weak self] in
+            guard let self = self else { return }
+
+            let publishers = archiver.handle(exports: exports)
+            self.exportCancellable = publishers.receive(on: DispatchQueue.main).sink { completion in
+
+            } receiveValue: { items in
+                self.handleCloseSoon(action: .previewConfirm)
+                self.delegate?.didCreateMedia(self, media: items, exportAction: .post)
+            }
         }
     }
 

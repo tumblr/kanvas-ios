@@ -337,7 +337,11 @@ extension KanvasCameraExampleViewController: FeatureTableViewDelegate {
 // MARK: - CameraControllerDelegate
 
 extension KanvasCameraExampleViewController: CameraControllerDelegate {
-    
+    func editorDismissed() {
+        
+    }
+
+
     func openAppSettings(completion: ((Bool) -> ())?) {
         if let url = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(url, options: [:], completionHandler: completion)
@@ -348,13 +352,8 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         // Only supported in Orangina
     }
 
-    func editorDismissed() {
+    func editorDismissed(_ cameraController: CameraController) {
         // Only supported in Orangina
-    }
-    
-    func getQuickPostButton() -> UIView {
-        // Only supported in Orangina
-        return UIView()
     }
 
     func getBlogSwitcher() -> UIView {
@@ -362,6 +361,11 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
         return UIView()
     }
     
+    func getQuickPostButton() -> UIView {
+        // Only supported in Orangina
+        return UIView()
+    }
+
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeTooltip
     }
@@ -393,41 +397,44 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
     func didEndDragInteraction() {
         
     }
-    
-    func didCreateMedia(_ cameraController: CameraController, media: KanvasCameraMedia?, exportAction: KanvasExportAction, error: Error?) {
-        if let error = error {
-            assertionFailure("Error creating Kanvas media: \(error)")
-            return
-        }
-        guard let media = media else {
-            assertionFailure("No error, but no media!?")
-            return
-        }
 
-        save(media: media) { err in
-            DispatchQueue.main.async {
-                if KanvasDevice.isRunningInSimulator == false {
-                    guard err == nil else {
-                        assertionFailure("Error saving to photo library")
-                        return
+    func didCreateMedia(_ cameraController: CameraController, media: [Result<KanvasCameraMedia?, Error>], exportAction: KanvasExportAction) {
+        media.forEach { result in
+            switch result {
+            case .failure(let error):
+                assertionFailure("Error creating Kanvas Media: \(error)")
+            case .success(let media):
+                guard let media = media else {
+                    assertionFailure("No Kanvas Media but no Error")
+                    return
+                }
+
+                save(media: media) { err in
+                    DispatchQueue.main.async {
+                        if KanvasDevice.isRunningInSimulator == false {
+                            guard err == nil else {
+                                assertionFailure("Error saving to photo library")
+                                return
+                            }
+                        }
+
+                    switch exportAction {
+                    case .previewConfirm:
+                        self.dismissCamera()
+                    case .confirm:
+                        self.dismissCamera()
+                    case .post:
+                        self.dismissCamera()
+                    case .save:
+                        break
+                    case .postOptions:
+                        self.dismissCamera()
+                    case .confirmPostOptions:
+                        self.dismissCamera()
+                    }
+
                     }
                 }
-
-                switch exportAction {
-                case .previewConfirm:
-                    self.dismissCamera()
-                case .confirm:
-                    self.dismissCamera()
-                case .post:
-                    self.dismissCamera()
-                case .save:
-                    break
-                case .postOptions:
-                    self.dismissCamera()
-                case .confirmPostOptions:
-                    self.dismissCamera()
-                }
-
             }
         }
     }
@@ -455,13 +462,13 @@ extension KanvasCameraExampleViewController: CameraControllerDelegate {
                 fallthrough
 #endif
             case .authorized:
-                switch media {
-                case let .image(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
-                case let .video(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .video, completion: completionMainThread)
-                case let .frames(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
+                switch media.type {
+                case .image:
+                    self.moveToLibrary(url: media.output, resourceType: .photo, completion: completionMainThread)
+                case .video:
+                    self.moveToLibrary(url: media.output, resourceType: .video, completion: completionMainThread)
+                case .frames:
+                    self.moveToLibrary(url: media.output, resourceType: .photo, completion: completionMainThread)
                 }
             @unknown default:
                 break

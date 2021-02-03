@@ -51,6 +51,16 @@ public protocol EditorControllerDelegate: class {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
+    /// Called when the Post Button is pressed to indicate whether export should occur
+    /// The return value indicates whether the export should be run
+    /// This is partly temporary, I think the export functionality should be passed into this controller to decouple things
+    func shouldExport() -> Bool
+}
+
+extension EditorControllerDelegate {
+    public func shouldExport() -> Bool {
+        return true
+    }
 }
 
 private struct Constants {
@@ -59,6 +69,18 @@ private struct Constants {
 
 /// A view controller to edit the segments
 public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
+
+    enum Media {
+        case image(UIImage)
+        case video(URL)
+    }
+
+    public struct ExportResult {
+       let original: Media?
+       let result: Media
+       let info: MediaInfo
+       let archive: Data
+    }
 
     var editorView: EditorView
     
@@ -160,6 +182,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     public weak var delegate: EditorControllerDelegate?
     
+    private var exportCompletion: ((Result<ExportResult, Error>) -> Void)?
+
     private static func editor(delegate: EditorViewDelegate?,
                                settings: CameraSettings,
                                quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
@@ -561,7 +585,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     func didTapPostButton() {
-        startExporting(action: .post)
+        if delegate?.shouldExport() ?? true {
+            startExporting(action: .post)
+        }
         analyticsProvider?.logPostFromDashboard()
     }
 
@@ -700,6 +726,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
             }
         }
+    }
+
+    public func export(_ completion: @escaping (Result<ExportResult, Error>) -> Void) {
+        exportCompletion = completion
+        startExporting(action: .post)
     }
 
     private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
