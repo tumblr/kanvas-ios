@@ -84,7 +84,7 @@ final class TextureSelectorView: IgnoreTouchesView {
     /// Sets up the button that opens the selector
     private func setUpMainButton() {
         mainButton.contentMode = .center
-        mainButton.image = KanvasCameraImages.pencilImage
+        mainButton.image = KanvasImages.pencilImage
         mainButton.accessibilityIdentifier = "Texture Main Button"
         mainButton.backgroundColor = .white
         addSubview(mainButton)

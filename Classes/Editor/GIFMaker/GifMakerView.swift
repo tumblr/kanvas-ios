@@ -41,7 +41,7 @@ private struct Constants {
     static let topButtonsInterspace: CGFloat = KanvasEditorDesign.shared.topButtonInterspace
     static let topButtonsCount: CGFloat = 3
 
-    static let font = KanvasCameraFonts.shared.gifMakerRevertButtonFont
+    static let font = KanvasFonts.shared.gifMakerRevertButtonFont
     static let revertFontColor = UIColor(red: 1, green: 0.286, blue: 0.188, alpha: 1)
     static let revertBackgroundColor = UIColor.white
 }
@@ -127,7 +127,7 @@ final class GifMakerView: UIView {
         
         let checkmark = KanvasEditorDesign.shared.checkmarkImage
         if KanvasEditorDesign.shared.isVerticalMenu {
-            let backgroundImage = UIImage.circle(diameter: Constants.topButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
+            let backgroundImage = UIImage.circle(diameter: Constants.topButtonSize, color: KanvasColors.shared.primaryButtonBackgroundColor)
             confirmButton.setBackgroundImage(backgroundImage, for: .normal)
             confirmButton.setImage(checkmark, for: .normal)
         }
@@ -152,7 +152,7 @@ final class GifMakerView: UIView {
     /// Sets up the trim button in the top options
     private func setUpTrimButton() {
         trimButton.accessibilityIdentifier = "GIF Maker Trim Button"
-        trimButton.setBackgroundImage(KanvasCameraImages.trimOff, for: .normal)
+        trimButton.setBackgroundImage(KanvasImages.trimOff, for: .normal)
         trimButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(trimButton)
         
@@ -171,7 +171,7 @@ final class GifMakerView: UIView {
     /// Sets up the speed tools button in the top options
     private func setUpSpeedButton() {
         speedButton.accessibilityIdentifier = "GIF Maker Speed Button"
-        speedButton.setBackgroundImage(KanvasCameraImages.speedOff, for: .normal)
+        speedButton.setBackgroundImage(KanvasImages.speedOff, for: .normal)
         speedButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(speedButton)
         
@@ -316,7 +316,7 @@ final class GifMakerView: UIView {
     /// - Parameter image: the new image for the button
     func changeTrimButton(_ enabled: Bool) {
         let animation: (() -> Void) = { [weak self] in
-            let image = enabled ? KanvasCameraImages.trimOn : KanvasCameraImages.trimOff
+            let image = enabled ? KanvasImages.trimOn : KanvasImages.trimOff
             self?.trimButton.setBackgroundImage(image, for: .normal)
         }
         
@@ -332,7 +332,7 @@ final class GifMakerView: UIView {
     /// - Parameter image: the new image for the button
     func changeSpeedButton(_ enabled: Bool) {
         let animation: (() -> Void) = { [weak self] in
-            let image = enabled ? KanvasCameraImages.speedOn : KanvasCameraImages.speedOff
+            let image = enabled ? KanvasImages.speedOn : KanvasImages.speedOff
             self?.speedButton.setBackgroundImage(image, for: .normal)
         }
         

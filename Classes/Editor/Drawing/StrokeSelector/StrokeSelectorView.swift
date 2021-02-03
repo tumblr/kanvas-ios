@@ -33,7 +33,7 @@ private struct Constants {
     static let selectorTopPadding: CGFloat = selectorPadding + (circleMaxSize - circleMinSize) / 2
     static let selectorPannableAreaHeight: CGFloat = selectorHeight - selectorTopPadding - selectorBottomPadding
     
-    static let circleDefaultColor: UIColor = KanvasCameraColors.shared.strokeColor
+    static let circleDefaultColor: UIColor = KanvasColors.shared.strokeColor
 }
 
 /// View for StrokeSelectorController
@@ -109,7 +109,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     /// Sets up the black circle inside the main button
     private func setUpMainButtonCircle() {
         mainButtonCircle.accessibilityIdentifier = "Stroke Main Button Circle"
-        mainButtonCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
+        mainButtonCircle.image = KanvasImages.circleImage?.withRenderingMode(.alwaysTemplate)
         mainButtonCircle.tintColor = Constants.circleDefaultColor
         mainButtonCircle.isUserInteractionEnabled = true
         mainButtonCircle.translatesAutoresizingMaskIntoConstraints = false
@@ -150,7 +150,7 @@ final class StrokeSelectorView: IgnoreTouchesView {
     /// Sets up the movable circle inside the selector
     private func setUpSelectorCircle() {
         selectorCircle.accessibilityIdentifier = "Stroke Selector Circle"
-        selectorCircle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
+        selectorCircle.image = KanvasImages.circleImage?.withRenderingMode(.alwaysTemplate)
         selectorCircle.tintColor = Constants.circleDefaultColor
         selectorCircle.isUserInteractionEnabled = true
         selectorCircle.translatesAutoresizingMaskIntoConstraints = false

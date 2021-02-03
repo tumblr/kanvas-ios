@@ -13,7 +13,7 @@ It is used in the [Tumblr iOS app](https://apps.apple.com/us/app/tumblr/id305343
 Add this to your `Podfile`:
 
 ```ruby
-pod 'KanvasCamera', :git => 'https://github.com/tumblr/kanvas-ios.git'
+pod 'Kanvas', :git => 'https://github.com/tumblr/kanvas-ios.git'
 ```
 
 And run:
@@ -49,8 +49,8 @@ Documentation is lacking at the moment, but contributions are welcome!
 
 ## Example App
 
-[`KanvasCameraExample`](https://github.com/tumblr/kanvas-ios/tree/main/KanvasCameraExample) is an example app showing how to use Kanvas. Try it out!
+[`KanvasExample`](https://github.com/tumblr/kanvas-ios/tree/main/KanvasExample) is an example app showing how to use Kanvas. Try it out!
 
-1. Run `cd KanvasCameraExample; bundle exec pod install`
-2. Open `KanvasCameraExample/KanvasCameraExample.xcworkspace` in Xcode
+1. Run `cd KanvasExample; bundle exec pod install`
+2. Open `KanvasExample/KanvasExample.xcworkspace` in Xcode
 3. Run the app on a device.

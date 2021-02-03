@@ -64,7 +64,7 @@ final class MediaPickerButtonView: IgnoreTouchesView {
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchCancel)
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchDragExit)
             
-            if let defaultImage = KanvasCameraImages.imageThumbnail {
+            if let defaultImage = KanvasImages.imageThumbnail {
                 setBackgroundImage(defaultImage)
             }
         }
