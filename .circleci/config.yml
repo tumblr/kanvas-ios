@@ -17,12 +17,9 @@ commands:
             fi
             chruby ruby-2.6.6
             gem install bundler
-jobs:
+workflows:
   build:
-    executor:
-      name: ios/default
-      xcode-version: "12.0.0"
-    steps:
+    jobs:
       - fix-image
       - git/shallow-checkout
       - ios/install-dependencies:
@@ -30,13 +27,8 @@ jobs:
           bundler-working-directory: KanvasExample
           pod-install: true
           cocoapods-working-directory: KanvasExample
-      - run:
-          name: Pod Install
-          when: always
-          working_directory: ./KanvasExample
-          command: bundle exec pod install
       - ios/test:
-          xcode-version: 11.2.1
+          xcode-version: 12.0.0
           workspace: KanvasExample/KanvasExample.xcworkspace
           scheme: KanvasExample
           device: iPhone 8
