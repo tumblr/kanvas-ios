@@ -289,7 +289,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
 
-        let glContext = EAGLContext(api: .openGLES3)
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
         self.editorView = EditorViewController.editor(delegate: nil,

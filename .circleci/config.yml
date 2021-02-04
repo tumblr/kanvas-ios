@@ -40,6 +40,22 @@ jobs:
           scheme: KanvasExample
           device: iPhone 8
           ios-version: "14.0"
+      - ios/validate-podspec:
+          name: Validate Podspec
+          xcode-version: "12.0.0"
+          podspec-path: Kanvas.podspec
+          bundle-install: true
+      - ios/publish-podspec:
+          name: Publish to Trunk
+          xcode-version: "12.0.0"
+          podspec-path: Kanvas.podspec
+          bundle-install: true
+          post-to-slack: true
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
       - run:
           name: Zip failed diffs
           when: always

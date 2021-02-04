@@ -4,6 +4,8 @@
 
 <a href="https://app.circleci.com/pipelines/github/tumblr/kanvas-ios?branch=main"><img src="https://circleci.com/gh/tumblr/kanvas-ios.svg?branch=main&style=svg" alt="Kanvas Build Status"></a>
 
+![Cocoapods](https://img.shields.io/cocoapods/v/Kanvas)
+
 Kanvas is an [open-source](https://github.com/tumblr/kanvas-ios/blob/main/LICENSE) iOS library for adding effects, drawings, text, stickers, and making GIFs from existing media or the camera.
 
 It is used in the [Tumblr iOS app](https://apps.apple.com/us/app/tumblr/id305343404) as a camera, media editor, GIF maker, and media posting tool. 
