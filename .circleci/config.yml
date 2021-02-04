@@ -6,7 +6,8 @@ orbs:
 workflows:
   build:
     jobs:
-      steps:
+      - build: 
+        steps:
           - ios/install-dependencies:
               bundle-install: true
               bundler-working-directory: KanvasExample
