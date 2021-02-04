@@ -6,41 +6,42 @@ orbs:
 workflows:
   build:
     jobs:
-      - ios/install-dependencies:
-          bundle-install: true
-          bundler-working-directory: KanvasExample
-          pod-install: true
-          cocoapods-working-directory: KanvasExample
-      - ios/test:
-          xcode-version: 12.0.0
-          workspace: KanvasExample/KanvasExample.xcworkspace
-          scheme: KanvasExample
-          device: iPhone 8
-          ios-version: "14.0"
-      - ios/validate-podspec:
-          name: Validate Podspec
-          xcode-version: "12.0.0"
-          podspec-path: Kanvas.podspec
-          bundle-install: true
-      - ios/publish-podspec:
-          name: Publish to Trunk
-          xcode-version: "12.0.0"
-          podspec-path: Kanvas.podspec
-          bundle-install: true
-          post-to-slack: true
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - run:
-          name: Zip failed diffs
-          when: always
-          working_directory: ./KanvasExample/KanvasExampleTests
-          command: zip -r diffoutput.zip FailureDiffs || true
-      - store_artifacts:
-          name: Save diffs
-          path: KanvasExample/KanvasExampleTests/diffoutput.zip
-          destination: testresults
-      - ios/save-xcodebuild-artifacts:
-          result-bundle-path: build/results
+      steps:
+          - ios/install-dependencies:
+              bundle-install: true
+              bundler-working-directory: KanvasExample
+              pod-install: true
+              cocoapods-working-directory: KanvasExample
+          - ios/test:
+              xcode-version: 12.0.0
+              workspace: KanvasExample/KanvasExample.xcworkspace
+              scheme: KanvasExample
+              device: iPhone 8
+              ios-version: "14.0"
+          - ios/validate-podspec:
+              name: Validate Podspec
+              xcode-version: "12.0.0"
+              podspec-path: Kanvas.podspec
+              bundle-install: true
+          - ios/publish-podspec:
+              name: Publish to Trunk
+              xcode-version: "12.0.0"
+              podspec-path: Kanvas.podspec
+              bundle-install: true
+              post-to-slack: true
+              filters:
+                tags:
+                  only: /.*/
+                branches:
+                  ignore: /.*/
+          - run:
+              name: Zip failed diffs
+              when: always
+              working_directory: ./KanvasExample/KanvasExampleTests
+              command: zip -r diffoutput.zip FailureDiffs || true
+          - store_artifacts:
+              name: Save diffs
+              path: KanvasExample/KanvasExampleTests/diffoutput.zip
+              destination: testresults
+          - ios/save-xcodebuild-artifacts:
+              result-bundle-path: build/results
