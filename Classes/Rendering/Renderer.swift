@@ -70,10 +70,9 @@ final class Renderer: Rendering {
 
     var filterPlatform: FilterPlatform {
         didSet {
-            let filterFactory = FilterFactory(glContext: glContext,
+            filterFactory = FilterFactory(glContext: glContext,
                                               metalContext: metalContext,
                                               filterPlatform: filterPlatform)
-            self.filterFactory = filterFactory
         }
     }
 
