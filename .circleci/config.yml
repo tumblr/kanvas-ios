@@ -5,23 +5,21 @@ orbs:
   ios: wordpress-mobile/ios@1.0
 
 jobs:
-  build: 
+  build_and_test: 
     executor:
       name: ios/default
       xcode-version: "12.0.0"
     steps:
-      - git/shallow-checkout
-      - ios/install-dependencies:
-          bundle-install: true
-          bundler-working-directory: KanvasExample
-          pod-install: true
-          cocoapods-working-directory: KanvasExample
       - ios/test:
           xcode-version: 12.0.0
           workspace: KanvasExample/KanvasExample.xcworkspace
           scheme: KanvasExample
           device: iPhone 8
           ios-version: "14.0"
+          bundle-install: true
+          bundler-working-directory: KanvasExample
+          pod-install: true
+          cocoapods-working-directory: KanvasExample
       - run:
           name: Zip failed diffs
           when: always
@@ -37,7 +35,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - build
+      - build_and_test
       - ios/validate-podspec:
           name: Validate Podspec
           xcode-version: "12.0.0"
