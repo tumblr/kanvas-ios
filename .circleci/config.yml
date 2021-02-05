@@ -1,7 +1,8 @@
 version: 2.1
 orbs:
   # See https://github.com/wordpress-mobile/circleci-orbs
-  ios: wordpress-mobile/ios@1.0.16
+  git: wordpress-mobile/git@1.0
+  ios: wordpress-mobile/ios@1.0
 
 jobs:
   build: 
@@ -9,6 +10,7 @@ jobs:
       name: ios/default
       xcode-version: "12.0.0"
     steps:
+      - git/shallow-checkout
       - ios/install-dependencies:
           bundle-install: true
           bundler-working-directory: KanvasExample
