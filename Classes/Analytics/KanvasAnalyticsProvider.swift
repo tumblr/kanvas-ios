@@ -52,33 +52,6 @@ import Foundation
     }
 }
 
-@objc public enum KanvasTextFont: Int {
-    case regular, script
-
-    public func string() -> String {
-        switch self {
-        case .regular:
-            return "regular"
-        case .script:
-            return "script"
-        }
-    }
-
-    public static func from(font: UIFont?) -> KanvasTextFont? {
-        guard let font = font else { return nil }
-        switch font.familyName {
-        case ".AppleSystemUIFont":
-            return .regular
-        case "Fairwater Script":
-            return .script
-        case "Bradley Hand":
-            return .script
-        default:
-            return nil
-        }
-    }
-}
-
 @objc public enum KanvasTextAlignment: Int {
     case left, center, right
 
@@ -303,7 +276,7 @@ import Foundation
     /// - Parameter font: the font
     /// - Parameter alignment: the text alignment
     /// - Parameter highlighted: whether the text is highlighted or not
-    func logEditorTextConfirm(isNew: Bool, font: KanvasTextFont, alignment: KanvasTextAlignment, highlighted: Bool)
+    func logEditorTextConfirm(isNew: Bool, font: UIFont, alignment: KanvasTextAlignment, highlighted: Bool)
 
     /// Logs an event when a text overlay is moved
     func logEditorTextMove()
@@ -313,7 +286,7 @@ import Foundation
 
     /// Logs an event when the font is changed
     /// - Parameter font: the font
-    func logEditorTextChange(font: KanvasTextFont)
+    func logEditorTextChange(font: UIFont)
 
     /// Logs an event when the text alignment is changed
     /// - Parameter alignment: the text alignment

@@ -979,7 +979,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didConfirmText(textView: StylableTextView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         if !textView.text.isEmpty {
             editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size)
-            if let font = KanvasTextFont.from(font: textView.options.font), let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
+            if let font = textView.options.font, let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
                 analyticsProvider?.logEditorTextConfirm(isNew: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
             }
             else {
@@ -994,9 +994,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     func didChange(font: UIFont) {
-        if let font = KanvasTextFont.from(font: font) {
-            analyticsProvider?.logEditorTextChange(font: font)
-        }
+        analyticsProvider?.logEditorTextChange(font: font)
     }
 
     func didChange(highlight: Bool) {
