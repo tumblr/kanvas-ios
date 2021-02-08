@@ -349,7 +349,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         if settings.fontSelectorUsesFont {
             refreshFontSelector()
         } else {
-            fontSelector.setImage(KanvasCameraImages.fontImage, for: .normal)
+            fontSelector.setImage(KanvasImages.fontImage, for: .normal)
         }
         fontSelector.layer.cornerRadius = Constants.customIconSize / 2
         fontSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
