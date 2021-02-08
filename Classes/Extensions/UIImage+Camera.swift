@@ -14,7 +14,7 @@ extension UIImage {
     /// - Parameter named: This is the name of the image (extension unnecessary) in the bundle
     /// - Returns: returns a UIImage if found in the bundle, or nil otherwise
     class func imageFromCameraBundle(named: String) -> UIImage? {
-        guard let bundlePath = KanvasCameraStrings.bundlePath(for: CameraSettings.self) else {
+        guard let bundlePath = KanvasStrings.bundlePath(for: CameraSettings.self) else {
                 return nil
         }
         

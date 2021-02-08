@@ -84,7 +84,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
     
     private lazy var textController: EditorTextController = {
-        let controller = EditorTextController()
+        let textViewSettings = EditorTextView.Settings(fontSelectorUsesFont: settings.fontSelectorUsesFont)
+        let settings = EditorTextController.Settings(textViewSettings: textViewSettings)
+        let controller = EditorTextController(settings: settings)
         controller.delegate = self
         return controller
     }()
@@ -117,7 +119,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    private let analyticsProvider: KanvasAnalyticsProvider?
     private let settings: CameraSettings
     private var originalSegments: [CameraSegment]
     private var segments: [CameraSegment] {
@@ -201,7 +203,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     public static func createEditor(for image: UIImage,
                                     settings: CameraSettings,
                                     stickerProvider: StickerProvider,
-                                    analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
+                                    analyticsProvider: KanvasAnalyticsProvider) -> EditorViewController {
         EditorViewController(settings: settings,
                              segments: [.image(image, nil, nil, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
@@ -231,7 +233,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                               info: MediaInfo,
                               settings: CameraSettings,
                               stickerProvider: StickerProvider,
-                              analyticsProvider: KanvasCameraAnalyticsProvider,
+                              analyticsProvider: KanvasAnalyticsProvider,
                               completion: @escaping (EditorViewController) -> Void) {
         GIFDecoderFactory.main().decode(image: url) { frames in
             let segments = CameraSegment.from(frames: frames, info: info)
@@ -246,7 +248,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     convenience init(settings: CameraSettings,
                      segments: [CameraSegment],
                      stickerProvider: StickerProvider,
-                     analyticsProvider: KanvasCameraAnalyticsProvider) {
+                     analyticsProvider: KanvasAnalyticsProvider) {
         self.init(settings: settings,
                   segments: segments,
                   assetsHandler: CameraSegmentHandler(),
@@ -267,7 +269,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
     ///   - stickerProvider: Class that will provide the stickers in the editor.
-    ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
+    ///   - analyticsProvider: A class conforming to KanvasAnalyticsProvider
     init(settings: CameraSettings,
          segments: [CameraSegment],
          assetsHandler: AssetsHandlerType,
@@ -275,7 +277,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          gifEncoderClass: GIFEncoder.Type,
          cameraMode: CameraMode?,
          stickerProvider: StickerProvider?,
-         analyticsProvider: KanvasCameraAnalyticsProvider?,
+         analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?) {
         self.settings = settings
@@ -289,7 +291,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
 
-        let glContext = EAGLContext(api: .openGLES3)
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
         self.editorView = EditorViewController.editor(delegate: nil,
@@ -668,7 +669,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         else if shouldExportMediaAsGIF {
             if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
-                self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
+                self.createFinalGIF(videoURL: url, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
             }
             else if assetsHandler.containsOnlyImages(segments: segments) {
                 self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), exportAction: action)
@@ -685,7 +686,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                         self.handleExportError()
                         return
                     }
-                    let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale).seconds / KanvasCameraTimes.onlyImagesFrameTime.seconds)
+                    let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasTimes.stopMotionFrameTimescale).seconds / KanvasTimes.onlyImagesFrameTime.seconds)
                     self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
                 }
             }
@@ -980,7 +981,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didConfirmText(textView: StylableTextView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         if !textView.text.isEmpty {
             editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size)
-            if let font = KanvasTextFont.from(font: textView.options.font), let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
+            if let font = textView.options.font, let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
                 analyticsProvider?.logEditorTextConfirm(isNew: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
             }
             else {
@@ -995,9 +996,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     func didChange(font: UIFont) {
-        if let font = KanvasTextFont.from(font: font) {
-            analyticsProvider?.logEditorTextChange(font: font)
-        }
+        analyticsProvider?.logEditorTextChange(font: font)
     }
 
     func didChange(highlight: Bool) {

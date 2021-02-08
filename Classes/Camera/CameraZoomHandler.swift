@@ -31,12 +31,12 @@ final class CameraZoomHandler {
     private var currentDevice: AVCaptureDevice? {
         return delegate?.currentDeviceForZooming
     }
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    private let analyticsProvider: KanvasAnalyticsProvider?
     
     /// The designated initializer
     ///
     /// - Parameter analyticsProvider: Optionally provide an analytics class
-    init(analyticsProvider: KanvasCameraAnalyticsProvider? = nil) {
+    init(analyticsProvider: KanvasAnalyticsProvider? = nil) {
         self.analyticsProvider = analyticsProvider
     }
     

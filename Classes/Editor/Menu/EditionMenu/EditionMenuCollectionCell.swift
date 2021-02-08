@@ -59,7 +59,7 @@ final class EditionMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuCol
     ///  - option: The edition menu to display
     ///  - enabled: Whether the option is on or off.
     func bindTo(_ option: EditionOption, enabled: Bool) {
-        iconView.image = KanvasCameraImages.editionOptionTypes(option, enabled: enabled)
+        iconView.image = KanvasImages.editionOptionTypes(option, enabled: enabled)
     }
     
     

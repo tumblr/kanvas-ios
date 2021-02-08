@@ -138,7 +138,7 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
         let extraVerticalPadding: CGFloat
         let extraHorizontalPadding: CGFloat
         
-        if let padding = KanvasCameraFonts.shared.paddingAdjustment?(font) {
+        if let padding = KanvasFonts.shared.paddingAdjustment?(font) {
             topMargin = padding.topMargin
             leftMargin = padding.leftMargin
             extraVerticalPadding = padding.extraVerticalPadding

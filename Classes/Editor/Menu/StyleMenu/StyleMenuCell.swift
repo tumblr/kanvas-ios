@@ -123,7 +123,7 @@ final class StyleMenuCell: UIView, KanvasEditorMenuCollectionCell {
         label.text = option.text
         label.textColor = textColor
         label.backgroundColor = backgroundColor
-        iconView.image = KanvasCameraImages.styleOptionTypes(option, enabled: enabled)
+        iconView.image = KanvasImages.styleOptionTypes(option, enabled: enabled)
         iconView.backgroundColor = backgroundColor
 
     }

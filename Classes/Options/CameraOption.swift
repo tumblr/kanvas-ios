@@ -84,8 +84,8 @@ extension CameraController {
         var options = [
             [
                 Option(option: settings.defaultCameraPositionOption.cameraOption,
-                       image: KanvasCameraDesign.shared.cameraOptionCameraPositionImage,
-                       backgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor,
+                       image: KanvasDesign.shared.cameraOptionCameraPositionImage,
+                       backgroundColor: KanvasDesign.shared.cameraViewButtonBackgroundColor,
                        type: .twoOptionsAnimation(animation: animation,
                                                   duration: CameraOptionsConstants.cameraFlipAnimationsDuration,
                                                   completion: completion))
@@ -93,10 +93,10 @@ extension CameraController {
             [
                 Option(option: settings.preferredFlashOption.cameraOption,
                        image: getImage(for: settings.preferredFlashOption, with: settings),
-                       backgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor,
+                       backgroundColor: KanvasDesign.shared.cameraViewButtonBackgroundColor,
                        type: .twoOptionsImages(alternateOption: settings.notDefaultFlashOption.cameraOption,
                                                alternateImage: getImage(for: settings.notDefaultFlashOption, with: settings),
-                                               alternateBackgroundColor: KanvasCameraDesign.shared.cameraViewButtonBackgroundColor)),
+                                               alternateBackgroundColor: KanvasDesign.shared.cameraViewButtonBackgroundColor)),
             ],
         ]
         if settings.features.ghostFrame {
@@ -118,10 +118,10 @@ extension CameraController {
     /// - Returns: an optional image
     func getImage(for option: AVCaptureDevice.FlashMode, with settings: CameraSettings) -> UIImage? {
         if option == .on {
-            return KanvasCameraDesign.shared.cameraOptionFlashOnImage
+            return KanvasDesign.shared.cameraOptionFlashOnImage
         }
         else {
-            return KanvasCameraDesign.shared.cameraOptionFlashOffImage
+            return KanvasDesign.shared.cameraOptionFlashOffImage
         }
     }
     
@@ -131,10 +131,10 @@ extension CameraController {
     /// - Returns: an optional image
     func getImage(for option: ImagePreviewMode, with settings: CameraSettings) -> UIImage? {
         if option == .on {
-            return KanvasCameraDesign.shared.cameraOptionGhostFrameOnImage
+            return KanvasDesign.shared.cameraOptionGhostFrameOnImage
         }
         else {
-            return KanvasCameraDesign.shared.cameraOptionGhostFrameOffImage
+            return KanvasDesign.shared.cameraOptionGhostFrameOffImage
         }
     }
     

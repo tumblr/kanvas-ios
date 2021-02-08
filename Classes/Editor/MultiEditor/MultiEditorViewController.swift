@@ -1,6 +1,6 @@
 import Foundation
 
-protocol MultiEditorComposerDelegate: class, EditorControllerDelegate {
+protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func addButtonWasPressed()
     func editor(segment: CameraSegment) -> EditorViewController
     func dismissButtonPressed()

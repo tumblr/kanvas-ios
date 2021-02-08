@@ -75,7 +75,7 @@ final class StyleMenuExpandCell: UIView {
         iconView.layer.cornerRadius = Constants.circleDiameter / 2
         iconView.layer.masksToBounds = true
         iconView.contentMode = .center
-        iconView.image = KanvasCameraImages.chevron
+        iconView.image = KanvasImages.chevron
         iconView.backgroundColor = Constants.backgroundColor
         
         NSLayoutConstraint.activate([

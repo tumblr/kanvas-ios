@@ -24,8 +24,8 @@ private struct Constants {
     static let bottomLineHeight: CGFloat = 2.0
     static let height: CGFloat = labelHeight + spacing + bottomLineHeight
     static let width: CGFloat = 80
-    static let selectedFont: UIFont = KanvasCameraFonts.shared.drawer.textSelectedFont
-    static let unselectedFont: UIFont = KanvasCameraFonts.shared.drawer.textUnselectedFont
+    static let selectedFont: UIFont = KanvasFonts.shared.drawer.textSelectedFont
+    static let unselectedFont: UIFont = KanvasFonts.shared.drawer.textUnselectedFont
     static let mainColor: UIColor = .black
 }
 
