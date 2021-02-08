@@ -60,7 +60,7 @@ extension MediaClipsCollectionView {
                                   UIColor.clear.cgColor]
         fadeOutGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
         fadeOutGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        fadeOutGradient.locations = KanvasCameraDesign.shared.mediaClipsCollectionViewFadeOutGradientLocations
+        fadeOutGradient.locations = KanvasDesign.shared.mediaClipsCollectionViewFadeOutGradientLocations
         
         layer.mask = fadeOutGradient
     }

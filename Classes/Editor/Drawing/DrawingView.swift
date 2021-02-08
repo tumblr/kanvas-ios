@@ -279,7 +279,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
         let checkmarkImage = KanvasEditorDesign.shared.checkmarkImage
         let undoImage = KanvasEditorDesign.shared.drawingViewUndoImage
         let eraserUnselectedImage = KanvasEditorDesign.shared.drawingViewEraserUnselectedImage
-        let primaryBackgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
+        let primaryBackgroundColor = KanvasColors.shared.primaryButtonBackgroundColor
         let secondaryBackgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         
         if KanvasEditorDesign.shared.isVerticalMenu {
@@ -395,7 +395,7 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     
     /// Sets up the gradient button that opens the color picker menu
     private func setUpColorPickerButton() {
-        colorPickerButton.image = KanvasCameraImages.gradientImage
+        colorPickerButton.image = KanvasImages.gradientImage
         bottomMenuContainer.addSubview(colorPickerButton)
         
         let cellSpace = CircularImageView.size + CircularImageView.padding * 2

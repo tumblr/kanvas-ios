@@ -192,9 +192,9 @@ class GifMakerHandler {
 
     private var thumbnails: [TimeInterval: UIImage] = [:]
 
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    private let analyticsProvider: KanvasAnalyticsProvider?
 
-    init(analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(analyticsProvider: KanvasAnalyticsProvider?) {
         self.analyticsProvider = analyticsProvider
     }
 

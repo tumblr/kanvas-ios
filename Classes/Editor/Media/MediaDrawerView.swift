@@ -124,9 +124,9 @@ final class MediaDrawerView: UIView {
     private func setupCloseButton() {
         addSubview(closeButton)
         closeButton.accessibilityIdentifier = "Media Drawer Top Container Close Button"
-        let image = KanvasCameraImages.closeImage?.withRenderingMode(.alwaysTemplate)
+        let image = KanvasImages.closeImage?.withRenderingMode(.alwaysTemplate)
         closeButton.setImage(image, for: .normal)
-        closeButton.tintColor = KanvasCameraColors.shared.closeButtonColor
+        closeButton.tintColor = KanvasColors.shared.closeButtonColor
         closeButton.adjustsImageWhenHighlighted = false
         closeButton.contentMode = .scaleAspectFit
         closeButton.contentVerticalAlignment = .center

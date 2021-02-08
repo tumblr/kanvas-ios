@@ -9,18 +9,22 @@ import UIKit
 
 private struct Constants {
     static let animationDuration: TimeInterval = 0.5
+    static let buttonHorizontalMargin: CGFloat = 16
     static let buttonRadius: CGFloat = 25
+    static let addButtonWidth: CGFloat = 40
+    static let addButtonHeight: CGFloat = 60
     static let nextButtonSize: CGFloat = 49
-    static let buttonLeadingMargin: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewButtonLeadingMargin
-    static let buttonTrailingMargin: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewButtonTrailingMargin
-    static let topPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewTopPadding
-    static let bottomPadding: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewBottomPadding
-    static let nextButtonCenterYOffset: CGFloat = KanvasCameraDesign.shared.mediaClipsEditorViewNextButtonCenterYOffset
+    static let buttonLeadingMargin: CGFloat = KanvasDesign.shared.mediaClipsEditorViewButtonLeadingMargin
+    static let buttonTrailingMargin: CGFloat = KanvasDesign.shared.mediaClipsEditorViewButtonTrailingMargin
+    static let topPadding: CGFloat = KanvasDesign.shared.mediaClipsEditorViewTopPadding
+    static let bottomPadding: CGFloat = KanvasDesign.shared.mediaClipsEditorViewBottomPadding
+    static let nextButtonCenterYOffset: CGFloat = KanvasDesign.shared.mediaClipsEditorViewNextButtonCenterYOffset
 }
 
 protocol MediaClipsEditorViewDelegate: class {
     /// Callback for when next button is selected
     func nextButtonWasPressed()
+    func addButtonWasPressed()
 }
 
 /// View for media clips editor
@@ -34,22 +38,31 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     
     private let mainContainer: IgnoreTouchesView
     private let nextButton: UIButton
+    private let addButton: UIButton // For adding a new clip
     let collectionContainer: IgnoreTouchesView
 
     // MARK: - Initializers
     
-    init() {
+    init(showsAddButton: Bool = false) {
         mainContainer = IgnoreTouchesView()
-        mainContainer.backgroundColor = KanvasCameraDesign.shared.mediaClipsEditorViewBackgroundColor
+        mainContainer.backgroundColor = KanvasDesign.shared.mediaClipsEditorViewBackgroundColor
         
         collectionContainer = IgnoreTouchesView()
 
         nextButton = UIButton()
+        addButton = UIButton()
         super.init(frame: .zero)
         
         clipsToBounds = false
         
         setUpViews()
+        
+        if showsAddButton {
+            setUpAddButton()
+        }
+        else {
+            setUpNextButton()
+        }
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -67,7 +80,6 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     private func setUpViews() {
         setUpMainContainer()
         setUpCollection()
-        setUpNextButton()
     }
     
     private func setUpMainContainer() {
@@ -90,7 +102,7 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         
         let trailingMargin: CGFloat
-        if KanvasCameraDesign.shared.isBottomPicker {
+        if KanvasDesign.shared.isBottomPicker {
             trailingMargin = Constants.nextButtonSize + Constants.buttonLeadingMargin + Constants.buttonTrailingMargin
         }
         else {
@@ -112,12 +124,12 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if KanvasCameraDesign.shared.isBottomPicker {
-            let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
+        if KanvasDesign.shared.isBottomPicker {
+            let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: KanvasColors.shared.primaryButtonBackgroundColor)
             nextButton.setBackgroundImage(circle, for: .normal)
         }
         
-        nextButton.setImage(KanvasCameraDesign.shared.mediaClipsEditorViewNextImage, for: .normal)
+        nextButton.setImage(KanvasDesign.shared.mediaClipsEditorViewNextImage, for: .normal)
         
         NSLayoutConstraint.activate([
             nextButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonTrailingMargin),
@@ -127,10 +139,31 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         ])
     }
     
+    private func setUpAddButton() {
+        mainContainer.addSubview(addButton)
+        addButton.accessibilityIdentifier = "Media Clips Next Button"
+        addButton.accessibilityLabel = "Next Button"
+        addButton.tintColor = .white
+        addButton.setImage(UIImage.imageFromCameraBundle(named: "new"), for: .normal)
+        addButton.addTarget(self, action: #selector(addPressed), for: .touchUpInside)
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            addButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonHorizontalMargin),
+            addButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
+            addButton.heightAnchor.constraint(equalToConstant: Constants.addButtonHeight),
+            addButton.widthAnchor.constraint(equalToConstant: Constants.addButtonWidth)
+        ])
+    }
+    
     // MARK: - Gesture recognizers
     
     @objc private func nextPressed() {
         delegate?.nextButtonWasPressed()
+    }
+    
+    @objc private func addPressed() {
+        delegate?.addButtonWasPressed()
     }
     
     // MARK: - Public interface

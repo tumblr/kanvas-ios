@@ -14,7 +14,7 @@ private struct Constants {
     static let labelWidth: CGFloat = 48
     static let labelBackgroundColor = UIColor.black.withAlphaComponent(0.65)
     static let labelCornerRadius: CGFloat = 8
-    static let labelFont: UIFont = KanvasCameraFonts.shared.speedLabelFont
+    static let labelFont: UIFont = KanvasFonts.shared.speedLabelFont
     static let labelFontColor: UIColor = .white
 }
 

@@ -94,7 +94,7 @@ private struct EditorViewConstants {
     static let fakeOptionCellMinSize: CGFloat = KanvasEditorDesign.shared.editorViewFakeOptionCellMinSize
     static let fakeOptionCellMaxSize: CGFloat = KanvasEditorDesign.shared.editorViewFakeOptionCellMaxSize
     
-    static let overlayColor: UIColor = KanvasCameraColors.shared.overlayColor.withAlphaComponent(0.87)
+    static let overlayColor: UIColor = KanvasColors.shared.overlayColor.withAlphaComponent(0.87)
     static let overlayLabelMargin: CGFloat = 20
     static let overlayLabelFont: UIFont = .boldSystemFont(ofSize: 16)
     static let overlayLabelTextColor: UIColor = UIColor.white.withAlphaComponent(0.87)
@@ -201,7 +201,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         return delegate.getBlogSwitcher()
     }()
     
-    private weak var delegate: EditorViewDelegate?
+    weak var delegate: EditorViewDelegate?
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -316,7 +316,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
     private func setupTagButton() {
         tagButton.accessibilityLabel = "Tag Button"
-        tagButton.setImage(KanvasCameraImages.tagImage, for: .normal)
+        tagButton.setImage(KanvasImages.tagImage, for: .normal)
         tagButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
         tagButton.layer.cornerRadius = EditorViewConstants.buttonSize / 2
         tagButton.layer.masksToBounds = true
@@ -376,7 +376,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private func setupConfirmButton() {
         confirmButton.accessibilityLabel = "Confirm Button"
         navigationContainer.addSubview(confirmButton)
-        confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+        confirmButton.setImage(KanvasImages.nextImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -396,7 +396,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         if showCogIcon {
             confirmButton.backgroundColor = EditorViewConstants.buttonBackgroundColor
-            confirmButton.setImage(KanvasCameraImages.cogImage, for: .normal)
+            confirmButton.setImage(KanvasImages.cogImage, for: .normal)
             confirmButton.layer.cornerRadius = EditorViewConstants.confirmButtonSize / 2
             confirmButton.layer.masksToBounds = true
             
@@ -408,7 +408,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             ])
         }
         else {
-            confirmButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+            confirmButton.setImage(KanvasImages.nextImage, for: .normal)
             
             NSLayoutConstraint.activate([
                 confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
@@ -561,7 +561,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             updatePostButton(avatarView: avatarView)
         }
         else {
-            postButton.setImage(KanvasCameraImages.nextImage, for: .normal)
+            postButton.setImage(KanvasImages.nextImage, for: .normal)
         }
         postButton.contentHorizontalAlignment = .fill
         postButton.contentVerticalAlignment = .fill
@@ -579,7 +579,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         postLabel.text = NSLocalizedString("Post", comment: "Message for the post button in the editor screen")
         postLabel.textColor = .white
-        postLabel.font = KanvasCameraFonts.shared.postLabelFont
+        postLabel.font = KanvasFonts.shared.postLabelFont
         postLabel.clipsToBounds = false
         postLabel.layer.applyShadows()
         postLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -602,7 +602,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         saveButton.accessibilityLabel = "Save Button"
         navigationContainer.addSubview(saveButton)
         saveButton.layer.applyShadows()
-        saveButton.setImage(KanvasCameraImages.saveImage, for: .normal)
+        saveButton.setImage(KanvasImages.saveImage, for: .normal)
         saveButton.imageView?.tintColor = .white
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         saveButton.translatesAutoresizingMaskIntoConstraints = false
@@ -838,7 +838,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         let translationTransform = CGAffineTransform(translationX: distance.x, y: distance.y)
         
         fakeOptionCell.image = KanvasEditorDesign.shared.checkmarkImage
-        fakeOptionCell.backgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
+        fakeOptionCell.backgroundColor = KanvasColors.shared.primaryButtonBackgroundColor
         fakeOptionCell.alpha = 1
         fakeOptionCell.transform = CGAffineTransform(scaleX: 0, y: 0).concatenating(translationTransform)
         fakeQuickPostButton.image = quickPostButton.asImage()
@@ -879,7 +879,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         let translationTransform = CGAffineTransform(translationX: distance.x, y: distance.y)
         
         fakeOptionCell.image = KanvasEditorDesign.shared.checkmarkImage
-        fakeOptionCell.backgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
+        fakeOptionCell.backgroundColor = KanvasColors.shared.primaryButtonBackgroundColor
         fakeOptionCell.alpha = 1
         fakeOptionCell.transform = translationTransform
         fakeQuickPostButton.transform = CGAffineTransform(scaleX: 0, y: 0)
@@ -935,7 +935,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45 / duration, animations: {
                 self.fakeOptionCell.image = KanvasEditorDesign.shared.checkmarkImage
-                self.fakeOptionCell.backgroundColor = KanvasCameraColors.shared.primaryButtonBackgroundColor
+                self.fakeOptionCell.backgroundColor = KanvasColors.shared.primaryButtonBackgroundColor
                 let scale = EditorViewConstants.fakeOptionCellMinSize / EditorViewConstants.fakeOptionCellMaxSize
                 self.fakeOptionCell.transform = CGAffineTransform(scaleX: scale, y: scale)
                 self.fakeOptionCell.center = finalLocation
@@ -1082,10 +1082,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     func updatePostButton(avatarView: UIView) {
         postButton.addSubview(avatarView)
         postButton.setImage(nil, for: .normal)
-        postButton.backgroundColor = KanvasCameraColors.shared.white65
+        postButton.backgroundColor = KanvasColors.shared.white65
         postButton.clipsToBounds = true
         postButton.layer.cornerRadius = EditorViewConstants.postButtonSize * 0.5
-        postButton.layer.borderColor = KanvasCameraColors.shared.white.cgColor
+        postButton.layer.borderColor = KanvasColors.shared.white.cgColor
         postButton.layer.borderWidth = CGFloat(2.0)
     }
     

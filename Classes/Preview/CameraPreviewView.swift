@@ -79,7 +79,7 @@ final class CameraPreviewView: UIView {
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
         closeButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
-        closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
+        closeButton.setImage(KanvasImages.backImage, for: .normal)
         closeButton.imageView?.contentMode = .scaleAspectFit
         
         addSubview(closeButton)
@@ -97,7 +97,7 @@ final class CameraPreviewView: UIView {
         confirmButton.accessibilityLabel = "Confirm Button"
         confirmButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
         addSubview(confirmButton)
-        confirmButton.setImage(KanvasCameraImages.confirmImage, for: .normal)
+        confirmButton.setImage(KanvasImages.confirmImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 

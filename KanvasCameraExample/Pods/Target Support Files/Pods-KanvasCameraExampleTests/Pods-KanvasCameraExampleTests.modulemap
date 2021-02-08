@@ -1,6 +1,0 @@
-module Pods_KanvasCameraExampleTests {
-  umbrella header "Pods-KanvasCameraExampleTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
