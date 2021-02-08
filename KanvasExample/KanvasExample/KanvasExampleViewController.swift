@@ -272,6 +272,7 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             .newCameraModes(settings.features.newCameraModes),
             .modeSelectorTooltip(settings.features.modeSelectorTooltip),
             .shutterButtonTooltip(settings.features.shutterButtonTooltip),
+            .editorFontSelectorUsesFont(settings.fontSelectorUsesFont),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
             .multipleExport(settings.features.multipleExports),
@@ -324,6 +325,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             settings.features.shutterButtonTooltip = value
         case .gifs(_):
             settings.features.gifs = value
+        case .editorFontSelectorUsesFont(_):
+            settings.fontSelectorUsesFont = value
         case .editorShouldStartGIFMaker(_):
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):

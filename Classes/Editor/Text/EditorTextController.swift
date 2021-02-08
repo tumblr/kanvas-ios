@@ -77,7 +77,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     private var highlight: Bool?
         
     private lazy var textView: EditorTextView = {
-        let textView = EditorTextView()
+        let textView = EditorTextView(settings: settings.textViewSettings)
         textView.delegate = self
         return textView
     }()
@@ -104,13 +104,20 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     var confirmButtonLocation: CGPoint {
         return textView.confirmButtonLocation
     }
+
+    struct Settings {
+        let textViewSettings: EditorTextView.Settings
+    }
+
+    private let settings: Settings
     
     // MARK: - Initializers
     
-    init() {
+    init(settings inSettings: Settings) {
         textTransformations = ViewTransformations()
         fonts = Constants.fonts
         alignments = Constants.alignments
+        settings = inSettings
         super.init(nibName: .none, bundle: .none)
     }
     
