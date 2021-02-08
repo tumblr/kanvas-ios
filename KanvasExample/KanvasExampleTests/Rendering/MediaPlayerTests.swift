@@ -16,6 +16,8 @@ class MediaPlayerTests: XCTestCase {
     class RendererMock: Rendering {
         
         var mediaTransform: GLKMatrix4?
+
+        var filterPlatform: FilterPlatform = .openGL
         
         var outputDimensions: CGSize = .zero
         
