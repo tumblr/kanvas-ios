@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 
 /// A container for segments
-enum CameraSegment {
+public enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
     case image(UIImage, URL?, TimeInterval?, MediaInfo)
     case video(URL, MediaInfo?)
@@ -48,10 +48,26 @@ enum CameraSegment {
             case .image(_, _, _, _):
                 break
             case .video(_, _):
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
+                return KanvasTimes.stopMotionFrameTimeInterval
             }
         }
-        return KanvasCameraTimes.onlyImagesFrameTimeInterval
+        return KanvasTimes.onlyImagesFrameTimeInterval
+    }
+
+    var lastFrame: UIImage {
+        switch self {
+        case .image(let image, _, _, _): return image
+        case .video(let url, _):
+            let asset = AVAsset(url: url)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            do {
+                let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
+                return UIImage(cgImage: image)
+            } catch let error {
+                assertionFailure("Failed to generate CameraSegment thumbnail \(url): \(error)")
+                return UIImage()
+            }
+        }
     }
 
     func mediaFrame(defaultTimeInterval: TimeInterval) -> MediaFrame? {
@@ -170,7 +186,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
 
 private struct CameraSegmentHandlerConstants {
     static let silentURL: URL? = {
-        guard let bundlePath = KanvasCameraStrings.bundlePath(for: CameraSegmentHandler.self),
+        guard let bundlePath = KanvasStrings.bundlePath(for: CameraSegmentHandler.self),
             let bundle = Bundle(path: bundlePath) else {
                 return nil
         }
@@ -303,13 +319,13 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             else if segment.image != nil {
                 let duration: CMTime = {
                     if let timeInterval = segment.timeInterval {
-                        return CMTime(seconds: timeInterval, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                        return CMTime(seconds: timeInterval, preferredTimescale: KanvasTimes.stopMotionFrameTimescale)
                     }
                     else if allImages {
-                        return KanvasCameraTimes.onlyImagesFrameTime
+                        return KanvasTimes.onlyImagesFrameTime
                     }
                     else {
-                        return KanvasCameraTimes.stopMotionFrameTime
+                        return KanvasTimes.stopMotionFrameTime
                     }
                 }()
                 totalDuration = CMTimeAdd(totalDuration, duration)
@@ -363,11 +379,11 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
                 videoDuration = {
                     if let segmentDuration = segmentDuration {
-                        return CMTime(seconds: segmentDuration, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                        return CMTime(seconds: segmentDuration, preferredTimescale: KanvasTimes.stopMotionFrameTimescale)
                     }
                     /// If all of the segments are photos, then the individual frame times are shorter
                     else if allImages {
-                        let endTime = CMTime(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                        let endTime = CMTime(value: KanvasTimes.onlyImagesFrameDuration, timescale: KanvasTimes.stopMotionFrameTimescale)
                         return CMTimeCompare(videoTrack.timeRange.duration, endTime) == 1 ? endTime : videoTrack.timeRange.duration
                     }
                     else {
@@ -580,7 +596,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 firstBufferAppended = true
             }
             else {
-                let endTime = CMTime(seconds: duration ?? KanvasCameraTimes.stopMotionFrameTimeInterval, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                let endTime = CMTime(seconds: duration ?? KanvasTimes.stopMotionFrameTimeInterval, preferredTimescale: KanvasTimes.stopMotionFrameTimescale)
                 adaptor.append(buffer, withPresentationTime: endTime)
                 assetWriter.endSession(atSourceTime: endTime)
                 adaptor.assetWriterInput.markAsFinished()

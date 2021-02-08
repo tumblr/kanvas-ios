@@ -1,0 +1,15 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+use_modular_headers!
+platform :ios, '13.0'
+
+project "KanvasExample.xcodeproj"
+
+target 'KanvasExample' do
+    pod 'Kanvas', :path => '../'
+    
+    target 'KanvasExampleTests' do
+        inherit! :search_paths
+        pod 'FBSnapshotTestCase', '2.1.4'
+    end
+end

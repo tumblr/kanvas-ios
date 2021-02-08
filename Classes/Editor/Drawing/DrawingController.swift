@@ -46,7 +46,7 @@ protocol DrawingControllerDelegate: class {
 /// Constants for Drawing Controller
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let defaultColor: UIColor = KanvasCameraColors.shared.drawingDefaultColor
+    static let defaultColor: UIColor = KanvasColors.shared.drawingDefaultColor
     static let numPointsPerLine: Int = 3
 }
 
@@ -121,7 +121,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     private var mode: DrawingMode
     private var drawingPoints: [CGPoint]
     
-    private var analyticsProvider: KanvasCameraAnalyticsProvider?
+    private var analyticsProvider: KanvasAnalyticsProvider?
     private var currentStrokeSize: Float {
         return Float(strokeSelectorController.strokeSize)
     }
@@ -131,7 +131,7 @@ final class DrawingController: UIViewController, DrawingViewDelegate, StrokeSele
     
     // MARK: Initializers
     
-    init(analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(analyticsProvider: KanvasAnalyticsProvider?) {
         self.analyticsProvider = analyticsProvider
 
         drawingCollection = []

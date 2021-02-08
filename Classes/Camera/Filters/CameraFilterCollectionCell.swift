@@ -8,8 +8,8 @@ import Foundation
 import UIKit
 
 private struct CameraFilterCollectionCellDimensions: FilterCollectionCellDimensions {
-    let circleDiameter: CGFloat = KanvasCameraDesign.shared.cameraFilterCollectionCellCircleDiameter
-    let circleMaxDiameter: CGFloat = KanvasCameraDesign.shared.cameraFilterCollectionCellCircleMaxDiameter
+    let circleDiameter: CGFloat = KanvasDesign.shared.cameraFilterCollectionCellCircleDiameter
+    let circleMaxDiameter: CGFloat = KanvasDesign.shared.cameraFilterCollectionCellCircleMaxDiameter
     let padding: CGFloat = 0
     var minimumHeight: CGFloat { return circleMaxDiameter }
     var width: CGFloat { return circleMaxDiameter }

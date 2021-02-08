@@ -61,7 +61,7 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         videoQueue = DispatchQueue(label: assetWriter.outputURL.absoluteString)
 
         recordedVideoFrameFirst = false
-        startTime = CMTime(value: 0, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
+        startTime = CMTime(value: 0, timescale: KanvasTimes.stopMotionFrameTimescale)
 
         if let sampleBuffer = currentVideoSampleBuffer {
             startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)

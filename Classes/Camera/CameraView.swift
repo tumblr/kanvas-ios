@@ -13,15 +13,15 @@ protocol CameraViewDelegate: class {
 }
 
 struct CameraConstants {
-    static let optionVerticalMargin: CGFloat = KanvasCameraDesign.shared.cameraViewOptionVerticalMargin
-    static let optionHorizontalMargin: CGFloat = KanvasCameraDesign.shared.cameraViewOptionHorizontalMargin
-    static let optionButtonSize: CGFloat = KanvasCameraDesign.shared.cameraViewOptionButtonSize
-    static let optionSpacing: CGFloat = KanvasCameraDesign.shared.cameraViewOptionSpacing
+    static let optionVerticalMargin: CGFloat = KanvasDesign.shared.cameraViewOptionVerticalMargin
+    static let optionHorizontalMargin: CGFloat = KanvasDesign.shared.cameraViewOptionHorizontalMargin
+    static let optionButtonSize: CGFloat = KanvasDesign.shared.cameraViewOptionButtonSize
+    static let optionSpacing: CGFloat = KanvasDesign.shared.cameraViewOptionSpacing
     private static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
     
-    static let buttonBackgroundColor: UIColor = KanvasCameraDesign.shared.cameraViewButtonBackgroundColor
-    static let buttonInvertedBackgroundColor: UIColor = KanvasCameraDesign.shared.cameraViewButtonInvertedBackgroundColor
+    static let buttonBackgroundColor: UIColor = KanvasDesign.shared.cameraViewButtonBackgroundColor
+    static let buttonInvertedBackgroundColor: UIColor = KanvasDesign.shared.cameraViewButtonInvertedBackgroundColor
 }
 
 /// View with containers for all camera subviews (input, mode selector, etc)
@@ -152,7 +152,7 @@ final class CameraView: UIView {
     private func setupModeLayoutGuide() {
         addLayoutGuide(modeLayoutGuide)
         
-        let bottomMargin: CGFloat = KanvasCameraDesign.shared.isBottomPicker ? MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin) : MediaClipsEditorView.height
+        let bottomMargin: CGFloat = KanvasDesign.shared.isBottomPicker ? MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin) : MediaClipsEditorView.height
         
         modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
@@ -225,7 +225,7 @@ final class CameraView: UIView {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
         
-        if KanvasCameraDesign.shared.isBottomPicker {
+        if KanvasDesign.shared.isBottomPicker {
             closeButton.backgroundColor = CameraConstants.buttonBackgroundColor
             closeButton.layer.cornerRadius = CameraConstants.optionButtonSize / 2
             closeButton.layer.masksToBounds = true
@@ -236,7 +236,7 @@ final class CameraView: UIView {
         }
         
         if settings.topButtonsSwapped {
-            closeButton.setImage(KanvasCameraDesign.shared.cameraViewNextImage, for: .normal)
+            closeButton.setImage(KanvasDesign.shared.cameraViewNextImage, for: .normal)
             NSLayoutConstraint.activate([
                 closeButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -CameraConstants.optionHorizontalMargin),
                 closeButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin),
@@ -245,7 +245,7 @@ final class CameraView: UIView {
             ])
         }
         else {
-            closeButton.setImage(KanvasCameraDesign.shared.cameraViewCloseImage, for: .normal)
+            closeButton.setImage(KanvasDesign.shared.cameraViewCloseImage, for: .normal)
             
             NSLayoutConstraint.activate([
                 closeButton.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor, constant: CameraConstants.optionHorizontalMargin),

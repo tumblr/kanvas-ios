@@ -287,7 +287,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         
         let checkmark = KanvasEditorDesign.shared.checkmarkImage
         if KanvasEditorDesign.shared.isVerticalMenu {
-            let backgroundImage = UIImage.circle(diameter: Constants.confirmButtonSize, color: KanvasCameraColors.shared.primaryButtonBackgroundColor)
+            let backgroundImage = UIImage.circle(diameter: Constants.confirmButtonSize, color: KanvasColors.shared.primaryButtonBackgroundColor)
             confirmButton.setBackgroundImage(backgroundImage, for: .normal)
             confirmButton.setImage(checkmark, for: .normal)
         }
@@ -408,7 +408,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the gradient button that opens the color picker menu
     private func setUpOpenColorPicker() {
         openColorPicker.accessibilityIdentifier = "Editor Text Open Color Picker"
-        openColorPicker.setImage(KanvasCameraImages.gradientImage, for: .normal)
+        openColorPicker.setImage(KanvasImages.gradientImage, for: .normal)
         openColorPicker.layer.borderColor = Constants.circularIconBorderColor.cgColor
         openColorPicker.layer.borderWidth = Constants.circularIconBorderWidth
         openColorPicker.layer.cornerRadius = Constants.circularIconCornerRadius

@@ -17,6 +17,8 @@ protocol MediaClipsCollectionControllerDelegate: class {
     
     /// Callback for when a clip finishes moving / draggin
     func mediaClipFinishedMoving()
+    
+    func mediaClipWasSelected(at: Int)
 }
 
 /// Constants for Collection Controller
@@ -25,8 +27,8 @@ private struct MediaClipsCollectionControllerConstants {
     static let animationDuration: TimeInterval = 0.15
             
     /// Padding at each side of the clip collection
-    static let leftInset: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionControllerLeftInset
-    static let rightInset: CGFloat = KanvasCameraDesign.shared.mediaClipsCollectionControllerRightInset
+    static let leftInset: CGFloat = KanvasDesign.shared.mediaClipsCollectionControllerLeftInset
+    static let rightInset: CGFloat = KanvasDesign.shared.mediaClipsCollectionControllerRightInset
 
 }
 
@@ -66,11 +68,20 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         }
     }
 
+    func select(index: Int) {
+        mediaClipsCollectionView.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .left)
+    }
+
     func removeAllClips() {
         while clips.count > 0 {
             clips.remove(at: 0)
             mediaClipsCollectionView.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
         }
+        mediaClipsCollectionView.collectionView.reloadData()
+    }
+    
+    func replace(clips: [MediaClip]) {
+        self.clips = clips.map({ $0 })
         mediaClipsCollectionView.collectionView.reloadData()
     }
     
@@ -219,6 +230,10 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         draggingCell?.show(true)
         draggingCell = .none
         draggingClipIndex = .none
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.mediaClipWasSelected(at: indexPath.row)
     }
 }
 

@@ -19,7 +19,7 @@ private struct Constants {
     static let height: CGFloat = 71
     static let selectorInset: CGFloat = -20
     static let cornerRadius: CGFloat = 8
-    static let backgroundColor: UIColor = KanvasCameraColors.shared.trimBackgroundColor
+    static let backgroundColor: UIColor = KanvasColors.shared.trimBackgroundColor
     
     // Top and bottom borders
     static let selectorBorderHeight: CGFloat = 5

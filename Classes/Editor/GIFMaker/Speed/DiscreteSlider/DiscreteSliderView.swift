@@ -88,7 +88,7 @@ final class DiscreteSliderView: UIView {
     /// Sets up the circular selector.
     private func setupSelector() {
         selector.accessibilityIdentifier = "Discrete Slider Selector"
-        selector.image = KanvasCameraImages.circleImage
+        selector.image = KanvasImages.circleImage
         selector.translatesAutoresizingMaskIntoConstraints = false
         addSubview(selector)
         
@@ -260,7 +260,7 @@ private class Selector: UIImageView {
     
     private func setupInnerCircle() {
         innerCircle.accessibilityIdentifier = "Discrete Slider Selector Inner Circle"
-        innerCircle.image = KanvasCameraImages.circleImage
+        innerCircle.image = KanvasImages.circleImage
         innerCircle.translatesAutoresizingMaskIntoConstraints = false
         addSubview(innerCircle)
         
@@ -276,9 +276,9 @@ private class Selector: UIImageView {
     private func setupOuterCircle() {
         outerCircle.backgroundColor = .clear
         outerCircle.accessibilityIdentifier = "Discrete Slider Selector Outer Circle"
-        let image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
+        let image = KanvasImages.circleImage?.withRenderingMode(.alwaysTemplate)
         outerCircle.image = image
-        outerCircle.tintColor = KanvasCameraColors.shared.sliderOuterCircleColor
+        outerCircle.tintColor = KanvasColors.shared.sliderOuterCircleColor
         outerCircle.translatesAutoresizingMaskIntoConstraints = false
         addSubview(outerCircle)
         

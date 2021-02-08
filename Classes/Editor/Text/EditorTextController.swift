@@ -61,7 +61,7 @@ protocol EditorTextControllerDelegate: class {
 /// Constants for EditorTextController
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let fonts: [UIFont?] = KanvasCameraFonts.shared.editorFonts
+    static let fonts: [UIFont?] = KanvasFonts.shared.editorFonts
     static let alignments: [NSTextAlignment] = [.left, .center, .right]
 }
 
