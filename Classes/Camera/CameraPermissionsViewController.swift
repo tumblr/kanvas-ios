@@ -51,11 +51,11 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     private struct Constants {
         static let borderWidth: CGFloat = 2
-        static let titleFont: UIFont = KanvasCameraFonts.shared.permissions.titleFont
+        static let titleFont: UIFont = KanvasFonts.shared.permissions.titleFont
         static let textColor: UIColor = .white
-        static let descriptionFont: UIFont = KanvasCameraFonts.shared.permissions.descriptionFont
+        static let descriptionFont: UIFont = KanvasFonts.shared.permissions.descriptionFont
         static let descriptionOpacity: CGFloat = 0.65
-        static let buttonFont: UIFont = KanvasCameraFonts.shared.permissions.buttonFont
+        static let buttonFont: UIFont = KanvasFonts.shared.permissions.buttonFont
         static let buttonColor: UIColor = .init(red: 0, green: 184.0/255.0, blue: 1.0, alpha: 1.0)
         static let buttonAcceptedBackgroundColor: UIColor = .init(hex: 0x00cf35)
         static let buttonAcceptedColor: UIColor = .black
@@ -126,7 +126,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }()
 
     private static var checkImage: UIImage? = {
-        return KanvasCameraImages.permissionCheckmark?.withRenderingMode(.alwaysTemplate)
+        return KanvasImages.permissionCheckmark?.withRenderingMode(.alwaysTemplate)
     }()
 
     weak var delegate: CameraPermissionsViewDelegate?

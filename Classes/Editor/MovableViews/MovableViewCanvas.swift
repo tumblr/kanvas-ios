@@ -41,7 +41,7 @@ protocol MovableViewCanvasDelegate: class {
 /// Constants for the canvas
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let trashViewSize: CGFloat = KanvasCameraDesign.shared.trashViewSize
+    static let trashViewSize: CGFloat = KanvasDesign.shared.trashViewSize
     static let trashViewBottomMargin: CGFloat = 93
     static let overlayColor = UIColor.black.withAlphaComponent(0.7)
 }

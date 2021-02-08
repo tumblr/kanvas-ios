@@ -31,7 +31,7 @@ protocol RendererDelegate: class {
     func rendererRanOutOfBuffers()
 }
 
-/// Renders pixel buffers with open gl
+/// Renders pixel buffers with open gl or metal
 final class Renderer: Rendering {
 
     /// Optional delegate
@@ -64,9 +64,17 @@ final class Renderer: Rendering {
     private let settings: CameraSettings?
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
-    private let filterFactory: FilterFactory
+    private var filterFactory: FilterFactory
     private var processingImage = false
     private var filteredPixelBuffer: CVPixelBuffer?
+
+    var filterPlatform: FilterPlatform {
+        didSet {
+            filterFactory = FilterFactory(glContext: glContext,
+                                              metalContext: metalContext,
+                                              filterPlatform: filterPlatform)
+        }
+    }
 
     /// Designated initializer
     ///
@@ -74,10 +82,11 @@ final class Renderer: Rendering {
     init(settings: CameraSettings?=nil, metalContext: MetalContext?=nil) {
         glContext = EAGLContext(api: .openGLES3)
         self.settings = settings
-        self.metalContext = metalContext
+        self.metalContext = metalContext ?? MetalContext.createContext()
+        self.filterPlatform = settings?.features.metalFilters == true ? .metal : .openGL
         let filterFactory = FilterFactory(glContext: glContext,
                                           metalContext: metalContext,
-                                          filterPlatform: settings?.features.metalFilters == true ? .metal : .openGL)
+                                          filterPlatform: filterPlatform)
         filter = filterFactory.createFilter(type: self.filterType)
         self.filterFactory = filterFactory
         switchInputDimensions = false

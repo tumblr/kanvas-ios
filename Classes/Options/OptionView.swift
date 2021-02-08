@@ -24,7 +24,7 @@ final class OptionView: UIView {
         button = ExtendedButton(inset: inset)
         button.setImage(image, for: .normal)
         
-        if KanvasCameraDesign.shared.isBottomPicker {
+        if KanvasDesign.shared.isBottomPicker {
             button.layer.cornerRadius = CameraConstants.optionButtonSize / 2
             button.layer.masksToBounds = true
             button.backgroundColor = backgroundColor

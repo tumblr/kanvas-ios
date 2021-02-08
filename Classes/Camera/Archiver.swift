@@ -56,9 +56,9 @@ class Archiver {
     }
 
     @available(iOS 13, *)
-    func handle(exports: [EditorViewController.ExportResult?]) -> AnyPublisher<[Result<KanvasCameraMedia?, Error>], Error> {
+    func handle(exports: [EditorViewController.ExportResult?]) -> AnyPublisher<[Result<KanvasMedia?, Error>], Error> {
         let exportCount = exports.count
-        let publishers: [AnyPublisher<(Int, KanvasCameraMedia?), Error>] = exports.enumerated().map { (index, export) in
+        let publishers: [AnyPublisher<(Int, KanvasMedia?), Error>] = exports.enumerated().map { (index, export) in
             return DispatchQueue.global(qos: .userInitiated).publisher { [weak self] promise
                 in
                 guard let export = export else {
@@ -72,12 +72,12 @@ class Archiver {
         let allPublishers = Publishers.MergeMany(publishers)
         let collected = allPublishers.collect(exportCount).sort(by: { (first, second) in
             return first.0 < second.0
-        }).map({ (element) -> [Result<KanvasCameraMedia?, Error>] in
+        }).map({ (element) -> [Result<KanvasMedia?, Error>] in
             return element.map { index, item in
                 return .success(item)
             }
         })
-        let result: AnyPublisher<[Result<KanvasCameraMedia?, Error>], Error> = collected.eraseToAnyPublisher()
+        let result: AnyPublisher<[Result<KanvasMedia?, Error>], Error> = collected.eraseToAnyPublisher()
         return result
 //        return allPublishers.collect(exportCount).eraseToAnyPublisher()
 //        publishers.forEach { publisher in
@@ -85,13 +85,13 @@ class Archiver {
 //        }
     }
 
-    func handle(export: EditorViewController.ExportResult) -> KanvasCameraMedia? {
+    func handle(export: EditorViewController.ExportResult) -> KanvasMedia? {
 
         switch (export.result, export.original) {
         case (.image(let image), .image(let original)):
             if let url = image.save(info: export.info), let originalURL = original.save(info: export.info, in: self.saveDirectory) {
                 print("Original image URL: \(originalURL)")
-                return KanvasCameraMedia(image: image, url: url, original: originalURL, info: export.info)
+                return KanvasMedia(image: image, url: url, original: originalURL, info: export.info)
             } else {
                 return nil
             }
@@ -101,7 +101,7 @@ class Archiver {
 //                    try? FileManager.default.removeItem(at: originalURL)
 //                    try! FileManager.default.moveItem(at: original, to: originalURL)
             let asset = AVURLAsset(url: url)
-            return KanvasCameraMedia(asset: asset, original: original, info: export.info)
+            return KanvasMedia(asset: asset, original: original, info: export.info)
         default:
             return nil
         }

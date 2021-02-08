@@ -33,12 +33,12 @@ private struct Constants {
     
     // Tooltip
     static let tooltipForegroundColor: UIColor = .white
-    static let tooltipBackgroundColor: UIColor = KanvasCameraColors.shared.tooltipBackgroundColor
+    static let tooltipBackgroundColor: UIColor = KanvasColors.shared.tooltipBackgroundColor
     static let tooltipArrowPosition: EasyTipView.ArrowPosition = .bottom
     static let tooltipCornerRadius: CGFloat = 6
     static let tooltipArrowWidth: CGFloat = 11
     static let tooltipMargin: CGFloat = 12
-    static let tooltipFont: UIFont = KanvasCameraFonts.shared.colorSelectorTooltipFont
+    static let tooltipFont: UIFont = KanvasFonts.shared.colorSelectorTooltipFont
     static let tooltipVerticalTextInset: CGFloat = 13
     static let tooltipHorizontalTextInset: CGFloat = 16
 }
