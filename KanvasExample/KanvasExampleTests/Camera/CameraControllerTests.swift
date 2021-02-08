@@ -199,15 +199,15 @@ final class CameraControllerTests: FBSnapshotTestCase {
         let controller = newController(delegate: delegate)
         let videoURL = newVideo()
         controller.didFinishExportingVideo(url: videoURL)
-        XCTAssertEqual(videoURL, delegate.videoURL)
+        XCTAssertEqual(videoURL, delegate.media(of: .video).first?.output)
     }
 
     func testDidFinishExportingImageCallsDelegate() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
         controller.didFinishExportingImage(image: newImage())
-        XCTAssert(delegate.imageCreatedCalled)
-        XCTAssert(!delegate.creationError)
+        XCTAssert(delegate.contains(type: .image))
+        XCTAssert(!delegate.containsErrors)
     }
     
     func testCameraWithOneMode() {
@@ -352,22 +352,74 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     func getBlogSwitcher() -> UIView {
         return UIView()
     }
+
+    var results: [Result<KanvasMedia?, Error>] = []
     
     var dismissCalled = false
-    var videoURL: URL? = nil
-    var framesURL: URL? = nil
-    var imageCreatedCalled = false
-    var creationError = false
-    var creationEmpty = false
 
-    func didCreateMedia(_ cameraController: CameraController, media: KanvasMedia?, exportAction: KanvasExportAction, error: Error?) {
-        switch (media, error) {
-        case (.none, .none): creationEmpty = true
-        case (_, .some): creationError = true
-        case (.some(.image(_, _, _)), _): imageCreatedCalled = true
-        case (.some(.video(let url, _, _)), _): videoURL = url
-        case (.some(.frames(let url, _, _)), _): framesURL = url
-        }
+    func media(of type: MediaType) -> [KanvasMedia] {
+        return results.compactMap({ result in
+            switch result {
+            case .success(let media):
+                if media?.type == type {
+                    return media
+                } else {
+                    return nil
+                }
+            case .failure:
+                return nil
+            }
+        })
+    }
+
+    func contains(type: MediaType) -> Bool {
+        return results.contains(where: { result in
+            switch result {
+            case .success(let media):
+                return media?.type == type
+            case .failure:
+                return false
+            }
+        })
+    }
+
+    var containsErrors: Bool {
+        return errors.contains(where: { $0 != nil })
+    }
+
+    var errors: [Error?] {
+        return results.map({ result in
+            switch result {
+            case .success:
+                return nil
+            case .failure(let error):
+                return error
+            }
+        })
+    }
+
+    func didCreateMedia(_ cameraController: CameraController, media: [Result<KanvasMedia?, Error>], exportAction: KanvasExportAction) {
+        results = media
+//        media.forEach({ result in
+//            results = res
+//            switch result {
+//            case .success(let media):
+//                guard let media = media else {
+//                    creationEmpty = true
+//                    return
+//                }
+//                switch media.type {
+//                case .image:
+//                    imageCreatedCalled = true
+//                case .video:
+//                    videoURLs.append(media.output)
+//                case .frames:
+//                    framesURLs.append(media.output)
+//                }
+//            case .failure:
+//                creationError = true
+//            }
+//        })
     }
 
     func dismissButtonPressed(_ cameraController: CameraController) {
