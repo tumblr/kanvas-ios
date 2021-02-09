@@ -176,69 +176,31 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var currentMode: CameraMode
     private var isRecording: Bool
     private var disposables: [NSKeyValueObservation] = []
-    private var recorderClass: CameraRecordingProtocol.Type
-    private var segmentsHandlerClass: SegmentsHandlerType.Type
     private let stickerProvider: StickerProvider?
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
-    private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
 
     private let mediaPicker: MediaPicker.Type
+    private let recorderClass: CameraRecordingProtocol.Type = CameraRecorder.self
+    private let segmentsHandlerClass: SegmentsHandlerType.Type = CameraSegmentHandler.self
+    private let captureDeviceAuthorizer: CaptureDeviceAuthorizing = CaptureDeviceAuthorizer()
 
     private weak var mediaPlayerController: MediaPlayerController?
-
-    /// Constructs a CameraController that will record from the device camera
-    /// and export the result to the device, saving to the phone all in between information
-    /// needed to attain the final output.
-    ///
-    /// - Parameters
-    ///   - settings: Settings to configure in which ways should the controller
-    /// interact with the user, which options should the controller give the user
-    /// and which should be the result of the interaction.
-    ///   - stickerProvider: Class that will provide the stickers in the editor.
-    ///   - analyticsProvider: An class conforming to KanvasCameraAnalyticsProvider
-    public init(settings: CameraSettings,
-                mediaPicker: MediaPicker.Type?,
-                stickerProvider: StickerProvider?,
-                analyticsProvider: KanvasAnalyticsProvider?,
-                quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-                tagCollection: UIView?) {
-        self.settings = settings
-        currentMode = settings.initialMode
-        isRecording = false
-        self.mediaPicker = mediaPicker ?? KanvasMediaPickerViewController.self
-        self.recorderClass = CameraRecorder.self
-        self.segmentsHandlerClass = CameraSegmentHandler.self
-        self.captureDeviceAuthorizer = CaptureDeviceAuthorizer()
-        self.stickerProvider = stickerProvider
-        self.analyticsProvider = analyticsProvider
-        self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
-        self.tagCollection = tagCollection
-        cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
-        feedbackGenerator = UINotificationFeedbackGenerator()
-        super.init(nibName: .none, bundle: .none)
-        cameraZoomHandler.delegate = self
-    }
 
     /// Constructs a CameraController that will take care of creating media
     /// as the result of user interaction.
     ///
     /// - Parameters:
-    ///   - settings: Settings to configure in which ways should the controller
-    /// interact with the user, which options should the controller give the user
-    /// and which should be the result of the interaction.
-    ///   - recorderClass: Class that will provide a recorder that defines how to record media.
-    ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
-    /// motion segments and constructing final input.
-    ///   - captureDeviceAuthorizer: Class responsible for authorizing access to capture devices.
-    ///   - stickerProvider: Class that will provide the stickers in the editor.
-    ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
-    private init(settings: CameraSettings,
-         recorderClass: CameraRecordingProtocol.Type,
-         segmentsHandlerClass: SegmentsHandlerType.Type,
-         captureDeviceAuthorizer: CaptureDeviceAuthorizing,
+    ///   - settings: Settings to configure in which ways should the controller interact with the user, which options should the controller give the user and which should be the result of the interaction.
+    ///   - mediaPicker: A class providing a Media Picker UI conforming to `MediaPicker`.
+    ///   - stickerProvider: An object that will provide the stickers in the editor.
+    ///   - analyticsProvider: An object conforming to KanvasCameraAnalyticsProvider used by tracking methods.
+    ///   - quickBlogSelectorCoordinator: An object which handles the Quick Blog selection UI.
+    ///   - tagCollection: A view to be shown when selecting tags.
+    public init(settings: CameraSettings,
+            mediaPicker: MediaPicker.Type?,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
@@ -246,10 +208,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
-        self.mediaPicker = KanvasMediaPickerViewController.self
-        self.recorderClass = recorderClass
-        self.segmentsHandlerClass = segmentsHandlerClass
-        self.captureDeviceAuthorizer = captureDeviceAuthorizer
+        self.mediaPicker = mediaPicker ?? KanvasMediaPickerViewController.self
         self.stickerProvider = stickerProvider
         self.analyticsProvider = analyticsProvider
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
