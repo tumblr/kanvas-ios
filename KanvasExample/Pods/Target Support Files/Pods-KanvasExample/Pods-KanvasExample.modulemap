@@ -1,6 +1,0 @@
-module Pods_KanvasExample {
-  umbrella header "Pods-KanvasExample-umbrella.h"
-
-  export *
-  module * { export * }
-}
