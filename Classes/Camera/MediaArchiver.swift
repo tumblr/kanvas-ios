@@ -55,7 +55,7 @@ class MediaArchiver {
                 let originalURL: URL?
                 if let saveDirectory = saveDirectory {
                     originalURL = original.save(info: export.info, in: saveDirectory)
-                    print("Original image URL: \(originalURL)")
+                    print("Original image URL: \(String(describing: originalURL))")
                 } else {
                     originalURL = nil
                 }
