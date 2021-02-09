@@ -28,6 +28,6 @@ DerivedData
 # ignore snapshot failure files
 **/FailureDiffs/*
 
-KanvasCameraExample/Pods/*
-!KanvasCameraExample/Pods/Target\ Support\ Files/
+KanvasExample/Pods
+KanvasExample/KanvasExample.xcworkspace
 
