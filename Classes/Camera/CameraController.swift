@@ -908,7 +908,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         }
 
         if let asset = asset, let info = info {
-            let media = KanvasMedia(asset: asset, original: url!, info: info)
+            let media = KanvasMedia(asset: asset, original: url, info: info)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
                 if let self = self {
