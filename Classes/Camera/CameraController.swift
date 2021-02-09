@@ -183,9 +183,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let tagCollection: UIView?
 
     private let mediaPicker: MediaPicker.Type
-    private let recorderClass: CameraRecordingProtocol.Type = CameraRecorder.self
-    private let segmentsHandlerClass: SegmentsHandlerType.Type = CameraSegmentHandler.self
-    private let captureDeviceAuthorizer: CaptureDeviceAuthorizing = CaptureDeviceAuthorizer()
+    var recorderClass: CameraRecordingProtocol.Type = CameraRecorder.self
+    var segmentsHandlerClass: SegmentsHandlerType.Type = CameraSegmentHandler.self
+    var captureDeviceAuthorizer: CaptureDeviceAuthorizing = CaptureDeviceAuthorizer()
 
     private weak var mediaPlayerController: MediaPlayerController?
 
