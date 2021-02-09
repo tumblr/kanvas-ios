@@ -974,7 +974,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             switch result {
             case .success(let export):
                 return export
-            case .failure(let error):
+            case .failure(_):
                 return nil
             }
         }
