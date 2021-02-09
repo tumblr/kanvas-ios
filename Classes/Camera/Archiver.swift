@@ -1,3 +1,9 @@
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+//
+
 import Combine
 import AVFoundation
 
@@ -79,10 +85,6 @@ class Archiver {
         })
         let result: AnyPublisher<[Result<KanvasMedia?, Error>], Error> = collected.eraseToAnyPublisher()
         return result
-//        return allPublishers.collect(exportCount).eraseToAnyPublisher()
-//        publishers.forEach { publisher in
-//            publishers.sin
-//        }
     }
 
     func handle(export: EditorViewController.ExportResult) -> KanvasMedia? {
@@ -96,10 +98,7 @@ class Archiver {
                 return nil
             }
         case (.video(let url), .video(let original)):
-//                    let originalURL =  saveDirectory.appendingPathComponent(url.lastPathComponent)
             print("Original video URL: \(original)")
-//                    try? FileManager.default.removeItem(at: originalURL)
-//                    try! FileManager.default.moveItem(at: original, to: originalURL)
             let asset = AVURLAsset(url: url)
             return KanvasMedia(asset: asset, original: original, info: export.info)
         default:

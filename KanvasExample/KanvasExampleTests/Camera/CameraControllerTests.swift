@@ -400,26 +400,6 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
 
     func didCreateMedia(_ cameraController: CameraController, media: [Result<KanvasMedia?, Error>], exportAction: KanvasExportAction) {
         results = media
-//        media.forEach({ result in
-//            results = res
-//            switch result {
-//            case .success(let media):
-//                guard let media = media else {
-//                    creationEmpty = true
-//                    return
-//                }
-//                switch media.type {
-//                case .image:
-//                    imageCreatedCalled = true
-//                case .video:
-//                    videoURLs.append(media.output)
-//                case .frames:
-//                    framesURLs.append(media.output)
-//                }
-//            case .failure:
-//                creationError = true
-//            }
-//        })
     }
 
     func dismissButtonPressed(_ cameraController: CameraController) {
