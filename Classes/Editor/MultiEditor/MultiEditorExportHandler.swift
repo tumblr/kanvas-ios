@@ -7,6 +7,8 @@
 import Foundation
 import os
 
+/// A class to handle collecting export results.
+/// TODO: Replace with a Combine version along with `MediaExport` refactor.
 class MultiEditorExportHandler {
     
     typealias ExportResult = Result<EditorViewController.ExportResult, Error>

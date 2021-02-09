@@ -968,7 +968,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     func didFinishExporting(media result: [Result<EditorViewController.ExportResult, Error>]) {
 
-        let archiver = Archiver(saveDirectory: saveDirectory)
+        let archiver = MediaArchiver(saveDirectory: saveDirectory)
 
         let exports: [EditorViewController.ExportResult?] = result.map { result in
             switch result {

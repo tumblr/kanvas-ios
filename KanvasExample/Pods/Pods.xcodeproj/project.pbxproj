@@ -214,7 +214,7 @@
 		BE7DF9F1968A941BE88FB49911F8FE9B /* MetalFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E960E3728D0FFDDC74C3ECBC47EB80E5 /* MetalFilter.swift */; };
 		BF2AE293263BB826E234A6ADB31C8612 /* DrawingCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FC088E1861E8BCC8264E61363AD9D40 /* DrawingCanvas.swift */; };
 		BFB277415DE51E54CC2E5DC4CDECCE6B /* PixelBufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A3E4C320480E36838A7403AFD60669 /* PixelBufferView.swift */; };
-		C107D2DEB1F320C5054187220817FC50 /* Archiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7332AC4DDE8209554229022D0077A6C /* Archiver.swift */; };
+		C107D2DEB1F320C5054187220817FC50 /* MediaArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7332AC4DDE8209554229022D0077A6C /* MediaArchiver.swift */; };
 		C227FD1C858148327AD6CF45F9BC35E4 /* UIImage+Diff.h in Headers */ = {isa = PBXBuildFile; fileRef = E354F8FD537351F26F7949B4EBFA5101 /* UIImage+Diff.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		C233C2FD3B1C5789EAAAE043BC361333 /* ModeSelectorAndShootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6F54C1BAAAD0DC5A1C6B42C7A39B87 /* ModeSelectorAndShootController.swift */; };
 		C2E1EC1E052961F02445DDCDA115C23C /* KanvasAnalyticsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66B39FC1F4BEB64211CAC30CDA7C361 /* KanvasAnalyticsProvider.swift */; };
@@ -330,15 +330,15 @@
 		11875B61B29111393C1FEB9455EF9C59 /* OptionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
 		11ACE1FDC32F09C59B7F379774375D6F /* MirrorFourOpenGLFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MirrorFourOpenGLFilter.swift; sourceTree = "<group>"; };
 		13C8BBFE2D9E3A9C566221B1DE04E91C /* FBSnapshotTestCase.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSnapshotTestCase.m; path = FBSnapshotTestCase/FBSnapshotTestCase.m; sourceTree = "<group>"; };
-		14390E926F004482B57CCADA915E5250 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		14390E926F004482B57CCADA915E5250 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1511D6120FF3A3489D8D1C27F227FE87 /* TrashView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 		16509DDCB42070BB1A6E5A74AA36A1AD /* HorizontalCollectionLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HorizontalCollectionLayout.swift; sourceTree = "<group>"; };
 		1A9BC8881179C0D8D9FD047119B342E7 /* UIImage+Shape.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Shape.swift"; sourceTree = "<group>"; };
-		1BE147AD0BEE35A0EAE193050A94C477 /* libPods-KanvasExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-KanvasExample.a"; path = "libPods-KanvasExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1BE147AD0BEE35A0EAE193050A94C477 /* libPods-KanvasExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C7613437AB47700FDAE3F52EFE1D6A4 /* StickerMenuController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerMenuController.swift; sourceTree = "<group>"; };
 		1CE48839DE15A622B45558DD7AD2CD94 /* TrimController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrimController.swift; sourceTree = "<group>"; };
-		1E2787AA1B44F20D34D07FFC8324DEBB /* libPods-KanvasExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-KanvasExampleTests.a"; path = "libPods-KanvasExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		206C526DCF24A51381FB993823F49485 /* MetalShaders */ = {isa = PBXFileReference; includeInIndex = 1; name = MetalShaders; path = Resources/MetalShaders; sourceTree = "<group>"; };
+		1E2787AA1B44F20D34D07FFC8324DEBB /* libPods-KanvasExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		206C526DCF24A51381FB993823F49485 /* MetalShaders */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = MetalShaders; path = Resources/MetalShaders; sourceTree = "<group>"; };
 		20B603BE940696A43460089D71FFCF06 /* EditionMenuCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionView.swift; sourceTree = "<group>"; };
 		214FA797B9878CE155439EB221D267EE /* DimensionsHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DimensionsHelper.swift; sourceTree = "<group>"; };
 		21F3099E244354A9629CD19109884881 /* AVAssetTrack+transform.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAssetTrack+transform.swift"; sourceTree = "<group>"; };
@@ -364,7 +364,7 @@
 		39D5D76206AF9B297C1F911538741504 /* Queue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		3A3ADB740C3CAA6261F9DE105F36D605 /* CALayer+Color.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CALayer+Color.swift"; sourceTree = "<group>"; };
 		3C4D9BF9329182C5A91B10DE0F1B7524 /* GIFEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GIFEncoder.swift; sourceTree = "<group>"; };
-		3D9DC64A11C0E62F4FA1804F94D9559E /* Kanvas.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Kanvas.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		3D9DC64A11C0E62F4FA1804F94D9559E /* Kanvas.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Kanvas.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		3E29C50D3CDB46CBCBD20AFA13EB3D8D /* FBSnapshotTestCase.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FBSnapshotTestCase.h; path = FBSnapshotTestCase/FBSnapshotTestCase.h; sourceTree = "<group>"; };
 		4085B30D9D69D546439C4656A3EB18A0 /* EditionMenuCollectionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditionMenuCollectionCell.swift; sourceTree = "<group>"; };
 		40D9073A8A5592945A0FF01C8821C900 /* MainTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTextView.swift; sourceTree = "<group>"; };
@@ -394,14 +394,14 @@
 		5204570F8F98B5DF88AC5B83D2F38752 /* Pods-KanvasExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-KanvasExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		524246FACC865AF63C931B71927AA178 /* KanvasTimes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasTimes.swift; sourceTree = "<group>"; };
 		52A489DCD860FDC3465FB6EDB2192406 /* Pods-KanvasExampleTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-KanvasExampleTests-acknowledgements.markdown"; sourceTree = "<group>"; };
-		53426F24DA00C9729D0DAA868D9EB553 /* libKanvas.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libKanvas.a; path = libKanvas.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		53426F24DA00C9729D0DAA868D9EB553 /* libKanvas.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKanvas.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		54457A06345492BEB188FD7D019D7E7A /* DrawerTabBarOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawerTabBarOption.swift; sourceTree = "<group>"; };
 		55BCCC25A1855A4C741D5C5949FF97C3 /* CameraRecordingProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraRecordingProtocol.swift; sourceTree = "<group>"; };
 		56EF7DF57E57CC4C34F101D30053AC8F /* Pods-KanvasExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-KanvasExample-umbrella.h"; sourceTree = "<group>"; };
-		573E6CC88E016B43CB8776F14CD7D017 /* silence.aac */ = {isa = PBXFileReference; includeInIndex = 1; name = silence.aac; path = Resources/silence.aac; sourceTree = "<group>"; };
+		573E6CC88E016B43CB8776F14CD7D017 /* silence.aac */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; name = silence.aac; path = Resources/silence.aac; sourceTree = "<group>"; };
 		58105BE596E029B7342D86AD49C24783 /* StickerMenuView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerMenuView.swift; sourceTree = "<group>"; };
 		5BDDEEB309480C15E144A6566B068CC4 /* StylableTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StylableTextView.swift; sourceTree = "<group>"; };
-		5C4F31330DFA99D699E4BDC8C3573D73 /* libFBSnapshotTestCase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libFBSnapshotTestCase.a; path = libFBSnapshotTestCase.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C4F31330DFA99D699E4BDC8C3573D73 /* libFBSnapshotTestCase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFBSnapshotTestCase.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CB12C1350A9FA75966125B6C86F7C74 /* MetalPixelBufferView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MetalPixelBufferView.swift; sourceTree = "<group>"; };
 		5DC8A837AC19F552EE3FF2AA7D1E7212 /* EditorFilterView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorFilterView.swift; sourceTree = "<group>"; };
 		5DDD0758ABE65840AB15913EF4B99B91 /* StickerLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerLoader.swift; sourceTree = "<group>"; };
@@ -422,7 +422,7 @@
 		68A6D5F10919F7DB9627B4C588D8FE9C /* MediaPickerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaPickerViewController.swift; sourceTree = "<group>"; };
 		68F1FC6DD65F3599D496EA07F1949FFA /* GIFDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GIFDecoder.swift; sourceTree = "<group>"; };
 		6910D8C10E9D4098AAA64A9E57FE2884 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
-		69D43DCAAD19FD6E9643D43A606536DA /* OpenGLShaders */ = {isa = PBXFileReference; includeInIndex = 1; name = OpenGLShaders; path = Resources/OpenGLShaders; sourceTree = "<group>"; };
+		69D43DCAAD19FD6E9643D43A606536DA /* OpenGLShaders */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = OpenGLShaders; path = Resources/OpenGLShaders; sourceTree = "<group>"; };
 		6A66D619626BA3EEFDAF887D2F35BD10 /* UIFont+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Utils.swift"; sourceTree = "<group>"; };
 		6AEB140F09589B5E59B0E7E34E24A951 /* TextureSelectorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextureSelectorView.swift; sourceTree = "<group>"; };
 		6C3B4EDE12C9FED93DEC8E92D04CE16C /* MultiEditorViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MultiEditorViewController.swift; sourceTree = "<group>"; };
@@ -471,7 +471,7 @@
 		909C1E87FDA266E2D92BE54EF3F7A340 /* KanvasEditorDesign.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasEditorDesign.swift; sourceTree = "<group>"; };
 		9107F4788C42748A9FD2A0D281328D4D /* AVAsset+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAsset+Utils.swift"; sourceTree = "<group>"; };
 		914386D9CC4E31410F52BF59969C7604 /* Sticker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
-		9191E8D5AE19F949EF4CB289C7F77D39 /* Kanvas.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = Kanvas.bundle; path = "Kanvas-Kanvas.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9191E8D5AE19F949EF4CB289C7F77D39 /* Kanvas.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Kanvas.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		91D0569EABE9312F091F6D85582AD270 /* StickerTypeCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerTypeCollectionView.swift; sourceTree = "<group>"; };
 		92392415CBAC7936FF3389824A4FCDA4 /* MediaDrawerController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaDrawerController.swift; sourceTree = "<group>"; };
 		929AD6051A6C4BE48E413EAAF283E4CA /* PlasmaOpenGLFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlasmaOpenGLFilter.swift; sourceTree = "<group>"; };
@@ -484,7 +484,7 @@
 		9B03B050012C4436CDFF5A0DD7748EB1 /* DrawerTabBarCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DrawerTabBarCell.swift; sourceTree = "<group>"; };
 		9B4B23CDC34E6715F9F9779CE8888DB5 /* ShootButtonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShootButtonView.swift; sourceTree = "<group>"; };
 		9D6970C2E2BD3DACD36E80DE907359D1 /* CameraInputController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraInputController.swift; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9DD9D07D3D557753EF4EDC8364BF42EA /* UIImage+Camera.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Camera.swift"; sourceTree = "<group>"; };
 		9E56D77EEA45DFBE6D6740A01203B34D /* ConicalGradientLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConicalGradientLayer.swift; sourceTree = "<group>"; };
 		9ED602485EDECEFC6AEB7165DA16499F /* Pencil.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Pencil.swift; sourceTree = "<group>"; };
@@ -559,7 +559,7 @@
 		D46B584D976507E0ECE8C0969F3D55E2 /* EditorTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
 		D5F4F8E6BBE806C613D7AD7FC2DE8C36 /* Kanvas-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Kanvas-prefix.pch"; sourceTree = "<group>"; };
 		D66B39FC1F4BEB64211CAC30CDA7C361 /* KanvasAnalyticsProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KanvasAnalyticsProvider.swift; sourceTree = "<group>"; };
-		D7225DB7927AC2E04AABD5956B05BB63 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		D7225DB7927AC2E04AABD5956B05BB63 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		D83075F2B33D9EF92BF09920E7144CA2 /* CGRect+Center.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CGRect+Center.swift"; sourceTree = "<group>"; };
 		D93A4C9D1E1F08C1DEA716F085357B1F /* OptionsController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		DA48C20AC6EB43CBD878B1A343DE1312 /* NumTypes+Conversion.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NumTypes+Conversion.swift"; sourceTree = "<group>"; };
@@ -598,7 +598,7 @@
 		F66C55B251237F53E58A547B0F6BCBAE /* StickerProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StickerProvider.swift; sourceTree = "<group>"; };
 		F6BA7EB017C66C63D51E36E55206E5AF /* MultiEditorExportHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MultiEditorExportHandler.swift; sourceTree = "<group>"; };
 		F71D8F0D36DFEB7C400CC566FC5679EA /* Pods-KanvasExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-KanvasExample-acknowledgements.plist"; sourceTree = "<group>"; };
-		F7332AC4DDE8209554229022D0077A6C /* Archiver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Archiver.swift; sourceTree = "<group>"; };
+		F7332AC4DDE8209554229022D0077A6C /* MediaArchiver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaArchiver.swift; sourceTree = "<group>"; };
 		F751D0A76CFC28728E3DF364E379DCA4 /* EditorFilterCollectionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EditorFilterCollectionController.swift; sourceTree = "<group>"; };
 		F8EDC6CBD7EA3269E53A788445EE3FF0 /* StyleMenuRoundedLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StyleMenuRoundedLabel.swift; sourceTree = "<group>"; };
 		F9A3E4C320480E36838A7403AFD60669 /* PixelBufferView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PixelBufferView.swift; sourceTree = "<group>"; };
@@ -667,7 +667,6 @@
 				B7A23D8CBEAFC470FD3003EFE807C9E0 /* RGBOpenGLFilter.swift */,
 				50875B53A09654AD6BB4DA11F76F588B /* ToonOpenGLFilter.swift */,
 			);
-			name = OpenGLFilters;
 			path = OpenGLFilters;
 			sourceTree = "<group>";
 		};
@@ -679,7 +678,6 @@
 				B619885C6FF96E7A48DD20DABBC8BBE7 /* FilterSettingsController.swift */,
 				7CBE333AD67A1A7115E82784D72B5EA9 /* FilterSettingsView.swift */,
 			);
-			name = Filters;
 			path = Filters;
 			sourceTree = "<group>";
 		};
@@ -689,7 +687,6 @@
 				7F0E52B88B4E202D2D3442BD83FFD5BA /* ColorThief.swift */,
 				C1581DF15D4F400FB6E26BBBE737CAC3 /* MMCQ.swift */,
 			);
-			name = ColorThief;
 			path = ColorThief;
 			sourceTree = "<group>";
 		};
@@ -759,7 +756,6 @@
 				16509DDCB42070BB1A6E5A74AA36A1AD /* HorizontalCollectionLayout.swift */,
 				C80A1B67B47ABCA909B76CA8F4508E3D /* HorizontalCollectionView.swift */,
 			);
-			name = HorizontalCollectionView;
 			path = HorizontalCollectionView;
 			sourceTree = "<group>";
 		};
@@ -794,7 +790,6 @@
 				2DA145C4EDCA19DD83B74586E0738D52 /* IgnoreTouchesCollectionView.swift */,
 				7850ED6CC1384AD11F0D320337DBAC12 /* IgnoreTouchesView.swift */,
 			);
-			name = IgnoreTouches;
 			path = IgnoreTouches;
 			sourceTree = "<group>";
 		};
@@ -805,7 +800,6 @@
 				84F59A6754E301DB45ABFDC660A1FD8B /* SpeedView.swift */,
 				F4F691A8A4FA0AC1383D2360ABF3F78C /* DiscreteSlider */,
 			);
-			name = Speed;
 			path = Speed;
 			sourceTree = "<group>";
 		};
@@ -817,7 +811,6 @@
 				F41DB9CA94B3B4A58F53018CB65D5EBD /* OptionSelectorItem.swift */,
 				E0A0EE320389FD9E0DAC56ACDE1171EA /* OptionSelectorView.swift */,
 			);
-			name = OptionSelector;
 			path = OptionSelector;
 			sourceTree = "<group>";
 		};
@@ -845,7 +838,6 @@
 				3171BDD5DCAF9FB50A0DBD1FC38AD747 /* Sharpie.swift */,
 				684FE6763C0F0476E9031471AD84D5D9 /* Texture.swift */,
 			);
-			name = Textures;
 			path = Textures;
 			sourceTree = "<group>";
 		};
@@ -869,7 +861,6 @@
 				A7DCEBEBC1B21EEE328B4C9F890FAD6E /* MetalRenderEncoder.swift */,
 				98CA376B23A91338F1969102A461FDB0 /* MTLDevice+Kanvas.swift */,
 			);
-			name = Metal;
 			path = Metal;
 			sourceTree = "<group>";
 		};
@@ -889,7 +880,6 @@
 			children = (
 				F157437CACCA4BEE603C42F039EDDFCA /* PlaybackOption.swift */,
 			);
-			name = Playback;
 			path = Playback;
 			sourceTree = "<group>";
 		};
@@ -901,7 +891,6 @@
 				4AAB2AEDB4C997402D46712925A9ED0D /* MovableViewInnerElement.swift */,
 				E1D51927618ACF4AA36A8D8100225817 /* ViewTransformations.swift */,
 			);
-			name = MovableViews;
 			path = MovableViews;
 			sourceTree = "<group>";
 		};
@@ -924,7 +913,6 @@
 				A47DB932646B5BFECA31B399E6217EF3 /* Shared */,
 				E4EC99F9C87F5D99C3A9AC47CD6C0351 /* StyleMenu */,
 			);
-			name = Menu;
 			path = Menu;
 			sourceTree = "<group>";
 		};
@@ -945,7 +933,6 @@
 				C30C9BC016F7B83FEF31DB29C34F1A3D /* ColorCollectionController.swift */,
 				292D3FF11E1176CF8DF0C17BD36CFEC1 /* ColorCollectionView.swift */,
 			);
-			name = ColorCollection;
 			path = ColorCollection;
 			sourceTree = "<group>";
 		};
@@ -983,7 +970,6 @@
 				5BDDEEB309480C15E144A6566B068CC4 /* StylableTextView.swift */,
 				94362BB7E5098EEFB4C0E40310A7D656 /* TextOptions.swift */,
 			);
-			name = Text;
 			path = Text;
 			sourceTree = "<group>";
 		};
@@ -996,7 +982,6 @@
 				85740C6A3A9F092C9A9B397157B197AE /* ColorPicker */,
 				8FA1855DE1BA20D6766B261242E79FB2 /* ColorSelector */,
 			);
-			name = Shared;
 			path = Shared;
 			sourceTree = "<group>";
 		};
@@ -1010,7 +995,6 @@
 				2480F5583A251DC4BDEAF441843FC6FB /* Textures */,
 				AC04DEE683373A6C2499A5190A8C8483 /* TextureSelector */,
 			);
-			name = Drawing;
 			path = Drawing;
 			sourceTree = "<group>";
 		};
@@ -1025,7 +1009,6 @@
 				206AEFCF7DC708DA46F7785464A9E140 /* Speed */,
 				E3E6D0DD3E30ED4777854135D7F6A557 /* Trim */,
 			);
-			name = GIFMaker;
 			path = GIFMaker;
 			sourceTree = "<group>";
 		};
@@ -1080,7 +1063,6 @@
 				E320AB1A028AB4861445CFA346FA6353 /* Stickers */,
 				CC9761B2F070D544613BEEFEBCB2D1CB /* TabBar */,
 			);
-			name = Media;
 			path = Media;
 			sourceTree = "<group>";
 		};
@@ -1092,7 +1074,6 @@
 				F47016DD9AD64F14EFCBE221449F2993 /* StickerCollectionController.swift */,
 				EE7E133506AED71A9E55FE4F68DD9877 /* StickerCollectionView.swift */,
 			);
-			name = StickerCollection;
 			path = StickerCollection;
 			sourceTree = "<group>";
 		};
@@ -1188,7 +1169,6 @@
 				7170FAF8185397B49190D84DD2AF4C8E /* ColorPickerController.swift */,
 				480840B00D4C272AAFE9ED243491B906 /* ColorPickerView.swift */,
 			);
-			name = ColorPicker;
 			path = ColorPicker;
 			sourceTree = "<group>";
 		};
@@ -1197,7 +1177,6 @@
 			children = (
 				F66C55B251237F53E58A547B0F6BCBAE /* StickerProvider.swift */,
 			);
-			name = StickerProvider;
 			path = StickerProvider;
 			sourceTree = "<group>";
 		};
@@ -1208,7 +1187,6 @@
 				36288652AE13FA843963592A79F83A69 /* ColorSelectorController.swift */,
 				EEDC9E06CBBE3CD7E70DD04885FEC1C4 /* ColorSelectorView.swift */,
 			);
-			name = ColorSelector;
 			path = ColorSelector;
 			sourceTree = "<group>";
 		};
@@ -1219,7 +1197,6 @@
 				C1F33F420985E14CD0D7BDA9573F3F23 /* Support Files */,
 				820C839EC049005CB82FAAF13AFDCB95 /* SwiftSupport */,
 			);
-			name = FBSnapshotTestCase;
 			path = FBSnapshotTestCase;
 			sourceTree = "<group>";
 		};
@@ -1230,7 +1207,6 @@
 				6702A56E88B633D4785D5BEE090B84C1 /* EditionMenuCollectionController.swift */,
 				20B603BE940696A43460089D71FFCF06 /* EditionMenuCollectionView.swift */,
 			);
-			name = EditionMenu;
 			path = EditionMenu;
 			sourceTree = "<group>";
 		};
@@ -1262,7 +1238,6 @@
 				B6DB1FD7E323A5EDEF6ACA31E39B57E9 /* KanvasEditorMenuCollectionCell.swift */,
 				0155DD95C04B4CBDCA4E5984C43636AE /* KanvasEditorMenuController.swift */,
 			);
-			name = Shared;
 			path = Shared;
 			sourceTree = "<group>";
 		};
@@ -1281,7 +1256,6 @@
 				7E1849CF67A398CC94138E67D4A86587 /* TextureSelectorController.swift */,
 				6AEB140F09589B5E59B0E7E34E24A951 /* TextureSelectorView.swift */,
 			);
-			name = TextureSelector;
 			path = TextureSelector;
 			sourceTree = "<group>";
 		};
@@ -1291,7 +1265,6 @@
 				A1F018A4A45E56EF5156D9509835FDE2 /* StrokeSelectorController.swift */,
 				7B2982712EF35577771EE82581AAE19B /* StrokeSelectorView.swift */,
 			);
-			name = StrokeSelector;
 			path = StrokeSelector;
 			sourceTree = "<group>";
 		};
@@ -1306,7 +1279,6 @@
 				755F6DA76F5D8C6EE75CE60F17957C24 /* Shader.swift */,
 				B789678E70030707787BAD70D12F0324 /* UIImage+PixelBuffer.swift */,
 			);
-			name = OpenGL;
 			path = OpenGL;
 			sourceTree = "<group>";
 		};
@@ -1318,7 +1290,6 @@
 				624AD2AEEAFC0E61F4AB9FC672F3EAD3 /* ThumbnailCollectionView.swift */,
 				C72B3D841BE7918A1D4F67CA78665A4C /* ThumbnailCollectionViewLayout.swift */,
 			);
-			name = ThumbnailCollection;
 			path = ThumbnailCollection;
 			sourceTree = "<group>";
 		};
@@ -1340,7 +1311,6 @@
 				8D278CF3C107428689E8FD6ACA26A5A7 /* StickerTypeCollectionController.swift */,
 				91D0569EABE9312F091F6D85582AD270 /* StickerTypeCollectionView.swift */,
 			);
-			name = StickerTypeCollection;
 			path = StickerTypeCollection;
 			sourceTree = "<group>";
 		};
@@ -1389,7 +1359,6 @@
 				F6BA7EB017C66C63D51E36E55206E5AF /* MultiEditorExportHandler.swift */,
 				6C3B4EDE12C9FED93DEC8E92D04CE16C /* MultiEditorViewController.swift */,
 			);
-			name = MultiEditor;
 			path = MultiEditor;
 			sourceTree = "<group>";
 		};
@@ -1401,7 +1370,6 @@
 				54457A06345492BEB188FD7D019D7E7A /* DrawerTabBarOption.swift */,
 				633E30CFFAA1836B0D45EFBAEC62F391 /* DrawerTabBarView.swift */,
 			);
-			name = TabBar;
 			path = TabBar;
 			sourceTree = "<group>";
 		};
@@ -1432,14 +1400,13 @@
 				A1AD9EEF1CF0C6DF747E7972DBF610AD /* EditorFilterController.swift */,
 				5DC8A837AC19F552EE3FF2AA7D1E7212 /* EditorFilterView.swift */,
 			);
-			name = Filters;
 			path = Filters;
 			sourceTree = "<group>";
 		};
 		DC1A104A3A85721796BEA57378A43EB0 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				F7332AC4DDE8209554229022D0077A6C /* Archiver.swift */,
+				F7332AC4DDE8209554229022D0077A6C /* MediaArchiver.swift */,
 				9FC530C48DA685E8CA39A4AC56449081 /* CameraController.swift */,
 				9D6970C2E2BD3DACD36E80DE907359D1 /* CameraInputController.swift */,
 				A187ED05651E525460D5E48A1C70BC7A /* CameraInputControllerDelegate.swift */,
@@ -1466,7 +1433,6 @@
 				8CA95E0862060948FF11D4FDA7F63FCA /* StickerProvider */,
 				BEF8D2881F481B2A4BBB0DBD6A931BCC /* StickerTypeCollection */,
 			);
-			name = Stickers;
 			path = Stickers;
 			sourceTree = "<group>";
 		};
@@ -1479,7 +1445,6 @@
 				BB06997AA522ED9DFEC5B0560EA20B29 /* TrimView.swift */,
 				B947A9BCA04175410561E9C7557DBB79 /* ThumbnailCollection */,
 			);
-			name = Trim;
 			path = Trim;
 			sourceTree = "<group>";
 		};
@@ -1492,7 +1457,6 @@
 				F8EDC6CBD7EA3269E53A788445EE3FF0 /* StyleMenuRoundedLabel.swift */,
 				23C5C2768A566620A57B7A1EB00AB8DB /* StyleMenuView.swift */,
 			);
-			name = StyleMenu;
 			path = StyleMenu;
 			sourceTree = "<group>";
 		};
@@ -1540,7 +1504,6 @@
 				6D569FB61160DCFB54EB28268F349E1E /* DiscreteSliderCollectionCell.swift */,
 				CEB2A0D1A2715436D5B92253BB09DD15 /* DiscreteSliderView.swift */,
 			);
-			name = DiscreteSlider;
 			path = DiscreteSlider;
 			sourceTree = "<group>";
 		};
@@ -1790,7 +1753,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7322409CAE79FE715649B256DD53DD4A /* AlphaBlendOpenGLFilter.swift in Sources */,
-				C107D2DEB1F320C5054187220817FC50 /* Archiver.swift in Sources */,
+				C107D2DEB1F320C5054187220817FC50 /* MediaArchiver.swift in Sources */,
 				844D8F8E1A9F83924357270BDD7CEBC1 /* Array+Move.swift in Sources */,
 				C604973381C209EAF1BA06661CF193DD /* Array+Object.swift in Sources */,
 				E3F9D066C2136EACA73602150449B50F /* Array+Rotate.swift in Sources */,
