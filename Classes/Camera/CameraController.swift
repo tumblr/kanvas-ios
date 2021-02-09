@@ -10,13 +10,13 @@ import UIKit
 
 // Media wrapper for media generated from the CameraController
 public struct KanvasMedia {
-    public let unmodified: URL
+    public let unmodified: URL?
     public let output: URL
     public let info: MediaInfo
     public let size: CGSize
     public let type: MediaType
 
-    init(unmodified: URL,
+    init(unmodified: URL?,
          output: URL,
          info: MediaInfo,
          size: CGSize,
@@ -28,7 +28,7 @@ public struct KanvasMedia {
         self.type = type
     }
 
-    init(asset: AVURLAsset, original: URL, info: MediaInfo) {
+    init(asset: AVURLAsset, original: URL?, info: MediaInfo) {
         self.init(unmodified: original,
              output: asset.url,
              info: info,
@@ -37,7 +37,7 @@ public struct KanvasMedia {
         )
     }
 
-    init(image: UIImage, url: URL, original: URL, info: MediaInfo) {
+    init(image: UIImage, url: URL, original: URL?, info: MediaInfo) {
         self.init(unmodified: original,
              output: url,
              info: info,
@@ -214,7 +214,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
-    private let saveDirectory: URL
+    private let saveDirectory: URL?
 
     private weak var mediaPlayerController: MediaPlayerController?
 
@@ -232,8 +232,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                             stickerProvider: StickerProvider?,
                             analyticsProvider: KanvasAnalyticsProvider?,
                             quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-                            tagCollection: UIView?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, tagCollection: tagCollection)
+                            tagCollection: UIView?,
+                            saveDirectory: URL?) {
+        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, tagCollection: tagCollection, saveDirectory: saveDirectory)
     }
 
     /// Constructs a CameraController that will take care of creating media
@@ -257,7 +258,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
          analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
-         saveDirectory: URL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)) {
+         saveDirectory: URL?) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false

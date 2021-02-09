@@ -10,13 +10,13 @@ import AVFoundation
 /// Saves `EditorViewController.ExportResult` to the directory specified by `saveDirectory`
 class MediaArchiver {
 
-    let saveDirectory: URL
+    let saveDirectory: URL?
 
     private let dispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
     /// Initializes a new MediaArchiver class to handle exports.
     /// - Parameter saveDirectory: A URL to save the files to.
-    init(saveDirectory: URL) {
+    init(saveDirectory: URL?) {
         self.saveDirectory = saveDirectory
     }
 
@@ -51,8 +51,14 @@ class MediaArchiver {
     private func handle(export: EditorViewController.ExportResult) -> KanvasMedia? {
         switch (export.result, export.original) {
         case (.image(let image), .image(let original)):
-            if let url = image.save(info: export.info), let originalURL = original.save(info: export.info, in: self.saveDirectory) {
-                print("Original image URL: \(originalURL)")
+            if let url = image.save(info: export.info) {
+                let originalURL: URL?
+                if let saveDirectory = saveDirectory {
+                    originalURL = original.save(info: export.info, in: saveDirectory)
+                    print("Original image URL: \(originalURL)")
+                } else {
+                    originalURL = nil
+                }
                 return KanvasMedia(image: image, url: url, original: originalURL, info: export.info)
             } else {
                 return nil

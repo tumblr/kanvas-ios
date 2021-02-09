@@ -271,7 +271,8 @@ private extension KanvasDashboardController {
     func createCameraController() -> CameraController {
         let kanvasAnalyticsProvider = stateDelegate?.kanvasDashboardAnalyticsProvider
         let stickerProvider = ExperimentalStickerProvider()
-        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider, quickBlogSelectorCoordinator: nil, tagCollection: nil)
+        let saveDirectory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let kanvasViewController = CameraController(settings: settings, stickerProvider: stickerProvider, analyticsProvider: kanvasAnalyticsProvider, quickBlogSelectorCoordinator: nil, tagCollection: nil, saveDirectory: saveDirectory)
         kanvasViewController.delegate = self
         return kanvasViewController
     }

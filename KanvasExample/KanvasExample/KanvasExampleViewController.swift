@@ -159,7 +159,8 @@ final class KanvasExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
+        let saveDirectory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil, saveDirectory: saveDirectory)
         controller.delegate = self
         controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
