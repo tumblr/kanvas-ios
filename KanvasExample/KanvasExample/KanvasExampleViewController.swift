@@ -37,14 +37,12 @@ final class KanvasExampleViewController: UIViewController {
     }()
     private var settings: CameraSettings = KanvasExampleViewController.customCameraSettings()
     private var cameraSettings: CameraSettings {
-        settings.exportStopMotionPhotoAsVideo = true
         settings.topButtonsSwapped = false
         settings.crossIconInEditor = false
         settings.showTagButtonInEditor = false
         return settings
     }
     private var dashboardSettings: CameraSettings {
-        settings.exportStopMotionPhotoAsVideo = false
         settings.topButtonsSwapped = true
         settings.crossIconInEditor = true
         settings.showTagButtonInEditor = true
@@ -148,6 +146,7 @@ final class KanvasExampleViewController: UIViewController {
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
+        settings.exportStopMotionPhotoAsVideo = true
         settings.features.multipleExports = false
         return settings
     }
@@ -275,6 +274,7 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             .editorFontSelectorUsesFont(settings.fontSelectorUsesFont),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
+            .exportStopMotionAsVideo(settings.exportStopMotionPhotoAsVideo),
             .multipleExport(settings.features.multipleExports),
         ]
     }
@@ -331,6 +331,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
+        case .exportStopMotionAsVideo(_):
+            settings.exportStopMotionPhotoAsVideo = value
         case .multipleExport(_):
             settings.features.multipleExports = value
         }
