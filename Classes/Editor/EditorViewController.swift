@@ -790,11 +790,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
+        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
                     self.hideLoading()
-                    self.handleExportError()
+                    if let error = error, let exportCompletion = self.exportCompletion {
+                        exportCompletion(.failure(error))
+                    } else {
+                        self.handleExportError()
+                    }
                     return
                 }
                 let result = ExportResult(original: .video(videoURL), result: .video(url), info: mediaInfo)
@@ -809,16 +813,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
+        exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, error) in
             performUIUpdate {
-                guard Device.isRunningInSimulator == false else {
-                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
-                    self.hideLoading()
-                    return
-                }
                 guard let unwrappedImage = exportedImage else {
                     self.hideLoading()
-                    self.handleExportError()
+                    if let error = error, let exportCompletion = self.exportCompletion {
+                        exportCompletion(.failure(error))
+                    } else {
+                        self.handleExportError()
+                    }
                     return
                 }
                 let result = ExportResult(original: .image(image), result: .image(unwrappedImage), info: mediaInfo)

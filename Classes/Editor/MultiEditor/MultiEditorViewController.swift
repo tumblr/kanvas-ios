@@ -341,9 +341,11 @@ extension MultiEditorViewController: EditorControllerDelegate {
         frames.enumerated().forEach({ (idx, frame) in
             autoreleasepool {
                 let editor = delegate.editor(segment: frame.segment)
-                editor.export { [weak self, editor] result in
-                    let _ = editor // strong reference until the export completes
-                    self?.exportHandler.handleExport(result, for: idx)
+                DispatchQueue.main.async {
+                    editor.export { [weak self, editor] result in
+                        let _ = editor // strong reference until the export completes
+                        self?.exportHandler.handleExport(result, for: idx)
+                    }
                 }
             }
         })
