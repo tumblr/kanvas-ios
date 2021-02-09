@@ -1,6 +1,0 @@
-module Kanvas {
-  umbrella header "Kanvas-umbrella.h"
-
-  export *
-  module * { export * }
-}
