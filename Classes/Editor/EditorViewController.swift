@@ -164,6 +164,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     private static func editor(delegate: EditorViewDelegate?,
                                settings: CameraSettings,
+                               showsMuteButton: Bool,
                                quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
                                tagCollection: UIView?,
                                metalContext: MetalContext?) -> EditorView {
@@ -173,11 +174,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         else if settings.features.editorPosting {
             mainActionMode = .post
+        } else if settings.features.multipleExports {
+            mainActionMode = .publish
         }
 
         let editorView: EditorView = EditorView(delegate: delegate,
                                     mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
+                                    showMuteButton: showsMuteButton,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showCogIcon: settings.showCogIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
@@ -293,8 +297,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
+        let muteButtonShown = settings.features.muteButton && segments.first?.isVideo == true
         self.editorView = EditorViewController.editor(delegate: nil,
                                                       settings: settings,
+                                                      showsMuteButton: muteButtonShown,
                                                       quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                                       tagCollection: tagCollection,
                                                       metalContext: metalContext)
@@ -561,6 +567,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         analyticsProvider?.logSaveFromDashboard()
     }
 
+    func didTapMuteButton(enabled: Bool) {
+        player.isMuted = enabled
+        shouldExportSound = !enabled
+    }
+
     func didTapPostButton() {
         startExporting(action: .post)
         analyticsProvider?.logPostFromDashboard()
@@ -677,7 +688,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
                 // It might be nice in the future to create a GIF directly from segments.
-                assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+                assetsHandler.mergeAssets(segments: segments, withAudio: true) { [weak self] url, mediaInfo in
                     guard let self = self else {
                         return
                     }
@@ -692,7 +703,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else {
-            assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+            assetsHandler.mergeAssets(segments: segments, withAudio: shouldExportSound) { [weak self] url, mediaInfo in
                 guard let url = url else {
                     self?.hideLoading()
                     self?.handleExportError()

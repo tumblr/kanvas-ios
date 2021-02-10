@@ -95,8 +95,9 @@ protocol AssetsHandlerType {
     ///
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
+    ///   - withAudio: whether to include audio tracks
     ///   - completion: returns a local video URL if merged successfully
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void)
+    func mergeAssets(segments: [CameraSegment], withAudio: Bool, completion: @escaping (URL?, MediaInfo?) -> Void)
 
     func ensureAllImagesHaveVideo(segments: [CameraSegment], completion: @escaping ([CameraSegment]) -> ())
 }
@@ -338,7 +339,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///
     /// - Parameter completion: returns a local video URL if merged successfully
     func exportVideo(completion: @escaping (URL?, MediaInfo?) -> Void) {
-        mergeAssets(segments: segments, completion: completion)
+        mergeAssets(segments: segments, withAudio: true, completion: completion)
     }
 
     /// This removes all segments from disk and memory
@@ -362,7 +363,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void) {
+    func mergeAssets(segments: [CameraSegment], withAudio: Bool, completion: @escaping (URL?, MediaInfo?) -> Void) {
         let preciseOptions = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
         let mixComposition = AVMutableComposition(urlAssetInitializationOptions: preciseOptions)
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
@@ -394,7 +395,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 self.addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: timeRange)
                 videoCompTrack?.preferredTransform = videoTrack.preferredTransform
             }
-            if let audioTrack = urlAsset.tracks(withMediaType: .audio).first {
+            if let audioTrack = urlAsset.tracks(withMediaType: .audio).first, withAudio {
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
                 var audioTimeRange = audioTrack.timeRange
                 if CMTimeCompare(audioTrack.timeRange.duration, videoDuration) == 1 {
