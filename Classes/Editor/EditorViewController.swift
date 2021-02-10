@@ -453,7 +453,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func revertGIF() {
-        editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
+        if settings.animateEditorControls {
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
+        }
         gifMakerController.showView(false)
         gifMakerController.showConfirmButton(false)
         gifMakerHandler.revert { reverted in
@@ -606,9 +608,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
-        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+        if settings.animateEditorControls {
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+                self.textController.showConfirmButton(true)
+            })
+        } else {
             self.textController.showConfirmButton(true)
-        })
+        }
         analyticsProvider?.logEditorTextEdit()
         editingNewText = false
     }
@@ -862,7 +868,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             if settings.features.editorGIFMaker {
                 shouldExportMediaAsGIF = gifMakerHandler.shouldExport
+                if settings.animateEditorControls {
                 editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
+                } else {
+                    selectedCell?.alpha = 1
+                }
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
@@ -877,12 +887,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             editorView.showQuickPostButton(true)
             showMainUI(true)
         case .text:
+            if settings.animateEditorControls {
             editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: textController.confirmButtonLocation)
+            } else {
+                selectedCell?.alpha = 1
+            }
             textController.showView(false)
             textController.showConfirmButton(false)
             showMainUI(true)
         case .drawing:
+            if settings.animateEditorControls {
             editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: drawingController.confirmButtonLocation)
+            } else {
+                selectedCell?.alpha = 1
+            }
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
             showMainUI(true)
@@ -925,17 +943,25 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+            if settings.animateEditorControls {
+                editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+                    self.textController.showConfirmButton(true)
+                })
+            } else {
                 self.textController.showConfirmButton(true)
-            })
+            }
         case .drawing:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
+            if settings.animateEditorControls {
+                editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
+                    self.drawingController.showConfirmButton(true)
+                })
+            } else {
                 self.drawingController.showConfirmButton(true)
-            })
+            }
         case .media:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorMediaDrawerOpen()
