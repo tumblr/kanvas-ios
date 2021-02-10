@@ -9,11 +9,11 @@ import UIKit
 import MobileCoreServices
 import Photos
 
-protocol KanvasMediaPickerViewControllerDelegate: class {
-    func didPick(image: UIImage, url: URL?)
-    func didPick(video: URL)
-    func didPick(gif: URL)
-    func didPick(livePhotoStill: UIImage, pairedVideo: URL)
+public protocol KanvasMediaPickerViewControllerDelegate: class {
+    func didPick(images: [(UIImage, URL?)])
+    func didPick(videos: [URL])
+    func didPick(gifs: [URL])
+    func didPick(livePhotos: [(UIImage, URL)])
     func didCancel()
     func pickingMediaNotAllowed(reason: String)
 }
@@ -28,7 +28,7 @@ final class KanvasUIImagePickerController: UIImagePickerController {
     }
 }
 
-final class KanvasMediaPickerViewController: UIViewController {
+final class KanvasMediaPickerViewController: UIViewController, MediaPicker {
 
     let settings: CameraSettings
 
@@ -56,6 +56,12 @@ final class KanvasMediaPickerViewController: UIViewController {
         super.viewDidLoad()
         addChild(imagePickerController)
         view.addSubview(imagePickerController.view)
+    }
+
+    static func present(on: UIViewController, with settings: CameraSettings, delegate: KanvasMediaPickerViewControllerDelegate, completion: @escaping () -> Void) {
+        let picker = KanvasMediaPickerViewController(settings: settings)
+        picker.delegate = delegate
+        on.present(picker, animated: true, completion: completion)
     }
 }
 
@@ -144,7 +150,7 @@ private extension KanvasMediaPickerViewController {
                 cannotPick(reason: message)
                 return
             }
-            pick(image: image, url: mediaURL)
+            pick(image: image, url: imageURL)
         }
         else if let mediaURL = mediaURL {
             pick(video: mediaURL)
@@ -155,19 +161,19 @@ private extension KanvasMediaPickerViewController {
     }
 
     private func pick(frames imageURL: URL) {
-        delegate?.didPick(gif: imageURL)
+        delegate?.didPick(gifs: [imageURL])
     }
 
     private func pick(image: UIImage, url: URL?) {
-        delegate?.didPick(image: image, url: url)
+        delegate?.didPick(images: [(image: image, url: url)])
     }
 
     private func pick(video url: URL) {
-        delegate?.didPick(video: url)
+        delegate?.didPick(videos: [url])
     }
 
     private func pick(livePhotoStill: UIImage, pairedVideo: URL) {
-        delegate?.didPick(livePhotoStill: livePhotoStill, pairedVideo: pairedVideo)
+        delegate?.didPick(livePhotos: [(still: livePhotoStill, pairedVideo: pairedVideo)])
     }
 
     private func canPick(image: UIImage) -> Bool {
