@@ -87,7 +87,6 @@ class MultiEditorViewController: UIViewController {
 
         self.exportHandler = MultiEditorExportHandler({ [weak delegate] result in
             delegate?.didFinishExporting(media: result)
-//            self?.exportingEditors = nil
         })
         self.selected = selected
         super.init(nibName: nil, bundle: nil)

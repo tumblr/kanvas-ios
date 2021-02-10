@@ -33,7 +33,7 @@ public struct KanvasMedia {
              output: asset.url,
              info: info,
              size: asset.videoScreenSize ?? .zero,
-             type: MediaType.video
+             type: .video
         )
     }
 
@@ -42,7 +42,7 @@ public struct KanvasMedia {
              output: url,
              info: info,
              size: image.size,
-             type: MediaType.image
+             type: .image
         )
     }
 }
