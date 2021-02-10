@@ -15,9 +15,22 @@ import UIKit
 /// This class is meant to be subclassed.
 class IgnoreTouchesView: UIView {
 
+    /// Override this property to specifically select which types of events to ignore
+    private(set) var ignoredTypes: [UIEvent.EventType]? = nil
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
-        return hitView == self ? nil : hitView
+        let ignored: Bool
+        if let type = event?.type, let ignoredTypes = ignoredTypes {
+            ignored = ignoredTypes.contains(type)
+        } else {
+            ignored = true
+        }
+        if ignored {
+            return hitView == self ? nil : hitView
+        } else {
+            return hitView
+        }
     }
     
 }

@@ -254,8 +254,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         switch recognizer.state {
         case .began:
             onRecognizerBegan(view: movableView)
-            showOverlay(true)
-            movableView.fadeOut()
+            showTrash()
             touchPosition = recognizer.touchLocations
             trashView.changeStatus(touchPosition)
         case .changed:
@@ -268,8 +267,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
             else {
                 movableView.fadeIn()
             }
-            showOverlay(false)
-            trashView.hide()
+            hideTrash()
             onRecognizerEnded()
         case .possible:
             break
@@ -283,6 +281,30 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         let oneIsTapGesture = gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer
         return !oneIsTapGesture
+    }
+
+    /// shows the trash icon opened with its red background
+    func openTrash() {
+        trashView.open()
+    }
+
+    /// shows the trash icon closed
+    func showTrash() {
+        showOverlay(true)
+        trashView.superview?.bringSubviewToFront(trashView)
+        movableViews.forEach { movableView in
+            movableView.fadeOut()
+        }
+        trashView.close()
+    }
+
+    /// hides the trash icon with its red background
+    func hideTrash() {
+        showOverlay(false)
+        movableViews.forEach { movableView in
+            movableView.fadeIn()
+        }
+        trashView.hide()
     }
     
     // MARK: - MovableViewDelegate
