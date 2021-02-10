@@ -59,21 +59,45 @@ class MediaArchiver {
                 } else {
                     originalURL = nil
                 }
-                return KanvasMedia(image: image, url: url, original: originalURL, info: export.info)
+                let archiveURL = self.archive(media: .image(original), archive: export.archive, to: url.deletingPathExtension().lastPathComponent)
+                return KanvasMedia(image: image, url: url, original: originalURL, info: export.info, archive: archiveURL)
             } else {
                 return nil
             }
         case (.video(let url), .video(let original)):
             print("Original video URL: \(original)")
+            let archiveURL = self.archive(media: .video(original), archive: export.archive, to: url.deletingPathExtension().lastPathComponent)
             let asset = AVURLAsset(url: url)
-            return KanvasMedia(asset: asset, original: original, info: export.info)
+            return KanvasMedia(asset: asset, original: original, info: export.info, archive: archiveURL)
         default:
             return nil
         }
     }
+
+    private func archive(media: EditorViewController.Media, archive data: Data, to path: String) -> URL? {
+
+        let archive: Archive
+
+        switch media {
+        case .image(let image):
+            archive = Archive(image: image, data: data)
+        case .video(let url):
+            archive = Archive(video: url, data: data)
+        }
+
+        let archiveURL: URL?
+        if let saveDirectory = saveDirectory {
+            let data = try! NSKeyedArchiver.archivedData(withRootObject: archive, requiringSecureCoding: true)
+            archiveURL = try! data.save(to: path, in: saveDirectory, ext: "")
+        } else {
+            archiveURL = nil
+        }
+
+        return archiveURL
+    }
 }
 
-private extension Data {
+extension Data {
     func save(to filename: String, in directory: URL, ext fileExtension: String) throws -> URL {
         let fileURL = directory.appendingPathComponent(filename).appendingPathExtension(fileExtension)
         try write(to: fileURL, options: .atomic)

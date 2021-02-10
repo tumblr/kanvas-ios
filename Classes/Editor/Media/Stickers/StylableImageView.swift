@@ -8,7 +8,9 @@ import Foundation
 import UIKit
 
 /// Image view that increases its image quality when its contentScaleFactor is modified
-final class StylableImageView: UIImageView, MovableViewInnerElement {
+@objc final class StylableImageView: UIImageView, MovableViewInnerElement, Codable, NSSecureCoding {
+
+    static var supportsSecureCoding: Bool { return true }
     
     let id: String
     
@@ -17,6 +19,10 @@ final class StylableImageView: UIImageView, MovableViewInnerElement {
             setScaleFactor(newValue)
         }
     }
+
+    var viewSize: CGSize = .zero
+
+    var viewCenter: CGPoint = .zero
     
     // MARK: - Initializers
     
@@ -25,10 +31,43 @@ final class StylableImageView: UIImageView, MovableViewInnerElement {
         super.init(image: image)
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required convenience init?(coder: NSCoder) {
+        let id = String(coder.decodeObject(of: NSString.self, forKey: CodingKeys.id.rawValue) ?? "")
+        let image = coder.decodeObject(of: UIImage.self, forKey: CodingKeys.image.rawValue)
+        self.init(id: id, image: image)
+        viewSize = coder.decodeCGSize(forKey: CodingKeys.size.rawValue)
+        viewCenter = coder.decodeCGPoint(forKey: CodingKeys.center.rawValue)
     }
-    
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case size
+        case center
+        case image
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.viewSize = try container.decode(CGSize.self, forKey: .size)
+        self.viewCenter = try container.decode(CGPoint.self, forKey: .center)
+        super.init(image: nil)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = try encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(viewSize, forKey: .size)
+        try container.encode(viewCenter, forKey: .center)
+    }
+
+    override func encode(with coder: NSCoder) {
+        coder.encode(id, forKey: CodingKeys.id.rawValue)
+        coder.encode(viewSize, forKey: CodingKeys.size.rawValue)
+        coder.encode(viewCenter, forKey: CodingKeys.center.rawValue)
+        coder.encode(image, forKey: CodingKeys.image.rawValue)
+    }
+
     // MARK: - Scale factor
     
     /// Sets a new scale factor to update the quality of the inner image. This value represents how content in the view is mapped

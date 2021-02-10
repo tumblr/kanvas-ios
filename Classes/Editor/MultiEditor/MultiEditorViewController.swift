@@ -9,7 +9,7 @@ import Foundation
 protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
     func addButtonWasPressed()
-    func editor(segment: CameraSegment) -> EditorViewController
+    func editor(segment: CameraSegment, canvas: MovableViewCanvas?, drawingView: IgnoreTouchesView?) -> EditorViewController
     func dismissButtonPressed()
 }
 
@@ -30,6 +30,7 @@ class MultiEditorViewController: UIViewController {
 
     struct Frame {
         let segment: CameraSegment
+        let edit: Edit?
     }
 
     private var frames: [Frame]
@@ -46,6 +47,9 @@ class MultiEditorViewController: UIViewController {
             guard newValue != selected && migratedIndex != newValue else {
                 return
             }
+            if let old = selected {
+                try! archive(index: old)//migratedIndex ?? old)
+            }
             if let new = newValue { // If the new index is the same as the old just keep the current editor
                 loadEditor(for: new)
             } else {
@@ -55,7 +59,10 @@ class MultiEditorViewController: UIViewController {
     }
 
     func addSegment(_ segment: CameraSegment) {
-        frames.append(Frame(segment: segment))
+
+//        let newEditor = editor(for: segment)
+
+        frames.append(Frame(segment: segment, edit: nil))
 
         let clip = MediaClip(representativeFrame: segment.lastFrame,
                                                         overlayText: nil,
@@ -68,6 +75,13 @@ class MultiEditorViewController: UIViewController {
     
     private let settings: CameraSettings
 
+//    private var edits: [[View]] = []
+
+    struct Edit {
+        let data: Data?
+        let canvasView: IgnoreTouchesView?
+        let options: EditOptions
+    }
 
     private var exportingEditors: [EditorViewController]?
 
@@ -76,14 +90,21 @@ class MultiEditorViewController: UIViewController {
     init(settings: CameraSettings,
          segments: [CameraSegment],
          delegate: MultiEditorComposerDelegate,
-         selected: Array<CameraSegment>.Index?) {
+         selected: Array<CameraSegment>.Index?,
+         edits: [Data?]?) {
         
         self.settings = settings
         self.delegate = delegate
 
-        frames = segments.map({ segment in
-            return Frame(segment: segment)
-        })
+        if let edits = edits {
+            frames = zip(segments, edits).map { (segment, data) in
+                return Frame(segment: segment, edit: Edit(data: data, canvasView: nil, options: EditOptions(soundEnabled: true)))
+            }
+        } else {
+            frames = segments.map({ segment in
+                return Frame(segment: segment, edit: nil)
+            })
+        }
 
         self.exportHandler = MultiEditorExportHandler({ [weak delegate] result in
             delegate?.didFinishExporting(media: result)
@@ -122,7 +143,8 @@ class MultiEditorViewController: UIViewController {
     }
 
     func loadEditor(for index: Int) {
-        if let editor = delegate?.editor(segment: frames[index].segment) {
+        let views = edits(for: index)
+        if let editor = delegate?.editor(segment: frames[index].segment, canvas: views?.0, drawingView: views?.1) {
             currentEditor?.stopPlayback()
             currentEditor?.unloadFromParentViewController()
             let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
@@ -134,6 +156,7 @@ class MultiEditorViewController: UIViewController {
             }
             editor.additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
             editor.delegate = self
+            unarchive(editor: editor, index: index)
             load(childViewController: editor, into: editorContainer)
             currentEditor = editor
         }
@@ -159,6 +182,7 @@ class MultiEditorViewController: UIViewController {
             editorContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             editorContainer.topAnchor.constraint(equalTo: view.topAnchor),
             editorContainer.bottomAnchor.constraint(equalTo: clipsContainer.bottomAnchor),
+//            editorContainer.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: clipsContainer.topAnchor)
         ])
     }
     
@@ -186,19 +210,22 @@ extension MultiEditorViewController: MediaPlayerController {
 }
 
 extension MultiEditorViewController: MediaClipsEditorDelegate {
+
     func mediaClipStartedMoving() {
-        // No-op for the moment. UI is coming in a future commit.
+
     }
 
     func mediaClipFinishedMoving() {
-        // No-op for the moment. UI is coming in a future commit.
+
     }
-    
+
     func addButtonWasPressed() {
         delegate?.addButtonWasPressed()
     }
 
     func mediaClipWasDeleted(at index: Int) {
+        var clips = self.clipsController.getClips()
+
         if frames.indices.contains(index) {
             frames.remove(at: index)
         }
@@ -244,6 +271,9 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
     }
 
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
+        if let selected = selected {
+            try! archive(index: selected)
+        }
         frames.move(from: originIndex, to: destinationIndex)
 
         let newIndex: Int
@@ -264,7 +294,7 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
     }
     
     @objc func nextButtonWasPressed() {
-    }    
+    }
 }
 
 extension MultiEditorViewController: EditorControllerDelegate {
@@ -277,16 +307,21 @@ extension MultiEditorViewController: EditorControllerDelegate {
         return UIView()
     }
 
-    func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        // No-op for the moment. API is coming in future commit.
+    func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
     }
     
-    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        // No-op for the moment. API is coming in future commit.
+    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+//        if let image = image {
+//            var clips = clipsController.getClips()
+//            if let selected = selected {
+//                let selectedClip = editors.distance(from: editors.startIndex, to: selected)
+//                clips[selectedClip] = MediaClip(representativeFrame: image, overlayText: nil, lastFrame: image)
+//            }
+//            clipsController.replace(clips: clips)
+//        }
     }
     
-    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        // No-op for the moment. API is coming in future commit.
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
     }
     
     func dismissButtonPressed() {
@@ -294,27 +329,75 @@ extension MultiEditorViewController: EditorControllerDelegate {
     }
     
     func didDismissColorSelectorTooltip() {
-        delegate?.didDismissColorSelectorTooltip()
+        
     }
     
     func editorShouldShowColorSelectorTooltip() -> Bool {
-        return delegate?.editorShouldShowColorSelectorTooltip() == true
+        return true
     }
     
     func didEndStrokeSelectorAnimation() {
-        delegate?.didEndStrokeSelectorAnimation()
+        
     }
     
     func editorShouldShowStrokeSelectorAnimation() -> Bool {
-        return delegate?.editorShouldShowStrokeSelectorAnimation() == true
+        return true
     }
     
     func tagButtonPressed() {
-        delegate?.tagButtonPressed()
+        
     }
 
     struct EditOptions {
         let soundEnabled: Bool
+    }
+
+    func archive(index: Int) throws {
+        guard let currentEditor = currentEditor else {
+            return
+        }
+        let currentCanvas = try NSKeyedArchiver.archivedData(withRootObject: currentEditor.editorView.movableViewCanvas, requiringSecureCoding: true)
+        let drawingLayer = currentEditor.editorView.drawingCanvas
+        let options = EditOptions(soundEnabled: currentEditor.shouldExportSound ?? true)
+        if frames.indices ~= index {
+            let frame = frames[index]
+            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas, canvasView: drawingLayer, options: options))
+        } else {
+            print("Invalid frame index")
+//            edits.insert((currentCanvas, drawingLayer, options), at: min(index, edits.endIndex))
+        }
+    }
+
+    func edits(for index: Int) -> (MovableViewCanvas?, IgnoreTouchesView?, EditOptions)? {
+        if frames.indices ~= index, let edit = frames[index].edit {
+            let canvas: MovableViewCanvas?
+            if let edit = edit.data {
+                canvas = try! NSKeyedUnarchiver.unarchivedObject(ofClass: MovableViewCanvas.self, from: edit)
+            } else {
+                canvas = nil
+            }
+            let drawing = edit.canvasView
+            let options = edit.options
+            return (canvas, drawing, options)
+        } else {
+            return nil
+        }
+    }
+
+    func unarchive(editor: EditorViewController, index: Int) {
+        if frames.indices ~= index {
+            let canvas: MovableViewCanvas?
+            let drawing: IgnoreTouchesView?
+            if let edits = edits(for: index) {
+                canvas = edits.0
+                drawing = edits.1
+            } else {
+                canvas = nil
+                drawing = nil
+            }
+
+            canvas?.delegate = editor.editorView
+        }
     }
 
     func showLoading() {
@@ -334,21 +417,40 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
         showLoading()
 
+        if let selected = selected {
+            try! archive(index: selected)
+        }
+
         exportHandler.startWaiting(for: frames.count)
 
         guard let delegate = delegate else { return true }
 
         frames.enumerated().forEach({ (idx, frame) in
             autoreleasepool {
-                let editor = delegate.editor(segment: frame.segment)
-                DispatchQueue.main.async {
-                    editor.export { [weak self, editor] result in
-                        let _ = editor // strong reference until the export completes
-                        self?.exportHandler.handleExport(result, for: idx)
-                    }
+                let canvas: MovableViewCanvas?
+                if let edit = frame.edit?.data {
+                    canvas = try! NSKeyedUnarchiver.unarchivedObject(ofClass: MovableViewCanvas.self, from: edit)
+                } else {
+                    canvas = nil
+                }
+                let editor = delegate.editor(segment: frame.segment, canvas: canvas, drawingView: frame.edit?.canvasView)
+                editor.shouldExportSound = frame.edit?.options.soundEnabled ?? true
+
+                unarchive(editor: editor, index: idx)
+                editor.export { [weak self, editor] result in
+                    let _ = editor // strong reference until the export completes
+                    self?.exportHandler.handleExport(result, for: idx)
                 }
             }
         })
         return false
+    }
+
+    func archive(editor: EditorViewController) {
+        
+    }
+    
+    func addButtonPressed() {
+        dismiss(animated: true, completion: nil)
     }
 }

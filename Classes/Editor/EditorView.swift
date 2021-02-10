@@ -116,8 +116,9 @@ private struct EditorViewConstants {
 final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelegate {
 
     func didRenderRectChange(rect: CGRect) {
-        drawingCanvasConstraints.update(with: rect)
-        movableViewCanvasConstraints.update(with: rect)
+        let newRect = rect.intersection(UIScreen.main.bounds)
+        drawingCanvasConstraints.update(with: newRect)
+        movableViewCanvasConstraints.update(with: newRect)
         delegate?.didRenderRectChange(rect: rect)
     }
 
@@ -159,7 +160,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
 
-    let drawingCanvas = IgnoreTouchesView()
+    var drawingCanvas: IgnoreTouchesView
 
     private lazy var drawingCanvasConstraints: FullViewConstraints = {
         return FullViewConstraints(
@@ -171,11 +172,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         )
     }()
 
-    lazy var movableViewCanvas: MovableViewCanvas = {
-        let canvas = MovableViewCanvas()
-        canvas.delegate = self
-        return canvas
-    }()
+    var movableViewCanvas: MovableViewCanvas
 
     private lazy var movableViewCanvasConstraints = {
         return FullViewConstraints(
@@ -219,7 +216,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showBlogSwitcher: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
-         metalContext: MetalContext?) {
+         metalContext: MetalContext?,
+         movableViewCanvas: MovableViewCanvas?,
+         drawingCanvas: IgnoreTouchesView?) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
@@ -232,7 +231,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
         self.metalContext = metalContext
+        self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
+        self.drawingCanvas = drawingCanvas ?? IgnoreTouchesView()
+
         super.init(frame: .zero)
+        self.movableViewCanvas.delegate = self
         setupViews()
     }
     
@@ -277,7 +280,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupOverlay()
         setupOverlayLabel()
     }
-    
+
     // MARK: - views
 
     private func setupPlayer() {
@@ -299,7 +302,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         addSubview(movableViewCanvas)
         movableViewCanvasConstraints.activate()
     }
-    
+
     /// Container that holds the back button and the bottom menu
     private func setupNavigationContainer() {
         navigationContainer.accessibilityIdentifier = "Navigation Container"
