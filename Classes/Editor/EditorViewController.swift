@@ -691,7 +691,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo {
                 assetsHandler.ensureAllImagesHaveVideo(segments: segments) { segments in
                     guard let videoURL = segments.first?.videoURL else { return }
-                    self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                    DispatchQueue.main.async {
+                        self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                    }
                 }
             }
             else {
@@ -718,7 +720,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                         return
                     }
                     let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasTimes.stopMotionFrameTimescale).seconds / KanvasTimes.onlyImagesFrameTime.seconds)
-                    self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
+                    DispatchQueue.main.async {
+                        self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
+                    }
                 }
             }
         }
@@ -729,7 +733,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self?.handleExportError()
                     return
                 }
-                self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
+                DispatchQueue.main.async {
+                    self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
+                }
             }
         }
     }
