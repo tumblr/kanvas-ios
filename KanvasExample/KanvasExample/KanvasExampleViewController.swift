@@ -160,7 +160,7 @@ final class KanvasExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
+        let controller = CameraController(settings: cameraSettings, mediaPicker: nil, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
         controller.delegate = self
         controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
