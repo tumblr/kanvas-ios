@@ -151,7 +151,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         let segments = getPhotoSegment()
         let delegate = newDelegateStub()
         let settings = CameraSettings()
-        settings.exportStopMotionPhotoAsVideo = true
+        settings.exportStopMotionPhotoAsVideo = false
         let handler = newAssetHandlerStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .photo)
         viewController.confirmButtonPressed()
