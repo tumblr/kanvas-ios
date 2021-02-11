@@ -167,12 +167,12 @@ class Archive: NSObject, NSSecureCoding {
 
     required init?(coder: NSCoder) {
         image = coder.decodeObject(of: UIImage.self, forKey: "image")
-        if let urlString = coder.decodeObject(of: NSString.self, forKey: "video") as? String {
+        if let urlString = coder.decodeObject(of: NSString.self, forKey: "video") as String? {
             video = URL(string: urlString)
         } else {
             video = nil
         }
-        if let dataString = coder.decodeObject(of: NSString.self, forKey: "data") as? String {
+        if let dataString = coder.decodeObject(of: NSString.self, forKey: "data") as String? {
             data = Data(base64Encoded: dataString)
         } else {
             data = nil
@@ -1050,7 +1050,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                 switch result {
                 case .success(let export):
                     return export
-                case .failure(let error):
+                case .failure(_):
                     return nil
                 }
             }

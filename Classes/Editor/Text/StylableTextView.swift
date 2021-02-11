@@ -75,13 +75,12 @@ private struct Constants {
         highlightViews = []
 
         let size = coder.decodeCGSize(forKey: CodingKeys.size.rawValue)
-        let center = coder.decodeCGPoint(forKey: CodingKeys.center.rawValue)
 
         super.init(frame: CGRect(origin: .zero, size: size), textContainer: nil)
         delegate = self
         backgroundColor = .clear
 
-        textAlignment = NSTextAlignment(rawValue: coder.decodeInteger(forKey: CodingKeys.textAlignment.rawValue))!
+        textAlignment = NSTextAlignment(rawValue: coder.decodeInteger(forKey: CodingKeys.textAlignment.rawValue)) ?? .left
         contentScaleFactor = CGFloat(coder.decodeFloat(forKey: CodingKeys.contentScaleFactor.rawValue))
         text = String(coder.decodeObject(of: NSString.self, forKey: CodingKeys.text.rawValue) ?? "")
 
@@ -90,9 +89,6 @@ private struct Constants {
         textColor = coder.decodeObject(of: UIColor.self, forKey: CodingKeys.textColor.rawValue)
         highlightColor = coder.decodeObject(of: UIColor.self, forKey: CodingKeys.highlightColor.rawValue)
 
-//        if let descriptor = coder.decodeObject(of: UIFontDescriptor.self, forKey: CodingKeys.font.rawValue) {
-//            font = UIFont(descriptor: descriptor, size: 12)
-//        }
         let fontName = String(coder.decodeObject(of: NSString.self, forKey: FontKeys.name.rawValue) ?? "")
         let fontSize = CGFloat(coder.decodeFloat(forKey: FontKeys.fontSize.rawValue))
         font = UIFont(name: fontName, size: fontSize)
@@ -114,46 +110,6 @@ private struct Constants {
         case fontSize
     }
 
-    required init(from decoder: Decoder) throws {
-        highlightViews = []
-        super.init(frame: .zero, textContainer: nil)
-        delegate = self
-        backgroundColor = .clear
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        textAlignment = NSTextAlignment(rawValue: try values.decode(Int.self, forKey: .textAlignment))!
-        contentScaleFactor = try values.decode(CGFloat.self, forKey: .contentScaleFactor)
-
-        text = try values.decode(String.self, forKey: .text)
-//        textColor = try values.decode(UIColor.self, forKey: .textColor)
-        viewSize = try values.decode(CGSize.self, forKey: .size)
-        viewCenter = try values.decode(CGPoint.self, forKey: .center)
-
-        let fontInfo = try values.nestedContainer(keyedBy: FontKeys.self, forKey: .font)
-        let name = try fontInfo.decode(String.self, forKey: .name)
-        let size = try fontInfo.decode(CGFloat.self, forKey: .fontSize)
-        let descriptor = UIFontDescriptor(name: font!.fontName, size: font!.pointSize)
-//        font = UIFont(descriptor: descriptor, size: size)
-        font = UIFont(name: name, size: size)
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = try encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(textAlignment.rawValue, forKey: .textAlignment)
-        try container.encode(contentScaleFactor, forKey: .contentScaleFactor)
-
-        try container.encode(text, forKey: .text)
-        try container.encode(viewSize, forKey: .size)
-        try container.encode(viewCenter, forKey: .center)
-
-//        try container.encode(textColor, forKey: .textColor)
-
-
-        var fontInfo = container.nestedContainer(keyedBy: FontKeys.self, forKey: .font)
-        print("Attributes: \(font!.fontDescriptor.fontAttributes)")
-        try fontInfo.encode(font?.fontName, forKey: .name)
-        try fontInfo.encode(font?.pointSize, forKey: .fontSize)
-    }
-
     override func encode(with coder: NSCoder) {
 
         coder.encode(textAlignment.rawValue, forKey: CodingKeys.textAlignment.rawValue)
@@ -165,9 +121,10 @@ private struct Constants {
         coder.encode(textColor, forKey: CodingKeys.textColor.rawValue)
         coder.encode(highlightColor, forKey: CodingKeys.highlightColor.rawValue)
 
-        coder.encode(font!.fontName, forKey: FontKeys.name.rawValue)
-        coder.encode(Float(font!.pointSize), forKey: FontKeys.fontSize.rawValue)
-//        coder.encode(font!.fontDescriptor, forKey: CodingKeys.font.rawValue)
+        if let font = font {
+            coder.encode(font.fontName, forKey: FontKeys.name.rawValue)
+            coder.encode(Float(font.pointSize), forKey: FontKeys.fontSize.rawValue)
+        }
     }
 
     

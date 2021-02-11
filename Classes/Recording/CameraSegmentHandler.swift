@@ -120,7 +120,7 @@ extension AssetsHandlerType {
     /// - Returns: true if all images, false otherwise
     func containsOnlyImages(segments: [CameraSegment]) -> Bool {
         return segments.contains(where: { segment in
-            if case let .video = segment {
+            if case .video = segment {
                 return true
             } else {
                 return false
@@ -448,7 +448,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
             switch segment {
             case .video:
                 assertionFailure("Video without a video URL")
-            case .image(let imageURL, _, let timeInterval, let mediaInfo):
+            case .image(let imageURL, _, _, _):
                 dispatchGroup.enter()
 
                 self.videoQueue.async {
@@ -472,7 +472,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
 
     private func allImagesHaveVideo(segments: [CameraSegment]) -> Bool {
         for segment in segments {
-            if case let .image = segment, segment.videoURL == nil {
+            if case .image = segment, segment.videoURL == nil {
                 return false
             }
         }

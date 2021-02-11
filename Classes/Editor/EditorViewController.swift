@@ -696,6 +696,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()
+        let archive: Data
+        do {
+            archive = try self.archive()
+        } catch {
+            handleExportError()
+            return
+        }
         if segments.count == 1, let firstSegment = segments.first, case CameraSegment.image(let image, _, _, _) = firstSegment {
             // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
@@ -703,20 +710,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 assetsHandler.ensureAllImagesHaveVideo(segments: segments) { segments in
                     guard let videoURL = segments.first?.videoURL else { return }
                     DispatchQueue.main.async {
-                        self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                        self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, archive: archive, exportAction: action)
                     }
                 }
             }
             else {
-                createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, archive: archive, exportAction: action)
             }
         }
         else if shouldExportMediaAsGIF {
             if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
-                self.createFinalGIF(videoURL: url, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
+                self.createFinalGIF(videoURL: url, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, archive: archive, exportAction: action)
             }
             else if assetsHandler.containsOnlyImages(segments: segments) {
-                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), exportAction: action)
+                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), archive: archive, exportAction: action)
             }
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
@@ -732,7 +739,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     }
                     let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasTimes.stopMotionFrameTimescale).seconds / KanvasTimes.onlyImagesFrameTime.seconds)
                     DispatchQueue.main.async {
-                        self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
+                        self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, archive: archive, exportAction: action)
                     }
                 }
             }
@@ -745,7 +752,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     return
                 }
                 DispatchQueue.main.async {
-                    self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
+                    self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), archive: archive, exportAction: action)
                 }
             }
         }
@@ -756,23 +763,24 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         startExporting(action: .post)
     }
 
-    var archive: Data {
-        return try! NSKeyedArchiver.archivedData(withRootObject: editorView.movableViewCanvas, requiringSecureCoding: true)
+    private func archive() throws -> Data {
+        return try NSKeyedArchiver.archivedData(withRootObject: editorView.movableViewCanvas, requiringSecureCoding: true)
     }
 
-    private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
         let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
-        let archive = self.archive
         exporter.export(frames: frames) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
-                var size: CGSize? = nil
+                let size: CGSize?
                 if let gifURL = gifURL {
                     size = GIFDecoderFactory.main().size(of: gifURL)
+                } else {
+                    size = nil
                 }
                 let result = ExportResult(original: nil, result: .video(gifURL!), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
@@ -784,11 +792,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        let archive = self.archive
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
             guard let exportedVideoURL = exportedVideoURL else {
                 performUIUpdate {
@@ -817,10 +824,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.imageOverlays = imageOverlays()
-        let archive = self.archive
         exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
@@ -840,12 +846,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-//        exporter.dimensions = UIScreen.main.bounds.size
-        let archive = self.archive
         exporter.export(image: image, time: player.lastStillFilterTime) { [weak self] (exportedImage, error) in
             guard let self = self else { return }
             let originalImage = image

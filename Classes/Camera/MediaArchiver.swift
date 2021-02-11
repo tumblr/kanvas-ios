@@ -89,8 +89,13 @@ class MediaArchiver {
 
         let archiveURL: URL?
         if let saveDirectory = saveDirectory {
-            let data = try! NSKeyedArchiver.archivedData(withRootObject: archive, requiringSecureCoding: true)
-            archiveURL = try! data.save(to: path, in: saveDirectory, ext: "")
+            do {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: archive, requiringSecureCoding: true)
+                archiveURL = try data.save(to: path, in: saveDirectory, ext: "")
+            } catch let error {
+                archiveURL = nil
+                print("Failed to archive \(error)")
+            }
         } else {
             archiveURL = nil
         }

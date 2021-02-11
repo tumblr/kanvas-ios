@@ -55,7 +55,7 @@ import UIKit
     }
 
     func encode(to encoder: Encoder) throws {
-        var container = try encoder.container(keyedBy: CodingKeys.self)
+        var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(viewSize, forKey: .size)
         try container.encode(viewCenter, forKey: .center)
