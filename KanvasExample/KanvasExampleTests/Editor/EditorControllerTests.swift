@@ -209,8 +209,13 @@ final class EditorControllerTests: FBSnapshotTestCase {
         settings.exportStopMotionPhotoAsVideo = true
         let handler = newAssetHandlerStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .stopMotion)
+        let expectation = XCTestExpectation(description: "Video Exported")
+        delegate.videoExportCompletion = {
+            expectation.fulfill()
+        }
         viewController.didTapConfirmButton()
         XCTAssertTrue(!handler.mergeAssetsCalled, "Handler merge assets function called")
+        wait(for: [expectation], timeout: 2)
         XCTAssertTrue(delegate.videoExportCalled, "Delegate video export function not called")
     }
     
@@ -218,11 +223,16 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let segments = getPhotoSegment()
         let delegate = newDelegateStub()
         let settings = getCameraSettings()
-        settings.exportStopMotionPhotoAsVideo = true
+        settings.exportStopMotionPhotoAsVideo = false
         let handler = newAssetHandlerStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate, assetsHandler: handler, cameraMode: .photo)
+        let expectation = XCTestExpectation(description: "Video Exported")
+        delegate.imageExportCompletion = {
+            expectation.fulfill()
+        }
         viewController.didTapConfirmButton()
         XCTAssertTrue(!handler.mergeAssetsCalled, "Handler merge assets function called")
+        wait(for: [expectation], timeout: 2)
         XCTAssertTrue(delegate.imageExportCalled, "Delegate image export function not called")
         XCTAssertFalse(delegate.videoExportCalled, "Delegate video export function should not be called")
     }
@@ -232,11 +242,16 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let handler = newAssetHandlerStub()
         let viewController = newViewController(segments: segments, delegate: delegate, assetsHandler: handler)
+        let expectation = XCTestExpectation(description: "Video Exported")
+        delegate.videoExportCompletion = {
+            expectation.fulfill()
+        }
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
+        wait(for: [expectation], timeout: 2)
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
     }
     
@@ -245,11 +260,16 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let handler = newAssetHandlerStub()
         let viewController = newViewController(segments: segments, delegate: delegate, assetsHandler: handler)
+        let expectation = XCTestExpectation(description: "Video Exported")
+        delegate.videoExportCompletion = {
+            expectation.fulfill()
+        }
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
         FBSnapshotVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
+        wait(for: [expectation], timeout: 2)
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
     }
     
@@ -314,20 +334,27 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
     private(set) var framesExportCalled = false
+
+    var videoExportCompletion: (() -> Void)?
+    var imageExportCompletion: (() -> Void)?
+    var framesExportCompletion: (() -> Void)?
     
     func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(url)
         videoExportCalled = true
+        videoExportCompletion?()
     }
     
     func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(image)
         imageExportCalled = true
+        imageExportCompletion?()
     }
 
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(url)
         framesExportCalled = true
+        framesExportCompletion?()
     }
     
     func dismissButtonPressed() {

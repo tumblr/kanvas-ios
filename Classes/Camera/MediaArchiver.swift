@@ -6,12 +6,14 @@
 
 import Combine
 import AVFoundation
+import os
 
 /// Saves `EditorViewController.ExportResult` to the directory specified by `saveDirectory`
 class MediaArchiver {
 
     let saveDirectory: URL?
 
+    private let log = OSLog(subsystem: "com.tumblr.kanvas", category: "MediaArchiver")
     private let dispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
     /// Initializes a new MediaArchiver class to handle exports.
@@ -55,7 +57,7 @@ class MediaArchiver {
                 let originalURL: URL?
                 if let saveDirectory = saveDirectory {
                     originalURL = original.save(info: export.info, in: saveDirectory)
-                    print("Original image URL: \(String(describing: originalURL))")
+                    os_log(.debug, log: log, "Original image URL: %@", String(describing: originalURL))
                 } else {
                     originalURL = nil
                 }
@@ -65,8 +67,8 @@ class MediaArchiver {
                 return nil
             }
         case (.video(let url), .video(let original)):
-            print("Original video URL: \(original)")
             let archiveURL = self.archive(media: .video(original), archive: export.archive, to: url.deletingPathExtension().lastPathComponent)
+            os_log(.debug, log: log, "Original video URL: %@", original.absoluteString)
             let asset = AVURLAsset(url: url)
             return KanvasMedia(asset: asset, original: original, info: export.info, archive: archiveURL)
         default:

@@ -464,7 +464,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func revertGIF() {
-        editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
+        if settings.animateEditorControls {
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
+        }
         gifMakerController.showView(false)
         gifMakerController.showConfirmButton(false)
         gifMakerHandler.revert { reverted in
@@ -617,9 +619,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
-        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+        if settings.animateEditorControls {
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+                self.textController.showConfirmButton(true)
+            })
+        } else {
             self.textController.showConfirmButton(true)
-        })
+        }
         analyticsProvider?.logEditorTextEdit()
         editingNewText = false
     }
@@ -693,8 +699,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         if segments.count == 1, let firstSegment = segments.first, case CameraSegment.image(let image, _, _, _) = firstSegment {
             // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
-            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
-                createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+            if let cameraMode = cameraMode, cameraMode.group == .video || settings.exportStopMotionPhotoAsVideo {
+                assetsHandler.ensureAllImagesHaveVideo(segments: segments) { segments in
+                    guard let videoURL = segments.first?.videoURL else { return }
+                    DispatchQueue.main.async {
+                        self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                    }
+                }
             }
             else {
                 createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
@@ -720,7 +731,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                         return
                     }
                     let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasTimes.stopMotionFrameTimescale).seconds / KanvasTimes.onlyImagesFrameTime.seconds)
-                    self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
+                    DispatchQueue.main.async {
+                        self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
+                    }
                 }
             }
         }
@@ -731,7 +744,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     self?.handleExportError()
                     return
                 }
-                self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
+                DispatchQueue.main.async {
+                    self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
+                }
             }
         }
     }
@@ -882,7 +897,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             if settings.features.editorGIFMaker {
                 shouldExportMediaAsGIF = gifMakerHandler.shouldExport
+                if settings.animateEditorControls {
                 editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
+                } else {
+                    selectedCell?.alpha = 1
+                }
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
@@ -897,12 +916,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             editorView.showQuickPostButton(true)
             showMainUI(true)
         case .text:
+            if settings.animateEditorControls {
             editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: textController.confirmButtonLocation)
+            } else {
+                selectedCell?.alpha = 1
+            }
             textController.showView(false)
             textController.showConfirmButton(false)
             showMainUI(true)
         case .drawing:
+            if settings.animateEditorControls {
             editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: drawingController.confirmButtonLocation)
+            } else {
+                selectedCell?.alpha = 1
+            }
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
             showMainUI(true)
@@ -945,17 +972,25 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+            if settings.animateEditorControls {
+                editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+                    self.textController.showConfirmButton(true)
+                })
+            } else {
                 self.textController.showConfirmButton(true)
-            })
+            }
         case .drawing:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
+            if settings.animateEditorControls {
+                editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
+                    self.drawingController.showConfirmButton(true)
+                })
+            } else {
                 self.drawingController.showConfirmButton(true)
-            })
+            }
         case .media:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorMediaDrawerOpen()
