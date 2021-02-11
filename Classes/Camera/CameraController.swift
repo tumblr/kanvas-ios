@@ -466,7 +466,6 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                                               analyticsProvider: analyticsProvider,
                                               quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                               canvas: canvas,
-                                              drawingView: drawing,
                                               tagCollection: tagCollection)
         controller.delegate = self
         return controller
@@ -921,10 +920,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         dismiss(animated: false, completion: nil)
     }
 
-    func editor(segment: CameraSegment, canvas: MovableViewCanvas?, drawingView: IgnoreTouchesView?) -> EditorViewController {
+    func editor(segment: CameraSegment, canvas: MovableViewCanvas?) -> EditorViewController {
         let segments = [segment]
 
-        return createEditorViewController(segments, selected: segments.startIndex, canvas: canvas, drawing: drawingView)
+        return createEditorViewController(segments, selected: segments.startIndex, canvas: canvas)
     }
     
     // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate & StoryComposerDelegate

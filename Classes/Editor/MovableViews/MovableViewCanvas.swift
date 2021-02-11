@@ -47,7 +47,7 @@ private struct Constants {
 }
 
 /// View that contains the collection of movable views
-final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, MovableViewDelegate, Codable, NSSecureCoding {
+final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, MovableViewDelegate, NSSecureCoding {
 
     static var supportsSecureCoding: Bool { return true }
 
@@ -94,22 +94,6 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         case movableViews
     }
 
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        overlay = UIView()
-        trashView = TrashView()
-        originTransformations = try values.decode(ViewTransformations.self, forKey: .originTransformations)
-
-        super.init(frame: .zero)
-
-        let textViews = try values.decode([StylableTextView].self, forKey: .textViews)
-        let imageViews = try values.decode([StylableImageView].self, forKey: .imageViews)
-        let innerViews: [MovableViewInnerElement] = textViews + imageViews
-        innerViews.forEach({ view in
-            addView(view: view, transformations: originTransformations, location: view.viewCenter, size: view.viewSize, animated: false)
-        })
-    }
-
     required init?(coder: NSCoder) {
 
         overlay = UIView()
@@ -124,18 +108,6 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
             addView(view: view.innerView, transformations: view.transformations, location: view.innerView.viewCenter, origin: view.originLocation, size: view.innerView.viewSize, animated: false)
         })
         setUpViews()
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-
-        try container.encode(originTransformations, forKey: .originTransformations)
-
-        let textViews = innerViews.compactMap { $0 as? StylableTextView } as [StylableTextView]
-        let imageViews = innerViews.compactMap { $0 as? StylableImageView } as [StylableImageView]
-        
-        try container.encode(textViews, forKey: .textViews)
-        try container.encode(imageViews, forKey: .imageViews)
     }
 
     override func encode(with coder: NSCoder) {

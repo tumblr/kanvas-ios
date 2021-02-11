@@ -217,8 +217,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
          metalContext: MetalContext?,
-         movableViewCanvas: MovableViewCanvas?,
-         drawingCanvas: IgnoreTouchesView?) {
+         movableViewCanvas: MovableViewCanvas?) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
@@ -232,7 +231,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.tagCollection = tagCollection
         self.metalContext = metalContext
         self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
-        self.drawingCanvas = drawingCanvas ?? IgnoreTouchesView()
+        
+        self.drawingCanvas = IgnoreTouchesView()
 
         super.init(frame: .zero)
         self.movableViewCanvas.delegate = self

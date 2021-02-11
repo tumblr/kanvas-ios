@@ -192,7 +192,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                settings: CameraSettings,
                                canvas: MovableViewCanvas?,
                                quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-                               drawingView: IgnoreTouchesView?,
                                tagCollection: UIView?,
                                metalContext: MetalContext?) -> EditorView {
         var mainActionMode: EditorView.MainActionMode = .confirm
@@ -215,8 +214,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                     tagCollection: tagCollection,
                                     metalContext: metalContext,
-                                    movableViewCanvas: canvas,
-                                    drawingCanvas: drawingView)
+                                    movableViewCanvas: canvas)
         return editorView
     }
 
@@ -310,7 +308,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          canvas: MovableViewCanvas? = nil,
-         drawingView: IgnoreTouchesView? = nil,
          tagCollection: UIView?) {
         self.settings = settings
         self.originalSegments = segments
@@ -329,7 +326,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                                       settings: settings,
                                                       canvas: canvas,
                                                       quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
-                                                      drawingView: drawingView,
                                                       tagCollection: tagCollection,
                                                       metalContext: metalContext)
         super.init(nibName: .none, bundle: .none)

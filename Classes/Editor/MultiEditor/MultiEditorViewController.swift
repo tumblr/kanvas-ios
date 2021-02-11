@@ -9,7 +9,7 @@ import Foundation
 protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
     func addButtonWasPressed()
-    func editor(segment: CameraSegment, canvas: MovableViewCanvas?, drawingView: IgnoreTouchesView?) -> EditorViewController
+    func editor(segment: CameraSegment, canvas: MovableViewCanvas?) -> EditorViewController
     func dismissButtonPressed()
 }
 
@@ -83,7 +83,6 @@ class MultiEditorViewController: UIViewController {
 
     struct Edit {
         let data: Data?
-        let canvasView: IgnoreTouchesView?
         let options: EditOptions
     }
 
@@ -102,7 +101,7 @@ class MultiEditorViewController: UIViewController {
 
         if let edits = edits {
             frames = zip(segments, edits).map { (segment, data) in
-                return Frame(segment: segment, edit: Edit(data: data, canvasView: nil, options: EditOptions(soundEnabled: true)))
+                return Frame(segment: segment, edit: Edit(data: data, options: EditOptions(soundEnabled: true)))
             }
         } else {
             frames = segments.map({ segment in
@@ -147,7 +146,7 @@ class MultiEditorViewController: UIViewController {
 
     func loadEditor(for index: Int) {
         let views = edits(for: index)
-        if let editor = delegate?.editor(segment: frames[index].segment, canvas: views?.0, drawingView: views?.1) {
+        if let editor = delegate?.editor(segment: frames[index].segment, canvas: views?.0) {
             currentEditor?.stopPlayback()
             currentEditor?.unloadFromParentViewController()
             let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
@@ -354,17 +353,16 @@ extension MultiEditorViewController: EditorControllerDelegate {
             return
         }
         let currentCanvas = try NSKeyedArchiver.archivedData(withRootObject: currentEditor.editorView.movableViewCanvas, requiringSecureCoding: true)
-        let drawingLayer = currentEditor.editorView.drawingCanvas
         let options = EditOptions(soundEnabled: currentEditor.shouldExportSound)
         if frames.indices ~= index {
             let frame = frames[index]
-            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas, canvasView: drawingLayer, options: options))
+            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas, options: options))
         } else {
             print("Invalid frame index")
         }
     }
 
-    func edits(for index: Int) -> (MovableViewCanvas?, IgnoreTouchesView?, EditOptions)? {
+    func edits(for index: Int) -> (MovableViewCanvas?, EditOptions)? {
         if frames.indices ~= index, let edit = frames[index].edit {
             let canvas: MovableViewCanvas?
             if let edit = edit.data {
@@ -378,9 +376,8 @@ extension MultiEditorViewController: EditorControllerDelegate {
             } else {
                 canvas = nil
             }
-            let drawing = edit.canvasView
             let options = edit.options
-            return (canvas, drawing, options)
+            return (canvas, options)
         } else {
             return nil
         }
@@ -442,7 +439,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
                 } else {
                     canvas = nil
                 }
-                let editor = delegate.editor(segment: frame.segment, canvas: canvas, drawingView: frame.edit?.canvasView)
+                let editor = delegate.editor(segment: frame.segment, canvas: canvas)
                 editor.shouldExportSound = frame.edit?.options.soundEnabled ?? true
 
                 unarchive(editor: editor, index: idx)

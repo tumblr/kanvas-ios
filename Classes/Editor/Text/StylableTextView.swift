@@ -13,7 +13,7 @@ private struct Constants {
 }
 
 /// TextView that can be customized with TextOptions
-@objc class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement, Codable, NSSecureCoding {
+@objc class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement, NSSecureCoding {
 
     static var supportsSecureCoding: Bool { return true }
     
