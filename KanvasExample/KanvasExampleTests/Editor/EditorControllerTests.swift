@@ -339,19 +339,19 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     var imageExportCompletion: (() -> Void)?
     var framesExportCompletion: (() -> Void)?
     
-    func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(url)
         videoExportCalled = true
         videoExportCompletion?()
     }
     
-    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(image)
         imageExportCalled = true
         imageExportCompletion?()
     }
 
-    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
         XCTAssertNotNil(url)
         framesExportCalled = true
         framesExportCompletion?()

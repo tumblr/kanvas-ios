@@ -32,7 +32,7 @@ final class MovableViewCanvasTests: FBSnapshotTestCase {
         textView.options = TextOptions(text: "Example", font: .fairwater(fontSize: 48))
         let location = view.center
         let transformations =  ViewTransformations()
-        view.addView(view: textView, transformations: transformations, location: location, size: view.frame.size)
+        view.addView(view: textView, transformations: transformations, location: location, size: view.frame.size, animated: true)
         FBSnapshotVerifyView(view)
     }
     

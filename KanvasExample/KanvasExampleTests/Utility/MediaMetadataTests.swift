@@ -35,10 +35,13 @@ class MediaMetadataTests: XCTestCase {
         let segmentsHandler = CameraSegmentHandler()
         let recorder = CameraRecorderStub(size: CGSize(width: 300, height: 300), photoOutput: nil, videoOutput: nil, audioOutput: nil, recordingDelegate: nil, segmentsHandler: segmentsHandler, settings: settings)
         recorder.takePhoto(on: .photo) { image in
-            guard let url = CameraController.save(image: image, info: .init(source: .kanvas_camera)) else {
+            let info = MediaInfo(source: .kanvas_camera)
+            guard let data = image?.jpegData(compressionQuality: 1),
+                  let url = try? CameraController.save(data: data, to: "kanvas-image", ext: "jpg") else {
                 XCTFail()
                 return
             }
+            info.write(toImage: url)
             let mediaInfo = MediaInfo(fromImage: url)
             XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
             expectation.fulfill()
