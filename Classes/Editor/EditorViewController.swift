@@ -158,6 +158,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     var shouldExportSound: Bool = true
     private let metalContext = MetalContext.createContext()
 
+    let cache: NSCache<NSString, NSData>
+
     private var shouldExportMediaAsGIF: Bool {
         get {
             return collectionController.shouldExportMediaAsGIF
@@ -241,7 +243,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              stickerProvider: stickerProvider,
                              analyticsProvider: analyticsProvider,
                              quickBlogSelectorCoordinator: nil,
-                             tagCollection: nil)
+                             tagCollection: nil,
+                             cache: nil)
     }
     
     public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
@@ -254,7 +257,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              stickerProvider: stickerProvider,
                              analyticsProvider: nil,
                              quickBlogSelectorCoordinator: nil,
-                             tagCollection: nil)
+                             tagCollection: nil,
+                             cache: nil)
     }
 
     public static func createEditor(forGIF url: URL,
@@ -273,6 +277,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
+    private static func freshCache() -> NSCache<NSString, NSData> {
+        let cache = NSCache<NSString, NSData>()
+        cache.name = "Kanvas Editor Cache"
+        cache.totalCostLimit = 50_000_000
+        return cache
+    }
+
     convenience init(settings: CameraSettings,
                      segments: [CameraSegment],
                      stickerProvider: StickerProvider,
@@ -286,7 +297,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                   stickerProvider: stickerProvider,
                   analyticsProvider: analyticsProvider,
                   quickBlogSelectorCoordinator: nil,
-                  tagCollection: nil)
+                  tagCollection: nil,
+                  cache: nil)
     }
     
     /// The designated initializer for the editor controller
@@ -308,7 +320,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          canvas: MovableViewCanvas? = nil,
-         tagCollection: UIView?) {
+         tagCollection: UIView?,
+         cache: NSCache<NSString, NSData>?) {
         self.settings = settings
         self.originalSegments = segments
         self.assetsHandler = assetsHandler
@@ -328,6 +341,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                                       quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                                       tagCollection: tagCollection,
                                                       metalContext: metalContext)
+        self.cache = cache ?? EditorViewController.freshCache()
         super.init(nibName: .none, bundle: .none)
         self.editorView.delegate = self
 
@@ -391,12 +405,25 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     /// Sets up the color carousels of both drawing and text tools
     private func addCarouselDefaultColors(_ image: UIImage) {
-        let dominantColors = image.getDominantColors(count: 3)
+
+        let cacheKey = "dominantColors"
+
+        let dominantColors: [UIColor]
+        if let cached = cache.object(forKey: cacheKey as NSString) {
+            let colors = try! NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, UIColor.self], from: cached as Data)
+            dominantColors = colors as! [UIColor]
+        } else {
+            dominantColors = image.getDominantColors(count: 3)
+        }
+
         drawingController.addColorsForCarousel(colors: dominantColors)
 
         if let mostDominantColor = dominantColors.first {
             textController.addColorsForCarousel(colors: [mostDominantColor, .white, .black])
         }
+
+        let archivedColors = try! NSKeyedArchiver.archivedData(withRootObject: dominantColors as NSArray, requiringSecureCoding: true)
+        cache.setObject(archivedColors as NSData, forKey: cacheKey as NSString)
     }
 
     // MARK: - Media Player

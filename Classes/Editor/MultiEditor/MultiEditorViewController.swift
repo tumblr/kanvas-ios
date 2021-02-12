@@ -9,7 +9,7 @@ import Foundation
 protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
     func addButtonWasPressed()
-    func editor(segment: CameraSegment, canvas: MovableViewCanvas?) -> EditorViewController
+    func editor(segment: CameraSegment, canvas: MovableViewCanvas?, cache: NSCache<NSString, NSData>?) -> EditorViewController
     func dismissButtonPressed()
 }
 
@@ -79,6 +79,7 @@ class MultiEditorViewController: UIViewController {
 
     struct Edit {
         let data: Data?
+        let cache: NSCache<NSString, NSData>?
     }
 
     private var exportingEditors: [EditorViewController]?
@@ -132,7 +133,7 @@ class MultiEditorViewController: UIViewController {
     func loadEditor(for index: Int) {
         let canvas = edits(for: index)
         let frame = frames[index]
-        if let editor = delegate?.editor(segment: frame.segment, canvas: canvas) {
+        if let editor = delegate?.editor(segment: frame.segment, canvas: canvas, cache: frame.edit?.cache) {
             currentEditor?.stopPlayback()
             currentEditor?.unloadFromParentViewController()
             let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
@@ -370,7 +371,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
                 } else {
                     canvas = nil
                 }
-                let editor = delegate.editor(segment: frame.segment, canvas: canvas)
+                let editor = delegate.editor(segment: frame.segment, canvas: canvas, cache: frame.edit?.cache)
                 editor.export { [weak self, editor] result in
                     let _ = editor // strong reference until the export completes
                     self?.exportHandler.handleExport(result, for: idx)
@@ -395,7 +396,7 @@ extension MultiEditorViewController {
         let currentCanvas = try NSKeyedArchiver.archivedData(withRootObject: currentEditor.editorView.movableViewCanvas, requiringSecureCoding: true)
         if frames.indices ~= index {
             let frame = frames[index]
-            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas))
+            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas, cache: currentEditor.cache))
         } else {
             print("Invalid frame index")
         }
