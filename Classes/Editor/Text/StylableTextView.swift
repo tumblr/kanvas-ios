@@ -94,7 +94,7 @@ private struct Constants {
         font = UIFont(name: fontName, size: fontSize)
     }
 
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String {
         case textAlignment
         case contentScaleFactor
         case font
@@ -105,7 +105,7 @@ private struct Constants {
         case highlightColor
     }
 
-    enum FontKeys: String, CodingKey {
+    private enum FontKeys: String {
         case name
         case fontSize
     }

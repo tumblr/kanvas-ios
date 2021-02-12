@@ -95,12 +95,20 @@ final class MovableView: UIView, NSSecureCoding {
         
         setupInnerView()
     }
+
+    private enum CodingKeys: String {
+        case position
+        case scale
+        case rotation
+        case innerView
+        case origin
+    }
     
     required init?(coder aDecoder: NSCoder) {
-        position = aDecoder.decodeCGPoint(forKey: "position")
-        scale = CGFloat(aDecoder.decodeFloat(forKey: "scale"))
-        rotation = CGFloat(aDecoder.decodeFloat(forKey: "rotation"))
-        let view = aDecoder.decodeObject(of: [StylableTextView.self, StylableImageView.self], forKey: "innerView")
+        position = aDecoder.decodeCGPoint(forKey: CodingKeys.position.rawValue)
+        scale = CGFloat(aDecoder.decodeFloat(forKey: CodingKeys.scale.rawValue))
+        rotation = CGFloat(aDecoder.decodeFloat(forKey: CodingKeys.rotation.rawValue))
+        let view = aDecoder.decodeObject(of: [StylableTextView.self, StylableImageView.self], forKey: CodingKeys.innerView.rawValue)
 
         switch view {
         case let imageView as StylableImageView:
@@ -110,7 +118,7 @@ final class MovableView: UIView, NSSecureCoding {
         default:
             innerView = StylableTextView()
         }
-        originLocation = aDecoder.decodeCGPoint(forKey: "origin")
+        originLocation = aDecoder.decodeCGPoint(forKey: CodingKeys.origin.rawValue)
 
         super.init(frame: .zero)
 
@@ -119,11 +127,11 @@ final class MovableView: UIView, NSSecureCoding {
 
     override func encode(with coder: NSCoder) {
         super.encode(with: coder)
-        coder.encode(position, forKey: "position")
-        coder.encode(Float(scale), forKey: "scale")
-        coder.encode(Float(rotation), forKey: "rotation")
-        coder.encode(innerView, forKey: "innerView")
-        coder.encode(originLocation, forKey: "origin")
+        coder.encode(position, forKey: CodingKeys.position.rawValue)
+        coder.encode(Float(scale), forKey: CodingKeys.scale.rawValue)
+        coder.encode(Float(rotation), forKey: CodingKeys.rotation.rawValue)
+        coder.encode(innerView, forKey: CodingKeys.innerView.rawValue)
+        coder.encode(originLocation, forKey: CodingKeys.origin.rawValue)
     }
 
     enum ViewType {

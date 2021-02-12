@@ -116,9 +116,8 @@ private struct EditorViewConstants {
 final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelegate {
 
     func didRenderRectChange(rect: CGRect) {
-        let newRect = rect.intersection(UIScreen.main.bounds)
-        drawingCanvasConstraints.update(with: newRect)
-        movableViewCanvasConstraints.update(with: newRect)
+        drawingCanvasConstraints.update(with: rect)
+        movableViewCanvasConstraints.update(with: rect)
         delegate?.didRenderRectChange(rect: rect)
     }
 
@@ -160,7 +159,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
 
-    var drawingCanvas: IgnoreTouchesView
+    let drawingCanvas = IgnoreTouchesView()
 
     private lazy var drawingCanvasConstraints: FullViewConstraints = {
         return FullViewConstraints(
@@ -232,8 +231,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.metalContext = metalContext
         self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
         
-        self.drawingCanvas = IgnoreTouchesView()
-
         super.init(frame: .zero)
         self.movableViewCanvas.delegate = self
         setupViews()

@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Image view that increases its image quality when its contentScaleFactor is modified
-@objc final class StylableImageView: UIImageView, MovableViewInnerElement, Codable, NSSecureCoding {
+@objc final class StylableImageView: UIImageView, MovableViewInnerElement, NSSecureCoding {
 
     static var supportsSecureCoding: Bool { return true }
     
@@ -39,26 +39,11 @@ import UIKit
         viewCenter = coder.decodeCGPoint(forKey: CodingKeys.center.rawValue)
     }
 
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String {
         case id
         case size
         case center
         case image
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(String.self, forKey: .id)
-        self.viewSize = try container.decode(CGSize.self, forKey: .size)
-        self.viewCenter = try container.decode(CGPoint.self, forKey: .center)
-        super.init(image: nil)
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(viewSize, forKey: .size)
-        try container.encode(viewCenter, forKey: .center)
     }
 
     override func encode(with coder: NSCoder) {

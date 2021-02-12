@@ -68,8 +68,6 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     
     // Values from which the different gestures start
     private var originTransformations: ViewTransformations
-
-    private var innerViews: [MovableViewInnerElement] = []
     
     var isEmpty: Bool {
         return movableViews.isEmpty
@@ -87,7 +85,7 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         setUpViews()
     }    
 
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case originTransformations
         case textViews
         case imageViews
@@ -103,8 +101,8 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
 
         super.init(frame: .zero)
 
-        let innerViews = coder.decodeObject(of: [NSArray.self, MovableView.self], forKey: CodingKeys.movableViews.rawValue) as? [MovableView]
-        innerViews?.forEach({ view in
+        let movableViews = coder.decodeObject(of: [NSArray.self, MovableView.self], forKey: CodingKeys.movableViews.rawValue) as? [MovableView]
+        movableViews?.forEach({ view in
             addView(view: view.innerView, transformations: view.transformations, location: view.innerView.viewCenter, origin: view.originLocation, size: view.innerView.viewSize, animated: false)
         })
         setUpViews()
@@ -217,7 +215,6 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         } else {
             move()
         }
-        innerViews.append(view)
     }
     
     /// Removes the tapped view from the canvas

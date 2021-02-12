@@ -772,13 +772,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(frames: frames) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
-                let size: CGSize?
-                if let gifURL = gifURL {
-                    size = GIFDecoderFactory.main().size(of: gifURL)
-                } else {
-                    size = nil
+                guard let gifURL = gifURL else {
+                    performUIUpdate {
+                        self.hideLoading()
+                        self.handleExportError()
+                    }
+                    return
                 }
-                let result = ExportResult(original: nil, result: .video(gifURL!), info: mediaInfo, archive: archive)
+                let size = GIFDecoderFactory.main().size(of: gifURL)
+                let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
                 performUIUpdate {
