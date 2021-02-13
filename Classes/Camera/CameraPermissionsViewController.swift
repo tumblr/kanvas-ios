@@ -56,8 +56,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         static let descriptionFont: UIFont = KanvasFonts.shared.permissions.descriptionFont
         static let descriptionOpacity: CGFloat = 0.65
         static let buttonFont: UIFont = KanvasFonts.shared.permissions.buttonFont
-        static let buttonColor: UIColor = .init(red: 0, green: 184.0/255.0, blue: 1.0, alpha: 1.0)
-        static let buttonAcceptedBackgroundColor: UIColor = .init(hex: 0x00cf35)
+        static let buttonColor: UIColor = KanvasColors.shared.permissionsButtonColor
+        static let buttonAcceptedBackgroundColor: UIColor = KanvasColors.shared.permissionsButtonAcceptedBackgroundColor
         static let buttonAcceptedColor: UIColor = .black
         static let buttonBorderWidth: CGFloat = 1.5
     }
