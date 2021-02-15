@@ -79,7 +79,7 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
         if let metalContext = metalContext {
             pixelBufferView = MetalPixelBufferView(context: metalContext)
         } else {
-            pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFill)
+            pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFit)
         }
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
