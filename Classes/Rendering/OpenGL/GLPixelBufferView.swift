@@ -43,7 +43,7 @@ final class GLPixelBufferView: UIView, PixelBufferView {
         }
     }
 
-    private var mediaContentMode: UIView.ContentMode = .scaleAspectFill {
+    private(set) var mediaContentMode: UIView.ContentMode = .scaleAspectFill {
         didSet {
             guard mediaContentMode == .scaleAspectFill || mediaContentMode == .scaleAspectFit else {
                 assertionFailure("GLPixelBufferView.mediaContentMode only supports scaleAspectFill and scaleAspectFit")

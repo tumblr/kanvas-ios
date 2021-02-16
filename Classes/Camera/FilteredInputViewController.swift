@@ -65,12 +65,12 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     // MARK: - layout
     private func setupPreview() {
         if settings.features.openGLPreview {
-            let previewView = GLPixelBufferView(delegate: nil, mediaContentMode: .scaleAspectFit)
+            let previewView = GLPixelBufferView(delegate: nil, mediaContentMode: settings.features.scaleMediaToFill ? .scaleAspectFill : .scaleAspectFit)
             previewView.add(into: view)
             self.previewView = previewView
         }
         else {
-            let previewView = MetalPixelBufferView(context: metalContext)
+            let previewView = MetalPixelBufferView(context: metalContext, mediaContentMode: settings.features.scaleMediaToFill ? .scaleAspectFill : .scaleAspectFit)
             previewView.add(into: view)
             self.previewView = previewView
         }

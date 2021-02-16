@@ -67,15 +67,15 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
     weak var delegate: MediaPlayerViewDelegate?
 
-    init(metalContext: MetalContext?) {
+    init(metalContext: MetalContext?, mediaContentMode: UIView.ContentMode) {
         super.init(frame: .zero)
 
         let pixelBufferView: PixelBufferView & UIView
         if let metalContext = metalContext {
-            pixelBufferView = MetalPixelBufferView(context: metalContext)
+            pixelBufferView = MetalPixelBufferView(context: metalContext, mediaContentMode: mediaContentMode)
         }
         else {
-            pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFit)
+            pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: mediaContentMode)
         }
 
         pixelBufferView.add(into: self)
@@ -519,7 +519,14 @@ final class MediaPlayer {
             return
         }
         if let sampleBuffer = output?.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: nil)?.sampleBuffer() {
-            renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime)
+            let size: CGSize?
+            
+            if let playerView = playerView, playerView.pixelBufferView?.mediaContentMode == .scaleAspectFill {
+                size = CGSize(width: playerView.frame.width * playerView.contentScaleFactor, height: playerView.frame.height * playerView.contentScaleFactor)
+            } else {
+                size = nil
+            }
+            renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime, scaleToFillSize: size)
         }
     }
 
