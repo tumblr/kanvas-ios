@@ -174,8 +174,6 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         controller.delegate = self
         return controller
     }()
-    
-    private var clips = [MediaClip]()
 
     private lazy var cameraInputController: CameraInputController = {
         let controller = CameraInputController(settings: self.settings, recorderClass: self.recorderClass, segmentsHandler: self.segmentsHandler, delegate: self)
@@ -588,7 +586,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         if isRecording {
             modeAndShootController.hideModeButton()
         }
-        else if !isRecording && !clipsController.hasClips && !clips.isEmpty && settings.enabledModes.count > 1 {
+        else if !isRecording && !clipsController.hasClips && settings.enabledModes.count > 1 {
             modeAndShootController.showModeButton()
         }
     }
@@ -648,7 +646,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         // Let's prompt for losing clips if they have clips and it's the "x" button, rather than the ">" button.
         if clipsController.hasClips && !settings.topButtonsSwapped {
             showDismissTooltip()
-        } else if clips.isEmpty == false && multiEditorViewController != nil {
+        } else if multiEditorViewController != nil {
             showPreviewWithSegments([], selected: multiEditorViewController?.selected ?? 0)
         }
         else {
@@ -1029,7 +1027,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         else {
             analyticsProvider?.logPreviewDismissed()
         }
-        if settings.features.multipleExports && !clips.isEmpty {
+        if settings.features.multipleExports {
+            self.dismiss(animated: true, completion: {
+                self.dismiss(animated: false)
+            })
             showPreviewWithSegments([], selected: multiEditorViewController?.selected ?? 0)
         } else {
             performUIUpdate { [weak self] in
