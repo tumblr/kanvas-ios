@@ -213,6 +213,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                     tagCollection: tagCollection,
                                     metalContext: metalContext,
+                                    mediaContentMode: settings.features.scaleMediaToFill ? .scaleAspectFill : .scaleAspectFit,
                                     movableViewCanvas: canvas)
         return editorView
     }
@@ -762,13 +763,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         return try NSKeyedArchiver.archivedData(withRootObject: editorView.movableViewCanvas, requiringSecureCoding: true)
     }
 
+    private var exportSize: CGSize? {
+        return settings.features.scaleMediaToFill ? CGSize(width: editorView.frame.width * editorView.contentScaleFactor, height: editorView.frame.height * editorView.contentScaleFactor) : nil
+    }
+
     private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
         let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
-        exporter.export(frames: frames) { orderedFrames in
+        exporter.export(frames: frames, toSize: exportSize) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
                 guard let gifURL = gifURL else {
@@ -793,7 +798,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
+        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, _) in
             guard let exportedVideoURL = exportedVideoURL else {
                 performUIUpdate {
                     self.hideLoading()
@@ -801,8 +806,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 }
                 return
             }
-            self.gifEncoderClass.init().encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { [weak self] gifURL in
-                guard let self = self else { return }
+            self.gifEncoderClass.init().encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { gifURL in
                 guard let gifURL = gifURL else {
                     performUIUpdate {
                         self.hideLoading()
@@ -824,7 +828,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, error) in
+        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
                     self.hideLoading()
@@ -847,8 +851,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(image: image, time: player.lastStillFilterTime) { [weak self] (exportedImage, error) in
-            guard let self = self else { return }
+        exporter.export(image: image, time: player.lastStillFilterTime, toSize: exportSize) { (exportedImage, error) in
             let originalImage = image
             performUIUpdate {
                 guard let unwrappedImage = exportedImage else {

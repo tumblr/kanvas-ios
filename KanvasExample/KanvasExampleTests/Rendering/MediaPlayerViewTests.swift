@@ -28,7 +28,7 @@ class MediaPlayerViewTests: FBSnapshotTestCase {
             return
         }
         let player = MediaPlayer(renderer: Renderer())
-        let view = MediaPlayerView(metalContext: nil)
+        let view = MediaPlayerView(metalContext: nil, mediaContentMode: .scaleAspectFit)
         view.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         player.playerView = view
         player.play(media: [.image(image, nil)])

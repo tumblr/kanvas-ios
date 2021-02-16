@@ -22,17 +22,17 @@ class MediaExporterStub: MediaExporting {
 
     }
 
-    func export(image: UIImage, time: TimeInterval, completion: (UIImage?, Error?) -> Void) {
+    func export(image: UIImage, time: TimeInterval, toSize: CGSize?, completion: (UIImage?, Error?) -> Void) {
         exportImageCalled = true
         completion(image, nil)
     }
 
-    func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void) {
+    func export(frames: [MediaFrame], toSize: CGSize?, completion: @escaping ([MediaFrame]) -> Void) {
         exportFramesCalled = true
         completion(frames)
     }
 
-    func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void) {
+    func export(video url: URL, mediaInfo: MediaInfo, toSize: CGSize?, completion: @escaping (URL?, Error?) -> Void) {
         exportVideoCalled = true
         completion(url, nil)
     }
