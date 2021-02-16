@@ -601,7 +601,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     func didTapConfirmButton() {
-        startExporting(action: .confirm)
+        if delegate?.shouldExport() ?? true {
+            startExporting(action: .confirm)
+        }
         analyticsProvider?.logOpenComposeFromDashboard()
     }
 
