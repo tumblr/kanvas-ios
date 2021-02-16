@@ -73,8 +73,6 @@ final class VideoCompositor: NSObject, AVVideoCompositing {
 
     var startTime: CMTime?
 
-    var dimensions: CGSize = .zero
-
     /// Convenience initializer
     override convenience init() {
         self.init(
@@ -99,7 +97,7 @@ final class VideoCompositor: NSObject, AVVideoCompositing {
     }
 
     func startRequest(_ asyncVideoCompositionRequest: AVAsynchronousVideoCompositionRequest) {
-        renderingQueue.async {
+        renderingQueue.async { [self] in
             if self.shouldCancelAllRequests {
                 asyncVideoCompositionRequest.finishCancelledRequest()
             }
@@ -126,10 +124,10 @@ final class VideoCompositor: NSObject, AVVideoCompositing {
 
                 if self.firstFrame {
                     self.startTime = asyncVideoCompositionRequest.compositionTime
-                    self.renderer.processSampleBuffer(sampleBuffer, time: 0)
+                    self.renderer.processSampleBuffer(sampleBuffer, time: 0, scaleToFillSize: asyncVideoCompositionRequest.renderContext.size)
                     self.firstFrame = false
                 }
-                self.renderer.processSampleBuffer(sampleBuffer, time: asyncVideoCompositionRequest.compositionTime.seconds - (self.startTime?.seconds ?? 0))
+                self.renderer.processSampleBuffer(sampleBuffer, time: asyncVideoCompositionRequest.compositionTime.seconds - (self.startTime?.seconds ?? 0), scaleToFillSize: asyncVideoCompositionRequest.renderContext.size)
             }
         }
     }

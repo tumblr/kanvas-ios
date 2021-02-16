@@ -17,7 +17,7 @@ class MetalPixelBufferViewTests: FBSnapshotTestCase {
         guard let context = MetalContext.createContext() else {
             return
         }
-        let view = MetalPixelBufferView(context: context)
+        let view = MetalPixelBufferView(context: context, mediaContentMode: .scaleAspectFit)
         XCTAssertNotNil(view)
         
         let filter = MetalFilter(context: context, kernelFunctionName: "kernelIdentity")

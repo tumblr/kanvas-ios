@@ -41,6 +41,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case gifCameraShouldStartGIFMaker(Bool)
         case exportStopMotionAsVideo(Bool)
         case multipleExport(Bool)
+        case scaleMediaToFill(Bool)
 
         var name: String {
             switch self {
@@ -96,6 +97,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Export Stop Motion as Video"
             case .multipleExport:
                 return "Multiple Exports"
+            case .scaleMediaToFill:
+                return "Scale Media to Fill"
             }
         }
 
@@ -152,6 +155,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .exportStopMotionAsVideo(let enabled):
                 return enabled
             case .multipleExport(let enabled):
+                return enabled
+            case .scaleMediaToFill(let enabled):
                 return enabled
             }
         }
@@ -247,6 +252,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .exportStopMotionAsVideo(value)
         case .multipleExport(_):
             featuresData[indexPath.row] = .multipleExport(value)
+        case .scaleMediaToFill(_):
+            featuresData[indexPath.row] = .scaleMediaToFill(value)
         }
         delegate?.featureTableView(didUpdateFeature: featuresData[indexPath.row], withValue: value)
     }
