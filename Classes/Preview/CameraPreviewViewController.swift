@@ -254,9 +254,9 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
         if segments.count == 1, let firstSegment = segments.first {
             switch firstSegment {
                 case .image(let image, let videoURL, _, _):
-                    // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
+                    // If the camera mode is .stopMotion, or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
                     // then single photos from that mode should still export as video.
-                    if let cameraMode = cameraMode, cameraMode.group == .video || settings.exportStopMotionPhotoAsVideo {
+                    if let cameraMode = cameraMode, cameraMode.group == .video && cameraMode != .normal && settings.exportStopMotionPhotoAsVideo {
                         performUIUpdate {
                             self.delegate?.didFinishExportingVideo(url: videoURL)
                             self.hideLoading()
