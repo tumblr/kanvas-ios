@@ -892,23 +892,8 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             asset = nil
         }
 
-        let fileName = url?.deletingPathExtension().lastPathComponent ?? UUID().uuidString
-
         if let asset = asset, let info = info {
-
-            let archiveURL: URL?
-            if let saveDirectory = saveDirectory {
-                do {
-                    archiveURL = try archive?.save(to: fileName, in: saveDirectory, ext: "")
-                } catch let error {
-                    print("Failed to save archive on video export: \(error)")
-                    archiveURL = nil
-                }
-            } else {
-                archiveURL = nil
-            }
-
-            let media = KanvasMedia(asset: asset, original: url, info: info, archive: archiveURL)
+            let media = KanvasMedia(asset: asset, original: nil, info: info, archive: nil)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
                 if let self = self {
@@ -929,15 +914,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     public func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
         guard settings.features.multipleExports == false else { return }
         if let image = image, let info = info, let url = image.save(info: info) {
-
-            let archiveURL: URL?
-            if let saveDirectory = saveDirectory {
-                archiveURL = try! archive?.save(to: UUID().uuidString, in: saveDirectory, ext: "")
-            } else {
-                archiveURL = nil
-            }
-
-            let media = KanvasMedia(image: image, url: url, original: url, info: info, archive: archiveURL)
+            let media = KanvasMedia(image: image, url: url, original: nil, info: info, archive: nil)
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
                 if let self = self {
@@ -965,15 +942,9 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             }
             return
         }
-        let archiveURL: URL?
-        if let saveDirectory = saveDirectory {
-            archiveURL = try! archive?.save(to: UUID().uuidString, in: saveDirectory, ext: "")
-        } else {
-            archiveURL = nil
-        }
         performUIUpdate {
             self.handleCloseSoon(action: action)
-            let media = KanvasMedia(unmodified: url, output: url, info: info, size: size, archive: archiveURL, type: .frames)
+            let media = KanvasMedia(unmodified: nil, output: url, info: info, size: size, archive: nil, type: .frames)
             self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
         }
     }
