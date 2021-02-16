@@ -155,7 +155,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private var openedMenu: EditionOption?
     private var selectedCell: KanvasEditorMenuCollectionCell?
 
-    var shouldExportSound: Bool = true
     private let metalContext = MetalContext.createContext()
 
     private var shouldExportMediaAsGIF: Bool {
