@@ -872,6 +872,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func imageOverlays() -> [CGImage] {
+        editorView.layoutIfNeeded()
         var imageOverlays: [CGImage] = []
         if let drawingLayer = drawingController.drawingLayer, let drawingOverlayImage = drawingLayer.cgImage() {
             imageOverlays.append(drawingOverlayImage)
