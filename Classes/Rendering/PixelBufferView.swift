@@ -9,6 +9,7 @@ import GLKit
 
 protocol PixelBufferView: class {
     var mediaTransform: GLKMatrix4? { get set }
+    var mediaContentMode: UIView.ContentMode { get }
     var isPortrait: Bool { get set }
     func displayPixelBuffer(_ pixelBuffer: CVPixelBuffer)
     func flushPixelBufferCache()

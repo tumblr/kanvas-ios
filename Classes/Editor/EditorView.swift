@@ -202,12 +202,13 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     }()
     
     weak var delegate: EditorViewDelegate?
+    private var mediaContentMode: UIView.ContentMode
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     init(delegate: EditorViewDelegate?,
          mainActionMode: MainActionMode,
          showSaveButton: Bool,
@@ -219,7 +220,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showBlogSwitcher: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
-         metalContext: MetalContext?) {
+         metalContext: MetalContext?,
+         mediaContentMode: UIView.ContentMode) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
@@ -232,6 +234,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
         self.metalContext = metalContext
+        self.mediaContentMode = mediaContentMode
         super.init(frame: .zero)
         setupViews()
     }
@@ -281,7 +284,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     // MARK: - views
 
     private func setupPlayer() {
-        let playerView = MediaPlayerView(metalContext: metalContext)
+        let playerView = MediaPlayerView(metalContext: metalContext, mediaContentMode: mediaContentMode)
         playerView.delegate = self
         playerView.add(into: self)
         self.playerView = playerView

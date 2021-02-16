@@ -159,6 +159,11 @@ public struct CameraFeatures {
     /// Multi-Export support
     /// This enables multiple images/videos to be taken, edited, and then exported
     public var multipleExports = false
+
+    /// Scale media to fill
+    /// This scales the imported media to fill the screen by setting the `mediaContentMode` to `scaleAspectFill` on the pixel buffer views.
+    /// The buffer views will resize their contents during drawing to fill the screen.
+    public var scaleMediaToFill: Bool = false
 }
 
 // A class that defines the settings for the Kanvas Camera

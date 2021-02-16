@@ -209,7 +209,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                     tagCollection: tagCollection,
-                                    metalContext: metalContext)
+                                    metalContext: metalContext,
+                                    mediaContentMode: settings.features.scaleMediaToFill ? .scaleAspectFill : .scaleAspectFit)
         return editorView
     }
 
@@ -745,13 +746,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         startExporting(action: .post)
     }
 
+    private var exportSize: CGSize? {
+        return settings.features.scaleMediaToFill ? CGSize(width: editorView.frame.width * editorView.contentScaleFactor, height: editorView.frame.height * editorView.contentScaleFactor) : nil
+    }
+
     private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
         let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
-        exporter.export(frames: frames) { orderedFrames in
+        exporter.export(frames: frames, toSize: exportSize) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
                 var size: CGSize? = nil
@@ -770,7 +775,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
+        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, _) in
             guard let exportedVideoURL = exportedVideoURL else {
                 performUIUpdate {
                     self.hideLoading()
@@ -802,7 +807,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, error) in
+        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
                     self.hideLoading()
@@ -825,7 +830,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, error) in
+        exporter.export(image: image, time: player.lastStillFilterTime, toSize: exportSize) { (exportedImage, error) in
             performUIUpdate {
                 guard let unwrappedImage = exportedImage else {
                     self.hideLoading()
