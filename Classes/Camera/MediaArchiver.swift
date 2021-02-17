@@ -25,7 +25,7 @@ class MediaArchiver {
     /// Handles a set of exports
     /// - Parameter exports: A set of `EditorViewController.ExportResult`s to save to disk.
     /// - Returns: A publisher which contains a set of resulting `KanvasMedia` or `Error` objects. Will emit the set after all media has been saved.
-    func handle(exports: [EditorViewController.ExportResult?]) -> AnyPublisher<[Result<KanvasMedia?, Error>], Error> {
+    func handle(exports: [EditorViewController.ExportResult?]) -> AnyPublisher<CameraController.MediaOutput, Error> {
         let exportCount = exports.count
         let publishers: [AnyPublisher<(Int, KanvasMedia?), Error>] = exports.enumerated().map { (index, export) in
             return dispatchQueue.publisher { [weak self] promise
@@ -41,12 +41,12 @@ class MediaArchiver {
         let allPublishers = Publishers.MergeMany(publishers)
         let collected = allPublishers.collect(exportCount).sort(by: { (first, second) in
             return first.0 < second.0
-        }).map({ (element) -> [Result<KanvasMedia?, Error>] in
+        }).map({ (element) -> CameraController.MediaOutput in
             return element.map { index, item in
                 return .success(item)
             }
         })
-        let result: AnyPublisher<[Result<KanvasMedia?, Error>], Error> = collected.eraseToAnyPublisher()
+        let result: AnyPublisher<CameraController.MediaOutput, Error> = collected.eraseToAnyPublisher()
         return result
     }
 
@@ -61,21 +61,50 @@ class MediaArchiver {
                 } else {
                     originalURL = nil
                 }
-                return KanvasMedia(image: image, url: url, original: originalURL, info: export.info)
+                let archiveURL = self.archive(media: .image(original), archive: export.archive, to: url.deletingPathExtension().lastPathComponent)
+                return KanvasMedia(image: image, url: url, original: originalURL, info: export.info, archive: archiveURL)
             } else {
                 return nil
             }
         case (.video(let url), .video(let original)):
+            let archiveURL = self.archive(media: .video(original), archive: export.archive, to: url.deletingPathExtension().lastPathComponent)
             os_log(.debug, log: log, "Original video URL: %@", original.absoluteString)
             let asset = AVURLAsset(url: url)
-            return KanvasMedia(asset: asset, original: original, info: export.info)
+            return KanvasMedia(asset: asset, original: original, info: export.info, archive: archiveURL)
         default:
             return nil
         }
     }
+
+    private func archive(media: EditorViewController.Media, archive data: Data, to path: String) -> URL? {
+
+        let archive: Archive
+
+        switch media {
+        case .image(let image):
+            archive = Archive(image: image, data: data)
+        case .video(let url):
+            archive = Archive(video: url, data: data)
+        }
+
+        let archiveURL: URL?
+        if let saveDirectory = saveDirectory {
+            do {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: archive, requiringSecureCoding: true)
+                archiveURL = try data.save(to: path, in: saveDirectory, ext: "")
+            } catch let error {
+                archiveURL = nil
+                print("Failed to archive \(error)")
+            }
+        } else {
+            archiveURL = nil
+        }
+
+        return archiveURL
+    }
 }
 
-private extension Data {
+extension Data {
     func save(to filename: String, in directory: URL, ext fileExtension: String) throws -> URL {
         let fileURL = directory.appendingPathComponent(filename).appendingPathExtension(fileExtension)
         try write(to: fileURL, options: .atomic)

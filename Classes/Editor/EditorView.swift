@@ -171,11 +171,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         )
     }()
 
-    lazy var movableViewCanvas: MovableViewCanvas = {
-        let canvas = MovableViewCanvas()
-        canvas.delegate = self
-        return canvas
-    }()
+    var movableViewCanvas: MovableViewCanvas
 
     private lazy var movableViewCanvasConstraints = {
         return FullViewConstraints(
@@ -221,7 +217,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
          metalContext: MetalContext?,
-         mediaContentMode: UIView.ContentMode) {
+         mediaContentMode: UIView.ContentMode,
+         movableViewCanvas: MovableViewCanvas?) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
@@ -235,7 +232,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.tagCollection = tagCollection
         self.metalContext = metalContext
         self.mediaContentMode = mediaContentMode
+        self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
         super.init(frame: .zero)
+        self.movableViewCanvas.delegate = self
         setupViews()
     }
     
@@ -280,7 +279,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupOverlay()
         setupOverlayLabel()
     }
-    
+
     // MARK: - views
 
     private func setupPlayer() {
@@ -302,7 +301,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         addSubview(movableViewCanvas)
         movableViewCanvasConstraints.activate()
     }
-    
+
     /// Container that holds the back button and the bottom menu
     private func setupNavigationContainer() {
         navigationContainer.accessibilityIdentifier = "Navigation Container"

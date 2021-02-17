@@ -329,6 +329,10 @@ final class CameraControllerDelegateStub: CameraControllerDelegate {
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return false
     }
+
+    func editorDismissed(_ cameraController: CameraController) {
+        
+    }
     
     func didDismissColorSelectorTooltip() {
         

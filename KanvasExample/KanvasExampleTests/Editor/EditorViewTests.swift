@@ -32,7 +32,9 @@ final class EditorViewTests: FBSnapshotTestCase {
                               showBlogSwitcher: false,
                               quickBlogSelectorCoordinator: nil,
                               tagCollection: nil,
-                              metalContext: nil, mediaContentMode: .scaleAspectFit)
+                              metalContext: nil,
+                              mediaContentMode: .scaleAspectFit,
+                              movableViewCanvas: nil)
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return view
     }

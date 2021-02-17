@@ -52,32 +52,32 @@ enum MediaPlayerPlaybackMode {
 final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
     weak var pixelBufferView: PixelBufferView?
-    
-    var mediaTransform: GLKMatrix4? {
-        didSet {
-            pixelBufferView?.mediaTransform = mediaTransform
-        }
-    }
-    
-    var isPortrait: Bool = true {
-        didSet {
-            pixelBufferView?.isPortrait = isPortrait
-        }
-    }
 
     weak var delegate: MediaPlayerViewDelegate?
+
+    var mediaTransform: GLKMatrix4? {
+         didSet {
+            pixelBufferView?.mediaTransform = mediaTransform
+         }
+     }
+
+      var isPortrait: Bool = true {
+         didSet {
+            pixelBufferView?.isPortrait = isPortrait
+         }
+     }
 
     init(metalContext: MetalContext?, mediaContentMode: UIView.ContentMode) {
         super.init(frame: .zero)
 
         let pixelBufferView: PixelBufferView & UIView
+
         if let metalContext = metalContext {
             pixelBufferView = MetalPixelBufferView(context: metalContext, mediaContentMode: mediaContentMode)
         }
         else {
             pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: mediaContentMode)
         }
-
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
@@ -199,17 +199,6 @@ final class MediaPlayer {
         }
     }
 
-    func getFrame(at index: Int) -> UIImage? {
-        guard index >= 0 && index < playableMedia.count else {
-            return nil
-        }
-        switch playableMedia[index] {
-        case .image(let image, _, _):
-            return image
-        case .video(_, _, _):
-            return nil
-        }
-    }
 
     /// Default initializer
     /// - Parameter renderer: Rendering instance for this player to use.
