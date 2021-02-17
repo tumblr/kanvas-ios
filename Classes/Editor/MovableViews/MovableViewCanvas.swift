@@ -49,7 +49,7 @@ private struct Constants {
 /// View that contains the collection of movable views
 final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, MovableViewDelegate, NSSecureCoding {
 
-    static var supportsSecureCoding: Bool { return true }
+    static var supportsSecureCoding = true
 
     weak var delegate: MovableViewCanvasDelegate?
 
@@ -102,16 +102,16 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
         super.init(frame: .zero)
 
         let movableViews = coder.decodeObject(of: [NSArray.self, MovableView.self], forKey: CodingKeys.movableViews.rawValue) as? [MovableView]
-        movableViews?.forEach({ view in
-            addView(view: view.innerView, transformations: view.transformations, location: view.innerView.viewCenter, origin: view.originLocation, size: view.innerView.viewSize, animated: false)
-        })
+        movableViews?.forEach { view in
+            addView(view: view.innerView, transformations: view.transformations, location: view.innerView.viewCenter, origin: view.originLocation, size: view.innerView.viewSize)
+        }
         setUpViews()
     }
 
     override func encode(with coder: NSCoder) {
         coder.encode(originTransformations, forKey: CodingKeys.originTransformations.rawValue)
 
-        let movableViews = subviews.compactMap({ $0 as? MovableView })
+        let movableViews = subviews.compactMap { $0 as? MovableView }
         coder.encode(movableViews, forKey: CodingKeys.movableViews.rawValue)
     }
 
@@ -155,20 +155,22 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        subviews.compactMap({ return $0 as? MovableView }).forEach({ view in
+        subviews.compactMap { return $0 as? MovableView }.forEach { view in
             view.moveToDefinedPosition()
-        })
+        }
     }
     
     // MARK: - Public interface
     
     /// Adds a new view to the canvas
-    /// - Parameters
-    ///  - view: view to be added
-    ///  - transformations: transformations for the view
-    ///  - location: location of the view before transformations
-    ///  - size: size of the view
-    func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, origin: CGPoint? = nil, size: CGSize, animated: Bool) {
+    /// - Parameters:
+    ///   - view: View to be added
+    ///   - transformations: Transformations for the view
+    ///   - location: Location of the view before transformations
+    ///   - origin: Origin point of the view.
+    ///   - size: Size of the view
+    ///   - animated: Whether to animate the views upon adding. When unarchiving, this is `false`, as an example. (Defaults to `false`)
+    func addView(view: MovableViewInnerElement, transformations: ViewTransformations, location: CGPoint, origin: CGPoint? = nil, size: CGSize, animated: Bool = false) {
         let movableView = MovableView(view: view, transformations: transformations)
         movableView.originLocation = origin ?? location
         movableView.delegate = self

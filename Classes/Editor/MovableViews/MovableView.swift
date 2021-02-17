@@ -52,7 +52,7 @@ private struct Constants {
 /// A wrapper for UIViews that can be rotated, moved and scaled
 final class MovableView: UIView, NSSecureCoding {
 
-    static var supportsSecureCoding: Bool { return true }
+    static var supportsSecureCoding = true
     
     weak var delegate: MovableViewDelegate?
     let innerView: MovableViewInnerElement

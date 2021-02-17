@@ -25,7 +25,7 @@ class MediaArchiver {
     /// Handles a set of exports
     /// - Parameter exports: A set of `EditorViewController.ExportResult`s to save to disk.
     /// - Returns: A publisher which contains a set of resulting `KanvasMedia` or `Error` objects. Will emit the set after all media has been saved.
-    func handle(exports: [EditorViewController.ExportResult?]) -> AnyPublisher<[Result<KanvasMedia?, Error>], Error> {
+    func handle(exports: [EditorViewController.ExportResult?]) -> AnyPublisher<CameraController.MediaOutput, Error> {
         let exportCount = exports.count
         let publishers: [AnyPublisher<(Int, KanvasMedia?), Error>] = exports.enumerated().map { (index, export) in
             return dispatchQueue.publisher { [weak self] promise
@@ -41,12 +41,12 @@ class MediaArchiver {
         let allPublishers = Publishers.MergeMany(publishers)
         let collected = allPublishers.collect(exportCount).sort(by: { (first, second) in
             return first.0 < second.0
-        }).map({ (element) -> [Result<KanvasMedia?, Error>] in
+        }).map({ (element) -> CameraController.MediaOutput in
             return element.map { index, item in
                 return .success(item)
             }
         })
-        let result: AnyPublisher<[Result<KanvasMedia?, Error>], Error> = collected.eraseToAnyPublisher()
+        let result: AnyPublisher<CameraController.MediaOutput, Error> = collected.eraseToAnyPublisher()
         return result
     }
 

@@ -9,7 +9,7 @@ import UIKit
 
 final class ViewTransformations: NSObject, NSSecureCoding {
 
-    static var supportsSecureCoding: Bool { return true }
+    static var supportsSecureCoding = true
     
     static let defaultPosition: CGPoint = .zero
     static let defaultScale: CGFloat = 1.0

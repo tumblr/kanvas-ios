@@ -76,12 +76,13 @@ enum CameraControllerError: Swift.Error {
 // Protocol for dismissing CameraController
 // or exporting its created media.
 public protocol CameraControllerDelegate: class {
+
     /**
      A function that is called when an image is exported. Can be nil if the export fails
      - parameter media: KanvasMedia - this is the media created in the controller (can be image, video, etc)
      - seealso: enum KanvasMedia
      */
-    func didCreateMedia(_ cameraController: CameraController, media: [Result<KanvasMedia?, Error>], exportAction: KanvasExportAction)
+    func didCreateMedia(_ cameraController: CameraController, media: CameraController.MediaOutput, exportAction: KanvasExportAction)
 
     /**
      A function that is called when the main camera dismiss button is pressed
@@ -139,6 +140,8 @@ public protocol CameraControllerDelegate: class {
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
 open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, KanvasMediaPickerViewControllerDelegate, MediaPickerThumbnailFetcherDelegate, MultiEditorComposerDelegate {
+
+    public typealias MediaOutput = [Result<KanvasMedia?, Error>]
 
     enum ArchiveErrors: Error {
         case unknownMedia

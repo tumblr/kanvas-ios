@@ -10,7 +10,7 @@ import UIKit
 /// Image view that increases its image quality when its contentScaleFactor is modified
 @objc final class StylableImageView: UIImageView, MovableViewInnerElement, NSSecureCoding {
 
-    static var supportsSecureCoding: Bool { return true }
+    static var supportsSecureCoding = true
     
     let id: String
     

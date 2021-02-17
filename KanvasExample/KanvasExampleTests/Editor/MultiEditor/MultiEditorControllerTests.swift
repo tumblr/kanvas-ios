@@ -17,7 +17,8 @@ class MultiEditorControllerTests: FBSnapshotTestCase {
     }
 
     func getPhotoSegment() -> [CameraSegment] {
-        if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
+        if let imagePath = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"),
+           let image = UIImage(contentsOfFile: imagePath) {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             return [
                 CameraSegment.image(image, nil, nil, mediaInfo)
@@ -61,9 +62,9 @@ class MultiEditorControllerTests: FBSnapshotTestCase {
     }
 
     func frames(segments: [CameraSegment]) -> [MultiEditorViewController.Frame] {
-        return segments.map({ segment in
+        return segments.map { segment in
             MultiEditorViewController.Frame(segment: segment, edit: nil)
-        })
+        }
     }
 
     func testExportPhoto() {
