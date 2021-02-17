@@ -68,7 +68,16 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     private var originTransformations: ViewTransformations
     
     var isEmpty: Bool {
-        return subviews.compactMap{ $0 as? MovableView }.count == 0
+
+    var trashCompletion: (() -> Void)? {
+        set {
+            trashView.completion = newValue
+        }
+        get {
+            return trashView.completion
+        }
+    }
+
     }
     
     init() {
@@ -173,6 +182,30 @@ final class MovableViewCanvas: IgnoreTouchesView, UIGestureRecognizerDelegate, M
     func removeSelectedView() {
         selectedMovableView?.removeFromSuperview()
         selectedMovableView = nil
+    }
+
+    /// shows the trash icon opened with its red background
+    func openTrash() {
+        trashView.open()
+    }
+
+    /// shows the trash icon closed
+    func showTrash() {
+        showOverlay(true)
+        trashView.superview?.bringSubviewToFront(trashView)
+        movableViews.forEach { movableView in
+            movableView.fadeOut()
+        }
+        trashView.close()
+    }
+
+    /// hides the trash icon with its red background
+    func hideTrash() {
+        showOverlay(false)
+        movableViews.forEach { movableView in
+            movableView.fadeIn()
+        }
+        trashView.hide()
     }
     
     // MARK: - Gesture recognizers
