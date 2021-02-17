@@ -359,15 +359,10 @@ extension MultiEditorViewController: EditorControllerDelegate {
         frames.enumerated().forEach({ (idx, frame) in
             autoreleasepool {
                 let canvas: MovableViewCanvas?
-                if let edit = frame.edit?.data {
-                    do {
-                        canvas = try NSKeyedUnarchiver.unarchivedObject(ofClass: MovableViewCanvas.self, from: edit)
-                    } catch let error {
-                        print("Failed to unarchive edits on export for \(idx): \(error)")
-                        assertionFailure("Failed to unarchive edits on export for \(idx): \(error)")
-                        canvas = nil
-                    }
-                } else {
+                do {
+                    canvas = try MovableViewCanvas.from(frame: frame)
+                } catch let error {
+                    assertionFailure("Failed to unarchive edits on export for \(idx): \(error)")
                     canvas = nil
                 }
                 let editor = delegate.editor(segment: frame.segment, canvas: canvas)
@@ -402,22 +397,28 @@ extension MultiEditorViewController {
     }
 
     func edits(for index: Int) -> MovableViewCanvas? {
-        if frames.indices ~= index, let edit = frames[index].edit {
-            let canvas: MovableViewCanvas?
-            if let edit = edit.data {
-                do {
-                    canvas = try NSKeyedUnarchiver.unarchivedObject(ofClass: MovableViewCanvas.self, from: edit)
-                } catch let error {
-                    print("Failed to unarchive edits for \(index): \(error)")
-                    assertionFailure("Failed to unarchive edits for \(index): \(error)")
-                    canvas = nil
-                }
-            } else {
-                canvas = nil
+        if frames.indices ~= index {
+            let frame = frames[index]
+            do {
+                return try MovableViewCanvas.from(frame: frame)
+            } catch let error {
+                assertionFailure("Failed to unarchive edits on export for \(index): \(error)")
+                return nil
             }
-            return canvas
         } else {
             return nil
         }
+    }
+}
+
+extension MovableViewCanvas {
+    static func from(frame: MultiEditorViewController.Frame) throws -> Self? {
+        let canvas: Self?
+        if let edit = frame.edit?.data {
+            canvas = try NSKeyedUnarchiver.unarchivedObject(ofClass: Self.self, from: edit)
+        } else {
+            canvas = nil
+        }
+        return canvas
     }
 }
