@@ -144,6 +144,9 @@ class MultiEditorViewController: UIViewController {
             }
             editor.additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
             editor.delegate = self
+            editor.editorView.movableViewCanvas.trashCompletion = { [weak self] in
+                self?.clipsController.removeDraggingClip()
+            }
             load(childViewController: editor, into: editorContainer)
             currentEditor = editor
         }
@@ -197,11 +200,11 @@ extension MultiEditorViewController: MediaPlayerController {
 
 extension MultiEditorViewController: MediaClipsEditorDelegate {
     func mediaClipStartedMoving() {
-        // No-op for the moment. UI is coming in a future commit.
+        currentEditor?.editorView.updateUI(forDraggingClip: true)
     }
 
     func mediaClipFinishedMoving() {
-        // No-op for the moment. UI is coming in a future commit.
+        currentEditor?.editorView.updateUI(forDraggingClip: false)
     }
     
     func addButtonWasPressed() {
