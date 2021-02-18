@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Extension that checks if a gesture recognizer is currently active/inactive
 extension UIGestureRecognizer {

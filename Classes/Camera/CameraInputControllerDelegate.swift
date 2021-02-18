@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Delegate for handling camera input actions
 protocol CameraInputControllerDelegate: class {

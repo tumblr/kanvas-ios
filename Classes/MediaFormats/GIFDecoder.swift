@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 typealias GIFDecodeFrame = (image: CGImage, interval: TimeInterval)
 

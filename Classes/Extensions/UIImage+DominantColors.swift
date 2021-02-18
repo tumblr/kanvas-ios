@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Extension for obtaining the dominant colors of a UIImage
 extension UIImage {

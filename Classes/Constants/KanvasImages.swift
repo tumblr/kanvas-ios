@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 // the images used throughout the module
 struct KanvasImages {

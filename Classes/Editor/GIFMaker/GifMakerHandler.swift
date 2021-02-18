@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 typealias MediaFrame = (image: UIImage, interval: TimeInterval)
 

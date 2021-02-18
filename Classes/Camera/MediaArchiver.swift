@@ -7,6 +7,7 @@
 import Combine
 import AVFoundation
 import os
+import UIKit
 
 /// Saves `EditorViewController.ExportResult` to the directory specified by `saveDirectory`
 class MediaArchiver {

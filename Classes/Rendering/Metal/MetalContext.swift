@@ -5,6 +5,7 @@
 //
 
 import Metal
+import CoreVideo
 
 final class MetalContext {
     let device: MTLDevice
