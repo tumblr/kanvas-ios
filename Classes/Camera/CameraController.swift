@@ -345,10 +345,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     // MARK: - navigation
 
     private var segments: [CameraSegment] = []
-    private var edits: [Data?]?
+    private var edits: [EditorViewController.Edit?]?
     private var showPreview: Bool = false
     
-    private func showPreviewWithSegments(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [Data?]? = nil, animated: Bool = true) {
+    private func showPreviewWithSegments(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [EditorViewController.Edit?]? = nil, animated: Bool = true) {
         guard view.superview != nil else {
             return
         }
@@ -362,7 +362,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         }
     }
     
-    private func createNextStepViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [Data?]?) -> MediaPlayerController {
+    private func createNextStepViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [EditorViewController.Edit?]?) -> MediaPlayerController {
         let controller: MediaPlayerController
         if settings.features.multipleExports && settings.features.editor {
             if segments.indices.contains(selected) {
@@ -383,7 +383,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         return controller
     }
     
-    private func createEditorViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, canvas: MovableViewCanvas? = nil, drawing: IgnoreTouchesView? = nil) -> EditorViewController {
+    private func createEditorViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edit: EditorViewController.Edit? = nil, drawing: IgnoreTouchesView? = nil) -> EditorViewController {
         let controller = EditorViewController(settings: settings,
                                               segments: segments,
                                               assetsHandler: segmentsHandler,
@@ -393,17 +393,16 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                                               stickerProvider: stickerProvider,
                                               analyticsProvider: analyticsProvider,
                                               quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
-                                              canvas: canvas,
+                                              edit: edit,
                                               tagCollection: tagCollection)
         controller.delegate = self
-        canvas?.delegate = controller.editorView
         return controller
     }
 
-    private func frames(segments: [CameraSegment], edits: [Data?]?) -> [MultiEditorViewController.Frame] {
+    private func frames(segments: [CameraSegment], edits: [EditorViewController.Edit?]?) -> [MultiEditorViewController.Frame] {
         if let edits = edits {
-            return zip(segments, edits).map { (segment, data) in
-                return MultiEditorViewController.Frame(segment: segment, edit: MultiEditorViewController.Edit(data: data))
+            return zip(segments, edits).map { (segment, edit) in
+                return MultiEditorViewController.Frame(segment: segment, edit: edit)
             }
         } else {
             return segments.map({ segment in
@@ -412,7 +411,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         }
     }
 
-    private func createStoryViewController(_ segments: [CameraSegment], selected: Int, edits: [Data?]?) -> MultiEditorViewController {
+    private func createStoryViewController(_ segments: [CameraSegment], selected: Int, edits: [EditorViewController.Edit?]?) -> MultiEditorViewController {
 
         let controller = MultiEditorViewController(settings: settings,
                                                      frames: frames(segments: segments, edits: edits),
@@ -861,10 +860,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         dismiss(animated: false, completion: nil)
     }
 
-    func editor(segment: CameraSegment, canvas: MovableViewCanvas?) -> EditorViewController {
+    func editor(segment: CameraSegment, edit: EditorViewController.Edit?) -> EditorViewController {
         let segments = [segment]
 
-        return createEditorViewController(segments, selected: segments.startIndex, canvas: canvas)
+        return createEditorViewController(segments, selected: segments.startIndex, edit: edit)
     }
     
     // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate & StoryComposerDelegate
@@ -1276,7 +1275,18 @@ extension CameraController {
     public func show(media: [(CameraSegment, Data?)]) {
         showPreview = true
         self.segments = media.map({ return $0.0 })
-        self.edits = media.map({ return $0.1 })
+        self.edits = try media.map({ (_, data) in
+            if let data = data {
+                do {
+                    return try NSKeyedUnarchiver.unarchivedObject(ofClass: EditorViewController.Edit.self, from: data)
+                } catch let error {
+                    print("Failed to unarchive edit: \(error)")
+                    return nil
+                }
+            } else {
+                return nil
+            }
+        })
 
         if view.superview != nil {
             showPreviewWithSegments(segments, selected: segments.startIndex, edits: nil, animated: false)

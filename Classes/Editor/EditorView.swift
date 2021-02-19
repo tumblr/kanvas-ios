@@ -181,6 +181,15 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
 
+    var muteButtonSelected: Bool {
+        set {
+            muteButton.isSelected = newValue
+        }
+        get {
+            return muteButton.isSelected
+        }
+    }
+
     let drawingCanvas = IgnoreTouchesView()
 
     private lazy var drawingCanvasConstraints: FullViewConstraints = {

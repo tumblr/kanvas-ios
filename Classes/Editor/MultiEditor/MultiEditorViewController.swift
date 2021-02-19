@@ -9,7 +9,7 @@ import Foundation
 protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
     func addButtonWasPressed()
-    func editor(segment: CameraSegment, canvas: MovableViewCanvas?) -> EditorViewController
+    func editor(segment: CameraSegment, edit: EditorViewController.Edit?) -> EditorViewController
     func dismissButtonPressed()
 }
 
@@ -30,7 +30,7 @@ class MultiEditorViewController: UIViewController {
 
     struct Frame {
         let segment: CameraSegment
-        let edit: Edit?
+        let edit: EditorViewController.Edit?
     }
 
     private var frames: [Frame]
@@ -76,10 +76,6 @@ class MultiEditorViewController: UIViewController {
     }
     
     private let settings: CameraSettings
-
-    struct Edit {
-        let data: Data?
-    }
 
     private var exportingEditors: [EditorViewController]?
 
@@ -130,9 +126,8 @@ class MultiEditorViewController: UIViewController {
     }
 
     func loadEditor(for index: Int) {
-        let canvas = edits(for: index)
         let frame = frames[index]
-        if let editor = delegate?.editor(segment: frame.segment, canvas: canvas) {
+        if let editor = delegate?.editor(segment: frame.segment, edit: frame.edit) {
             currentEditor?.stopPlayback()
             currentEditor?.unloadFromParentViewController()
             let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
@@ -358,14 +353,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
         frames.enumerated().forEach({ (idx, frame) in
             autoreleasepool {
-                let canvas: MovableViewCanvas?
-                do {
-                    canvas = try MovableViewCanvas.from(frame: frame)
-                } catch let error {
-                    assertionFailure("Failed to unarchive edits on export for \(idx): \(error)")
-                    canvas = nil
-                }
-                let editor = delegate.editor(segment: frame.segment, canvas: canvas)
+                let editor = delegate.editor(segment: frame.segment, edit: frame.edit)
                 editor.export { [weak self, editor] result in
                     let _ = editor // strong reference until the export completes
                     self?.exportHandler.handleExport(result, for: idx)
@@ -387,38 +375,12 @@ extension MultiEditorViewController {
         guard let currentEditor = currentEditor else {
             return
         }
-        let currentCanvas = try NSKeyedArchiver.archivedData(withRootObject: currentEditor.editorView.movableViewCanvas, requiringSecureCoding: true)
+
         if frames.indices ~= index {
             let frame = frames[index]
-            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas))
+            frames[index] = Frame(segment: frame.segment, edit: currentEditor.edit)
         } else {
             print("Invalid frame index")
         }
-    }
-
-    func edits(for index: Int) -> MovableViewCanvas? {
-        if frames.indices ~= index {
-            let frame = frames[index]
-            do {
-                return try MovableViewCanvas.from(frame: frame)
-            } catch let error {
-                assertionFailure("Failed to unarchive edits on export for \(index): \(error)")
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-}
-
-extension MovableViewCanvas {
-    static func from(frame: MultiEditorViewController.Frame) throws -> Self? {
-        let canvas: Self?
-        if let edit = frame.edit?.data {
-            canvas = try NSKeyedUnarchiver.unarchivedObject(ofClass: Self.self, from: edit)
-        } else {
-            canvas = nil
-        }
-        return canvas
     }
 }
