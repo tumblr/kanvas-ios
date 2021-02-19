@@ -456,25 +456,25 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         collectionContainer.accessibilityIdentifier = "Edition Menu Collection Container"
         collectionContainer.clipsToBounds = false
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let buttonOnTheLeft: UIView?
-        let buttonOnTheRight: UIView?
+        let leftButton: UIView?
+        let rightButton: UIView?
         let trailingMargin: CGFloat
         let leadingMargin: CGFloat
 
         if showMuteButton {
-            buttonOnTheLeft = muteButton
+            leftButton = muteButton
             leadingMargin = EditorViewConstants.saveButtonHorizontalMargin
         } else {
-            buttonOnTheLeft = nil
+            leftButton = nil
             leadingMargin = 0
         }
 
         if showSaveButton {
-            buttonOnTheRight = saveButton
+            rightButton = saveButton
             trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
         }
         else {
-            buttonOnTheRight = confirmOrPostButton()
+            rightButton = confirmOrPostButton()
             trailingMargin = confirmOrPostButtonHorizontalMargin()
         }
         
@@ -491,18 +491,19 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
             let verticalConstraint: NSLayoutConstraint
 
-            if let button = buttonOnTheRight {
+            if let button = rightButton {
                 verticalConstraint = collectionContainer.centerYAnchor.constraint(equalTo: button.centerYAnchor)
             } else {
                 verticalConstraint = collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
             }
 
             NSLayoutConstraint.activate([
-                collectionContainer.leadingAnchor.constraint(equalTo: buttonOnTheLeft?.trailingAnchor ?? safeAreaLayoutGuide.leadingAnchor, constant: trailingMargin),
-                collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight?.leadingAnchor ?? trailingAnchor, constant: -trailingMargin / 2),
+                collectionContainer.leadingAnchor.constraint(equalTo: leftButton?.trailingAnchor ?? safeAreaLayoutGuide.leadingAnchor, constant: leadingMargin),
+                collectionContainer.trailingAnchor.constraint(equalTo: rightButton?.leadingAnchor ?? trailingAnchor, constant: -trailingMargin / 2),
                 verticalConstraint,
-                collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
-            ])
+                collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height),
+                leftButton?.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
+            ].compactMap { $0 })
         }
     }
     
@@ -707,7 +708,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             muteButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: EditorViewConstants.saveButtonHorizontalMargin),
             muteButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.muteButtonSize),
             muteButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.muteButtonSize),
-            muteButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
