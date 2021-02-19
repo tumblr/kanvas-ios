@@ -37,14 +37,12 @@ final class KanvasExampleViewController: UIViewController {
     }()
     private var settings: CameraSettings = KanvasExampleViewController.customCameraSettings()
     private var cameraSettings: CameraSettings {
-        settings.exportStopMotionPhotoAsVideo = true
         settings.topButtonsSwapped = false
         settings.crossIconInEditor = false
         settings.showTagButtonInEditor = false
         return settings
     }
     private var dashboardSettings: CameraSettings {
-        settings.exportStopMotionPhotoAsVideo = false
         settings.topButtonsSwapped = true
         settings.crossIconInEditor = true
         settings.showTagButtonInEditor = true
@@ -148,7 +146,9 @@ final class KanvasExampleViewController: UIViewController {
         settings.enabledModes = settings.features.newCameraModes ? Constants.newModes : Constants.standardModes
         settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         settings.gifCameraShouldStartGIFMaker = true
+        settings.exportStopMotionPhotoAsVideo = true
         settings.features.multipleExports = false
+        settings.features.scaleMediaToFill = false
         return settings
     }
 
@@ -160,7 +160,8 @@ final class KanvasExampleViewController: UIViewController {
     }
 
     private func launchCamera(animated: Bool = true) {
-        let controller = CameraController(settings: cameraSettings, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil)
+        let saveDirectory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let controller = CameraController(settings: cameraSettings, mediaPicker: nil, stickerProvider: ExperimentalStickerProvider(), analyticsProvider: KanvasAnalyticsStub(), quickBlogSelectorCoordinator: nil, tagCollection: nil, saveDirectory: saveDirectory)
         controller.delegate = self
         controller.modalPresentationStyle = .fullScreen
         controller.modalTransitionStyle = .crossDissolve
@@ -275,7 +276,9 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             .editorFontSelectorUsesFont(settings.fontSelectorUsesFont),
             .editorShouldStartGIFMaker(settings.editorShouldStartGIFMaker(mode: .normal)),
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
+            .exportStopMotionAsVideo(settings.exportStopMotionPhotoAsVideo),
             .multipleExport(settings.features.multipleExports),
+            .scaleMediaToFill(settings.features.scaleMediaToFill)
         ]
     }
 
@@ -331,8 +334,12 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             settings.setEditorShouldStartGIFMaker(value)
         case .gifCameraShouldStartGIFMaker(_):
             settings.gifCameraShouldStartGIFMaker = value
+        case .exportStopMotionAsVideo(_):
+            settings.exportStopMotionPhotoAsVideo = value
         case .multipleExport(_):
             settings.features.multipleExports = value
+        case .scaleMediaToFill(_):
+            settings.features.scaleMediaToFill = value
         }
     }
 }
@@ -340,7 +347,11 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
 // MARK: - CameraControllerDelegate
 
 extension KanvasExampleViewController: CameraControllerDelegate {
-    
+    func editorDismissed() {
+        
+    }
+
+
     func openAppSettings(completion: ((Bool) -> ())?) {
         if let url = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(url, options: [:], completionHandler: completion)
@@ -351,13 +362,8 @@ extension KanvasExampleViewController: CameraControllerDelegate {
         // Only supported in Orangina
     }
 
-    func editorDismissed() {
+    func editorDismissed(_ cameraController: CameraController) {
         // Only supported in Orangina
-    }
-    
-    func getQuickPostButton() -> UIView {
-        // Only supported in Orangina
-        return UIView()
     }
 
     func getBlogSwitcher() -> UIView {
@@ -365,6 +371,11 @@ extension KanvasExampleViewController: CameraControllerDelegate {
         return UIView()
     }
     
+    func getQuickPostButton() -> UIView {
+        // Only supported in Orangina
+        return UIView()
+    }
+
     func cameraShouldShowWelcomeTooltip() -> Bool {
         return shouldShowWelcomeTooltip
     }
@@ -396,41 +407,44 @@ extension KanvasExampleViewController: CameraControllerDelegate {
     func didEndDragInteraction() {
         
     }
-    
-    func didCreateMedia(_ cameraController: CameraController, media: KanvasMedia?, exportAction: KanvasExportAction, error: Error?) {
-        if let error = error {
-            assertionFailure("Error creating Kanvas media: \(error)")
-            return
-        }
-        guard let media = media else {
-            assertionFailure("No error, but no media!?")
-            return
-        }
 
-        save(media: media) { err in
-            DispatchQueue.main.async {
-                if KanvasDevice.isRunningInSimulator == false {
-                    guard err == nil else {
-                        assertionFailure("Error saving to photo library")
-                        return
+    func didCreateMedia(_ cameraController: CameraController, media: [Result<KanvasMedia?, Error>], exportAction: KanvasExportAction) {
+        media.forEach { result in
+            switch result {
+            case .failure(let error):
+                assertionFailure("Error creating Kanvas Media: \(error)")
+            case .success(let media):
+                guard let media = media else {
+                    assertionFailure("No Kanvas Media but no Error")
+                    return
+                }
+
+                save(media: media) { err in
+                    DispatchQueue.main.async {
+                        if KanvasDevice.isRunningInSimulator == false {
+                            guard err == nil else {
+                                assertionFailure("Error saving to photo library")
+                                return
+                            }
+                        }
+
+                    switch exportAction {
+                    case .previewConfirm:
+                        self.dismissCamera()
+                    case .confirm:
+                        self.dismissCamera()
+                    case .post:
+                        self.dismissCamera()
+                    case .save:
+                        break
+                    case .postOptions:
+                        self.dismissCamera()
+                    case .confirmPostOptions:
+                        self.dismissCamera()
+                    }
+
                     }
                 }
-
-                switch exportAction {
-                case .previewConfirm:
-                    self.dismissCamera()
-                case .confirm:
-                    self.dismissCamera()
-                case .post:
-                    self.dismissCamera()
-                case .save:
-                    break
-                case .postOptions:
-                    self.dismissCamera()
-                case .confirmPostOptions:
-                    self.dismissCamera()
-                }
-
             }
         }
     }
@@ -458,13 +472,13 @@ extension KanvasExampleViewController: CameraControllerDelegate {
                 fallthrough
 #endif
             case .authorized:
-                switch media {
-                case let .image(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
-                case let .video(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .video, completion: completionMainThread)
-                case let .frames(url, _, _):
-                    self.moveToLibrary(url: url, resourceType: .photo, completion: completionMainThread)
+                switch media.type {
+                case .image:
+                    self.moveToLibrary(url: media.output, resourceType: .photo, completion: completionMainThread)
+                case .video:
+                    self.moveToLibrary(url: media.output, resourceType: .video, completion: completionMainThread)
+                case .frames:
+                    self.moveToLibrary(url: media.output, resourceType: .photo, completion: completionMainThread)
                 }
             @unknown default:
                 break

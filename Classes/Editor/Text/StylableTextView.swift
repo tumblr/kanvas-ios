@@ -13,7 +13,9 @@ private struct Constants {
 }
 
 /// TextView that can be customized with TextOptions
-class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement {
+@objc class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement, NSSecureCoding {
+
+    static var supportsSecureCoding = true
     
     // Color rectangles behind the text
     private var highlightViews: [UIView]
@@ -41,7 +43,11 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
             setScaleFactor(newValue)
         }
     }
-    
+
+    var viewSize: CGSize = .zero
+
+    var viewCenter: CGPoint = .zero
+
     // MARK: - Initializers
     
     init() {
@@ -65,11 +71,62 @@ class StylableTextView: UITextView, UITextViewDelegate, MovableViewInnerElement 
         backgroundColor = .clear
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder: NSCoder) {
         highlightViews = []
-        super.init(coder: aDecoder)
+
+        let size = coder.decodeCGSize(forKey: CodingKeys.size.rawValue)
+
+        super.init(frame: CGRect(origin: .zero, size: size), textContainer: nil)
         delegate = self
+        backgroundColor = .clear
+
+        textAlignment = NSTextAlignment(rawValue: coder.decodeInteger(forKey: CodingKeys.textAlignment.rawValue)) ?? .left
+        contentScaleFactor = CGFloat(coder.decodeFloat(forKey: CodingKeys.contentScaleFactor.rawValue))
+        text = String(coder.decodeObject(of: NSString.self, forKey: CodingKeys.text.rawValue) ?? "")
+
+        viewSize = coder.decodeCGSize(forKey: CodingKeys.size.rawValue)
+        viewCenter = coder.decodeCGPoint(forKey: CodingKeys.center.rawValue)
+        textColor = coder.decodeObject(of: UIColor.self, forKey: CodingKeys.textColor.rawValue)
+        highlightColor = coder.decodeObject(of: UIColor.self, forKey: CodingKeys.highlightColor.rawValue)
+
+        let fontName = String(coder.decodeObject(of: NSString.self, forKey: FontKeys.name.rawValue) ?? "")
+        let fontSize = CGFloat(coder.decodeFloat(forKey: FontKeys.fontSize.rawValue))
+        font = UIFont(name: fontName, size: fontSize)
     }
+
+    private enum CodingKeys: String {
+        case textAlignment
+        case contentScaleFactor
+        case font
+        case text
+        case size
+        case center
+        case textColor
+        case highlightColor
+    }
+
+    private enum FontKeys: String {
+        case name
+        case fontSize
+    }
+
+    override func encode(with coder: NSCoder) {
+
+        coder.encode(textAlignment.rawValue, forKey: CodingKeys.textAlignment.rawValue)
+        coder.encode(Float(contentScaleFactor), forKey: CodingKeys.contentScaleFactor.rawValue)
+
+        coder.encode(text, forKey: CodingKeys.text.rawValue)
+        coder.encode(viewSize, forKey: CodingKeys.size.rawValue)
+        coder.encode(viewCenter, forKey: CodingKeys.center.rawValue)
+        coder.encode(textColor, forKey: CodingKeys.textColor.rawValue)
+        coder.encode(highlightColor, forKey: CodingKeys.highlightColor.rawValue)
+
+        if let font = font {
+            coder.encode(font.fontName, forKey: FontKeys.name.rawValue)
+            coder.encode(Float(font.pointSize), forKey: FontKeys.fontSize.rawValue)
+        }
+    }
+
     
     override func layoutSubviews() {
         super.layoutSubviews()

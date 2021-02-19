@@ -9,18 +9,53 @@ import Foundation
 import UIKit
 
 // Media wrapper for media generated from the CameraController
-public enum KanvasMedia {
-    case image(URL, MediaInfo, CGSize)
-    case video(URL, MediaInfo, CGSize)
-    case frames(URL, MediaInfo, CGSize)
+public struct KanvasMedia {
+    public let unmodified: URL?
+    public let output: URL
+    public let info: MediaInfo
+    public let size: CGSize
+    public let archive: URL?
+    public let type: MediaType
 
-    public var info: MediaInfo {
-        switch self {
-        case .image(_, let info, _): return info
-        case .video(_, let info, _): return info
-        case .frames(_, let info, _): return info
-        }
+    init(unmodified: URL?,
+         output: URL,
+         info: MediaInfo,
+         size: CGSize,
+         archive: URL?,
+         type: MediaType) {
+        self.unmodified = unmodified
+        self.output = output
+        self.info = info
+        self.size = size
+        self.archive = archive
+        self.type = type
     }
+
+    init(asset: AVURLAsset, original: URL?, info: MediaInfo, archive: URL?) {
+        self.init(unmodified: original,
+             output: asset.url,
+             info: info,
+             size: asset.videoScreenSize ?? .zero,
+             archive: archive,
+             type: .video
+        )
+    }
+
+    init(image: UIImage, url: URL, original: URL?, info: MediaInfo, archive: URL?) {
+        self.init(unmodified: original,
+             output: url,
+             info: info,
+             size: image.size,
+             archive: archive,
+             type: .image
+        )
+    }
+}
+
+public enum MediaType {
+    case image
+    case video
+    case frames
 }
 
 public enum KanvasExportAction {
@@ -41,12 +76,13 @@ enum CameraControllerError: Swift.Error {
 // Protocol for dismissing CameraController
 // or exporting its created media.
 public protocol CameraControllerDelegate: class {
+
     /**
      A function that is called when an image is exported. Can be nil if the export fails
      - parameter media: KanvasMedia - this is the media created in the controller (can be image, video, etc)
      - seealso: enum KanvasMedia
      */
-    func didCreateMedia(_ cameraController: CameraController, media: KanvasMedia?, exportAction: KanvasExportAction, error: Error?)
+    func didCreateMedia(_ cameraController: CameraController, media: CameraController.MediaOutput, exportAction: KanvasExportAction)
 
     /**
      A function that is called when the main camera dismiss button is pressed
@@ -57,7 +93,7 @@ public protocol CameraControllerDelegate: class {
     func tagButtonPressed()
 
     /// Called when the editor is dismissed
-    func editorDismissed()
+    func editorDismissed(_ cameraController: CameraController)
     
     /// Called after the welcome tooltip is dismissed
     func didDismissWelcomeTooltip()
@@ -103,14 +139,12 @@ public protocol CameraControllerDelegate: class {
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
-public class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, KanvasMediaPickerViewControllerDelegate, MediaPickerThumbnailFetcherDelegate, MultiEditorComposerDelegate {
-    public func show(media: [(CameraSegment, Data?)]) {
-        showPreview = true
-        self.segments = media.map({ return $0.0 })
+open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraPreviewControllerDelegate, EditorControllerDelegate, CameraZoomHandlerDelegate, OptionsControllerDelegate, ModeSelectorAndShootControllerDelegate, CameraViewDelegate, CameraInputControllerDelegate, FilterSettingsControllerDelegate, CameraPermissionsViewControllerDelegate, KanvasMediaPickerViewControllerDelegate, MediaPickerThumbnailFetcherDelegate, MultiEditorComposerDelegate {
 
-        if view.superview != nil {
-            showPreviewWithSegments(segments, selected: segments.startIndex, edits: nil, animated: false)
-        }
+    public typealias MediaOutput = [Result<KanvasMedia?, Error>]
+
+    enum ArchiveErrors: Error {
+        case unknownMedia
     }
 
     public func hideLoading() {
@@ -176,62 +210,46 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     private var currentMode: CameraMode
     private var isRecording: Bool
     private var disposables: [NSKeyValueObservation] = []
-    private var recorderClass: CameraRecordingProtocol.Type
-    private var segmentsHandlerClass: SegmentsHandlerType.Type
     private let stickerProvider: StickerProvider?
     private let cameraZoomHandler: CameraZoomHandler
     private let feedbackGenerator: UINotificationFeedbackGenerator
-    private let captureDeviceAuthorizer: CaptureDeviceAuthorizing
     private let quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?
     private let tagCollection: UIView?
+    private let saveDirectory: URL?
+
+    private let mediaPicker: MediaPicker.Type
+    var recorderClass: CameraRecordingProtocol.Type = CameraRecorder.self
+    var segmentsHandlerClass: SegmentsHandlerType.Type = CameraSegmentHandler.self
+    var captureDeviceAuthorizer: CaptureDeviceAuthorizing = CaptureDeviceAuthorizer()
 
     private weak var mediaPlayerController: MediaPlayerController?
-
-    /// Constructs a CameraController that will record from the device camera
-    /// and export the result to the device, saving to the phone all in between information
-    /// needed to attain the final output.
-    ///
-    /// - Parameters
-    ///   - settings: Settings to configure in which ways should the controller
-    /// interact with the user, which options should the controller give the user
-    /// and which should be the result of the interaction.
-    ///   - stickerProvider: Class that will provide the stickers in the editor.
-    ///   - analyticsProvider: An class conforming to KanvasAnalyticsProvider
-    convenience public init(settings: CameraSettings, stickerProvider: StickerProvider?, analyticsProvider: KanvasAnalyticsProvider?, quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?, tagCollection: UIView?) {
-        self.init(settings: settings, recorderClass: CameraRecorder.self, segmentsHandlerClass: CameraSegmentHandler.self, captureDeviceAuthorizer: CaptureDeviceAuthorizer(), stickerProvider: stickerProvider, analyticsProvider: analyticsProvider, quickBlogSelectorCoordinator: quickBlogSelectorCoordinator, tagCollection: tagCollection)
-    }
 
     /// Constructs a CameraController that will take care of creating media
     /// as the result of user interaction.
     ///
     /// - Parameters:
-    ///   - settings: Settings to configure in which ways should the controller
-    /// interact with the user, which options should the controller give the user
-    /// and which should be the result of the interaction.
-    ///   - recorderClass: Class that will provide a recorder that defines how to record media.
-    ///   - segmentsHandlerClass: Class that will provide a segments handler for storing stop
-    /// motion segments and constructing final input.
-    ///   - captureDeviceAuthorizer: Class responsible for authorizing access to capture devices.
-    ///   - stickerProvider: Class that will provide the stickers in the editor.
-    ///   - analyticsProvider: A class conforming to KanvasAnalyticsProvider
-    init(settings: CameraSettings,
-         recorderClass: CameraRecordingProtocol.Type,
-         segmentsHandlerClass: SegmentsHandlerType.Type,
-         captureDeviceAuthorizer: CaptureDeviceAuthorizing,
+    ///   - settings: Settings to configure in which ways should the controller interact with the user, which options should the controller give the user and which should be the result of the interaction.
+    ///   - mediaPicker: A class providing a Media Picker UI conforming to `MediaPicker`.
+    ///   - stickerProvider: An object that will provide the stickers in the editor.
+    ///   - analyticsProvider: An object conforming to KanvasCameraAnalyticsProvider used by tracking methods.
+    ///   - quickBlogSelectorCoordinator: An object which handles the Quick Blog selection UI.
+    ///   - tagCollection: A view to be shown when selecting tags.
+    public init(settings: CameraSettings,
+            mediaPicker: MediaPicker.Type?,
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-         tagCollection: UIView?) {
+         tagCollection: UIView?,
+         saveDirectory: URL?) {
         self.settings = settings
         currentMode = settings.initialMode
         isRecording = false
-        self.recorderClass = recorderClass
-        self.segmentsHandlerClass = segmentsHandlerClass
-        self.captureDeviceAuthorizer = captureDeviceAuthorizer
+        self.mediaPicker = mediaPicker ?? KanvasMediaPickerViewController.self
         self.stickerProvider = stickerProvider
         self.analyticsProvider = analyticsProvider
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
+        self.saveDirectory = saveDirectory
         cameraZoomHandler = CameraZoomHandler(analyticsProvider: analyticsProvider)
         feedbackGenerator = UINotificationFeedbackGenerator()
         super.init(nibName: .none, bundle: .none)
@@ -316,7 +334,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             return
         }
         if segments.isEmpty == false && showPreview {
-            showPreviewWithSegments(segments, selected: segments.startIndex, animated: false)
+            showPreviewWithSegments(segments, selected: segments.startIndex, edits: edits, animated: false)
             showPreview = false
         }
         if delegate?.cameraShouldShowWelcomeTooltip() == true && cameraPermissionsViewController.hasFullAccess() {
@@ -325,7 +343,9 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     // MARK: - navigation
+
     private var segments: [CameraSegment] = []
+    private var edits: [Data?]?
     private var showPreview: Bool = false
     
     private func showPreviewWithSegments(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edits: [Data?]? = nil, animated: Bool = true) {
@@ -352,7 +372,8 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             multiEditorViewController = controller as? MultiEditorViewController
         }
         else if settings.features.editor {
-            controller = createEditorViewController(segments, selected: selected)
+            let existing = existingEditor
+            controller = existing ?? createEditorViewController(segments, selected: selected)
         }
         else {
             controller = createPreviewViewController(segments)
@@ -362,7 +383,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         return controller
     }
     
-    private func createEditorViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index) -> EditorViewController {
+    private func createEditorViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, canvas: MovableViewCanvas? = nil, drawing: IgnoreTouchesView? = nil) -> EditorViewController {
         let controller = EditorViewController(settings: settings,
                                               segments: segments,
                                               assetsHandler: segmentsHandler,
@@ -372,14 +393,29 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                                               stickerProvider: stickerProvider,
                                               analyticsProvider: analyticsProvider,
                                               quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                              canvas: canvas,
                                               tagCollection: tagCollection)
         controller.delegate = self
+        canvas?.delegate = controller.editorView
         return controller
     }
 
+    private func frames(segments: [CameraSegment], edits: [Data?]?) -> [MultiEditorViewController.Frame] {
+        if let edits = edits {
+            return zip(segments, edits).map { (segment, data) in
+                return MultiEditorViewController.Frame(segment: segment, edit: MultiEditorViewController.Edit(data: data))
+            }
+        } else {
+            return segments.map({ segment in
+                return MultiEditorViewController.Frame(segment: segment, edit: nil)
+            })
+        }
+    }
+
     private func createStoryViewController(_ segments: [CameraSegment], selected: Int, edits: [Data?]?) -> MultiEditorViewController {
+
         let controller = MultiEditorViewController(settings: settings,
-                                                     segments: segments,
+                                                     frames: frames(segments: segments, edits: edits),
                                                      delegate: self,
                                                      selected: selected)
         return controller
@@ -416,27 +452,13 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
     
     // MARK: - Media Content Creation
-    
-    class func save(image: UIImage?, info: MediaInfo) -> URL? {
-        do {
-            guard let image = image, let jpgImageData = image.jpegData(compressionQuality: 1.0) else {
-                return nil
-            }
-            let fileURL = try save(data: jpgImageData, to: "kanvas-image", ext: "jpg")
-            info.write(toImage: fileURL)
-            return fileURL
-        } catch {
-            print("Failed to save to file. \(error)")
-            return nil
-        }
-    }
 
     class func save(data: Data, to filename: String, ext fileExtension: String) throws -> URL {
         let fileURL = try URL(filename: filename, fileExtension: fileExtension, unique: false, removeExisting: true)
         try data.write(to: fileURL, options: .atomic)
         return fileURL
     }
-    
+
     private func durationStringForAssetAtURL(_ url: URL?) -> String {
         var text = ""
         if let url = url {
@@ -627,7 +649,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         // Let's prompt for losing clips if they have clips and it's the "x" button, rather than the ">" button.
         if clipsController.hasClips && !settings.topButtonsSwapped {
             showDismissTooltip()
-        } else if clipsController.hasClips && multiEditorViewController != nil {
+        } else if multiEditorViewController != nil {
             showPreviewWithSegments([], selected: multiEditorViewController?.selected ?? 0)
         }
         else {
@@ -727,13 +749,15 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     }
 
     func didTapMediaPickerButton(completion: (() -> ())? = nil) {
-        let picker = KanvasMediaPickerViewController(settings: settings)
-        picker.delegate = self
-        present(picker, animated: true) {
+        presentPicker(completion: completion)
+        analyticsProvider?.logMediaPickerOpen()
+    }
+
+    open func presentPicker(completion: (() -> ())? = nil) -> Void {
+        mediaPicker.present(on: self, with: settings, delegate: self, completion: {
             self.modeAndShootController.resetMediaPickerButton()
             completion?()
-        }
-        analyticsProvider?.logMediaPickerOpen()
+        })
     }
 
     func updateMediaPickerThumbnail(targetSize: CGSize) {
@@ -837,18 +861,20 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         dismiss(animated: false, completion: nil)
     }
 
-    func editor(segment: CameraSegment) -> EditorViewController {
+    func editor(segment: CameraSegment, canvas: MovableViewCanvas?) -> EditorViewController {
         let segments = [segment]
 
-        return createEditorViewController(segments, selected: segments.startIndex)
+        return createEditorViewController(segments, selected: segments.startIndex, canvas: canvas)
     }
+    
+    // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate & StoryComposerDelegate
 
     func didFinishExportingVideo(url: URL?) {
-        didFinishExportingVideo(url: url, info: MediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
+        didFinishExportingVideo(url: url, info: MediaInfo(source: .kanvas_camera), archive: nil, action: .previewConfirm, mediaChanged: true)
     }
 
     func didFinishExportingImage(image: UIImage?) {
-        didFinishExportingImage(image: image, info: MediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
+        didFinishExportingImage(image: image, info: MediaInfo(source: .kanvas_camera), archive: nil, action: .previewConfirm, mediaChanged: true)
     }
 
     func didFinishExportingFrames(url: URL?) {
@@ -856,37 +882,47 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         if let url = url {
             size = GIFDecoderFactory.main().size(of: url)
         }
-        didFinishExportingFrames(url: url, size: size, info: MediaInfo(source: .kanvas_camera), action: .previewConfirm, mediaChanged: true)
+        didFinishExportingFrames(url: url, size: size, info: MediaInfo(source: .kanvas_camera), archive: nil, action: .previewConfirm, mediaChanged: true)
     }
 
-    public func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        if let url = url, let info = info {
-            let asset = AVURLAsset(url: url)
+    public func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        guard settings.features.multipleExports == false else { return }
+        let asset: AVURLAsset?
+        if let url = url {
+            asset = AVURLAsset(url: url)
+        }
+        else {
+            asset = nil
+        }
+
+        if let asset = asset, let info = info {
+            let media = KanvasMedia(asset: asset, original: nil, info: info, archive: nil)
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
-                if let self = self, let videoSize = asset.videoScreenSize {
+                if let self = self {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: .video(url, info, videoSize), exportAction: action, error: nil)
+                    self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
                 }
             }
-        }
-        else {
+        } else {
             performUIUpdate { [weak self] in
                 if let self = self {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                    self.delegate?.didCreateMedia(self, media: [.failure(CameraControllerError.exportFailure)], exportAction: action)
                 }
             }
         }
     }
 
-    public func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
-        if let info = info, let url = CameraController.save(image: image, info: info) {
+    public func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        guard settings.features.multipleExports == false else { return }
+        if let image = image, let info = info, let url = image.save(info: info) {
+            let media = KanvasMedia(image: image, url: url, original: nil, info: info, archive: nil)
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
-                if let self = self, let image = image {
+                if let self = self {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: .image(url, info, image.size), exportAction: action, error: nil)
+                    self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
                 }
             }
         }
@@ -894,23 +930,54 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
             performUIUpdate { [weak self] in
                 if let self = self {
                     self.handleCloseSoon(action: action)
-                    self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                    self.delegate?.didCreateMedia(self, media: [.failure(CameraControllerError.exportFailure)], exportAction: action)
                 }
             }
         }
     }
 
-    public func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool) {
+    public func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        guard settings.features.multipleExports == false else { return }
         guard let url = url, let info = info, let size = size, size != .zero else {
             performUIUpdate {
                 self.handleCloseSoon(action: action)
-                self.delegate?.didCreateMedia(self, media: nil, exportAction: action, error: CameraControllerError.exportFailure)
+                self.delegate?.didCreateMedia(self, media: [.failure(CameraControllerError.exportFailure)], exportAction: action)
             }
             return
         }
         performUIUpdate {
             self.handleCloseSoon(action: action)
-            self.delegate?.didCreateMedia(self, media: .frames(url, info, size), exportAction: action, error: nil)
+            let media = KanvasMedia(unmodified: nil, output: url, info: info, size: size, archive: nil, type: .frames)
+            self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
+        }
+    }
+
+    lazy var queue = DispatchQueue.global(qos: .background)
+
+    var exportCancellable: Any?
+
+    func didFinishExporting(media result: [Result<EditorViewController.ExportResult, Error>]) {
+
+        let archiver = MediaArchiver(saveDirectory: saveDirectory)
+
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            let exports: [EditorViewController.ExportResult?] = result.map { result in
+                switch result {
+                case .success(let export):
+                    return export
+                case .failure(_):
+                    return nil
+                }
+            }
+
+            let publishers = archiver.handle(exports: exports)
+            self.exportCancellable = publishers.receive(on: DispatchQueue.main).sink { completion in
+
+            } receiveValue: { items in
+                self.handleCloseSoon(action: .previewConfirm)
+                self.delegate?.didCreateMedia(self, media: items, exportAction: .post)
+            }
         }
     }
 
@@ -934,14 +1001,17 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
         else {
             analyticsProvider?.logPreviewDismissed()
         }
-        if settings.features.multipleExports && clipsController.hasClips {
+        if settings.features.multipleExports {
+            self.dismiss(animated: true, completion: {
+                self.dismiss(animated: false)
+            })
             showPreviewWithSegments([], selected: multiEditorViewController?.selected ?? 0)
         } else {
             performUIUpdate { [weak self] in
                 self?.dismiss(animated: true)
             }
         }
-        delegate?.editorDismissed()
+        delegate?.editorDismissed(self)
     }
 
     public func tagButtonPressed() {
@@ -1046,7 +1116,7 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
                 modeAndShootController.showMediaPickerButton(basedOn: currentMode, animated: animated)
             }
             else {
-                modeAndShootController.toggleMediaPickerButton(false, animated: animated)
+                modeAndShootController.toggleMediaPickerButton(settings.features.cameraFilters == false, animated: animated)
             }
         }
         else {
@@ -1056,90 +1126,84 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
 
     // MARK: - KanvasMediaPickerViewControllerDelegate
 
-    func didPick(image: UIImage, url imageURL: URL?) {
-        defer {
-            analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
-        }
+    private func segment(image: UIImage, imageURL: URL?) -> CameraSegment {
         let mediaInfo: MediaInfo = {
             guard let imageURL = imageURL else { return MediaInfo(source: .media_library) }
             return MediaInfo(fromImage: imageURL) ?? MediaInfo(source: .media_library)
         }()
-        if currentMode.quantity == .single {
-            performUIUpdate {
-                let segments = [CameraSegment.image(image, nil, nil, mediaInfo)]
-                self.showPreviewWithSegments(segments, selected: segments.startIndex)
-            }
+
+        return CameraSegment.image(image, nil, nil, mediaInfo)
+    }
+
+    private func segment(video url: URL) -> CameraSegment {
+        let mediaInfo = MediaInfo(fromVideoURL: url) ?? MediaInfo(source: .media_library)
+        return CameraSegment.video(url, mediaInfo)
+
+    }
+
+    public func didPick(images: [(UIImage, URL?)]) {
+        defer {
+            analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
         }
-        else {
-            segmentsHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo) { [weak self] success, segment in
-                guard let strongSelf = self else {
-                    return
-                }
-                guard success else {
-                    return
-                }
-                performUIUpdate {
-                    strongSelf.clipsController.addNewClip(MediaClip(representativeFrame: image,
-                                                                    overlayText: nil,
-                                                                    lastFrame: image))
-                }
-            }
+        let segments: [CameraSegment] = images.map { (image, imageURL) in
+            return segment(image: image, imageURL: imageURL)
+        }
+
+        performUIUpdate {
+            self.showPreviewWithSegments(segments, selected: segments.startIndex)
         }
     }
 
-    func didPick(video url: URL) {
+    public func didPick(videos urls: [URL]) {
         defer {
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .video)
         }
-        let mediaInfo = MediaInfo(fromVideoURL: url) ?? MediaInfo(source: .media_library)
-        if currentMode.quantity == .single {
-            let segments = [CameraSegment.video(url, mediaInfo)]
-            self.showPreviewWithSegments(segments, selected: segments.startIndex)
+
+        let segments: [CameraSegment] = urls.map { url in
+            return segment(video: url)
         }
-        else {
-            segmentsHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
-            performUIUpdate {
-                if let image = AVURLAsset(url: url).thumbnail() {
-                    self.clipsController.addNewClip(MediaClip(representativeFrame: image,
-                                                              overlayText: self.durationStringForAssetAtURL(url),
-                                                              lastFrame: self.getLastFrameFrom(url)))
-                }
-            }
+
+        performUIUpdate {
+            self.showPreviewWithSegments(segments, selected: segments.startIndex)
         }
     }
 
-    func didPick(gif url: URL) {
+    public func didPick(gifs urls: [URL]) {
         defer {
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
         }
-        let mediaInfo: MediaInfo = {
-            return MediaInfo(fromImage: url) ?? MediaInfo(source: .media_library)
-        }()
-        GIFDecoderFactory.main().decode(image: url) { frames in
-            let segments = frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
-            self.showPreviewWithSegments(segments, selected: segments.endIndex)
-        }
+        urls.forEach({ url in
+            let mediaInfo: MediaInfo = {
+                return MediaInfo(fromImage: url) ?? MediaInfo(source: .media_library)
+            }()
+            GIFDecoderFactory.main().decode(image: url) { frames in
+                let segments = frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
+                self.showPreviewWithSegments(segments, selected: segments.endIndex)
+            }
+        })
     }
 
-    func didPick(livePhotoStill: UIImage, pairedVideo: URL) {
+    public func didPick(livePhotos: [(UIImage, URL)]) {
         defer {
             analyticsProvider?.logMediaPickerPickedMedia(ofType: .livePhoto)
         }
-        let mediaInfo = MediaInfo(source: .media_library)
-        if currentMode.quantity == .single {
-            let segments = [CameraSegment.image(livePhotoStill, pairedVideo, nil, mediaInfo)]
-            self.showPreviewWithSegments(segments, selected: segments.startIndex)
-        }
-        else {
-            assertionFailure("No media picking from stitch yet")
-        }
+        livePhotos.forEach({ (livePhotoStill, pairedVideo) in
+            let mediaInfo = MediaInfo(source: .media_library)
+            if currentMode.quantity == .single {
+                let segments = [CameraSegment.image(livePhotoStill, pairedVideo, nil, mediaInfo)]
+                self.showPreviewWithSegments(segments, selected: segments.startIndex)
+            }
+            else {
+                assertionFailure("No media picking from stitch yet")
+            }
+        })
     }
 
-    func didCancel() {
+    public func didCancel() {
         analyticsProvider?.logMediaPickerDismiss()
     }
 
-    func pickingMediaNotAllowed(reason: String) {
+    public func pickingMediaNotAllowed(reason: String) {
         let buttonMessage = NSLocalizedString("Got it", comment: "Got it")
         showAlert(message: reason, buttonMessage: buttonMessage)
     }
@@ -1183,5 +1247,39 @@ public class CameraController: UIViewController, MediaClipsEditorDelegate, Camer
     
     public func onQuickPostOptionsSelected(selected: Bool, hintText: String?, view: UIView) {
         mediaPlayerController?.onQuickPostOptionsSelected(selected: selected, hintText: hintText, view: view)
+    }
+}
+
+//MARK: Archival
+
+extension CameraController {
+    public static func unarchive(_ url: URL) throws -> (CameraSegment, Data?) {
+        let data = try Data(contentsOf: url)
+        let archive = try NSKeyedUnarchiver.unarchivedObject(ofClass: Archive.self, from: data)
+        let segment: CameraSegment
+        if let image = archive?.image {
+            let info: MediaInfo
+            if let imageData = image.jpegData(compressionQuality: 1.0), let mInfo = MediaInfo(fromImageData: imageData) {
+                info = mInfo
+            } else {
+                info = MediaInfo(source: .kanvas_camera)
+            }
+            segment = CameraSegment.image(image, nil, nil, info)
+        } else if let video = archive?.video {
+            segment = CameraSegment.video(video, MediaInfo(fromVideoURL: video))
+        } else {
+            throw ArchiveErrors.unknownMedia
+        }
+        return (segment, archive?.data)
+    }
+
+    public func show(media: [(CameraSegment, Data?)]) {
+        showPreview = true
+        self.segments = media.map({ return $0.0 })
+        self.edits = media.map({ return $0.1 })
+
+        if view.superview != nil {
+            showPreviewWithSegments(segments, selected: segments.startIndex, edits: nil, animated: false)
+        }
     }
 }

@@ -50,10 +50,12 @@ private struct Constants {
 }
 
 /// A wrapper for UIViews that can be rotated, moved and scaled
-final class MovableView: UIView {
+final class MovableView: UIView, NSSecureCoding {
+
+    static var supportsSecureCoding = true
     
     weak var delegate: MovableViewDelegate?
-    private let innerView: MovableViewInnerElement
+    let innerView: MovableViewInnerElement
     
     /// Current rotation angle
     var rotation: CGFloat {
@@ -75,6 +77,10 @@ final class MovableView: UIView {
             applyTransform()
         }
     }
+
+    var originLocation: CGPoint = .zero
+
+    var size: CGSize = .zero
     
     var transformations: ViewTransformations {
         return ViewTransformations(position: position, scale: scale, rotation: rotation)
@@ -89,9 +95,56 @@ final class MovableView: UIView {
         
         setupInnerView()
     }
+
+    private enum CodingKeys: String {
+        case position
+        case scale
+        case rotation
+        case innerView
+        case origin
+    }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        position = aDecoder.decodeCGPoint(forKey: CodingKeys.position.rawValue)
+        scale = CGFloat(aDecoder.decodeFloat(forKey: CodingKeys.scale.rawValue))
+        rotation = CGFloat(aDecoder.decodeFloat(forKey: CodingKeys.rotation.rawValue))
+        let view = aDecoder.decodeObject(of: [StylableTextView.self, StylableImageView.self], forKey: CodingKeys.innerView.rawValue)
+
+        switch view {
+        case let imageView as StylableImageView:
+            innerView = imageView
+        case let textView as StylableTextView:
+            innerView = textView
+        default:
+            innerView = StylableTextView()
+        }
+        originLocation = aDecoder.decodeCGPoint(forKey: CodingKeys.origin.rawValue)
+
+        super.init(frame: .zero)
+
+        setupInnerView()
+    }
+
+    override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(position, forKey: CodingKeys.position.rawValue)
+        coder.encode(Float(scale), forKey: CodingKeys.scale.rawValue)
+        coder.encode(Float(rotation), forKey: CodingKeys.rotation.rawValue)
+        coder.encode(innerView, forKey: CodingKeys.innerView.rawValue)
+        coder.encode(originLocation, forKey: CodingKeys.origin.rawValue)
+    }
+
+    enum ViewType {
+        case text
+        case image
+    }
+
+    var type: ViewType {
+        if innerView is StylableTextView {
+            return .text
+        } else {
+            return .image
+        }
     }
     
     // MARK: - Layout
@@ -170,6 +223,7 @@ final class MovableView: UIView {
     
     // Called when the view is moved
     func onMove() {
+        innerView.viewCenter = position
         if let _ = innerView as? StylableTextView {
             delegate?.didMoveTextView()
         }

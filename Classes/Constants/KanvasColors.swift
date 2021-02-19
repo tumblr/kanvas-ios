@@ -75,6 +75,8 @@ public struct KanvasColors {
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
             primaryButtonBackgroundColor: brightBlue,
+            permissionsButtonColor: UIColor(red: 0, green: 184.0/255.0, blue: 1.0, alpha: 1.0),
+            permissionsButtonAcceptedBackgroundColor: UIColor(hex: 0x00cf35),
             overlayColor: deepBlue,
             filterColors: [
                 .manga: brightPink,
@@ -109,6 +111,8 @@ public struct KanvasColors {
         tooltipBackgroundColor: UIColor,
         closeButtonColor: UIColor,
         primaryButtonBackgroundColor: UIColor,
+        permissionsButtonColor: UIColor,
+        permissionsButtonAcceptedBackgroundColor: UIColor,
         overlayColor: UIColor,
         filterColors: [FilterType: UIColor]) {
         self.drawingDefaultColor = drawingDefaultColor
@@ -124,9 +128,14 @@ public struct KanvasColors {
         self.tooltipBackgroundColor = tooltipBackgroundColor
         self.closeButtonColor = closeButtonColor
         self.primaryButtonBackgroundColor = primaryButtonBackgroundColor
+        self.permissionsButtonColor = permissionsButtonColor
+        self.permissionsButtonAcceptedBackgroundColor = permissionsButtonAcceptedBackgroundColor
         self.overlayColor = overlayColor
         self.filterColors = filterColors
     }
+
+    let permissionsButtonColor: UIColor
+    let permissionsButtonAcceptedBackgroundColor: UIColor
     
     let drawingDefaultColor: UIColor // DrawingController:50
     let colorPickerColors: [UIColor] // ColorPickerView:37

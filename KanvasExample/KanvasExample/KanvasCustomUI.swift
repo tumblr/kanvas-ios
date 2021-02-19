@@ -76,6 +76,8 @@ public class KanvasCustomUI {
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
             primaryButtonBackgroundColor: Self.brightBlue,
+            permissionsButtonColor: UIColor(red: 0, green: 184.0/255.0, blue: 1.0, alpha: 1.0),
+            permissionsButtonAcceptedBackgroundColor: UIColor(hex: 0x00cf35),
             overlayColor: Self.deepBlue,
             filterColors: [
                 .manga: mangaColor,

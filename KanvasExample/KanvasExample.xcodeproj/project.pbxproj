@@ -201,6 +201,7 @@
 		BFA7DAA824E3BA8000F357B6 /* LivePhotoLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA7DAA724E3BA8000F357B6 /* LivePhotoLoaderTests.swift */; };
 		BFA7DAAA24E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA7DAA924E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift */; };
 		BFA7DAAC24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA7DAAB24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift */; };
+		F551188025DDC96700DEBF7E /* MultiEditorControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F551187F25DDC96700DEBF7E /* MultiEditorControllerTests.swift */; };
 		F58D37BA25117A88007CDF82 /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = F58D37B925117A88007CDF82 /* en.lproj */; };
 		F597B4E124B3E57300843540 /* UIColor+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B4E024B3E57300843540 /* UIColor+Colors.swift */; };
 		F597B4E224B3E58C00843540 /* UIColor+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B4E024B3E57300843540 /* UIColor+Colors.swift */; };
@@ -422,6 +423,7 @@
 		BFA7DAA924E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerThumbnailFetcherTests.swift; sourceTree = "<group>"; };
 		BFA7DAAB24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasMediaPickerViewControllerTests.swift; sourceTree = "<group>"; };
 		E4E3D4DAD54900431C164FE1 /* libPods-KanvasExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F551187F25DDC96700DEBF7E /* MultiEditorControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiEditorControllerTests.swift; sourceTree = "<group>"; };
 		F58D37B925117A88007CDF82 /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = en.lproj; sourceTree = "<group>"; };
 		F597B4E024B3E57300843540 /* UIColor+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Colors.swift"; sourceTree = "<group>"; };
 		F597B4E324B3E63200843540 /* UIFont+Fonts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Fonts.swift"; sourceTree = "<group>"; };
@@ -837,6 +839,7 @@
 		65E46B9822BD22DE004FD226 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
+				F551187E25DDC96700DEBF7E /* MultiEditor */,
 				65C03EB425409D260001BBF5 /* Menu */,
 				651D4B5B22CE67A5004AB75C /* Drawing */,
 				65E46B9922BD22DE004FD226 /* Filters */,
@@ -1089,6 +1092,14 @@
 				BFA7DAAB24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift */,
 			);
 			path = MediaPicker;
+			sourceTree = "<group>";
+		};
+		F551187E25DDC96700DEBF7E /* MultiEditor */ = {
+			isa = PBXGroup;
+			children = (
+				F551187F25DDC96700DEBF7E /* MultiEditorControllerTests.swift */,
+			);
+			path = MultiEditor;
 			sourceTree = "<group>";
 		};
 		F8A70A8209D208023D56CAC9 /* Pods */ = {
@@ -1451,6 +1462,7 @@
 				653B044A22E911DB005AAFCA /* ColorCollectionCellTests.swift in Sources */,
 				658A32A0239FFD9B00EEC1D3 /* DrawerTabBarCell.swift in Sources */,
 				654910EE22EB5675006DE5A1 /* EditorFilterControllerTests.swift in Sources */,
+				F551188025DDC96700DEBF7E /* MultiEditorControllerTests.swift in Sources */,
 				ABE4992B21375B3700379F7F /* ShootButtonViewTests.swift in Sources */,
 				658A329C239FFD9B00EEC1D3 /* StickerMenuViewTests.swift in Sources */,
 				653B045522E9143C005AAFCA /* HorizontalCollectionLayoutTests.swift in Sources */,

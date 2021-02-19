@@ -193,11 +193,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         )
     }()
 
-    lazy var movableViewCanvas: MovableViewCanvas = {
-        let canvas = MovableViewCanvas()
-        canvas.delegate = self
-        return canvas
-    }()
+    var movableViewCanvas: MovableViewCanvas
 
     private lazy var movableViewCanvasConstraints = {
         return FullViewConstraints(
@@ -224,12 +220,13 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     }()
     
     weak var delegate: EditorViewDelegate?
+    private var mediaContentMode: UIView.ContentMode
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     init(delegate: EditorViewDelegate?,
          mainActionMode: MainActionMode,
          showSaveButton: Bool,
@@ -242,7 +239,9 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showBlogSwitcher: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
-         metalContext: MetalContext?) {
+         metalContext: MetalContext?,
+         mediaContentMode: UIView.ContentMode,
+         movableViewCanvas: MovableViewCanvas?) {
         self.delegate = delegate
         self.mainActionMode = mainActionMode
         self.showSaveButton = showSaveButton
@@ -256,20 +255,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
         self.metalContext = metalContext
+        self.mediaContentMode = mediaContentMode
+        self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
         super.init(frame: .zero)
+        self.movableViewCanvas.delegate = self
         setupViews()
-    }
-
-    func updateUI(forDraggingClip: Bool) {
-        if forDraggingClip {
-            self.movableViewCanvas.showTrash()
-        } else {
-            self.movableViewCanvas.hideTrash()
-        }
-        UIView.animate(withDuration: 0.5, animations: {
-            self.collectionContainer.alpha = forDraggingClip ? 0.0 : 1.0
-            self.collectionContainer.isHidden = forDraggingClip
-        })
     }
     
     private func setupViews() {
@@ -318,11 +308,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         setupOverlay()
         setupOverlayLabel()
     }
-    
+
     // MARK: - views
 
     private func setupPlayer() {
-        let playerView = MediaPlayerView(metalContext: metalContext)
+        let playerView = MediaPlayerView(metalContext: metalContext, mediaContentMode: mediaContentMode)
         playerView.delegate = self
         playerView.add(into: self)
         self.playerView = playerView
@@ -340,7 +330,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         addSubview(movableViewCanvas)
         movableViewCanvasConstraints.activate()
     }
-    
+
     /// Container that holds the back button and the bottom menu
     private func setupNavigationContainer() {
         navigationContainer.accessibilityIdentifier = "Navigation Container"

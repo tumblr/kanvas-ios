@@ -25,9 +25,9 @@ protocol MediaExporting: class {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     init(settings: CameraSettings)
-    func export(image: UIImage, time: TimeInterval, completion: @escaping (UIImage?, Error?) -> Void)
-    func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void)
-    func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void)
+    func export(image: UIImage, time: TimeInterval, toSize: CGSize?, completion: @escaping (UIImage?, Error?) -> Void)
+    func export(frames: [MediaFrame], toSize: CGSize?, completion: @escaping ([MediaFrame]) -> Void)
+    func export(video url: URL, mediaInfo: MediaInfo, toSize: CGSize?, completion: @escaping (URL?, Error?) -> Void)
 }
 
 
@@ -39,8 +39,6 @@ final class MediaExporter: MediaExporting {
 
     /// The image overlays to apply on top of each frame.
     var imageOverlays: [CGImage] = []
-
-    var dimensions: CGSize = .zero
 
     /// A timer you can hook into to get progress updates from an export.
     private(set) var progressTimer: Timer?
@@ -63,7 +61,7 @@ final class MediaExporter: MediaExporting {
     /// Exports an image
     /// - Parameter image: UIImage to export
     /// - Parameter completion: callback which is invoked with the processed UIImage
-    func export(image: UIImage, time: TimeInterval, completion: @escaping (UIImage?, Error?) -> Void) {
+    func export(image: UIImage, time: TimeInterval, toSize: CGSize?, completion: @escaping (UIImage?, Error?) -> Void) {
         guard needsProcessing else {
             completion(image, nil)
             return
@@ -82,8 +80,8 @@ final class MediaExporter: MediaExporting {
         renderer.refreshFilter()
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
-        renderer.processSampleBuffer(sampleBuffer, time: time)
-        renderer.processSampleBuffer(sampleBuffer, time: time) { (filteredPixelBuffer, time) in
+        renderer.processSampleBuffer(sampleBuffer, time: time, scaleToFillSize: toSize)
+        renderer.processSampleBuffer(sampleBuffer, time: time, scaleToFillSize: toSize) { (filteredPixelBuffer, time) in
             guard let processedImage = UIImage(pixelBuffer: filteredPixelBuffer) else {
                 completion(nil, MediaExporterError.noProcessedImage)
                 return
@@ -92,12 +90,12 @@ final class MediaExporter: MediaExporting {
         }
     }
 
-    func export(frames: [MediaFrame], completion: @escaping ([MediaFrame]) -> Void) {
+    func export(frames: [MediaFrame], toSize: CGSize?, completion: @escaping ([MediaFrame]) -> Void) {
         var processedFrames: [MediaFrame] = []
         DispatchQueue.global(qos: .default).async {
             var time: TimeInterval = 0
             for frame in frames {
-                self.export(image: frame.image, time: time) { (image, error) in
+                self.export(image: frame.image, time: time, toSize: toSize) { (image, error) in
                     guard error == nil, let image = image else {
                         return
                     }
@@ -112,9 +110,11 @@ final class MediaExporter: MediaExporting {
     }
 
     /// Exports a video
-    /// - Parameter video: URL of a video to export
-    /// - Parameter completion: callback which is invoked with the processed video URL
-    func export(video url: URL, mediaInfo: MediaInfo, completion: @escaping (URL?, Error?) -> Void) {
+    /// - Parameter video: URL of a video to export.
+    /// - Parameter mediaInfo: The MediaInfo containing the metadata to apply to the exported media.
+    /// - Parameter toSize: A size to export the media to. Media will fill this size.
+    /// - Parameter completion: A callback block which is invoked with the processed video URL.
+    func export(video url: URL, mediaInfo: MediaInfo, toSize: CGSize?, completion: @escaping (URL?, Error?) -> Void) {
         guard needsProcessing else {
             completion(url, nil)
             return
@@ -122,6 +122,9 @@ final class MediaExporter: MediaExporting {
 
         let asset = AVAsset(url: url)
         let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
+        if let size = toSize {
+            videoComposition.renderSize = size
+        }
         videoComposition.customVideoCompositorClass = VideoCompositor.self
 
         let presets = AVAssetExportSession.exportPresets(compatibleWith: asset)
@@ -147,7 +150,6 @@ final class MediaExporter: MediaExporting {
             return
         }
         videoCompositor.renderer.filterPlatform = settings.features.metalFilters == true ? FilterPlatform.metal : FilterPlatform.openGL
-        videoCompositor.dimensions = dimensions
         videoCompositor.renderer.switchInputDimensions = track.orientation.isPortrait
         videoCompositor.renderer.mediaTransform = track.glPreferredTransform
         videoCompositor.imageOverlays = imageOverlays

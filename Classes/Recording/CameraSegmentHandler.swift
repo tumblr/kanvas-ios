@@ -4,8 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import UIKit
 import AVFoundation
 import Foundation
+import CoreServices
 
 /// A container for segments
 public enum CameraSegment {
@@ -17,6 +19,15 @@ public enum CameraSegment {
         switch self {
         case .image(let image, _, _, _): return image
         case .video: return nil
+        }
+    }
+
+    var isVideo: Bool {
+        switch self {
+        case .video:
+            return true
+        case .image:
+            return false
         }
     }
 
@@ -45,9 +56,9 @@ public enum CameraSegment {
     static func defaultTimeInterval(segments: [CameraSegment]) -> TimeInterval {
         for media in segments {
             switch media {
-            case .image(_, _, _, _):
+            case .image:
                 break
-            case .video(_, _):
+            case .video:
                 return KanvasTimes.stopMotionFrameTimeInterval
             }
         }
@@ -71,10 +82,10 @@ public enum CameraSegment {
     }
 
     func mediaFrame(defaultTimeInterval: TimeInterval) -> MediaFrame? {
-        if let image = self.image {
-            return (image: image, interval: self.timeInterval ?? defaultTimeInterval)
-        }
-        else {
+        switch self {
+        case .image(let image, _, let timeInterval, _):
+            return (image: image, interval: timeInterval ?? defaultTimeInterval)
+        case .video:
             return nil
         }
     }
@@ -109,12 +120,13 @@ extension AssetsHandlerType {
     ///   - segments: the CameraSegments
     /// - Returns: true if all images, false otherwise
     func containsOnlyImages(segments: [CameraSegment]) -> Bool {
-        for segment in segments {
-            if segment.image == nil {
+        return segments.contains(where: { segment in
+            if case .video = segment {
+                return true
+            } else {
                 return false
             }
-        }
-        return true
+        }) == false
     }
 }
 
@@ -313,13 +325,13 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         var totalDuration: CMTime = CMTime.zero
         let allImages = containsOnlyImages(segments: segments)
         for segment in segments {
-            if let segmentURL = segment.videoURL {
-                let asset = AVURLAsset(url: segmentURL)
+            switch segment {
+            case .video(let url, _):
+                let asset = AVURLAsset(url: url)
                 totalDuration = CMTimeAdd(totalDuration, asset.duration)
-            }
-            else if segment.image != nil {
+            case .image(_, _, let timeInterval, _):
                 let duration: CMTime = {
-                    if let timeInterval = segment.timeInterval {
+                    if let timeInterval = timeInterval {
                         return CMTime(seconds: timeInterval, preferredTimescale: KanvasTimes.stopMotionFrameTimescale)
                     }
                     else if allImages {
@@ -432,23 +444,24 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         for segment in segments {
             if segment.videoURL != nil {
                 newSegments.append(segment)
-                continue
             }
-            guard let segmentImage = segment.image else {
-                assertionFailure("No video and no image?")
-                continue
-            }
-            dispatchGroup.enter()
 
-            self.videoQueue.async {
-                self.createVideoFromImage(image: segmentImage, duration: segment.timeInterval) { url in
-                    guard let url = url else {
-                        dispatchGroup.leave()
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        newSegments.append(.image(segmentImage, url, segment.timeInterval, segment.mediaInfo))
-                        dispatchGroup.leave()
+            switch segment {
+            case .video:
+                assertionFailure("Video without a video URL")
+            case .image(let imageURL, _, _, _):
+                dispatchGroup.enter()
+
+                self.videoQueue.async {
+                    self.createVideoFromImage(image: imageURL, duration: segment.timeInterval) { url in
+                        guard let url = url else {
+                            dispatchGroup.leave()
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            newSegments.append(.image(imageURL, url, segment.timeInterval, segment.mediaInfo))
+                            dispatchGroup.leave()
+                        }
                     }
                 }
             }
@@ -460,7 +473,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
 
     private func allImagesHaveVideo(segments: [CameraSegment]) -> Bool {
         for segment in segments {
-            if segment.image != nil && segment.videoURL == nil {
+            if case .image = segment, segment.videoURL == nil {
                 return false
             }
         }
@@ -541,7 +554,9 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         assetExport.shouldOptimizeForNetworkUse = true
 
         assetExport.exportAsynchronously() {
-            completion(assetExport.status == .completed ? finalURL : nil, mediaInfo)
+            DispatchQueue.main.async {
+                completion(assetExport.status == .completed ? finalURL : nil, mediaInfo)
+            }
         }
     }
 
