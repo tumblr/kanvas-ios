@@ -135,6 +135,10 @@ public struct CameraFeatures {
 
     public var editorPostOptions: Bool = false
 
+    /// Editor Confirm Button
+    /// Moves the editor confirm button to the top right
+    public var editorConfirmAtTop: Bool = false
+
     /// The Editor Saving feature
     /// This enables the UI to save media from the editor.
     public var editorSaving: Bool = false

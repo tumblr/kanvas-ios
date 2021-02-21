@@ -210,6 +210,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showTagCollection: settings.showTagCollectionInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
+                                    confirmAtTop: settings.features.editorConfirmAtTop,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                     tagCollection: tagCollection,
                                     metalContext: metalContext,

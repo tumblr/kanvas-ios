@@ -145,6 +145,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showTagCollection: Bool
     private let showQuickPostButton: Bool
     private let showBlogSwitcher: Bool
+    private let confirmAtTop: Bool
     private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
@@ -214,6 +215,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showTagCollection: Bool,
          showQuickPostButton: Bool,
          showBlogSwitcher: Bool,
+         confirmAtTop: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
          metalContext: MetalContext?,
@@ -228,6 +230,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showCrossIcon = showCrossIcon
         self.showQuickPostButton = showQuickPostButton
         self.showBlogSwitcher = showBlogSwitcher
+        self.confirmAtTop = confirmAtTop
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
         self.metalContext = metalContext
@@ -393,13 +396,24 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         confirmButton.setImage(KanvasImages.nextImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
-        
+
+        let positioningConstraints: [NSLayoutConstraint]
+        if confirmAtTop {
+            positioningConstraints = [
+                confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+                confirmButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: EditorViewConstants.buttonBottomMargin)
+            ]
+        } else {
+            positioningConstraints = [
+                confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+                confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
+            ]
+        }
+
         NSLayoutConstraint.activate([
-            confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
             confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
-        ])
+        ] + positioningConstraints)
     }
 
     private func setupPostOptionsButton() {
@@ -451,24 +465,35 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
         else {
             
-            let buttonOnTheRight: UIButton
+            let xAnchor: NSLayoutXAxisAnchor
             let trailingMargin: CGFloat
-            
-            if showSaveButton {
-                buttonOnTheRight = saveButton
-                trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
+
+            if confirmAtTop {
+                xAnchor = safeAreaLayoutGuide.trailingAnchor
+                trailingMargin = 0
+            } else {
+                if showSaveButton {
+                    xAnchor = saveButton.leadingAnchor
+                    trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
+                }
+                else {
+                    xAnchor = confirmOrPostButton().leadingAnchor
+                    trailingMargin = confirmOrPostButtonHorizontalMargin()
+                }
             }
-            else {
-                buttonOnTheRight = confirmOrPostButton()
-                trailingMargin = confirmOrPostButtonHorizontalMargin()
+
+            let verticalPositioning: [NSLayoutConstraint]
+            if confirmAtTop {
+                verticalPositioning = [collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)]
+            } else {
+                verticalPositioning = [collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor)]
             }
             
             NSLayoutConstraint.activate([
                 collectionContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-                collectionContainer.trailingAnchor.constraint(equalTo: buttonOnTheRight.leadingAnchor, constant: -trailingMargin / 2),
-                collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
+                collectionContainer.trailingAnchor.constraint(equalTo: xAnchor, constant: -trailingMargin / 2),
                 collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height)
-            ])
+            ] + verticalPositioning)
         }
     }
     

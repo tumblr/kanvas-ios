@@ -32,6 +32,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case editorSaving(Bool)
         case editorPosting(Bool)
         case editorPostOptions(Bool)
+        case editorConfirmAtTop(Bool)
         case newCameraModes(Bool)
         case gifs(Bool)
         case modeSelectorTooltip(Bool)
@@ -81,6 +82,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "New Camera Modes"
             case .editorPostOptions(_):
                 return "Editor Post Options"
+            case .editorConfirmAtTop(_):
+                return "Editor Confirm At Top"
             case .gifs(_):
                 return "GIF support"
             case .modeSelectorTooltip(_):
@@ -139,6 +142,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .newCameraModes(let enabled):
                 return enabled
             case .editorPostOptions(let enabled):
+                return enabled
+            case .editorConfirmAtTop(let enabled):
                 return enabled
             case .gifs(let enabled):
                 return enabled
@@ -236,6 +241,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .newCameraModes(value)
         case .editorPostOptions(_):
             featuresData[indexPath.row] = .editorPostOptions(value)
+        case .editorConfirmAtTop(_):
+            featuresData[indexPath.row] = .editorConfirmAtTop(value)
         case .gifs(_):
             featuresData[indexPath.row] = .gifs(value)
         case .modeSelectorTooltip(_):

@@ -270,6 +270,7 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
+            .editorConfirmAtTop(settings.features.editorConfirmAtTop),
             .newCameraModes(settings.features.newCameraModes),
             .modeSelectorTooltip(settings.features.modeSelectorTooltip),
             .shutterButtonTooltip(settings.features.shutterButtonTooltip),
@@ -322,6 +323,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         case .editorPostOptions(_):
             settings.features.editorPostOptions = value
+        case .editorConfirmAtTop(_):
+            settings.features.editorConfirmAtTop = value
         case .modeSelectorTooltip(_):
             settings.features.modeSelectorTooltip = value
         case .shutterButtonTooltip(_):
