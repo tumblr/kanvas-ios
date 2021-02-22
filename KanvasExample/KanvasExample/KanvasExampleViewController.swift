@@ -149,6 +149,7 @@ final class KanvasExampleViewController: UIViewController {
         settings.exportStopMotionPhotoAsVideo = true
         settings.features.multipleExports = false
         settings.features.scaleMediaToFill = false
+        settings.features.muteButton = false
         return settings
     }
 
@@ -278,7 +279,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
             .exportStopMotionAsVideo(settings.exportStopMotionPhotoAsVideo),
             .multipleExport(settings.features.multipleExports),
-            .scaleMediaToFill(settings.features.scaleMediaToFill)
+            .scaleMediaToFill(settings.features.scaleMediaToFill),
+            .muteButton(settings.features.muteButton)
         ]
     }
 
@@ -340,6 +342,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             settings.features.multipleExports = value
         case .scaleMediaToFill(_):
             settings.features.scaleMediaToFill = value
+        case .muteButton(_):
+            settings.features.muteButton = value
         }
     }
 }
