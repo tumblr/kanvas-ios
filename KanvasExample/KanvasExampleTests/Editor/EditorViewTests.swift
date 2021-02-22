@@ -24,6 +24,7 @@ final class EditorViewTests: FBSnapshotTestCase {
         let view = EditorView(delegate: nil,
                               mainActionMode: .confirm,
                               showSaveButton: false,
+                              showMuteButton: false,
                               showCrossIcon: false,
                               showCogIcon: false,
                               showTagButton: false,
