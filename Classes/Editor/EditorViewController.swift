@@ -226,8 +226,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         else if settings.features.editorPosting {
             mainActionMode = .post
-        } else if settings.features.multipleExports {
-            mainActionMode = .publish
         }
 
         let canvas = edit?.canvas ?? MovableViewCanvas()

@@ -129,7 +129,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         case confirm
         case post
         case postOptions
-        case publish
     }
     
     weak var playerView: MediaPlayerView?
@@ -290,8 +289,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             setupPostButton()
         case .postOptions:
             setupPostOptionsButton()
-        case .publish:
-            setupPublishButton()
         }
         if showSaveButton {
             setupSaveButton()
@@ -609,23 +606,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         fakeQuickPostButton.alpha = 0
     }
-    
-    func setupPublishButton() {
-//        publishButton.translatesAutoresizingMaskIntoConstraints = false
-//        button.setTitleColor(.white, for: .normal)
-//        button.titleLabel?.font = KanvasCameraFonts.shared.postLabelFont
-
-        navigationContainer.addSubview(publishButton)
-
-        NSLayoutConstraint.activate([
-            publishButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.postButtonHorizontalMargin),
-//            button.heightAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
-//            button.widthAnchor.constraint(equalToConstant: EditorViewConstants.postButtonSize),
-            publishButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor)
-        ])
-
-        publishButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
-    }
 
     @objc func nextPressed() {
         delegate?.didTapPostButton()
@@ -686,19 +666,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
         saveButton.translatesAutoresizingMaskIntoConstraints = false
 
-        let verticalConstraint: NSLayoutConstraint
-
-        if let button = confirmOrPostButton() {
-            verticalConstraint = saveButton.centerYAnchor.constraint(equalTo: button.centerYAnchor)
-        } else {
-            verticalConstraint = saveButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
-        }
-
         NSLayoutConstraint.activate([
-            saveButton.trailingAnchor.constraint(equalTo: confirmOrPostButton()?.leadingAnchor ?? safeAreaLayoutGuide.leadingAnchor, constant: -EditorViewConstants.saveButtonHorizontalMargin),
+            saveButton.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor),
+            saveButton.trailingAnchor.constraint(equalTo: confirmOrPostButton().leadingAnchor, constant: -EditorViewConstants.saveButtonHorizontalMargin),
             saveButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.saveButtonSize),
-            saveButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.saveButtonSize),
-            verticalConstraint
+            saveButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.saveButtonSize)
         ])
     }
 
@@ -720,14 +692,12 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         ])
     }
 
-    func confirmOrPostButton() -> UIView? {
+    func confirmOrPostButton() -> UIView {
         switch mainActionMode {
         case .confirm, .postOptions:
             return confirmButton
         case .post:
             return postButton
-        case .publish:
-            return nil
         }
     }
     
@@ -735,7 +705,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         switch mainActionMode {
         case .confirm, .postOptions:
             return EditorViewConstants.confirmButtonHorizontalMargin
-        case .post, .publish:
+        case .post:
             return EditorViewConstants.postButtonHorizontalMargin
         }
     }
@@ -1096,10 +1066,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             UIView.animate(withDuration: EditorViewConstants.animationDuration) {
                 self.postButton.alpha = show ? 1 : 0
                 self.postLabel.alpha = show ? 1 : 0
-            }
-        case .publish:
-            UIView.animate(withDuration: EditorViewConstants.animationDuration) {
-                self.publishButton.alpha = show ? 1 : 0
             }
         }
         if showSaveButton {
