@@ -111,7 +111,7 @@ public struct KanvasEditorDesign {
     public static var original: KanvasEditorDesign = {
         return KanvasEditorDesign(
             isVerticalMenu: false,
-            checkmarkImage: UIImage.imageFromCameraBundle(named: "editorConfirm"),
+            checkmarkImage: KanvasImages.shared.confirmImage,
             buttonBackgroundColor: .clear,
             buttonInvertedBackgroundColor: .clear,
             optionBackgroundColor: .clear,

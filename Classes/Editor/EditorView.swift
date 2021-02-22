@@ -393,7 +393,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private func setupConfirmButton() {
         confirmButton.accessibilityLabel = "Confirm Button"
         navigationContainer.addSubview(confirmButton)
-        confirmButton.setImage(KanvasImages.nextImage, for: .normal)
+        confirmButton.setImage(KanvasImages.shared.nextImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -401,7 +401,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         if confirmAtTop {
             positioningConstraints = [
                 confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
-                confirmButton.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: EditorViewConstants.buttonBottomMargin)
+                confirmButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor)
             ]
         } else {
             positioningConstraints = [
@@ -436,7 +436,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             ])
         }
         else {
-            confirmButton.setImage(KanvasImages.nextImage, for: .normal)
+            confirmButton.setImage(KanvasImages.shared.nextImage, for: .normal)
             
             NSLayoutConstraint.activate([
                 confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
@@ -600,7 +600,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             updatePostButton(avatarView: avatarView)
         }
         else {
-            postButton.setImage(KanvasImages.nextImage, for: .normal)
+            postButton.setImage(KanvasImages.shared.nextImage, for: .normal)
         }
         postButton.contentHorizontalAlignment = .fill
         postButton.contentVerticalAlignment = .fill
