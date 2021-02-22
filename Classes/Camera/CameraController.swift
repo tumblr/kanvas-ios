@@ -1140,38 +1140,28 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
 
     }
 
-    public func didPick(images: [(UIImage, URL?)]) {
+    public func didPick(media: [PickedMedia]) {
+
+        let mediaTypes = media.map { media -> KanvasMediaType in
+            switch media {
+            case .image:
+                return .image
+            case .video:
+                return .video
+            case .gif:
+                return .frames
+            case .livePhoto:
+                return .livePhoto
+            }
+        }
+
         defer {
-            analyticsProvider?.logMediaPickerPickedMedia(ofType: .image)
-        }
-        let segments: [CameraSegment] = images.map { (image, imageURL) in
-            return segment(image: image, imageURL: imageURL)
+            analyticsProvider?.logMediaPickerPickedMedia(ofTypes: mediaTypes)
         }
 
-        performUIUpdate {
-            self.showPreviewWithSegments(segments, selected: segments.startIndex)
-        }
-    }
-
-    public func didPick(videos urls: [URL]) {
-        defer {
-            analyticsProvider?.logMediaPickerPickedMedia(ofType: .video)
-        }
-
-        let segments: [CameraSegment] = urls.map { url in
-            return segment(video: url)
-        }
-
-        performUIUpdate {
-            self.showPreviewWithSegments(segments, selected: segments.startIndex)
-        }
-    }
-
-    public func didPick(gifs urls: [URL]) {
-        defer {
-            analyticsProvider?.logMediaPickerPickedMedia(ofType: .frames)
-        }
-        urls.forEach({ url in
+        // Handle gifs and live photos separately, as they should not be chosen when multiple selection is enabled.
+        switch media.first {
+        case .gif(let url):
             let mediaInfo: MediaInfo = {
                 return MediaInfo(fromImage: url) ?? MediaInfo(source: .media_library)
             }()
@@ -1179,14 +1169,8 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                 let segments = frames.map { CameraSegment.image(UIImage(cgImage: $0.image), nil, $0.interval, mediaInfo) }
                 self.showPreviewWithSegments(segments, selected: segments.endIndex)
             }
-        })
-    }
-
-    public func didPick(livePhotos: [(UIImage, URL)]) {
-        defer {
-            analyticsProvider?.logMediaPickerPickedMedia(ofType: .livePhoto)
-        }
-        livePhotos.forEach({ (livePhotoStill, pairedVideo) in
+            return
+        case .livePhoto(let livePhotoStill, let pairedVideo):
             let mediaInfo = MediaInfo(source: .media_library)
             if currentMode.quantity == .single {
                 let segments = [CameraSegment.image(livePhotoStill, pairedVideo, nil, mediaInfo)]
@@ -1195,7 +1179,26 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             else {
                 assertionFailure("No media picking from stitch yet")
             }
-        })
+            return
+        default:
+            break
+        }
+
+        let segments = media.compactMap { media -> CameraSegment? in
+            switch media {
+            case .image(let image, let imageURL):
+                return segment(image: image, imageURL: imageURL)
+            case .video(let url):
+                return segment(video: url)
+            case .gif, .livePhoto:
+                // Should not get here from code above
+                return nil
+            }
+        }
+
+        performUIUpdate {
+            self.showPreviewWithSegments(segments, selected: segments.startIndex)
+        }
     }
 
     public func didCancel() {
