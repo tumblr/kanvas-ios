@@ -228,7 +228,7 @@ final class CameraPreviewControllerDelegateStub: CameraPreviewControllerDelegate
 final class AssetsHandlerStub: AssetsHandlerType {
     private(set) var mergeAssetsCalled = false
 
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void) {
+    func mergeAssets(segments: [CameraSegment], withAudio: Bool, completion: @escaping (URL?, MediaInfo?) -> Void) {
         mergeAssetsCalled = true
         let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4")
         let mediaInfo = MediaInfo(source: .kanvas_camera)

@@ -26,7 +26,7 @@ final class GIFEncoderTests: FBSnapshotTestCase {
     private func videoFromColors(colors: [UIColor], size: CGSize, interval: TimeInterval, completion: @escaping (URL?) -> Void) {
         let images = colors.map{ image(color: $0, size: size) }
         let segments = images.map{ CameraSegment.image($0, nil, interval, .init(source: .kanvas_camera)) }
-        CameraSegmentHandler().mergeAssets(segments: segments) { (url, info) in
+        CameraSegmentHandler().mergeAssets(segments: segments, withAudio: true) { (url, info) in
             completion(url)
         }
     }

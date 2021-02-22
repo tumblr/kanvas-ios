@@ -159,6 +159,10 @@ public struct CameraFeatures {
     /// This enables a tooltip to appear above the shutter button when the camera launches for the first time.
     public var shutterButtonTooltip: Bool = false
 
+    /// Button to Mute Sound
+    /// This adds an option to mute sounds from videos during editing and in export.
+    public var muteButton = false
+
 
     /// Multi-Export support
     /// This enables multiple images/videos to be taken, edited, and then exported

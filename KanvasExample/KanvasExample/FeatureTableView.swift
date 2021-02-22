@@ -43,6 +43,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case exportStopMotionAsVideo(Bool)
         case multipleExport(Bool)
         case scaleMediaToFill(Bool)
+        case muteButton(Bool)
 
         var name: String {
             switch self {
@@ -102,6 +103,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Multiple Exports"
             case .scaleMediaToFill:
                 return "Scale Media to Fill"
+            case .muteButton:
+                return "Mute Button"
             }
         }
 
@@ -162,6 +165,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .multipleExport(let enabled):
                 return enabled
             case .scaleMediaToFill(let enabled):
+                return enabled
+            case .muteButton(let enabled):
                 return enabled
             }
         }
@@ -261,6 +266,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .multipleExport(value)
         case .scaleMediaToFill(_):
             featuresData[indexPath.row] = .scaleMediaToFill(value)
+        case .muteButton(_):
+            featuresData[indexPath.row] = .muteButton(value)
         }
         delegate?.featureTableView(didUpdateFeature: featuresData[indexPath.row], withValue: value)
     }

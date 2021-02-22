@@ -124,7 +124,7 @@ final class MultiEditorControllerDelegateStub: MultiEditorComposerDelegate {
 
     }
 
-    func editor(segment: CameraSegment, canvas: MovableViewCanvas?) -> EditorViewController {
+    func editor(segment: CameraSegment, edit: EditorViewController.Edit?) -> EditorViewController {
         return EditorViewController(settings: settings,
                                     segments: [segment],
                                     assetsHandler: assetsHandler,
@@ -134,6 +134,7 @@ final class MultiEditorControllerDelegateStub: MultiEditorComposerDelegate {
                                     stickerProvider: nil,
                                     analyticsProvider: nil,
                                     quickBlogSelectorCoordinator: nil,
+                                    edit: edit,
                                     tagCollection: nil)
     }
 

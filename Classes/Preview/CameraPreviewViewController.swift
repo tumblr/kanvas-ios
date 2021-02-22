@@ -285,7 +285,7 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
     }
 
     private func createFinalContent() {
-        assetsHandler.mergeAssets(segments: segments, completion: { url, _  in
+        assetsHandler.mergeAssets(segments: segments, withAudio: true, completion: { url, _  in
             performUIUpdate {
                 if let url = url {
                     self.delegate?.didFinishExportingVideo(url: url)

@@ -9,11 +9,15 @@ import UIKit
 import MobileCoreServices
 import Photos
 
+public enum PickedMedia {
+    case image(UIImage, URL?)
+    case video(URL)
+    case gif(URL)
+    case livePhoto(UIImage, URL)
+}
+
 public protocol KanvasMediaPickerViewControllerDelegate: class {
-    func didPick(images: [(UIImage, URL?)])
-    func didPick(videos: [URL])
-    func didPick(gifs: [URL])
-    func didPick(livePhotos: [(UIImage, URL)])
+    func didPick(media: [PickedMedia])
     func didCancel()
     func pickingMediaNotAllowed(reason: String)
 }
@@ -161,19 +165,23 @@ private extension KanvasMediaPickerViewController {
     }
 
     private func pick(frames imageURL: URL) {
-        delegate?.didPick(gifs: [imageURL])
+        let media = PickedMedia.gif(imageURL)
+        delegate?.didPick(media: [media])
     }
 
     private func pick(image: UIImage, url: URL?) {
-        delegate?.didPick(images: [(image: image, url: url)])
+        let media = PickedMedia.image(image, url)
+        delegate?.didPick(media: [media])
     }
 
     private func pick(video url: URL) {
-        delegate?.didPick(videos: [url])
+        let media = PickedMedia.video(url)
+        delegate?.didPick(media: [media])
     }
 
     private func pick(livePhotoStill: UIImage, pairedVideo: URL) {
-        delegate?.didPick(livePhotos: [(still: livePhotoStill, pairedVideo: pairedVideo)])
+        let media = PickedMedia.livePhoto(livePhotoStill, pairedVideo)
+        delegate?.didPick(media: [media])
     }
 
     private func canPick(image: UIImage) -> Bool {

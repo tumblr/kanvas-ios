@@ -257,6 +257,15 @@ final class MediaPlayer {
         renderer.reset()
     }
 
+    var isMuted: Bool {
+        set {
+            avPlayer.isMuted = newValue
+        }
+        get {
+            return avPlayer.isMuted
+        }
+    }
+
     /// Resumes the playback of media.
     /// Can be used to resume playback after a call to `pause`.
     /// This currently just resumes at the current segment; it doesn't continue playing a video at the time it was paused.

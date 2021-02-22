@@ -82,7 +82,33 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let archive: Data
     }
 
+    @objc(KanvasEditorEdit) public class Edit: NSObject, NSSecureCoding {
+        public static var supportsSecureCoding = true
+
+        public func encode(with coder: NSCoder) {
+            coder.encode(canvas, forKey: "canvas")
+            coder.encode(isMuted, forKey: "isMuted")
+        }
+
+        public required init?(coder: NSCoder) {
+            canvas = coder.decodeObject(of: MovableViewCanvas.self, forKey: "canvas")
+            isMuted = coder.decodeBool(forKey: "isMuted")
+        }
+
+        let canvas: MovableViewCanvas?
+        let isMuted: Bool
+
+        init(canvas: MovableViewCanvas, isMuted: Bool) {
+            self.canvas = canvas
+            self.isMuted = isMuted
+        }
+    }
+
     var editorView: EditorView
+
+    var isMuted: Bool {
+        return player.isMuted
+    }
     
     private lazy var collectionController: KanvasEditorMenuController = {
         let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
@@ -189,7 +215,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private static func editor(delegate: EditorViewDelegate?,
                                settings: CameraSettings,
-                               canvas: MovableViewCanvas?,
+                               showsMuteButton: Bool,
+                               edit: Edit?,
                                quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
                                tagCollection: UIView?,
                                metalContext: MetalContext?) -> EditorView {
@@ -201,9 +228,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             mainActionMode = .post
         }
 
+        let canvas = edit?.canvas ?? MovableViewCanvas()
+
         let editorView: EditorView = EditorView(delegate: delegate,
                                     mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
+                                    showMuteButton: showsMuteButton,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showCogIcon: settings.showCogIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
@@ -216,6 +246,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     metalContext: metalContext,
                                     mediaContentMode: settings.features.scaleMediaToFill ? .scaleAspectFill : .scaleAspectFit,
                                     movableViewCanvas: canvas)
+        canvas.delegate = editorView
         return editorView
     }
 
@@ -308,7 +339,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-         canvas: MovableViewCanvas? = nil,
+         edit: Edit? = nil,
          tagCollection: UIView?) {
         self.settings = settings
         self.originalSegments = segments
@@ -323,14 +354,18 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
+        self.player.isMuted = edit?.isMuted == true
+        let muteButtonShown = settings.features.muteButton && segments.first?.isVideo == true
         self.editorView = EditorViewController.editor(delegate: nil,
                                                       settings: settings,
-                                                      canvas: canvas,
+                                                      showsMuteButton: muteButtonShown,
+                                                      edit: edit,
                                                       quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                                       tagCollection: tagCollection,
                                                       metalContext: metalContext)
         super.init(nibName: .none, bundle: .none)
         self.editorView.delegate = self
+        self.editorView.muteButtonSelected = player.isMuted
 
         editorView.delegate = self
         player.playerView = editorView.playerView
@@ -594,6 +629,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         analyticsProvider?.logSaveFromDashboard()
     }
 
+    func didTapMuteButton(enabled: Bool) {
+        player.isMuted = enabled
+    }
+
     func didTapPostButton() {
         if delegate?.shouldExport() ?? true {
             startExporting(action: .post)
@@ -697,7 +736,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         showLoading()
         let archive: Data
         do {
-            archive = try self.archive()
+            archive = try NSKeyedArchiver.archivedData(withRootObject: edit, requiringSecureCoding: true)
         } catch {
             handleExportError()
             return
@@ -727,7 +766,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
                 // It might be nice in the future to create a GIF directly from segments.
-                assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+                assetsHandler.mergeAssets(segments: segments, withAudio: true) { [weak self] url, mediaInfo in
                     guard let self = self else {
                         return
                     }
@@ -744,7 +783,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else {
-            assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+            assetsHandler.mergeAssets(segments: segments, withAudio: isMuted == false) { [weak self] url, mediaInfo in
                 guard let url = url else {
                     self?.hideLoading()
                     self?.handleExportError()
@@ -762,8 +801,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         startExporting(action: .post)
     }
 
-    private func archive() throws -> Data {
-        return try NSKeyedArchiver.archivedData(withRootObject: editorView.movableViewCanvas, requiringSecureCoding: true)
+    var edit: Edit {
+        return Edit(canvas: editorView.movableViewCanvas, isMuted: isMuted)
     }
 
     private var exportSize: CGSize? {
