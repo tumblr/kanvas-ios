@@ -269,6 +269,18 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.movableViewCanvas.delegate = self
         setupViews()
     }
+
+    func updateUI(forDraggingClip: Bool) {
+        if forDraggingClip {
+            self.movableViewCanvas.showTrash()
+        } else {
+            self.movableViewCanvas.hideTrash()
+        }
+        UIView.animate(withDuration: 0.5, animations: {
+            self.collectionContainer.alpha = forDraggingClip ? 0.0 : 1.0
+            self.collectionContainer.isHidden = forDraggingClip
+        })
+    }
     
     private func setupViews() {
         setupPlayer()

@@ -95,11 +95,11 @@ final class CameraFilterCollectionController: UIViewController, UICollectionView
         filterCollectionView.collectionView.delegate = self
         filterCollectionView.collectionView.dataSource = self
         setUpView()
+        scrollToOption(at: Constants.initialIndex, animated: false)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollToOption(at: Constants.initialIndex, animated: false)
         filterCollectionView.collectionView.collectionViewLayout.invalidateLayout()
         filterCollectionView.collectionView.layoutIfNeeded()
         scrollHandler?.changeSize(IndexPath(item: Constants.initialIndex, section: Constants.section))
