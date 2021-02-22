@@ -327,7 +327,7 @@ public struct KanvasDesign {
             mediaClipsEditorViewTopPadding: 11,
             mediaClipsEditorViewBottomPadding: Device.belongsToIPhoneXGroup ? 29 : 15,
             mediaClipsEditorViewNextButtonCenterYOffset: 0,
-            mediaClipsEditorViewNextImage: KanvasImages.shared.nextImage,
+            mediaClipsEditorViewNextImage: UIImage.imageFromCameraBundle(named: "nextArrow"),
             mediaClipsCollectionCellClipHeight: 48,
             mediaClipsCollectionCellClipWidth: 33,
             mediaClipsCollectionCellBorderWidth: 2,

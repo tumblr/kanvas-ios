@@ -80,9 +80,6 @@ public struct KanvasImages {
         .manga: nil,
         .toon: nil,
     ]
-    
-    // MARK: - Editor
-    static let editorConfirmImage = UIImage.imageFromCameraBundle(named: "editorConfirm")
 
     static let editIcons: [EditionOption: [UIImage?]] = [
         .gif: [
@@ -174,13 +171,17 @@ public struct KanvasImages {
 
     let nextImage: UIImage?
     let confirmImage: UIImage?
+    let editorConfirmImage: UIImage?
 
     public static var shared = KanvasImages(confirmImage: UIImage.imageFromCameraBundle(named: "confirm"),
+                                    editorConfirmImage: UIImage.imageFromCameraBundle(named: "editorConfirm"),
                                      nextImage: UIImage.imageFromCameraBundle(named: "next"))
 
     public init(confirmImage: UIImage?,
+         editorConfirmImage: UIImage?,
          nextImage: UIImage?) {
         self.confirmImage = confirmImage
+        self.editorConfirmImage = editorConfirmImage
         self.nextImage = nextImage
     }
 }

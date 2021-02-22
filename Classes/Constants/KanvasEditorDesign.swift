@@ -111,7 +111,7 @@ public struct KanvasEditorDesign {
     public static var original: KanvasEditorDesign = {
         return KanvasEditorDesign(
             isVerticalMenu: false,
-            checkmarkImage: KanvasImages.shared.confirmImage,
+            checkmarkImage: KanvasImages.shared.editorConfirmImage,
             buttonBackgroundColor: .clear,
             buttonInvertedBackgroundColor: .clear,
             optionBackgroundColor: .clear,
