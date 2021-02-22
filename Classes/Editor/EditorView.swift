@@ -149,14 +149,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showMuteButton: Bool
     private let showCrossIcon: Bool
     private let postButton = UIButton()
-    private lazy var publishButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.accessibilityIdentifier = "Media Clips Next Button"
-        button.accessibilityLabel = "Next Button"
-        button.setImage(KanvasImages.nextImage, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     private let postLabel = UILabel()
     private let tagButton = UIButton()
     private let fakeOptionCell = UIImageView()
@@ -166,6 +158,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private let showTagCollection: Bool
     private let showQuickPostButton: Bool
     private let showBlogSwitcher: Bool
+    private let confirmAtTop: Bool
     private let metalContext: MetalContext?
     private let filterSelectionCircle = UIImageView()
     private let navigationContainer = IgnoreTouchesView()
@@ -245,6 +238,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showTagCollection: Bool,
          showQuickPostButton: Bool,
          showBlogSwitcher: Bool,
+         confirmAtTop: Bool,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
          metalContext: MetalContext?,
@@ -260,6 +254,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showCrossIcon = showCrossIcon
         self.showQuickPostButton = showQuickPostButton
         self.showBlogSwitcher = showBlogSwitcher
+        self.confirmAtTop = confirmAtTop
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
         self.metalContext = metalContext
@@ -425,16 +420,27 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private func setupConfirmButton() {
         confirmButton.accessibilityLabel = "Confirm Button"
         navigationContainer.addSubview(confirmButton)
-        confirmButton.setImage(KanvasImages.nextImage, for: .normal)
+        confirmButton.setImage(KanvasImages.shared.nextImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
-        
+
+        let positioningConstraints: [NSLayoutConstraint]
+        if confirmAtTop {
+            positioningConstraints = [
+                confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+                confirmButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor)
+            ]
+        } else {
+            positioningConstraints = [
+                confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
+                confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
+            ]
+        }
+
         NSLayoutConstraint.activate([
-            confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
             confirmButton.heightAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
             confirmButton.widthAnchor.constraint(equalToConstant: EditorViewConstants.confirmButtonSize),
-            confirmButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.buttonBottomMargin)
-        ])
+        ] + positioningConstraints)
     }
 
     private func setupPostOptionsButton() {
@@ -457,7 +463,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             ])
         }
         else {
-            confirmButton.setImage(KanvasImages.nextImage, for: .normal)
+            confirmButton.setImage(KanvasImages.shared.nextImage, for: .normal)
             
             NSLayoutConstraint.activate([
                 confirmButton.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor, constant: -EditorViewConstants.confirmButtonHorizontalMargin),
@@ -474,28 +480,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         collectionContainer.accessibilityIdentifier = "Edition Menu Collection Container"
         collectionContainer.clipsToBounds = false
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
-        let leftButton: UIView?
-        let rightButton: UIView?
-        let trailingMargin: CGFloat
-        let leadingMargin: CGFloat
-
-        if showMuteButton {
-            leftButton = muteButton
-            leadingMargin = EditorViewConstants.saveButtonHorizontalMargin
-        } else {
-            leftButton = nil
-            leadingMargin = 0
-        }
-
-        if showSaveButton {
-            rightButton = saveButton
-            trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
-        }
-        else {
-            rightButton = confirmOrPostButton()
-            trailingMargin = confirmOrPostButtonHorizontalMargin()
-        }
-        
         if KanvasEditorDesign.shared.isVerticalMenu {
             
             NSLayoutConstraint.activate([
@@ -507,21 +491,49 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         }
         else {
 
-            let verticalConstraint: NSLayoutConstraint
+            let leftButton: UIView?
+            let leadingMargin: CGFloat
+            let xAnchor: NSLayoutXAxisAnchor
+            let trailingMargin: CGFloat
 
-            if let button = rightButton {
-                verticalConstraint = collectionContainer.centerYAnchor.constraint(equalTo: button.centerYAnchor)
+            if showMuteButton {
+                leftButton = muteButton
+                leadingMargin = EditorViewConstants.saveButtonHorizontalMargin
             } else {
-                verticalConstraint = collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+                leftButton = nil
+                leadingMargin = 0
             }
+
+            if confirmAtTop {
+                xAnchor = safeAreaLayoutGuide.trailingAnchor
+                trailingMargin = 0
+            } else {
+                if showSaveButton {
+                    xAnchor = saveButton.leadingAnchor
+                    trailingMargin = EditorViewConstants.saveButtonHorizontalMargin
+                }
+                else {
+                    xAnchor = confirmOrPostButton().leadingAnchor
+                    trailingMargin = confirmOrPostButtonHorizontalMargin()
+                }
+            }
+
+            let verticalPositioning: [NSLayoutConstraint]
+            if confirmAtTop {
+                verticalPositioning = [collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)]
+            } else {
+                verticalPositioning = [collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor)]
+            }
+
+            let leftButtonConstraints = [
+                leftButton?.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
+            ].compactMap { $0 }
 
             NSLayoutConstraint.activate([
                 collectionContainer.leadingAnchor.constraint(equalTo: leftButton?.trailingAnchor ?? safeAreaLayoutGuide.leadingAnchor, constant: leadingMargin),
-                collectionContainer.trailingAnchor.constraint(equalTo: rightButton?.leadingAnchor ?? trailingAnchor, constant: -trailingMargin / 2),
-                verticalConstraint,
+                collectionContainer.trailingAnchor.constraint(equalTo: xAnchor, constant: -trailingMargin / 2),
                 collectionContainer.heightAnchor.constraint(equalToConstant: EditionMenuCollectionView.height),
-                leftButton?.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor)
-            ].compactMap { $0 })
+            ] + verticalPositioning + leftButtonConstraints)
         }
     }
     
@@ -632,7 +644,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             updatePostButton(avatarView: avatarView)
         }
         else {
-            postButton.setImage(KanvasImages.nextImage, for: .normal)
+            postButton.setImage(KanvasImages.shared.nextImage, for: .normal)
         }
         postButton.contentHorizontalAlignment = .fill
         postButton.contentVerticalAlignment = .fill

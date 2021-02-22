@@ -10,7 +10,7 @@ import XCTest
 final class UIImageDominantColorsTests: XCTestCase {
     
     func testDominantColors() {
-        guard let image = KanvasImages.confirmImage else { return }
+        guard let image = KanvasImages.shared.confirmImage else { return }
         let colors = image.getDominantColors(count: 3)
                 
         let expectedColors = [UIColor(hex: "#24bbfa"),

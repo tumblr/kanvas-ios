@@ -11,7 +11,7 @@ import XCTest
 
 final class ColorThieftTests: XCTestCase {
     
-    private let testImage = KanvasImages.confirmImage
+    private let testImage = KanvasImages.shared.confirmImage
     
     func testGetPalette() {
         guard let image = testImage,

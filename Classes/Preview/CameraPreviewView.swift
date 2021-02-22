@@ -97,7 +97,7 @@ final class CameraPreviewView: UIView {
         confirmButton.accessibilityLabel = "Confirm Button"
         confirmButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
         addSubview(confirmButton)
-        confirmButton.setImage(KanvasImages.confirmImage, for: .normal)
+        confirmButton.setImage(KanvasImages.shared.confirmImage, for: .normal)
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 

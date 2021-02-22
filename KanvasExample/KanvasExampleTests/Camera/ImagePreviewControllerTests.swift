@@ -12,7 +12,7 @@ import XCTest
 
 final class ImagePreviewControllerTests: FBSnapshotTestCase {
     
-    private let testImage = KanvasImages.confirmImage
+    private let testImage = KanvasImages.shared.confirmImage
     private let secondTestImage = KanvasImages.flashOnImage
     
     override func setUp() {
