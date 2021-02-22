@@ -1275,18 +1275,18 @@ extension CameraController {
     public func show(media: [(CameraSegment, Data?)]) {
         showPreview = true
         self.segments = media.map({ return $0.0 })
-        self.edits = media.map({ (_, data) in
+        self.edits = media.map { (_, data) in
             if let data = data {
                 do {
                     return try NSKeyedUnarchiver.unarchivedObject(ofClass: EditorViewController.Edit.self, from: data)
                 } catch let error {
-                    print("Failed to unarchive edit: \(error)")
+                    assertionFailure("Failed to unarchive frame edit: \(error)")
                     return nil
                 }
             } else {
                 return nil
             }
-        })
+        }
 
         if view.superview != nil {
             showPreviewWithSegments(segments, selected: segments.startIndex, edits: nil, animated: false)

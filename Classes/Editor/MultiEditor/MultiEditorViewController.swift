@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import os
 
 protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
@@ -48,11 +49,7 @@ class MultiEditorViewController: UIViewController {
                 return
             }
             if let old = selected {
-                do {
-                    try archive(index: old)
-                } catch let error {
-                    print("Failed to archive current edits \(error)")
-                }
+                archive(index: old)
             }
             if let new = newValue { // If the new index is the same as the old just keep the current editor
                 loadEditor(for: new)
@@ -250,11 +247,7 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         if let selected = selected {
-            do {
-                try archive(index: selected)
-            } catch let error {
-                print("Failed to archive current edits: \(error)")
-            }
+            archive(index: selected)
         }
         frames.move(from: originIndex, to: destinationIndex)
 
@@ -340,11 +333,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
         showLoading()
 
         if let selected = selected {
-            do {
-                try archive(index: selected)
-            } catch let error {
-                print("Failed to archive current edits on export \(error)")
-            }
+            archive(index: selected)
         }
 
         exportHandler.startWaiting(for: frames.count)
@@ -370,8 +359,10 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
 //MARK: Edit + Archive
 
+private let archive_log = OSLog(subsystem: "com.tumblr.kanvas", category: "MultiEditorArchive")
+
 extension MultiEditorViewController {
-    func archive(index: Int) throws {
+    func archive(index: Int) {
         guard let currentEditor = currentEditor else {
             return
         }
@@ -380,7 +371,7 @@ extension MultiEditorViewController {
             let frame = frames[index]
             frames[index] = Frame(segment: frame.segment, edit: currentEditor.edit)
         } else {
-            print("Invalid frame index")
+            os_log("Invalid frame index on archive", log: archive_log, type: .debug)
         }
     }
 }
