@@ -7,7 +7,7 @@
 import Foundation
 
 // the values for common string throughout the module
-struct KanvasStrings {
+public struct KanvasStrings {
     // MARK: - Camera Modes
 
     // photoModeName: used in the camera mode button
@@ -41,5 +41,19 @@ struct KanvasStrings {
 
     static func bundlePath(for aClass: AnyClass) -> String? {
         return Bundle(for: aClass).path(forResource: "Kanvas", ofType: "bundle")
+    }
+
+    public var cameraPermissionsTitleLabel: String
+    public var cameraPermissionsDescriptionLabel: String
+
+    public static var shared = KanvasStrings(
+        cameraPermissionsTitleLabel: NSLocalizedString("Post to Tumblr", comment: "Title of camera permissions screen"),
+        cameraPermissionsDescriptionLabel: NSLocalizedString("Allow access so you can start taking photos and videos", comment: "Message on camera permissions screen to explain why the Tumblr app needs camera and microphone permissions")
+    )
+
+    public init(cameraPermissionsTitleLabel: String,
+                cameraPermissionsDescriptionLabel: String) {
+        self.cameraPermissionsTitleLabel = cameraPermissionsTitleLabel
+        self.cameraPermissionsDescriptionLabel = cameraPermissionsDescriptionLabel
     }
 }

@@ -72,7 +72,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = NSLocalizedString("Post to Tumblr", comment: "Title of camera permissions screen")
+        label.text = KanvasStrings.shared.cameraPermissionsTitleLabel
         label.font = Constants.titleFont
         label.textColor = Constants.textColor
         label.textAlignment = .center
@@ -83,7 +83,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
 
-        let description = NSLocalizedString("Allow access so you can start taking photos and videos", comment: "Message on camera permissions screen to explain why the Tumblr app needs camera and microphone permissions")
+        let description = KanvasStrings.shared.cameraPermissionsDescriptionLabel
         let descriptionParagraphStyle = NSMutableParagraphStyle()
         descriptionParagraphStyle.lineSpacing = Constants.descriptionFont.pointSize * 0.5
         let descriptionAttributedString = NSMutableAttributedString(string: description)
@@ -108,7 +108,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }()
 
     private lazy var microphoneAccessButton: UIButton = {
-        let title = NSLocalizedString("Allow access to microphone", comment: "Button on camera permissions screen to initiate the sytem prompt for microphone access")
+        let title = NSLocalizedString("Allow access to microphone", comment: "Button on camera permissions screen to initiate the sytem prompt for microphone access.")
         let titleDisabled = NSLocalizedString("Microphone access granted", comment: "Label on camera permissions screen to indicate microphone access is granted")
         let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
         button.translatesAutoresizingMaskIntoConstraints = false

@@ -309,8 +309,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     }
 
     private func refreshFontSelector() {
-        if let attributedFont = font?.withSize(18) {
-            fontSelector.setAttributedTitle(NSAttributedString(string: "Aa", attributes: [.font: attributedFont]), for: .normal)
+        if let attributedFont = font?.withSize(20) {
+            fontSelector.setAttributedTitle(NSAttributedString(string: "Aa", attributes: [.font: attributedFont, .foregroundColor: UIColor.white]), for: .normal)
         }
     }
     
