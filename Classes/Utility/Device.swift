@@ -20,6 +20,8 @@ public struct KanvasDevice {
     static let iPhone11ScreenHeight = 896
     static let iPhone11ProScreenHeight = 812
     static let iPhone11ProMaxScreenHeight = 896
+    static let iPhone12ProScreenHeight = 844
+    static let iPhone12ProMaxScreenHeight = 926
     static let retinaScreenMinScale: CGFloat = 2.0
     
     // Device type
@@ -44,8 +46,10 @@ public struct KanvasDevice {
     static let isIPhone11: Bool = isIPhone && screenMaxLength == iPhone11ScreenHeight
     static let isIPhone11Pro: Bool = isIPhone && screenMaxLength == iPhone11ProScreenHeight
     static let isIPhone11ProMax: Bool = isIPhone && screenMaxLength == iPhone11ProMaxScreenHeight
+    static let isIPhone12Pro: Bool = isIPhone && screenMaxLength == iPhone12ProScreenHeight
+    static let isIPhone12ProMax: Bool = isIPhone && screenMaxLength == iPhone12ProMaxScreenHeight
     
     // Device group
     // This group represents all devices which have extra safe space at the top and the bottom, as well as rounded screen corners.
-    public static let belongsToIPhoneXGroup: Bool = isIPhoneX || isIPhoneXR || isIPhoneXS || isIPhoneXSMax || isIPhone11 || isIPhone11Pro || isIPhone11ProMax
+    public static let belongsToIPhoneXGroup: Bool = isIPhoneX || isIPhoneXR || isIPhoneXS || isIPhoneXSMax || isIPhone11 || isIPhone11Pro || isIPhone11ProMax || isIPhone12Pro || isIPhone12ProMax
 }
