@@ -357,7 +357,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         let controller = createNextStepViewController(segments, selected: selected, edits: edits)
         self.present(controller, animated: animated)
         mediaPlayerController = controller
-        if controller is EditorViewController {
+        if controller is EditorViewController || controller is MultiEditorViewController {
             analyticsProvider?.logEditorOpen()
         }
     }
