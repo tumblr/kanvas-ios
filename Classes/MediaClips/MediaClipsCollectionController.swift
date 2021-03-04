@@ -70,6 +70,12 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     func select(index: Int) {
         let selectedIndexPath = IndexPath(item: index, section: 0)
+        guard mediaClipsCollectionView.collectionView.indexPathsForSelectedItems?.contains(selectedIndexPath) == false else {
+            return
+        }
+        mediaClipsCollectionView.collectionView.indexPathsForSelectedItems?.forEach({ indexPath in
+            mediaClipsCollectionView.collectionView.deselectItem(at: indexPath, animated: false)
+        })
         let scrollPosition: UICollectionView.ScrollPosition
         if mediaClipsCollectionView.collectionView.indexPathsForVisibleItems.contains(selectedIndexPath) {
             scrollPosition = []
