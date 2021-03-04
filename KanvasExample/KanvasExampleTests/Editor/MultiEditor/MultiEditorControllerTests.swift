@@ -99,20 +99,6 @@ class MultiEditorControllerTests: FBSnapshotTestCase {
         wait(for: [expectation], timeout: 2)
     }
 
-    func testShift() {
-        let segments = getPhotoSegment() + getPhotoSegment() + getPhotoSegment()
-        let inFrames = frames(segments: segments)
-        let vc = newViewController(frames: inFrames)
-        let frameMovedAhead = vc.shift(index: 2, moves: [(1,0)], edits: inFrames)
-        XCTAssertEqual(frameMovedAhead, 2, "Selection shouldn't change")
-        let frameMovedBehind = vc.shift(index: 0, moves: [(1,2)], edits: inFrames)
-        XCTAssertEqual(frameMovedBehind, 0, "Selection shouldn't change")
-        let frameMovedInFront = vc.shift(index: 1, moves: [(0,2)], edits: inFrames)
-        XCTAssertEqual(frameMovedInFront, 1, "Selection shouldn't change")
-        let frameMovedInBack = vc.shift(index: 1, moves: [(0,2)], edits: inFrames)
-        XCTAssertEqual(frameMovedInBack, 1, "Selection shouldn't change")
-    }
-
     func testDeletedIndex() {
         let segments = getPhotoSegment() + getPhotoSegment() + getPhotoSegment()
         let inFrames = frames(segments: segments)
