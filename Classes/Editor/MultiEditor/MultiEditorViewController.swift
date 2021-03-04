@@ -122,6 +122,11 @@ class MultiEditorViewController: UIViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        clipsController.select(index: selected ?? 0)
+    }
+
     func loadEditor(for index: Int) {
         let frame = frames[index]
         if let editor = delegate?.editor(segment: frame.segment, edit: frame.edit) {
