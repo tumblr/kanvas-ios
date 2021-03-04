@@ -172,6 +172,10 @@ public struct CameraFeatures {
     /// This scales the imported media to fill the screen by setting the `mediaContentMode` to `scaleAspectFill` on the pixel buffer views.
     /// The buffer views will resize their contents during drawing to fill the screen.
     public var scaleMediaToFill: Bool = false
+
+    /// Resizes Text View Fonts
+    /// Whether or not to resize the text view fonts progressively to fit withinthe editing area.
+    public var resizesFonts: Bool = true
 }
 
 // A class that defines the settings for the Kanvas Camera

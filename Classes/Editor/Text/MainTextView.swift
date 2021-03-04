@@ -35,6 +35,8 @@ final class MainTextView: StylableTextView {
         resizeFont()
         centerContentVertically()
     }
+
+    var resizesFont: Bool = true
     
     override init() {
         super.init()
@@ -88,7 +90,7 @@ final class MainTextView: StylableTextView {
     }
     
     func resizeFont() {
-        guard !bounds.size.equalTo(.zero), let currentFont = font else { return }
+        guard resizesFont && !bounds.size.equalTo(.zero), let currentFont = font else { return }
         var bestFont = currentFont.withSize(Constants.fontSizes[0])
         
         for fontSize in Constants.fontSizes {
