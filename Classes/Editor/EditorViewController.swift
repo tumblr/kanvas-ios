@@ -393,6 +393,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
         startPlayerFromSegments()
     }
+
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        player.pause()
+    }
     
     override public func viewDidLoad() {
         super.viewDidLoad()
