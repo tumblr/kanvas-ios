@@ -1001,16 +1001,14 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             analyticsProvider?.logPreviewDismissed()
         }
         if settings.features.multipleExports {
-            self.dismiss(animated: true, completion: {
-                self.dismiss(animated: false)
-            })
+            delegate?.editorDismissed(self)
             showPreviewWithSegments([], selected: multiEditorViewController?.selected ?? 0)
         } else {
             performUIUpdate { [weak self] in
                 self?.dismiss(animated: true)
             }
+            delegate?.editorDismissed(self)
         }
-        delegate?.editorDismissed(self)
     }
 
     public func tagButtonPressed() {

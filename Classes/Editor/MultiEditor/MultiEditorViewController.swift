@@ -122,6 +122,11 @@ class MultiEditorViewController: UIViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        clipsController.select(index: selected ?? 0)
+    }
+
     func loadEditor(for index: Int) {
         let frame = frames[index]
         if let editor = delegate?.editor(segment: frame.segment, edit: frame.edit) {
@@ -208,8 +213,11 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
             frames.remove(at: index)
         }
 
-        migratedIndex = shift(index: selected ?? 0, indices: [index], edits: frames)
-        selected = newIndex(indices: [index], selected: selected, edits: frames)
+        let newSelection = newIndex(indices: [index], selected: selected, edits: frames)
+        if newSelection == selected {
+            selected = nil
+        }
+        selected = newSelection
         if selected == nil {
             dismissButtonPressed()
         }
@@ -224,12 +232,12 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 
         let sortedindices = indices.sorted()
 
-        if let selected = selected, sortedindices.contains(selected) {
-            if let index = indices.first, edits.indices.contains(index) {
+        if let selected = selected, sortedindices.contains(selected) { // If the selection is contained in the set
+            if let index = indices.first, edits.indices.contains(index) { // Keep the same selection if it still exists.
                 return index
-            } else if let firstIndex = indices.first, firstIndex > edits.startIndex {
+            } else if let firstIndex = indices.first, firstIndex > edits.startIndex { // Item before if it does not.
                 nextIndex = edits.index(before: firstIndex)
-            } else if let lastIndex = sortedindices.last, lastIndex < edits.endIndex {
+            } else if let lastIndex = sortedindices.last, lastIndex < edits.endIndex { // Item after if prior item doesn't exist.
                 nextIndex = edits.index(after: lastIndex)
             }
         } else {
@@ -248,23 +256,40 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
         }
     }
 
+    func shift(index: Int, moves: [(origin: Int, destination: Int)], edits: [Any]) -> Int {
+        let indexMoves: [Int] = moves.map { origin, destination -> Int in
+            if (index < origin && index < destination) || (index > origin && index > destination) {
+                return 0
+            } else {
+                if destination >= index && origin < index {
+                    return -1
+                } else if destination <= index && origin > index {
+                    return 1
+                } else {
+                    return 0
+                }
+            }
+        }
+        return index + indexMoves.reduce(0, { $0 + $1 })
+    }
+
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         if let selected = selected {
             archive(index: selected)
         }
         frames.move(from: originIndex, to: destinationIndex)
 
-        let newIndex: Int
+        let selectedIndex: Int
         if selected == originIndex {
             // When moving the selected frame just move it to the destination index
-            newIndex = destinationIndex
+            selectedIndex = destinationIndex
         } else {
             // Otherwise calculate the shifted index value
-            newIndex = shift(index: selected ?? 0, indices: [originIndex], edits: frames)
+            selectedIndex = shift(index: selected ?? 0, moves: [(originIndex, destinationIndex)], edits: frames)
         }
 
-        migratedIndex = newIndex
-        selected = newIndex
+        migratedIndex = selectedIndex
+        selected = selectedIndex
     }
     
     func mediaClipWasSelected(at: Int) {

@@ -72,7 +72,7 @@ private func createCollectionView() -> UICollectionView {
     let layout = UICollectionViewFlowLayout()
     configureCollectionLayout(layout: layout)
 
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    let collectionView = InteractiveMovementsCrashFixCollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.accessibilityIdentifier = "Media Clips Collection"
     collectionView.backgroundColor = .clear
     configureCollection(collectionView: collectionView)
@@ -98,4 +98,13 @@ private func configureCollection(collectionView: UICollectionView) {
     collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
     collectionView.dragInteractionEnabled = true
     collectionView.reorderingCadence = .immediate
+}
+
+// Fixes a crash in `_UIDragFeedbackGenerator`: https://github.com/tumblr/kanvas-ios/issues/98
+private class InteractiveMovementsCrashFixCollectionView: UICollectionView {
+    // See https://stackoverflow.com/questions/51553223/handling-multiple-uicollectionview-interactivemovements-crash-uidragsnapping for more details
+    override func cancelInteractiveMovement() {
+        super.cancelInteractiveMovement()
+        super.endInteractiveMovement() // animation will be ended early here
+    }
 }

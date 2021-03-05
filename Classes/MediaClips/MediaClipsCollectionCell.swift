@@ -73,6 +73,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         clipImage.image = .none
+        clipView.layer.borderWidth = MediaClipsCollectionCellConstants.borderWidth
     }
 
     override var isSelected: Bool {
