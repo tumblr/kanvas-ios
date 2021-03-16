@@ -120,8 +120,12 @@ private struct EditorViewConstants {
 final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelegate {
 
     func didRenderRectChange(rect: CGRect) {
-        drawingCanvasConstraints.update(with: rect)
-        movableViewCanvasConstraints.update(with: rect)
+        if playerView?.contentMode != .scaleToFill {
+            // Any content mode which isn't explicitly filling the frame needs to adjust the drawing / canvas area
+            // Since `scaleToFill` always fills the provided frame, leave sizing alone since they match rendering area at setup.
+            drawingCanvasConstraints.update(with: rect)
+            movableViewCanvasConstraints.update(with: rect)
+        }
         delegate?.didRenderRectChange(rect: rect)
     }
 
