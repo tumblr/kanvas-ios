@@ -133,6 +133,11 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     weak var playerView: MediaPlayerView?
 
+    var exportSize: CGSize {
+        let exportView = playerView ?? self
+        return CGSize(width: exportView.bounds.width * exportView.contentScaleFactor, height: exportView.bounds.height * exportView.contentScaleFactor)
+    }
+
     private let mainActionMode: MainActionMode
     private let confirmButton = UIButton()
     private let closeButton = UIButton()

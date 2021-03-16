@@ -813,7 +813,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private var exportSize: CGSize? {
-        return settings.features.scaleMediaToFill ? CGSize(width: editorView.frame.width * editorView.contentScaleFactor, height: editorView.frame.height * editorView.contentScaleFactor) : nil
+        let exportSize = editorView.exportSize
+        return settings.features.scaleMediaToFill ? exportSize : nil
     }
 
     private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
