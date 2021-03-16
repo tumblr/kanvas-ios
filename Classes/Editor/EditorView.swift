@@ -187,10 +187,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private lazy var drawingCanvasConstraints: FullViewConstraints = {
         return FullViewConstraints(
             view: drawingCanvas,
-            top: drawingCanvas.topAnchor.constraint(equalTo: topAnchor),
-            bottom: drawingCanvas.bottomAnchor.constraint(equalTo: bottomAnchor),
-            leading: drawingCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
-            trailing: drawingCanvas.trailingAnchor.constraint(equalTo: trailingAnchor)
+            top: drawingCanvas.topAnchor.constraint(equalTo: playerView?.topAnchor ?? topAnchor),
+            bottom: drawingCanvas.bottomAnchor.constraint(equalTo: playerView?.bottomAnchor ?? bottomAnchor),
+            leading: drawingCanvas.leadingAnchor.constraint(equalTo: playerView?.leadingAnchor ?? leadingAnchor),
+            trailing: drawingCanvas.trailingAnchor.constraint(equalTo: playerView?.trailingAnchor ?? trailingAnchor)
         )
     }()
 
@@ -199,10 +199,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private lazy var movableViewCanvasConstraints = {
         return FullViewConstraints(
             view: movableViewCanvas,
-            top: movableViewCanvas.topAnchor.constraint(equalTo: topAnchor),
-            bottom: movableViewCanvas.bottomAnchor.constraint(equalTo: bottomAnchor),
-            leading: movableViewCanvas.leadingAnchor.constraint(equalTo: leadingAnchor),
-            trailing: movableViewCanvas.trailingAnchor.constraint(equalTo: trailingAnchor)
+            top: movableViewCanvas.topAnchor.constraint(equalTo: playerView?.topAnchor ?? topAnchor),
+            bottom: movableViewCanvas.bottomAnchor.constraint(equalTo: playerView?.bottomAnchor ?? bottomAnchor),
+            leading: movableViewCanvas.leadingAnchor.constraint(equalTo: playerView?.leadingAnchor ?? leadingAnchor),
+            trailing: movableViewCanvas.trailingAnchor.constraint(equalTo: playerView?.trailingAnchor ?? trailingAnchor)
         )
     }()
 
@@ -222,6 +222,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     
     weak var delegate: EditorViewDelegate?
     private var mediaContentMode: UIView.ContentMode
+    private var aspectRatio: CGFloat?
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
@@ -239,6 +240,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
          showQuickPostButton: Bool,
          showBlogSwitcher: Bool,
          confirmAtTop: Bool,
+         aspectRatio: CGFloat?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          tagCollection: UIView?,
          metalContext: MetalContext?,
@@ -255,6 +257,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.showQuickPostButton = showQuickPostButton
         self.showBlogSwitcher = showBlogSwitcher
         self.confirmAtTop = confirmAtTop
+        self.aspectRatio = aspectRatio
         self.quickBlogSelectorCoordinator = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
         self.metalContext = metalContext
@@ -327,7 +330,24 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
     private func setupPlayer() {
         let playerView = MediaPlayerView(metalContext: metalContext, mediaContentMode: mediaContentMode)
         playerView.delegate = self
-        playerView.add(into: self)
+
+        if let aspectRatio = aspectRatio {
+            playerView.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(playerView)
+
+            let topConstraint = playerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+            topConstraint.priority = .defaultHigh
+            NSLayoutConstraint.activate([
+                playerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                playerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                playerView.widthAnchor.constraint(equalTo: playerView.heightAnchor, multiplier: aspectRatio, constant: 0),
+                topConstraint,
+                playerView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor)
+            ])
+        } else {
+            playerView.add(into: self)
+        }
+
         self.playerView = playerView
     }
 
@@ -560,10 +580,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         
         addSubview(textMenuContainer)
         NSLayoutConstraint.activate([
-            textMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            textMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            textMenuContainer.topAnchor.constraint(equalTo: topAnchor),
-            textMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+            textMenuContainer.leadingAnchor.constraint(equalTo: playerView?.leadingAnchor ?? leadingAnchor),
+            textMenuContainer.trailingAnchor.constraint(equalTo: playerView?.trailingAnchor ?? trailingAnchor),
+            textMenuContainer.topAnchor.constraint(equalTo: playerView?.topAnchor ?? topAnchor),
+            textMenuContainer.bottomAnchor.constraint(equalTo: playerView?.bottomAnchor ?? bottomAnchor)
         ])
     }
     

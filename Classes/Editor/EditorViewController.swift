@@ -241,6 +241,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
                                     confirmAtTop: settings.features.editorConfirmAtTop,
+                                    aspectRatio: settings.aspectRatio,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                     tagCollection: tagCollection,
                                     metalContext: metalContext,
