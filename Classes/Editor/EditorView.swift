@@ -341,16 +341,27 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         playerView.delegate = self
 
         if let aspectRatio = aspectRatio {
+            playerView.layer.masksToBounds = true
+            playerView.layer.cornerRadius = 12
             playerView.translatesAutoresizingMaskIntoConstraints = false
             self.addSubview(playerView)
 
-            let topConstraint = playerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-            topConstraint.priority = .defaultHigh
+            let bottomConstraint: NSLayoutConstraint
+            let topConstraint: NSLayoutConstraint
+            if Device.belongsToIPhoneXGroup {
+                bottomConstraint = playerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+                topConstraint = playerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+            } else {
+                bottomConstraint = playerView.bottomAnchor.constraint(equalTo: bottomAnchor)
+                topConstraint = playerView.topAnchor.constraint(equalTo: topAnchor)
+            }
             NSLayoutConstraint.activate([
-                playerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                playerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                playerView.centerXAnchor.constraint(equalTo: centerXAnchor),
+                playerView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),
+                playerView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
                 playerView.widthAnchor.constraint(equalTo: playerView.heightAnchor, multiplier: aspectRatio, constant: 0),
                 topConstraint,
+                bottomConstraint,
                 playerView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor)
             ])
         } else {
@@ -549,7 +560,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
             let verticalPositioning: [NSLayoutConstraint]
             if confirmAtTop {
-                verticalPositioning = [collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)]
+                verticalPositioning = [collectionContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -KanvasEditorDesign.shared.editorViewButtonBottomMargin)]
             } else {
                 verticalPositioning = [collectionContainer.centerYAnchor.constraint(equalTo: confirmOrPostButton().centerYAnchor)]
             }
