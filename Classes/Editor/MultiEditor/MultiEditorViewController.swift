@@ -374,6 +374,9 @@ extension MultiEditorViewController: EditorControllerDelegate {
                 editor.export { [weak self, editor] result in
                     let _ = editor // strong reference until the export completes
                     self?.exportHandler.handleExport(result, for: idx)
+                    if let selected = self?.selected {
+                        self?.loadEditor(for: selected)
+                    }
                 }
             }
         })
