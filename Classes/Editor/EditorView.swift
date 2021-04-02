@@ -615,10 +615,10 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         addSubview(drawingMenuContainer)
         drawingMenuContainer.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            drawingMenuContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            drawingMenuContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            drawingMenuContainer.topAnchor.constraint(equalTo: topAnchor),
-            drawingMenuContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+            drawingMenuContainer.leadingAnchor.constraint(equalTo: playerView?.leadingAnchor ?? leadingAnchor),
+            drawingMenuContainer.trailingAnchor.constraint(equalTo: playerView?.trailingAnchor ?? trailingAnchor),
+            drawingMenuContainer.topAnchor.constraint(equalTo: playerView?.topAnchor ?? topAnchor),
+            drawingMenuContainer.bottomAnchor.constraint(equalTo: playerView?.bottomAnchor ?? bottomAnchor)
         ])
     }
     
