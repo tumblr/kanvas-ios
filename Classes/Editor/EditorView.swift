@@ -121,8 +121,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
     func didRenderRectChange(rect: CGRect) {
         if playerView?.contentMode != .scaleToFill {
-            // Any content mode which isn't explicitly filling the frame needs to adjust the drawing / canvas area
-            // Since `scaleToFill` always fills the provided frame, leave sizing alone since they match rendering area at setup.
+            // When scaling to fill we don't need to update these views as they are already sized correctly.
             drawingCanvasConstraints.update(with: rect)
             movableViewCanvasConstraints.update(with: rect)
         }
