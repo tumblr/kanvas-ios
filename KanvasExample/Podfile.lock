@@ -4,7 +4,7 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - Kanvas (1.2.4)
+  - Kanvas (1.2.6)
 
 DEPENDENCIES:
   - FBSnapshotTestCase (= 2.1.4)
@@ -20,7 +20,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  Kanvas: 0e1acb8c10e15eea3365f16c086de2443c7703a8
+  Kanvas: 828033a062a8df8bd73e6efd1a09ac438ead4b41
 
 PODFILE CHECKSUM: 14b28dd726149c0d01dba9154d5bb095d9ba6a18
 
