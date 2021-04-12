@@ -312,6 +312,9 @@ public struct CameraFeatures {
     /// The Font Selector button uses the currently selected font for its label
     public var fontSelectorUsesFont: Bool = DefaultCameraSettings.fontFamilyUsesFont
 
+    /// The aspect ratio to pin the Editor View to
+    public var aspectRatio: CGFloat? = nil
+
     override public init() { }
 
 }

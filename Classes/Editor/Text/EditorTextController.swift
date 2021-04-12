@@ -269,7 +269,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
-            textView.moveToolsUp(distance: keyboardRectangle.height)
+
+            let bottom = CGPoint(x: view.frame.minX, y: view.frame.maxY)
+            let difference = keyboardRectangle.maxY - view.convert(bottom, to: nil).y
+
+            let heightDiff = keyboardRectangle.height - difference
+            textView.moveToolsUp(distance: heightDiff)
         }
     }
     
