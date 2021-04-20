@@ -76,7 +76,7 @@ class MultiEditorViewController: UIViewController {
 
     private var exportingEditors: [EditorViewController]?
 
-    private weak var currentEditor: EditorViewController?
+    private(set) weak var currentEditor: EditorViewController?
 
     init(settings: CameraSettings,
          frames: [Frame],

@@ -640,6 +640,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     private func generateHapticFeedback() {
         feedbackGenerator.notificationOccurred(.success)
     }
+
+    public var confirmButton: UIView? {
+        return (presentedViewController as? MultiEditorViewController)?.currentEditor?.editorView.confirmOrPostButton()
+    }
     
     // MARK: - CameraViewDelegate
 
