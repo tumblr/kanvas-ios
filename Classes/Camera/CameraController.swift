@@ -1091,7 +1091,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
 
     func cameraPermissionsChanged(hasFullAccess: Bool) {
         if hasFullAccess {
-            cameraInputController.setupCaptureSession()
+            cameraInputController.setupCaptureSession(frameSize: view.frame.size)
             toggleMediaPicker(visible: true, animated: false)
         }
     }
