@@ -41,7 +41,6 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
     private var audioInput: AVAssetWriterInput?
     private var recordedVideoFrameFirst: Bool = false
     private var videoQueue: DispatchQueue = DispatchQueue(label: VideoHandlerConstants.queue)
-    private let stopRecordingSemaphore = DispatchSemaphore(value: 0)
 
     // MARK: - external methods
 
@@ -83,15 +82,16 @@ final class VideoOutputHandler: NSObject, VideoOutputHandlerProtocol {
         else if let pixelBuffer = currentVideoPixelBuffer, let presentationTime = currentPresentationTime {
             processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
         }
-
-        stopRecordingSemaphore.signal()
     }
 
     /// Stops recording video and exports as a mp4
     ///
     /// - Parameter completion: success boolean if asset writer completed
     func stopRecordingVideo(completion: @escaping (Bool) -> Void) {
-        stopRecordingSemaphore.wait()
+        guard recording else {
+            completion(false)
+            return
+        }
         recording = false
 
         if let sampleBuffer = currentVideoSampleBuffer {
