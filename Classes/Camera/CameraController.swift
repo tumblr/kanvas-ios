@@ -173,7 +173,9 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         return controller
     }()
     private lazy var clipsController: MediaClipsEditorViewController = {
-        let controller = MediaClipsEditorViewController(showsAddButton: false)
+        let viewSettings = MediaClipsCollectionView.Settings(showsFadeOutGradient: false)
+        let collectionSettings = MediaClipsCollectionController.Settings(clipsCollectionViewSettings: viewSettings)
+        let controller = MediaClipsEditorViewController(showsAddButton: false, collectionSettings: collectionSettings)
         controller.delegate = self
         return controller
     }()
