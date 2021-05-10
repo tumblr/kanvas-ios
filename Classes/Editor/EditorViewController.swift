@@ -19,6 +19,9 @@ public protocol EditorControllerDelegate: class {
 
     /// callback when finished exporting frames
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
+
+    /// callback when exporting fails
+    func didFailExporting()
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -778,7 +781,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                         return
                     }
                     guard let url = url, let mediaInfo = mediaInfo else {
-                        self.hideLoading()
                         self.handleExportError()
                         return
                     }
@@ -792,7 +794,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         else {
             assetsHandler.mergeAssets(segments: segments, withAudio: isMuted == false) { [weak self] url, mediaInfo in
                 guard let url = url else {
-                    self?.hideLoading()
                     self?.handleExportError()
                     return
                 }
@@ -828,7 +829,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
                 guard let gifURL = gifURL else {
                     performUIUpdate {
-                        self.hideLoading()
                         self.handleExportError()
                     }
                     return
@@ -837,9 +837,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
-                performUIUpdate {
-                    self.hideLoading()
-                }
             }
         }
     }
@@ -851,7 +848,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, _) in
             guard let exportedVideoURL = exportedVideoURL else {
                 performUIUpdate {
-                    self.hideLoading()
                     self.handleExportError()
                 }
                 return
@@ -859,7 +855,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             self.gifEncoderClass.init().encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { gifURL in
                 guard let gifURL = gifURL else {
                     performUIUpdate {
-                        self.hideLoading()
                         self.handleExportError()
                     }
                     return
@@ -868,9 +863,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
-                performUIUpdate {
-                    self.hideLoading()
-                }
             }
         }
     }
@@ -881,7 +873,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
-                    self.hideLoading()
                     if let error = error, let exportCompletion = self.exportCompletion {
                         exportCompletion(.failure(error))
                     } else {
@@ -892,7 +883,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 let result = ExportResult(original: .video(videoURL), result: .video(url), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
-                self.hideLoading()
             }
         }
     }
@@ -905,7 +895,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             let originalImage = image
             performUIUpdate {
                 guard let unwrappedImage = exportedImage else {
-                    self.hideLoading()
                     if let error = error, let exportCompletion = self.exportCompletion {
                         exportCompletion(.failure(error))
                     } else {
@@ -916,7 +905,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 let result = ExportResult(original: .image(originalImage), result: .image(unwrappedImage), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
-                self.hideLoading()
             }
         }
     }
@@ -935,6 +923,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func handleExportError() {
+        delegate?.didFailExporting()
         let alertController = UIAlertController(title: nil,
                                                 message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"),
                                                 preferredStyle: .alert)

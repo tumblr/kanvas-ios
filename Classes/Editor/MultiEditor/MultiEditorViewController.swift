@@ -76,7 +76,7 @@ class MultiEditorViewController: UIViewController {
 
     private var exportingEditors: [EditorViewController]?
 
-    private weak var currentEditor: EditorViewController?
+    private(set) weak var currentEditor: EditorViewController?
 
     init(settings: CameraSettings,
          frames: [Frame],
@@ -317,6 +317,9 @@ extension MultiEditorViewController: EditorControllerDelegate {
     }
     
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+    }
+
+    func didFailExporting() {
     }
     
     func dismissButtonPressed() {
