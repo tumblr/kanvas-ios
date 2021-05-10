@@ -317,15 +317,19 @@ extension MultiEditorViewController: EditorControllerDelegate {
     }
 
     func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
     }
     
     func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
     }
     
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
     }
 
     func didFailExporting() {
+        // Handled by MultiEditorExportHandler
     }
     
     func dismissButtonPressed() {
