@@ -356,6 +356,10 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
         framesExportCalled = true
         framesExportCompletion?()
     }
+
+    func didFailExporting() {
+        
+    }
     
     func dismissButtonPressed() {
         closeCalled = true
