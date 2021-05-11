@@ -181,6 +181,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let handler = newAssetHandlerStub()
         let viewController = newViewController(segments: segments, delegate: delegate, assetsHandler: handler)
+        delegate.editor = viewController
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
@@ -194,6 +195,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let handler = newAssetHandlerStub()
         let viewController = newViewController(segments: segments, delegate: delegate, assetsHandler: handler)
+        delegate.editor = viewController
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
@@ -339,19 +341,24 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     var imageExportCompletion: (() -> Void)?
     var framesExportCompletion: (() -> Void)?
     
+    var editor: EditorViewController?
+
     func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        editor?.hideLoading()
         XCTAssertNotNil(url)
         videoExportCalled = true
         videoExportCompletion?()
     }
     
     func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        editor?.hideLoading()
         XCTAssertNotNil(image)
         imageExportCalled = true
         imageExportCompletion?()
     }
 
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        editor?.hideLoading()
         XCTAssertNotNil(url)
         framesExportCalled = true
         framesExportCompletion?()
