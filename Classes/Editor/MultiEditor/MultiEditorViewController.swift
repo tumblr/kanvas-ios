@@ -76,7 +76,7 @@ class MultiEditorViewController: UIViewController {
 
     private var exportingEditors: [EditorViewController]?
 
-    private weak var currentEditor: EditorViewController?
+    private(set) weak var currentEditor: EditorViewController?
 
     init(settings: CameraSettings,
          frames: [Frame],
@@ -127,11 +127,13 @@ class MultiEditorViewController: UIViewController {
         clipsController.select(index: selected ?? 0)
     }
 
-    func loadEditor(for index: Int) {
+    func loadEditor(for index: Int, current: Bool = true) {
         let frame = frames[index]
         if let editor = delegate?.editor(segment: frame.segment, edit: frame.edit) {
-            currentEditor?.stopPlayback()
-            currentEditor?.unloadFromParentViewController()
+            if current {
+                currentEditor?.stopPlayback()
+                currentEditor?.unloadFromParentViewController()
+            }
             let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
             let bottom: CGFloat
             if view.safeAreaInsets.bottom > 0 {
@@ -145,7 +147,11 @@ class MultiEditorViewController: UIViewController {
                 self?.clipsController.removeDraggingClip()
             }
             load(childViewController: editor, into: editorContainer)
-            currentEditor = editor
+            if current {
+                currentEditor = editor
+            } else {
+                editor.view.alpha = 0.0
+            }
         }
     }
         
@@ -311,12 +317,19 @@ extension MultiEditorViewController: EditorControllerDelegate {
     }
 
     func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
     }
     
     func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
     }
     
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
+    }
+
+    func didFailExporting() {
+        // Handled by MultiEditorExportHandler
     }
     
     func dismissButtonPressed() {
@@ -376,7 +389,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
                     
                     self?.exportHandler.handleExport(result, for: idx)
                     if let selected = self?.selected {
-                        self?.loadEditor(for: selected)
+                        self?.loadEditor(for: selected, current: false)
                     }
                 }
             }
