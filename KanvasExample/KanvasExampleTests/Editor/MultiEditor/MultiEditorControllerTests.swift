@@ -189,6 +189,10 @@ final class MultiEditorControllerDelegateStub: MultiEditorComposerDelegate {
 
     }
 
+    func didFailExporting() {
+        
+    }
+
     func dismissButtonPressed() {
 
     }

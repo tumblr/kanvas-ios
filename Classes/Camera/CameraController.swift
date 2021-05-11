@@ -899,6 +899,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             logMediaCreation(action: action, clipsCount: cameraInputController.segments().count, length: CMTimeGetSeconds(asset.duration))
             performUIUpdate { [weak self] in
                 if let self = self {
+                    self.existingEditor?.hideLoading()
                     self.handleCloseSoon(action: action)
                     self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
                 }
@@ -906,6 +907,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         } else {
             performUIUpdate { [weak self] in
                 if let self = self {
+                    self.existingEditor?.hideLoading()
                     self.handleCloseSoon(action: action)
                     self.delegate?.didCreateMedia(self, media: [.failure(CameraControllerError.exportFailure)], exportAction: action)
                 }
@@ -920,6 +922,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             logMediaCreation(action: action, clipsCount: 1, length: 0)
             performUIUpdate { [weak self] in
                 if let self = self {
+                    self.existingEditor?.hideLoading()
                     self.handleCloseSoon(action: action)
                     self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
                 }
@@ -928,6 +931,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         else {
             performUIUpdate { [weak self] in
                 if let self = self {
+                    self.existingEditor?.hideLoading()
                     self.handleCloseSoon(action: action)
                     self.delegate?.didCreateMedia(self, media: [.failure(CameraControllerError.exportFailure)], exportAction: action)
                 }
@@ -939,15 +943,23 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         guard settings.features.multipleExports == false else { return }
         guard let url = url, let info = info, let size = size, size != .zero else {
             performUIUpdate {
+                self.existingEditor?.hideLoading()
                 self.handleCloseSoon(action: action)
                 self.delegate?.didCreateMedia(self, media: [.failure(CameraControllerError.exportFailure)], exportAction: action)
             }
             return
         }
         performUIUpdate {
+            self.existingEditor?.hideLoading()
             self.handleCloseSoon(action: action)
             let media = KanvasMedia(unmodified: nil, output: url, info: info, size: size, archive: nil, type: .frames)
             self.delegate?.didCreateMedia(self, media: [.success(media)], exportAction: action)
+        }
+    }
+
+    public func didFailExporting() {
+        performUIUpdate {
+            self.existingEditor?.hideLoading()
         }
     }
 
@@ -972,7 +984,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
 
             let publishers = archiver.handle(exports: exports)
             self.exportCancellable = publishers.receive(on: DispatchQueue.main).sink { completion in
-
+                self.multiEditorViewController?.hideLoading()
             } receiveValue: { items in
                 self.handleCloseSoon(action: .previewConfirm)
                 self.delegate?.didCreateMedia(self, media: items, exportAction: .post)

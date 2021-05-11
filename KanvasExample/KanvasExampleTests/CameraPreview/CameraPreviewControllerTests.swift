@@ -228,9 +228,15 @@ final class CameraPreviewControllerDelegateStub: CameraPreviewControllerDelegate
 final class AssetsHandlerStub: AssetsHandlerType {
     private(set) var mergeAssetsCalled = false
 
+    private let filename: String
+
+    init(filename: String = "sample") {
+        self.filename = filename
+    }
+
     func mergeAssets(segments: [CameraSegment], withAudio: Bool, completion: @escaping (URL?, MediaInfo?) -> Void) {
         mergeAssetsCalled = true
-        let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4")
+        let videoURL = Bundle(for: type(of: self)).url(forResource: filename, withExtension: "mp4")
         let mediaInfo = MediaInfo(source: .kanvas_camera)
         completion(videoURL, mediaInfo)
     }
@@ -239,7 +245,7 @@ final class AssetsHandlerStub: AssetsHandlerType {
         let newSegments = segments.map { (segment) -> CameraSegment in
             switch segment {
             case let .image(image, _, interval, mt):
-                let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4")
+                let videoURL = Bundle(for: type(of: self)).url(forResource: filename, withExtension: "mp4")
                 return CameraSegment.image(image, videoURL, interval, mt)
             case let .video(url, mt):
                 return CameraSegment.video(url, mt)

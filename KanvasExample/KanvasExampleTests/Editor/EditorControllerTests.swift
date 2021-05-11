@@ -146,8 +146,12 @@ final class EditorControllerTests: FBSnapshotTestCase {
         return stub
     }
     
-    func newAssetHandlerStub() -> AssetsHandlerStub {
-        return AssetsHandlerStub()
+    func newAssetHandlerStub(filename: String? = nil) -> AssetsHandlerStub {
+        if let filename = filename {
+            return AssetsHandlerStub(filename: filename)
+        } else {
+            return AssetsHandlerStub()
+        }
     }
     
     func testSetUp() {
@@ -181,6 +185,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let handler = newAssetHandlerStub()
         let viewController = newViewController(segments: segments, delegate: delegate, assetsHandler: handler)
+        delegate.editor = viewController
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
@@ -194,6 +199,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let delegate = newDelegateStub()
         let handler = newAssetHandlerStub()
         let viewController = newViewController(segments: segments, delegate: delegate, assetsHandler: handler)
+        delegate.editor = viewController
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
@@ -253,6 +259,24 @@ final class EditorControllerTests: FBSnapshotTestCase {
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         wait(for: [expectation], timeout: 2)
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
+    }
+
+    func testConfirmInvalidVideo() {
+        let segments = getVideoSegments()
+        let delegate = newDelegateStub()
+        let handler = newAssetHandlerStub(filename: "sample_invalid")
+        let viewController = newViewController(segments: segments, delegate: delegate, assetsHandler: handler)
+        let expectation = XCTestExpectation(description: "Video Exported")
+        delegate.exportFailedCompletion = {
+            expectation.fulfill()
+        }
+        UIView.setAnimationsEnabled(false)
+        viewController.didTapConfirmButton()
+        UIView.setAnimationsEnabled(true)
+        FBSnapshotVerifyView(viewController.view)
+        XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
+        wait(for: [expectation], timeout: 2)
+        XCTAssert(delegate.exportFailedCalled, "Delegate export failed not called")
     }
     
     func testConfirmVideosAndPhotos() {
@@ -334,27 +358,40 @@ final class EditorControllerDelegateStub: EditorControllerDelegate {
     private(set) var videoExportCalled = false
     private(set) var imageExportCalled = false
     private(set) var framesExportCalled = false
+    private(set) var exportFailedCalled = false
 
     var videoExportCompletion: (() -> Void)?
     var imageExportCompletion: (() -> Void)?
     var framesExportCompletion: (() -> Void)?
-    
+    var exportFailedCompletion: (() -> Void)?
+
+    var editor: EditorViewController?
+
     func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        editor?.hideLoading()
         XCTAssertNotNil(url)
         videoExportCalled = true
         videoExportCompletion?()
     }
     
     func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        editor?.hideLoading()
         XCTAssertNotNil(image)
         imageExportCalled = true
         imageExportCompletion?()
     }
 
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        editor?.hideLoading()
         XCTAssertNotNil(url)
         framesExportCalled = true
         framesExportCompletion?()
+    }
+
+    func didFailExporting() {
+        editor?.hideLoading()
+        exportFailedCalled = true
+        exportFailedCompletion?()
     }
     
     func dismissButtonPressed() {
