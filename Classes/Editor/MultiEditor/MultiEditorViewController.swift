@@ -127,13 +127,11 @@ class MultiEditorViewController: UIViewController {
         clipsController.select(index: selected ?? 0)
     }
 
-    func loadEditor(for index: Int, current: Bool = true) {
+    func loadEditor(for index: Int) {
         let frame = frames[index]
         if let editor = delegate?.editor(segment: frame.segment, edit: frame.edit) {
-            if current {
-                currentEditor?.stopPlayback()
-                currentEditor?.unloadFromParentViewController()
-            }
+            currentEditor?.stopPlayback()
+            currentEditor?.unloadFromParentViewController()
             let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
             let bottom: CGFloat
             if view.safeAreaInsets.bottom > 0 {
@@ -147,11 +145,7 @@ class MultiEditorViewController: UIViewController {
                 self?.clipsController.removeDraggingClip()
             }
             load(childViewController: editor, into: editorContainer)
-            if current {
-                currentEditor = editor
-            } else {
-                editor.view.alpha = 0.0
-            }
+            currentEditor = editor
         }
     }
         
@@ -383,14 +377,17 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
         frames.enumerated().forEach({ (idx, frame) in
             autoreleasepool {
-                let editor = delegate.editor(segment: frame.segment, edit: frame.edit)
-                editor.export(size: currentEditor?.exportSize ?? .zero) { [weak self, editor] result in
-                    let _ = editor // strong reference until the export completes
-                    
-                    self?.exportHandler.handleExport(result, for: idx)
-                    if let selected = self?.selected {
-                        self?.loadEditor(for: selected, current: false)
+                do {
+                    let data = try NSKeyedArchiver.archivedData(withRootObject: frame.edit, requiringSecureCoding: true)
+                    let edit = try NSKeyedUnarchiver.unarchivedObject(ofClass: EditorViewController.Edit.self, from: data)
+                    let editor = delegate.editor(segment: frame.segment, edit: edit)
+                    editor.export(size: currentEditor?.exportSize ?? .zero) { [weak self, editor] result in
+                        let _ = editor // strong reference until the export completes
+
+                        self?.exportHandler.handleExport(result, for: idx)
                     }
+                } catch let error {
+                    exportHandler.handleExport(MultiEditorExportHandler.ExportResult.failure(error), for: idx)
                 }
             }
         })
