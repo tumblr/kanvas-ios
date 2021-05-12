@@ -312,21 +312,24 @@ final class MediaPlayer {
         let heightFactor = 4
         
         let bufferAspectRatio = bufferWidth.f / bufferHeight.f
-        let screenAspectRatio = Device.screenWidth.f / Device.screenHeight.f
+
+        let targetSize = CGSize(width: playerView.frame.width * playerView.contentScaleFactor, height: playerView.frame.height * playerView.contentScaleFactor)
+
+        let targetAspectRatio = targetSize.width / targetSize.height
         
         let x,y: CGFloat
         
-        if bufferAspectRatio > screenAspectRatio {
-            let croppedSpace = bufferWidth - (CGFloat(Device.screenWidth) * bufferHeight / CGFloat(Device.screenHeight))
+        if CGFloat(bufferAspectRatio) > targetAspectRatio {
+            let croppedSpace = bufferWidth - (targetSize.width * bufferHeight / targetSize.height)
             let visibleBufferWidth = bufferWidth - croppedSpace
-            x = croppedSpace / 2 + point.x * visibleBufferWidth / CGFloat(Device.screenWidth)
-            y = point.y * bufferHeight / (CGFloat(Device.screenHeight))
+            x = croppedSpace / 2 + point.x * visibleBufferWidth / targetSize.width
+            y = point.y * bufferHeight / (targetSize.height)
         }
         else {
-            let croppedSpace = bufferHeight - (CGFloat(Device.screenHeight) * bufferWidth / CGFloat(Device.screenWidth))
+            let croppedSpace = bufferHeight - (targetSize.height * bufferWidth / targetSize.width)
             let visibleBufferHeight = bufferHeight - croppedSpace
-            y = croppedSpace / 2 + point.y * visibleBufferHeight / CGFloat(Device.screenHeight)
-            x = point.x * bufferWidth / CGFloat(Device.screenWidth)
+            y = croppedSpace / 2 + point.y * visibleBufferHeight / targetSize.height
+            x = point.x * bufferWidth / targetSize.width
         }
 
         let luma = int32Buffer[Int(y) * int32PerRow / heightFactor + Int(x)]
