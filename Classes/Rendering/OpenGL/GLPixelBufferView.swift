@@ -46,6 +46,10 @@ final class GLPixelBufferView: UIView, PixelBufferView {
         }
     }
 
+    func displayImage(_ image: CIImage) {
+        
+    }
+
     private(set) var mediaContentMode: UIView.ContentMode = .scaleAspectFill {
         didSet {
             guard mediaContentMode == .scaleAspectFill || mediaContentMode == .scaleAspectFit else {

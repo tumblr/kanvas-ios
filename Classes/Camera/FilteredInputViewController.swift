@@ -70,7 +70,7 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
             self.previewView = previewView
         }
         else {
-            let previewView = MetalPixelBufferView(context: metalContext, mediaContentMode: settings.features.scaleMediaToFill ? .scaleAspectFill : .scaleAspectFit)
+            let previewView = MetalPixelBufferView()
             previewView.add(into: view)
             self.previewView = previewView
         }
@@ -87,6 +87,10 @@ final class FilteredInputViewController: UIViewController, RendererDelegate {
     // MARK: - RendererDelegate
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         self.previewView?.displayPixelBuffer(pixelBuffer)
+    }
+
+    func rendererReadyForDisplay(image: CIImage) {
+        self.previewView?.displayImage(image)
     }
 
     func rendererFilteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {

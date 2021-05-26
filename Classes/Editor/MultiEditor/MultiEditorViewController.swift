@@ -24,6 +24,7 @@ class MultiEditorViewController: UIViewController {
     
     private let clipsContainer = IgnoreTouchesView()
     private let editorContainer = IgnoreTouchesView()
+    private let exportContainer = IgnoreTouchesView()
     
     private let exportHandler: MultiEditorExportHandler
     
@@ -127,7 +128,7 @@ class MultiEditorViewController: UIViewController {
         clipsController.select(index: selected ?? 0)
     }
 
-    func loadEditor(for index: Int) {
+    func loadEditor(for index: Int, current: Bool = true) {
         let frame = frames[index]
         if let editor = delegate?.editor(segment: frame.segment, edit: frame.edit) {
             currentEditor?.stopPlayback()
@@ -147,6 +148,19 @@ class MultiEditorViewController: UIViewController {
             load(childViewController: editor, into: editorContainer)
             currentEditor = editor
         }
+    }
+
+    func setup(editor: UIViewController, forExport: Bool) {
+        let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
+        let bottom: CGFloat
+        if view.safeAreaInsets.bottom > 0 {
+            bottom = MediaClipsCollectionView.height + 10
+        } else {
+            bottom = MediaClipsCollectionView.height + 10 + additionalPadding
+        }
+        editor.additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
+        load(childViewController: editor, into: forExport ? exportContainer : editorContainer)
+        editor.viewSafeAreaInsetsDidChange()
     }
         
     func setupContainers() {
@@ -169,6 +183,15 @@ class MultiEditorViewController: UIViewController {
             editorContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             editorContainer.topAnchor.constraint(equalTo: view.topAnchor),
             editorContainer.bottomAnchor.constraint(equalTo: clipsContainer.bottomAnchor),
+        ])
+
+        exportContainer.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(exportContainer, belowSubview: editorContainer)
+        NSLayoutConstraint.activate([
+            exportContainer.leadingAnchor.constraint(equalTo: editorContainer.leadingAnchor),
+            exportContainer.trailingAnchor.constraint(equalTo: editorContainer.trailingAnchor),
+            exportContainer.topAnchor.constraint(equalTo: editorContainer.topAnchor),
+            exportContainer.bottomAnchor.constraint(equalTo: editorContainer.bottomAnchor)
         ])
     }
     
@@ -381,7 +404,10 @@ extension MultiEditorViewController: EditorControllerDelegate {
                     let data = try NSKeyedArchiver.archivedData(withRootObject: frame.edit, requiringSecureCoding: true)
                     let edit = try NSKeyedUnarchiver.unarchivedObject(ofClass: EditorViewController.Edit.self, from: data)
                     let editor = delegate.editor(segment: frame.segment, edit: edit)
-                    editor.export(size: currentEditor?.exportSize ?? .zero) { [weak self, editor] result in
+                    setup(editor: editor, forExport: true)
+//                    let size = frame.segment.image?.size.scaledToFill(size: currentEditor?.exportSize ?? .zero) ?? .zero
+//                    let newSize = CGSize(width: round(size.width), height: round(size.height))
+                    editor.export(size: editor.editorView.exportSize) { [weak self, editor] result in
                         let _ = editor // strong reference until the export completes
 
                         self?.exportHandler.handleExport(result, for: idx)

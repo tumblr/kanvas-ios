@@ -149,6 +149,10 @@ final class VideoCompositor: NSObject, AVVideoCompositing {
 
 extension VideoCompositor: RendererDelegate {
 
+    func rendererReadyForDisplay(image: CIImage) {
+        
+    }
+
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         // Empty since this method is for rendering, not storage
     }

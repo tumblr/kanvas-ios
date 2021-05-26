@@ -78,6 +78,7 @@ final class MediaExporter: MediaExporting {
         renderer.imageOverlays = imageOverlays
         renderer.filterType = filterType
         renderer.refreshFilter()
+        print("Export size: \(toSize)")
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
         renderer.processSampleBuffer(sampleBuffer, time: time, scaleToFillSize: toSize)
@@ -86,6 +87,7 @@ final class MediaExporter: MediaExporting {
                 completion(nil, MediaExporterError.noProcessedImage)
                 return
             }
+            print("Image size: \(processedImage.size)")
             completion(processedImage, nil)
         }
     }

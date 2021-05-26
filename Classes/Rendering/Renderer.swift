@@ -19,6 +19,8 @@ protocol RendererDelegate: class {
     ///   - pixelBuffer: the filtered pixel buffer
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer)
 
+    func rendererReadyForDisplay(image: CIImage)
+
     /// Called when renderer has a processed pixel buffer ready. This is called for every frame, so this can be
     /// used for recording purposes.
     ///
@@ -132,6 +134,7 @@ final class Renderer: Rendering {
         let filterAlreadyInitialized: Bool = synchronized(self) {
             if filter.outputFormatDescription == nil {
                 let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: scaleToFillSize)
+                print("Output dimensions: \(outputDimensions)")
                 filter.setupFormatDescription(from: sampleBuffer, transform: finalMediaTransform, outputDimensions: outputDimensions ?? .zero)
                 return false
             }
@@ -205,6 +208,7 @@ final class Renderer: Rendering {
         
         if imageFilter.outputFormatDescription == nil {
             let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: scaleToFillSize)
+            print("Output size: \(outputDimensions)")
             imageFilter.setupFormatDescription(from: sampleBuffer, transform: finalMediaTransform, outputDimensions: outputDimensions ?? .zero)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
@@ -219,7 +223,8 @@ final class Renderer: Rendering {
         if let scaleToFillSize = size, let inputFormatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) {
             let dimensions = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)
             let inputDimensions = CGSize(width: CGFloat(dimensions.width), height: CGFloat(dimensions.height))
-            let outputDimensions = CGSize(width: inputDimensions.height * (scaleToFillSize.width / scaleToFillSize.height), height: inputDimensions.height)
+            let outputDimensions = inputDimensions.scaledToFill(size: scaleToFillSize)
+            print("Output dimensions: \(outputDimensions)")
             let finalMediaTransform = GLKMatrix4Multiply(scaleWithMatrix(inputDimensions: inputDimensions, outputDimensions: outputDimensions), mediaTransform ?? GLKMatrix4Identity)
             return (finalMediaTransform, outputDimensions)
         }
@@ -242,5 +247,11 @@ final class Renderer: Rendering {
             filter.switchInputDimensions = self.switchInputDimensions
             filter.cleanup()
         }
+    }
+}
+
+extension CGSize {
+    func scaledToFill(size: CGSize) -> CGSize {
+        return CGSize(width: height * (size.width / size.height), height: height)
     }
 }

@@ -73,7 +73,7 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
         let pixelBufferView: PixelBufferView & UIView
 
         if let metalContext = metalContext {
-            pixelBufferView = MetalPixelBufferView(context: metalContext, mediaContentMode: mediaContentMode)
+            pixelBufferView = MetalPixelBufferView()
         }
         else {
             pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: mediaContentMode)
@@ -447,17 +447,21 @@ final class MediaPlayer {
 
         renderer.switchInputDimensions = false
         renderer.mediaTransform = nil
-        
-        renderer.processSampleBuffer(sampleBuffer, time: startTime)
+
+
+
+        let playerSize = playerView?.bounds.size ?? .zero
+        let scaleSize = CGSize(width: playerSize.width * UIScreen.main.nativeScale, height: playerSize.height * UIScreen.main.nativeScale)
+        renderer.processSampleBuffer(sampleBuffer, time: startTime, scaleToFillSize: scaleSize)
         
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯
         if playableMedia.count > 1 {
             lastStillFilterTime = Date.timeIntervalSinceReferenceDate - startTime
-            renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime)
+            renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime, scaleToFillSize: scaleSize)
         }
         else {
-            renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime)
+            renderer.processSampleBuffer(sampleBuffer, time: lastStillFilterTime, scaleToFillSize: scaleSize)
             // If we're only playing one image, don't do anything else!
             return
         }
@@ -565,6 +569,14 @@ final class MediaPlayer {
 }
 
 extension MediaPlayer: RendererDelegate {
+
+    func rendererReadyForDisplay(image: CIImage) {
+        self.playerView?.pixelBufferView?.displayImage(image)
+        if !firstFrameSent {
+            firstFrameSent = true
+            delegate?.didDisplayFirstFrame(UIImage(ciImage: image))
+        }
+    }
 
     func rendererReadyForDisplay(pixelBuffer: CVPixelBuffer) {
         self.currentPixelBuffer = pixelBuffer

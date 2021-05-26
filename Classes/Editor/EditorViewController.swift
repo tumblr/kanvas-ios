@@ -232,6 +232,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
 
         let canvas = edit?.canvas ?? MovableViewCanvas()
+        print("Edit Canvas: \(edit?.canvas)")
 
         let editorView: EditorView = EditorView(delegate: delegate,
                                     mainActionMode: mainActionMode,
@@ -357,7 +358,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.tagCollection = tagCollection
 
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
-        self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
+//        let renderer = Renderer(settings: settings, metalContext: metalContext)
+        let renderer = CIRenderer(settings: settings)
+        self.player = MediaPlayer(renderer: renderer)
         self.player.isMuted = edit?.isMuted == true
         let muteButtonShown = settings.features.muteButton && segments.first?.isVideo == true
         self.editorView = EditorViewController.editor(delegate: nil,
@@ -394,7 +397,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
 
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         startPlayerFromSegments()
     }
 
@@ -743,6 +749,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private func startExporting(action: KanvasExportAction, size: CGSize) {
         player.stop()
+        editorView.layoutIfNeeded()
+        print("Export Size: \(size)")
+        let exportRect = CGRect(origin: .zero, size: size ?? .zero)
+        editorView.didRenderRectChange(rect: exportRect)
+        didRenderRectChange(rect: exportRect)
         showLoading()
         let archive: Data
         do {
@@ -821,9 +832,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func createFinalGIF(segments: [CameraSegment], size: CGSize, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
-        exporter.imageOverlays = imageOverlays(size: size)
         let segments = gifMakerHandler.trimmedSegments(segments)
         let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
+        exporter.imageOverlays = imageOverlays(size: (frames.first?.image.size ?? .zero).scaledToFill(size: size))
         exporter.export(frames: frames, toSize: size) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
@@ -844,7 +855,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func createFinalGIF(videoURL: URL, size: CGSize, framesPerSecond: Int, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
-        exporter.imageOverlays = imageOverlays(size: size)
+        let assetSize = AVURLAsset(url: videoURL).tracks(withMediaType: .video).first?.naturalSize ?? .zero
+        exporter.imageOverlays = imageOverlays(size: assetSize.scaledToFill(size: size))
         exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: size) { (exportedVideoURL, _) in
             guard let exportedVideoURL = exportedVideoURL else {
                 performUIUpdate {
@@ -869,7 +881,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private func createFinalVideo(videoURL: URL, size: CGSize, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
-        exporter.imageOverlays = imageOverlays(size: size)
+        let assetSize = AVURLAsset(url: videoURL).tracks(withMediaType: .video).first?.naturalSize ?? .zero
+        exporter.imageOverlays = imageOverlays(size: assetSize.scaledToFill(size: size))
         exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: size) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
@@ -887,10 +900,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalImage(image: UIImage, size: CGSize, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: UIImage, size inSize: CGSize, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
+        let size = editorView.exportSize
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays(size: size)
+        print("Size: \(size)")
+        print("Image Size: \(image.size.scaledToFill(size: size))")
         exporter.export(image: image, time: player.lastStillFilterTime, toSize: size) { (exportedImage, error) in
             let originalImage = image
             performUIUpdate {
@@ -911,14 +927,15 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private func imageOverlays(size: CGSize) -> [CGImage] {
         // Remove this automatic sizing once export logic is removed from EditorViewController
-        editorView.movableViewCanvas.frame = CGRect(origin: .zero, size: size)
+//        editorView.movableViewCanvas.frame = CGRect(origin: .zero, size: size)
         var imageOverlays: [CGImage] = []
         if let drawingLayer = drawingController.drawingLayer, let drawingOverlayImage = drawingLayer.cgImage() {
             imageOverlays.append(drawingOverlayImage)
         }
-        
+
         if let movableViewsOverlayImage = editorView.movableViewCanvas.layer.cgImage() {
             print("Frame: \(editorView.movableViewCanvas.frame) Image: \(movableViewsOverlayImage.width), \(movableViewsOverlayImage.height)")
+            let myImage = UIImage(cgImage: movableViewsOverlayImage)
             imageOverlays.append(movableViewsOverlayImage)
         }
         return imageOverlays

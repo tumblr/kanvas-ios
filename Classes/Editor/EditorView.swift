@@ -138,7 +138,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
     var exportSize: CGSize {
         let exportView = playerView ?? self
-        return CGSize(width: exportView.bounds.width * exportView.contentScaleFactor, height: exportView.bounds.height * exportView.contentScaleFactor)
+        return CGSize(width: exportView.bounds.width * UIScreen.main.scale, height: exportView.bounds.height * UIScreen.main.scale)
     }
 
     private let mainActionMode: MainActionMode
@@ -350,6 +350,8 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             if Device.belongsToIPhoneXGroup {
                 bottomConstraint = playerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
                 topConstraint = playerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+                bottomConstraint.priority = .defaultHigh
+                topConstraint.priority = .defaultHigh
             } else {
                 bottomConstraint = playerView.bottomAnchor.constraint(equalTo: bottomAnchor)
                 topConstraint = playerView.topAnchor.constraint(equalTo: topAnchor)
