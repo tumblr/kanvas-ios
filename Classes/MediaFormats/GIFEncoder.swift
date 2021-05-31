@@ -128,13 +128,15 @@ final class GIFEncoderImageIO: GIFEncoder {
             CGImageDestinationSetProperties(destination, getFileProperties(loopCount) as CFDictionary)
 
             for frame in frames {
-                if let image = frame.image.cgImage {
-                    CGImageDestinationAddImage(destination, image, getFrameProperties(frame.interval) as CFDictionary)
-                }
-                else {
-                    assertionFailure("GIF frame missing")
-                    completionMain(nil)
-                    return
+                autoreleasepool {
+                    if let image = frame.image.cgImage {
+                        CGImageDestinationAddImage(destination, image, getFrameProperties(frame.interval) as CFDictionary)
+                    }
+                    else {
+                        assertionFailure("GIF frame missing")
+                        completionMain(nil)
+                        return
+                    }
                 }
             }
 
