@@ -97,12 +97,14 @@ final class MediaExporter: MediaExporting {
         DispatchQueue.global(qos: .default).async {
             var time: TimeInterval = 0
             for frame in frames {
-                self.export(image: frame.image, time: time) { (image, error) in
-                    guard error == nil, let image = image else {
-                        return
+                autoreleasepool {
+                    self.export(image: frame.image, time: time) { (image, error) in
+                        guard error == nil, let image = image else {
+                            return
+                        }
+                        time += frame.interval
+                        processedFrames.append((image: image, interval: frame.interval))
                     }
-                    time += frame.interval
-                    processedFrames.append((image: image, interval: frame.interval))
                 }
             }
             DispatchQueue.main.async {
