@@ -10,6 +10,7 @@ import AVFoundation
 import VideoToolbox
 import OpenGLES
 import GLKit
+import CoreImage
 
 /// Delegate for MediaPlayer
 protocol MediaPlayerDelegate: class {
@@ -49,23 +50,39 @@ enum MediaPlayerPlaybackMode {
 }
 
 /// View for rendering the player.
-final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
+final class MediaPlayerView: UIView, GLPixelBufferViewDelegate, UIGestureRecognizerDelegate {
+
+    weak var renderer: Rendering?
 
     weak var pixelBufferView: PixelBufferView?
+
+    weak var backgroundView: UIImageView?
 
     weak var delegate: MediaPlayerViewDelegate?
 
     var mediaTransform: GLKMatrix4? {
          didSet {
-            pixelBufferView?.mediaTransform = mediaTransform
+            let transform = GLKMatrix4Translate(mediaTransform ?? GLKMatrix4Identity, 0, -300, 0)
+            pixelBufferView?.mediaTransform = transform
          }
      }
 
-      var isPortrait: Bool = true {
-         didSet {
+    var viewportTransform: CGAffineTransform? {
+        set {
+            renderer?.viewportTransform = newValue ?? .identity
+        }
+        get {
+            return renderer?.viewportTransform
+        }
+    }
+
+    var isPortrait: Bool = true {
+        didSet {
             pixelBufferView?.isPortrait = isPortrait
-         }
-     }
+        }
+    }
+
+    var refreshHandler: (() -> Void)?
 
     init(metalContext: MetalContext?, mediaContentMode: UIView.ContentMode) {
         super.init(frame: .zero)
@@ -80,6 +97,18 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
         }
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
+        let imageView = UIImageView(image: UIImage())
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundView = imageView
+        self.insertSubview(imageView, belowSubview: pixelBufferView)
+        NSLayoutConstraint.activate([
+            imageView.trailingAnchor.constraint(equalTo: pixelBufferView.trailingAnchor),
+            imageView.leadingAnchor.constraint(equalTo: pixelBufferView.leadingAnchor),
+            imageView.topAnchor.constraint(equalTo: pixelBufferView.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: pixelBufferView.bottomAnchor)
+        ])
+        addGestureHandlers()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -92,6 +121,122 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
         delegate?.didRenderRectChange(rect: rect)
     }
 
+    func addGestureHandlers() {
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handleGestureRecognizer(gestureRecognizer:)))
+        pan.minimumNumberOfTouches = 1
+        pan.maximumNumberOfTouches = 1
+        pan.delegate = self
+        pan.delaysTouchesBegan = false
+        pan.name = "Kanvas Pan+Zoom Pan"
+        addGestureRecognizer(pan)
+
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handleGestureRecognizer(gestureRecognizer:)))
+        pinch.delegate = self
+        pinch.delaysTouchesBegan = false
+        pinch.name = "Kanvas Pan+Zoom Pinch"
+        addGestureRecognizer(pinch)
+
+//        let rotation = UIRotationGestureRecognizer
+    }
+
+    var currentSize: CGSize = .zero
+    var initialPoint = CGPoint()
+    var currentPoint: CGPoint?
+    var currentScale: CGFloat = 1
+
+    var currentScaleTransform: CGAffineTransform = .identity
+    var currentTranslationTransform: CGAffineTransform = .identity
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer.view == self {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    @objc func handleGestureRecognizer(gestureRecognizer: UIGestureRecognizer) {
+        let minScale = bounds.width / currentSize.width
+        switch gestureRecognizer {
+        case let pan as UIPanGestureRecognizer:
+            // Get the changes in the X and Y directions relative to
+            // the superview's coordinate space.
+            let translation = pan.translation(in: self.superview)
+
+            switch gestureRecognizer.state {
+            case .ended:
+                let velocity = pan.velocity(in: self.superview)
+                currentPoint = CGPoint(x: initialPoint.x + translation.x + velocity.x , y: initialPoint.y + translation.y + velocity.y)
+                self.initialPoint = currentPoint ?? initialPoint
+            default:
+                currentPoint = CGPoint(x: initialPoint.x + translation.x , y: initialPoint.y + translation.y)
+                let transform = mediaTransform ?? GLKMatrix4Identity
+                currentTranslationTransform = CGAffineTransform(translationX: currentPoint?.x ?? 0, y: currentPoint?.y ?? 0)
+            }
+            print("Transform: \(translation.x) \(translation.y)")
+        case let pinch as UIPinchGestureRecognizer:
+//            print("Handle pinch: \(pinch.scale) - \(pinch.state.rawValue)")
+            let scale = pinch.scale
+            let finalScale: CGFloat
+            switch gestureRecognizer.state {
+            case .ended:
+                var newScale = currentScale * scale
+                if newScale < minScale {
+                    newScale = minScale
+                } else {
+                    newScale = currentScale * scale
+                }
+                finalScale = newScale
+                currentScale = newScale
+            case .began:
+                finalScale = currentScale * scale
+                let touch1 = pinch.location(ofTouch: 0, in: self)
+                let touch2 = pinch.location(ofTouch: 1, in: self)
+                let touchRect = CGRect(x: min(touch1.x, touch2.x), y: min(touch1.y, touch2.y), width: max(touch1.x, touch2.x), height: max(touch1.y, touch2.y))
+                let center = CGPoint(x: touchRect.midX, y: touchRect.midY)
+                currentPoint = center
+            default:
+                finalScale = currentScale * scale
+            }
+
+            currentScaleTransform = CGAffineTransform(scaleX: finalScale, y: finalScale)
+            let newSize = currentSize.applying(currentScaleTransform)
+            currentTranslationTransform = translation(center: currentPoint ?? .zero, newSize: newSize)
+        default:
+            break
+        }
+        renderer?.viewportTransform = currentTranslationTransform.concatenating(currentScaleTransform).concatenating(currentTranslationTransform.inverted())
+        refreshHandler?()
+    }
+
+    private func centerOffset(center: CGPoint, size: CGSize, newSize: CGSize) -> (CGFloat, CGFloat) {
+//        print("Frame Width: \(bounds.size.width) Frame Height: \(bounds.size.height)")
+//        print("Media Width: \(size.width) Media Height: \(size.height)")
+
+//        let xOffset = (size.width - newSize.width) / 2
+//        let yOffset = (size.height - newSize.height) / 2
+
+
+        let xOffset = center.x - size.width
+        let yOffset = center.y - size.height
+
+//        CGFloat scale = pinch.scale;
+//        transform = CGAffineTransformScale(transform, scale, scale);
+//        transform = CGAffineTransformTranslate(transform, -pinchCenter.x, -pinchCenter.y);
+//        pinchView.transform = transform;
+//        pinch.scale = 1.0;
+
+
+//        let xOffset = (size.width - center.x * 2)
+//        let yOffset = (size.height - center.y * 2)
+
+        return (xOffset, yOffset)
+    }
+
+    private func translation(center: CGPoint, newSize: CGSize) -> CGAffineTransform {
+        let (x, y) = centerOffset(center: center, size: self.bounds.size, newSize: newSize)
+        return CGAffineTransform(translationX: x, y: y)
+    }
 }
 
 /// Controls the playback of many MediaPlayerContent
@@ -153,7 +298,11 @@ final class MediaPlayer {
     let renderer: Rendering
 
     /// The MediaPlayerView that this controls.
-    weak var playerView: MediaPlayerView?
+    weak var playerView: MediaPlayerView? {
+        didSet {
+            playerView?.renderer = renderer
+        }
+    }
 
     /// The last timestamp a still photo has a filter applied. This is used to replicate the filter when exporting an image.
     var lastStillFilterTime: TimeInterval = 0
@@ -239,6 +388,9 @@ final class MediaPlayer {
         currentlyPlayingMediaIndex = -1
         loadAll(media: media)
         playNextMedia()
+        playerView?.refreshHandler = { [weak self] in
+            self?.playCurrentMedia()
+        }
     }
 
     /// Stops the playback of media
@@ -312,24 +464,21 @@ final class MediaPlayer {
         let heightFactor = 4
         
         let bufferAspectRatio = bufferWidth.f / bufferHeight.f
-
-        let targetSize = CGSize(width: playerView.frame.width * playerView.contentScaleFactor, height: playerView.frame.height * playerView.contentScaleFactor)
-
-        let targetAspectRatio = targetSize.width / targetSize.height
+        let screenAspectRatio = Device.screenWidth.f / Device.screenHeight.f
         
         let x,y: CGFloat
         
-        if CGFloat(bufferAspectRatio) > targetAspectRatio {
-            let croppedSpace = bufferWidth - (targetSize.width * bufferHeight / targetSize.height)
+        if bufferAspectRatio > screenAspectRatio {
+            let croppedSpace = bufferWidth - (CGFloat(Device.screenWidth) * bufferHeight / CGFloat(Device.screenHeight))
             let visibleBufferWidth = bufferWidth - croppedSpace
-            x = croppedSpace / 2 + point.x * visibleBufferWidth / targetSize.width
-            y = point.y * bufferHeight / (targetSize.height)
+            x = croppedSpace / 2 + point.x * visibleBufferWidth / CGFloat(Device.screenWidth)
+            y = point.y * bufferHeight / (CGFloat(Device.screenHeight))
         }
         else {
-            let croppedSpace = bufferHeight - (targetSize.height * bufferWidth / targetSize.width)
+            let croppedSpace = bufferHeight - (CGFloat(Device.screenHeight) * bufferWidth / CGFloat(Device.screenWidth))
             let visibleBufferHeight = bufferHeight - croppedSpace
-            y = croppedSpace / 2 + point.y * visibleBufferHeight / targetSize.height
-            x = point.x * bufferWidth / targetSize.width
+            y = croppedSpace / 2 + point.y * visibleBufferHeight / CGFloat(Device.screenHeight)
+            x = point.x * bufferWidth / CGFloat(Device.screenWidth)
         }
 
         let luma = int32Buffer[Int(y) * int32PerRow / heightFactor + Int(x)]
@@ -396,9 +545,11 @@ final class MediaPlayer {
             return
         }
         switch currentlyPlayingMedia {
-        case .image(_, _, _):
+        case .image(let image, _, _):
+            playerView?.currentSize = image.size
             playStill()
-        case .video(_, _, _):
+        case .video(_, let item, _):
+            playerView?.currentSize = item.asset.tracks(withMediaType: .video).first!.naturalSize
             playVideo()
         }
     }
@@ -445,14 +596,20 @@ final class MediaPlayer {
             return
         }
 
-        renderer.switchInputDimensions = false
-        renderer.mediaTransform = nil
-
+        // Render blurred background
+//        let filter = CIFilter.gaussianBlur()
+//        let image = CIImage(cvPixelBuffer: CMSampleBufferGetImageBuffer(sampleBuffer)!)
+//        filter.inputImage = image
+//        filter.radius = 20
+//        let blurredImage = filter.outputImage!.cropped(to: image.extent)
+//        playerView?.backgroundView?.image = UIImage(ciImage: blurredImage)
 
 
         let playerSize = playerView?.bounds.size ?? .zero
         let scaleSize = CGSize(width: playerSize.width * UIScreen.main.nativeScale, height: playerSize.height * UIScreen.main.nativeScale)
         renderer.processSampleBuffer(sampleBuffer, time: startTime, scaleToFillSize: scaleSize)
+        renderer.switchInputDimensions = false
+        renderer.mediaTransform = playerView?.mediaTransform
         
         // LOL I have to call this twice, because this was written for video, where the first frame only initializes
         // things and stuff gets rendered for the 2nd frame ¯\_(ツ)_/¯

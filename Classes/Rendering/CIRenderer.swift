@@ -29,6 +29,8 @@ class CIRenderer: Rendering {
 
     private let context = CIContext()
 
+    var viewportTransform: CGAffineTransform = .identity
+
     /// Designated initializer
     ///
     /// - Parameter delegate: the callback
@@ -83,20 +85,32 @@ class CIRenderer: Rendering {
 //        scale.aspectRatio = Float(size.width / size.height)
 
         let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue, kCVPixelBufferMetalCompatibilityKey: kCFBooleanTrue, kCVPixelBufferIOSurfacePropertiesKey: [:]] as CFDictionary
-        var pixelBuffer : CVPixelBuffer?
+        var buffer : CVPixelBuffer?
 
-        let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(size.width), Int(size.height), kCVPixelFormatType_32BGRA, attrs, &pixelBuffer)
+        let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(size.width), Int(size.height), kCVPixelFormatType_32BGRA, attrs, &buffer)
 
-        guard let pixelBuffer = pixelBuffer else {
+        guard let pixelBuffer = buffer else {
             throw CIRendererError.failedPixelBufferCreation
         }
 
         let scaled = scale.outputImage!
-        let scaledImage = UIImage(ciImage: scaled)
-        let origin = scaled.extent.center.applying(CGAffineTransform(translationX: -(scaleToFillSize ?? .zero).width / 2, y: -scaled.extent.height / 2))
-        let output = scaled.cropped(to: CGRect(origin: origin, size: size ?? .zero))
-        let testImage = UIImage(ciImage: output)
-        delegate?.rendererReadyForDisplay(image: output)
+//        let scaledImage = UIImage(ciImage: scaled)
+//        let origin = scaled.extent.center.applying(CGAffineTransform(translationX: -(scaleToFillSize ?? .zero).width / 2, y: -scaled.extent.height / 2))
+//        let transformed = scaled.extent.applying()
+        let newTransform = viewportTransform//.translatedBy(x: -viewportTransform.tx, y: -viewportTransform.ty) // Zeroing out origin
+        let output = scaled.transformed(by: newTransform)
+//        let testImage = UIImage(ciImage: output)
+
+        /// Blurred Background
+        let filter = CIFilter.gaussianBlur()
+        filter.inputImage = scaled.clampedToExtent()//.transformed(by: CGAffineTransform.identity)
+        filter.radius = 20
+        let blurredImage = filter.outputImage!//.cropped(to: rect).transformed(by: CGAffineTransform(translationX: -image.extent.x, y: -image.extent.y))
+        let backgroundImage = blurredImage.cropped(to: scaled.extent)
+        //transformed(by: CGAffineTransform(translationX: viewportTransform.tx, y: viewportTransform.ty))
+        let compositedImage = output.cropped(to: CGRect(origin: .zero, size: backgroundImage.extent.size)).composited(over: backgroundImage)
+
+        delegate?.rendererReadyForDisplay(image: compositedImage)
         context.render(output, to: pixelBuffer)
         return pixelBuffer
     }

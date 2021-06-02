@@ -8,7 +8,6 @@ import UIKit
 import CoreVideo
 import OpenGLES
 import GLKit
-import os
 
 /// Protocol for GLPixelBufferView
 protocol GLPixelBufferViewDelegate: class {
@@ -19,8 +18,6 @@ protocol GLPixelBufferViewDelegate: class {
 
 /// OpenGL view for rendering a buffer of pixels.
 final class GLPixelBufferView: UIView, PixelBufferView {
-
-    private let log = OSLog(subsystem: "com.tumblr.kanvas", category: "GLPixelBufferView")
 
     private weak var delegate: GLPixelBufferViewDelegate?
 
@@ -58,7 +55,7 @@ final class GLPixelBufferView: UIView, PixelBufferView {
             }
         }
     }
-    
+
     var mediaTransform: GLKMatrix4?
     var isPortrait: Bool = true
 
@@ -111,7 +108,7 @@ final class GLPixelBufferView: UIView, PixelBufferView {
         bail: repeat {
             glFramebufferRenderbuffer(GL_FRAMEBUFFER.ui, GL_COLOR_ATTACHMENT0.ui, GL_RENDERBUFFER.ui, colorBufferHandle)
             if glCheckFramebufferStatus(GL_FRAMEBUFFER.ui) != GL_FRAMEBUFFER_COMPLETE.ui {
-                os_log("Failure with framebuffer generation", log: log, type: .error)
+                assertionFailure("Failure with framebuffer generation")
                 success = false
                 break bail
             }
@@ -175,7 +172,7 @@ final class GLPixelBufferView: UIView, PixelBufferView {
         if frameBufferHandle == 0 {
             let success = self.initializeBuffers()
             if !success {
-                os_log("Problem initializing OpenGL buffers.", log: log, type: .error)
+                assertionFailure("Problem initializing OpenGL buffers.")
                 return
             }
         }
@@ -233,7 +230,11 @@ final class GLPixelBufferView: UIView, PixelBufferView {
             }
         }()
 
+        glClearColor(0.0, 0.0, 0.0, 0.0)
+        glClear(GLbitfield(GL_COLOR_BUFFER_BIT))
         self.viewportRect = viewportRect
+
+        print("Viewport o: \(viewportRect.origin), s: \(viewportRect.size)")
 
         // Set the view port to the entire view
         glBindFramebuffer(GL_FRAMEBUFFER.ui, frameBufferHandle)

@@ -15,6 +15,7 @@ protocol Rendering: class {
     var imageOverlays: [CGImage] { get set }
     var mediaTransform: GLKMatrix4? { get set }
     var switchInputDimensions: Bool { get set }
+    var viewportTransform: CGAffineTransform { get set }
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval)
     func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, time: TimeInterval, scaleToFillSize: CGSize?)
     func processSingleImagePixelBuffer(_ pixelBuffer: CVPixelBuffer, time: TimeInterval, scaleToFillSize: CGSize?) -> CVPixelBuffer?

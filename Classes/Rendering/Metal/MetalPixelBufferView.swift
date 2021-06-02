@@ -26,6 +26,7 @@ final class MetalPixelBufferView: MTKView {
         isPortrait = false
         commandQueue = device.makeCommandQueue()!
         super.init(frame: .zero, device: device)
+        backgroundColor = .clear
         framebufferOnly = false
     }
     
@@ -39,9 +40,13 @@ final class MetalPixelBufferView: MTKView {
             return self.currentDrawable!.texture
         })
 
-        let scale = CIFilter.lanczosScaleTransform()
-        scale.inputImage = image
-        scale.scale = Float(UIScreen.main.nativeScale)
+//        let scale = CIFilter.lanczosScaleTransform()
+//        scale.inputImage = image
+//        scale.scale = Float(UIScreen.main.nativeScale)
+
+//        let transformedImage = image?.transformed(by: viewportTransform ?? CGAffineTransform.identity)
+
+        try! context.startTask(toClear: rd)
 
         if let image = image {
             try! context.startTask(toRender: image, from: image.extent, to: rd, at: rect.origin)

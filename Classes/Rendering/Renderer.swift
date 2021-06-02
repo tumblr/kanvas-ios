@@ -63,6 +63,8 @@ final class Renderer: Rendering {
         }
     }
 
+    var viewportTransform: CGAffineTransform = .identity
+
     private let settings: CameraSettings?
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
