@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 import UIKit
 
-@objc public enum KanvasBrushType: Int {
+public enum KanvasBrushType: Int {
     case pencil, marker, sharpie
 
     public func string() -> String {
@@ -23,7 +23,7 @@ import UIKit
     }
 }
 
-@objc public enum KanvasColorSelectionTool: Int {
+public enum KanvasColorSelectionTool: Int {
     case swatch, gradient, eyedropper
 
     public func string() -> String {
@@ -53,7 +53,7 @@ import UIKit
     }
 }
 
-@objc public enum KanvasTextAlignment: Int {
+public enum KanvasTextAlignment: Int {
     case left, center, right
 
     public func string() -> String {
@@ -82,7 +82,7 @@ import UIKit
     }
 }
 
-@objc public enum KanvasDashboardOpenAction: Int {
+public enum KanvasDashboardOpenAction: Int {
     case tap, swipe
 
     public func string() -> String {
@@ -95,7 +95,7 @@ import UIKit
     }
 }
 
-@objc public enum KanvasDashboardDismissAction: Int {
+public enum KanvasDashboardDismissAction: Int {
     case tap, swipe
 
     public func string() -> String {
@@ -108,7 +108,7 @@ import UIKit
     }
 }
 
-@objc public enum KanvasMediaType: Int {
+public enum KanvasMediaType: Int {
     case image, video, frames, livePhoto
 
     public func string() -> String {
@@ -125,7 +125,7 @@ import UIKit
     }
 }
 
-@objc public enum KanvasGIFPlaybackMode: Int {
+public enum KanvasGIFPlaybackMode: Int {
     case loop, rebound, reverse
 
     init(from playbackOption: PlaybackOption) {
@@ -152,7 +152,7 @@ import UIKit
 }
 
 /// A protocol for injecting analytics into the Kanvas module
-@objc public protocol KanvasAnalyticsProvider {
+public protocol KanvasAnalyticsProvider {
 
     /// Logs an event when the camera is opened
     ///
@@ -221,7 +221,7 @@ import UIKit
 
     func logMediaPickerDismiss()
 
-    func logMediaPickerPickedMedia(ofType mediaType: KanvasMediaType)
+    func logMediaPickerPickedMedia(ofTypes mediaTypes: [KanvasMediaType])
 
     func logEditorOpen()
 

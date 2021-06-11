@@ -22,7 +22,7 @@ class MultiEditorExportHandler {
     /// Storage for the exported media as export occurs
     private var exports: [ExportResult?] = []
     
-    private let logger = OSLog(subsystem: "com.tumblr.Kanvas", category: "StoryExport")
+    private let logger = OSLog(subsystem: "com.tumblr.kanvas", category: "StoryExport")
     
     /// The count of media items we are waiting for
     private var waitingFor: Int?

@@ -66,7 +66,7 @@ final class KanvasImagesTests: FBSnapshotTestCase {
 
     func testConfirmImage() {
         let imageView = newImageView()
-        let image = KanvasImages.confirmImage
+        let image = KanvasImages.shared.confirmImage
         XCTAssert(image != nil, "Image not found")
         imageView.image = image
         FBSnapshotVerifyView(imageView)

@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 // the images used throughout the module
-struct KanvasImages {
+public struct KanvasImages {
     // MARK: - Mode Selection
     static let photoModeImage: UIImage? = .none
     static let loopModeImage: UIImage? = .none
@@ -44,7 +44,6 @@ struct KanvasImages {
     // MARK: - General
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
     static let crossImage = UIImage.imageFromCameraBundle(named: "cross")
-    static let confirmImage = UIImage.imageFromCameraBundle(named: "confirm")
     static let longCheckmarkImage = UIImage.imageFromCameraBundle(named: "longCheckmark")
     static let backImage = UIImage.imageFromCameraBundle(named: "back")
     static let backArrowImage = UIImage.imageFromCameraBundle(named: "backArrow")
@@ -55,7 +54,6 @@ struct KanvasImages {
     static let trashBinClosed = UIImage.imageFromCameraBundle(named: "trashBinClosed")
     static let trashBinOpened = UIImage.imageFromCameraBundle(named: "trashBinOpened")
     static let circleImage = UIImage.imageFromCameraBundle(named: "circleIcon")
-    static let nextImage = UIImage.imageFromCameraBundle(named: "next")
     static let nextArrowImage = UIImage.imageFromCameraBundle(named: "nextArrow")
     static let saveImage = UIImage.imageFromCameraBundle(named: "save")
     static let cogImage = UIImage.imageFromCameraBundle(named: "cog")
@@ -83,9 +81,6 @@ struct KanvasImages {
         .manga: nil,
         .toon: nil,
     ]
-    
-    // MARK: - Editor
-    static let editorConfirmImage = UIImage.imageFromCameraBundle(named: "editorConfirm")
 
     static let editIcons: [EditionOption: [UIImage?]] = [
         .gif: [
@@ -174,4 +169,20 @@ struct KanvasImages {
     
     // MARK: - Camera Permissions
     static let permissionCheckmark = UIImage.imageFromCameraBundle(named: "checkmark")
+
+    let nextImage: UIImage?
+    let confirmImage: UIImage?
+    let editorConfirmImage: UIImage?
+
+    public static var shared = KanvasImages(confirmImage: UIImage.imageFromCameraBundle(named: "confirm"),
+                                    editorConfirmImage: UIImage.imageFromCameraBundle(named: "editorConfirm"),
+                                     nextImage: UIImage.imageFromCameraBundle(named: "next"))
+
+    public init(confirmImage: UIImage?,
+         editorConfirmImage: UIImage?,
+         nextImage: UIImage?) {
+        self.confirmImage = confirmImage
+        self.editorConfirmImage = editorConfirmImage
+        self.nextImage = nextImage
+    }
 }

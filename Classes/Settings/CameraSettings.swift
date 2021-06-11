@@ -135,6 +135,10 @@ public struct CameraFeatures {
 
     public var editorPostOptions: Bool = false
 
+    /// Editor Confirm Button
+    /// Moves the editor confirm button to the top right
+    public var editorConfirmAtTop: Bool = false
+
     /// The Editor Saving feature
     /// This enables the UI to save media from the editor.
     public var editorSaving: Bool = false
@@ -155,6 +159,10 @@ public struct CameraFeatures {
     /// This enables a tooltip to appear above the shutter button when the camera launches for the first time.
     public var shutterButtonTooltip: Bool = false
 
+    /// Button to Mute Sound
+    /// This adds an option to mute sounds from videos during editing and in export.
+    public var muteButton = false
+
 
     /// Multi-Export support
     /// This enables multiple images/videos to be taken, edited, and then exported
@@ -164,6 +172,10 @@ public struct CameraFeatures {
     /// This scales the imported media to fill the screen by setting the `mediaContentMode` to `scaleAspectFill` on the pixel buffer views.
     /// The buffer views will resize their contents during drawing to fill the screen.
     public var scaleMediaToFill: Bool = false
+
+    /// Resizes Text View Fonts
+    /// Whether or not to resize the text view fonts progressively to fit withinthe editing area.
+    public var resizesFonts: Bool = true
 }
 
 // A class that defines the settings for the Kanvas Camera
@@ -299,6 +311,9 @@ public struct CameraFeatures {
 
     /// The Font Selector button uses the currently selected font for its label
     public var fontSelectorUsesFont: Bool = DefaultCameraSettings.fontFamilyUsesFont
+
+    /// The aspect ratio to pin the Editor View to
+    public var aspectRatio: CGFloat? = nil
 
     override public init() { }
 

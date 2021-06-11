@@ -196,6 +196,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     struct Settings {
         /// The Font Selector button uses the current selected font (`font`) for its label
         let fontSelectorUsesFont: Bool
+        /// Enables/disables progressive font resizing
+        let resizesFonts: Bool
     }
 
     private let settings: Settings
@@ -251,6 +253,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     private func setUpMainTextView() {
         mainTextView.accessibilityIdentifier = "Editor Text Main View"
         mainTextView.translatesAutoresizingMaskIntoConstraints = false
+        mainTextView.resizesFont = settings.resizesFonts
         addSubview(mainTextView)
         
         let topMargin = Constants.topMargin + Constants.confirmButtonSize
@@ -309,8 +312,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     }
 
     private func refreshFontSelector() {
-        if let attributedFont = font?.withSize(18) {
-            fontSelector.setAttributedTitle(NSAttributedString(string: "Aa", attributes: [.font: attributedFont]), for: .normal)
+        if let attributedFont = font?.withSize(20) {
+            fontSelector.setAttributedTitle(NSAttributedString(string: "Aa", attributes: [.font: attributedFont, .foregroundColor: UIColor.white]), for: .normal)
         }
     }
     

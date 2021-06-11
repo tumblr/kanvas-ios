@@ -11,7 +11,7 @@ import XCTest
 
 final class MMCQTests: XCTestCase {
     
-    private let testImage = KanvasImages.confirmImage
+    private let testImage = KanvasImages.shared.confirmImage
     
     func testQuantize() {
         guard let image = testImage,

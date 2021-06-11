@@ -205,6 +205,11 @@ final class MediaPlayer {
     init(renderer: Rendering?) {
         self.renderer = renderer ?? Renderer()
         self.renderer.delegate = self
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+        } catch let error {
+            print("Failed to set audio session category: \(error)")
+        }
     }
 
     deinit {
@@ -255,6 +260,15 @@ final class MediaPlayer {
         nextImageTimer = nil
         avPlayer.pause()
         renderer.reset()
+    }
+
+    var isMuted: Bool {
+        set {
+            avPlayer.isMuted = newValue
+        }
+        get {
+            return avPlayer.isMuted
+        }
     }
 
     /// Resumes the playback of media.

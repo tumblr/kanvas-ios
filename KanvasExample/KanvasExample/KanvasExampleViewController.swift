@@ -149,6 +149,7 @@ final class KanvasExampleViewController: UIViewController {
         settings.exportStopMotionPhotoAsVideo = true
         settings.features.multipleExports = false
         settings.features.scaleMediaToFill = false
+        settings.features.muteButton = false
         return settings
     }
 
@@ -270,6 +271,7 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
             .editorPostOptions(settings.features.editorPostOptions),
+            .editorConfirmAtTop(settings.features.editorConfirmAtTop),
             .newCameraModes(settings.features.newCameraModes),
             .modeSelectorTooltip(settings.features.modeSelectorTooltip),
             .shutterButtonTooltip(settings.features.shutterButtonTooltip),
@@ -278,7 +280,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             .gifCameraShouldStartGIFMaker(settings.gifCameraShouldStartGIFMaker),
             .exportStopMotionAsVideo(settings.exportStopMotionPhotoAsVideo),
             .multipleExport(settings.features.multipleExports),
-            .scaleMediaToFill(settings.features.scaleMediaToFill)
+            .scaleMediaToFill(settings.features.scaleMediaToFill),
+            .muteButton(settings.features.muteButton)
         ]
     }
 
@@ -322,6 +325,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             settings.defaultMode = settings.features.newCameraModes ? Constants.defaultNewMode : Constants.defaultStandardMode
         case .editorPostOptions(_):
             settings.features.editorPostOptions = value
+        case .editorConfirmAtTop(_):
+            settings.features.editorConfirmAtTop = value
         case .modeSelectorTooltip(_):
             settings.features.modeSelectorTooltip = value
         case .shutterButtonTooltip(_):
@@ -340,6 +345,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             settings.features.multipleExports = value
         case .scaleMediaToFill(_):
             settings.features.scaleMediaToFill = value
+        case .muteButton(_):
+            settings.features.muteButton = value
         }
     }
 }

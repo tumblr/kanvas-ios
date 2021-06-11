@@ -6,11 +6,12 @@
 
 import Foundation
 import UIKit
+import os
 
 protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])
     func addButtonWasPressed()
-    func editor(segment: CameraSegment, canvas: MovableViewCanvas?) -> EditorViewController
+    func editor(segment: CameraSegment, edit: EditorViewController.Edit?) -> EditorViewController
     func dismissButtonPressed()
 }
 
@@ -31,7 +32,7 @@ class MultiEditorViewController: UIViewController {
 
     struct Frame {
         let segment: CameraSegment
-        let edit: Edit?
+        let edit: EditorViewController.Edit?
     }
 
     private var frames: [Frame]
@@ -49,11 +50,7 @@ class MultiEditorViewController: UIViewController {
                 return
             }
             if let old = selected {
-                do {
-                    try archive(index: old)
-                } catch let error {
-                    print("Failed to archive current edits \(error)")
-                }
+                archive(index: old)
             }
             if let new = newValue { // If the new index is the same as the old just keep the current editor
                 loadEditor(for: new)
@@ -78,13 +75,9 @@ class MultiEditorViewController: UIViewController {
     
     private let settings: CameraSettings
 
-    struct Edit {
-        let data: Data?
-    }
-
     private var exportingEditors: [EditorViewController]?
 
-    private weak var currentEditor: EditorViewController?
+    private(set) weak var currentEditor: EditorViewController?
 
     init(settings: CameraSettings,
          frames: [Frame],
@@ -130,12 +123,18 @@ class MultiEditorViewController: UIViewController {
         }
     }
 
-    func loadEditor(for index: Int) {
-        let canvas = edits(for: index)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        clipsController.select(index: selected ?? 0)
+    }
+
+    func loadEditor(for index: Int, current: Bool = true) {
         let frame = frames[index]
-        if let editor = delegate?.editor(segment: frame.segment, canvas: canvas) {
-            currentEditor?.stopPlayback()
-            currentEditor?.unloadFromParentViewController()
+        if let editor = delegate?.editor(segment: frame.segment, edit: frame.edit) {
+            if current {
+                currentEditor?.stopPlayback()
+                currentEditor?.unloadFromParentViewController()
+            }
             let additionalPadding: CGFloat = 10 // Extra padding for devices that don't have safe areas (which provide some padding by default).
             let bottom: CGFloat
             if view.safeAreaInsets.bottom > 0 {
@@ -145,8 +144,15 @@ class MultiEditorViewController: UIViewController {
             }
             editor.additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
             editor.delegate = self
+            editor.editorView.movableViewCanvas.trashCompletion = { [weak self] in
+                self?.clipsController.removeDraggingClip()
+            }
             load(childViewController: editor, into: editorContainer)
-            currentEditor = editor
+            if current {
+                currentEditor = editor
+            } else {
+                editor.view.alpha = 0.0
+            }
         }
     }
         
@@ -198,11 +204,11 @@ extension MultiEditorViewController: MediaPlayerController {
 
 extension MultiEditorViewController: MediaClipsEditorDelegate {
     func mediaClipStartedMoving() {
-        // No-op for the moment. UI is coming in a future commit.
+        currentEditor?.editorView.updateUI(forDraggingClip: true)
     }
 
     func mediaClipFinishedMoving() {
-        // No-op for the moment. UI is coming in a future commit.
+        currentEditor?.editorView.updateUI(forDraggingClip: false)
     }
     
     func addButtonWasPressed() {
@@ -214,8 +220,11 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
             frames.remove(at: index)
         }
 
-        migratedIndex = shift(index: selected ?? 0, indices: [index], edits: frames)
-        selected = newIndex(indices: [index], selected: selected, edits: frames)
+        let newSelection = newIndex(indices: [index], selected: selected, edits: frames)
+        if newSelection == selected {
+            selected = nil
+        }
+        selected = newSelection
         if selected == nil {
             dismissButtonPressed()
         }
@@ -230,12 +239,12 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 
         let sortedindices = indices.sorted()
 
-        if let selected = selected, sortedindices.contains(selected) {
-            if let index = indices.first, edits.indices.contains(index) {
+        if let selected = selected, sortedindices.contains(selected) { // If the selection is contained in the set
+            if let index = indices.first, edits.indices.contains(index) { // Keep the same selection if it still exists.
                 return index
-            } else if let firstIndex = indices.first, firstIndex > edits.startIndex {
+            } else if let firstIndex = indices.first, firstIndex > edits.startIndex { // Item before if it does not.
                 nextIndex = edits.index(before: firstIndex)
-            } else if let lastIndex = sortedindices.last, lastIndex < edits.endIndex {
+            } else if let lastIndex = sortedindices.last, lastIndex < edits.endIndex { // Item after if prior item doesn't exist.
                 nextIndex = edits.index(after: lastIndex)
             }
         } else {
@@ -254,27 +263,40 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
         }
     }
 
+    func shift(index: Int, moves: [(origin: Int, destination: Int)], edits: [Any]) -> Int {
+        let indexMoves: [Int] = moves.map { origin, destination -> Int in
+            if (index < origin && index < destination) || (index > origin && index > destination) {
+                return 0
+            } else {
+                if destination >= index && origin < index {
+                    return -1
+                } else if destination <= index && origin > index {
+                    return 1
+                } else {
+                    return 0
+                }
+            }
+        }
+        return index + indexMoves.reduce(0, { $0 + $1 })
+    }
+
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int) {
         if let selected = selected {
-            do {
-                try archive(index: selected)
-            } catch let error {
-                print("Failed to archive current edits: \(error)")
-            }
+            archive(index: selected)
         }
         frames.move(from: originIndex, to: destinationIndex)
 
-        let newIndex: Int
+        let selectedIndex: Int
         if selected == originIndex {
             // When moving the selected frame just move it to the destination index
-            newIndex = destinationIndex
+            selectedIndex = destinationIndex
         } else {
             // Otherwise calculate the shifted index value
-            newIndex = shift(index: selected ?? 0, indices: [originIndex], edits: frames)
+            selectedIndex = shift(index: selected ?? 0, moves: [(originIndex, destinationIndex)], edits: frames)
         }
 
-        migratedIndex = newIndex
-        selected = newIndex
+        migratedIndex = selectedIndex
+        selected = selectedIndex
     }
     
     func mediaClipWasSelected(at: Int) {
@@ -296,12 +318,19 @@ extension MultiEditorViewController: EditorControllerDelegate {
     }
 
     func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
     }
     
     func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
     }
     
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool) {
+        // Handled by MultiEditorExportHandler
+    }
+
+    func didFailExporting() {
+        // Handled by MultiEditorExportHandler
     }
     
     func dismissButtonPressed() {
@@ -346,11 +375,7 @@ extension MultiEditorViewController: EditorControllerDelegate {
         showLoading()
 
         if let selected = selected {
-            do {
-                try archive(index: selected)
-            } catch let error {
-                print("Failed to archive current edits on export \(error)")
-            }
+            archive(index: selected)
         }
 
         exportHandler.startWaiting(for: frames.count)
@@ -359,17 +384,13 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
         frames.enumerated().forEach({ (idx, frame) in
             autoreleasepool {
-                let canvas: MovableViewCanvas?
-                do {
-                    canvas = try MovableViewCanvas.from(frame: frame)
-                } catch let error {
-                    assertionFailure("Failed to unarchive edits on export for \(idx): \(error)")
-                    canvas = nil
-                }
-                let editor = delegate.editor(segment: frame.segment, canvas: canvas)
+                let editor = delegate.editor(segment: frame.segment, edit: frame.edit)
                 editor.export { [weak self, editor] result in
                     let _ = editor // strong reference until the export completes
                     self?.exportHandler.handleExport(result, for: idx)
+                    if let selected = self?.selected {
+                        self?.loadEditor(for: selected, current: false)
+                    }
                 }
             }
         })
@@ -383,43 +404,19 @@ extension MultiEditorViewController: EditorControllerDelegate {
 
 //MARK: Edit + Archive
 
+private let archive_log = OSLog(subsystem: "com.tumblr.kanvas", category: "MultiEditorArchive")
+
 extension MultiEditorViewController {
-    func archive(index: Int) throws {
+    func archive(index: Int) {
         guard let currentEditor = currentEditor else {
             return
         }
-        let currentCanvas = try NSKeyedArchiver.archivedData(withRootObject: currentEditor.editorView.movableViewCanvas, requiringSecureCoding: true)
+
         if frames.indices ~= index {
             let frame = frames[index]
-            frames[index] = Frame(segment: frame.segment, edit: Edit(data: currentCanvas))
+            frames[index] = Frame(segment: frame.segment, edit: currentEditor.edit)
         } else {
-            print("Invalid frame index")
+            os_log("Invalid frame index on archive", log: archive_log, type: .debug)
         }
-    }
-
-    func edits(for index: Int) -> MovableViewCanvas? {
-        if frames.indices ~= index {
-            let frame = frames[index]
-            do {
-                return try MovableViewCanvas.from(frame: frame)
-            } catch let error {
-                assertionFailure("Failed to unarchive edits on export for \(index): \(error)")
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-}
-
-extension MovableViewCanvas {
-    static func from(frame: MultiEditorViewController.Frame) throws -> Self? {
-        let canvas: Self?
-        if let edit = frame.edit?.data {
-            canvas = try NSKeyedUnarchiver.unarchivedObject(ofClass: Self.self, from: edit)
-        } else {
-            canvas = nil
-        }
-        return canvas
     }
 }

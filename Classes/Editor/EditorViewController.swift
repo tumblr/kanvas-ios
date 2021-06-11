@@ -19,6 +19,9 @@ public protocol EditorControllerDelegate: class {
 
     /// callback when finished exporting frames
     func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
+
+    /// callback when exporting fails
+    func didFailExporting()
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -82,7 +85,33 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         let archive: Data
     }
 
+    @objc(KanvasEditorEdit) public class Edit: NSObject, NSSecureCoding {
+        public static var supportsSecureCoding = true
+
+        public func encode(with coder: NSCoder) {
+            coder.encode(canvas, forKey: "canvas")
+            coder.encode(isMuted, forKey: "isMuted")
+        }
+
+        public required init?(coder: NSCoder) {
+            canvas = coder.decodeObject(of: MovableViewCanvas.self, forKey: "canvas")
+            isMuted = coder.decodeBool(forKey: "isMuted")
+        }
+
+        let canvas: MovableViewCanvas?
+        let isMuted: Bool
+
+        init(canvas: MovableViewCanvas, isMuted: Bool) {
+            self.canvas = canvas
+            self.isMuted = isMuted
+        }
+    }
+
     var editorView: EditorView
+
+    var isMuted: Bool {
+        return player.isMuted
+    }
     
     private lazy var collectionController: KanvasEditorMenuController = {
         let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
@@ -106,7 +135,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
     
     private lazy var textController: EditorTextController = {
-        let textViewSettings = EditorTextView.Settings(fontSelectorUsesFont: settings.fontSelectorUsesFont)
+        let textViewSettings = EditorTextView.Settings(fontSelectorUsesFont: settings.fontSelectorUsesFont, resizesFonts: settings.features.resizesFonts)
         let settings = EditorTextController.Settings(textViewSettings: textViewSettings)
         let controller = EditorTextController(settings: settings)
         controller.delegate = self
@@ -189,7 +218,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private static func editor(delegate: EditorViewDelegate?,
                                settings: CameraSettings,
-                               canvas: MovableViewCanvas?,
+                               showsMuteButton: Bool,
+                               edit: Edit?,
                                quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
                                tagCollection: UIView?,
                                metalContext: MetalContext?) -> EditorView {
@@ -201,20 +231,26 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             mainActionMode = .post
         }
 
+        let canvas = edit?.canvas ?? MovableViewCanvas()
+
         let editorView: EditorView = EditorView(delegate: delegate,
                                     mainActionMode: mainActionMode,
                                     showSaveButton: settings.features.editorSaving,
+                                    showMuteButton: showsMuteButton,
                                     showCrossIcon: settings.crossIconInEditor,
                                     showCogIcon: settings.showCogIconInEditor,
                                     showTagButton: settings.showTagButtonInEditor,
                                     showTagCollection: settings.showTagCollectionInEditor,
                                     showQuickPostButton: settings.showQuickPostButtonInEditor,
                                     showBlogSwitcher: settings.showBlogSwitcherInEditor,
+                                    confirmAtTop: settings.features.editorConfirmAtTop,
+                                    aspectRatio: settings.aspectRatio,
                                     quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                     tagCollection: tagCollection,
                                     metalContext: metalContext,
                                     mediaContentMode: settings.features.scaleMediaToFill ? .scaleAspectFill : .scaleAspectFit,
                                     movableViewCanvas: canvas)
+        canvas.delegate = editorView
         return editorView
     }
 
@@ -307,7 +343,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          stickerProvider: StickerProvider?,
          analyticsProvider: KanvasAnalyticsProvider?,
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
-         canvas: MovableViewCanvas? = nil,
+         edit: Edit? = nil,
          tagCollection: UIView?) {
         self.settings = settings
         self.originalSegments = segments
@@ -322,14 +358,18 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
+        self.player.isMuted = edit?.isMuted == true
+        let muteButtonShown = settings.features.muteButton && segments.first?.isVideo == true
         self.editorView = EditorViewController.editor(delegate: nil,
                                                       settings: settings,
-                                                      canvas: canvas,
+                                                      showsMuteButton: muteButtonShown,
+                                                      edit: edit,
                                                       quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                                       tagCollection: tagCollection,
                                                       metalContext: metalContext)
         super.init(nibName: .none, bundle: .none)
         self.editorView.delegate = self
+        self.editorView.muteButtonSelected = player.isMuted
 
         editorView.delegate = self
         player.playerView = editorView.playerView
@@ -356,6 +396,12 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         super.viewWillAppear(animated)
 
         startPlayerFromSegments()
+    }
+
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        player.pause()
     }
     
     override public func viewDidLoad() {
@@ -593,6 +639,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         analyticsProvider?.logSaveFromDashboard()
     }
 
+    func didTapMuteButton(enabled: Bool) {
+        player.isMuted = enabled
+    }
+
     func didTapPostButton() {
         if delegate?.shouldExport() ?? true {
             startExporting(action: .post)
@@ -696,7 +746,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         showLoading()
         let archive: Data
         do {
-            archive = try self.archive()
+            archive = try NSKeyedArchiver.archivedData(withRootObject: edit, requiringSecureCoding: true)
         } catch {
             handleExportError()
             return
@@ -726,12 +776,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
                 // It might be nice in the future to create a GIF directly from segments.
-                assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+                assetsHandler.mergeAssets(segments: segments, withAudio: true) { [weak self] url, mediaInfo in
                     guard let self = self else {
                         return
                     }
                     guard let url = url, let mediaInfo = mediaInfo else {
-                        self.hideLoading()
                         self.handleExportError()
                         return
                     }
@@ -743,9 +792,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else {
-            assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+            assetsHandler.mergeAssets(segments: segments, withAudio: isMuted == false) { [weak self] url, mediaInfo in
                 guard let url = url else {
-                    self?.hideLoading()
                     self?.handleExportError()
                     return
                 }
@@ -761,12 +809,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         startExporting(action: .post)
     }
 
-    private func archive() throws -> Data {
-        return try NSKeyedArchiver.archivedData(withRootObject: editorView.movableViewCanvas, requiringSecureCoding: true)
+    var edit: Edit {
+        return Edit(canvas: editorView.movableViewCanvas, isMuted: isMuted)
     }
 
     private var exportSize: CGSize? {
-        return settings.features.scaleMediaToFill ? CGSize(width: editorView.frame.width * editorView.contentScaleFactor, height: editorView.frame.height * editorView.contentScaleFactor) : nil
+        let exportSize = editorView.exportSize
+        return settings.features.scaleMediaToFill ? exportSize : nil
     }
 
     private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
@@ -780,7 +829,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
                 guard let gifURL = gifURL else {
                     performUIUpdate {
-                        self.hideLoading()
                         self.handleExportError()
                     }
                     return
@@ -789,9 +837,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
-                performUIUpdate {
-                    self.hideLoading()
-                }
             }
         }
     }
@@ -803,7 +848,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, _) in
             guard let exportedVideoURL = exportedVideoURL else {
                 performUIUpdate {
-                    self.hideLoading()
                     self.handleExportError()
                 }
                 return
@@ -811,7 +855,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             self.gifEncoderClass.init().encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { gifURL in
                 guard let gifURL = gifURL else {
                     performUIUpdate {
-                        self.hideLoading()
                         self.handleExportError()
                     }
                     return
@@ -820,9 +863,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
-                performUIUpdate {
-                    self.hideLoading()
-                }
             }
         }
     }
@@ -833,7 +873,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
-                    self.hideLoading()
                     if let error = error, let exportCompletion = self.exportCompletion {
                         exportCompletion(.failure(error))
                     } else {
@@ -844,7 +883,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 let result = ExportResult(original: .video(videoURL), result: .video(url), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
-                self.hideLoading()
             }
         }
     }
@@ -857,7 +895,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             let originalImage = image
             performUIUpdate {
                 guard let unwrappedImage = exportedImage else {
-                    self.hideLoading()
                     if let error = error, let exportCompletion = self.exportCompletion {
                         exportCompletion(.failure(error))
                     } else {
@@ -868,7 +905,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 let result = ExportResult(original: .image(originalImage), result: .image(unwrappedImage), info: mediaInfo, archive: archive)
                 self.exportCompletion?(.success(result))
                 self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
-                self.hideLoading()
             }
         }
     }
@@ -887,6 +923,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func handleExportError() {
+        delegate?.didFailExporting()
         let alertController = UIAlertController(title: nil,
                                                 message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"),
                                                 preferredStyle: .alert)

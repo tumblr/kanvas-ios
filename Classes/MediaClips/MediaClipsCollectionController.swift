@@ -69,7 +69,20 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     }
 
     func select(index: Int) {
-        mediaClipsCollectionView.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .left)
+        let selectedIndexPath = IndexPath(item: index, section: 0)
+        guard mediaClipsCollectionView.collectionView.indexPathsForSelectedItems?.contains(selectedIndexPath) == false else {
+            return
+        }
+        mediaClipsCollectionView.collectionView.indexPathsForSelectedItems?.forEach({ indexPath in
+            mediaClipsCollectionView.collectionView.deselectItem(at: indexPath, animated: false)
+        })
+        let scrollPosition: UICollectionView.ScrollPosition
+        if mediaClipsCollectionView.collectionView.indexPathsForVisibleItems.contains(selectedIndexPath) {
+            scrollPosition = []
+        } else {
+            scrollPosition = .left
+        }
+        mediaClipsCollectionView.collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: scrollPosition)
     }
 
     func removeAllClips() {

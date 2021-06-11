@@ -63,7 +63,7 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
 
     }
 
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void) {
+    func mergeAssets(segments: [CameraSegment], withAudio: Bool, completion: @escaping (URL?, MediaInfo?) -> Void) {
         completion(videoURL, MediaInfo(source: .kanvas_camera))
     }
 
