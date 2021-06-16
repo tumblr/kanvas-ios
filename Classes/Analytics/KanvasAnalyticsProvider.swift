@@ -7,7 +7,7 @@
 import AVFoundation
 import Foundation
 
-public enum KanvasBrushType: Int {
+@objc public enum KanvasBrushType: Int {
     case pencil, marker, sharpie
 
     public func string() -> String {
@@ -22,7 +22,7 @@ public enum KanvasBrushType: Int {
     }
 }
 
-public enum KanvasColorSelectionTool: Int {
+@objc public enum KanvasColorSelectionTool: Int {
     case swatch, gradient, eyedropper
 
     public func string() -> String {
@@ -52,7 +52,7 @@ public enum KanvasColorSelectionTool: Int {
     }
 }
 
-public enum KanvasTextAlignment: Int {
+@objc public enum KanvasTextAlignment: Int {
     case left, center, right
 
     public func string() -> String {
@@ -81,7 +81,7 @@ public enum KanvasTextAlignment: Int {
     }
 }
 
-public enum KanvasDashboardOpenAction: Int {
+@objc public enum KanvasDashboardOpenAction: Int {
     case tap, swipe
 
     public func string() -> String {
@@ -94,7 +94,7 @@ public enum KanvasDashboardOpenAction: Int {
     }
 }
 
-public enum KanvasDashboardDismissAction: Int {
+@objc public enum KanvasDashboardDismissAction: Int {
     case tap, swipe
 
     public func string() -> String {
@@ -107,7 +107,7 @@ public enum KanvasDashboardDismissAction: Int {
     }
 }
 
-public enum KanvasMediaType: Int {
+@objc public enum KanvasMediaType: Int {
     case image, video, frames, livePhoto
 
     public func string() -> String {
@@ -124,7 +124,7 @@ public enum KanvasMediaType: Int {
     }
 }
 
-public enum KanvasGIFPlaybackMode: Int {
+@objc public enum KanvasGIFPlaybackMode: Int {
     case loop, rebound, reverse
 
     init(from playbackOption: PlaybackOption) {
@@ -151,7 +151,7 @@ public enum KanvasGIFPlaybackMode: Int {
 }
 
 /// A protocol for injecting analytics into the Kanvas module
-public protocol KanvasAnalyticsProvider {
+@objc public protocol KanvasAnalyticsProvider {
 
     /// Logs an event when the camera is opened
     ///
@@ -220,7 +220,8 @@ public protocol KanvasAnalyticsProvider {
 
     func logMediaPickerDismiss()
 
-    func logMediaPickerPickedMedia(ofTypes mediaTypes: [KanvasMediaType])
+    // Using Objective-C compatible types until Tumblr is updated to remove this requirement.
+    func logMediaPickerPickedMedia(ofTypes mediaTypes: [Int])
 
     func logEditorOpen()
 

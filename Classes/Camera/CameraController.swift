@@ -1176,7 +1176,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         }
 
         defer {
-            analyticsProvider?.logMediaPickerPickedMedia(ofTypes: mediaTypes)
+            analyticsProvider?.logMediaPickerPickedMedia(ofTypes: mediaTypes.map({ return $0.rawValue }))
         }
 
         // Handle gifs and live photos separately, as they should not be chosen when multiple selection is enabled.
