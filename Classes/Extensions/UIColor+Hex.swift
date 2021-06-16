@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-public extension UIColor {
+extension UIColor {
 
     /**
      Create UIColor from the given hex value
