@@ -5,6 +5,7 @@
 //
 
 import UIKit
+import Kanvas
 
 extension UIColor {
     
