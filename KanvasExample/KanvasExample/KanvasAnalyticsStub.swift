@@ -102,8 +102,8 @@ final public class KanvasAnalyticsStub: NSObject, KanvasAnalyticsProvider {
         logString(string: "logEditorBack")
     }
 
-    public func logMediaPickerPickedMedia(ofTypes mediaTypes: [Int]) {
-        let mediaTypes = mediaTypes.compactMap{ KanvasMediaType(rawValue: $0)?.string() }.joined(separator: ", ")
+    public func logMediaPickerPickedMedia(ofTypes mediaTypes: [KanvasMediaType]) {
+        let mediaTypes = mediaTypes.compactMap{ $0.string() }.joined(separator: ", ")
         logString(string: "logMediaPickerPickedMedia mediaTypes:\(mediaTypes)")
     }
 
