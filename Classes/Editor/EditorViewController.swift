@@ -1219,6 +1219,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func onPostingOptionsDismissed() {
         startPlayerFromSegments()
+        hideLoading()
     }
     
     func onQuickPostButtonSubmitted() {
