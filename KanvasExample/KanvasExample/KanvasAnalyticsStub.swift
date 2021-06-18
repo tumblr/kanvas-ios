@@ -103,7 +103,7 @@ final public class KanvasAnalyticsStub: NSObject, KanvasAnalyticsProvider {
     }
 
     public func logMediaPickerPickedMedia(ofTypes mediaTypes: [KanvasMediaType]) {
-        let mediaTypes = mediaTypes.compactMap{ $0.string() }.joined(separator: ", ")
+        let mediaTypes = mediaTypes.map{ $0.string() }.joined(separator: ", ")
         logString(string: "logMediaPickerPickedMedia mediaTypes:\(mediaTypes)")
     }
 

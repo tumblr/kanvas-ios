@@ -220,7 +220,6 @@ public protocol KanvasAnalyticsProvider {
 
     func logMediaPickerDismiss()
 
-    // Using Objective-C compatible types until Tumblr is updated to remove this requirement.
     func logMediaPickerPickedMedia(ofTypes mediaTypes: [KanvasMediaType])
 
     func logEditorOpen()
