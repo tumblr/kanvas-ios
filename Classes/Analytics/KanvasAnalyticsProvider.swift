@@ -37,7 +37,7 @@ public enum KanvasColorSelectionTool: Int {
     }
 }
 
-@objc public enum KanvasDrawingAction: Int {
+public enum KanvasDrawingAction: Int {
     case tap, fill, stroke
 
     public func string() -> String {

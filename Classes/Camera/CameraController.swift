@@ -50,6 +50,16 @@ public struct KanvasMedia {
              type: .image
         )
     }
+
+    public init(type: MediaType, url: URL, info: MediaInfo, size: CGSize) {
+        self.init(unmodified: nil,
+                  output: url,
+                  info: info,
+                  size: size,
+                  archive: nil,
+                  type: type
+        )
+    }
 }
 
 public enum MediaType {

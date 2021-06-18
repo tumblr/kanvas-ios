@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -211,6 +211,8 @@
 		F597B4E824B3E66700843540 /* KanvasCustomUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B4E624B3E66500843540 /* KanvasCustomUI.swift */; };
 		F597B50924B4FAD100843540 /* KanvasFontsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B50824B4FAD100843540 /* KanvasFontsTests.swift */; };
 		F597B50B24B5017B00843540 /* MediaInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F597B50A24B5017B00843540 /* MediaInfoTests.swift */; };
+		F5C0D31B267B19D200431C75 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C0D31A267B19D200431C75 /* UIColor+Hex.swift */; };
+		F5C0D31E267B1A0F00431C75 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C0D31A267B19D200431C75 /* UIColor+Hex.swift */; };
 		F5E448CA24B8E23000403A7C /* KanvasCustomUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E448C924B8E23000403A7C /* KanvasCustomUITests.swift */; };
 /* End PBXBuildFile section */
 
@@ -430,6 +432,7 @@
 		F597B4E624B3E66500843540 /* KanvasCustomUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KanvasCustomUI.swift; sourceTree = "<group>"; };
 		F597B50824B4FAD100843540 /* KanvasFontsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasFontsTests.swift; sourceTree = "<group>"; };
 		F597B50A24B5017B00843540 /* MediaInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaInfoTests.swift; sourceTree = "<group>"; };
+		F5C0D31A267B19D200431C75 /* UIColor+Hex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+Hex.swift"; path = "../../Classes/Extensions/UIColor+Hex.swift"; sourceTree = "<group>"; };
 		F5E448C924B8E23000403A7C /* KanvasCustomUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasCustomUITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -967,6 +970,7 @@
 				76A50BEB22FCB65D00D314AF /* ExampleKanvasDashboardController.swift */,
 				655163A02396E63F0043C01A /* Stickers */,
 				F597B4E024B3E57300843540 /* UIColor+Colors.swift */,
+				F5C0D31A267B19D200431C75 /* UIColor+Hex.swift */,
 				F597B4E324B3E63200843540 /* UIFont+Fonts.swift */,
 			);
 			path = KanvasExample;
@@ -1298,6 +1302,7 @@
 				0EAE0CB92139EC85004CD7FF /* KanvasAnalyticsStub.swift in Sources */,
 				F597B4E724B3E66500843540 /* KanvasCustomUI.swift in Sources */,
 				F597B4E124B3E57300843540 /* UIColor+Colors.swift in Sources */,
+				F5C0D31B267B19D200431C75 /* UIColor+Hex.swift in Sources */,
 				76FFF24822DCD991000A0D04 /* FeatureTableView.swift in Sources */,
 				655163A22396E6AC0043C01A /* ExperimentalStickerProvider.swift in Sources */,
 				F597B4E424B3E63300843540 /* UIFont+Fonts.swift in Sources */,
@@ -1343,6 +1348,7 @@
 				65303C37253FC31D0045E18F /* StyleMenuControllerTests.swift in Sources */,
 				0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */,
 				654AE16222E8B8DD00C8C0E4 /* StrokeSelectorViewTests.swift in Sources */,
+				F5C0D31E267B1A0F00431C75 /* UIColor+Hex.swift in Sources */,
 				ABE49906213712E100379F7F /* OptionsControllerTests.swift in Sources */,
 				658A329B239FFD9B00EEC1D3 /* StickerMenuControllerTests.swift in Sources */,
 				76BC5BAE220CCFF2007A9289 /* Array+MoveTests.swift in Sources */,

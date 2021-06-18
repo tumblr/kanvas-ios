@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-public extension UIColor {
+extension UIColor {
 
     /**
      Create UIColor from the given hex value
@@ -57,16 +57,4 @@ public extension UIColor {
             alpha: alpha
         )
     }
-
-    /**
-     Create UIColor from the given hex Integer
-
-     - parameter hex:   Int value to be converted to UIColor
-     - note: Method is used to bridge objc without a large multi file rewrite
-     */
-    @objc(colorWithHex:)
-    static func color(hex: UInt) -> UIColor {
-        return UIColor(hex: UInt32(hex))
-    }
-
 }
