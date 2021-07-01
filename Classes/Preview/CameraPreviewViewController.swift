@@ -272,6 +272,13 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                     // then single photos from that mode should still export as video.
                     if settings.features.gifs,
                        let group = cameraMode?.group, group == .gif {
+                        GIFEncoderImageIO().encode(video: videoURL, loopCount: 0, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond) { gifURL in
+                            performUIUpdate {
+                                self.delegate?.didFinishExportingFrames(url: gifURL)
+                                self.hideLoading()
+                            }
+                        }
+                    } else {
                         performUIUpdate {
                             self.delegate?.didFinishExportingVideo(url: videoURL)
                             self.hideLoading()
