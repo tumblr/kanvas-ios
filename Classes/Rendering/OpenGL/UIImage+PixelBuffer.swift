@@ -7,6 +7,7 @@
 import Accelerate
 import AVFoundation
 import Foundation
+import UIKit
 import VideoToolbox
 
 extension UIImage {

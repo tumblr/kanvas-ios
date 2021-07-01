@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import UIKit
 
 /// Default values for the input camera
 private struct CameraZoomConstants {

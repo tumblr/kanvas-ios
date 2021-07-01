@@ -1,3 +1,5 @@
+import UIKit
+
 /// A type which displays a media picker and calls the `delegate` with any received media.
 public protocol MediaPicker {
     /// Presents the Media Picker UI

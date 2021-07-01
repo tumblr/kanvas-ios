@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Delegate for touch events on this cell
 protocol FilterCollectionCellDelegate: class {

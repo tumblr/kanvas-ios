@@ -5,8 +5,8 @@
 //
 
 import Foundation
-
 import Photos
+import UIKit
 
 protocol MediaPickerThumbnailFetcherDelegate: class {
     func didUpdateThumbnail(image: UIImage)

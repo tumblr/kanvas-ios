@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import CoreImage
 
 extension CVPixelBuffer {
     func resize(scale: CGFloat) -> CVPixelBuffer? {

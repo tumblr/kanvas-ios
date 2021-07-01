@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 import os
 
 protocol MultiEditorComposerDelegate: EditorControllerDelegate {

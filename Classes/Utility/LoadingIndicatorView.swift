@@ -3,8 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
-
 import Foundation
+import UIKit
 
 private struct LoadingIndicatorConstants {
     static let backgroundColor = UIColor.black.withAlphaComponent(0.7)

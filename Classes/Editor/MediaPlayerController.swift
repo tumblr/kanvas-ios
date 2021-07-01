@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Protocol for the editor and preview controller
 protocol MediaPlayerController: UIViewController {
