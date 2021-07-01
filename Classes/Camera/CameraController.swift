@@ -186,7 +186,9 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         return controller
     }()
     private lazy var clipsController: MediaClipsEditorViewController = {
-        let controller = MediaClipsEditorViewController(showsAddButton: false)
+        let viewSettings = MediaClipsCollectionView.Settings(showsFadeOutGradient: false)
+        let collectionSettings = MediaClipsCollectionController.Settings(clipsCollectionViewSettings: viewSettings)
+        let controller = MediaClipsEditorViewController(showsAddButton: false, collectionSettings: collectionSettings)
         controller.delegate = self
         return controller
     }()
@@ -656,6 +658,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     private func generateHapticFeedback() {
         feedbackGenerator.notificationOccurred(.success)
     }
+
+    public var confirmButton: UIView? {
+        return (presentedViewController as? MultiEditorViewController)?.currentEditor?.editorView.confirmOrPostButton()
+    }
     
     // MARK: - CameraViewDelegate
 
@@ -1116,7 +1122,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
 
     func cameraPermissionsChanged(hasFullAccess: Bool) {
         if hasFullAccess {
-            cameraInputController.setupCaptureSession()
+            cameraInputController.setupCaptureSession(frameSize: view.frame.size)
             toggleMediaPicker(visible: true, animated: false)
         }
     }
