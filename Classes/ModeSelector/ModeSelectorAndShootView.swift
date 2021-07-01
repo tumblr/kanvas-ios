@@ -55,11 +55,11 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
 
     private let settings: CameraSettings
-    private let shootButton: ShootButtonView
     private let modeSelectorButton: ModeButtonView
     private let mediaPickerButton: MediaPickerButtonView
     private var modeSelectorTooltip: EasyTipView?
     private var shutterButtonTooltip: EasyTipView?
+    let shootButton: ShootButtonView
     let modeSelectorView: UIView
     
     
