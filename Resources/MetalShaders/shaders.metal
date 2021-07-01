@@ -50,17 +50,25 @@ uint2 clampToEdge(int2 pos, float width, float height) {
     return uint2(pos);
 }
 
-// identity
-
-kernel void kernelIdentity(texture2d<float, access::read> inTexture [[ texture(0) ]],
-                           texture2d<float, access::write> outTexture [[ texture(1) ]],
-                           uint2 gid [[ thread_position_in_grid ]])
+uint2 getAdjustedPosition(texture2d<float, access::read> inTexture,
+                          texture2d<float, access::write> outTexture,
+                          uint2 gid)
 {
     uint inWidth = inTexture.get_width();
     uint outWidth = outTexture.get_width();
     
     uint offset = (inWidth - outWidth) > 0 ? (inWidth - outWidth) / 2 : 0;
     uint2 adjusted = uint2(gid.x + offset, gid.y);
+    return adjusted;
+}
+
+// identity
+
+kernel void kernelIdentity(texture2d<float, access::read> inTexture [[ texture(0) ]],
+                           texture2d<float, access::write> outTexture [[ texture(1) ]],
+                           uint2 gid [[ thread_position_in_grid ]])
+{
+    uint2 adjusted = getAdjustedPosition(inTexture, outTexture, gid);
     float4 outColor = inTexture.read(adjusted);
     outTexture.write(outColor, gid);
 }
@@ -120,10 +128,12 @@ kernel void wavepool(texture2d<float, access::read> inTexture [[ texture(0) ]],
                      constant ShaderContext &shaderContext [[ buffer(0) ]],
                      uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
     float time = shaderContext.time;
     float width = inTexture.get_width();
     float height = inTexture.get_height();
-    float2 uv = float2(float(gid.x) / width, float(gid.y) / height);
+    float2 uv = float2(float(adjustedGid.x) / width, float(adjustedGid.y) / height);
     
     float2 p =  fmod(uv * TAU, TAU) - 250.0;
     float2 i = float2(p);
@@ -143,7 +153,7 @@ kernel void wavepool(texture2d<float, access::read> inTexture [[ texture(0) ]],
     float4 outColor = float4(color, 1.0);
     float stongth = 0.3;
     float waveu = sin((uv.y + time) * 20.0) * 0.5 * 0.05 * stongth;
-    float4 textureColor = inTexture.read(gid + uint2(waveu * width, 0));
+    float4 textureColor = inTexture.read(adjustedGid + uint2(waveu * width, 0));
     
     outColor.r = (outColor.r + (textureColor.r * 1.3)) / 2.0;
     outColor.g = (outColor.g + (textureColor.g * 1.3)) / 2.0;
@@ -159,7 +169,9 @@ kernel void grayscale(texture2d<float, access::read> inTexture [[ texture(0) ]],
                       texture2d<float, access::write> outTexture [[ texture(1) ]],
                       uint2 gid [[ thread_position_in_grid ]])
 {
-    float4 inColor = inTexture.read(gid);
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
+    float4 inColor = inTexture.read(adjustedGid);
     float gray = dot(inColor.rgb, W);
     float4 outColor(gray, gray, gray, 1.0);
     outTexture.write(outColor, gid);
@@ -172,11 +184,13 @@ kernel void lightLeaks(texture2d<float, access::read> inTexture [[ texture(0) ]]
                        constant ShaderContext &shaderContext [[ buffer(0) ]],
                        uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
     float time = shaderContext.time;
     float width = inTexture.get_width();
     float height = inTexture.get_height();
-    float2 p = float2(gid.x / width, gid.y / height);
-    float4 cam = inTexture.read(gid);
+    float2 p = float2(adjustedGid.x / width, adjustedGid.y / height);
+    float4 cam = inTexture.read(adjustedGid);
     
     for (int i = 1; i < 6; i++) {
         float2 newp = p;
@@ -198,8 +212,10 @@ kernel void lego(texture2d<float, access::read> inTexture [[ texture(0) ]],
                  texture2d<float, access::write> outTexture [[ texture(1) ]],
                  uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
     const float c = 0.03;
-    float2 fragCoord = float2(gid);
+    float2 fragCoord = float2(adjustedGid);
     
     float2 middle = floor(fragCoord * c + 0.5) / c;
     float3 outColor = inTexture.read(uint2(middle)).rgb;
@@ -223,16 +239,18 @@ kernel void rgb(texture2d<float, access::read> inTexture [[ texture(0) ]],
                 texture2d<float, access::write> outTexture [[ texture(1) ]],
                 uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
     float width = inTexture.get_width();
     float height = inTexture.get_height();
     float2 control = float2(0.7, 0.7);
     float2 m = float2(control.xy);
     float d = (length(m) < 0.02) ? 0.015 : m.x / 10.0;
     
-    int2 posR = int2(gid.x - d * width, gid.y - d * height);
+    int2 posR = int2(adjustedGid.x - d * width, adjustedGid.y - d * height);
     posR = int2(clampToEdge(posR, width, height));
-    int2 posG = int2(gid);
-    int2 posB = int2(gid.x + d * width, gid.y + d * height);
+    int2 posG = int2(adjustedGid);
+    int2 posB = int2(adjustedGid.x + d * width, adjustedGid.y + d * height);
     posB = int2(clampToEdge(posB, width, height));
     
     float4 outColor = float4(inTexture.read(uint2(posR)).x,
@@ -248,6 +266,8 @@ kernel void toon(texture2d<float, access::read> inTexture [[ texture(0) ]],
                  texture2d<float, access::write> outTexture [[ texture(1) ]],
                  uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
     uint width = inTexture.get_width();
     uint height = inTexture.get_height();
     
@@ -256,20 +276,20 @@ kernel void toon(texture2d<float, access::read> inTexture [[ texture(0) ]],
     float MagTol = .5;
     float Quantize = 10.;
 
-    float3 irgb = inTexture.read(gid).rgb;
+    float3 irgb = inTexture.read(adjustedGid).rgb;
     float2 stp0 = float2(1. / ResS, 0.);
     float2 st0p = float2(0., 1. / ResT);
     float2 stpp = float2(1. / ResS, 1. / ResT);
     float2 stpm = float2(1. / ResS, -1. / ResT);
     
-    float im1m1 = dot(inTexture.read(gid - uint2(stpp.x * width, stpp.y * height)).rgb, W);
-    float ip1p1 = dot(inTexture.read(gid + uint2(stpp.x * width, stpp.y * height)).rgb, W);
-    float im1p1 = dot(inTexture.read(gid - uint2(stpm.x * width, stpm.y * height)).rgb, W);
-    float ip1m1 = dot(inTexture.read(gid + uint2(stpm.x * width, stpm.y * height)).rgb, W);
-    float im10 = dot(inTexture.read(gid - uint2(stp0.x * width, stp0.y * height)).rgb, W);
-    float ip10 = dot(inTexture.read(gid + uint2(stp0.x * width, stp0.y * height)).rgb, W);
-    float i0m1 = dot(inTexture.read(gid - uint2(st0p.x * width, st0p.y * height)).rgb, W);
-    float i0p1 = dot(inTexture.read(gid + uint2(st0p.x * width, st0p.y * height)).rgb, W);
+    float im1m1 = dot(inTexture.read(adjustedGid - uint2(stpp.x * width, stpp.y * height)).rgb, W);
+    float ip1p1 = dot(inTexture.read(adjustedGid + uint2(stpp.x * width, stpp.y * height)).rgb, W);
+    float im1p1 = dot(inTexture.read(adjustedGid - uint2(stpm.x * width, stpm.y * height)).rgb, W);
+    float ip1m1 = dot(inTexture.read(adjustedGid + uint2(stpm.x * width, stpm.y * height)).rgb, W);
+    float im10 = dot(inTexture.read(adjustedGid - uint2(stp0.x * width, stp0.y * height)).rgb, W);
+    float ip10 = dot(inTexture.read(adjustedGid + uint2(stp0.x * width, stp0.y * height)).rgb, W);
+    float i0m1 = dot(inTexture.read(adjustedGid - uint2(st0p.x * width, st0p.y * height)).rgb, W);
+    float i0p1 = dot(inTexture.read(adjustedGid + uint2(st0p.x * width, st0p.y * height)).rgb, W);
     
     float h = -1. * im1p1 - 2. * i0p1 - 1. * ip1p1 + 1. * im1m1 + 2. * i0m1 + 1. * ip1m1;
     float v = -1. * im1m1 - 2. * im10 - 1. * im1p1 + 1. * ip1m1 + 2. * ip10 + 1. * ip1p1;
@@ -313,21 +333,23 @@ kernel void manga(texture2d<float, access::read> inTexture [[ texture(0) ]],
                   texture2d<float, access::write> outTexture [[ texture(1) ]],
                   uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
     uint width = inTexture.get_width();
     uint height = inTexture.get_height();
     
     uint dx = 1.0/720.0 * width;
     uint dy = 1.0/720.0 * height;
     
-    float3 sample0 = inTexture.read(uint2(gid.x - dx, gid.y + dy)).rgb;
-    float3 sample1 = inTexture.read(uint2(gid.x - dx, gid.y)).rgb;
-    float3 sample2 = inTexture.read(uint2(gid.x - dx, gid.y - dy)).rgb;
-    float3 sample3 = inTexture.read(uint2(gid.x, gid.y + dy)).rgb;
-    float3 sample4 = inTexture.read(uint2(gid.x, gid.y)).rgb;
-    float3 sample5 = inTexture.read(uint2(gid.x, gid.y - dy)).rgb;
-    float3 sample6 = inTexture.read(uint2(gid.x + dx, gid.y + dy)).rgb;
-    float3 sample7 = inTexture.read(uint2(gid.x + dx, gid.y)).rgb;
-    float3 sample8 = inTexture.read(uint2(gid.x + dx, gid.y - dy)).rgb;
+    float3 sample0 = inTexture.read(uint2(adjustedGid.x - dx, adjustedGid.y + dy)).rgb;
+    float3 sample1 = inTexture.read(uint2(adjustedGid.x - dx, adjustedGid.y)).rgb;
+    float3 sample2 = inTexture.read(uint2(adjustedGid.x - dx, adjustedGid.y - dy)).rgb;
+    float3 sample3 = inTexture.read(uint2(adjustedGid.x, adjustedGid.y + dy)).rgb;
+    float3 sample4 = inTexture.read(uint2(adjustedGid.x, adjustedGid.y)).rgb;
+    float3 sample5 = inTexture.read(uint2(adjustedGid.x, adjustedGid.y - dy)).rgb;
+    float3 sample6 = inTexture.read(uint2(adjustedGid.x + dx, adjustedGid.y + dy)).rgb;
+    float3 sample7 = inTexture.read(uint2(adjustedGid.x + dx, adjustedGid.y)).rgb;
+    float3 sample8 = inTexture.read(uint2(adjustedGid.x + dx, adjustedGid.y - dy)).rgb;
     
     float3 horizEdge = sample2 + sample5 + sample8 - (sample0 + sample3 + sample6);
     float3 vertEdge = sample0 + sample1 + sample2 - (sample6 + sample7 + sample8);
@@ -346,7 +368,7 @@ kernel void manga(texture2d<float, access::read> inTexture [[ texture(0) ]],
             outColor = float3(20.0/255.0, 20.0/255.0, 20.0/255.0);
         }
         else if (gray >= 0.25 && gray < 0.4) {
-            outColor = StripsPattern(float2(float(gid.x) / float(width), float(gid.y) / float(height)));
+            outColor = StripsPattern(float2(float(adjustedGid.x) / float(width), float(adjustedGid.y) / float(height)));
         }
         else {
             outColor = float3(1.0);
@@ -367,17 +389,19 @@ kernel void film(texture2d<float, access::read> inTexture [[ texture(0) ]],
                  constant ShaderContext &shaderContext [[ buffer(0) ]],
                  uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
     float time = shaderContext.time;
     float height = inTexture.get_height();
     float2 res = float2(1.0, 1.0);
-    float2 p = float2(gid) / res;
+    float2 p = float2(adjustedGid) / res;
     
     float2 u = p * 2.0 - 1.0;
     float2 n = u * float2(res.x / res.y, 1.0);
     float3 c = inTexture.read(uint2(p)).xyz;
     
     float4 outColor;
-    if (fmod(gid.y / height * 0.5, 1.0) > 1.0) {
+    if (fmod(adjustedGid.y / height * 0.5, 1.0) > 1.0) {
         outColor = float4(float3(0), 1);
     }
     else {
@@ -434,13 +458,15 @@ kernel void plasma(texture2d<float, access::read> inTexture [[ texture(0) ]],
                    constant ShaderContext &shaderContext [[ buffer(0) ]],
                    uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    
     float time = shaderContext.time;
     float width = inTexture.get_width();
     float height = inTexture.get_height();
     
     float3 green = float3(0.173, 0.5, 0.106);
-    float2 uv = float2(gid.x / width, gid.y / height);
-    float3 inColor = inTexture.read(gid).rgb;
+    float2 uv = float2(adjustedGid.x / width, adjustedGid.y / height);
+    float3 inColor = inTexture.read(adjustedGid).rgb;
     float greenness = 1.0 - (length(inColor - green) / length(float3(1, 1, 1)));
     float imageAlpha = clamp((greenness - 0.7) / 0.2, 0.0, 1.0);
     
@@ -456,8 +482,9 @@ kernel void rave(texture2d<float, access::read> inTexture [[ texture(0) ]],
                  constant ShaderContext &shaderContext [[ buffer(0) ]],
                  uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
     float time = shaderContext.time;
-    float4 outColor = inTexture.read(gid);
+    float4 outColor = inTexture.read(adjustedGid);
     outColor.r *= abs(sin(time * 1.0));
     outColor.g *= abs(sin(time * 5.0 + 4.0));
     outColor.b *= abs(sin(time * 3.0 + 2.0));
@@ -472,6 +499,7 @@ kernel void chroma(texture2d<float, access::read> inTexture [[ texture(0) ]],
                    constant ShaderContext &shaderContext [[ buffer(0) ]],
                    uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
     float width = inTexture.get_width();
     float height = inTexture.get_height();
     float time = shaderContext.time;
@@ -481,9 +509,9 @@ kernel void chroma(texture2d<float, access::read> inTexture [[ texture(0) ]],
     float2 strength = float2(2.5, 1.0); // tweaked value from the OpenGL shader
     
     float4 outColor;
-    outColor.r = inTexture.read(clampToEdge(int2(gid - uint2(float2(go * width, 0) * strength)), width, height)).r;
-    outColor.g = inTexture.read(clampToEdge(int2(gid - uint2(float2(0.005 * width, go2 * height) * strength)), width, height)).g;
-    outColor.b = inTexture.read(gid).g;
+    outColor.r = inTexture.read(clampToEdge(int2(adjustedGid - uint2(float2(go * width, 0) * strength)), width, height)).r;
+    outColor.g = inTexture.read(clampToEdge(int2(adjustedGid - uint2(float2(0.005 * width, go2 * height) * strength)), width, height)).g;
+    outColor.b = inTexture.read(adjustedGid).g;
     outColor.a = 1.0;
     outTexture.write(outColor, gid);
 }
@@ -503,11 +531,12 @@ kernel void em_interference(texture2d<float, access::read> inTexture [[ texture(
                             constant ShaderContext &shaderContext [[ buffer(0) ]],
                             uint2 gid [[ thread_position_in_grid ]])
 {
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
     float time = shaderContext.time;
     float width = inTexture.get_width();
     float height = inTexture.get_height();
     
-    float2 uv = float2(gid.x/width, gid.y/height);
+    float2 uv = float2(adjustedGid.x/width, adjustedGid.y/height);
     float2 blockS = floor(uv * float2(24.0, 9.0));
     float2 blockL = floor(uv * float2(8.0, 4.0));
     
@@ -533,8 +562,9 @@ kernel void alpha_blend(texture2d<float, access::read> inTexture [[ texture(0) ]
                         constant ShaderContext &shaderContext [[ buffer(0) ]],
                         uint2 gid [[ thread_position_in_grid ]])
 {
-    float4 inColor = inTexture.read(gid);
-    float4 overlay = overlayTexture.read(gid);
+    uint2 adjustedGid = getAdjustedPosition(inTexture, outTexture, gid);
+    float4 inColor = inTexture.read(adjustedGid);
+    float4 overlay = overlayTexture.read(adjustedGid);
     float4 outColor = float4(mix(inColor.rgb, overlay.rgb, overlay.a), inColor.a);
     outTexture.write(outColor, gid);
 }
