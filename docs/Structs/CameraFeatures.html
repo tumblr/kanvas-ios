@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CameraFeatures Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Struct/CameraFeatures" class="dashAnchor"></a>
+    <a title="CameraFeatures Structure Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">KanvasCamera 1.0.0 Docs</a> (43% documented)</p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">KanvasCamera Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        CameraFeatures Structure Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/CameraController.html">CameraController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CameraSettings.html">CameraSettings</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EasyTipView.html">EasyTipView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EasyTipView/ArrowPosition.html">– ArrowPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EasyTipView/Preferences.html">– Preferences</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EditorViewController.html">EditorViewController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/CameraMode.html">CameraMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CameraMode/Group.html">– Group</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CameraMode/Quantity.html">– Quantity</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FilterType.html">FilterType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ImagePreviewMode.html">ImagePreviewMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasBrushType.html">KanvasBrushType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasCameraMedia.html">KanvasCameraMedia</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasColorSelectionTool.html">KanvasColorSelectionTool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasDashboardDismissAction.html">KanvasDashboardDismissAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasDashboardOpenAction.html">KanvasDashboardOpenAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasDrawingAction.html">KanvasDrawingAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasExportAction.html">KanvasExportAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasGIFPlaybackMode.html">KanvasGIFPlaybackMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasMediaType.html">KanvasMediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasTextAlignment.html">KanvasTextAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KanvasTextFont.html">KanvasTextFont</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/AVAsset.html">AVAsset</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/AVCaptureDevice">AVCaptureDevice</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CGFloat.html">CGFloat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int32.html">Int32</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/MediaInfo.html">MediaInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UICollectionReusableView">UICollectionReusableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionView.html">UICollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIColor.html">UIColor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIImage.html">UIImage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewCell">UITableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)UITableViewHeaderFooterView">UITableViewHeaderFooterView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt.html">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt32.html">UInt32</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt64.html">UInt64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UInt8.html">UInt8</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/CameraControllerDelegate.html">CameraControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EasyTipViewDelegate.html">EasyTipViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EditorControllerDelegate.html">EditorControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/Identifiable.html">Identifiable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KanvasCameraAnalyticsProvider.html">KanvasCameraAnalyticsProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KanvasCancelable.html">KanvasCancelable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KanvasQuickBlogSelectorCoordinating.html">KanvasQuickBlogSelectorCoordinating</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KanvasStickerLoader.html">KanvasStickerLoader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StickerProvider.html">StickerProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StickerProviderDelegate.html">StickerProviderDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/CameraFeatures.html">CameraFeatures</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/GLU.html">GLU</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraColors.html">KanvasCameraColors</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraFonts.html">KanvasCameraFonts</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraFonts/CameraPermissions.html">– CameraPermissions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraFonts/Drawer.html">– Drawer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasCameraFonts/Padding.html">– Padding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KanvasDevice.html">KanvasDevice</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaInfoSimple.html">MediaInfoSimple</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MediaInfoSimple/Source.html">– Source</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Sticker.html">Sticker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/StickerType.html">StickerType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:12KanvasCamera9MediaInfoa">MediaInfo</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>CameraFeatures</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">CameraFeatures</span></code></pre>
+
+                </div>
+              </div>
+            <p>Struct which represents all camera features which are the same value for the duration of a camera session.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV10ghostFrameSbvp"></a>
+                    <a name="//apple_ref/swift/Property/ghostFrame" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV10ghostFrameSbvp">ghostFrame</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Ghost Frame feature</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">ghostFrame</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV13openGLPreviewSbvp"></a>
+                    <a name="//apple_ref/swift/Property/openGLPreview" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV13openGLPreviewSbvp">openGLPreview</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The OpenGL Camera Preview feature</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">openGLPreview</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV13openGLCaptureSbvp"></a>
+                    <a name="//apple_ref/swift/Property/openGLCapture" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV13openGLCaptureSbvp">openGLCapture</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The OpenGL Camera Capture feature</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">openGLCapture</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV12metalPreviewSbvp"></a>
+                    <a name="//apple_ref/swift/Property/metalPreview" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV12metalPreviewSbvp">metalPreview</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The metal camera preview feature. When openGLPreview is true, this will be ignored.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">metalPreview</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV13cameraFiltersSbvp"></a>
+                    <a name="//apple_ref/swift/Property/cameraFilters" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV13cameraFiltersSbvp">cameraFilters</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Camera Filters feature
+This enables the UI to select filters in the camera.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">cameraFilters</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV12metalFiltersSbvp"></a>
+                    <a name="//apple_ref/swift/Property/metalFilters" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV12metalFiltersSbvp">metalFilters</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This enables metal backed filteres</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">metalFilters</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV012experimentalB7FiltersSbvp"></a>
+                    <a name="//apple_ref/swift/Property/experimentalCameraFilters" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV012experimentalB7FiltersSbvp">experimentalCameraFilters</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Experimental Camera Filters feature
+This adds experimental filters to the end of the filters picker.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">experimentalCameraFilters</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV6editorSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editor" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV6editorSbvp">editor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Editor feature
+This replaces the Preview screen with the Editor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editor</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV14editorGIFMakerSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editorGIFMaker" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV14editorGIFMakerSbvp">editorGIFMaker</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Editor GIF maker menu
+This makes the GIF button open the GIF tools.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editorGIFMaker</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV13editorFiltersSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editorFilters" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV13editorFiltersSbvp">editorFilters</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Editor Filters feature
+This enables the UI to select filters in the editor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editorFilters</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV10editorTextSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editorText" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV10editorTextSbvp">editorText</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Editor Text feature
+This enables the UI to write text in the editor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editorText</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV11editorMediaSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editorMedia" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV11editorMediaSbvp">editorMedia</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Editor Media feature
+This enables the UI to select media in the editor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editorMedia</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV13editorDrawingSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editorDrawing" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV13editorDrawingSbvp">editorDrawing</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Editor Drawing feature
+This enables the UI to draw in the editor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editorDrawing</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV12mediaPickingSbvp"></a>
+                    <a name="//apple_ref/swift/Property/mediaPicking" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV12mediaPickingSbvp">mediaPicking</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Media Picker feature
+This enables the UI to pick media instead of using the camera.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">mediaPicking</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV13editorPostingSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editorPosting" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV13editorPostingSbvp">editorPosting</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Editor Posting feature
+This enables the UI to post media from the editor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editorPosting</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV17editorPostOptionsSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editorPostOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV17editorPostOptionsSbvp">editorPostOptions</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editorPostOptions</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV12editorSavingSbvp"></a>
+                    <a name="//apple_ref/swift/Property/editorSaving" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV12editorSavingSbvp">editorSaving</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Editor Saving feature
+This enables the UI to save media from the editor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">editorSaving</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV03newB5ModesSbvp"></a>
+                    <a name="//apple_ref/swift/Property/newCameraModes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV03newB5ModesSbvp">newCameraModes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The New Camera Modes
+This replaces Capture, Photo and Loop modes with Normal, Stitch and GIF modes</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">newCameraModes</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12KanvasCamera0B8FeaturesV4gifsSbvp"></a>
+                    <a name="//apple_ref/swift/Property/gifs" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12KanvasCamera0B8FeaturesV4gifsSbvp">gifs</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>GIF support
+This enables GIFs to be picked from the media picker, and exported from the Editor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">gifs</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2021 <a class="link" href="https://github.com/tumblr/kanvas-ios" target="_blank" rel="external">Tony Cheng and Jimmy Schementi</a>. All rights reserved. (Last updated: 2021-01-04)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

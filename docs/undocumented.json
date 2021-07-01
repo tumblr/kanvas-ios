@@ -1,0 +1,2014 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 10,
+      "symbol": "KanvasBrushType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 11,
+      "symbol": "KanvasBrushType.marker",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 11,
+      "symbol": "KanvasBrushType.pencil",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 11,
+      "symbol": "KanvasBrushType.sharpie",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 13,
+      "symbol": "KanvasBrushType.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 25,
+      "symbol": "KanvasColorSelectionTool",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 26,
+      "symbol": "KanvasColorSelectionTool.eyedropper",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 26,
+      "symbol": "KanvasColorSelectionTool.gradient",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 26,
+      "symbol": "KanvasColorSelectionTool.swatch",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 28,
+      "symbol": "KanvasColorSelectionTool.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 40,
+      "symbol": "KanvasDrawingAction",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 41,
+      "symbol": "KanvasDrawingAction.fill",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 41,
+      "symbol": "KanvasDrawingAction.stroke",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 41,
+      "symbol": "KanvasDrawingAction.tap",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 43,
+      "symbol": "KanvasDrawingAction.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 55,
+      "symbol": "KanvasTextFont",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 56,
+      "symbol": "KanvasTextFont.regular",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 56,
+      "symbol": "KanvasTextFont.script",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 58,
+      "symbol": "KanvasTextFont.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 67,
+      "symbol": "KanvasTextFont.from(font:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 82,
+      "symbol": "KanvasTextAlignment",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 83,
+      "symbol": "KanvasTextAlignment.center",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 83,
+      "symbol": "KanvasTextAlignment.left",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 83,
+      "symbol": "KanvasTextAlignment.right",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 85,
+      "symbol": "KanvasTextAlignment.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 96,
+      "symbol": "KanvasTextAlignment.from(alignment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 111,
+      "symbol": "KanvasDashboardOpenAction",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 112,
+      "symbol": "KanvasDashboardOpenAction.swipe",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 112,
+      "symbol": "KanvasDashboardOpenAction.tap",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 114,
+      "symbol": "KanvasDashboardOpenAction.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 124,
+      "symbol": "KanvasDashboardDismissAction",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 125,
+      "symbol": "KanvasDashboardDismissAction.swipe",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 125,
+      "symbol": "KanvasDashboardDismissAction.tap",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 127,
+      "symbol": "KanvasDashboardDismissAction.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 137,
+      "symbol": "KanvasMediaType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 138,
+      "symbol": "KanvasMediaType.frames",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 138,
+      "symbol": "KanvasMediaType.image",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 138,
+      "symbol": "KanvasMediaType.livePhoto",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 138,
+      "symbol": "KanvasMediaType.video",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 140,
+      "symbol": "KanvasMediaType.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 154,
+      "symbol": "KanvasGIFPlaybackMode",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 155,
+      "symbol": "KanvasGIFPlaybackMode.loop",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 155,
+      "symbol": "KanvasGIFPlaybackMode.rebound",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 155,
+      "symbol": "KanvasGIFPlaybackMode.reverse",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 168,
+      "symbol": "KanvasGIFPlaybackMode.string()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 246,
+      "symbol": "KanvasCameraAnalyticsProvider.logMediaPickerOpen()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 248,
+      "symbol": "KanvasCameraAnalyticsProvider.logMediaPickerDismiss()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 250,
+      "symbol": "KanvasCameraAnalyticsProvider.logMediaPickerPickedMedia(ofType:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 252,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorOpen()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 254,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorBack()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 384,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFButtonToggle(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 385,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFOpen()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 386,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFOpenTrim()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 387,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFOpenSpeed()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 388,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFRevert()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 389,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFConfirm(duration:playbackMode:speed:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 390,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFChange(playbackMode:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 391,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFChange(speed:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Analytics/KanvasCameraAnalyticsProvider.swift",
+      "line": 392,
+      "symbol": "KanvasCameraAnalyticsProvider.logEditorGIFChange(trimStart:trimEnd:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 13,
+      "symbol": "KanvasCameraMedia.image(_:_:_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 14,
+      "symbol": "KanvasCameraMedia.video(_:_:_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 15,
+      "symbol": "KanvasCameraMedia.frames(_:_:_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 17,
+      "symbol": "KanvasCameraMedia.info",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 26,
+      "symbol": "KanvasExportAction",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 27,
+      "symbol": "KanvasExportAction.previewConfirm",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 28,
+      "symbol": "KanvasExportAction.confirm",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 29,
+      "symbol": "KanvasExportAction.post",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 30,
+      "symbol": "KanvasExportAction.save",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 31,
+      "symbol": "KanvasExportAction.postOptions",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 32,
+      "symbol": "KanvasExportAction.confirmPostOptions",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 245,
+      "symbol": "CameraController.preferredStatusBarStyle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 249,
+      "symbol": "CameraController.preferredStatusBarUpdateAnimation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 253,
+      "symbol": "CameraController.supportedInterfaceOrientations",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 280,
+      "symbol": "CameraController.loadView()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 284,
+      "symbol": "CameraController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 304,
+      "symbol": "CameraController.viewDidAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 1087,
+      "symbol": "CameraController.resetState()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 1096,
+      "symbol": "CameraController.onPostOptionsDismissed()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 1100,
+      "symbol": "CameraController.onQuickPostButtonSubmitted()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 1104,
+      "symbol": "CameraController.onQuickPostOptionsShown(visible:hintText:view:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Camera/CameraController.swift",
+      "line": 1108,
+      "symbol": "CameraController.onQuickPostOptionsSelected(selected:hintText:view:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraColors.swift",
+      "line": 60,
+      "symbol": "KanvasCameraColors",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraColors.swift",
+      "line": 62,
+      "symbol": "KanvasCameraColors.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraColors.swift",
+      "line": 95,
+      "symbol": "KanvasCameraColors.init(drawingDefaultColor:colorPickerColors:selectedPickerColor:timeSegmentColors:backgroundColors:strokeColor:sliderActiveColor:sliderOuterCircleColor:trimBackgroundColor:trashColor:tooltipBackgroundColor:closeButtonColor:filterColors:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 9,
+      "symbol": "KanvasCameraFonts",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 28,
+      "symbol": "KanvasCameraFonts.init(permissions:drawer:editorFonts:optionSelectorCellFont:mediaClipsFont:modeButtonFont:speedLabelFont:timeIndicatorFont:colorSelectorTooltipFont:modeSelectorTooltipFont:postLabelFont:gifMakerRevertButtonFont:paddingAdjustment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 56,
+      "symbol": "KanvasCameraFonts.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 73,
+      "symbol": "KanvasCameraFonts.CameraPermissions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 74,
+      "symbol": "KanvasCameraFonts.CameraPermissions.init(titleFont:descriptionFont:buttonFont:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 86,
+      "symbol": "KanvasCameraFonts.Drawer",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 87,
+      "symbol": "KanvasCameraFonts.Drawer.init(textSelectedFont:textUnselectedFont:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 112,
+      "symbol": "KanvasCameraFonts.Padding",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Constants/KanvasCameraFonts.swift",
+      "line": 118,
+      "symbol": "KanvasCameraFonts.Padding.init(topMargin:leftMargin:extraVerticalPadding:extraHorizontalPadding:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/EditorViewController.swift",
+      "line": 190,
+      "symbol": "EditorViewController.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/EditorViewController.swift",
+      "line": 202,
+      "symbol": "EditorViewController.createEditor(for:settings:stickerProvider:analyticsProvider:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/EditorViewController.swift",
+      "line": 218,
+      "symbol": "EditorViewController.createEditor(for:settings:stickerProvider:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/EditorViewController.swift",
+      "line": 231,
+      "symbol": "EditorViewController.createEditor(forGIF:info:settings:stickerProvider:analyticsProvider:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/EditorViewController.swift",
+      "line": 313,
+      "symbol": "EditorViewController.viewWillAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/EditorViewController.swift",
+      "line": 319,
+      "symbol": "EditorViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/EditorViewController.swift",
+      "line": 340,
+      "symbol": "EditorViewController.preferredStatusBarStyle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/EditorViewController.swift",
+      "line": 344,
+      "symbol": "EditorViewController.supportedInterfaceOrientations",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/KanvasQuickBlogSelectorCoordinating.swift",
+      "line": 9,
+      "symbol": "KanvasQuickBlogSelectorCoordinating",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/KanvasQuickBlogSelectorCoordinating.swift",
+      "line": 11,
+      "symbol": "KanvasQuickBlogSelectorCoordinating.present(presentingView:fromPoint:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/KanvasQuickBlogSelectorCoordinating.swift",
+      "line": 13,
+      "symbol": "KanvasQuickBlogSelectorCoordinating.dismiss()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/KanvasQuickBlogSelectorCoordinating.swift",
+      "line": 15,
+      "symbol": "KanvasQuickBlogSelectorCoordinating.touchDidMoveToPoint(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/KanvasQuickBlogSelectorCoordinating.swift",
+      "line": 17,
+      "symbol": "KanvasQuickBlogSelectorCoordinating.avatarView(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/Media/Stickers/StickerCollection/Sticker.swift",
+      "line": 18,
+      "symbol": "Sticker.init(id:imageUrl:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/Media/Stickers/StickerLoader.swift",
+      "line": 9,
+      "symbol": "KanvasCancelable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/Media/Stickers/StickerLoader.swift",
+      "line": 14,
+      "symbol": "KanvasStickerLoader",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/Media/Stickers/StickerLoader.swift",
+      "line": 16,
+      "symbol": "KanvasStickerLoader.loadSticker(at:imageView:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/Media/Stickers/StickerProvider/StickerProvider.swift",
+      "line": 7,
+      "symbol": "StickerProviderDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/Media/Stickers/StickerProvider/StickerProvider.swift",
+      "line": 14,
+      "symbol": "StickerProvider",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/Media/Stickers/StickerProvider/StickerProvider.swift",
+      "line": 24,
+      "symbol": "StickerProvider.loader()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Editor/Media/Stickers/StickerTypeCollection/StickerType.swift",
+      "line": 19,
+      "symbol": "StickerType.init(id:imageUrl:stickers:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Extensions/AVAsset+Utils.swift",
+      "line": 10,
+      "symbol": "AVAsset.videoScreenSize",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Extensions/UICollectionView+Cells.swift",
+      "line": 18,
+      "symbol": "Identifiable.identifier",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Extensions/UICollectionView+Cells.swift",
+      "line": 24,
+      "symbol": "Identifiable.identifier",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Extensions/UICollectionView+Cells.swift",
+      "line": 105,
+      "symbol": "UICollectionView.dequeue(view:ofKind:for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Options/CameraOption.swift",
+      "line": 63,
+      "symbol": "ImagePreviewMode",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Options/CameraOption.swift",
+      "line": 64,
+      "symbol": "ImagePreviewMode.on",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Options/CameraOption.swift",
+      "line": 65,
+      "symbol": "ImagePreviewMode.off",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Recording/PhotoOutputHandler.swift",
+      "line": 53,
+      "symbol": "PhotoOutputHandler.photoOutput(_:didFinishProcessingPhoto:error:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 13,
+      "symbol": "FilterType.passthrough",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 14,
+      "symbol": "FilterType.wavePool",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 15,
+      "symbol": "FilterType.plasma",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 16,
+      "symbol": "FilterType.emInterference",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 17,
+      "symbol": "FilterType.rgb",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 18,
+      "symbol": "FilterType.lego",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 19,
+      "symbol": "FilterType.chroma",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 20,
+      "symbol": "FilterType.rave",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 21,
+      "symbol": "FilterType.mirrorTwo",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 22,
+      "symbol": "FilterType.mirrorFour",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 23,
+      "symbol": "FilterType.lightLeaks",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 24,
+      "symbol": "FilterType.film",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 25,
+      "symbol": "FilterType.grayscale",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 26,
+      "symbol": "FilterType.manga",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 27,
+      "symbol": "FilterType.toon",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 28,
+      "symbol": "FilterType.off",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/FilterType.swift",
+      "line": 70,
+      "symbol": "FilterType.filterApplied",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 11,
+      "symbol": "UInt8.boolValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 27,
+      "symbol": "Int.g",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 30,
+      "symbol": "Int.d",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 33,
+      "symbol": "Int.f",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 36,
+      "symbol": "Int.b",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 39,
+      "symbol": "Int.ub",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 42,
+      "symbol": "Int.s",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 45,
+      "symbol": "Int.us",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 48,
+      "symbol": "Int.i",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 51,
+      "symbol": "Int.ui",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 57,
+      "symbol": "Int.ul",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 60,
+      "symbol": "Int.ll",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 63,
+      "symbol": "Int.ull",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 70,
+      "symbol": "UInt.g",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 73,
+      "symbol": "UInt.d",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 76,
+      "symbol": "UInt.f",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 79,
+      "symbol": "UInt.b",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 82,
+      "symbol": "UInt.ub",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 85,
+      "symbol": "UInt.s",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 88,
+      "symbol": "UInt.us",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 91,
+      "symbol": "UInt.i",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 94,
+      "symbol": "UInt.ui",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 97,
+      "symbol": "UInt.l",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 103,
+      "symbol": "UInt.ll",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 106,
+      "symbol": "UInt.ull",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 113,
+      "symbol": "Int32.g",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 116,
+      "symbol": "Int32.d",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 119,
+      "symbol": "Int32.f",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 122,
+      "symbol": "Int32.b",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 125,
+      "symbol": "Int32.ub",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 128,
+      "symbol": "Int32.s",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 131,
+      "symbol": "Int32.us",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 137,
+      "symbol": "Int32.ui",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 140,
+      "symbol": "Int32.l",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 143,
+      "symbol": "Int32.ul",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 146,
+      "symbol": "Int32.ll",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 149,
+      "symbol": "Int32.ull",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 156,
+      "symbol": "UInt32.g",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 159,
+      "symbol": "UInt32.d",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 162,
+      "symbol": "UInt32.f",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 165,
+      "symbol": "UInt32.b",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 168,
+      "symbol": "UInt32.ub",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 171,
+      "symbol": "UInt32.s",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 174,
+      "symbol": "UInt32.us",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 177,
+      "symbol": "UInt32.i",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 183,
+      "symbol": "UInt32.l",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 186,
+      "symbol": "UInt32.ul",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 189,
+      "symbol": "UInt32.ll",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 192,
+      "symbol": "UInt32.ull",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 199,
+      "symbol": "UInt64.g",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 202,
+      "symbol": "UInt64.d",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 205,
+      "symbol": "UInt64.f",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 208,
+      "symbol": "UInt64.b",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 211,
+      "symbol": "UInt64.ub",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 214,
+      "symbol": "UInt64.s",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 217,
+      "symbol": "UInt64.us",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 220,
+      "symbol": "UInt64.i",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 223,
+      "symbol": "UInt64.ui",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 226,
+      "symbol": "UInt64.l",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 229,
+      "symbol": "UInt64.ul",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 232,
+      "symbol": "UInt64.ll",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 242,
+      "symbol": "Float.g",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 245,
+      "symbol": "Float.d",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 251,
+      "symbol": "Double.g",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 254,
+      "symbol": "Double.f",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 260,
+      "symbol": "CGFloat.d",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 263,
+      "symbol": "CGFloat.f",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/NumTypes+Conversion.swift",
+      "line": 266,
+      "symbol": "CGFloat.i",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/OpenGL/GLUtilities.swift",
+      "line": 11,
+      "symbol": "GLU",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/OpenGL/GLUtilities.swift",
+      "line": 75,
+      "symbol": "GLU.validateProgram(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/OpenGL/GLUtilities.swift",
+      "line": 100,
+      "symbol": "GLU.getUniformLocation(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Rendering/OpenGL/GLUtilities.swift",
+      "line": 110,
+      "symbol": "GLU.createProgram(_:_:_:_:_:_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Settings/CameraSettings.swift",
+      "line": 44,
+      "symbol": "CameraMode.group",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Settings/CameraSettings.swift",
+      "line": 55,
+      "symbol": "CameraMode.quantity",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Settings/CameraSettings.swift",
+      "line": 131,
+      "symbol": "CameraFeatures.editorPostOptions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Settings/CameraSettings.swift",
+      "line": 287,
+      "symbol": "CameraSettings.setEditorShouldStartGIFMaker(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Settings/CameraSettings.swift",
+      "line": 296,
+      "symbol": "CameraSettings.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/Device.swift",
+      "line": 9,
+      "symbol": "KanvasDevice",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/Device.swift",
+      "line": 28,
+      "symbol": "KanvasDevice.isRunningInSimulator",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/Device.swift",
+      "line": 50,
+      "symbol": "KanvasDevice.belongsToIPhoneXGroup",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 13,
+      "symbol": "EasyTipViewDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 14,
+      "symbol": "EasyTipViewDelegate.easyTipViewDidDismiss(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 162,
+      "symbol": "EasyTipView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 164,
+      "symbol": "EasyTipView.gestureRecognizerShouldBegin(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 171,
+      "symbol": "EasyTipView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 175,
+      "symbol": "EasyTipView.ArrowPosition",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 176,
+      "symbol": "EasyTipView.ArrowPosition.any",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 177,
+      "symbol": "EasyTipView.ArrowPosition.top",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 178,
+      "symbol": "EasyTipView.ArrowPosition.bottom",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 179,
+      "symbol": "EasyTipView.ArrowPosition.right",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 180,
+      "symbol": "EasyTipView.ArrowPosition.left",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 185,
+      "symbol": "EasyTipView.Preferences",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 187,
+      "symbol": "EasyTipView.Preferences.Drawing",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 188,
+      "symbol": "EasyTipView.Preferences.Drawing.cornerRadius",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 189,
+      "symbol": "EasyTipView.Preferences.Drawing.arrowHeight",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 190,
+      "symbol": "EasyTipView.Preferences.Drawing.arrowWidth",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 191,
+      "symbol": "EasyTipView.Preferences.Drawing.foregroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 192,
+      "symbol": "EasyTipView.Preferences.Drawing.backgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 193,
+      "symbol": "EasyTipView.Preferences.Drawing.backgroundColorCollection",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 194,
+      "symbol": "EasyTipView.Preferences.Drawing.arrowPosition",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 195,
+      "symbol": "EasyTipView.Preferences.Drawing.textAlignment",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 196,
+      "symbol": "EasyTipView.Preferences.Drawing.borderWidth",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 197,
+      "symbol": "EasyTipView.Preferences.Drawing.borderColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 198,
+      "symbol": "EasyTipView.Preferences.Drawing.font",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 201,
+      "symbol": "EasyTipView.Preferences.Positioning",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 202,
+      "symbol": "EasyTipView.Preferences.Positioning.bubbleHInset",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 203,
+      "symbol": "EasyTipView.Preferences.Positioning.bubbleVInset",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 204,
+      "symbol": "EasyTipView.Preferences.Positioning.textHInset",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 205,
+      "symbol": "EasyTipView.Preferences.Positioning.textVInset",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 206,
+      "symbol": "EasyTipView.Preferences.Positioning.maxWidth",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 207,
+      "symbol": "EasyTipView.Preferences.Positioning.margin",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 210,
+      "symbol": "EasyTipView.Preferences.Animating",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 211,
+      "symbol": "EasyTipView.Preferences.Animating.dismissTransform",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 212,
+      "symbol": "EasyTipView.Preferences.Animating.showInitialTransform",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 213,
+      "symbol": "EasyTipView.Preferences.Animating.showFinalTransform",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 214,
+      "symbol": "EasyTipView.Preferences.Animating.springDamping",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 215,
+      "symbol": "EasyTipView.Preferences.Animating.springVelocity",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 216,
+      "symbol": "EasyTipView.Preferences.Animating.showInitialAlpha",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 217,
+      "symbol": "EasyTipView.Preferences.Animating.dismissFinalAlpha",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 218,
+      "symbol": "EasyTipView.Preferences.Animating.showDuration",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 219,
+      "symbol": "EasyTipView.Preferences.Animating.dismissDuration",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 220,
+      "symbol": "EasyTipView.Preferences.Animating.dismissOnTap",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 221,
+      "symbol": "EasyTipView.Preferences.Animating.gradientVelocity",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 224,
+      "symbol": "EasyTipView.Preferences.drawing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 225,
+      "symbol": "EasyTipView.Preferences.positioning",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 226,
+      "symbol": "EasyTipView.Preferences.animating",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 227,
+      "symbol": "EasyTipView.Preferences.hasBorder",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 231,
+      "symbol": "EasyTipView.Preferences.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 236,
+      "symbol": "EasyTipView.backgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 246,
+      "symbol": "EasyTipView.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 257,
+      "symbol": "EasyTipView.preferences",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 258,
+      "symbol": "EasyTipView.text",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 304,
+      "symbol": "EasyTipView.globalPreferences",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 308,
+      "symbol": "EasyTipView.init(text:preferences:delegate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/EasyTipView.swift",
+      "line": 646,
+      "symbol": "EasyTipView.draw(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 10,
+      "symbol": "MediaInfo",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 12,
+      "symbol": "MediaInfoSimple",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 14,
+      "symbol": "MediaInfoSimple.Source",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 15,
+      "symbol": "MediaInfoSimple.Source.kanvas_camera",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 16,
+      "symbol": "MediaInfoSimple.Source.media_library",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 19,
+      "symbol": "MediaInfoSimple.source",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 21,
+      "symbol": "MediaInfoSimple.init(source:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 26,
+      "symbol": "MediaInfoSimple",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 32,
+      "symbol": "MediaInfoSimple.Source",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 68,
+      "symbol": "MediaInfoSimple.Source.stringValue()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 79,
+      "symbol": "MediaInfo",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 155,
+      "symbol": "MediaInfo",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bjtitus/Source/Automattic/Kanvas-iOS/Classes/Utility/MediaInfo.swift",
+      "line": 178,
+      "symbol": "MediaInfo.createAVMetadataItems()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/bjtitus/Source/Automattic/Kanvas-iOS"
+}
