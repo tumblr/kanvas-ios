@@ -76,6 +76,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         label.font = Constants.titleFont
         label.textColor = Constants.textColor
         label.textAlignment = .center
+        label.numberOfLines = 0
         return label
     }()
 
