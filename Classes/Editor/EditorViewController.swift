@@ -407,6 +407,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        editorView.setupViews()
+
         view.backgroundColor = .black
         editorView.add(into: view)
         drawingController.drawingLayer = editorView.drawingCanvas.layer
