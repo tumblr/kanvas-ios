@@ -273,7 +273,6 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
         super.init(frame: .zero)
         self.movableViewCanvas.delegate = self
-        setupViews()
     }
 
     func updateUI(forDraggingClip: Bool) {
@@ -288,7 +287,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         })
     }
     
-    private func setupViews() {
+    func setupViews() {
         setupPlayer()
         setupDrawingCanvas()
         setupMovableViewCanvas()

@@ -107,7 +107,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    var editorView: EditorView!
+    var editorView: EditorView
 
     var isMuted: Bool {
         return player.isMuted
@@ -267,10 +267,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     public static func createEditor(for image: UIImage,
                                     settings: CameraSettings,
                                     stickerProvider: StickerProvider,
-                                    analyticsProvider: KanvasAnalyticsProvider,
-                                    delegate: EditorControllerDelegate) -> EditorViewController {
-        EditorViewController(delegate: delegate,
-                             settings: settings,
+                                    analyticsProvider: KanvasAnalyticsProvider) -> EditorViewController {
+        EditorViewController(settings: settings,
                              segments: [.image(image, nil, nil, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
@@ -282,12 +280,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              tagCollection: nil)
     }
     
-    public static func createEditor(for videoURL: URL,
-                                    settings: CameraSettings,
-                                    stickerProvider: StickerProvider,
-                                    delegate: EditorControllerDelegate) -> EditorViewController {
-        EditorViewController(delegate: delegate,
-                             settings: settings,
+    public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
+        EditorViewController(settings: settings,
                              segments: [.video(videoURL, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
@@ -304,12 +298,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                               settings: CameraSettings,
                               stickerProvider: StickerProvider,
                               analyticsProvider: KanvasAnalyticsProvider,
-                              delegate: EditorControllerDelegate,
                               completion: @escaping (EditorViewController) -> Void) {
         GIFDecoderFactory.main().decode(image: url) { frames in
             let segments = CameraSegment.from(frames: frames, info: info)
-            let editor = EditorViewController(delegate: delegate,
-                                              settings: settings,
+            let editor = EditorViewController(settings: settings,
                                               segments: segments,
                                               stickerProvider: stickerProvider,
                                               analyticsProvider: analyticsProvider)
@@ -317,13 +309,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    convenience init(delegate: EditorControllerDelegate,
-                     settings: CameraSettings,
+    convenience init(settings: CameraSettings,
                      segments: [CameraSegment],
                      stickerProvider: StickerProvider,
                      analyticsProvider: KanvasAnalyticsProvider) {
-        self.init(delegate: delegate,
-                  settings: settings,
+        self.init(settings: settings,
                   segments: segments,
                   assetsHandler: CameraSegmentHandler(),
                   exporterClass: MediaExporter.self,
@@ -344,8 +334,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     ///   - cameraMode: The camera mode that the preview was coming from, if any
     ///   - stickerProvider: Class that will provide the stickers in the editor.
     ///   - analyticsProvider: A class conforming to KanvasAnalyticsProvider
-    init(delegate: EditorControllerDelegate,
-         settings: CameraSettings,
+    init(settings: CameraSettings,
          segments: [CameraSegment],
          assetsHandler: AssetsHandlerType,
          exporterClass: MediaExporting.Type,
@@ -356,7 +345,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
          quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
          edit: Edit? = nil,
          tagCollection: UIView?) {
-        self.delegate = delegate
         self.settings = settings
         self.originalSegments = segments
         self.assetsHandler = assetsHandler
@@ -368,22 +356,19 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
 
-
-
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
         self.player.isMuted = edit?.isMuted == true
         let muteButtonShown = settings.features.muteButton && segments.first?.isVideo == true
-
-        super.init(nibName: .none, bundle: .none)
-
-        self.editorView = EditorViewController.editor(delegate: self,
+        self.editorView = EditorViewController.editor(delegate: nil,
                                                       settings: settings,
                                                       showsMuteButton: muteButtonShown,
                                                       edit: edit,
                                                       quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
                                                       tagCollection: tagCollection,
                                                       metalContext: metalContext)
+        super.init(nibName: .none, bundle: .none)
+        self.editorView.delegate = self
         self.editorView.muteButtonSelected = player.isMuted
 
         editorView.delegate = self
@@ -421,6 +406,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+
+        editorView.setupViews()
 
         view.backgroundColor = .black
         editorView.add(into: view)

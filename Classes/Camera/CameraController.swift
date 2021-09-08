@@ -397,8 +397,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     }
     
     private func createEditorViewController(_ segments: [CameraSegment], selected: Array<CameraSegment>.Index, edit: EditorViewController.Edit? = nil, drawing: IgnoreTouchesView? = nil) -> EditorViewController {
-        let controller = EditorViewController(delegate: self,
-                                              settings: settings,
+        let controller = EditorViewController(settings: settings,
                                               segments: segments,
                                               assetsHandler: segmentsHandler,
                                               exporterClass: MediaExporter.self,
@@ -412,6 +411,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         controller.editorView.movableViewCanvas.trashCompletion = { [weak self] in
             self?.clipsController.removeDraggingClip()
         }
+        controller.delegate = self
         return controller
     }
 
