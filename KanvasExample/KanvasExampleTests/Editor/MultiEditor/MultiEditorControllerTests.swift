@@ -145,7 +145,6 @@ final class MultiEditorControllerDelegateStub: MultiEditorComposerDelegate {
     let assetsHandler: AssetsHandlerType
     let exporterClass: MediaExporting.Type
     let gifEncoderClass: GIFEncoder.Type
-    let editorDelegate = EditorControllerDelegateStub()
 
     init(settings: CameraSettings, assetsHandler: AssetsHandlerType? = nil, exporterClass: MediaExporting.Type? = nil, gifEncoderClass: GIFEncoder.Type? = nil) {
         self.settings = settings
@@ -165,8 +164,7 @@ final class MultiEditorControllerDelegateStub: MultiEditorComposerDelegate {
     }
 
     func editor(segment: CameraSegment, edit: EditorViewController.Edit?) -> EditorViewController {
-        return EditorViewController(delegate: editorDelegate,
-                                    settings: settings,
+        return EditorViewController(settings: settings,
                                     segments: [segment],
                                     assetsHandler: assetsHandler,
                                     exporterClass: exporterClass,
