@@ -637,7 +637,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - EditorViewDelegate
     
     func didTapSaveButton() {
-        startExporting(action: .save)
+        startExporting(action: .save, size: exportSize ?? .zero)
         analyticsProvider?.logSaveFromDashboard()
     }
 
@@ -647,20 +647,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     func didTapPostButton() {
         if delegate?.shouldExport() ?? true {
-            startExporting(action: .post)
+            startExporting(action: .post, size: exportSize ?? .zero)
         }
         analyticsProvider?.logPostFromDashboard()
     }
 
     func didTapConfirmButton() {
         if delegate?.shouldExport() ?? true {
-            startExporting(action: .confirm)
+            startExporting(action: .confirm, size: exportSize ?? .zero)
         }
         analyticsProvider?.logOpenComposeFromDashboard()
     }
 
     func didTapPostOptionsButton() {
-        startExporting(action: .postOptions)
+        startExporting(action: .postOptions, size: exportSize ?? .zero)
         analyticsProvider?.logAdvancedOptionsOpen(page: Constants.pageName)
     }
     
@@ -743,7 +743,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     // MARK: - Media Exporting
 
-    private func startExporting(action: KanvasExportAction) {
+    private func startExporting(action: KanvasExportAction, size: CGSize) {
         player.stop()
         showLoading()
         let archive: Data
@@ -760,20 +760,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                 assetsHandler.ensureAllImagesHaveVideo(segments: segments) { segments in
                     guard let videoURL = segments.first?.videoURL else { return }
                     DispatchQueue.main.async {
-                        self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, archive: archive, exportAction: action)
+                        self.createFinalVideo(videoURL: videoURL, size: size, mediaInfo: firstSegment.mediaInfo, archive: archive, exportAction: action)
                     }
                 }
             }
             else {
-                createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, archive: archive, exportAction: action)
+                createFinalImage(image: image, size: size, mediaInfo: firstSegment.mediaInfo, archive: archive, exportAction: action)
             }
         }
         else if shouldExportMediaAsGIF {
             if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
-                self.createFinalGIF(videoURL: url, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, archive: archive, exportAction: action)
+                self.createFinalGIF(videoURL: url, size: size, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, archive: archive, exportAction: action)
             }
             else if assetsHandler.containsOnlyImages(segments: segments) {
-                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), archive: archive, exportAction: action)
+                self.createFinalGIF(segments: segments, size: size, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), archive: archive, exportAction: action)
             }
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
@@ -788,7 +788,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     }
                     let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasTimes.stopMotionFrameTimescale).seconds / KanvasTimes.onlyImagesFrameTime.seconds)
                     DispatchQueue.main.async {
-                        self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, archive: archive, exportAction: action)
+                        self.createFinalGIF(videoURL: url, size: size, framesPerSecond: fps, mediaInfo: mediaInfo, archive: archive, exportAction: action)
                     }
                 }
             }
@@ -800,33 +800,33 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                     return
                 }
                 DispatchQueue.main.async {
-                    self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), archive: archive, exportAction: action)
+                    self?.createFinalVideo(videoURL: url, size: size, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), archive: archive, exportAction: action)
                 }
             }
         }
     }
 
-    public func export(_ completion: @escaping (Result<ExportResult, Error>) -> Void) {
+    public func export(size: CGSize, _ completion: @escaping (Result<ExportResult, Error>) -> Void) {
         exportCompletion = completion
-        startExporting(action: .post)
+        startExporting(action: .post, size: size)
     }
 
     var edit: Edit {
         return Edit(canvas: editorView.movableViewCanvas, isMuted: isMuted)
     }
 
-    private var exportSize: CGSize? {
+    var exportSize: CGSize? {
         let exportSize = editorView.exportSize
         return settings.features.scaleMediaToFill ? exportSize : nil
     }
 
-    private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
+    private func createFinalGIF(segments: [CameraSegment], size: CGSize, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
-        exporter.imageOverlays = imageOverlays()
+        exporter.imageOverlays = imageOverlays(size: size)
         let segments = gifMakerHandler.trimmedSegments(segments)
         let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
-        exporter.export(frames: frames, toSize: exportSize) { orderedFrames in
+        exporter.export(frames: frames, toSize: size) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
                 guard let gifURL = gifURL else {
@@ -843,11 +843,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
+    private func createFinalGIF(videoURL: URL, size: CGSize, framesPerSecond: Int, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
-        exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, _) in
+        exporter.imageOverlays = imageOverlays(size: size)
+        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: size) { (exportedVideoURL, _) in
             guard let exportedVideoURL = exportedVideoURL else {
                 performUIUpdate {
                     self.handleExportError()
@@ -869,10 +869,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
+    private func createFinalVideo(videoURL: URL, size: CGSize, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
-        exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, error) in
+        exporter.imageOverlays = imageOverlays(size: size)
+        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: size) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
                     if let error = error, let exportCompletion = self.exportCompletion {
@@ -889,11 +889,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: UIImage, size: CGSize, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
-        exporter.imageOverlays = imageOverlays()
-        exporter.export(image: image, time: player.lastStillFilterTime, toSize: exportSize) { (exportedImage, error) in
+        exporter.imageOverlays = imageOverlays(size: size)
+        exporter.export(image: image, time: player.lastStillFilterTime, toSize: size) { (exportedImage, error) in
             let originalImage = image
             performUIUpdate {
                 guard let unwrappedImage = exportedImage else {
@@ -911,14 +911,16 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private func imageOverlays() -> [CGImage] {
-        editorView.layoutIfNeeded()
+    private func imageOverlays(size: CGSize) -> [CGImage] {
+        // Remove this automatic sizing once export logic is removed from EditorViewController
+        editorView.movableViewCanvas.frame = CGRect(origin: .zero, size: size)
         var imageOverlays: [CGImage] = []
         if let drawingLayer = drawingController.drawingLayer, let drawingOverlayImage = drawingLayer.cgImage() {
             imageOverlays.append(drawingOverlayImage)
         }
         
         if let movableViewsOverlayImage = editorView.movableViewCanvas.layer.cgImage() {
+            print("Frame: \(editorView.movableViewCanvas.frame) Image: \(movableViewsOverlayImage.width), \(movableViewsOverlayImage.height)")
             imageOverlays.append(movableViewsOverlayImage)
         }
         return imageOverlays
@@ -1225,7 +1227,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func onQuickPostButtonSubmitted() {
-        startExporting(action: .confirmPostOptions)
+        startExporting(action: .confirmPostOptions, size: exportSize ?? .zero)
     }
     
     public func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
