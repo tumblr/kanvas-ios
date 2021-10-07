@@ -17,6 +17,9 @@ struct CameraConstants {
     static let optionHorizontalMargin: CGFloat = KanvasDesign.shared.cameraViewOptionHorizontalMargin
     static let optionButtonSize: CGFloat = KanvasDesign.shared.cameraViewOptionButtonSize
     static let optionSpacing: CGFloat = KanvasDesign.shared.cameraViewOptionSpacing
+    
+    static let modeBottomMargin: CGFloat = KanvasDesign.shared.isBottomPicker ? MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin) : MediaClipsEditorView.height
+    
     private static let hidingAnimationDuration: CGFloat = 0.2
     fileprivate static let defaultOptionRows: CGFloat = 2
     
@@ -152,11 +155,9 @@ final class CameraView: UIView {
     private func setupModeLayoutGuide() {
         addLayoutGuide(modeLayoutGuide)
         
-        let bottomMargin: CGFloat = KanvasDesign.shared.isBottomPicker ? MediaClipsEditorView.height - (ModeSelectorAndShootView.modeSelectorHeight + ModeSelectorAndShootView.modeSelectorTopMargin) : MediaClipsEditorView.height
-        
         modeLayoutGuide.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor).isActive = true
         modeLayoutGuide.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor).isActive = true
-        modeLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -bottomMargin).isActive = true
+        modeLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CameraConstants.modeBottomMargin).isActive = true
         modeLayoutGuide.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: CameraConstants.optionVerticalMargin).isActive = true
     }
 

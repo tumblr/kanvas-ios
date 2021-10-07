@@ -62,7 +62,23 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         static let buttonBorderWidth: CGFloat = 1.5
     }
 
+    private let contentViewTopPadding: CGFloat
+    private let contentViewBottomPadding: CGFloat
+    
     private lazy var containerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        return view
+    }()
+    
+    private lazy var backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.black.withAlphaComponent(0.75)
@@ -132,8 +148,10 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     weak var delegate: CameraPermissionsViewDelegate?
 
-    init(showMediaPicker: Bool, frame: CGRect = .zero) {
+    init(showMediaPicker: Bool, frame: CGRect = .zero, contentViewTopPadding: CGFloat, contentViewBottomPadding: CGFloat) {
         self.showMediaPicker = showMediaPicker
+        self.contentViewTopPadding = contentViewTopPadding
+        self.contentViewBottomPadding = contentViewBottomPadding
 
         super.init(frame: frame)
 
@@ -142,6 +160,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     override init(frame: CGRect) {
         self.showMediaPicker = false
+        self.contentViewTopPadding = 0
+        self.contentViewBottomPadding = 0
 
         super.init(frame: frame)
 
@@ -163,14 +183,18 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }
 
     private func setupView() {
+        addSubview(backgroundView)
         addSubview(containerView)
-        addSubview(titleLabel)
-        addSubview(descriptionLabel)
-        addSubview(cameraAccessButton)
-        addSubview(microphoneAccessButton)
-        addSubview(mediaPickerButton)
+        containerView.addSubview(contentView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(descriptionLabel)
+        contentView.addSubview(cameraAccessButton)
+        contentView.addSubview(microphoneAccessButton)
+        contentView.addSubview(mediaPickerButton)
 
+        setupBackgroundView()
         setupContainerView()
+        setupContentView()
         setupTitleView()
         setupDescriptionView()
         setupCameraAccessButton()
@@ -178,26 +202,45 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         setupMediaPickerButton()
     }
 
+    private func setupBackgroundView() {
+        NSLayoutConstraint.activate([
+            backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            backgroundView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+    }
+    
     private func setupContainerView() {
         NSLayoutConstraint.activate([
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerView.topAnchor.constraint(equalTo: topAnchor),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            containerView.topAnchor.constraint(equalTo: safeLayoutGuide.topAnchor, constant: contentViewTopPadding),
+            containerView.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -contentViewBottomPadding),
+            containerView.leadingAnchor.constraint(equalTo: safeLayoutGuide.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: safeLayoutGuide.trailingAnchor)
+        ])
+    }
+    
+    private func setupContentView() {
+        NSLayoutConstraint.activate([
+            contentView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            contentView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            contentView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
         ])
     }
 
     private func setupTitleView() {
         NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -15),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             titleLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.60)
         ])
     }
 
     private func setupDescriptionView() {
         NSLayoutConstraint.activate([
-            descriptionLabel.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -25),
+            descriptionLabel.bottomAnchor.constraint(equalTo: cameraAccessButton.topAnchor, constant: -25),
             descriptionLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
             descriptionLabel.widthAnchor.constraint(equalTo: titleLabel.widthAnchor)
         ])
@@ -205,7 +248,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     private func setupCameraAccessButton() {
         NSLayoutConstraint.activate([
-            cameraAccessButton.topAnchor.constraint(equalTo: centerYAnchor),
             cameraAccessButton.centerXAnchor.constraint(equalTo: descriptionLabel.centerXAnchor),
         ])
         cameraAccessButton.layoutIfNeeded()
@@ -216,6 +258,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         NSLayoutConstraint.activate([
             microphoneAccessButton.topAnchor.constraint(equalTo: cameraAccessButton.bottomAnchor, constant: 15),
             microphoneAccessButton.centerXAnchor.constraint(equalTo: cameraAccessButton.centerXAnchor),
+            microphoneAccessButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         microphoneAccessButton.layoutIfNeeded()
         CameraPermissionsView.updateButton(button: microphoneAccessButton)
@@ -317,6 +360,10 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     let captureDeviceAuthorizer: CaptureDeviceAuthorizing
 
     let shouldShowMediaPicker: Bool
+    
+    private let contentViewTopPadding: CGFloat
+    
+    private let contentViewBottomPadding: CGFloat
 
     weak var delegate: CameraPermissionsViewControllerDelegate?
 
@@ -328,9 +375,11 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         return view as? IgnoreTouchesView
     }
 
-    init(shouldShowMediaPicker: Bool, captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
+    init(shouldShowMediaPicker: Bool, captureDeviceAuthorizer: CaptureDeviceAuthorizing, contentViewTopPadding: CGFloat, contentViewBottomPadding: CGFloat) {
         self.captureDeviceAuthorizer = captureDeviceAuthorizer
         self.shouldShowMediaPicker = shouldShowMediaPicker
+        self.contentViewTopPadding = contentViewTopPadding
+        self.contentViewBottomPadding = contentViewBottomPadding
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -339,7 +388,10 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
 
     override func loadView() {
-        let view = CameraPermissionsView(showMediaPicker: shouldShowMediaPicker, frame: .zero)
+        let view = CameraPermissionsView(showMediaPicker: shouldShowMediaPicker,
+                                         frame: .zero,
+                                         contentViewTopPadding: contentViewTopPadding,
+                                         contentViewBottomPadding: contentViewBottomPadding)
         view.delegate = self
         self.view = view
     }
