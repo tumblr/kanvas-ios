@@ -75,6 +75,7 @@ public class KanvasCustomUI {
             trashColor: Self.brightRed,
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
+            cameraConfirmationColor: Self.brightBlue,
             primaryButtonBackgroundColor: Self.brightBlue,
             permissionsButtonColor: UIColor(red: 0, green: 184.0/255.0, blue: 1.0, alpha: 1.0),
             permissionsButtonAcceptedBackgroundColor: UIColor(hex: 0x00cf35),
