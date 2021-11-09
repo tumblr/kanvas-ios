@@ -14,15 +14,18 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
     
     private let testImage = KanvasImages.shared.confirmImage
     private let secondTestImage = KanvasImages.flashOnImage
+    private var controller = ImagePreviewController()
     
     override func setUp() {
         super.setUp()
-        
-        self.recordMode = false
+
+        recordMode = false
+
+        controller = ImagePreviewController()
+        controller.view.frame = CGRect(x: 0, y: 0, width: 375, height: 667)
     }
     
     func testPreviewWithNoImage() {
-        let controller = ImagePreviewController()
         UIView.setAnimationsEnabled(false)
         controller.showImagePreview(true)
         UIView.setAnimationsEnabled(true)
@@ -30,7 +33,6 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
     }
     
     func testSetImagePreview() {
-        let controller = ImagePreviewController()
         UIView.setAnimationsEnabled(false)
         controller.showImagePreview(true)
         controller.setImagePreview(testImage)
@@ -39,7 +41,6 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
     }
     
     func testSetImagePreviewWithNil() {
-        let controller = ImagePreviewController()
         UIView.setAnimationsEnabled(false)
         controller.showImagePreview(true)
         controller.setImagePreview(nil)
@@ -48,7 +49,6 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
     }
     
     func testSetImagePreviewOff() {
-        let controller = ImagePreviewController()
         UIView.setAnimationsEnabled(false)
         controller.showImagePreview(false)
         controller.setImagePreview(testImage)
@@ -57,7 +57,6 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
     }
     
     func testSetImagePreviewTwice() {
-        let controller = ImagePreviewController()
         UIView.setAnimationsEnabled(false)
         controller.showImagePreview(true)
         controller.setImagePreview(testImage)
