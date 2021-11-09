@@ -29,6 +29,6 @@ final class DiscreteSliderTests: FBSnapshotTestCase {
     
     func testSliderView() {
         let slider = newSlider()
-        FBSnapshotVerifyView(slider.view)
+        FBSnapshotVerifyView(slider.view, tolerance: 0.05)
     }
 }

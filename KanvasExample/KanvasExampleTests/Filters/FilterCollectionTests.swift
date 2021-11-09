@@ -61,7 +61,7 @@ final class FilterCollectionTests: FBSnapshotTestCase, UICollectionViewDelegate,
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.reloadData()
-        FBSnapshotVerifyView(collectionView)
+        FBSnapshotVerifyView(collectionView, tolerance: 0.05)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

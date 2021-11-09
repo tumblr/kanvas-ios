@@ -27,19 +27,19 @@ final class ModeSelectorAndShootViewTests: FBSnapshotTestCase {
     func testPhotoMode() {
         let view = newView()
         view.setUpMode(.photo)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testGifMode() {
         let view = newView()
         view.setUpMode(.loop)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testStopMotionMode() {
         let view = newView()
         view.setUpMode(.stopMotion)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testShowModeButton() {

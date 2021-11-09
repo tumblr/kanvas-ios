@@ -35,7 +35,7 @@ final class OptionSelectorViewTests: FBSnapshotTestCase, UICollectionViewDataSou
     
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
     
     // MARK: - UICollectionViewDataSource

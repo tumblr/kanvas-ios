@@ -29,7 +29,7 @@ final class ModeButtonViewTests: FBSnapshotTestCase {
         modeButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
         modeButton.setTitle(KanvasStrings.name(for: .photo))
-        FBSnapshotVerifyView(modeButton)
+        FBSnapshotVerifyView(modeButton, tolerance: 0.05)
         UIView.setAnimationsEnabled(true)
     }
     
@@ -39,7 +39,7 @@ final class ModeButtonViewTests: FBSnapshotTestCase {
         modeButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
         modeButton.setTitle(KanvasStrings.name(for: .loop))
-        FBSnapshotVerifyView(modeButton)
+        FBSnapshotVerifyView(modeButton, tolerance: 0.05)
         UIView.setAnimationsEnabled(true)
     }
 
@@ -49,7 +49,7 @@ final class ModeButtonViewTests: FBSnapshotTestCase {
         modeButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
         modeButton.setTitle(KanvasStrings.name(for: .stopMotion))
-        FBSnapshotVerifyView(modeButton)
+        FBSnapshotVerifyView(modeButton, tolerance: 0.05)
         UIView.setAnimationsEnabled(true)
     }
 }

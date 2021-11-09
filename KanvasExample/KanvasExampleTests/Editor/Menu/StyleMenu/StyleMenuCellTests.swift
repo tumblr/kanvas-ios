@@ -29,6 +29,6 @@ final class StyleMenuCellTests: FBSnapshotTestCase {
         let editionOption = EditionOption.media
         cell.bindTo(editionOption, enabled: false)
         cell.layoutIfNeeded()
-        FBSnapshotVerifyView(cell)
+        FBSnapshotVerifyView(cell, tolerance: 0.05)
     }
 }

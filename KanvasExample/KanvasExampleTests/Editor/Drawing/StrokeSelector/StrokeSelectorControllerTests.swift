@@ -29,6 +29,6 @@ final class StrokeSelectorControllerTests: FBSnapshotTestCase {
     
     func testSelectorControllerView() {
         let controller = newViewController()
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 }

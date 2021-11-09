@@ -29,6 +29,6 @@ final class OptionSelectorControllerTests: FBSnapshotTestCase {
     
     func testControllerView() {
         let controller = newViewController()
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 }

@@ -18,14 +18,14 @@ class KanvasFontsTests: FBSnapshotTestCase {
         let label = newLabelView()
         let drawer = KanvasFonts.Drawer(textSelectedFont: .guavaMedium(), textUnselectedFont: .guavaMedium())
         label.font = drawer.textSelectedFont
-        FBSnapshotVerifyView(label)
+        FBSnapshotVerifyView(label, tolerance: 0.05)
     }
     
     func testPermissionsFont() {
         let label = newLabelView()
         let permissions = KanvasFonts.CameraPermissions(titleFont: .guavaMedium(), descriptionFont: .guavaMedium(), buttonFont: .guavaMedium())
         label.font = permissions.titleFont
-        FBSnapshotVerifyView(label)
+        FBSnapshotVerifyView(label, tolerance: 0.05)
     }
     
     func testPadding() {
