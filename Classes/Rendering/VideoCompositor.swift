@@ -124,10 +124,10 @@ final class VideoCompositor: NSObject, AVVideoCompositing {
 
                 if self.firstFrame {
                     self.startTime = asyncVideoCompositionRequest.compositionTime
-                    self.renderer.processSampleBuffer(sampleBuffer, time: 0, scaleToFillSize: asyncVideoCompositionRequest.renderContext.size)
+                    self.renderer.processSampleBuffer(sampleBuffer, time: 0)
                     self.firstFrame = false
                 }
-                self.renderer.processSampleBuffer(sampleBuffer, time: asyncVideoCompositionRequest.compositionTime.seconds - (self.startTime?.seconds ?? 0), scaleToFillSize: asyncVideoCompositionRequest.renderContext.size)
+                self.renderer.processSampleBuffer(sampleBuffer, time: asyncVideoCompositionRequest.compositionTime.seconds - (self.startTime?.seconds ?? 0))
             }
         }
     }
