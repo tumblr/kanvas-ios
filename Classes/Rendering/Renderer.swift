@@ -131,7 +131,7 @@ final class Renderer: Rendering {
         let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         let filterAlreadyInitialized: Bool = synchronized(self) {
             if filter.outputFormatDescription == nil {
-                let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: scaleToFillSize)
+                let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: settings?.features.scaleMediaToFill == true ? scaleToFillSize : nil)
                 filter.setupFormatDescription(from: sampleBuffer, transform: finalMediaTransform, outputDimensions: outputDimensions ?? .zero)
                 return false
             }
@@ -204,7 +204,7 @@ final class Renderer: Rendering {
         }
         
         if imageFilter.outputFormatDescription == nil {
-            let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: scaleToFillSize)
+            let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: settings?.features.scaleMediaToFill == true ? scaleToFillSize : nil)
             imageFilter.setupFormatDescription(from: sampleBuffer, transform: finalMediaTransform, outputDimensions: outputDimensions ?? .zero)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
