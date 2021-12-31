@@ -164,7 +164,8 @@ final class MultiEditorControllerDelegateStub: MultiEditorComposerDelegate {
     }
 
     func editor(segment: CameraSegment, edit: EditorViewController.Edit?) -> EditorViewController {
-        return EditorViewController(settings: settings,
+        return EditorViewController(delegate: self,
+                                    settings: settings,
                                     segments: [segment],
                                     assetsHandler: assetsHandler,
                                     exporterClass: exporterClass,

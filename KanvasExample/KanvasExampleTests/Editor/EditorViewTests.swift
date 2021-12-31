@@ -39,7 +39,6 @@ final class EditorViewTests: FBSnapshotTestCase {
                               mediaContentMode: .scaleAspectFit,
                               movableViewCanvas: nil)
         view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
-        view.setupViews()
         return view
     }
     
