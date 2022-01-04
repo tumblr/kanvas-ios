@@ -228,7 +228,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         return delegate.getBlogSwitcher()
     }()
     
-    weak var delegate: EditorViewDelegate?
+    private weak var delegate: EditorViewDelegate?
     private var mediaContentMode: UIView.ContentMode
     private var aspectRatio: CGFloat?
     
@@ -273,6 +273,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         self.movableViewCanvas = movableViewCanvas ?? MovableViewCanvas()
         super.init(frame: .zero)
         self.movableViewCanvas.delegate = self
+        setupViews()
     }
 
     func updateUI(forDraggingClip: Bool) {
@@ -287,7 +288,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
         })
     }
     
-    func setupViews() {
+    private func setupViews() {
         setupPlayer()
         setupDrawingCanvas()
         setupMovableViewCanvas()
