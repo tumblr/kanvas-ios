@@ -884,6 +884,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
+        exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, error) in
             performUIUpdate {
