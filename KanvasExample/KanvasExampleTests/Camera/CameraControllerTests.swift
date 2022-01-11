@@ -63,7 +63,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
     func testSetUpWithAllOptionsAndModesShouldStartWithFlashOffAndStopMotionMode() {
         let delegate = newDelegateStub()
         let controller = newController(delegate: delegate)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 
     func testSetupWithStopMotionDisabled() {
@@ -72,7 +72,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         settings.features.ghostFrame = false
         settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 
     func testSetUpWithGifDefaultModeShouldStartWithGifMode() {
@@ -82,7 +82,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         settings.features.ghostFrame = true
         settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 
     func testSetUpWithFlashOn() {
@@ -92,7 +92,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         settings.features.ghostFrame = true
         settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
     
     func testSetUpWithImagePreviewOn() {
@@ -102,7 +102,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         settings.features.ghostFrame = true
         settings.features.cameraFilters = true
         let controller = newController(delegate: delegate, settings: settings)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
     
     func testImagePreviewButtonShouldHideOnPhotoMode() {
@@ -111,7 +111,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.didOpenMode(.photo, andClosed: .none)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
     
     func testImagePreviewButtonShouldHideOnStopMotionMode() {
@@ -120,7 +120,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.didOpenMode(.stopMotion, andClosed: .none)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
     
     func testImagePreviewButtonShouldHideOnGifMode() {
@@ -129,7 +129,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.didOpenMode(.loop, andClosed: .none)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 
     // Can't test `exportStopMotionPhotoAsVideo` because it can't export in tests
@@ -147,7 +147,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         controller.didOpenMode(.stopMotion, andClosed: .none)
         controller.didTapForMode(.stopMotion)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 
     func testStartLongPressShouldHideUIButFilterSelectorAndShutterButton() {
@@ -168,7 +168,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         controller.didStartPressingForMode(.stopMotion)
         controller.didEndPressingForMode(.stopMotion)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 
     func testTapAndLongPressShouldAddTwoClipsAndShowNextButton() {
@@ -180,7 +180,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         controller.didStartPressingForMode(.stopMotion)
         controller.didEndPressingForMode(.stopMotion)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 
     // MARK: - CameraViewDelegate
@@ -293,7 +293,7 @@ final class CameraControllerTests: FBSnapshotTestCase {
         controller.didTapVisibilityButton(visible: true)
         controller.didTapVisibilityButton(visible: false)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 
     // Can't test `dismissButtonPressed` because it requires presenting and dismissing preview controller.

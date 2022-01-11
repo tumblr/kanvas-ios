@@ -74,6 +74,7 @@ public struct KanvasColors {
             trashColor: brightRed,
             tooltipBackgroundColor: .systemRed,
             closeButtonColor: black25,
+            cameraConfirmationColor: brightBlue,
             primaryButtonBackgroundColor: brightBlue,
             permissionsButtonColor: UIColor(red: 0, green: 184.0/255.0, blue: 1.0, alpha: 1.0),
             permissionsButtonAcceptedBackgroundColor: UIColor(hex: 0x00cf35),
@@ -110,6 +111,7 @@ public struct KanvasColors {
         trashColor: UIColor,
         tooltipBackgroundColor: UIColor,
         closeButtonColor: UIColor,
+        cameraConfirmationColor: UIColor,
         primaryButtonBackgroundColor: UIColor,
         permissionsButtonColor: UIColor,
         permissionsButtonAcceptedBackgroundColor: UIColor,
@@ -127,6 +129,7 @@ public struct KanvasColors {
         self.trashColor = trashColor
         self.tooltipBackgroundColor = tooltipBackgroundColor
         self.closeButtonColor = closeButtonColor
+        self.cameraConfirmationColor = cameraConfirmationColor
         self.primaryButtonBackgroundColor = primaryButtonBackgroundColor
         self.permissionsButtonColor = permissionsButtonColor
         self.permissionsButtonAcceptedBackgroundColor = permissionsButtonAcceptedBackgroundColor
@@ -151,6 +154,7 @@ public struct KanvasColors {
     let tooltipBackgroundColor: UIColor // ColorPickerController:29
     
     let closeButtonColor: UIColor // MediaDrawerView:130
+    let cameraConfirmationColor: UIColor
     
     let primaryButtonBackgroundColor: UIColor
     

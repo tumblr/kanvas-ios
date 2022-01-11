@@ -82,6 +82,6 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         cell.bindTo(0)
         cell.setStyle(isCenter: true, isFirst: false, isLast: false)
         cell.setProgress(leftLineActive: false, rightLineActive: false)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotVerifyView(cell, tolerance: 0.05)
     }
 }

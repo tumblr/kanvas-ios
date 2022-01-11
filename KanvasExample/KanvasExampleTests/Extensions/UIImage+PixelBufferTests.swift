@@ -38,6 +38,6 @@ final class UIImagePixelBufferTests: FBSnapshotTestCase {
         let newUIImage = UIImage(pixelBuffer: pixelBuffer)
         let imageView = UIImageView(image: newUIImage)
         imageView.add(into: view)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 }

@@ -29,20 +29,20 @@ final class DiscreteSliderViewTests: FBSnapshotTestCase {
         let view = newView()
         view.cellWidth = view.bounds.width / 5
         view.setSelector(at: 0)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
     
     func testViewSetupWithIndex() {
         let view = newView()
         view.cellWidth = view.bounds.width / 5
         view.setSelector(at: 2)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
     
     func testViewSetupAtLastPosition() {
         let view = newView()
         view.cellWidth = view.bounds.width / 5
         view.setSelector(at: 4)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 }

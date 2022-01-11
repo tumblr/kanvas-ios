@@ -30,6 +30,6 @@ final class CameraFilterCollectionControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.showView(true)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 }

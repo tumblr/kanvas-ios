@@ -133,31 +133,31 @@ final class CameraPermissionsViewTests: FBSnapshotTestCase {
     func testViewWithNoAccess() {
         let view = CameraPermissionsView(showMediaPicker: true, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         view.layoutIfNeeded()
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testViewWithCameraAccess() {
         let view = CameraPermissionsView(showMediaPicker: true, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         view.updateCameraAccess(hasAccess: true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testViewWithMicrophoneAccess() {
         let view = CameraPermissionsView(showMediaPicker: true, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         view.updateMicrophoneAccess(hasAccess: true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testViewWithCameraAndMicrophoneAccess() {
         let view = CameraPermissionsView(showMediaPicker: true, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         view.updateCameraAccess(hasAccess: true)
         view.updateMicrophoneAccess(hasAccess: true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testViewWithoutMediaPickerButton() {
         let view = CameraPermissionsView(showMediaPicker: false, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
 }

@@ -50,7 +50,7 @@ final class EditorFilterCollectionViewTests: FBSnapshotTestCase, UICollectionVie
         view.collectionView.delegate = self
         view.collectionView.dataSource = self
         view.collectionView.reloadData()
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, tolerance: 0.05)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

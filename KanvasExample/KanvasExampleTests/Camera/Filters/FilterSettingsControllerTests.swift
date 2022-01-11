@@ -39,6 +39,6 @@ final class FilterSettingsControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.didTapVisibilityButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
     }
 }

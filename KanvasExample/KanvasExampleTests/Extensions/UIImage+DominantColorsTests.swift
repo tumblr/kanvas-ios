@@ -13,10 +13,10 @@ final class UIImageDominantColorsTests: XCTestCase {
         guard let image = KanvasImages.shared.confirmImage else { return }
         let colors = image.getDominantColors(count: 3)
                 
-        let expectedColors = [UIColor(hex: "#24bbfa"),
-                              UIColor(hex: "#040505"),
-                              UIColor(hex: "#f4f9fc"),
-                              UIColor(hex: "#146c8c")]
+        let expectedColors = [UIColor(hex: "#ebebeb"),
+                              UIColor(hex: "#040404"),
+                              UIColor(hex: "#545454"),
+                              UIColor(hex: "#343434")]
         
         XCTAssertEqual(colors, expectedColors, "Expected different colors.")
     }

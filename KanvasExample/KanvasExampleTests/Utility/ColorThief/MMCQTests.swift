@@ -20,7 +20,10 @@ final class MMCQTests: XCTestCase {
         
         let palette = colorMap.makePalette()
         let colors = palette.map { $0.makeUIColor() }
-        let expectedColors = [UIColor(hex: "#24bbfa"), UIColor(hex: "#040506"), UIColor(hex: "#f4f9fc"), UIColor(hex: "#145c7c")]
+        let expectedColors = [UIColor(hex: "#040404"),
+                              UIColor(hex: "#ebebeb"),
+                              UIColor(hex: "#747474"),
+                              UIColor(hex: "#6c6c6c")]
         
         XCTAssertEqual(colors, expectedColors, "Expected different colors")
     }

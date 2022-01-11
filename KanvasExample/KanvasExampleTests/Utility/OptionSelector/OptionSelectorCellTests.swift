@@ -27,13 +27,13 @@ final class OptionSelectorCellTests: FBSnapshotTestCase {
     func testCell() {
         let cell = newCell()
         cell.bindTo(PlaybackOption.loop)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotVerifyView(cell, tolerance: 0.05)
     }
     
     func testSelectedCell() {
         let cell = newCell()
         cell.bindTo(PlaybackOption.loop)
         cell.setSelected(true, animated: false)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotVerifyView(cell, tolerance: 0.05)
     }
 }

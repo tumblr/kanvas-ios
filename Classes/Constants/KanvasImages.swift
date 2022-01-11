@@ -44,6 +44,7 @@ public struct KanvasImages {
     static let closeImage = UIImage.imageFromCameraBundle(named: "whiteCloseIcon")
     static let crossImage = UIImage.imageFromCameraBundle(named: "cross")
     static let longCheckmarkImage = UIImage.imageFromCameraBundle(named: "longCheckmark")
+    static let checkmarkImage = UIImage.imageFromCameraBundle(named: "roundedCheckmark")
     static let backImage = UIImage.imageFromCameraBundle(named: "back")
     static let backArrowImage = UIImage.imageFromCameraBundle(named: "backArrow")
     static let chevron = UIImage.imageFromCameraBundle(named: "chevron")
@@ -173,9 +174,9 @@ public struct KanvasImages {
     let confirmImage: UIImage?
     let editorConfirmImage: UIImage?
 
-    public static var shared = KanvasImages(confirmImage: UIImage.imageFromCameraBundle(named: "confirm"),
-                                    editorConfirmImage: UIImage.imageFromCameraBundle(named: "editorConfirm"),
-                                     nextImage: UIImage.imageFromCameraBundle(named: "next"))
+    public static var shared = KanvasImages(confirmImage: checkmarkImage,
+                                            editorConfirmImage: UIImage.imageFromCameraBundle(named: "editorConfirm"),
+                                            nextImage: UIImage.imageFromCameraBundle(named: "next"))
 
     public init(confirmImage: UIImage?,
          editorConfirmImage: UIImage?,
