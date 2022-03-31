@@ -434,18 +434,26 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     private func setupViewFromAccess() {
         if hasFullAccess() {
-            if ignoreTouchesView == nil {
-                view = IgnoreTouchesView()
-            }
+            showIgnoreTouchesView()
         }
         else {
-            if permissionsView == nil {
-                let view = CameraPermissionsView()
-                view.delegate = self
-                self.view = view
-            }
-            permissionsView?.updateCameraAccess(hasAccess: hasCameraAccess())
-            permissionsView?.updateMicrophoneAccess(hasAccess: hasMicrophoneAccess())
+            showPermissionsView()
+        }
+    }
+    
+    private func showPermissionsView() {
+        if permissionsView == nil {
+            let view = CameraPermissionsView()
+            view.delegate = self
+            self.view = view
+        }
+        permissionsView?.updateCameraAccess(hasAccess: hasCameraAccess())
+        permissionsView?.updateMicrophoneAccess(hasAccess: hasMicrophoneAccess())
+    }
+    
+    private func showIgnoreTouchesView() {
+        if ignoreTouchesView == nil {
+            view = IgnoreTouchesView()
         }
     }
 
