@@ -353,9 +353,13 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         super.viewWillAppear(animated)
 
         setupViewFromAccess()
+        if hasFullAccess() { return }
+        
+        requestCameraAccess()
+        requestMicrophoneAccess()
     }
-
-    func cameraAccessButtonPressed() {
+    
+    func requestCameraAccess() {
         switch captureDeviceAuthorizer.authorizationStatus(for: .video) {
         case .notDetermined:
             captureDeviceAuthorizer.requestAccess(for: .video) { videoGranted in
@@ -364,16 +368,14 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                 }
             }
         case .restricted, .denied:
-            openAppSettings()
+            //            openAppSettings()
+            return
         case .authorized:
-            assertionFailure("How was this button pressed if we're already authorized!?")
-            self.setupViewFromAccessAndNotifyPermissionsChanged()
-        @unknown default:
-            assertionFailure()
+            return
         }
     }
 
-    func microphoneAccessButtonPressed() {
+    func requestMicrophoneAccess() {
         switch captureDeviceAuthorizer.authorizationStatus(for: .audio) {
         case .notDetermined:
             captureDeviceAuthorizer.requestAccess(for: .audio) { audioGranted in
@@ -382,12 +384,10 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                 }
             }
         case .restricted, .denied:
-            openAppSettings()
+            //            openAppSettings()
+            return
         case .authorized:
-            assertionFailure("How was this button pressed if we're already authorized!?")
-            self.setupViewFromAccessAndNotifyPermissionsChanged()
-        @unknown default:
-            assertionFailure()
+            return
         }
     }
 
