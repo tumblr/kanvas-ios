@@ -21,6 +21,8 @@ protocol CameraPermissionsViewDelegate: class {
     func requestCameraAccess()
     
     func requestMicrophoneAccess()
+    
+    func openAppSettings()
 
     func mediaPickerButtonPressed()
 
@@ -99,11 +101,11 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }()
 
     private lazy var cameraAccessButton: UIButton = {
-        let title = NSLocalizedString("Allow access to camera", comment: "Button on camera permissions screen to initiate the sytem prompt for camera access")
-        let titleDisabled = NSLocalizedString("Camera access granted", comment: "Label on camera permissions screen to indicate camera access is granted")
+        let title = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
+        let titleDisabled = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
         let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(cameraAccessButtonPressed), for: .touchUpInside)
+        button.addTarget(self, action: #selector(openAppSettings), for: .touchUpInside)
         return button
     }()
 
@@ -288,6 +290,10 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     @objc private func microphoneAccessButtonPressed() {
         delegate?.requestMicrophoneAccess()
     }
+    
+    @objc private func openAppSettings() {
+        delegate?.openAppSettings()
+    }
 
     func mediaPickerButtonDidPress() {
         delegate?.mediaPickerButtonPressed()
@@ -393,6 +399,10 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
             return
         }
     }
+    
+    func openAppSettings() {
+        delegate?.openAppSettings(completion: nil)
+    }
 
     func mediaPickerButtonPressed() {
         delegate?.didTapMediaPickerButton {
@@ -424,10 +434,6 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         @unknown default:
             return false
         }
-    }
-
-    private func openAppSettings() {
-        delegate?.openAppSettings(completion: nil)
     }
 
     private func setupViewFromAccessAndNotifyPermissionsChanged() {
