@@ -109,15 +109,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return button
     }()
 
-    private lazy var microphoneAccessButton: UIButton = {
-        let title = NSLocalizedString("Allow access to microphone", comment: "Button on camera permissions screen to initiate the sytem prompt for microphone access.")
-        let titleDisabled = NSLocalizedString("Microphone access granted", comment: "Label on camera permissions screen to indicate microphone access is granted")
-        let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(microphoneAccessButtonPressed), for: .touchUpInside)
-        return button
-    }()
-
     private lazy var mediaPickerButton: MediaPickerButtonView = {
         let settings = CameraSettings()
         settings.features.mediaPicking = showMediaPicker
@@ -158,24 +149,19 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         CameraPermissionsView.updateButton(button: cameraAccessButton)
     }
 
-    func updateMicrophoneAccess(hasAccess: Bool) {
-        microphoneAccessButton.isEnabled = !hasAccess
-        CameraPermissionsView.updateButton(button: microphoneAccessButton)
-    }
+    func updateMicrophoneAccess(hasAccess: Bool) {}
 
     private func setupView() {
         addSubview(containerView)
         addSubview(titleLabel)
         addSubview(descriptionLabel)
         addSubview(cameraAccessButton)
-        addSubview(microphoneAccessButton)
         addSubview(mediaPickerButton)
 
         setupContainerView()
         setupTitleView()
         setupDescriptionView()
         setupCameraAccessButton()
-        setupMicrophoneAccessButton()
         setupMediaPickerButton()
     }
 
@@ -211,15 +197,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         ])
         cameraAccessButton.layoutIfNeeded()
         CameraPermissionsView.updateButton(button: cameraAccessButton)
-    }
-
-    private func setupMicrophoneAccessButton() {
-        NSLayoutConstraint.activate([
-            microphoneAccessButton.topAnchor.constraint(equalTo: cameraAccessButton.bottomAnchor, constant: 15),
-            microphoneAccessButton.centerXAnchor.constraint(equalTo: cameraAccessButton.centerXAnchor),
-        ])
-        microphoneAccessButton.layoutIfNeeded()
-        CameraPermissionsView.updateButton(button: microphoneAccessButton)
     }
 
     private func setupMediaPickerButton() {
@@ -285,10 +262,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     @objc private func cameraAccessButtonPressed() {
         delegate?.requestCameraAccess()
-    }
-
-    @objc private func microphoneAccessButtonPressed() {
-        delegate?.requestMicrophoneAccess()
     }
     
     @objc private func openAppSettings() {
