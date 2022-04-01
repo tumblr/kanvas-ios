@@ -376,10 +376,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                     self.setupViewFromAccessAndNotifyPermissionsChanged()
                 }
             }
-        case .restricted, .denied:
-            //            openAppSettings()
-            return
-        case .authorized:
+        case .restricted, .denied, .authorized:
             return
         }
     }
@@ -392,10 +389,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                     self.setupViewFromAccessAndNotifyPermissionsChanged()
                 }
             }
-        case .restricted, .denied:
-            //            openAppSettings()
-            return
-        case .authorized:
+        case .restricted, .denied, .authorized:
             return
         }
     }
