@@ -18,9 +18,9 @@ protocol CaptureDeviceAuthorizing: class {
 
 protocol CameraPermissionsViewDelegate: class {
 
-    func cameraAccessButtonPressed()
-
-    func microphoneAccessButtonPressed()
+    func requestCameraAccess()
+    
+    func requestMicrophoneAccess()
 
     func mediaPickerButtonPressed()
 
@@ -282,11 +282,11 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }
 
     @objc private func cameraAccessButtonPressed() {
-        delegate?.cameraAccessButtonPressed()
+        delegate?.requestCameraAccess()
     }
 
     @objc private func microphoneAccessButtonPressed() {
-        delegate?.microphoneAccessButtonPressed()
+        delegate?.requestMicrophoneAccess()
     }
 
     func mediaPickerButtonDidPress() {
@@ -316,16 +316,19 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     let captureDeviceAuthorizer: CaptureDeviceAuthorizing
 
     let shouldShowMediaPicker: Bool
-
+    
+    var isViewBlockingCameraAccess: Bool { !isIgnoringTouches }
+    
     weak var delegate: CameraPermissionsViewControllerDelegate?
 
     private var permissionsView: CameraPermissionsViewable? {
         return view as? CameraPermissionsViewable
     }
-
-    private var ignoreTouchesView: IgnoreTouchesView? {
-        return view as? IgnoreTouchesView
+    
+    private var isIgnoringTouches: Bool {
+        return view is IgnoreTouchesView
     }
+
 
     init(shouldShowMediaPicker: Bool, captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
         self.captureDeviceAuthorizer = captureDeviceAuthorizer
@@ -452,7 +455,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
     
     private func showIgnoreTouchesView() {
-        if ignoreTouchesView == nil {
+        if !isIgnoringTouches {
             view = IgnoreTouchesView()
         }
     }

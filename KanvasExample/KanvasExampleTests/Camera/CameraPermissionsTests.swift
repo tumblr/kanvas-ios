@@ -90,9 +90,9 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         let delegate = MockCameraPermissionsViewControllerDelegate()
         let controller = CameraPermissionsViewController(shouldShowMediaPicker: true, captureDeviceAuthorizer: authorizer)
         controller.delegate = delegate
-        controller.cameraAccessButtonPressed()
+        controller.requestCameraAccess()
         XCTAssertEqual(delegate.cameraPermissionsChangedHasFullAccess, false)
-        controller.microphoneAccessButtonPressed()
+        controller.requestMicrophoneAccess()
         XCTAssertEqual(delegate.cameraPermissionsChangedHasFullAccess, true)
     }
 
@@ -116,8 +116,8 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         let delegate = MockCameraPermissionsViewControllerDelegate()
         let controller = CameraPermissionsViewController(shouldShowMediaPicker: true, captureDeviceAuthorizer: authorizer)
         controller.delegate = delegate
-        controller.cameraAccessButtonPressed()
-        XCTAssertEqual(delegate.appSettingsOpened, true)
+        controller.loadViewIfNeeded()
+        XCTAssertTrue(controller.isViewBlockingCameraAccess)
     }
 
 }
