@@ -144,10 +144,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateCameraAccess(hasAccess: Bool) {
-        cameraAccessButton.isEnabled = !hasAccess
-        CameraPermissionsView.updateButton(button: cameraAccessButton)
-    }
+    func updateCameraAccess(hasAccess: Bool) {}
 
     func updateMicrophoneAccess(hasAccess: Bool) {}
 
@@ -423,8 +420,6 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
             view.delegate = self
             self.view = view
         }
-        permissionsView?.updateCameraAccess(hasAccess: hasCameraAccess())
-        permissionsView?.updateMicrophoneAccess(hasAccess: hasMicrophoneAccess())
     }
     
     private func showIgnoreTouchesView() {
