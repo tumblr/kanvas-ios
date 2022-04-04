@@ -51,6 +51,9 @@
                   Identifier = "CameraInputControllerTests/testSwitchCameras()">
                </Test>
                <Test
+                  Identifier = "CameraPermissionsViewTests">
+               </Test>
+               <Test
                   Identifier = "CameraRecorderTests/testPhoto()">
                </Test>
                <Test
