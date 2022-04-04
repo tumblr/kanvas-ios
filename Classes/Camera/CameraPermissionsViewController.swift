@@ -100,7 +100,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return label
     }()
 
-    private lazy var cameraAccessButton: UIButton = {
+    private lazy var settingsButton: UIButton = {
         let title = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
         let titleDisabled = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
         let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
@@ -152,7 +152,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         addSubview(containerView)
         addSubview(titleLabel)
         addSubview(descriptionLabel)
-        addSubview(cameraAccessButton)
+        addSubview(settingsButton)
         addSubview(mediaPickerButton)
 
         setupContainerView()
@@ -189,11 +189,11 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     private func setupCameraAccessButton() {
         NSLayoutConstraint.activate([
-            cameraAccessButton.topAnchor.constraint(equalTo: centerYAnchor),
-            cameraAccessButton.centerXAnchor.constraint(equalTo: descriptionLabel.centerXAnchor),
+            settingsButton.topAnchor.constraint(equalTo: centerYAnchor),
+            settingsButton.centerXAnchor.constraint(equalTo: descriptionLabel.centerXAnchor),
         ])
-        cameraAccessButton.layoutIfNeeded()
-        CameraPermissionsView.updateButton(button: cameraAccessButton)
+        settingsButton.layoutIfNeeded()
+        CameraPermissionsView.updateButton(button: settingsButton)
     }
 
     private func setupMediaPickerButton() {
