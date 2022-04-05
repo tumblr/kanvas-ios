@@ -67,7 +67,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.75)
+        view.backgroundColor = UIColor.black
         return view
     }()
     
