@@ -70,6 +70,14 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         view.backgroundColor = UIColor.black.withAlphaComponent(0.75)
         return view
     }()
+    
+    private lazy var contentStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel, settingsButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        return stackView
+    }()
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -150,14 +158,11 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     private func setupView() {
         addSubview(containerView)
-        addSubview(titleLabel)
-        addSubview(descriptionLabel)
-        addSubview(settingsButton)
+        addSubview(contentStack)
         addSubview(mediaPickerButton)
 
         setupContainerView()
-        setupTitleView()
-        setupDescriptionView()
+        setupContentStack()
         setupCameraAccessButton()
         setupMediaPickerButton()
     }
@@ -170,28 +175,17 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-
-    private func setupTitleView() {
+    
+    private func setupContentStack() {
         NSLayoutConstraint.activate([
-            titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -15),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.60)
-        ])
-    }
-
-    private func setupDescriptionView() {
-        NSLayoutConstraint.activate([
-            descriptionLabel.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -25),
-            descriptionLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
-            descriptionLabel.widthAnchor.constraint(equalTo: titleLabel.widthAnchor)
+            contentStack.heightAnchor.constraint(equalToConstant: 300),
+            contentStack.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
+            contentStack.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor),
+            readableContentGuide.trailingAnchor.constraint(equalTo: contentStack.trailingAnchor)
         ])
     }
 
     private func setupCameraAccessButton() {
-        NSLayoutConstraint.activate([
-            settingsButton.topAnchor.constraint(equalTo: centerYAnchor),
-            settingsButton.centerXAnchor.constraint(equalTo: descriptionLabel.centerXAnchor),
-        ])
         settingsButton.layoutIfNeeded()
         CameraPermissionsView.updateButton(button: settingsButton)
     }
