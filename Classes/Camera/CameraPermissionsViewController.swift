@@ -117,15 +117,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return button
     }()
 
-    private lazy var mediaPickerButton: MediaPickerButtonView = {
-        let settings = CameraSettings()
-        settings.features.mediaPicking = showMediaPicker
-        let button = MediaPickerButtonView(settings: settings)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.delegate = self
-        return button
-    }()
-
     private static var checkImage: UIImage? = {
         return KanvasImages.permissionCheckmark?.withRenderingMode(.alwaysTemplate)
     }()
@@ -159,12 +150,10 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private func setupView() {
         addSubview(containerView)
         addSubview(contentStack)
-        addSubview(mediaPickerButton)
 
         setupContainerView()
         setupContentStack()
         setupCameraAccessButton()
-        setupMediaPickerButton()
     }
 
     private func setupContainerView() {
@@ -189,25 +178,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         settingsButton.layoutIfNeeded()
         CameraPermissionsView.updateButton(button: settingsButton)
     }
-
-    private func setupMediaPickerButton() {
-        let guide = UILayoutGuide()
-        addLayoutGuide(guide)
-        let bottomMargin: CGFloat = deviceDependentBottomMargin()
-        NSLayoutConstraint.activate([
-            guide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
-            guide.heightAnchor.constraint(equalToConstant: 100),
-            guide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            guide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor, constant: -50),
-        ])
-        NSLayoutConstraint.activate([
-            mediaPickerButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
-            mediaPickerButton.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
-            mediaPickerButton.widthAnchor.constraint(equalToConstant: 35),
-            mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
-        ])
-    }
-    
     
     private func deviceDependentBottomMargin() -> CGFloat {
         guard Device.belongsToIPhoneXGroup == true else {
@@ -259,14 +229,9 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         delegate?.openAppSettings()
     }
 
-    func mediaPickerButtonDidPress() {
-        delegate?.mediaPickerButtonPressed()
-    }
+    func mediaPickerButtonDidPress() {}
 
-    func resetMediaPickerButton() {
-        mediaPickerButton.reset()
-    }
-
+    func resetMediaPickerButton() {}
 }
 
 class CaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
