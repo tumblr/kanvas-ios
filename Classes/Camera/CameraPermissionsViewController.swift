@@ -177,7 +177,9 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     private func setupCameraAccessButton() {
         settingsButton.layoutIfNeeded()
-        CameraPermissionsView.updateButton(button: settingsButton)
+        settingsButton.layer.cornerRadius = settingsButton.bounds.height / 2.0
+        settingsButton.backgroundColor = .clear
+        settingsButton.layer.borderColor = Constants.buttonColor.cgColor
     }
     
     private func deviceDependentBottomMargin() -> CGFloat {
@@ -201,25 +203,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         button.titleLabel?.font = Constants.buttonFont
         button.layer.borderWidth = Constants.borderWidth
         return button
-    }
-
-    private static func updateButton(button: UIButton) {
-        button.layer.cornerRadius = button.bounds.height / 2.0
-        let verticalInset: CGFloat = 4.5
-        button.imageEdgeInsets = UIEdgeInsets(top: verticalInset, left: button.bounds.height / -4.0, bottom: verticalInset, right: 0.0)
-        button.contentEdgeInsets = UIEdgeInsets(
-            top: button.bounds.height / 5.0,
-            left: button.bounds.height / 2.0,
-            bottom: button.bounds.height / 5.0,
-            right: button.bounds.height / 2.0)
-        if button.isEnabled {
-            button.backgroundColor = .clear
-            button.layer.borderColor = Constants.buttonColor.cgColor
-        }
-        else {
-            button.backgroundColor = Constants.buttonAcceptedBackgroundColor
-            button.layer.borderColor = Constants.buttonAcceptedBackgroundColor.cgColor
-        }
     }
 
     @objc private func cameraAccessButtonPressed() {
