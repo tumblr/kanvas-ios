@@ -154,7 +154,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
         setupContainerView()
         setupContentStack()
-        setupCameraAccessButton()
+        setupSettingsButton()
     }
 
     private func setupContainerView() {
@@ -175,7 +175,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         ])
     }
 
-    private func setupCameraAccessButton() {
+    private func setupSettingsButton() {
         settingsButton.layoutIfNeeded()
         settingsButton.layer.cornerRadius = settingsButton.bounds.height / 2.0
         settingsButton.backgroundColor = .clear
