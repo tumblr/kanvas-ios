@@ -93,14 +93,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-
-        let description = KanvasStrings.shared.cameraPermissionsDescriptionLabel
-        let descriptionParagraphStyle = NSMutableParagraphStyle()
-        descriptionParagraphStyle.lineSpacing = Constants.descriptionFont.pointSize * 0.5
-        let descriptionAttributedString = NSMutableAttributedString(string: description)
-        descriptionAttributedString.addAttribute(.paragraphStyle, value: descriptionParagraphStyle, range: NSMakeRange(0, descriptionAttributedString.length))
-
-        label.attributedText = descriptionAttributedString
+        label.text = KanvasStrings.shared.cameraPermissionsDescriptionLabel
         label.font = Constants.descriptionFont
         label.textColor = Constants.textColor
         label.alpha = Constants.descriptionOpacity
