@@ -161,7 +161,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     
     private func setupContentStack() {
         NSLayoutConstraint.activate([
-            contentStack.heightAnchor.constraint(equalToConstant: 300),
+            contentStack.heightAnchor.constraint(equalToConstant: 250),
             contentStack.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
             contentStack.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor),
             readableContentGuide.trailingAnchor.constraint(equalTo: contentStack.trailingAnchor)
