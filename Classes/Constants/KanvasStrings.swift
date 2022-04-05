@@ -46,10 +46,18 @@ public struct KanvasStrings {
     public var cameraPermissionsTitleLabel: String
     public var cameraPermissionsDescriptionLabel: String
 
-    public static var shared = KanvasStrings(
-        cameraPermissionsTitleLabel: NSLocalizedString("Post to Tumblr", comment: "Title of camera permissions screen"),
-        cameraPermissionsDescriptionLabel: NSLocalizedString("Allow access so you can start taking photos and videos", comment: "Message on camera permissions screen to explain why the Tumblr app needs camera and microphone permissions")
-    )
+    public static var shared = KanvasStrings(cameraPermissionsTitleLabel: cameraPermissionTitleString,
+                                             cameraPermissionsDescriptionLabel: cameraPermissionDescriptionString)
+    
+    private static let cameraPermissionTitleString = {
+        NSLocalizedString("Please allow Tumblr access to your Camera and Microphone",
+                          comment: "Title text for scenerio when access to Photos has been disallowed")
+    }()
+    
+    private static let cameraPermissionDescriptionString = {
+        NSLocalizedString("You might want to save your post as a draft first so you don’t lose any unsaved progress.",
+                          comment: "Description text for scenerio when access to Photos has been disallowed")
+    }()
 
     public init(cameraPermissionsTitleLabel: String,
                 cameraPermissionsDescriptionLabel: String) {
