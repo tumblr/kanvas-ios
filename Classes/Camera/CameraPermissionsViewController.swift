@@ -176,10 +176,10 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     }
 
     private func setupSettingsButton() {
-        settingsButton.layoutIfNeeded()
         settingsButton.layer.cornerRadius = settingsButton.bounds.height / 2.0
         settingsButton.backgroundColor = .clear
         settingsButton.layer.borderColor = Constants.buttonColor.cgColor
+        settingsButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     private func deviceDependentBottomMargin() -> CGFloat {
