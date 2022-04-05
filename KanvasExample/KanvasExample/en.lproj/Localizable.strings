@@ -59,7 +59,7 @@
 "Please allow Tumblr access to your Camera and Microphone" = "Please allow Tumblr access to your Camera and Microphone";
 
 /* Description text for scenerio when access to Photos has been disallowed */
-"You might want to save your post as a draft first so you don’t lose any unsaved progress." = "You might want to save your post as a draft first so you don’t lose any unsaved progress.";
+"CameraAccessNoAccessDesc" = "You might want to save your post as a draft first so you don’t lose any unsaved progress.";
 
 /* Alert controller message */
 "SomethingGoofedTitle" = "SomethingGoofedTitle";

@@ -55,7 +55,7 @@ public struct KanvasStrings {
     }()
     
     private static let cameraPermissionDescriptionString = {
-        NSLocalizedString("You might want to save your post as a draft first so you don’t lose any unsaved progress.",
+        NSLocalizedString("CameraAccessNoAccessDesc",
                           comment: "Description text for scenerio when access to Photos has been disallowed")
     }()
 
