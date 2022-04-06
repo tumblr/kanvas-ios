@@ -59,9 +59,7 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         static let descriptionOpacity: CGFloat = 0.65
         static let buttonFont: UIFont = KanvasFonts.shared.permissions.buttonFont
         static let buttonColor: UIColor = KanvasColors.shared.permissionsButtonColor
-        static let buttonAcceptedBackgroundColor: UIColor = KanvasColors.shared.permissionsButtonAcceptedBackgroundColor
         static let buttonAcceptedColor: UIColor = .black
-        static let buttonBorderWidth: CGFloat = 1.5
     }
 
     private lazy var containerView: UIView = {
@@ -196,10 +194,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         button.titleLabel?.font = Constants.buttonFont
         button.layer.borderWidth = Constants.borderWidth
         return button
-    }
-
-    @objc private func cameraAccessButtonPressed() {
-        delegate?.requestCameraAccess()
     }
     
     @objc private func openAppSettings() {
