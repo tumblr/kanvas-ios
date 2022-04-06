@@ -23,9 +23,6 @@ protocol CameraPermissionsViewDelegate: class {
     func requestMicrophoneAccess()
     
     func openAppSettings()
-
-    func mediaPickerButtonPressed()
-
 }
 
 protocol CameraPermissionsViewable: class {
@@ -47,9 +44,7 @@ protocol CameraPermissionsViewControllerDelegate: class {
     func openAppSettings(completion: ((Bool) -> ())?)
 }
 
-class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButtonViewDelegate {
-
-    let showMediaPicker: Bool
+class CameraPermissionsView: UIView, CameraPermissionsViewable {
 
     private struct Constants {
         static let borderWidth: CGFloat = 2
@@ -115,19 +110,8 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
 
     weak var delegate: CameraPermissionsViewDelegate?
 
-    init(showMediaPicker: Bool, frame: CGRect = .zero) {
-        self.showMediaPicker = showMediaPicker
-
+    override init(frame: CGRect = .zero) {
         super.init(frame: frame)
-
-        setupView()
-    }
-
-    override init(frame: CGRect) {
-        self.showMediaPicker = false
-
-        super.init(frame: frame)
-
         setupView()
     }
 
@@ -200,8 +184,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         delegate?.openAppSettings()
     }
 
-    func mediaPickerButtonDidPress() {}
-
     func resetMediaPickerButton() {}
 }
 
@@ -220,8 +202,6 @@ class CaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
 class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDelegate {
 
     let captureDeviceAuthorizer: CaptureDeviceAuthorizing
-
-    let shouldShowMediaPicker: Bool
     
     var isViewBlockingCameraAccess: Bool { !isIgnoringTouches }
     
@@ -236,9 +216,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
 
 
-    init(shouldShowMediaPicker: Bool, captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
+    init(captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
         self.captureDeviceAuthorizer = captureDeviceAuthorizer
-        self.shouldShowMediaPicker = shouldShowMediaPicker
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -247,7 +226,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
 
     override func loadView() {
-        let view = CameraPermissionsView(showMediaPicker: shouldShowMediaPicker, frame: .zero)
+        let view = CameraPermissionsView(frame: .zero)
         view.delegate = self
         self.view = view
     }
@@ -296,12 +275,6 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     
     func openAppSettings() {
         delegate?.openAppSettings(completion: nil)
-    }
-
-    func mediaPickerButtonPressed() {
-        delegate?.didTapMediaPickerButton {
-            self.permissionsView?.resetMediaPickerButton()
-        }
     }
 
     func hasFullAccess() -> Bool {

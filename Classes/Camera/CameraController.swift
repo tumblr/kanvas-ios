@@ -205,7 +205,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         return controller
     }()
     private lazy var cameraPermissionsViewController: CameraPermissionsViewController = {
-        let controller = CameraPermissionsViewController(shouldShowMediaPicker: settings.features.mediaPicking, captureDeviceAuthorizer: self.captureDeviceAuthorizer)
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: self.captureDeviceAuthorizer)
         controller.delegate = self
         return controller
     }()

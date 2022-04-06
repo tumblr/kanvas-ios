@@ -88,7 +88,7 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
     func testChangeCameraPermissions() {
         let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined, initialMicrophoneAccess: .notDetermined, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized)
         let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(shouldShowMediaPicker: true, captureDeviceAuthorizer: authorizer)
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer)
         controller.delegate = delegate
         controller.requestCameraAccess()
         XCTAssertEqual(delegate.cameraPermissionsChangedHasFullAccess, false)
@@ -96,25 +96,16 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         XCTAssertEqual(delegate.cameraPermissionsChangedHasFullAccess, true)
     }
 
-    func testMediaPickerButtonPressed() {
-        let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined, initialMicrophoneAccess: .notDetermined, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .denied)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(shouldShowMediaPicker: true, captureDeviceAuthorizer: authorizer)
-        controller.delegate = delegate
-        controller.mediaPickerButtonPressed()
-        XCTAssertEqual(delegate.mediaPickerButtonTapped, true)
-    }
-
     func testHasFullAccess() {
         let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .authorized, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized)
-        let controller = CameraPermissionsViewController(shouldShowMediaPicker: true, captureDeviceAuthorizer: authorizer)
+        let controller = CameraPermissionsViewController( captureDeviceAuthorizer: authorizer)
         XCTAssertEqual(controller.hasFullAccess(), true)
     }
 
     func testOpenAppSettingsWhenAccessIsAlreadyDenied() {
         let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied, initialMicrophoneAccess: .denied, requestedCameraAccessAnswer: .denied, requestedMicrophoneAccessAnswer: .denied)
         let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(shouldShowMediaPicker: true, captureDeviceAuthorizer: authorizer)
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer)
         controller.delegate = delegate
         controller.loadViewIfNeeded()
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
@@ -131,32 +122,32 @@ final class CameraPermissionsViewTests: FBSnapshotTestCase {
     }
 
     func testViewWithNoAccess() {
-        let view = CameraPermissionsView(showMediaPicker: true, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         view.layoutIfNeeded()
         FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testViewWithCameraAccess() {
-        let view = CameraPermissionsView(showMediaPicker: true, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         view.updateCameraAccess(hasAccess: true)
         FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testViewWithMicrophoneAccess() {
-        let view = CameraPermissionsView(showMediaPicker: true, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         view.updateMicrophoneAccess(hasAccess: true)
         FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testViewWithCameraAndMicrophoneAccess() {
-        let view = CameraPermissionsView(showMediaPicker: true, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         view.updateCameraAccess(hasAccess: true)
         view.updateMicrophoneAccess(hasAccess: true)
         FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
     func testViewWithoutMediaPickerButton() {
-        let view = CameraPermissionsView(showMediaPicker: false, frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         FBSnapshotVerifyView(view, tolerance: 0.05)
     }
 
