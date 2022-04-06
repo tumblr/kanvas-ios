@@ -1,17 +1,8 @@
-/* Button on camera permissions screen to initiate the sytem prompt for camera access */
-"Allow access to camera" = "Allow access to camera";
-
-/* Button on camera permissions screen to initiate the sytem prompt for microphone access */
-"Allow access to microphone" = "Allow access to microphone";
-
 /* Action button text for scenerio when access to Photos has been disallowed */
 "PhotoAccessNoAccessAction" = "Take me to Settings";
 
 /* Popup message when user discards all their clips */
 "Are you sure? If you close this, you'll lose everything you just created." = "Are you sure? If you close this, you'll lose everything you just created.";
-
-/* Label on camera permissions screen to indicate camera access is granted */
-"Camera access granted" = "Camera access granted";
 
 /* Cancel alert controller */
 "Cancel" = "Cancel";
@@ -42,9 +33,6 @@
 
 /* Gif camera mode */
 "Loop" = "Loop";
-
-/* Label on camera permissions screen to indicate microphone access is granted */
-"Microphone access granted" = "Microphone access granted";
 
 /* Normal camera mode */
 "Normal" = "Normal";
