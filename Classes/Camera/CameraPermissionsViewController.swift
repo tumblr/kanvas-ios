@@ -25,16 +25,6 @@ protocol CameraPermissionsViewDelegate: class {
     func openAppSettings()
 }
 
-protocol CameraPermissionsViewable: class {
-
-    func updateCameraAccess(hasAccess: Bool)
-
-    func updateMicrophoneAccess(hasAccess: Bool)
-
-    func resetMediaPickerButton()
-
-}
-
 protocol CameraPermissionsViewControllerDelegate: class {
 
     func cameraPermissionsChanged(hasFullAccess: Bool)
@@ -44,7 +34,7 @@ protocol CameraPermissionsViewControllerDelegate: class {
     func openAppSettings(completion: ((Bool) -> ())?)
 }
 
-class CameraPermissionsView: UIView, CameraPermissionsViewable {
+class CameraPermissionsView: UIView {
 
     private struct Constants {
         static let borderWidth: CGFloat = 2
@@ -119,10 +109,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateCameraAccess(hasAccess: Bool) {}
-
-    func updateMicrophoneAccess(hasAccess: Bool) {}
-
     private func setupView() {
         addSubview(containerView)
         addSubview(contentStack)
@@ -183,8 +169,6 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable {
     @objc private func openAppSettings() {
         delegate?.openAppSettings()
     }
-
-    func resetMediaPickerButton() {}
 }
 
 class CaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
@@ -207,8 +191,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     
     weak var delegate: CameraPermissionsViewControllerDelegate?
 
-    private var permissionsView: CameraPermissionsViewable? {
-        return view as? CameraPermissionsViewable
+    private var permissionsView: CameraPermissionsView? {
+        return view as? CameraPermissionsView
     }
     
     private var isIgnoringTouches: Bool {

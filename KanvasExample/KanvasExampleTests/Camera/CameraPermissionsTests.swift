@@ -110,45 +110,4 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         controller.loadViewIfNeeded()
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
     }
-
-}
-
-final class CameraPermissionsViewTests: FBSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-
-        self.recordMode = false
-    }
-
-    func testViewWithNoAccess() {
-        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        view.layoutIfNeeded()
-        FBSnapshotVerifyView(view, tolerance: 0.05)
-    }
-
-    func testViewWithCameraAccess() {
-        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        view.updateCameraAccess(hasAccess: true)
-        FBSnapshotVerifyView(view, tolerance: 0.05)
-    }
-
-    func testViewWithMicrophoneAccess() {
-        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        view.updateMicrophoneAccess(hasAccess: true)
-        FBSnapshotVerifyView(view, tolerance: 0.05)
-    }
-
-    func testViewWithCameraAndMicrophoneAccess() {
-        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        view.updateCameraAccess(hasAccess: true)
-        view.updateMicrophoneAccess(hasAccess: true)
-        FBSnapshotVerifyView(view, tolerance: 0.05)
-    }
-
-    func testViewWithoutMediaPickerButton() {
-        let view = CameraPermissionsView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        FBSnapshotVerifyView(view, tolerance: 0.05)
-    }
-
 }
