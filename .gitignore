@@ -3,6 +3,10 @@
 .idea/
 *.orig
 
+# Ignore Bundler
+/.bundle/
+/vendor/bundle
+
 # Ignore Xcode debris
 build
 *.pbxuser
