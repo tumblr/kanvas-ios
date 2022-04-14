@@ -7,7 +7,6 @@
 import Foundation
 
 @testable import Kanvas
-import FBSnapshotTestCase
 import XCTest
 import AVFoundation
 
@@ -18,7 +17,11 @@ final class MockCaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
     let requestedCameraAccessAnswer: AVAuthorizationStatus
     let requestedMicrophoneAccessAnswer: AVAuthorizationStatus
 
-    init(initialCameraAccess: AVAuthorizationStatus, initialMicrophoneAccess: AVAuthorizationStatus, requestedCameraAccessAnswer: AVAuthorizationStatus, requestedMicrophoneAccessAnswer: AVAuthorizationStatus) {
+    init(initialCameraAccess: AVAuthorizationStatus,
+         initialMicrophoneAccess: AVAuthorizationStatus,
+         requestedCameraAccessAnswer: AVAuthorizationStatus = .notDetermined,
+         requestedMicrophoneAccessAnswer: AVAuthorizationStatus = .notDetermined) {
+        
         self.currentCameraAccess = initialCameraAccess
         self.currentMicrophoneAccess = initialMicrophoneAccess
         self.requestedCameraAccessAnswer = requestedCameraAccessAnswer
