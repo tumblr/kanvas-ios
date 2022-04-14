@@ -11,6 +11,7 @@ import XCTest
 import FBSnapshotTestCase
 
 final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
+    private var mockDelegate: MockCameraPermissionsViewControllerDelegate { MockCameraPermissionsViewControllerDelegate() }
 
     override func setUp() {
         super.setUp()
@@ -20,46 +21,36 @@ final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
     func testViewWithAcceptedPermissionsDoesntAppear() {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
                                                          initialMicrophoneAccess: .authorized)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: delegate)
-        controller.delegate = delegate
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
         FBSnapshotVerifyViewController(controller)
     }
     
     func testViewWithNoAccessDisplaysSettingsPrompt() {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied,
                                                          initialMicrophoneAccess: .denied)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: delegate)
-        controller.delegate = delegate
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
         FBSnapshotVerifyViewController(controller)
     }
     
     func testViewWithUndeterminedAccessDisplaysSettingsPrompt() {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined,
                                                          initialMicrophoneAccess: .notDetermined)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: delegate)
-        controller.delegate = delegate
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
         FBSnapshotVerifyViewController(controller)
     }
     
     func testViewWithCameraOnlyAccessDisplaysSettingsPrompt() {
         let authorizedCameraMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
                                                          initialMicrophoneAccess: .notDetermined)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
         let cameraOnlyAccessController = CameraPermissionsViewController(captureDeviceAuthorizer: authorizedCameraMock,
-                                                                         delegate: delegate)
-        cameraOnlyAccessController.delegate = delegate
+                                                                         delegate: mockDelegate)
         FBSnapshotVerifyViewController(cameraOnlyAccessController)
     }
     
     func testViewWithMicrophoneOnlyAccessDisplaysSettingsPrompt() {
         let authorizedMicMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied, initialMicrophoneAccess: .authorized)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
         let micOnlyAccessController = CameraPermissionsViewController(captureDeviceAuthorizer: authorizedMicMock,
-                                                                      delegate: delegate)
-        micOnlyAccessController.delegate = delegate
+                                                                      delegate: mockDelegate)
         FBSnapshotVerifyViewController(micOnlyAccessController)
     }
 }
