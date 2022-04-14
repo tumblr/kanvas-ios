@@ -29,8 +29,6 @@ protocol CameraPermissionsViewControllerDelegate: class {
 
     func cameraPermissionsChanged(hasFullAccess: Bool)
 
-    func didTapMediaPickerButton(completion: (() -> ())?)
-
     func openAppSettings(completion: ((Bool) -> ())?)
 }
 

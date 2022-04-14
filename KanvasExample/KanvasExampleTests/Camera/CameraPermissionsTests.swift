@@ -66,11 +66,6 @@ final class MockCameraPermissionsViewControllerDelegate: CameraPermissionsViewCo
         cameraPermissionsChangedHasFullAccess = hasFullAccess
     }
 
-    func didTapMediaPickerButton(completion: (() -> ())?) {
-        mediaPickerButtonTapped = true
-        completion?()
-    }
-
     func openAppSettings(completion: ((Bool) -> ())?) {
         appSettingsOpened = true
         completion?(true)
