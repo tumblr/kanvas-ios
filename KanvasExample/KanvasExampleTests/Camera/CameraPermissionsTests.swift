@@ -88,8 +88,7 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
     func testChangeCameraPermissions() {
         let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined, initialMicrophoneAccess: .notDetermined, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized)
         let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer)
-        controller.delegate = delegate
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: delegate)
         controller.requestCameraAccess()
         XCTAssertEqual(delegate.cameraPermissionsChangedHasFullAccess, false)
         controller.requestMicrophoneAccess()
@@ -98,15 +97,15 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
 
     func testHasFullAccess() {
         let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .authorized, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized)
-        let controller = CameraPermissionsViewController( captureDeviceAuthorizer: authorizer)
+        let delegate = MockCameraPermissionsViewControllerDelegate()
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: delegate)
         XCTAssertEqual(controller.hasFullAccess(), true)
     }
 
     func testOpenAppSettingsWhenAccessIsAlreadyDenied() {
         let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied, initialMicrophoneAccess: .denied, requestedCameraAccessAnswer: .denied, requestedMicrophoneAccessAnswer: .denied)
         let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer)
-        controller.delegate = delegate
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: delegate)
         controller.loadViewIfNeeded()
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
     }

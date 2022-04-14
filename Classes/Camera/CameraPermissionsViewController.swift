@@ -200,8 +200,9 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     }
 
 
-    init(captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
+    init(captureDeviceAuthorizer: CaptureDeviceAuthorizing, delegate: CameraPermissionsViewControllerDelegate) {
         self.captureDeviceAuthorizer = captureDeviceAuthorizer
+        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
 
