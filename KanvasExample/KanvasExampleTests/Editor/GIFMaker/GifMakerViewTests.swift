@@ -27,13 +27,13 @@ final class GifMakerViewTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         view.showConfirmButton(true)
-        FBSnapshotVerifyView(view, tolerance: 0.05)
+        FBSnapshotVerifyView(view, overallTolerance: 0.05)
     }
     
     func testRevertButton() {
         let view = newView()
         view.toggleRevertButton(true)
-        FBSnapshotVerifyView(view, tolerance: 0.05)
+        FBSnapshotVerifyView(view, overallTolerance: 0.05)
     }
     
 }

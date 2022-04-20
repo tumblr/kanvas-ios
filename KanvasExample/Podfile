@@ -10,6 +10,7 @@ target 'KanvasExample' do
     
     target 'KanvasExampleTests' do
         inherit! :search_paths
-        pod 'FBSnapshotTestCase', '2.1.4'
+	use_frameworks!
+        pod 'iOSSnapshotTestCase', '8.0.0'
     end
 end

@@ -23,7 +23,7 @@ final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
                                                          initialMicrophoneAccess: .authorized)
         let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
-        FBSnapshotVerifyViewController(controller, overallTolerance: tolerance)
+        FBSnapshotVerifyViewController(controller)
     }
     
     func testViewWithNoAccessDisplaysSettingsPrompt() {
