@@ -82,6 +82,36 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         XCTAssertFalse(controller.isViewBlockingCameraAccess)
     }
     
+    func testDecliningBothPermissionsBlocksCameraAccess() {
+        loadViewWithPermissions(initialCameraAccess: .notDetermined,
+                                initialMicAccess: .notDetermined,
+                                cameraAccessRequestAnswer: .denied,
+                                micAccessRequestAnswer: .denied)
+        
+        XCTAssertFalse(mockDelegate.cameraPermissionsChangedHasFullAccess)
+        XCTAssertTrue(controller.isViewBlockingCameraAccess)
+    }
+    
+    func testDecliningMicPermissionBlocksCameraAccess() {
+        loadViewWithPermissions(initialCameraAccess: .notDetermined,
+                                initialMicAccess: .notDetermined,
+                                cameraAccessRequestAnswer: .authorized,
+                                micAccessRequestAnswer: .denied)
+        
+        XCTAssertFalse(mockDelegate.cameraPermissionsChangedHasFullAccess)
+        XCTAssertTrue(controller.isViewBlockingCameraAccess)
+    }
+    
+    func testDecliningCameraPermissionBlockCameraAccess() {
+        loadViewWithPermissions(initialCameraAccess: .notDetermined,
+                                initialMicAccess: .notDetermined,
+                                cameraAccessRequestAnswer: .denied,
+                                micAccessRequestAnswer: .authorized)
+        
+        XCTAssertFalse(mockDelegate.cameraPermissionsChangedHasFullAccess)
+        XCTAssertTrue(controller.isViewBlockingCameraAccess)
+    }
+    
     func testSettingsButtonDisplaysSettings() throws {
         loadViewWithPermissions(initialCameraAccess: .denied, initialMicAccess: .denied)
         let settingsButton = try XCTUnwrap(controller.permissionsView?.settingsButton)
