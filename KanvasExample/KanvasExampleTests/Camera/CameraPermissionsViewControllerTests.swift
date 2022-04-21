@@ -112,7 +112,7 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
     }
     
-    func testSettingsButtonDisplaysSettings() throws {
+    func testTappingSettingsButtonDisplaysSettings() throws {
         loadViewWithPermissions(initialCameraAccess: .denied, initialMicAccess: .denied)
         let settingsButton = try XCTUnwrap(controller.permissionsView?.settingsButton)
         tap(settingsButton)
