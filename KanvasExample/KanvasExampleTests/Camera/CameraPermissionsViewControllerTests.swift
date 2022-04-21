@@ -141,14 +141,6 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
         XCTAssertFalse(controller.hasFullAccess())
     }
-
-    func testOpenAppSettingsWhenAccessIsAlreadyDenied() {
-        let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied, initialMicrophoneAccess: .denied, requestedCameraAccessAnswer: .denied, requestedMicrophoneAccessAnswer: .denied)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: delegate)
-        controller.loadViewIfNeeded()
-        XCTAssertTrue(controller.isViewBlockingCameraAccess)
-    }
 }
 
 private extension CameraPermissionsViewControllerTests {
