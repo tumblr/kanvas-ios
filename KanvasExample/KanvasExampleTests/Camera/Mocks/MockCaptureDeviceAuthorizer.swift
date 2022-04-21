@@ -8,14 +8,15 @@
 
 @testable import Kanvas
 import AVFoundation
+import XCTest
 
 final class MockCaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
 
-    var currentCameraAccess: AVAuthorizationStatus
-    var currentMicrophoneAccess: AVAuthorizationStatus
-    var mediaAccessRequestsMade: [AVMediaType] = []
-    let requestedCameraAccessAnswer: AVAuthorizationStatus
-    let requestedMicrophoneAccessAnswer: AVAuthorizationStatus
+    private(set) var mediaAccessRequestsMade: [AVMediaType] = []
+    private let requestedCameraAccessAnswer: AVAuthorizationStatus
+    private let requestedMicrophoneAccessAnswer: AVAuthorizationStatus
+    private var currentCameraAccess: AVAuthorizationStatus
+    private var currentMicrophoneAccess: AVAuthorizationStatus
 
     init(initialCameraAccess: AVAuthorizationStatus,
          initialMicrophoneAccess: AVAuthorizationStatus,
@@ -30,19 +31,16 @@ final class MockCaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
 
     func requestAccess(for mediaType: AVMediaType, completionHandler: @escaping (Bool) -> ()) {
         mediaAccessRequestsMade.append(mediaType)
-        let authorizationStatus: AVAuthorizationStatus? = {
-            switch mediaType {
-            case .video:
-                currentCameraAccess = requestedCameraAccessAnswer
-                return currentCameraAccess
-            case .audio:
-                currentMicrophoneAccess = requestedMicrophoneAccessAnswer
-                return currentCameraAccess
-            default:
-                return nil
-            }
-        }()
-        completionHandler(authorizationStatus == .authorized)
+        switch mediaType {
+        case .video:
+            currentCameraAccess = requestedCameraAccessAnswer
+            completionHandler(requestedCameraAccessAnswer.isAuthorized)
+        case .audio:
+            currentMicrophoneAccess = requestedMicrophoneAccessAnswer
+            completionHandler(requestedMicrophoneAccessAnswer.isAuthorized)
+        default:
+            XCTFail("\(mediaType) is not currently supported by this mock, please implement it!")
+        }
     }
 
     func authorizationStatus(for mediaType: AVMediaType) -> AVAuthorizationStatus {
@@ -55,4 +53,8 @@ final class MockCaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
             return .denied
         }
     }
+}
+
+private extension AVAuthorizationStatus {
+    var isAuthorized: Bool { self == .authorized }
 }
