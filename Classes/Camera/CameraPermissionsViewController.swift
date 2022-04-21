@@ -83,7 +83,7 @@ class CameraPermissionsView: UIView {
         return label
     }()
 
-    private lazy var settingsButton: UIButton = {
+    lazy var settingsButton: UIButton = {
         let title = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
         let titleDisabled = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
         let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
@@ -189,7 +189,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     
     weak var delegate: CameraPermissionsViewControllerDelegate?
 
-    private var permissionsView: CameraPermissionsView? {
+    var permissionsView: CameraPermissionsView? {
         return view as? CameraPermissionsView
     }
     

@@ -81,6 +81,13 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         controller.requestMicrophoneAccess()
         XCTAssertEqual(delegate.cameraPermissionsChangedHasFullAccess, true)
     }
+    
+    func testSettingsButtonDisplaysSettings() throws {
+        loadViewWithPermissions(cameraAccess: .denied, micAccess: .denied)
+        let settingsButton = try XCTUnwrap(controller.permissionsView?.settingsButton)
+        tap(settingsButton)
+        XCTAssertTrue(mockDelegate.appSettingsOpened)
+    }
 
     func testHasFullAccess() {
         let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .authorized, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized)
@@ -104,5 +111,9 @@ private extension CameraPermissionsViewControllerTests {
         controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
         controller.loadViewIfNeeded()
         controller.viewWillAppear(false)
+    }
+    
+    func tap(_ button: UIButton) {
+        button.sendActions(for: .touchUpInside)
     }
 }
