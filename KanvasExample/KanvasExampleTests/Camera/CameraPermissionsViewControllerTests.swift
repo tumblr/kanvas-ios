@@ -42,11 +42,6 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [])
     }
     
-    func testLoadingViewWithRestrictedAuthorizationDoesNotRequestPermissions() {
-        loadViewWithPermissions(cameraAccess: .restricted, micAccess: .restricted)
-        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [])
-    }
-    
     func testLoadingViewWithUndeterminedCameraAccessRequesstsCameraPermission() {
         loadViewWithPermissions(cameraAccess: .notDetermined, micAccess: .authorized)
         XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [.video])
