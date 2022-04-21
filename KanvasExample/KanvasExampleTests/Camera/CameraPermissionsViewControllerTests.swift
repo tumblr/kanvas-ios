@@ -12,6 +12,7 @@ import AVFoundation
 
 final class CameraPermissionsViewControllerTests: XCTestCase {
     private var mockDelegate: MockCameraPermissionsViewControllerDelegate!
+    private var mockAuthorizer: MockCaptureDeviceAuthorizer!
     private var controller: CameraPermissionsViewController!
     
     override func setUp() {
@@ -21,75 +22,58 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
     
     override func tearDown() {
         mockDelegate = nil
+        mockAuthorizer = nil
         controller = nil
         super.tearDown()
     }
     
     func testLoadingViewWithUndeterminedAccessRequestsPermissions() {
-        let undeterminedAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined,
-                                                     initialMicrophoneAccess: .notDetermined)
-        loadView(with: undeterminedAuthorizer)
-        XCTAssertEqual(undeterminedAuthorizer.mediaAccessRequestsMade, [.video, .audio])
+        loadViewWithPermissions(cameraAccess: .notDetermined, micAccess: .notDetermined)
+        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [.video, .audio])
     }
     
     func testLoadingViewWithAuthorizationDoesNotRequestPermissions() {
-        let authorizedAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
-                                                         initialMicrophoneAccess: .authorized)
-        loadView(with: authorizedAuthorizer)
-        XCTAssertEqual(authorizedAuthorizer.mediaAccessRequestsMade, [])
+        loadViewWithPermissions(cameraAccess: .authorized, micAccess: .authorized)
+        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [])
     }
     
     func testLoadingViewWithDeniedAuthorizationDoesNotRequestPermissions() {
-        let deniedAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied,
-                                                           initialMicrophoneAccess: .denied)
-        loadView(with: deniedAuthorizer)
-        XCTAssertEqual(deniedAuthorizer.mediaAccessRequestsMade, [])
+        loadViewWithPermissions(cameraAccess: .denied, micAccess: .denied)
+        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [])
     }
     
     func testLoadingViewWithRestrictedAuthorizationDoesNotRequestPermissions() {
-        let restrictedAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .restricted,
-                                                               initialMicrophoneAccess: .restricted)
-        loadView(with: restrictedAuthorizer)
-        XCTAssertEqual(restrictedAuthorizer.mediaAccessRequestsMade, [])
+        loadViewWithPermissions(cameraAccess: .restricted, micAccess: .restricted)
+        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [])
     }
     
-    func testLoadingViewWithOneUndeterminedPermissionRequestsThatPermission() {
-        let undeterminedCameraAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined,
-                                                                       initialMicrophoneAccess: .authorized)
-        loadView(with: undeterminedCameraAuthorizer)
-        XCTAssertEqual(undeterminedCameraAuthorizer.mediaAccessRequestsMade, [.video])
-        
-        let undeterminedMicAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .restricted,
-                                                                    initialMicrophoneAccess: .notDetermined)
-        loadView(with: undeterminedMicAuthorizer)
-        XCTAssertEqual(undeterminedMicAuthorizer.mediaAccessRequestsMade, [.audio])
+    func testLoadingViewWithUndeterminedCameraAccessRequesstsCameraPermission() {
+        loadViewWithPermissions(cameraAccess: .notDetermined, micAccess: .authorized)
+        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [.video])
+    }
+    
+    func testLoadingViewWithUndeterminedMicAccessRequestsMicPermission() {
+        loadViewWithPermissions(cameraAccess: .authorized, micAccess: .notDetermined)
+        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [.audio])
     }
     
     func testLoadingViewWithAcceptedPermissionsDoesNotBlockCameraAccess() {
-        let authorizedAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
-                                                               initialMicrophoneAccess: .authorized)
-        loadView(with: authorizedAuthorizer)
+        loadViewWithPermissions(cameraAccess: .authorized, micAccess: .authorized)
         XCTAssertFalse(controller.isViewBlockingCameraAccess)
     }
     
     func testLoadingViewWithDeniedPermissionsBlocksCameraAccess() {
-        let restrictedAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied,
-                                                               initialMicrophoneAccess: .denied)
-        loadView(with: restrictedAuthorizer)
+        loadViewWithPermissions(cameraAccess: .denied, micAccess: .denied)
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
     }
     
     func testLoadingViewWithCameraOnlyPermissionBlocksCameraAccess() {
-        let cameraOnlyAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
-                                                               initialMicrophoneAccess: .denied)
-        loadView(with: cameraOnlyAuthorizer)
+        loadViewWithPermissions(cameraAccess: .authorized, micAccess: .denied)
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
     }
     
     func testLoadingViewWithMicOnlyPermissionBlocksCameraAccess() {
-        let micOnlyAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied,
-                                                            initialMicrophoneAccess: .authorized)
-        loadView(with: micOnlyAuthorizer)
+        loadViewWithPermissions(cameraAccess: .denied, micAccess: .authorized)
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
     }
 
@@ -120,8 +104,9 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
 }
 
 private extension CameraPermissionsViewControllerTests {
-    func loadView(with authorizer: MockCaptureDeviceAuthorizer) {
-        controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: mockDelegate)
+    func loadViewWithPermissions(cameraAccess: AVAuthorizationStatus, micAccess: AVAuthorizationStatus) {
+        mockAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: cameraAccess, initialMicrophoneAccess: micAccess)
+        controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
         controller.loadViewIfNeeded()
         controller.viewWillAppear(false)
     }
