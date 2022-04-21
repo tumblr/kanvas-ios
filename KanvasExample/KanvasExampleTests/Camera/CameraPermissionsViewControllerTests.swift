@@ -11,6 +11,26 @@ import XCTest
 import AVFoundation
 
 final class CameraPermissionsViewControllerTests: XCTestCase {
+    private var mockDelegate: MockCameraPermissionsViewControllerDelegate!
+    
+    override func setUp() {
+        super.setUp()
+        mockDelegate = MockCameraPermissionsViewControllerDelegate()
+    }
+    
+    override func tearDown() {
+        mockDelegate = nil
+        super.tearDown()
+    }
+    
+    func testLoadingViewWithUndeterminedAccessRequestsPermissions() {
+        let undeterminedAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined,
+                                                     initialMicrophoneAccess: .notDetermined)
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
+        controller.loadViewIfNeeded()
+        controller.viewWillAppear(false)
+        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [.video, .audio])
+    }
 
     func testChangeCameraPermissions() {
         let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined, initialMicrophoneAccess: .notDetermined, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized)
