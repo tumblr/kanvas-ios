@@ -72,14 +72,14 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
     }
 
-    func testChangeCameraPermissions() {
-        let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined, initialMicrophoneAccess: .notDetermined, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: delegate)
-        controller.requestCameraAccess()
-        XCTAssertEqual(delegate.cameraPermissionsChangedHasFullAccess, false)
-        controller.requestMicrophoneAccess()
-        XCTAssertEqual(delegate.cameraPermissionsChangedHasFullAccess, true)
+    func testAcceptingPermissionsUnblocksCameraAccess() {
+        loadViewWithPermissions(initialCameraAccess: .notDetermined,
+                                initialMicAccess: .notDetermined,
+                                cameraAccessRequestAnswer: .authorized,
+                                micAccessRequestAnswer: .authorized)
+        
+        XCTAssertTrue(mockDelegate.cameraPermissionsChangedHasFullAccess)
+        XCTAssertFalse(controller.isViewBlockingCameraAccess)
     }
     
     func testSettingsButtonDisplaysSettings() throws {
