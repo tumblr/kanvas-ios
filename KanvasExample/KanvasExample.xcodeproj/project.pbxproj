@@ -30,6 +30,7 @@
 		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
 		14E8FB8728082DBF00EDAE46 /* FBSnapshotTestCase+VerifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E8FB8628082DBF00EDAE46 /* FBSnapshotTestCase+VerifyViewController.swift */; };
 		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
+		1F11FE1FF570F16AE42DE1EB /* libPods-KanvasExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E3D4DAD54900431C164FE1 /* libPods-KanvasExampleTests.a */; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
 		650A833F24646A350071BF9D /* GifMakerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A833E24646A350071BF9D /* GifMakerControllerTests.swift */; };
