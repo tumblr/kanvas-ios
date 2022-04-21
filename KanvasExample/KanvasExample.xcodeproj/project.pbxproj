@@ -28,9 +28,7 @@
 		1404E2AC28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AB28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift */; };
 		1404E2AE28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */; };
 		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
-		14E8FB8728082DBF00EDAE46 /* FBSnapshotTestCase+VerifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E8FB8628082DBF00EDAE46 /* FBSnapshotTestCase+VerifyViewController.swift */; };
 		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
-		1F11FE1FF570F16AE42DE1EB /* libPods-KanvasExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E3D4DAD54900431C164FE1 /* libPods-KanvasExampleTests.a */; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
 		650A833F24646A350071BF9D /* GifMakerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A833E24646A350071BF9D /* GifMakerControllerTests.swift */; };
@@ -253,7 +251,6 @@
 		1404E2AB28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCaptureDeviceAuthorizer.swift; sourceTree = "<group>"; };
 		1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraPermissionsViewControllerDelegate.swift; sourceTree = "<group>"; };
 		147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
-		14E8FB8628082DBF00EDAE46 /* FBSnapshotTestCase+VerifyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FBSnapshotTestCase+VerifyViewController.swift"; sourceTree = "<group>"; };
 		2E2C11793C82F53D672DCC9A /* Pods-KanvasExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.release.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.release.xcconfig"; sourceTree = "<group>"; };
 		2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		528EA69F8E77F28A567AEDBC /* Pods-KanvasExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -999,7 +996,6 @@
 		AB7F295D2121F0ED00B8D599 /* KanvasExampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				14E8FB8628082DBF00EDAE46 /* FBSnapshotTestCase+VerifyViewController.swift */,
 				F5E448C924B8E23000403A7C /* KanvasCustomUITests.swift */,
 				0EAE0CB72139EC81004CD7FF /* KanvasAnalyticsStub.swift */,
 				0EAE0CAE2139B966004CD7FF /* CameraPreview */,
@@ -1517,7 +1513,6 @@
 				BFA7DAAC24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift in Sources */,
 				BFA7DAA824E3BA8000F357B6 /* LivePhotoLoaderTests.swift in Sources */,
 				651D4B5F22CE6826004AB75C /* DrawingControllerTests.swift in Sources */,
-				14E8FB8728082DBF00EDAE46 /* FBSnapshotTestCase+VerifyViewController.swift in Sources */,
 				658A32A4239FFD9B00EEC1D3 /* MediaDrawerViewTests.swift in Sources */,
 				BF5AD66B24652CB70077481B /* GIFEncoderTests.swift in Sources */,
 				ABE4991E2137307500379F7F /* IgnoreTouchesViewTests.swift in Sources */,
