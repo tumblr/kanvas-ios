@@ -119,11 +119,27 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         XCTAssertTrue(mockDelegate.appSettingsOpened)
     }
 
-    func testHasFullAccess() {
-        let authorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .authorized, requestedCameraAccessAnswer: .authorized, requestedMicrophoneAccessAnswer: .authorized)
-        let delegate = MockCameraPermissionsViewControllerDelegate()
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: delegate)
-        XCTAssertEqual(controller.hasFullAccess(), true)
+    func testHasFullAccessPropertyIsTrueWhenAccessIsGranted() {
+        mockAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
+                                                     initialMicrophoneAccess: .authorized)
+        controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
+        XCTAssertTrue(controller.hasFullAccess())
+    }
+    
+    func testHasFullAccessPropertyIsFalseWhenAccessIsDenied() {
+        mockAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied, initialMicrophoneAccess: .denied)
+        controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
+        XCTAssertFalse(controller.hasFullAccess())
+    }
+    
+    func testHasFullAccessIsFalseWithMixedPermissions() {
+        mockAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized, initialMicrophoneAccess: .denied)
+        controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
+        XCTAssertFalse(controller.hasFullAccess())
+        
+        mockAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied, initialMicrophoneAccess: .authorized)
+        controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
+        XCTAssertFalse(controller.hasFullAccess())
     }
 
     func testOpenAppSettingsWhenAccessIsAlreadyDenied() {
