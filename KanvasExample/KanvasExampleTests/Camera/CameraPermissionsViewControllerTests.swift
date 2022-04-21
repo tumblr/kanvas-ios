@@ -26,10 +26,9 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
     func testLoadingViewWithUndeterminedAccessRequestsPermissions() {
         let undeterminedAuthorizer = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined,
                                                      initialMicrophoneAccess: .notDetermined)
-        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: mockAuthorizer, delegate: mockDelegate)
-        controller.loadViewIfNeeded()
-        controller.viewWillAppear(false)
-        XCTAssertEqual(mockAuthorizer.mediaAccessRequestsMade, [.video, .audio])
+        loadView(with: undeterminedAuthorizer)
+        XCTAssertEqual(undeterminedAuthorizer.mediaAccessRequestsMade, [.video, .audio])
+    }
     }
 
     func testChangeCameraPermissions() {
@@ -55,5 +54,13 @@ final class CameraPermissionsViewControllerTests: XCTestCase {
         let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: delegate)
         controller.loadViewIfNeeded()
         XCTAssertTrue(controller.isViewBlockingCameraAccess)
+    }
+}
+
+private extension CameraPermissionsViewControllerTests {
+    func loadView(with authorizer: MockCaptureDeviceAuthorizer) {
+        let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizer, delegate: mockDelegate)
+        controller.loadViewIfNeeded()
+        controller.viewWillAppear(false)
     }
 }
