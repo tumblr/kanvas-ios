@@ -13,6 +13,7 @@ final class MockCaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
 
     var currentCameraAccess: AVAuthorizationStatus
     var currentMicrophoneAccess: AVAuthorizationStatus
+    var mediaAccessRequestsMade: [AVMediaType] = []
     let requestedCameraAccessAnswer: AVAuthorizationStatus
     let requestedMicrophoneAccessAnswer: AVAuthorizationStatus
 
@@ -28,6 +29,7 @@ final class MockCaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
     }
 
     func requestAccess(for mediaType: AVMediaType, completionHandler: @escaping (Bool) -> ()) {
+        mediaAccessRequestsMade.append(mediaType)
         let authorizationStatus: AVAuthorizationStatus? = {
             switch mediaType {
             case .video:
