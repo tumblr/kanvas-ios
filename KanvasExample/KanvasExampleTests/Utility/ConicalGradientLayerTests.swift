@@ -31,6 +31,6 @@ final class ConicalGradientLayerTests: FBSnapshotTestCase {
                            .tumblrBrightPurple,
                            .tumblrBrightRed]
         view.layer.addSublayer(gradient)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 }

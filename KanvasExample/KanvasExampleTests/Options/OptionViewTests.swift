@@ -22,7 +22,7 @@ final class OptionViewTests: FBSnapshotTestCase {
         if let image = KanvasImages.flashOffImage {
             let button = OptionView(image: image, backgroundColor: .clear)
             button.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-            FBSnapshotVerifyView(button)
+            FBSnapshotArchFriendlyVerifyView(button)
         }
         else {
             XCTFail("Bundle image not found")

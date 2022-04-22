@@ -32,7 +32,7 @@ final class ThumbnailCollectionViewTests: FBSnapshotTestCase, UICollectionViewDa
     
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
     
     // MARK: - UICollectionViewDataSource

@@ -26,6 +26,6 @@ final class FilterSettingsViewTests: FBSnapshotTestCase {
     
     func testIcon() {
         let settingsView = newSettingsView()
-        FBSnapshotVerifyView(settingsView)
+        FBSnapshotArchFriendlyVerifyView(settingsView)
     }
 }

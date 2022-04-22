@@ -35,7 +35,7 @@ final class MediaClipsCollectionCellTests: FBSnapshotTestCase {
         }
 
         cell.bindTo(clip)
-        FBSnapshotVerifyView(cell, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(cell, overallTolerance: 0.05)
     }
 
 }

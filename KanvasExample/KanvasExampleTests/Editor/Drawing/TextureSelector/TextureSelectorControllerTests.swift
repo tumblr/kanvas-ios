@@ -29,6 +29,6 @@ final class TextureSelectorControllerTests: FBSnapshotTestCase {
     
     func testSelectorControllerView() {
         let controller = newViewController()
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 }

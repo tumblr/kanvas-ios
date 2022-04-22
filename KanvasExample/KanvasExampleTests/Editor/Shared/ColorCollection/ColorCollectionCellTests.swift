@@ -30,6 +30,6 @@ final class ColorCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         let color = UIColor.tumblrBrightBlue
         cell.bindTo(color)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
 }

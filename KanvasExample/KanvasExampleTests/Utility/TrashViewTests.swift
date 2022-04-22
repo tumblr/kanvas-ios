@@ -29,7 +29,7 @@ final class TrashViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         trashView.open()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(trashView)
+        FBSnapshotArchFriendlyVerifyView(trashView)
     }
     
     func testShowClosedTrash() {
@@ -37,7 +37,7 @@ final class TrashViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         trashView.close()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(trashView)
+        FBSnapshotArchFriendlyVerifyView(trashView)
     }
     
     func testOpenAndHideTrash() {
@@ -46,7 +46,7 @@ final class TrashViewTests: FBSnapshotTestCase {
         trashView.open()
         trashView.hide()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(trashView)
+        FBSnapshotArchFriendlyVerifyView(trashView)
     }
     
     func testCloseAndHideTrash() {
@@ -55,7 +55,7 @@ final class TrashViewTests: FBSnapshotTestCase {
         trashView.close()
         trashView.hide()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(trashView)
+        FBSnapshotArchFriendlyVerifyView(trashView)
     }
 
 }

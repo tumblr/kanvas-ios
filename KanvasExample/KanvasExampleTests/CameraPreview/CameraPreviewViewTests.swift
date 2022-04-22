@@ -35,21 +35,21 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
 
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testSetFirstPlayer() {
         let view = newView()
         let player = newPlayer()
         view.setFirstPlayer(player: player)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testSetSecondPlayer() {
         let view = newView()
         let player = newPlayer()
         view.setSecondPlayer(player: player)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testSetImage() {
@@ -58,7 +58,7 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
             UIView.setAnimationsEnabled(false)
             view.setImage(image: image)
             UIView.setAnimationsEnabled(true)
-            FBSnapshotVerifyView(view)
+            FBSnapshotArchFriendlyVerifyView(view)
         }
     }
 
@@ -69,7 +69,7 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         view.showFirstPlayer()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testShowSecondPlayer() {
@@ -79,7 +79,7 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         view.showSecondPlayer()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testShowSecondPlayerAfterFirstPlayer() {
@@ -92,7 +92,7 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
         view.showFirstPlayer()
         view.showSecondPlayer()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testShowFirstPlayerAfterSecondPlayer() {
@@ -105,7 +105,7 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
         view.showSecondPlayer()
         view.showFirstPlayer()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testShowImageAfterFirstPlayer() {
@@ -117,7 +117,7 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
             view.showFirstPlayer()
             view.setImage(image: image)
             UIView.setAnimationsEnabled(true)
-            FBSnapshotVerifyView(view)
+            FBSnapshotArchFriendlyVerifyView(view)
         }
     }
 
@@ -130,7 +130,7 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
             view.setImage(image: image)
             view.showFirstPlayer()
             UIView.setAnimationsEnabled(true)
-            FBSnapshotVerifyView(view)
+            FBSnapshotArchFriendlyVerifyView(view)
         }
     }
 
@@ -143,7 +143,7 @@ final class CameraPreviewViewTests: FBSnapshotTestCase {
             view.setImage(image: image)
             view.showSecondPlayer()
             UIView.setAnimationsEnabled(true)
-            FBSnapshotVerifyView(view)
+            FBSnapshotArchFriendlyVerifyView(view)
         }
     }
 

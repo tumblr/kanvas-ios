@@ -27,6 +27,6 @@ final class SliderViewTests: FBSnapshotTestCase {
     
     func testSliderView() {
         let sliderView = newSliderView()
-        FBSnapshotVerifyView(sliderView)
+        FBSnapshotArchFriendlyVerifyView(sliderView)
     }
 }

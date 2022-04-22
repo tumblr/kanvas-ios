@@ -27,6 +27,6 @@ final class SpeedViewTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         view.setLabelText("1x")
-        FBSnapshotVerifyView(view, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(view, overallTolerance: 0.05)
     }
 }

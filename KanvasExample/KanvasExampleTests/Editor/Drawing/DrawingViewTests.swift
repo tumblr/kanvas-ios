@@ -28,7 +28,7 @@ final class DrawingViewTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         view.showConfirmButton(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
     
     // Cannot test DrawingCanvas since touchesBegan cannot be called programmatically
@@ -38,6 +38,6 @@ final class DrawingViewTests: FBSnapshotTestCase {
         let drawingCanvas = DrawingCanvas()
         drawingCanvas.backgroundColor = .blue
         drawingCanvas.add(into: view)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 }

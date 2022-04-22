@@ -30,7 +30,7 @@ final class FilteredInputViewControllerTests: FBSnapshotTestCase {
         let delegate = FilteredInputViewControllerDelegateStub()
         let settings = CameraSettings()
         let controller = FilteredInputViewController(delegate: delegate, settings: settings)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 
 }

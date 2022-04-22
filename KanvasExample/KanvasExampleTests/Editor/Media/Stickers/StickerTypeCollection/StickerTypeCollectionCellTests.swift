@@ -29,6 +29,6 @@ final class StickerTypeCollectionCellTests: FBSnapshotTestCase {
         let stickerType = StickerType(id: "id", imageUrl: "imageUrl", stickers: [])
         
         cell.bindTo(stickerType)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
 }

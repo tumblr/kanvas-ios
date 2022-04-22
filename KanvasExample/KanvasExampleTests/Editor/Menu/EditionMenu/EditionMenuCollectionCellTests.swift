@@ -28,6 +28,6 @@ final class EditionMenuCollectionCellTests: FBSnapshotTestCase {
         let cell = newCell()
         let editionOption = EditionOption.media
         cell.bindTo(editionOption, enabled: false)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
 }

@@ -29,7 +29,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
         cell.setStyle(isCenter: false, isFirst: true, isLast: false)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
     
     func testEndingCell() {
@@ -37,7 +37,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         cell.backgroundColor = .darkGray
         cell.bindTo(0)
         cell.setStyle(isCenter: false, isFirst: false, isLast: true)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
     
     func testCellWhenLeftSideIsActive() {
@@ -46,7 +46,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         cell.bindTo(0)
         cell.setStyle(isCenter: false, isFirst: false, isLast: false)
         cell.setProgress(leftLineActive: true, rightLineActive: false)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
     
     func testCellWhenRightSideIsActive() {
@@ -55,7 +55,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         cell.bindTo(0)
         cell.setStyle(isCenter: false, isFirst: false, isLast: false)
         cell.setProgress(leftLineActive: false, rightLineActive: true)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
     
     func testInactiveCellOnBothSides() {
@@ -64,7 +64,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         cell.bindTo(0)
         cell.setStyle(isCenter: false, isFirst: false, isLast: false)
         cell.setProgress(leftLineActive: false, rightLineActive: false)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
     
     func testActiveCellOnBothSides() {
@@ -73,7 +73,7 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         cell.bindTo(0)
         cell.setStyle(isCenter: false, isFirst: false, isLast: false)
         cell.setProgress(leftLineActive: true, rightLineActive: true)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
     
     func testCircle() {
@@ -82,6 +82,6 @@ final class DiscreteSliderCollectionCellTests: FBSnapshotTestCase {
         cell.bindTo(0)
         cell.setStyle(isCenter: true, isFirst: false, isLast: false)
         cell.setProgress(leftLineActive: false, rightLineActive: false)
-        FBSnapshotVerifyView(cell, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(cell, overallTolerance: 0.05)
     }
 }

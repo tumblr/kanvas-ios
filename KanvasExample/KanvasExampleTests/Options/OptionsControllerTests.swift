@@ -50,7 +50,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.optionWasTapped(section: 0, optionIndex: 0)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         // Test that the option was correctly changed
         XCTAssertEqual(options[0][0].option, "Option 1.2")
         if case let .twoOptionsImages(alternateOption: otherOption, alternateImage: _, alternateBackgroundColor: _) = options[0][0].type {
@@ -67,7 +67,7 @@ final class OptionsControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.optionWasTapped(section: 0, optionIndex: 1)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         // Test that the animation was made
         RunLoop.main.run(until: Date())
         XCTAssert(animationCalled, "Animation not called")
