@@ -44,7 +44,7 @@ final class StyleMenuViewTests: FBSnapshotTestCase, StyleMenuViewDelegate {
         view.load()
         view.setNeedsLayout()
         view.expandCollection()
-        FBSnapshotVerifyView(view, tolerance: 0.05)
+        FBSnapshotVerifyView(view, overallTolerance: 0.05)
     }
     
     // MARK: - StyleMenuViewDelegate
