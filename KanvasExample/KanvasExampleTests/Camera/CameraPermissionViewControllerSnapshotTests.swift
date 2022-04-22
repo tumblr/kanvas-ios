@@ -11,7 +11,8 @@ import XCTest
 import FBSnapshotTestCase
 
 final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
-    private let arm64AndIntelCompatabilityPixelTolerance: CGFloat = 0.1
+    private let arm64AndIntelCompatabilityPixelTolerance: CGFloat = 0.02
+    private let arm64AndIntelCompatabilityOverallTolerance: CGFloat = 0.01
     private var mockDelegate: MockCameraPermissionsViewControllerDelegate { MockCameraPermissionsViewControllerDelegate() }
 
     override func setUp() {
@@ -23,7 +24,7 @@ final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
                                                          initialMicrophoneAccess: .authorized)
         let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
-        FBSnapshotVerifyViewController(controller, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance)
+        FBSnapshotVerifyViewController(controller, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance, overallTolerance: arm64AndIntelCompatabilityOverallTolerance)
     }
     
     func testViewWithNoAccessDisplaysSettingsPrompt() {
