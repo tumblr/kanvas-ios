@@ -11,7 +11,7 @@ import XCTest
 import FBSnapshotTestCase
 
 final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
-    private let arm64AndIntelCompatabilityPixelTolerance: CGFloat = 0.02
+    private let arm64AndIntelCompatabilityPixelTolerance: CGFloat = 0.04
     private var mockDelegate: MockCameraPermissionsViewControllerDelegate { MockCameraPermissionsViewControllerDelegate() }
 
     override func setUp() {
