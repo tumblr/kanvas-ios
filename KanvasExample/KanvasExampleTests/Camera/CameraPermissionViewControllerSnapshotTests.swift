@@ -24,21 +24,21 @@ final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
                                                          initialMicrophoneAccess: .authorized)
         let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
-        FBSnapshotVerifyViewController(controller, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance, overallTolerance: arm64AndIntelCompatabilityOverallTolerance)
+        FBSnapshotArchFriendlyVerifyViewController(controller)
     }
     
     func testViewWithNoAccessDisplaysSettingsPrompt() {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied,
                                                          initialMicrophoneAccess: .denied)
         let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
-        FBSnapshotVerifyViewController(controller, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance)
+        FBSnapshotArchFriendlyVerifyViewController(controller)
     }
     
     func testViewWithUndeterminedAccessDisplaysSettingsPrompt() {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .notDetermined,
                                                          initialMicrophoneAccess: .notDetermined)
         let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
-        FBSnapshotVerifyViewController(controller, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance)
+        FBSnapshotArchFriendlyVerifyViewController(controller)
     }
     
     func testViewWithCameraOnlyAccessDisplaysSettingsPrompt() {
@@ -46,13 +46,19 @@ final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
                                                          initialMicrophoneAccess: .notDetermined)
         let cameraOnlyAccessController = CameraPermissionsViewController(captureDeviceAuthorizer: authorizedCameraMock,
                                                                          delegate: mockDelegate)
-        FBSnapshotVerifyViewController(cameraOnlyAccessController, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance)
+        FBSnapshotArchFriendlyVerifyViewController(cameraOnlyAccessController)
     }
     
     func testViewWithMicrophoneOnlyAccessDisplaysSettingsPrompt() {
         let authorizedMicMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied, initialMicrophoneAccess: .authorized)
         let micOnlyAccessController = CameraPermissionsViewController(captureDeviceAuthorizer: authorizedMicMock,
                                                                       delegate: mockDelegate)
-        FBSnapshotVerifyViewController(micOnlyAccessController, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance)
+        FBSnapshotArchFriendlyVerifyViewController(micOnlyAccessController)
+    }
+}
+
+private extension FBSnapshotTestCase {
+    func FBSnapshotArchFriendlyVerifyViewController(_ viewController: UIViewController) {
+        FBSnapshotVerifyViewController(viewController, perPixelTolerance: 0.02, overallTolerance: 0.01)
     }
 }
