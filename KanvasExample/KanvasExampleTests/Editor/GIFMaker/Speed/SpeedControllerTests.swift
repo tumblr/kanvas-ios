@@ -30,6 +30,6 @@ final class SpeedControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.showView(true)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view, tolerance: 0.05)
+        FBSnapshotVerifyView(controller.view, overallTolerance: 0.05)
     }
 }

@@ -1,27 +1,27 @@
 PODS:
-  - FBSnapshotTestCase (2.1.4):
-    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
-  - FBSnapshotTestCase/Core (2.1.4)
-  - FBSnapshotTestCase/SwiftSupport (2.1.4):
-    - FBSnapshotTestCase/Core
+  - iOSSnapshotTestCase (8.0.0):
+    - iOSSnapshotTestCase/SwiftSupport (= 8.0.0)
+  - iOSSnapshotTestCase/Core (8.0.0)
+  - iOSSnapshotTestCase/SwiftSupport (8.0.0):
+    - iOSSnapshotTestCase/Core
   - Kanvas (1.3.5)
 
 DEPENDENCIES:
-  - FBSnapshotTestCase (= 2.1.4)
+  - iOSSnapshotTestCase (= 8.0.0)
   - Kanvas (from `../`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - FBSnapshotTestCase
+    - iOSSnapshotTestCase
 
 EXTERNAL SOURCES:
   Kanvas:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
   Kanvas: 55d9c3606495cd58a8586d1df018f77656543f5a
 
-PODFILE CHECKSUM: 14b28dd726149c0d01dba9154d5bb095d9ba6a18
+PODFILE CHECKSUM: 6056b6f4c65b8326861b9cb6120a717bc03a9d4d
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

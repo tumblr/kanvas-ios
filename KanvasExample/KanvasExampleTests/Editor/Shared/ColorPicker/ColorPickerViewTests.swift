@@ -29,6 +29,6 @@ final class ColorPickerViewTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view, tolerance: 0.05)
+        FBSnapshotVerifyView(view, overallTolerance: 0.05)
     }
 }
