@@ -56,7 +56,7 @@ final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
 }
 
 fileprivate let defaultArm64CompatiblePerPixelTolerance: CGFloat = 0.02
-fileprivate let defaultArm64CompatibleOverallTolerance: CGFloat = 0.005
+fileprivate let defaultArm64CompatibleOverallTolerance: CGFloat = 0.002
 
 private extension FBSnapshotTestCase {
     func FBSnapshotArchFriendlyVerifyViewController(_ viewController: UIViewController,
