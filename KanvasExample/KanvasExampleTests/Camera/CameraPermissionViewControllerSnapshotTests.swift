@@ -11,7 +11,7 @@ import XCTest
 import FBSnapshotTestCase
 
 final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
-    private let arm64AndIntelCompatabilityPixelTolerance: CGFloat = 0.04
+    private let arm64AndIntelCompatabilityPixelTolerance: CGFloat = 0.1
     private var mockDelegate: MockCameraPermissionsViewControllerDelegate { MockCameraPermissionsViewControllerDelegate() }
 
     override func setUp() {
@@ -23,7 +23,7 @@ final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
         let authorizerMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .authorized,
                                                          initialMicrophoneAccess: .authorized)
         let controller = CameraPermissionsViewController(captureDeviceAuthorizer: authorizerMock, delegate: mockDelegate)
-        FBSnapshotVerifyViewController(controller)
+        FBSnapshotVerifyViewController(controller, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance)
     }
     
     func testViewWithNoAccessDisplaysSettingsPrompt() {
@@ -45,13 +45,13 @@ final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
                                                          initialMicrophoneAccess: .notDetermined)
         let cameraOnlyAccessController = CameraPermissionsViewController(captureDeviceAuthorizer: authorizedCameraMock,
                                                                          delegate: mockDelegate)
-        FBSnapshotVerifyViewController(cameraOnlyAccessController)
+        FBSnapshotVerifyViewController(cameraOnlyAccessController, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance)
     }
     
     func testViewWithMicrophoneOnlyAccessDisplaysSettingsPrompt() {
         let authorizedMicMock = MockCaptureDeviceAuthorizer(initialCameraAccess: .denied, initialMicrophoneAccess: .authorized)
         let micOnlyAccessController = CameraPermissionsViewController(captureDeviceAuthorizer: authorizedMicMock,
                                                                       delegate: mockDelegate)
-        FBSnapshotVerifyViewController(micOnlyAccessController)
+        FBSnapshotVerifyViewController(micOnlyAccessController, perPixelTolerance: arm64AndIntelCompatabilityPixelTolerance)
     }
 }
