@@ -27,7 +27,7 @@ final class TimeIndicatorTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         view.text = "0:02"
-        FBSnapshotVerifyView(view, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(view, overallTolerance: 0.05)
     }
     
 }

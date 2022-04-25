@@ -30,6 +30,6 @@ final class StickerCollectionCellTests: FBSnapshotTestCase {
         let sticker = Sticker(id: "id", imageUrl: "imageUrl")
         
         cell.bindTo(sticker, type: stickerType, index: 0)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
 }

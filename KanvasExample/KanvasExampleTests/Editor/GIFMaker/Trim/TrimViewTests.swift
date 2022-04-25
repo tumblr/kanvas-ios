@@ -26,6 +26,6 @@ final class TrimViewTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 }

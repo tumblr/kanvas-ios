@@ -39,6 +39,6 @@ final class FilterCollectionInnerCellTests: FBSnapshotTestCase {
         let cell = newCell()
         let filterItem = FilterItem(type: .lightLeaks)
         cell.bindTo(filterItem)
-        FBSnapshotVerifyView(cell, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(cell, overallTolerance: 0.05)
     }
 }

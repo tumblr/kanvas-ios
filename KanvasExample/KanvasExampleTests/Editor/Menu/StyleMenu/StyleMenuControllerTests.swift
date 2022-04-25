@@ -35,6 +35,6 @@ final class StyleMenuControllerTests: FBSnapshotTestCase {
     
     func testControllerView() {
         let controller = newViewController()
-        FBSnapshotVerifyView(controller.view, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(controller.view, overallTolerance: 0.05)
     }
 }

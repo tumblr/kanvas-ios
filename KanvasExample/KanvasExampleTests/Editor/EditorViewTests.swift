@@ -44,7 +44,7 @@ final class EditorViewTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testFullViewConstraints() {

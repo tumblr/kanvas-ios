@@ -30,6 +30,6 @@ final class StyleMenuRoundedLabelTests: FBSnapshotTestCase {
         let label = newLabel()
         label.text = "Test"
         label.layoutIfNeeded()
-        FBSnapshotVerifyView(label, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(label, overallTolerance: 0.05)
     }
 }

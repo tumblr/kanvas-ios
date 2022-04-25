@@ -25,7 +25,7 @@ final class MediaPickerButtonViewTests: FBSnapshotTestCase {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
             view.setThumbnail(image)
         }
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testButtonDisabled() {
@@ -36,7 +36,7 @@ final class MediaPickerButtonViewTests: FBSnapshotTestCase {
         if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
             view.setThumbnail(image)
         }
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
 }

@@ -27,6 +27,6 @@ final class DrawerTabBarControllerTests: FBSnapshotTestCase {
     
     func testDrawerTabBarControllerView() {
         let controller = newViewController()
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 }

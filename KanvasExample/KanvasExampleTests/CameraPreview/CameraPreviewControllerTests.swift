@@ -86,7 +86,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
     func testSetUp() {
         let segments = getAllSegments()
         let viewController = newViewController(segments: segments)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
 
     func testShowLoading() {
@@ -96,7 +96,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         viewController.hideLoading()
         viewController.showLoading()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
 
     func testHideLoading() {
@@ -106,7 +106,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         viewController.showLoading()
         viewController.hideLoading()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
 
     func testConfirmPhoto() {
@@ -117,7 +117,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.confirmButtonPressed()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(!handler.mergeAssetsCalled, "Handler merge assets function called")
         XCTAssert(delegate.imageExportCalled, "Delegate image export function not called")
     }
@@ -130,7 +130,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.confirmButtonPressed()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
     }
@@ -168,7 +168,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.confirmButtonPressed()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
     }
@@ -181,7 +181,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.confirmButtonPressed()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
     }
@@ -193,7 +193,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.closeButtonPressed()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(delegate.closeCalled, "Delegate close function not called")
     }
 

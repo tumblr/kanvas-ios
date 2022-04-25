@@ -27,6 +27,6 @@ final class StickerTypeCollectionViewTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 }

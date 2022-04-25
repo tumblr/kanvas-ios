@@ -27,6 +27,6 @@ final class DrawerTabBarViewTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 }

@@ -33,7 +33,7 @@ class MediaPlayerViewTests: FBSnapshotTestCase {
         player.playerView = view
         player.play(media: [.image(image, nil)])
         RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 2))
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
 }

@@ -29,7 +29,7 @@ final class ColorSelectorViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         view.show(true)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
     
 }

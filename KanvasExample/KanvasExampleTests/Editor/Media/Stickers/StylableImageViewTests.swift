@@ -27,7 +27,7 @@ final class StylableImageViewTests: FBSnapshotTestCase {
         let view = newView()
         let imageView = StylableImageView(id: "id", image: KanvasImages.gradientImage)
         imageView.add(into: view)
-        FBSnapshotVerifyView(imageView)
+        FBSnapshotArchFriendlyVerifyView(imageView)
     }
     
     func testHitInsideShape() {

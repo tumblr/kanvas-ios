@@ -89,7 +89,7 @@ final class GIFEncoderTests: FBSnapshotTestCase {
                 let image = UIImage(cgImage: firstCGImage)
                 view.frame = CGRect(origin: .zero, size: image.size)
                 view.image = image
-                self.FBSnapshotVerifyView(view, identifier: "first")
+                self.FBSnapshotArchFriendlyVerifyView(view, identifier: "first")
 
                 let someLastCGImage = CGImageSourceCreateImageAtIndex(source, actualFrameCount - Int(Double(gifFramesPerSecond) / 2.0), nil)
                 XCTAssertNotNil(someLastCGImage)
@@ -102,7 +102,7 @@ final class GIFEncoderTests: FBSnapshotTestCase {
                 let image1 = UIImage(cgImage: lastCGImage)
                 view1.frame = CGRect(origin: .zero, size: image1.size)
                 view1.image = image1
-                self.FBSnapshotVerifyView(view1, identifier: "last")
+                self.FBSnapshotArchFriendlyVerifyView(view1, identifier: "last")
 
                 expectation.fulfill()
             }

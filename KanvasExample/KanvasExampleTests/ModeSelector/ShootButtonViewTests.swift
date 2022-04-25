@@ -29,7 +29,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
         shootButton.configureFor(trigger: .tap, image: KanvasImages.photoModeImage, timeLimit: KanvasTimes.stopMotionFrameTimeInterval)
-        FBSnapshotVerifyView(shootButton)
+        FBSnapshotArchFriendlyVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
 
@@ -39,7 +39,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
         shootButton.configureFor(trigger: .tap, image: KanvasImages.loopModeImage, timeLimit: KanvasTimes.gifTapRecordingTime)
-        FBSnapshotVerifyView(shootButton)
+        FBSnapshotArchFriendlyVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
 
@@ -49,7 +49,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         shootButton.add(into: uiView)
         UIView.setAnimationsEnabled(false)
         shootButton.configureFor(trigger: .tapOrHold(animateCircle: true), image: KanvasImages.stopMotionModeImage, timeLimit: KanvasTimes.videoRecordingTime)
-        FBSnapshotVerifyView(shootButton)
+        FBSnapshotArchFriendlyVerifyView(shootButton)
         UIView.setAnimationsEnabled(true)
     }
     
@@ -60,7 +60,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         shootButton.openTrash()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(shootButton)
+        FBSnapshotArchFriendlyVerifyView(shootButton)
     }
     
     func testShowClosedTrash() {
@@ -70,7 +70,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         shootButton.closeTrash()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(shootButton)
+        FBSnapshotArchFriendlyVerifyView(shootButton)
     }
     
     func testOpenAndHideTrash() {
@@ -81,7 +81,7 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         shootButton.openTrash()
         shootButton.hideTrash()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(shootButton)
+        FBSnapshotArchFriendlyVerifyView(shootButton)
     }
     
     func testCloseAndHideTrash() {
@@ -92,6 +92,6 @@ final class ShootButtonViewTests: FBSnapshotTestCase {
         shootButton.openTrash()
         shootButton.hideTrash()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(shootButton)
+        FBSnapshotArchFriendlyVerifyView(shootButton)
     }
 }

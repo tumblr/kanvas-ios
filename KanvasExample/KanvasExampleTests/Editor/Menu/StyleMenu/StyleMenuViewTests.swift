@@ -36,7 +36,7 @@ final class StyleMenuViewTests: FBSnapshotTestCase, StyleMenuViewDelegate {
     func testMenuCollapsed() {
         let view = newCollectionView()
         view.load()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
     
     func testMenuExpanded() {
@@ -44,7 +44,7 @@ final class StyleMenuViewTests: FBSnapshotTestCase, StyleMenuViewDelegate {
         view.load()
         view.setNeedsLayout()
         view.expandCollection()
-        FBSnapshotVerifyView(view, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(view, overallTolerance: 0.05)
     }
     
     // MARK: - StyleMenuViewDelegate

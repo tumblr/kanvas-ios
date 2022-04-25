@@ -28,6 +28,7 @@
 		1404E2AC28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AB28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift */; };
 		1404E2AE28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */; };
 		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
+		1431FA3B2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */; };
 		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
@@ -251,6 +252,7 @@
 		1404E2AB28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCaptureDeviceAuthorizer.swift; sourceTree = "<group>"; };
 		1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraPermissionsViewControllerDelegate.swift; sourceTree = "<group>"; };
 		147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
+		1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FBSnapshotTest+M1Compatability.swift"; sourceTree = "<group>"; };
 		2E2C11793C82F53D672DCC9A /* Pods-KanvasExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.release.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.release.xcconfig"; sourceTree = "<group>"; };
 		2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		528EA69F8E77F28A567AEDBC /* Pods-KanvasExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -504,6 +506,14 @@
 				1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */,
 			);
 			path = Mocks;
+			sourceTree = "<group>";
+		};
+		1431FA392812DD2C007BA9B6 /* TestHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */,
+			);
+			path = TestHelpers;
 			sourceTree = "<group>";
 		};
 		207DC35FB9695882309558B9 /* Frameworks */ = {
@@ -996,6 +1006,7 @@
 		AB7F295D2121F0ED00B8D599 /* KanvasExampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				1431FA392812DD2C007BA9B6 /* TestHelpers */,
 				F5E448C924B8E23000403A7C /* KanvasCustomUITests.swift */,
 				0EAE0CB72139EC81004CD7FF /* KanvasAnalyticsStub.swift */,
 				0EAE0CAE2139B966004CD7FF /* CameraPreview */,
@@ -1415,6 +1426,7 @@
 				658A32A3239FFD9B00EEC1D3 /* MediaDrawerControllerTests.swift in Sources */,
 				6539F18E255C30DB00FCCA22 /* KanvasEditorDesignTests.swift in Sources */,
 				655C934F234CCA80008F26AF /* ColorSelectorViewTests.swift in Sources */,
+				1431FA3B2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift in Sources */,
 				6578F83B22E12098002B952C /* ColorThiefTests.swift in Sources */,
 				65E46BA922BD22DE004FD226 /* EditorControllerTests.swift in Sources */,
 				F597B50B24B5017B00843540 /* MediaInfoTests.swift in Sources */,
