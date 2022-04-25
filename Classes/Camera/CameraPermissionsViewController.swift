@@ -18,9 +18,11 @@ protocol CaptureDeviceAuthorizing: class {
 
 protocol CameraPermissionsViewDelegate: class {
 
-    func cameraAccessButtonPressed()
-
-    func microphoneAccessButtonPressed()
+    func requestCameraAccess()
+    
+    func requestMicrophoneAccess()
+    
+    func openAppSettings()
 
     func mediaPickerButtonPressed()
 
@@ -65,8 +67,16 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
     private lazy var containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.75)
+        view.backgroundColor = UIColor.black
         return view
+    }()
+    
+    private lazy var contentStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel, settingsButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        return stackView
     }()
 
     private lazy var titleLabel: UILabel = {
@@ -76,20 +86,14 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         label.font = Constants.titleFont
         label.textColor = Constants.textColor
         label.textAlignment = .center
+        label.numberOfLines = 0
         return label
     }()
 
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-
-        let description = KanvasStrings.shared.cameraPermissionsDescriptionLabel
-        let descriptionParagraphStyle = NSMutableParagraphStyle()
-        descriptionParagraphStyle.lineSpacing = Constants.descriptionFont.pointSize * 0.5
-        let descriptionAttributedString = NSMutableAttributedString(string: description)
-        descriptionAttributedString.addAttribute(.paragraphStyle, value: descriptionParagraphStyle, range: NSMakeRange(0, descriptionAttributedString.length))
-
-        label.attributedText = descriptionAttributedString
+        label.text = KanvasStrings.shared.cameraPermissionsDescriptionLabel
         label.font = Constants.descriptionFont
         label.textColor = Constants.textColor
         label.alpha = Constants.descriptionOpacity
@@ -98,30 +102,12 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return label
     }()
 
-    private lazy var cameraAccessButton: UIButton = {
-        let title = NSLocalizedString("Allow access to camera", comment: "Button on camera permissions screen to initiate the sytem prompt for camera access")
-        let titleDisabled = NSLocalizedString("Camera access granted", comment: "Label on camera permissions screen to indicate camera access is granted")
+    private lazy var settingsButton: UIButton = {
+        let title = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
+        let titleDisabled = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
         let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(cameraAccessButtonPressed), for: .touchUpInside)
-        return button
-    }()
-
-    private lazy var microphoneAccessButton: UIButton = {
-        let title = NSLocalizedString("Allow access to microphone", comment: "Button on camera permissions screen to initiate the sytem prompt for microphone access.")
-        let titleDisabled = NSLocalizedString("Microphone access granted", comment: "Label on camera permissions screen to indicate microphone access is granted")
-        let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(microphoneAccessButtonPressed), for: .touchUpInside)
-        return button
-    }()
-
-    private lazy var mediaPickerButton: MediaPickerButtonView = {
-        let settings = CameraSettings()
-        settings.features.mediaPicking = showMediaPicker
-        let button = MediaPickerButtonView(settings: settings)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.delegate = self
+        button.addTarget(self, action: #selector(openAppSettings), for: .touchUpInside)
         return button
     }()
 
@@ -151,30 +137,17 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateCameraAccess(hasAccess: Bool) {
-        cameraAccessButton.isEnabled = !hasAccess
-        CameraPermissionsView.updateButton(button: cameraAccessButton)
-    }
+    func updateCameraAccess(hasAccess: Bool) {}
 
-    func updateMicrophoneAccess(hasAccess: Bool) {
-        microphoneAccessButton.isEnabled = !hasAccess
-        CameraPermissionsView.updateButton(button: microphoneAccessButton)
-    }
+    func updateMicrophoneAccess(hasAccess: Bool) {}
 
     private func setupView() {
         addSubview(containerView)
-        addSubview(titleLabel)
-        addSubview(descriptionLabel)
-        addSubview(cameraAccessButton)
-        addSubview(microphoneAccessButton)
-        addSubview(mediaPickerButton)
+        addSubview(contentStack)
 
         setupContainerView()
-        setupTitleView()
-        setupDescriptionView()
-        setupCameraAccessButton()
-        setupMicrophoneAccessButton()
-        setupMediaPickerButton()
+        setupContentStack()
+        setupSettingsButton()
     }
 
     private func setupContainerView() {
@@ -185,59 +158,22 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-
-    private func setupTitleView() {
-        NSLayoutConstraint.activate([
-            titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -15),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.60)
-        ])
-    }
-
-    private func setupDescriptionView() {
-        NSLayoutConstraint.activate([
-            descriptionLabel.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -25),
-            descriptionLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
-            descriptionLabel.widthAnchor.constraint(equalTo: titleLabel.widthAnchor)
-        ])
-    }
-
-    private func setupCameraAccessButton() {
-        NSLayoutConstraint.activate([
-            cameraAccessButton.topAnchor.constraint(equalTo: centerYAnchor),
-            cameraAccessButton.centerXAnchor.constraint(equalTo: descriptionLabel.centerXAnchor),
-        ])
-        cameraAccessButton.layoutIfNeeded()
-        CameraPermissionsView.updateButton(button: cameraAccessButton)
-    }
-
-    private func setupMicrophoneAccessButton() {
-        NSLayoutConstraint.activate([
-            microphoneAccessButton.topAnchor.constraint(equalTo: cameraAccessButton.bottomAnchor, constant: 15),
-            microphoneAccessButton.centerXAnchor.constraint(equalTo: cameraAccessButton.centerXAnchor),
-        ])
-        microphoneAccessButton.layoutIfNeeded()
-        CameraPermissionsView.updateButton(button: microphoneAccessButton)
-    }
-
-    private func setupMediaPickerButton() {
-        let guide = UILayoutGuide()
-        addLayoutGuide(guide)
-        let bottomMargin: CGFloat = deviceDependentBottomMargin()
-        NSLayoutConstraint.activate([
-            guide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
-            guide.heightAnchor.constraint(equalToConstant: 100),
-            guide.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            guide.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor, constant: -50),
-        ])
-        NSLayoutConstraint.activate([
-            mediaPickerButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
-            mediaPickerButton.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
-            mediaPickerButton.widthAnchor.constraint(equalToConstant: 35),
-            mediaPickerButton.heightAnchor.constraint(equalTo: mediaPickerButton.widthAnchor),
-        ])
-    }
     
+    private func setupContentStack() {
+        NSLayoutConstraint.activate([
+            contentStack.heightAnchor.constraint(equalToConstant: 250),
+            contentStack.centerYAnchor.constraint(equalTo: safeLayoutGuide.centerYAnchor),
+            contentStack.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor),
+            readableContentGuide.trailingAnchor.constraint(equalTo: contentStack.trailingAnchor)
+        ])
+    }
+
+    private func setupSettingsButton() {
+        settingsButton.layer.cornerRadius = settingsButton.bounds.height / 2.0
+        settingsButton.backgroundColor = .clear
+        settingsButton.layer.borderColor = Constants.buttonColor.cgColor
+        settingsButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
     
     private func deviceDependentBottomMargin() -> CGFloat {
         guard Device.belongsToIPhoneXGroup == true else {
@@ -262,41 +198,17 @@ class CameraPermissionsView: UIView, CameraPermissionsViewable, MediaPickerButto
         return button
     }
 
-    private static func updateButton(button: UIButton) {
-        button.layer.cornerRadius = button.bounds.height / 2.0
-        let verticalInset: CGFloat = 4.5
-        button.imageEdgeInsets = UIEdgeInsets(top: verticalInset, left: button.bounds.height / -4.0, bottom: verticalInset, right: 0.0)
-        button.contentEdgeInsets = UIEdgeInsets(
-            top: button.bounds.height / 5.0,
-            left: button.bounds.height / 2.0,
-            bottom: button.bounds.height / 5.0,
-            right: button.bounds.height / 2.0)
-        if button.isEnabled {
-            button.backgroundColor = .clear
-            button.layer.borderColor = Constants.buttonColor.cgColor
-        }
-        else {
-            button.backgroundColor = Constants.buttonAcceptedBackgroundColor
-            button.layer.borderColor = Constants.buttonAcceptedBackgroundColor.cgColor
-        }
-    }
-
     @objc private func cameraAccessButtonPressed() {
-        delegate?.cameraAccessButtonPressed()
+        delegate?.requestCameraAccess()
+    }
+    
+    @objc private func openAppSettings() {
+        delegate?.openAppSettings()
     }
 
-    @objc private func microphoneAccessButtonPressed() {
-        delegate?.microphoneAccessButtonPressed()
-    }
+    func mediaPickerButtonDidPress() {}
 
-    func mediaPickerButtonDidPress() {
-        delegate?.mediaPickerButtonPressed()
-    }
-
-    func resetMediaPickerButton() {
-        mediaPickerButton.reset()
-    }
-
+    func resetMediaPickerButton() {}
 }
 
 class CaptureDeviceAuthorizer: CaptureDeviceAuthorizing {
@@ -316,16 +228,19 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
     let captureDeviceAuthorizer: CaptureDeviceAuthorizing
 
     let shouldShowMediaPicker: Bool
-
+    
+    var isViewBlockingCameraAccess: Bool { !isIgnoringTouches }
+    
     weak var delegate: CameraPermissionsViewControllerDelegate?
 
     private var permissionsView: CameraPermissionsViewable? {
         return view as? CameraPermissionsViewable
     }
-
-    private var ignoreTouchesView: IgnoreTouchesView? {
-        return view as? IgnoreTouchesView
+    
+    private var isIgnoringTouches: Bool {
+        return view is IgnoreTouchesView
     }
+
 
     init(shouldShowMediaPicker: Bool, captureDeviceAuthorizer: CaptureDeviceAuthorizing) {
         self.captureDeviceAuthorizer = captureDeviceAuthorizer
@@ -353,9 +268,13 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         super.viewWillAppear(animated)
 
         setupViewFromAccess()
+        if hasFullAccess() { return }
+        
+        requestCameraAccess()
+        requestMicrophoneAccess()
     }
-
-    func cameraAccessButtonPressed() {
+    
+    func requestCameraAccess() {
         switch captureDeviceAuthorizer.authorizationStatus(for: .video) {
         case .notDetermined:
             captureDeviceAuthorizer.requestAccess(for: .video) { videoGranted in
@@ -363,17 +282,12 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                     self.setupViewFromAccessAndNotifyPermissionsChanged()
                 }
             }
-        case .restricted, .denied:
-            openAppSettings()
-        case .authorized:
-            assertionFailure("How was this button pressed if we're already authorized!?")
-            self.setupViewFromAccessAndNotifyPermissionsChanged()
-        @unknown default:
-            assertionFailure()
+        case .restricted, .denied, .authorized:
+            return
         }
     }
 
-    func microphoneAccessButtonPressed() {
+    func requestMicrophoneAccess() {
         switch captureDeviceAuthorizer.authorizationStatus(for: .audio) {
         case .notDetermined:
             captureDeviceAuthorizer.requestAccess(for: .audio) { audioGranted in
@@ -381,14 +295,13 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                     self.setupViewFromAccessAndNotifyPermissionsChanged()
                 }
             }
-        case .restricted, .denied:
-            openAppSettings()
-        case .authorized:
-            assertionFailure("How was this button pressed if we're already authorized!?")
-            self.setupViewFromAccessAndNotifyPermissionsChanged()
-        @unknown default:
-            assertionFailure()
+        case .restricted, .denied, .authorized:
+            return
         }
+    }
+    
+    func openAppSettings() {
+        delegate?.openAppSettings(completion: nil)
     }
 
     func mediaPickerButtonPressed() {
@@ -423,10 +336,6 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         }
     }
 
-    private func openAppSettings() {
-        delegate?.openAppSettings(completion: nil)
-    }
-
     private func setupViewFromAccessAndNotifyPermissionsChanged() {
         setupViewFromAccess()
         delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
@@ -434,18 +343,24 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     private func setupViewFromAccess() {
         if hasFullAccess() {
-            if ignoreTouchesView == nil {
-                view = IgnoreTouchesView()
-            }
+            showIgnoreTouchesView()
         }
         else {
-            if permissionsView == nil {
-                let view = CameraPermissionsView()
-                view.delegate = self
-                self.view = view
-            }
-            permissionsView?.updateCameraAccess(hasAccess: hasCameraAccess())
-            permissionsView?.updateMicrophoneAccess(hasAccess: hasMicrophoneAccess())
+            showPermissionsView()
+        }
+    }
+    
+    private func showPermissionsView() {
+        if permissionsView == nil {
+            let view = CameraPermissionsView()
+            view.delegate = self
+            self.view = view
+        }
+    }
+    
+    private func showIgnoreTouchesView() {
+        if !isIgnoringTouches {
+            view = IgnoreTouchesView()
         }
     }
 

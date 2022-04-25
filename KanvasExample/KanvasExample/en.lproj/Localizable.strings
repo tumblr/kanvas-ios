@@ -1,11 +1,11 @@
-/* Message on camera permissions screen to explain why the Tumblr app needs camera and microphone permissions */
-"Allow access so you can start taking photos and videos" = "Allow access so you can start taking photos and videos";
-
 /* Button on camera permissions screen to initiate the sytem prompt for camera access */
 "Allow access to camera" = "Allow access to camera";
 
 /* Button on camera permissions screen to initiate the sytem prompt for microphone access */
 "Allow access to microphone" = "Allow access to microphone";
+
+/* Action button text for scenerio when access to Photos has been disallowed */
+"PhotoAccessNoAccessAction" = "Take me to Settings";
 
 /* Popup message when user discards all their clips */
 "Are you sure? If you close this, you'll lose everything you just created." = "Are you sure? If you close this, you'll lose everything you just created.";
@@ -55,8 +55,11 @@
 /* Message for the post button in the editor screen */
 "Post" = "Post";
 
-/* Title of camera permissions screen */
-"Post to Tumblr" = "Post to Tumblr";
+/* Title text for scenerio when access to Photos has been disallowed */
+"Please allow Tumblr access to your Camera and Microphone" = "Please allow Tumblr access to your Camera and Microphone";
+
+/* Description text for scenerio when access to Photos has been disallowed */
+"CameraAccessNoAccessDesc" = "You might want to save your post as a draft first so you don’t lose any unsaved progress.";
 
 /* Alert controller message */
 "SomethingGoofedTitle" = "SomethingGoofedTitle";
