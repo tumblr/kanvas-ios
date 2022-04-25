@@ -27,6 +27,6 @@ final class StickerMenuControllerTests: FBSnapshotTestCase {
     
     func testStickerMenuControllerView() {
         let controller = newViewController()
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 }

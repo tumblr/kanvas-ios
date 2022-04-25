@@ -35,6 +35,6 @@ final class OptionsStackViewTests: FBSnapshotTestCase {
         let stackView = newStackView()
         let options = self.options()
         stackView.changeOptions(to: options)
-        FBSnapshotVerifyView(stackView)
+        FBSnapshotArchFriendlyVerifyView(stackView)
     }
 }

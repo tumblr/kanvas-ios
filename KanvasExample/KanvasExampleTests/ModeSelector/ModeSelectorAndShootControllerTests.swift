@@ -34,13 +34,13 @@ final class ModeSelectorAndShootControllerTests: FBSnapshotTestCase {
     func testShowMode() {
         let viewController = newViewController()
         viewController.showModeButton()
-        FBSnapshotVerifyView(viewController.view, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(viewController.view, overallTolerance: 0.05)
     }
 
     func testHideMode() {
         let viewController = newViewController()
         viewController.hideModeButton()
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
 
     func testSetMode() {
@@ -48,7 +48,7 @@ final class ModeSelectorAndShootControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.setMode(.stopMotion, from: .loop)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(viewController.view, overallTolerance: 0.05)
     }
 
     func testModeTap() {

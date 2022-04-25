@@ -31,7 +31,7 @@ final class FilterSettingsControllerTests: FBSnapshotTestCase {
         controller.didTapVisibilityButton()
         controller.didTapVisibilityButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 
     func testShowCollection() {
@@ -39,6 +39,6 @@ final class FilterSettingsControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.didTapVisibilityButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(controller.view, overallTolerance: 0.05)
     }
 }

@@ -27,6 +27,6 @@ final class MediaDrawerControllerTests: FBSnapshotTestCase {
     
     func testMediaDrawerControllerView() {
         let controller = newViewController()
-        FBSnapshotVerifyView(controller.view, overallTolerance: 0.05)
+        FBSnapshotArchFriendlyVerifyView(controller.view, overallTolerance: 0.05)
     }
 }

@@ -28,6 +28,6 @@ final class FlipLeftMirroredTests: FBSnapshotTestCase {
         let view = newView()
         let imageView = UIImageView(image: KanvasImages.imagePreviewOnImage?.flipLeftMirrored())
         imageView.add(into: view)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 }

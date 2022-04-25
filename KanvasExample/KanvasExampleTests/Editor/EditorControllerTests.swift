@@ -156,7 +156,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
     func testSetUp() {
         let segments = getAllSegments()
         let viewController = newViewController(segments: segments)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
     
     func testShowLoading() {
@@ -166,7 +166,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         viewController.hideLoading()
         viewController.showLoading()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
     
     func testHideLoading() {
@@ -176,7 +176,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         viewController.showLoading()
         viewController.hideLoading()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
     
     func testConfirmPhoto() {
@@ -188,7 +188,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(!handler.mergeAssetsCalled, "Handler merge assets function called")
         XCTAssert(delegate.imageExportCalled, "Delegate image export function not called")
     }
@@ -202,7 +202,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(!handler.mergeAssetsCalled, "Handler merge assets function not called")
         XCTAssert(delegate.framesExportCalled, "Delegate frames export function not called")
     }
@@ -254,7 +254,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         wait(for: [expectation], timeout: 2)
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
@@ -272,7 +272,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         wait(for: [expectation], timeout: 2)
         XCTAssert(delegate.exportFailedCalled, "Delegate export failed not called")
@@ -290,7 +290,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.didTapConfirmButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(handler.mergeAssetsCalled, "Handler merge assets function not called")
         wait(for: [expectation], timeout: 2)
         XCTAssert(delegate.videoExportCalled, "Delegate video export function not called")
@@ -303,7 +303,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.didTapCloseButton()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(delegate.closeCalled, "Delegate close function not called")
     }
     
@@ -313,7 +313,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let segments = getPhotoSegment()
         let delegate = newDelegateStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
 
     func testEditorShowsTagButton() {
@@ -322,7 +322,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         let segments = getPhotoSegment()
         let delegate = newDelegateStub()
         let viewController = newViewController(settings: settings, segments: segments, delegate: delegate)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
 
     func testEditorWithFiltersOpenHidesTagButton() {
@@ -334,7 +334,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         viewController.didSelectEditionOption(.filter, cell: EditionMenuCollectionCell())
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
 
     func testEditorWhenClosingFiltersShowsTagButton() {
@@ -347,7 +347,7 @@ final class EditorControllerTests: FBSnapshotTestCase {
         viewController.didSelectEditionOption(.filter, cell: EditionMenuCollectionCell())
         viewController.didConfirmFilters()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(viewController.view)
+        FBSnapshotArchFriendlyVerifyView(viewController.view)
     }
 }
 

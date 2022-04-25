@@ -32,6 +32,6 @@ final class EditorTextControllerTests: FBSnapshotTestCase {
         controller.showView(true)
         controller.showConfirmButton(true)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 }

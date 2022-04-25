@@ -33,7 +33,7 @@ final class MovableViewCanvasTests: FBSnapshotTestCase {
         let location = view.center
         let transformations =  ViewTransformations()
         view.addView(view: textView, transformations: transformations, location: location, size: view.frame.size, animated: true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
     
     func testMovableTextView() {
@@ -47,6 +47,6 @@ final class MovableViewCanvasTests: FBSnapshotTestCase {
         movableView.frame = CGRect(x: 0, y: 0, width: 250, height: 100)
         view.addSubview(movableView)
         movableView.moveToDefinedPosition()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 }

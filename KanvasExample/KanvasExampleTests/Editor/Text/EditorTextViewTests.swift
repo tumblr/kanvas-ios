@@ -29,7 +29,7 @@ final class EditorTextViewTests: FBSnapshotTestCase {
     func testViewSetup() {
         let view = newView()
         view.showConfirmButton(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
     
 }

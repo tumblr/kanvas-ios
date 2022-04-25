@@ -27,7 +27,7 @@ final class CameraViewTests: FBSnapshotTestCase {
 
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testUpdateUIForRecording() {
@@ -35,7 +35,7 @@ final class CameraViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         view.updateUI(forRecording: true)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testUpdateUIForNotRecording() {
@@ -44,7 +44,7 @@ final class CameraViewTests: FBSnapshotTestCase {
         view.updateUI(forRecording: true)
         view.updateUI(forRecording: false)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
 }

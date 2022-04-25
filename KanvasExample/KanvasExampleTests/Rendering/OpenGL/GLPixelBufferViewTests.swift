@@ -33,7 +33,7 @@ class GLPixelBufferViewTests: FBSnapshotTestCase {
             }
             _ = view
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 2.0))
-            FBSnapshotVerifyView(view)
+            FBSnapshotArchFriendlyVerifyView(view)
         }
         else {
             XCTAssert(false, "Failed to load sample.png")

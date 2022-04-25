@@ -28,7 +28,7 @@ final class ColorDropTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let imageView = newColorDrop()
-        FBSnapshotVerifyView(imageView)
+        FBSnapshotArchFriendlyVerifyView(imageView)
     }
     
 }

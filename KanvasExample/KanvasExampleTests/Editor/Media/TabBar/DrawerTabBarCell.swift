@@ -28,6 +28,6 @@ final class DrawerTabBarCellTests: FBSnapshotTestCase {
         let cell = newCell()
         let tabBarOption = DrawerTabBarOption.stickers
         cell.bindTo(tabBarOption)
-        FBSnapshotVerifyView(cell)
+        FBSnapshotArchFriendlyVerifyView(cell)
     }
 }
