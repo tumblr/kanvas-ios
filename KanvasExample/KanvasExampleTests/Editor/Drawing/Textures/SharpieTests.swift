@@ -43,7 +43,7 @@ final class SharpieTests: FBSnapshotTestCase {
         }
         UIGraphicsEndImageContext()
         
-        FBSnapshotVerifyView(imageView)
+        FBSnapshotArchFriendlyVerifyView(imageView)
     }
     
     func testDrawingLine() {
@@ -64,6 +64,6 @@ final class SharpieTests: FBSnapshotTestCase {
         }
         UIGraphicsEndImageContext()
         
-        FBSnapshotVerifyView(imageView)
+        FBSnapshotArchFriendlyVerifyView(imageView)
     }
 }

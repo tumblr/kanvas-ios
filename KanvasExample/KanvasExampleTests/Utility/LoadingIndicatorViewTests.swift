@@ -27,7 +27,7 @@ final class LoadingIndicatorViewTests: FBSnapshotTestCase {
 
     func testViewSetup() {
         let view = newView()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testStartLoading() {
@@ -35,7 +35,7 @@ final class LoadingIndicatorViewTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         view.startLoading()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testStopLoading() {
@@ -44,7 +44,7 @@ final class LoadingIndicatorViewTests: FBSnapshotTestCase {
         view.startLoading()
         view.stopLoading()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
     func testStartAfterStopLoading() {
@@ -54,7 +54,7 @@ final class LoadingIndicatorViewTests: FBSnapshotTestCase {
         view.stopLoading()
         view.startLoading()
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 
 }

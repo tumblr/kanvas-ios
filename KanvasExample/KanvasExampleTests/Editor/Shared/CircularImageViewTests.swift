@@ -28,7 +28,7 @@ final class CircularImageViewTests: FBSnapshotTestCase {
     
     func testViewSetup() {
         let imageView = newCircularImageView()
-        FBSnapshotVerifyView(imageView)
+        FBSnapshotArchFriendlyVerifyView(imageView)
     }
     
 }

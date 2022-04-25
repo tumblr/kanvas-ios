@@ -44,7 +44,7 @@ final class PencilTests: FBSnapshotTestCase {
         }
         UIGraphicsEndImageContext()
         
-        FBSnapshotVerifyView(imageView)
+        FBSnapshotArchFriendlyVerifyView(imageView)
     }
     
     func testDrawingLine() {
@@ -65,6 +65,6 @@ final class PencilTests: FBSnapshotTestCase {
         }
         UIGraphicsEndImageContext()
         
-        FBSnapshotVerifyView(imageView)
+        FBSnapshotArchFriendlyVerifyView(imageView)
     }
 }

@@ -27,6 +27,6 @@ final class StickerCollectionControllerTests: FBSnapshotTestCase {
     
     func testStickerCollectionControllerView() {
         let controller = newViewController()
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 }

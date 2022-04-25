@@ -65,7 +65,7 @@ final class GIFDecoderTests: FBSnapshotTestCase {
                 view.frame = CGRect(x: 0, y: 0, width: frame.image.width, height: frame.image.height)
                 view.image = UIImage(cgImage: frame.image)
                 view.layoutIfNeeded()
-                self.FBSnapshotVerifyView(view, identifier: "\(i)")
+                self.FBSnapshotArchFriendlyVerifyView(view, identifier: "\(i)")
             }
         }
     }

@@ -26,7 +26,7 @@ final class ThumbnailCollectionControllerTests: FBSnapshotTestCase {
         controller.view.backgroundColor = .black
         controller.view.setNeedsDisplay()
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 }
 

@@ -29,7 +29,7 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.showImagePreview(true)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
     
     func testSetImagePreview() {
@@ -37,7 +37,7 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
         controller.showImagePreview(true)
         controller.setImagePreview(testImage)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
     
     func testSetImagePreviewWithNil() {
@@ -45,7 +45,7 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
         controller.showImagePreview(true)
         controller.setImagePreview(nil)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
     
     func testSetImagePreviewOff() {
@@ -53,7 +53,7 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
         controller.showImagePreview(false)
         controller.setImagePreview(testImage)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
     
     func testSetImagePreviewTwice() {
@@ -62,6 +62,6 @@ final class ImagePreviewControllerTests: FBSnapshotTestCase {
         controller.setImagePreview(testImage)
         controller.setImagePreview(secondTestImage)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 }

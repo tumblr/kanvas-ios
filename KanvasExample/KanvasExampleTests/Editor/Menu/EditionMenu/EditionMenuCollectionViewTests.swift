@@ -38,7 +38,7 @@ final class EditionMenuCollectionViewTests: FBSnapshotTestCase, UICollectionView
         view.collectionView.delegate = self
         view.collectionView.dataSource = self
         view.collectionView.reloadData()
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

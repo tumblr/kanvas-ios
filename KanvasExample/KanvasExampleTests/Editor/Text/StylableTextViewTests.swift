@@ -31,7 +31,7 @@ final class StylableTextViewTests: FBSnapshotTestCase {
         textView.text = "Example"
         textView.textAlignment = .center
         textView.font = .fairwater(fontSize: 48)
-        FBSnapshotVerifyView(textView)
+        FBSnapshotArchFriendlyVerifyView(textView)
     }
     
     func testHitInsideShape() {

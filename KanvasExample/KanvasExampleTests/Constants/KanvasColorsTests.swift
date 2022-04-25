@@ -17,6 +17,6 @@ final class KanvasColorsTests: FBSnapshotTestCase {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         view.backgroundColor = KanvasColors.shared.shootButtonBaseColor
         
-        FBSnapshotVerifyView(view)
+        FBSnapshotArchFriendlyVerifyView(view)
     }
 }

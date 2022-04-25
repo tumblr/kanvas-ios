@@ -30,6 +30,6 @@ final class EditorFilterControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         controller.showView(true)
         UIView.setAnimationsEnabled(true)
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotArchFriendlyVerifyView(controller.view)
     }
 }
