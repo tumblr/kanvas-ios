@@ -50,7 +50,7 @@ public struct KanvasStrings {
                                              cameraPermissionsDescriptionLabel: cameraPermissionDescriptionString)
     
     private static let cameraPermissionTitleString = {
-        NSLocalizedString("Please allow Tumblr access to your Camera and Microphone",
+        NSLocalizedString("CameraAccessNoAccessTitle",
                           comment: "Title text for scenerio when access to Photos has been disallowed")
     }()
     
