@@ -43,10 +43,10 @@
 /* Message for the post button in the editor screen */
 "Post" = "Post";
 
-/* Title text for scenerio when access to Photos has been disallowed */
+/* Title text for scenerio when access to Camera and Mic is required or has been disallowed */
 "CameraAccessNoAccessTitle" = "Please allow access to your Camera and Microphone";
 
-/* Description text for scenerio when access to Photos has been disallowed */
+/* Description text for scenerio when access to Camera and Mic is required has been disallowed */
 "CameraAccessNoAccessDesc" = "You might want to save your post as a draft first so you don’t lose any unsaved progress.";
 
 /* Alert controller message */

@@ -54,7 +54,7 @@ public struct KanvasStrings {
     }()
     
     private static let cameraPermissionDescriptionString = {
-        NSLocalizedString("CameraAccessNoAccessDesc", value: "This functionality is required to post videos and ", comment: "Description text for scenerio when access to Photos has been disallowed")        
+        NSLocalizedString("CameraAccessNoAccessDesc", value: "This functionality is required to post videos and photos", comment: "Description text for scenerio when access to Photos has been disallowed")        
     }()
 
     public init(cameraPermissionsTitleLabel: String,
