@@ -36,3 +36,16 @@ steps:
       lint_pod
     env: *common_env
     plugins: *common_plugins
+
+  #################
+  # Publish the Podspec (if we're building a tag)
+  #################
+  - label: "⬆️ Publish Pod"
+    command: .buildkite/commands/publish-pod.sh
+    env: *common_env
+    plugins: *common_plugins
+    depends_on:
+      - "test"
+      - "validate"
+      - "lint"
+    if: build.tag != null
