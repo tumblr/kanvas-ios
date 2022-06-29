@@ -33,3 +33,9 @@ DerivedData
 
 KanvasExample/Pods
 
+/artifacts
+
+# Fastlane
+fastlane/README.md
+fastlane/test_output
+fastlane/report.xml
