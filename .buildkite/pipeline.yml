@@ -5,7 +5,11 @@ common_params:
     IMAGE_ID: xcode-13.4.1
 
 steps:
+  #################
+  # Build and Test
+  #################
   - label: "Build and Test"
+    key: test
     command: |
       build_and_test_pod
     env: *common_env
@@ -13,8 +17,22 @@ steps:
     artifact_paths:
       - "artifacts/**/*"
 
+  #################
+  # Validate Podspecs
+  #################
   - label: "Validate Podspec"
+    key: validate
     command: |
       validate_podspec
+    env: *common_env
+    plugins: *common_plugins
+
+  #################
+  # Lint
+  #################
+  - label: "Lint"
+    key: lint
+    command: |
+      lint_pod
     env: *common_env
     plugins: *common_plugins
