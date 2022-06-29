@@ -51,8 +51,8 @@ Documentation is lacking at the moment, but contributions are welcome!
 
 ## Example App
 
-[`KanvasExample`](https://github.com/tumblr/kanvas-ios/tree/main/KanvasExample) is an example app showing how to use Kanvas. Try it out!
+[`Example`](https://github.com/tumblr/kanvas-ios/tree/main/Example) is an example app showing how to use Kanvas. Try it out!
 
-1. Run `cd KanvasExample; bundle exec pod install`
-2. Open `KanvasExample/KanvasExample.xcworkspace` in Xcode
+1. Run `cd Example; bundle exec pod install`
+2. Open `Example/KanvasExample.xcworkspace` in Xcode
 3. Run the app on a device.
