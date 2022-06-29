@@ -2,7 +2,7 @@
 
 # Kanvas
 
-<a href="https://app.circleci.com/pipelines/github/tumblr/kanvas-ios?branch=main"><img src="https://circleci.com/gh/tumblr/kanvas-ios.svg?branch=main&style=svg" alt="Kanvas Build Status"></a>
+[![Build status](https://badge.buildkite.com/7c8558667703d6147550801644af0f394019d6e7b2daed739f.svg)](https://buildkite.com/automattic/kanvas-ios)
 
 ![Cocoapods](https://img.shields.io/cocoapods/v/Kanvas)
 
