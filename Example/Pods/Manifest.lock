@@ -1,0 +1,27 @@
+PODS:
+  - iOSSnapshotTestCase (8.0.0):
+    - iOSSnapshotTestCase/SwiftSupport (= 8.0.0)
+  - iOSSnapshotTestCase/Core (8.0.0)
+  - iOSSnapshotTestCase/SwiftSupport (8.0.0):
+    - iOSSnapshotTestCase/Core
+  - Kanvas (1.4.2)
+
+DEPENDENCIES:
+  - iOSSnapshotTestCase (= 8.0.0)
+  - Kanvas (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - iOSSnapshotTestCase
+
+EXTERNAL SOURCES:
+  Kanvas:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
+  Kanvas: 27717d8f0003104bfdd3c4de37a82dc39c8ff09c
+
+PODFILE CHECKSUM: 40c74ab9ebb4c3daa2adb2eaaf214aa103ed88e4
+
+COCOAPODS: 1.11.3

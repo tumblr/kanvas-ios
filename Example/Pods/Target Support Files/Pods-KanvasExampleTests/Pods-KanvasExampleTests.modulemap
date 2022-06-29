@@ -1,0 +1,6 @@
+framework module Pods_KanvasExampleTests {
+  umbrella header "Pods-KanvasExampleTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
