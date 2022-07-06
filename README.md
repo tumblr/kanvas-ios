@@ -2,7 +2,7 @@
 
 # Kanvas
 
-<a href="https://app.circleci.com/pipelines/github/tumblr/kanvas-ios?branch=main"><img src="https://circleci.com/gh/tumblr/kanvas-ios.svg?branch=main&style=svg" alt="Kanvas Build Status"></a>
+[![Build status](https://badge.buildkite.com/7c8558667703d6147550801644af0f394019d6e7b2daed739f.svg)](https://buildkite.com/automattic/kanvas-ios)
 
 ![Cocoapods](https://img.shields.io/cocoapods/v/Kanvas)
 
@@ -51,8 +51,8 @@ Documentation is lacking at the moment, but contributions are welcome!
 
 ## Example App
 
-[`KanvasExample`](https://github.com/tumblr/kanvas-ios/tree/main/KanvasExample) is an example app showing how to use Kanvas. Try it out!
+[`Example`](https://github.com/tumblr/kanvas-ios/tree/main/Example) is an example app showing how to use Kanvas. Try it out!
 
-1. Run `cd KanvasExample; bundle exec pod install`
-2. Open `KanvasExample/KanvasExample.xcworkspace` in Xcode
+1. Run `cd Example; bundle exec pod install`
+2. Open `Example/KanvasExample.xcworkspace` in Xcode
 3. Run the app on a device.

@@ -3,10 +3,6 @@
 .idea/
 *.orig
 
-# Ignore Bundler
-/.bundle/
-/vendor/bundle
-
 # Ignore Xcode debris
 build
 *.pbxuser
@@ -32,5 +28,16 @@ DerivedData
 # ignore snapshot failure files
 **/FailureDiffs/*
 
-KanvasExample/Pods
 
+/artifacts
+
+# Fastlane
+fastlane/README.md
+fastlane/test_output
+fastlane/report.xml
+
+# CocoaPods
+Example/Pods
+
+# Bundler
+/vendor/bundle

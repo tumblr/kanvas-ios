@@ -1,0 +1,33 @@
+# frozen_string_literal: true
+
+default_platform(:ios)
+
+PROJECT_ROOT = File.dirname(__dir__)
+EXAMPLE_PROJECT_ROOT = File.join(PROJECT_ROOT, 'Example')
+ARTIFACTS_PATH = File.join(PROJECT_ROOT, 'artifacts')
+
+platform :ios do
+  desc 'Build and Test the Pod'
+  lane :test do
+    run_tests(
+      workspace: File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExample.xcworkspace'),
+      scheme: 'KanvasExample',
+      devices: ['iPhone 8'],
+      deployment_target_version: '14.0'
+    )
+  end
+end
+
+error do |_lane, _exception|
+  # Create the artifacts path if needed
+  FileUtils.mkdir_p(ARTIFACTS_PATH)
+
+  diffs_path = File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExampleTests', 'FailureDiffs')
+
+  return unless File.directory? diffs_path
+
+  zip(
+    path: diffs_path,
+    output_path: File.join(ARTIFACTS_PATH, 'FailureDiffs.zip')
+  )
+end

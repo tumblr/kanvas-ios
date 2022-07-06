@@ -1,0 +1,51 @@
+common_params:
+  - &common_plugins
+    - automattic/bash-cache#2.2.0
+  - &common_env
+    IMAGE_ID: xcode-13.4.1
+
+steps:
+  #################
+  # Build and Test
+  #################
+  - label: "Build and Test"
+    key: test
+    command: |
+      build_and_test_pod
+    env: *common_env
+    plugins: *common_plugins
+    artifact_paths:
+      - "artifacts/**/*"
+
+  #################
+  # Validate Podspecs
+  #################
+  - label: "Validate Podspec"
+    key: validate
+    command: |
+      validate_podspec
+    env: *common_env
+    plugins: *common_plugins
+
+  #################
+  # Lint
+  #################
+  - label: "Lint"
+    key: lint
+    command: |
+      lint_pod
+    env: *common_env
+    plugins: *common_plugins
+
+  #################
+  # Publish the Podspec (if we're building a tag)
+  #################
+  - label: "⬆️ Publish Pod"
+    command: .buildkite/commands/publish-pod.sh
+    env: *common_env
+    plugins: *common_plugins
+    depends_on:
+      - "test"
+      - "validate"
+      - "lint"
+    if: build.tag != null
