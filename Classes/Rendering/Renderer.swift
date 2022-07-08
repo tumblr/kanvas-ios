@@ -163,6 +163,8 @@ final class Renderer: Rendering {
     /// For this to work, all access to filteredPixelBuffer should be locked, so this method should be called in
     /// a synchronized(self) block.
     private func output(filteredPixelBuffer: CVPixelBuffer) {
+        guard let delegate = self.delegate else { return }
+
         self.filteredPixelBuffer = filteredPixelBuffer
         callbackQueue.async {
             let pixelBuffer: CVPixelBuffer? = synchronized(self) {
@@ -173,7 +175,7 @@ final class Renderer: Rendering {
                 return pixelBuffer
             }
             if let filteredPixelBuffer = pixelBuffer {
-                self.delegate?.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer)
+                delegate.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer)
             }
         }
     }
