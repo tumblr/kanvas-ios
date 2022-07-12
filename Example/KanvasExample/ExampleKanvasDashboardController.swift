@@ -15,7 +15,7 @@ private enum PhotoLibraryAccessError: Error {
 }
 
 /// Protocol for the KanvasDashboardController to delegate events to
-public protocol KanvasDashboardControllerDelegate: class {
+public protocol KanvasDashboardControllerDelegate: AnyObject {
 
     /// Called when the dismiss button is pressed in the camera
     func kanvasDashboardDismissRequest()
@@ -36,7 +36,7 @@ public protocol KanvasDashboardControllerDelegate: class {
 
 /// Protocol for the KanvasDashboardController to get state from
 /// This is an alternative to passing this state in through a constructor
-public protocol KanvasDashboardStateDelegate: class {
+public protocol KanvasDashboardStateDelegate: AnyObject {
 
     /// The EventBuffering for Kanvas Dashboard to use
     var kanvasDashboardAnalyticsProvider: KanvasAnalyticsProvider { get }

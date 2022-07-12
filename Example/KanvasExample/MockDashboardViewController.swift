@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol MockDashboardViewControllerDelegate: class {
+protocol MockDashboardViewControllerDelegate: AnyObject {
     func kanvasButtonTapped()
 }
 

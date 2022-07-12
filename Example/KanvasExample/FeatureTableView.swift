@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol FeatureTableViewDelegate: class {
+protocol FeatureTableViewDelegate: AnyObject {
     func featureTableViewLoadFeatures() -> [FeatureTableView.KanvasFeature]
     func featureTableView(didUpdateFeature feature: FeatureTableView.KanvasFeature, withValue value: Bool)
 }
@@ -302,7 +302,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
     }
 }
 
-protocol FeatureTableViewCellDelegate: class {
+protocol FeatureTableViewCellDelegate: AnyObject {
     func featureTableViewCell(didToggle value: Bool, indexPath: IndexPath)
 }
 
