@@ -27,8 +27,8 @@
 		0EDE7A3D216425C5009DB00F /* ExtendedButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */; };
 		1404E2AC28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AB28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift */; };
 		1404E2AE28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */; };
-		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
 		1431FA3B2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */; };
+		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
 		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
@@ -251,8 +251,8 @@
 		0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedButtonTests.swift; sourceTree = "<group>"; };
 		1404E2AB28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCaptureDeviceAuthorizer.swift; sourceTree = "<group>"; };
 		1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraPermissionsViewControllerDelegate.swift; sourceTree = "<group>"; };
-		147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FBSnapshotTest+M1Compatability.swift"; sourceTree = "<group>"; };
+		147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		2E2C11793C82F53D672DCC9A /* Pods-KanvasExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.release.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.release.xcconfig"; sourceTree = "<group>"; };
 		2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		528EA69F8E77F28A567AEDBC /* Pods-KanvasExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1202,6 +1202,7 @@
 					};
 					AB7F295B2121F0ED00B8D599 = {
 						CreatedOnToolsVersion = 9.4;
+						LastSwiftMigration = 1330;
 						TestTargetID = AB7F29422121F02A00B8D599;
 					};
 				};
@@ -1746,7 +1747,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tumblr.KanvasExampleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KanvasExample.app/KanvasExample";
 			};
@@ -1771,7 +1772,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tumblr.KanvasExampleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KanvasExample.app/KanvasExample";
 			};
