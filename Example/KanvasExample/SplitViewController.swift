@@ -8,7 +8,7 @@ import Foundation
 import Kanvas
 import Photos
 
-@objc protocol DashboardPagingController: class {
+@objc protocol DashboardPagingController: AnyObject {
     func setPageSlideEnabled(_ pageSlideEnabled: Bool)
 
     /// Navigates to the Kanvas view controller.

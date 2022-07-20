@@ -13,7 +13,7 @@ final class ArrayMoveTests: XCTestCase {
     func testMoveAltersElementToNewIndex() {
         var array = ["a", "b", "c"]
         array.move(from: 1, to: 2)
-        XCTAssertEqual(array.index(of: "b"), 2, "Expected index to be 2 after movement.")
+        XCTAssertEqual(array.firstIndex(of: "b"), 2, "Expected index to be 2 after movement.")
     }
 
     func testMoveDoesntAlterQuantity() {
