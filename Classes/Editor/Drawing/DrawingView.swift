@@ -639,7 +639,6 @@ final class DrawingView: IgnoreTouchesView, DrawingCanvasDelegate {
     func showCanvas(_ show: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
             self.drawingCanvas.alpha = show ? 1 : 0
-            self.temporalImageView.alpha = show ? 1 : 0
         }
     }
     
