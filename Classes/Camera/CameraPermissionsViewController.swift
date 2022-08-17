@@ -240,6 +240,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
             }
         case .restricted, .denied, .authorized:
             return
+        @unknown default:
+            return
         }
     }
 
@@ -252,6 +254,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                 }
             }
         case .restricted, .denied, .authorized:
+            return
+        @unknown default:
             return
         }
     }
