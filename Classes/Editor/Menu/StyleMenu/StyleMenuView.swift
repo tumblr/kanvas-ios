@@ -415,7 +415,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     ///
     /// - Parameter cell: the cell.
     func getIndex(for cell: StyleMenuCell) -> Int? {
-        return cells.index(of: cell)
+        return cells.firstIndex(of: cell)
     }
     
     /// Reloads a specific cell.
