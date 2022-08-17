@@ -227,6 +227,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         if hasFullAccess() { return }
         
         requestCameraAccess()
+        requestMicrophoneAccess()
     }
     
     func requestCameraAccess() {
@@ -235,7 +236,6 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
             captureDeviceAuthorizer.requestAccess(for: .video) { videoGranted in
                 performUIUpdate {
                     self.setupViewFromAccessAndNotifyPermissionsChanged()
-                    self.requestMicrophoneAccess()
                 }
             }
         case .restricted, .denied, .authorized:
