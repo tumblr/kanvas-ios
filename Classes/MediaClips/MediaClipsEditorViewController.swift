@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol MediaClipsEditorDelegate: class {
+protocol MediaClipsEditorDelegate: AnyObject {
     /// Callback for when a clip is deleted
     ///
     /// - Parameter index: the index of the deleted clip

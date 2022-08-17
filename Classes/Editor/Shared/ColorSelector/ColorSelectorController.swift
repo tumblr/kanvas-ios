@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol ColorSelectorControllerDelegate: class {
+protocol ColorSelectorControllerDelegate: AnyObject {
     
     /// Called to ask if tooltip should be shown
     ///

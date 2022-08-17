@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol DrawingControllerDelegate: class {
+protocol DrawingControllerDelegate: AnyObject {
     /// Called to ask if color selector tooltip should be shown
     ///
     /// - Returns: Bool for tooltip

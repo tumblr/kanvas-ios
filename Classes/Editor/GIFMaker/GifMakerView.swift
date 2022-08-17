@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for closing the GIF maker
-protocol GifMakerViewDelegate: class {
+protocol GifMakerViewDelegate: AnyObject {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()

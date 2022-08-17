@@ -11,7 +11,7 @@ import GLKit
 import os
 
 /// Protocol for GLPixelBufferView
-protocol GLPixelBufferViewDelegate: class {
+protocol GLPixelBufferViewDelegate: AnyObject {
 
     /// Called when the rendering rectangle changes
     func didRenderRectChange(rect: CGRect)

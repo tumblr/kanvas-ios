@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for selecting cells.
-protocol DiscreteSliderViewDelegate: class {
+protocol DiscreteSliderViewDelegate: AnyObject {
     
     /// Called when a cell is selected.
     ///

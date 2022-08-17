@@ -19,7 +19,7 @@ enum CaptureTrigger {
 }
 
 /// Protocol to handle capture button user actions
-protocol ShootButtonViewDelegate: class {
+protocol ShootButtonViewDelegate: AnyObject {
 
     /// Function called when capture button was tapped
     func shootButtonViewDidTap()

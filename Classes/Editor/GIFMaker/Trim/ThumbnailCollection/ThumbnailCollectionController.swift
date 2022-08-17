@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for obtaining images.
-protocol ThumbnailCollectionControllerDelegate: class {
+protocol ThumbnailCollectionControllerDelegate: AnyObject {
     
     /// Obtains the full media duration
     func getMediaDuration() -> TimeInterval?

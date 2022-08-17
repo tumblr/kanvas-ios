@@ -16,7 +16,7 @@ public enum PickedMedia {
     case livePhoto(UIImage, URL)
 }
 
-public protocol KanvasMediaPickerViewControllerDelegate: class {
+public protocol KanvasMediaPickerViewControllerDelegate: AnyObject {
     func didPick(media: [PickedMedia])
     func didCancel()
     func pickingMediaNotAllowed(reason: String)

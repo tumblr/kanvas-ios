@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for obtaining images.
-protocol ThumbnailCollectionCellDelegate: class {
+protocol ThumbnailCollectionCellDelegate: AnyObject {
     
     /// Obtains a thumbnail for the background of the trimming tool
     ///

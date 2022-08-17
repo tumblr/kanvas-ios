@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for tapping a movable view
-protocol MovableViewDelegate: class {
+protocol MovableViewDelegate: AnyObject {
     /// Callback for when a movable view with text is tapped
     ///
     /// - Parameters

@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol ColorPickerViewDelegate: class {
+protocol ColorPickerViewDelegate: AnyObject {
     /// Called when the selector is tapped
     ///
     /// - Parameter recognizer: the tap gesture recognizer

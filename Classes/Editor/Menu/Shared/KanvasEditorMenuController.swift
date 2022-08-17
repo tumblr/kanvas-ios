@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for tap events on the editor menu.
-protocol KanvasEditorMenuControllerDelegate: class {
+protocol KanvasEditorMenuControllerDelegate: AnyObject {
     
     /// Callback for the selection of an option.
     ///

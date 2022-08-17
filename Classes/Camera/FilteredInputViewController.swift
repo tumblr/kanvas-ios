@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Callback protocol for the filters
-protocol FilteredInputViewControllerDelegate: class {
+protocol FilteredInputViewControllerDelegate: AnyObject {
     /// Method to return a filtered pixel buffer
     ///
     /// - Parameter pixelBuffer: the final pixel buffer

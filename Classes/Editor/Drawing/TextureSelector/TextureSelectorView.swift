@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol TextureSelectorViewDelegate: class {
+protocol TextureSelectorViewDelegate: AnyObject {
     /// Called when the main button is selected
     func didTapTextureButton()
     

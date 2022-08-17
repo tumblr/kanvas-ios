@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for editing GIFs
-protocol GifMakerControllerDelegate: class {
+protocol GifMakerControllerDelegate: AnyObject {
     
     /// Called after the confirm button is tapped
     func didConfirmGif()

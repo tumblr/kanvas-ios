@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol EditionMenuCollectionCellDelegate: class {
+protocol EditionMenuCollectionCellDelegate: AnyObject {
     /// Callback method when tapping a cell
     ///
     /// - Parameters:

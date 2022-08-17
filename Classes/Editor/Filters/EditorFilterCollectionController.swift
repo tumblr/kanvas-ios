@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol EditorFilterCollectionControllerDelegate: class {
+protocol EditorFilterCollectionControllerDelegate: AnyObject {
     /// Callback for when a filter item is selected
     ///
     /// - Parameter filterItem: the selected filter

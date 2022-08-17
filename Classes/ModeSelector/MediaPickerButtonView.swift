@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Media Picker Button Delegate
-protocol MediaPickerButtonViewDelegate: class {
+protocol MediaPickerButtonViewDelegate: AnyObject {
 
     /// Called when the media picker button is pressed
     func mediaPickerButtonDidPress()

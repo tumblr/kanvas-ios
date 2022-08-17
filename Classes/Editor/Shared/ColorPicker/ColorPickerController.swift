@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol ColorPickerControllerDelegate: class {
+protocol ColorPickerControllerDelegate: AnyObject {
     /// Called when a color is selected
     ///
     /// - Parameter color: the color just selected
