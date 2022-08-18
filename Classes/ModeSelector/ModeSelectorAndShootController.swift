@@ -7,7 +7,7 @@
 import Foundation
 
 /// Protocol for handling mode selector and capture button events
-protocol ModeSelectorAndShootControllerDelegate: class {
+protocol ModeSelectorAndShootControllerDelegate: AnyObject {
     /// Function called when a mode was selected
     ///
     /// - Parameter mode: selected mode

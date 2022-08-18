@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol StrokeSelectorViewDelegate: class {
+protocol StrokeSelectorViewDelegate: AnyObject {
     /// Called when the main button is held
     ///
     /// - Parameter recognizer: the long press gesture recognizer

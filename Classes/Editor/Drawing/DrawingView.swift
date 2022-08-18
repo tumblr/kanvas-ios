@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol DrawingViewDelegate: class {
+protocol DrawingViewDelegate: AnyObject {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()

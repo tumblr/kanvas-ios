@@ -7,7 +7,7 @@
 import Foundation
 
 /// Protocol for handling CameraView's interaction.
-protocol CameraViewDelegate: class {
+protocol CameraViewDelegate: AnyObject {
     /// A function that is called when the close button is pressed
     func closeButtonPressed()
 }

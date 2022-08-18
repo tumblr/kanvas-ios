@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol StrokeSelectorControllerDelegate: class {
+protocol StrokeSelectorControllerDelegate: AnyObject {
     /// Called before the animation for onboarding begins
     func didAnimationStart()
     

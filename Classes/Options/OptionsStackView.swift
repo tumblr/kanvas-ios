@@ -12,7 +12,7 @@ private struct OptionsStackViewConstants {
     static let inset: CGFloat = -15
 }
 
-protocol OptionsStackViewDelegate: class {
+protocol OptionsStackViewDelegate: AnyObject {
     /// callback for an option button being tapped
     func optionWasTapped(section: Int, optionIndex: Int)
 }

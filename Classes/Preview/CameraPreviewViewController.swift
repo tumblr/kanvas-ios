@@ -10,7 +10,7 @@ import UIKit
 
 /// Protocol for camera preview controller methods
 
-protocol CameraPreviewControllerDelegate: class {
+protocol CameraPreviewControllerDelegate: AnyObject {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?)
 

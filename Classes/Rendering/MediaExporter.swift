@@ -21,7 +21,7 @@ enum MediaExporterError: Error {
     case noProcessedImage
 }
 
-protocol MediaExporting: class {
+protocol MediaExporting: AnyObject {
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     init(settings: CameraSettings)

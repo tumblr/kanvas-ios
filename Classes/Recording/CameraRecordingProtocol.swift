@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 
 /// A protocol for camera recording callbacks
-protocol CameraRecordingDelegate: class {
+protocol CameraRecordingDelegate: AnyObject {
 
     /// this is called before a photo is taken. It uses the returned settings (if any) for the current device
     ///

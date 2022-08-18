@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for confirming the text tools
-protocol EditorTextControllerDelegate: class {
+protocol EditorTextControllerDelegate: AnyObject {
     
     /// Called after the confirm button is tapped
     ///

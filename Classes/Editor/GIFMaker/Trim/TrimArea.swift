@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for changes in the trimming range
-protocol TrimAreaDelegate: class {
+protocol TrimAreaDelegate: AnyObject {
     func didMoveLeftSide(recognizer: UIGestureRecognizer)
     func didMoveRightSide(recognizer: UIGestureRecognizer)
 }

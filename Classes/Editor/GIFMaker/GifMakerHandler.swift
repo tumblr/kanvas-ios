@@ -47,7 +47,7 @@ func MediaFrameGetEndTimestamp(_ frames: [MediaFrame], at index: Int) -> TimeInt
     }
 }
 
-protocol GifMakerHandlerDelegate: class {
+protocol GifMakerHandlerDelegate: AnyObject {
     func didConfirmGif()
 
     func didRevertGif()

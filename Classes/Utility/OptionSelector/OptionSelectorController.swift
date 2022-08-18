@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for selecting an option.
-protocol OptionSelectorControllerDelegate: class {
+protocol OptionSelectorControllerDelegate: AnyObject {
     
     /// Called when an option is selected
     ///

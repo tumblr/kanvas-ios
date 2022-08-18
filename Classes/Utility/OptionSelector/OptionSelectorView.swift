@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for tapping or swiping the options.
-protocol OptionSelectorViewDelegate: class {
+protocol OptionSelectorViewDelegate: AnyObject {
     
     /// Called when a cell is tapped
     ///

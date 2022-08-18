@@ -14,7 +14,7 @@ private struct CameraZoomConstants {
 }
 
 /// protocol for handling the current zoom on a device
-protocol CameraZoomHandlerDelegate: class {
+protocol CameraZoomHandlerDelegate: AnyObject {
     /// Gets the current device for zooming
     var currentDeviceForZooming: AVCaptureDevice? { get }
 }
