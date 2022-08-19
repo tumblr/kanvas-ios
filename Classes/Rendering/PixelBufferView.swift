@@ -7,7 +7,7 @@
 import Foundation
 import GLKit
 
-protocol PixelBufferView: class {
+protocol PixelBufferView: AnyObject {
     var mediaTransform: GLKMatrix4? { get set }
     var mediaContentMode: UIView.ContentMode { get }
     var isPortrait: Bool { get set }

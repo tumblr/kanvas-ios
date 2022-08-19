@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for selecting items.
-protocol DiscreteSliderDelegate: class {
+protocol DiscreteSliderDelegate: AnyObject {
     /// Called when a new value is selected.
     ///
     /// - Parameter item: the selected item.

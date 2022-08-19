@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 import AVFoundation
 
-protocol CaptureDeviceAuthorizing: class {
+protocol CaptureDeviceAuthorizing: AnyObject {
 
     func requestAccess(for mediaType: AVMediaType, completionHandler: @escaping (Bool) -> ())
 
@@ -16,7 +16,7 @@ protocol CaptureDeviceAuthorizing: class {
 
 }
 
-protocol CameraPermissionsViewDelegate: class {
+protocol CameraPermissionsViewDelegate: AnyObject {
 
     func requestCameraAccess()
     
@@ -25,7 +25,7 @@ protocol CameraPermissionsViewDelegate: class {
     func openAppSettings()
 }
 
-protocol CameraPermissionsViewControllerDelegate: class {
+protocol CameraPermissionsViewControllerDelegate: AnyObject {
 
     func cameraPermissionsChanged(hasFullAccess: Bool)
 
@@ -240,6 +240,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
             }
         case .restricted, .denied, .authorized:
             return
+        @unknown default:
+            return
         }
     }
 
@@ -252,6 +254,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
                 }
             }
         case .restricted, .denied, .authorized:
+            return
+        @unknown default:
             return
         }
     }

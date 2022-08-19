@@ -15,7 +15,7 @@ private struct FilterSettingsViewConstants {
     static let height: CGFloat = collectionViewHeight + padding + iconSize
 }
 
-protocol FilterSettingsViewDelegate: class {
+protocol FilterSettingsViewDelegate: AnyObject {
     /// Callback for when the button that shows/hides the filter selector is tapped
     func didTapVisibilityButton()
 }

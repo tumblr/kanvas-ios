@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol DrawerTabBarCellDelegate: class {
+protocol DrawerTabBarCellDelegate: AnyObject {
     /// Callback method when tapping a cell
     ///
     /// - Parameters:

@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for selecting a sticker
-protocol StickerCollectionControllerDelegate: class {
+protocol StickerCollectionControllerDelegate: AnyObject {
     /// Callback for when a sticker is selected
     /// 
     /// - Parameters

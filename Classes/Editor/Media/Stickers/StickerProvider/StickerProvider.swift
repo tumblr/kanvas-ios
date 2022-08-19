@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
-public protocol StickerProviderDelegate: class {
+public protocol StickerProviderDelegate: AnyObject {
     /// Callback for when the sticker request has finished loading
     ///
     /// - Parameter stickerTypes: the collection of sticker types from the API

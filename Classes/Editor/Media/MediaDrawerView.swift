@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol MediaDrawerViewDelegate: class {
+protocol MediaDrawerViewDelegate: AnyObject {
     /// Called when the close button is tapped
     func didTapCloseButton()
 }

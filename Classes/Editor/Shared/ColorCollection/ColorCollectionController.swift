@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol ColorCollectionControllerDelegate: class {
+protocol ColorCollectionControllerDelegate: AnyObject {
     /// Callback for the selection of an color
     ///
     /// - Parameter color: the selected color

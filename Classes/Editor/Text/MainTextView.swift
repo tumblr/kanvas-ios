@@ -13,7 +13,7 @@ private struct Constants {
 }
 
 /// Protocol for the text view inside text tools
-protocol MainTextViewDelegate: class {
+protocol MainTextViewDelegate: AnyObject {
     
     /// Called when the background was touched
     func didTapBackground()

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Protocol for the text tools editor
-protocol EditorTextViewDelegate: class {
+protocol EditorTextViewDelegate: AnyObject {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()

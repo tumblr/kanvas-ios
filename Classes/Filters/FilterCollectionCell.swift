@@ -7,7 +7,7 @@
 import Foundation
 
 /// Delegate for touch events on this cell
-protocol FilterCollectionCellDelegate: class {
+protocol FilterCollectionCellDelegate: AnyObject {
     /// Callback method when tapping a cell
     ///
     /// - Parameters:

@@ -34,7 +34,7 @@ struct FullViewConstraints {
 }
 
 /// protocol for closing the preview or confirming
-protocol EditorViewDelegate: class {
+protocol EditorViewDelegate: AnyObject {
     /// Called when the confirm button is pressed
     func didTapConfirmButton()
     /// Called when the close button is pressed
