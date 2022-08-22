@@ -27,7 +27,7 @@ protocol CameraPermissionsViewDelegate: AnyObject {
 
 protocol CameraPermissionsViewControllerDelegate: AnyObject {
 
-    func cameraPermissionsChanged(hasFullAccess: Bool)
+    func cameraPermissionsCameraChanged(hasCameraAccess: Bool)
 
     func openAppSettings(completion: ((Bool) -> ())?)
 }
@@ -224,10 +224,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         super.viewWillAppear(animated)
 
         setupViewFromAccess()
-        if hasFullAccess() { return }
-        
+        if hasCameraAccess() { return }
         requestCameraAccess()
-        requestMicrophoneAccess()
     }
     
     func requestCameraAccess() {
@@ -264,8 +262,8 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         delegate?.openAppSettings(completion: nil)
     }
 
-    func hasFullAccess() -> Bool {
-        return hasCameraAccess() && hasMicrophoneAccess()
+    func hasCameraAccessOnly() -> Bool {
+        hasCameraAccess()
     }
 
     private func hasCameraAccess() -> Bool {
@@ -292,11 +290,11 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     private func setupViewFromAccessAndNotifyPermissionsChanged() {
         setupViewFromAccess()
-        delegate?.cameraPermissionsChanged(hasFullAccess: self.hasFullAccess())
+        delegate?.cameraPermissionsCameraChanged(hasCameraAccess: self.hasCameraAccess())
     }
 
     private func setupViewFromAccess() {
-        if hasFullAccess() {
+        if hasCameraAccess() {
             showIgnoreTouchesView()
         }
         else {
