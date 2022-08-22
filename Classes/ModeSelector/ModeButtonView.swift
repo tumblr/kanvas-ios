@@ -7,7 +7,7 @@
 import Foundation
 
 /// Protocol to handle mode button user actions
-protocol ModeButtonViewDelegate: class {
+protocol ModeButtonViewDelegate: AnyObject {
 
     /// Function called when mode button was tapped
     func modeButtonViewDidTap()

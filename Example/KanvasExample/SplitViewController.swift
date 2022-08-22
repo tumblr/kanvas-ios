@@ -189,7 +189,7 @@ extension SplitViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         if let index = orderedViewControllers.firstIndex(of: viewController) {
             let nextIndex = orderedViewControllers.index(after: index)
-            if orderedViewControllers.endIndex >= nextIndex {
+            if orderedViewControllers.indices.contains(nextIndex) {
                 let nextVC = orderedViewControllers[nextIndex]
                 return nextVC
             }

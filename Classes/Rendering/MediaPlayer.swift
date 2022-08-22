@@ -12,7 +12,7 @@ import OpenGLES
 import GLKit
 
 /// Delegate for MediaPlayer
-protocol MediaPlayerDelegate: class {
+protocol MediaPlayerDelegate: AnyObject {
     /// Called then the first pixel buffer is shown
     /// - Parameter image: the first frame shown
     func didDisplayFirstFrame(_ image: UIImage)
@@ -21,7 +21,7 @@ protocol MediaPlayerDelegate: class {
 }
 
 /// Delegate for MediaPlayerView
-protocol MediaPlayerViewDelegate: class {
+protocol MediaPlayerViewDelegate: AnyObject {
     /// Called when the rendering rectangle changes
     /// - Parameter rect: new rendering rectangle
     func didRenderRectChange(rect: CGRect)

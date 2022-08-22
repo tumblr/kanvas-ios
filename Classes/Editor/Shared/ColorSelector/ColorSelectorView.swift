@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for the color selector view
-protocol ColorSelectorViewDelegate: class {
+protocol ColorSelectorViewDelegate: AnyObject {
     
     /// Called when the selection circle is panned
     ///

@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol TextureSelectorControllerDelegate: class {
+protocol TextureSelectorControllerDelegate: AnyObject {
     func didSelectTexture(textureType: KanvasBrushType)
 }
 

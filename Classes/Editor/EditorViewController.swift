@@ -10,7 +10,7 @@ import UIKit
 
 /// Protocol for camera editor controller methods
 
-public protocol EditorControllerDelegate: class {
+public protocol EditorControllerDelegate: AnyObject {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
 

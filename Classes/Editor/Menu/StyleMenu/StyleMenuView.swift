@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for cell binding and touch events.
-protocol StyleMenuViewDelegate: class {
+protocol StyleMenuViewDelegate: AnyObject {
     
     /// Called to obtain the size of the collection.
     func numberOfItems() -> Int
@@ -415,7 +415,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     ///
     /// - Parameter cell: the cell.
     func getIndex(for cell: StyleMenuCell) -> Int? {
-        return cells.index(of: cell)
+        return cells.firstIndex(of: cell)
     }
     
     /// Reloads a specific cell.
@@ -482,7 +482,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
 }
 
 /// Protocol for touch events.
-private protocol StyleMenuScrollViewDelegate: class {
+private protocol StyleMenuScrollViewDelegate: AnyObject {
     
     /// Called when the scroll view is touched outside its content.
     func didTouchEmptySpace()

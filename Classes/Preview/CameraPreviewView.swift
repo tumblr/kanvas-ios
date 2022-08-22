@@ -10,7 +10,7 @@ import UIKit
 
 /// protocol for closing the preview or confirming
 
-protocol CameraPreviewViewDelegate: class {
+protocol CameraPreviewViewDelegate: AnyObject {
     /// A function that is called when the confirm button is pressed
     func confirmButtonPressed()
     /// A function that is called when the close button is pressed

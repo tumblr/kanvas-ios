@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol MediaClipsCollectionControllerDelegate: class {
+protocol MediaClipsCollectionControllerDelegate: AnyObject {
     
     /// Callback for when a clip is moved inside the collection
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)

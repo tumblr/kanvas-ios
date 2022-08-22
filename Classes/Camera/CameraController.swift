@@ -85,7 +85,7 @@ enum CameraControllerError: Swift.Error {
 
 // Protocol for dismissing CameraController
 // or exporting its created media.
-public protocol CameraControllerDelegate: class {
+public protocol CameraControllerDelegate: AnyObject {
 
     /**
      A function that is called when an image is exported. Can be nil if the export fails

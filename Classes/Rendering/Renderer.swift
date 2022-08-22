@@ -11,7 +11,7 @@ import OpenGLES
 import GLKit
 
 /// Callbacks for rendering
-protocol RendererDelegate: class {
+protocol RendererDelegate: AnyObject {
     /// Called when renderer has a processed pixel buffer ready for display. This may skip frames, so it's only
     /// intended to be used for display purposes.
     ///

@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for trimming
-protocol TrimViewDelegate: class {
+protocol TrimViewDelegate: AnyObject {
     /// Called after a trimming movement starts
     func didStartMovingTrimArea()
     

@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for movable view canvas methods
-protocol MovableViewCanvasDelegate: class {
+protocol MovableViewCanvasDelegate: AnyObject {
     /// Called when a movable view is tapped
     ///
     /// - Parameter option: text style options

@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol StickerTypeCollectionCellDelegate: class {
+protocol StickerTypeCollectionCellDelegate: AnyObject {
     /// Callback method when selecting a cell
     ///
     /// - Parameters:

@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol FilterSettingsControllerDelegate: class {
+protocol FilterSettingsControllerDelegate: AnyObject {
     /// Callback for when a filter item is selected
     ///
     /// - Parameter filterItem: the selected filter

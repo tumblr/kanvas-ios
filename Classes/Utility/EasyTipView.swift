@@ -10,7 +10,7 @@
 import UIKit
 import Foundation
 
-public protocol EasyTipViewDelegate: class {
+public protocol EasyTipViewDelegate: AnyObject {
     func easyTipViewDidDismiss(_ tipView: EasyTipView)
 }
 

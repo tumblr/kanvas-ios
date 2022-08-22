@@ -21,7 +21,7 @@ private struct Constants {
     static let nextButtonCenterYOffset: CGFloat = KanvasDesign.shared.mediaClipsEditorViewNextButtonCenterYOffset
 }
 
-protocol MediaClipsEditorViewDelegate: class {
+protocol MediaClipsEditorViewDelegate: AnyObject {
     /// Callback for when next button is selected
     func nextButtonWasPressed()
     func addButtonWasPressed()
