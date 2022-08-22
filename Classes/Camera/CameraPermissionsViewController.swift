@@ -27,7 +27,9 @@ protocol CameraPermissionsViewDelegate: AnyObject {
 
 protocol CameraPermissionsViewControllerDelegate: AnyObject {
 
-    func cameraPermissionsCameraChanged(hasCameraAccess: Bool)
+    func cameraPermissionsChanged(hasCameraAccess: Bool)
+
+    func micPermissionsChanged(hasMicAccess: Bool)
 
     func openAppSettings(completion: ((Bool) -> ())?)
 }
@@ -225,6 +227,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
         setupViewFromAccess()
         if hasCameraAccess() { return }
+        
         requestCameraAccess()
     }
     
@@ -262,11 +265,17 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         delegate?.openAppSettings(completion: nil)
     }
 
-    func hasCameraAccessOnly() -> Bool {
-        hasCameraAccess()
+    // public accessor
+    func hasCameraAccess() -> Bool {
+        hasCameraAuthorized()
     }
 
-    private func hasCameraAccess() -> Bool {
+    // public acessor
+    func hasMicrophoneAccess() -> Bool {
+        hasMicrophoneAuthorized()
+    }
+
+    private func hasCameraAuthorized() -> Bool {
         switch captureDeviceAuthorizer.authorizationStatus(for: .video) {
         case .notDetermined, .restricted, .denied:
             return false
@@ -277,7 +286,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
         }
     }
 
-    private func hasMicrophoneAccess() -> Bool {
+    private func hasMicrophoneAuthorized() -> Bool {
         switch captureDeviceAuthorizer.authorizationStatus(for: .audio) {
         case .notDetermined, .restricted, .denied:
             return false
@@ -290,7 +299,7 @@ class CameraPermissionsViewController: UIViewController, CameraPermissionsViewDe
 
     private func setupViewFromAccessAndNotifyPermissionsChanged() {
         setupViewFromAccess()
-        delegate?.cameraPermissionsCameraChanged(hasCameraAccess: self.hasCameraAccess())
+        delegate?.cameraPermissionsChanged(hasCameraAccess: self.hasCameraAccess())
     }
 
     private func setupViewFromAccess() {

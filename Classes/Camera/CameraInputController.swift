@@ -217,8 +217,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     func setupCaptureSession() {
         let frameSize = view.frame.size
         previewBlurView.effect = CameraInputController.blurEffect()
-        let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
-        guard hasFullAccess else {
+        let hasCameraAccess = delegate?.cameraInputControllerHasCameraAccess() ?? true
+        guard hasCameraAccess else {
             return
         }
         sessionQueue.async { [weak self] in
@@ -419,6 +419,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
     /// - Returns: return true if successfully started recording
     func startRecording(on mode: CameraMode) -> Bool {
         guard let recorder = self.recorder else { return false }
+//        let hasMicAccess = delegate?.cameraInputControllerHasMicAccess() ?? true
+//        guard hasMicAccess else {
+//            return false
+//        }
         startAudioSession()
         addArtificialFlashIfNecessary()
         recorder.startRecordingVideo(on: mode)
@@ -596,8 +600,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             }
         }
         
-        let microphoneSession =  AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone], mediaType: AVMediaType.audio, position: .unspecified)
-        microphone = microphoneSession.devices.first
+//        let microphoneSession =  AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone], mediaType: AVMediaType.audio, position: .unspecified)
+//        microphone = microphoneSession.devices.first
     }
 
     /// Configures Camera Inputs. Must be called from the sessionQueue.
@@ -744,6 +748,15 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     func cameraWillTakeVideo() {
         guard let camera = currentDevice else { return }
+
+        // check for microphone access
+        let microphoneSession =  AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone], mediaType: AVMediaType.audio, position: .unspecified)
+        microphone = microphoneSession.devices.first
+        let hasMicAccess = delegate?.cameraInputControllerHasMicAccess() ?? true
+        guard hasMicAccess else {
+            return
+        }
+
         if flashMode == .on {
             if camera.hasTorch && camera.isTorchModeSupported(.on) {
                 do {

@@ -349,7 +349,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
             showPreviewWithSegments(segments, selected: segments.startIndex, edits: edits, animated: false)
             showPreview = false
         }
-        if delegate?.cameraShouldShowWelcomeTooltip() == true && cameraPermissionsViewController.hasFullAccess() {
+        if delegate?.cameraShouldShowWelcomeTooltip() == true && cameraPermissionsViewController.hasCameraAccess() {
             showWelcomeTooltip()
         }
     }
@@ -1081,8 +1081,12 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         cameraZoomHandler.setZoom(gesture: gesture)
     }
 
-    func cameraInputControllerHasFullAccess() -> Bool {
-        return cameraPermissionsViewController.hasFullAccess()
+    func cameraInputControllerHasCameraAccess() -> Bool {
+        return cameraPermissionsViewController.hasCameraAccess()
+    }
+
+    func cameraInputControllerHasMicAccess() -> Bool {
+        return cameraPermissionsViewController.hasMicrophoneAccess()
     }
     
     // MARK: - FilterSettingsControllerDelegate
@@ -1113,8 +1117,15 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
 
     // MARK: - CameraPermissionsViewControllerDelegate
 
-    func cameraPermissionsChanged(hasFullAccess: Bool) {
-        if hasFullAccess {
+    func cameraPermissionsChanged(hasCameraAccess: Bool) {
+        if hasCameraAccess {
+            cameraInputController.setupCaptureSession()
+            toggleMediaPicker(visible: true, animated: false)
+        }
+    }
+
+    func micPermissionsChanged(hasMicAccess: Bool) {
+        if hasMicAccess {
             cameraInputController.setupCaptureSession()
             toggleMediaPicker(visible: true, animated: false)
         }
@@ -1133,7 +1144,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     ///   - animated: Whether to animate the transition.
     private func toggleMediaPicker(visible: Bool, animated: Bool = true) {
         if visible {
-            if !filterSettingsController.isFilterSelectorVisible() && cameraPermissionsViewController.hasFullAccess() {
+            if !filterSettingsController.isFilterSelectorVisible() && cameraPermissionsViewController.hasCameraAccess() {
                 modeAndShootController.showMediaPickerButton(basedOn: currentMode, animated: animated)
             }
             else {
