@@ -17,5 +17,7 @@ protocol CameraInputControllerDelegate: AnyObject {
     ///   - gesture: the pinch gesture
     func cameraInputControllerPinched(gesture: UIPinchGestureRecognizer)
 
-    func cameraInputControllerHasFullAccess() -> Bool
+    func cameraInputControllerHasCameraAccess() -> Bool
+
+    func cameraInputControllerHasMicAccess() -> Bool
 }
