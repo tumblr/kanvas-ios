@@ -2,7 +2,8 @@
 
 # Kanvas
 
-[![Build status](https://badge.buildkite.com/7c8558667703d6147550801644af0f394019d6e7b2daed739f.svg)](https://buildkite.com/automattic/kanvas-ios)
+
+[![Build status](https://badge.buildkite.com/7c8558667703d6147550801644af0f394019d6e7b2daed739f.svg?branch=main)](https://buildkite.com/automattic/kanvas-ios)
 
 ![Cocoapods](https://img.shields.io/cocoapods/v/Kanvas)
 
