@@ -147,7 +147,6 @@ class MultiEditorViewController: UIViewController {
                 self?.clipsController.removeDraggingClip()
             }
             load(childViewController: editor, into: editorContainer)
-
             if current {
                 currentEditor = editor
             } else {
