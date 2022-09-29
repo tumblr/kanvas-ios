@@ -227,6 +227,9 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
         if selected == nil {
             dismissButtonPressed()
         }
+        
+        /// The editor does not layout automatically after we delete a clip and load another image
+        editorContainer.layoutIfNeeded()
     }
     
     func mediaClipWasAdded(at index: Int) {
