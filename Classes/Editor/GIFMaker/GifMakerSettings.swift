@@ -4,6 +4,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import Foundation
+
 struct GIFMakerSettings {
 
     static let defaultRate: Float = 1.0

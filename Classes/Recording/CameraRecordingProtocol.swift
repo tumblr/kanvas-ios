@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import UIKit
 
 /// A protocol for camera recording callbacks
 protocol CameraRecordingDelegate: AnyObject {

@@ -6,6 +6,7 @@
 
 import Foundation
 import os
+import UIKit
 
 protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func didFinishExporting(media: [Result<EditorViewController.ExportResult, Error>])

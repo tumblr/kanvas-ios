@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Protocol for handling CameraView's interaction.
 protocol CameraViewDelegate: AnyObject {

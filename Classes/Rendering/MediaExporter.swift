@@ -7,6 +7,7 @@
 import Foundation
 import AVFoundation
 import Photos
+import UIKit
 
 /// Errors that can be thrown from MediaExporter
 enum MediaExporterError: Error {

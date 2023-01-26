@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 private struct LoadingIndicatorConstants {
     static let backgroundColor = UIColor.black.withAlphaComponent(0.7)
