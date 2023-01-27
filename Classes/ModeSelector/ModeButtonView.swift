@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Protocol to handle mode button user actions
 protocol ModeButtonViewDelegate: AnyObject {

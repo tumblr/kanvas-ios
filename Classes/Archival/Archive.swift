@@ -4,6 +4,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import Foundation
+import UIKit
+
 /// The class containing an image or video and associated data (an encoded representation of the edits).
 class Archive: NSObject, NSSecureCoding {
     static var supportsSecureCoding: Bool = true

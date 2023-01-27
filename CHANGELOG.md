@@ -32,6 +32,8 @@ _None._
 
 ## Unreleased
 
+- Fixes issues with files missing imports. [#149]
+
 ### Breaking Changes
 
 _None._

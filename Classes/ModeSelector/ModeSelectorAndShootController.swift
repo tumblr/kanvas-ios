@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Protocol for handling mode selector and capture button events
 protocol ModeSelectorAndShootControllerDelegate: AnyObject {

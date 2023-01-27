@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 private struct ModeSelectorAndShootViewConstants {
     static let tooltipTopMargin: CGFloat = 13.5

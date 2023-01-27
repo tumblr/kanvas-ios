@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Extension for linear interpolation (lerp) and creation of RGBA components
 extension UIColor {

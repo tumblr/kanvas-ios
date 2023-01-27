@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Extension for simplifying resizing fonts
 extension UIFont {

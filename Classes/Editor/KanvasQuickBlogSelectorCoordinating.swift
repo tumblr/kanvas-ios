@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol KanvasQuickBlogSelectorCoordinating {
 
