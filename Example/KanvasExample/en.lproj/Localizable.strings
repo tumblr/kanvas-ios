@@ -90,3 +90,6 @@
 
 /* Label for the 'Close' option in the editor tools */
 "EditorClose" = "Close";
+
+/* Label for the 'Crop & Rotate' option in the editor tools */
+"EditorCropRotate" = "Crop & Rotate";

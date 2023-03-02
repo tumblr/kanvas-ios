@@ -995,6 +995,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             showMainUI(true)
         case .media:
             analyticsProvider?.logEditorMediaDrawerClosed()
+        case .cropRotate:
+            //TODO: ?
+            break
         }
         
         onAfterConfirmingEditionMenu()
@@ -1055,6 +1058,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorMediaDrawerOpen()
             openMediaDrawer()
+        case .cropRotate:
+            //TODO: Crop Rotate
+            break
         }
     }
     

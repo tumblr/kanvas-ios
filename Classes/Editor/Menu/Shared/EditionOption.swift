@@ -13,6 +13,7 @@ enum EditionOption: Int {
     case text
     case media
     case drawing
+    case cropRotate
     
     var text: String {
         switch self {
@@ -26,6 +27,8 @@ enum EditionOption: Int {
             return NSLocalizedString("EditorMedia", comment: "Label for the media option in the editor tools")
         case .drawing:
             return NSLocalizedString("EditorDrawing", comment: "Label for the drawing option in the editor tools")
+        case .cropRotate:
+            return NSLocalizedString("EditorCropRotate", comment: "Label for the crop rotate option in the editor tools")
         }
     }
 }
