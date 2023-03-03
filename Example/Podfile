@@ -9,7 +9,8 @@ project 'KanvasExample.xcodeproj'
 
 target 'KanvasExample' do
   pod 'Kanvas', path: '../'
-
+  pod 'CropViewController'
+  
   target 'KanvasExampleTests' do
     inherit! :search_paths
     use_frameworks!
