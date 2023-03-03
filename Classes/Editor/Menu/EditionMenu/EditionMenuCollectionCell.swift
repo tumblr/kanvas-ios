@@ -59,7 +59,13 @@ final class EditionMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuCol
     ///  - option: The edition menu to display
     ///  - enabled: Whether the option is on or off.
     func bindTo(_ option: EditionOption, enabled: Bool) {
-        iconView.image = KanvasImages.editionOptionTypes(option, enabled: enabled)
+        if option == .cropRotate {
+            iconView.image = KanvasImages.editionOptionTypes(option, enabled: enabled)?.withRenderingMode(.alwaysTemplate)
+            iconView.tintColor = .white
+        }
+        else {
+            iconView.image = KanvasImages.editionOptionTypes(option, enabled: enabled)
+        }
     }
     
     

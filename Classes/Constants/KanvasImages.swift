@@ -92,6 +92,7 @@ public struct KanvasImages {
         .text: [UIImage.imageFromCameraBundle(named: "editorText")],
         .media: [UIImage.imageFromCameraBundle(named: "editorMedia")],
         .drawing: [UIImage.imageFromCameraBundle(named: "editorDraw")],
+        .cropRotate: [UIImage.imageFromCameraBundle(named: "editorCropRotate")]
     ]
     
     static let styleIcons: [EditionOption: [UIImage?]] = [
