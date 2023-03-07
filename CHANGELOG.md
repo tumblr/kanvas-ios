@@ -33,6 +33,7 @@ _None._
 ## Unreleased
 
 - Fixes issues with files missing imports. [#149]
+- Adds Crop & Rotate capabilities to the editor. [#150]
 
 ### Breaking Changes
 
