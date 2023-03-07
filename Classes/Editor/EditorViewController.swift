@@ -7,6 +7,7 @@
 import AVFoundation
 import Foundation
 import UIKit
+import CropViewController
 
 /// Protocol for camera editor controller methods
 
@@ -71,7 +72,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate, CropViewControllerDelegate {
 
     enum Media {
         case image(UIImage)
@@ -996,7 +997,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .media:
             analyticsProvider?.logEditorMediaDrawerClosed()
         case .cropRotate:
-            //TODO: ?
             break
         }
         
@@ -1059,9 +1059,30 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             analyticsProvider?.logEditorMediaDrawerOpen()
             openMediaDrawer()
         case .cropRotate:
-            //TODO: Crop Rotate
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
+            analyticsProvider?.logEditorCropRotateOpen()
+            showCropRotateController()
             break
         }
+    }
+    
+    private func showCropRotateController() {
+        guard let image: UIImage = segments.first?.image else {
+            return
+        }
+        let cropViewController = CropViewController(image: image)
+        cropViewController.delegate = self
+        present(cropViewController, animated: true, completion: nil)
+    }
+    
+    // MARK: CropViewControllerDelegate
+    
+    public func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        originalSegments = [CameraSegment.image(image, nil, nil, MediaInfo(source: .media_library))]
+        player.renderer.refreshFilter()
+        restartPlayback()
+        dismiss(animated: true)
+        onAfterConfirmingEditionMenu()
     }
     
     /// Prepares the editor state to show an edition menu
