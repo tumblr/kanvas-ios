@@ -204,12 +204,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
     
+    private var cropRotateApplied: Bool = false
+    
     private var mediaChanged: Bool {
         let hasStickerOrText = !editorView.movableViewCanvas.isEmpty
         let filterApplied = filterType?.filterApplied ?? false
         let hasDrawings = !drawingController.isEmpty
         let gifMakerOpened = shouldExportMediaAsGIF
-        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened
+        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened || cropRotateApplied
     }
 
     private var editingNewText: Bool = true
@@ -369,8 +371,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
-
-
 
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
@@ -1072,6 +1072,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
         let cropViewController = CropViewController(image: image)
         cropViewController.delegate = self
+        cropRotateApplied = false
         present(cropViewController, animated: true, completion: nil)
     }
     
@@ -1081,6 +1082,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         originalSegments = [CameraSegment.image(image, nil, nil, MediaInfo(source: .media_library))]
         player.renderer.refreshFilter()
         restartPlayback()
+        cropRotateApplied = true
         dismiss(animated: true)
         onAfterConfirmingEditionMenu()
     }
