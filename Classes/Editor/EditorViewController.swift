@@ -1080,6 +1080,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     public func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
         originalSegments = [CameraSegment.image(image, nil, nil, MediaInfo(source: .media_library))]
+        player.playerView?.pixelBufferView?.reset()
         player.renderer.refreshFilter()
         restartPlayback()
         cropRotateApplied = true
