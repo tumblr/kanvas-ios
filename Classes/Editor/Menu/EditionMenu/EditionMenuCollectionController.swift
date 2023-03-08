@@ -44,7 +44,7 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditorMenuC
             editionOptions.append(.filter)
         }
         
-        if settings.features.editorCropRotate {
+        if settings.features.editorCropRotate && !(shouldExportMediaAsGIF ?? false) {
             editionOptions.append(.cropRotate)
         }
         
