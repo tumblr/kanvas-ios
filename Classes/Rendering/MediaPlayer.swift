@@ -51,8 +51,9 @@ enum MediaPlayerPlaybackMode {
 /// View for rendering the player.
 final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
-    weak var pixelBufferView: PixelBufferView?
-
+    weak var pixelBufferView: (PixelBufferView & UIView)?
+    private var metalContext: MetalContext?
+    private var mediaContentMode: UIView.ContentMode
     weak var delegate: MediaPlayerViewDelegate?
 
     var mediaTransform: GLKMatrix4? {
@@ -68,8 +69,13 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
      }
 
     init(metalContext: MetalContext?, mediaContentMode: UIView.ContentMode) {
+        self.metalContext = metalContext
+        self.mediaContentMode = mediaContentMode
         super.init(frame: .zero)
+        createPixelBufferView()
+    }
 
+    private func createPixelBufferView() {
         let pixelBufferView: PixelBufferView & UIView
 
         if let metalContext = metalContext {
@@ -86,6 +92,11 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func reset() {
+        pixelBufferView?.removeFromSuperview()
+        createPixelBufferView()
+    }
+    
     // MARK: - GLPixelBufferViewDelegate
 
     func didRenderRectChange(rect: CGRect) {
