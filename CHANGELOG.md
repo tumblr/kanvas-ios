@@ -30,10 +30,12 @@ _None._
 
 -->
 
-## Unreleased
+## 1.4.6
 
 - Fixes issues with files missing imports. [#149]
 - Adds Crop & Rotate capabilities to the editor. [#150]
+
+## Unreleased
 
 ### Breaking Changes
 
