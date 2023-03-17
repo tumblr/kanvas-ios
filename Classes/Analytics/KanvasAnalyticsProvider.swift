@@ -236,6 +236,9 @@ public protocol KanvasAnalyticsProvider {
     /// Logs an event when the drawing button is tapped in the editor
     func logEditorDrawingOpen()
 
+    /// Logs an event when the crop & rotate button is tapped in the editor
+    func logEditorCropRotateOpen()
+    
     /// Logs an event when the stroke size is changed
     /// - Parameter strokeSize: the size of the stroke, between 0 and 1
     func logEditorDrawingChangeStrokeSize(strokeSize: Float)

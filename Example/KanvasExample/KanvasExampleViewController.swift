@@ -136,6 +136,7 @@ final class KanvasExampleViewController: UIViewController {
         settings.features.editorText = true
         settings.features.editorMedia = true
         settings.features.editorDrawing = true
+        settings.features.editorCropRotate = true
         settings.features.mediaPicking = true
         settings.features.editorPosting = true
         settings.features.editorSaving = true
@@ -267,6 +268,7 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             .editorText(settings.features.editorText),
             .editorMedia(settings.features.editorMedia),
             .editorDrawing(settings.features.editorDrawing),
+            .editorCropRotate(settings.features.editorCropRotate),
             .mediaPicking(settings.features.mediaPicking),
             .editorSaving(settings.features.editorSaving),
             .editorPosting(settings.features.editorPosting),
@@ -313,6 +315,8 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
             settings.features.editorMedia = value
         case .editorDrawing(_):
             settings.features.editorDrawing = value
+        case .editorCropRotate(_):
+            settings.features.editorCropRotate = value
         case .mediaPicking(_):
             settings.features.mediaPicking = value
         case .editorPosting(_):

@@ -20,6 +20,7 @@ protocol EditionMenuCollectionCellDelegate: AnyObject {
 private struct Constants {
     static let circleDiameter: CGFloat = 50
     static let padding: CGFloat = 8
+    static let vectorIconHeight = Self.circleDiameter * 0.5
     
     static let animationDuration: TimeInterval = 0.25
     
@@ -37,8 +38,17 @@ final class EditionMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuCol
     
     static let height = Constants.height
     static let width = Constants.width
+    private var iconViewHeightConstraint: NSLayoutConstraint?
     
     let iconView: UIImageView
+    
+    private lazy var shadeView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .black.withAlphaComponent(0.5)
+        view.layer.cornerRadius = Constants.vectorIconHeight
+        return view
+    }()
     
     weak var delegate: EditionMenuCollectionCellDelegate?
         
@@ -59,7 +69,16 @@ final class EditionMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuCol
     ///  - option: The edition menu to display
     ///  - enabled: Whether the option is on or off.
     func bindTo(_ option: EditionOption, enabled: Bool) {
-        iconView.image = KanvasImages.editionOptionTypes(option, enabled: enabled)
+        if option == .cropRotate {
+            iconView.image = KanvasImages.editionOptionTypes(option, enabled: enabled)?.withRenderingMode(.alwaysTemplate)
+            iconView.tintColor = .white
+            iconViewHeightConstraint?.constant = Constants.vectorIconHeight
+            shadeView.isHidden = false
+        }
+        else {
+            iconView.image = KanvasImages.editionOptionTypes(option, enabled: enabled)
+            shadeView.isHidden = true
+        }
     }
     
     
@@ -68,23 +87,30 @@ final class EditionMenuCollectionCell: UICollectionViewCell, KanvasEditorMenuCol
         super.prepareForReuse()
         iconView.image = nil
         iconView.backgroundColor = nil
+        shadeView.isHidden = true
     }
     
     // MARK: - Layout
     
     private func setUpView() {
+        contentView.addSubview(shadeView)
         contentView.addSubview(iconView)
         iconView.accessibilityIdentifier = "Edition Menu Cell Icon View"
         iconView.translatesAutoresizingMaskIntoConstraints = false
         iconView.contentMode = .scaleAspectFill
         iconView.clipsToBounds = true
         iconView.layer.masksToBounds = true
+        iconViewHeightConstraint = iconView.heightAnchor.constraint(equalToConstant: Constants.circleDiameter)
+        iconViewHeightConstraint?.isActive = true
         
         NSLayoutConstraint.activate([
+            shadeView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            shadeView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            shadeView.widthAnchor.constraint(equalToConstant: Constants.circleDiameter),
+            shadeView.heightAnchor.constraint(equalToConstant: Constants.circleDiameter),
             iconView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
             iconView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
-            iconView.heightAnchor.constraint(equalToConstant: Constants.circleDiameter),
-            iconView.widthAnchor.constraint(equalToConstant: Constants.circleDiameter)
+            iconView.widthAnchor.constraint(equalTo: iconView.heightAnchor)
         ])
     }
     

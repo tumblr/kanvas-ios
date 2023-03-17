@@ -7,6 +7,7 @@
 import AVFoundation
 import Foundation
 import UIKit
+import CropViewController
 
 /// Protocol for camera editor controller methods
 
@@ -71,7 +72,7 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate, CropViewControllerDelegate {
 
     enum Media {
         case image(UIImage)
@@ -203,12 +204,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
     
+    private var cropRotateApplied: Bool = false
+    
     private var mediaChanged: Bool {
         let hasStickerOrText = !editorView.movableViewCanvas.isEmpty
         let filterApplied = filterType?.filterApplied ?? false
         let hasDrawings = !drawingController.isEmpty
         let gifMakerOpened = shouldExportMediaAsGIF
-        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened
+        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened || cropRotateApplied
     }
 
     private var editingNewText: Bool = true
@@ -368,8 +371,6 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
         self.tagCollection = tagCollection
-
-
 
         let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
         self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
@@ -995,6 +996,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             showMainUI(true)
         case .media:
             analyticsProvider?.logEditorMediaDrawerClosed()
+        case .cropRotate:
+            break
         }
         
         onAfterConfirmingEditionMenu()
@@ -1055,7 +1058,34 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorMediaDrawerOpen()
             openMediaDrawer()
+        case .cropRotate:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
+            analyticsProvider?.logEditorCropRotateOpen()
+            showCropRotateController()
+            break
         }
+    }
+    
+    private func showCropRotateController() {
+        guard let image: UIImage = segments.first?.image else {
+            return
+        }
+        let cropViewController = CropViewController(image: image)
+        cropViewController.delegate = self
+        cropRotateApplied = false
+        present(cropViewController, animated: true, completion: nil)
+    }
+    
+    // MARK: CropViewControllerDelegate
+    
+    public func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        originalSegments = [CameraSegment.image(image, nil, nil, MediaInfo(source: .media_library))]
+        player.playerView?.reset()
+        player.renderer.refreshFilter()
+        restartPlayback()
+        cropRotateApplied = true
+        dismiss(animated: true)
+        onAfterConfirmingEditionMenu()
     }
     
     /// Prepares the editor state to show an edition menu

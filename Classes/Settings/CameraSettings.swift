@@ -125,6 +125,10 @@ public struct CameraFeatures {
     /// This enables the UI to draw in the editor.
     public var editorDrawing: Bool = false
     
+    /// The Editor Crop Rotate feature
+    /// This enables the UI to crop & rotate your image in the editor.
+    public var editorCropRotate: Bool = false
+
     /// The Media Picker feature
     /// This enables the UI to pick media instead of using the camera.
     public var mediaPicking: Bool = false

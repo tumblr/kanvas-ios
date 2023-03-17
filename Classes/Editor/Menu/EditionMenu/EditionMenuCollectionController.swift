@@ -44,6 +44,10 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditorMenuC
             editionOptions.append(.filter)
         }
         
+        if settings.features.editorCropRotate {
+            editionOptions.append(.cropRotate)
+        }
+        
         if settings.features.editorText {
             editionOptions.append(.text)
         }

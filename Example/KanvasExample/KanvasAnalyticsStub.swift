@@ -98,6 +98,10 @@ final public class KanvasAnalyticsStub: NSObject, KanvasAnalyticsProvider {
         logString(string: "logEditorOpen")
     }
 
+    public func logEditorCropRotateOpen() {
+        logString(string: "logEditorCropRotateOpen")
+    }
+    
     public func logEditorBack() {
         logString(string: "logEditorBack")
     }

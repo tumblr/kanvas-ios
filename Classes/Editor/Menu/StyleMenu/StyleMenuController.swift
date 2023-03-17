@@ -60,6 +60,10 @@ final class StyleMenuController: UIViewController, KanvasEditorMenuController, S
             editionOptions.append(.gif)
         }
         
+        if settings.features.editorCropRotate {
+            editionOptions.append(.cropRotate)
+        }
+        
         super.init(nibName: .none, bundle: .none)
     }
     

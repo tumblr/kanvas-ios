@@ -28,6 +28,7 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
         case editorText(Bool)
         case editorMedia(Bool)
         case editorDrawing(Bool)
+        case editorCropRotate(Bool)
         case mediaPicking(Bool)
         case editorSaving(Bool)
         case editorPosting(Bool)
@@ -73,6 +74,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
                 return "Editor Media"
             case .editorDrawing(_):
                 return "Editor Drawing"
+            case .editorCropRotate(_):
+                return "Editor Crop & Rotate"
             case .mediaPicking(_):
                 return "Media Picking"
             case .editorPosting(_):
@@ -135,6 +138,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             case .editorMedia(let enabled):
                 return enabled
             case .editorDrawing(let enabled):
+                return enabled
+            case .editorCropRotate(let enabled):
                 return enabled
             case .mediaPicking(let enabled):
                 return enabled
@@ -236,6 +241,8 @@ class FeatureTableView: UIView, UITableViewDelegate, UITableViewDataSource, Feat
             featuresData[indexPath.row] = .editorMedia(value)
         case .editorDrawing(_):
             featuresData[indexPath.row] = .editorDrawing(value)
+        case .editorCropRotate(_):
+            featuresData[indexPath.row] = .editorCropRotate(value)
         case .mediaPicking(_):
             featuresData[indexPath.row] = .mediaPicking(value)
         case .editorPosting(_):
