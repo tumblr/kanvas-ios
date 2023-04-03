@@ -1071,6 +1071,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             return
         }
         let cropViewController = CropViewController(image: image)
+        cropViewController.aspectRatioLockDimensionSwapEnabled = true
         cropViewController.delegate = self
         cropRotateApplied = false
         present(cropViewController, animated: true, completion: nil)

@@ -30,6 +30,10 @@ _None._
 
 -->
 
+## 1.4.7
+
+- The crop box starts to swap its dimensions depending on portrait or landscape sized images. [#152]
+
 ## 1.4.6
 
 - Fixes issues with files missing imports. [#149]
