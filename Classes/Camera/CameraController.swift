@@ -277,6 +277,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         fatalError("init(nibName:bundle:) has not been implemented")
     }
+    
+    deinit {
+        task?.cancel()
+    }
 
     override public var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -975,16 +979,20 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         }
     }
 
-    lazy var queue = DispatchQueue.global(qos: .background)
+    private var task: Task<Void, Error>?
 
     var exportCancellable: Any?
 
     func didFinishExporting(media result: [Result<EditorViewController.ExportResult, Error>]) {
-
-        let archiver = MediaArchiver(saveDirectory: saveDirectory)
-
-        queue.async { [weak self] in
-            guard let self = self else { return }
+        task = Task.detached(priority: .background) { [weak self] in
+            await self?.exportingDidFinishHandler(from: result)
+        }
+    }
+    
+    private func exportingDidFinishHandler(from result: [Result<EditorViewController.ExportResult, Error>]) async {
+        Task { [weak self] in
+            guard let self else { return }
+            
             let exports: [EditorViewController.ExportResult?] = result.map { result in
                 switch result {
                 case .success(let export):
@@ -993,8 +1001,10 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                     return nil
                 }
             }
-
+            
+            let archiver = MediaArchiver(saveDirectory: saveDirectory)
             let publishers = archiver.handle(exports: exports)
+            
             self.exportCancellable = publishers.receive(on: DispatchQueue.main).sink { completion in
                 self.multiEditorViewController?.hideLoading()
             } receiveValue: { items in
