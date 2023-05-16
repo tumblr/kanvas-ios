@@ -100,12 +100,7 @@ final class MediaExporter: MediaExporting {
     
     func export(frames: [MediaFrame], toSize: CGSize?, completion: @escaping ([MediaFrame]) -> Void) {
         
-        exportFramesTask = Task.detached(priority: .medium) { [weak self] in
-            guard let self else {
-                completion([])
-                return
-            }
-            
+        exportFramesTask = Task.detached(priority: .medium) {
             var processedFrames: [MediaFrame] = []
             var time: TimeInterval = 0
             for frame in frames {
