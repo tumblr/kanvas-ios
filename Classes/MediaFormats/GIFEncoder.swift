@@ -80,9 +80,17 @@ final class GIFEncoderImageIO: GIFEncoder {
     private struct Constants {
         static let timeScale: CMTimeScale = CMTimeScale(600)
     }
+    
+    private var encodeFramesTask: Task<Void, Error>?
+    private var encodeVideoTask: Task<Void, Error>?
 
     init() {
 
+    }
+    
+    deinit {
+        encodeFramesTask?.cancel()
+        encodeVideoTask?.cancel()
     }
 
     func encode(frames: [(image: UIImage, interval: TimeInterval)], loopCount: Int, completion: @escaping (URL?) -> Void) {
@@ -98,9 +106,9 @@ final class GIFEncoderImageIO: GIFEncoder {
                 completion(url)
             }
         }
-
-        DispatchQueue.global(qos: .default).async {
-
+        
+        encodeFramesTask = Task.detached(priority: .medium) {
+            
             let getFileProperties = { (loopCount: Int) in
                 return [
                     kCGImagePropertyGIFDictionary: [
@@ -108,7 +116,7 @@ final class GIFEncoderImageIO: GIFEncoder {
                     ]
                 ]
             }
-
+            
             let getFrameProperties = { (delayTime: TimeInterval) in
                 return [
                     kCGImagePropertyGIFDictionary: [
@@ -117,17 +125,17 @@ final class GIFEncoderImageIO: GIFEncoder {
                     ]
                 ]
             }
-
+            
             let timeEncodedFileName = String(format: "%@-%lu.gif", "kanvas-gif", Date().timeIntervalSince1970)
             let temporaryFile = NSTemporaryDirectory().appending(timeEncodedFileName)
             let fileURL = URL(fileURLWithPath: temporaryFile)
-
+            
             guard let destination = CGImageDestinationCreateWithURL(fileURL as CFURL, kUTTypeGIF, frames.count, nil) else {
                 completionMain(nil)
                 return
             }
             CGImageDestinationSetProperties(destination, getFileProperties(loopCount) as CFDictionary)
-
+            
             for frame in frames {
                 autoreleasepool {
                     if let image = frame.image.cgImage {
@@ -140,13 +148,13 @@ final class GIFEncoderImageIO: GIFEncoder {
                     }
                 }
             }
-
+            
             guard CGImageDestinationFinalize(destination) else {
                 assertionFailure("Failed to finalize GIF destination")
                 completionMain(nil)
                 return
             }
-
+            
             completionMain(fileURL)
         }
     }
@@ -158,9 +166,9 @@ final class GIFEncoderImageIO: GIFEncoder {
                 completion(url)
             }
         }
-
-        DispatchQueue.global(qos: .default).async {
-
+        
+        encodeVideoTask = Task.detached(priority: .medium) {
+            
             let getFileProperties = { (loopCount: Int) in
                 return [
                     kCGImagePropertyGIFDictionary: [
@@ -168,7 +176,7 @@ final class GIFEncoderImageIO: GIFEncoder {
                     ]
                 ]
             }
-
+            
             let getFrameProperties = { (delayTime: TimeInterval) in
                 return [
                     kCGImagePropertyGIFDictionary: [
@@ -177,36 +185,36 @@ final class GIFEncoderImageIO: GIFEncoder {
                     ]
                 ]
             }
-
+            
             let asset = AVAsset(url: url)
             let gifSize = GIFSize(size: asset.videoScreenSize ?? .zero)
-
+            
             let videoLength = Double(asset.duration.value) / Double(asset.duration.timescale)
             let frameCount = Int(videoLength * Double(framesPerSecond))
             let increment = videoLength / Double(frameCount)
-
+            
             var timePoints: [CMTime] = []
             for currentFrame in 0..<frameCount {
                 let seconds = increment * Double(currentFrame)
                 let time = CMTime(seconds: seconds, preferredTimescale: Constants.timeScale)
                 timePoints.append(time)
             }
-
+            
             let timeEncodedFileName = String(format: "%@-%lu.gif", "kanvas-gif", Date().timeIntervalSince1970)
             let temporaryFile = NSTemporaryDirectory().appending(timeEncodedFileName)
             let fileURL = URL(fileURLWithPath: temporaryFile)
-
+            
             guard let destination = CGImageDestinationCreateWithURL(fileURL as CFURL, kUTTypeGIF, frameCount, nil) else {
                 completionMain(nil)
                 return
             }
             CGImageDestinationSetProperties(destination, getFileProperties(loopCount) as CFDictionary)
-
+            
             let generator = AVAssetImageGenerator(asset: asset)
             generator.appliesPreferredTrackTransform = true
             generator.requestedTimeToleranceBefore = .zero
             generator.requestedTimeToleranceAfter = .zero
-
+            
             // AVAssetImageGenerator.generateCGImagesAsynchronously would be a more
             // efficient alternative to looping through all the times and calling
             // AVAssetImageGenerator.copyCGImage.
@@ -221,12 +229,12 @@ final class GIFEncoderImageIO: GIFEncoder {
                     return
                 }
             }
-
+            
             guard CGImageDestinationFinalize(destination) else {
                 completionMain(nil)
                 return
             }
-
+            
             completionMain(fileURL)
         }
     }
