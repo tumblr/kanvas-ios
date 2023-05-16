@@ -31,7 +31,7 @@ class MediaArchiver {
             return Future { [weak self] promise in
                 guard let self else { return }
                 
-                Task.detached(priority: .background) { [weak self] in
+                Task.detached(priority: .userInitiated) { [weak self] in
                     guard let export else {
                         promise(.success((index, nil)))
                         return

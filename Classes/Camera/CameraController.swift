@@ -1002,7 +1002,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
                 }
             }
             
-            let archiver = MediaArchiver(saveDirectory: saveDirectory)
+            let archiver = MediaArchiver(saveDirectory: self.saveDirectory)
             let publishers = archiver.handle(exports: exports)
             
             self.exportCancellable = publishers.receive(on: DispatchQueue.main).sink { completion in
