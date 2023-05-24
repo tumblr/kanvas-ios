@@ -29,10 +29,10 @@ class MediaArchiver {
         let exportCount = exports.count
         let publishers: [AnyPublisher<(Int, KanvasMedia?), Error>] = exports.enumerated().map { (index, export) in
             return Future { [weak self] promise in
-                guard let self else { return }
+                guard let self = self else { return }
                 
                 Task.detached(priority: .userInitiated) { [weak self] in
-                    guard let export else {
+                    guard let export = export else {
                         promise(.success((index, nil)))
                         return
                     }

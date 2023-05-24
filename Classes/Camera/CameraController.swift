@@ -991,7 +991,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     
     private func exportingDidFinishHandler(from result: [Result<EditorViewController.ExportResult, Error>]) async {
         Task { [weak self] in
-            guard let self else { return }
+            guard let self = self else { return }
             
             let exports: [EditorViewController.ExportResult?] = result.map { result in
                 switch result {
