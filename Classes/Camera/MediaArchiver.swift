@@ -15,7 +15,6 @@ class MediaArchiver {
     let saveDirectory: URL?
 
     private let log = OSLog(subsystem: "com.tumblr.kanvas", category: "MediaArchiver")
-    private let dispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
     /// Initializes a new MediaArchiver class to handle exports.
     /// - Parameter saveDirectory: A URL to save the files to.
@@ -29,16 +28,20 @@ class MediaArchiver {
     func handle(exports: [EditorViewController.ExportResult?]) -> AnyPublisher<CameraController.MediaOutput, Error> {
         let exportCount = exports.count
         let publishers: [AnyPublisher<(Int, KanvasMedia?), Error>] = exports.enumerated().map { (index, export) in
-            return dispatchQueue.publisher { [weak self] promise
-                in
-                guard let export = export else {
-                    promise(.success((index, nil)))
-                    return
+            return Future { [weak self] promise in
+                guard let self = self else { return }
+                
+                Task.detached(priority: .userInitiated) { [weak self] in
+                    guard let export = export else {
+                        promise(.success((index, nil)))
+                        return
+                    }
+                    let media = self?.handle(export: export)
+                    promise(.success((index, media)))
                 }
-                let media = self?.handle(export: export)
-                promise(.success((index, media)))
-            }
+            }.eraseToAnyPublisher()
         }
+        
         let allPublishers = Publishers.MergeMany(publishers)
         let collected = allPublishers.collect(exportCount).sort(by: { (first, second) in
             return first.0 < second.0
@@ -126,17 +129,6 @@ extension UIImage {
             print("Failed to save to file. \(error)")
             return nil
         }
-    }
-}
-
-private extension DispatchQueue {
-
-    /// Dispatches `block` asynchronously.
-    /// - Parameter block: Block
-    func publisher<Output, Failure: Error>(_ block: @escaping (Future<Output, Failure>.Promise) -> Void) -> AnyPublisher<Output, Failure> {
-        Future<Output, Failure> { promise in
-            self.async { block(promise) }
-        }.eraseToAnyPublisher()
     }
 }
 

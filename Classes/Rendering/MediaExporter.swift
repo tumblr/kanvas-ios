@@ -53,10 +53,17 @@ final class MediaExporter: MediaExporting {
         return true
     }
     
+    /// A Task to control exportFrames task, it need to be canceld when MediaExporter is deallocated
+    private var exportFramesTask: Task<Void, Error>?
+    
     private let settings: CameraSettings
     
     init(settings: CameraSettings) {
         self.settings = settings
+    }
+    
+    deinit {
+        exportFramesTask?.cancel()
     }
 
     /// Exports an image
@@ -90,10 +97,11 @@ final class MediaExporter: MediaExporting {
             completion(processedImage, nil)
         }
     }
-
+    
     func export(frames: [MediaFrame], toSize: CGSize?, completion: @escaping ([MediaFrame]) -> Void) {
-        var processedFrames: [MediaFrame] = []
-        DispatchQueue.global(qos: .default).async {
+        
+        exportFramesTask = Task.detached(priority: .medium) {
+            var processedFrames: [MediaFrame] = []
             var time: TimeInterval = 0
             for frame in frames {
                 autoreleasepool {
@@ -106,7 +114,8 @@ final class MediaExporter: MediaExporting {
                     }
                 }
             }
-            DispatchQueue.main.async {
+            
+            await MainActor.run { [processedFrames] in
                 completion(processedFrames)
             }
         }
