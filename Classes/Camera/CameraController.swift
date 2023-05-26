@@ -921,14 +921,6 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         delegate?.screenWillDisappear(.editor)
     }
 
-    func multiEditorDidAppear() {
-        delegate?.screenDidAppear(.editor)
-    }
-
-    func multiEditorWillDisappear() {
-        delegate?.screenWillDisappear(.editor)
-    }
-
     func didFinishExportingVideo(url: URL?) {
         didFinishExportingVideo(url: url, info: MediaInfo(source: .kanvas_camera), archive: nil, action: .previewConfirm, mediaChanged: true)
     }

@@ -9,6 +9,13 @@ import Foundation
 import Kanvas
 
 final public class KanvasAnalyticsStub: NSObject, KanvasAnalyticsProvider {
+    public func logScreenView(_ screen: Kanvas.KanvasScreen) {
+        logString(string: "logScreenView:\(screen)")
+    }
+
+    public func logScreenLeave(_ screen: Kanvas.KanvasScreen) {
+        logString(string: "logScreenLeave:\(screen)")
+    }
 
     public func logCameraOpen(mode: CameraMode) {
         logString(string: "logCameraOpen mode:\(modeStringValue(mode))")
