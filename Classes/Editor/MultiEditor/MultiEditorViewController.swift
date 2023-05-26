@@ -13,6 +13,8 @@ protocol MultiEditorComposerDelegate: EditorControllerDelegate {
     func addButtonWasPressed()
     func editor(segment: CameraSegment, edit: EditorViewController.Edit?) -> EditorViewController
     func dismissButtonPressed()
+    func multiEditorDidAppear()
+    func multiEditorWillDisappear()
 }
 
 class MultiEditorViewController: UIViewController {
@@ -311,6 +313,13 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 }
 
 extension MultiEditorViewController: EditorControllerDelegate {
+    func editorDidAppear() {
+        delegate?.multiEditorDidAppear()
+    }
+
+    func editorWillDisappear() {
+        delegate?.multiEditorWillDisappear()
+    }
 
     func getBlogSwitcher() -> UIView {
         return UIView()
