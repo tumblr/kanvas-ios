@@ -550,8 +550,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         if let formatDescription = currentDevice?.activeFormat.formatDescription {
             let videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription)
             var dimensions = CGSize(width: CGFloat(videoDimensions.height), height: CGFloat(videoDimensions.width))
-            // Make recording resolution have the same aspect ratio as the screen
-            dimensions.width = dimensions.height * (frameSize.width / frameSize.height)
+            if settings.features.scaleMediaToFill {
+                // Make recording resolution have the same aspect ratio as the screen
+                dimensions.width = dimensions.height * (frameSize.width / frameSize.height)
+            }
             return dimensions
         }
         return .zero
