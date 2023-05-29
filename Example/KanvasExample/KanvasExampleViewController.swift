@@ -358,10 +358,17 @@ extension KanvasExampleViewController: FeatureTableViewDelegate {
 // MARK: - CameraControllerDelegate
 
 extension KanvasExampleViewController: CameraControllerDelegate {
+    public func screenDidAppear(_ screen: KanvasScreen) {
+        print("🔵 Screen did appear: \(screen)")
+    }
+
+    public func screenWillDisappear(_ screen: KanvasScreen) {
+        print("🔵 Screen will disappear: \(screen)")
+    }
+
     func editorDismissed() {
         
     }
-
 
     func openAppSettings(completion: ((Bool) -> ())?) {
         if let url = URL(string: UIApplication.openSettingsURLString) {

@@ -83,6 +83,12 @@ enum CameraControllerError: Swift.Error {
     case unknown
 }
 
+public enum KanvasScreen {
+    case camera
+    case editor
+    case preview
+}
+
 // Protocol for dismissing CameraController
 // or exporting its created media.
 public protocol CameraControllerDelegate: AnyObject {
@@ -146,6 +152,14 @@ public protocol CameraControllerDelegate: AnyObject {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
+
+    /// Called when the given screen has become visible.
+    /// - Parameter screen: The screen that became visible.
+    func screenDidAppear(_ screen: KanvasScreen)
+
+    /// Called when the given screen is not longer visible.
+    /// - Parameter screen: The screen not longer visible.
+    func screenWillDisappear(_ screen: KanvasScreen)
 }
 
 // A controller that contains and layouts all camera handling views and controllers (mode selector, input, etc).
@@ -346,6 +360,8 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        delegate?.screenDidAppear(.camera)
+
         guard cameraInputController.willCloseSoon == false else {
             return
         }
@@ -356,6 +372,11 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
         if delegate?.cameraShouldShowWelcomeTooltip() == true && cameraPermissionsViewController.hasFullAccess() {
             showWelcomeTooltip()
         }
+    }
+
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.screenWillDisappear(.camera)
     }
 
     // MARK: - navigation
@@ -883,6 +904,22 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     }
     
     // MARK: - CameraPreviewControllerDelegate & EditorControllerDelegate & StoryComposerDelegate
+
+    func previewDidAppear() {
+        delegate?.screenDidAppear(.preview)
+    }
+
+    func previewWillDisappear() {
+        delegate?.screenWillDisappear(.preview)
+    }
+
+    public func editorDidAppear() {
+        delegate?.screenDidAppear(.editor)
+    }
+
+    public func editorWillDisappear() {
+        delegate?.screenWillDisappear(.editor)
+    }
 
     func didFinishExportingVideo(url: URL?) {
         didFinishExportingVideo(url: url, info: MediaInfo(source: .kanvas_camera), archive: nil, action: .previewConfirm, mediaChanged: true)

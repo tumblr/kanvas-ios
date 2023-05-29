@@ -223,6 +223,14 @@ final class CameraPreviewControllerDelegateStub: CameraPreviewControllerDelegate
     func dismissButtonPressed() {
         closeCalled = true
     }
+
+    func previewDidAppear() {
+
+    }
+
+    func previewWillDisappear() {
+
+    }
 }
 
 final class AssetsHandlerStub: AssetsHandlerType {

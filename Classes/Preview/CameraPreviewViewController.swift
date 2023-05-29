@@ -22,6 +22,12 @@ protocol CameraPreviewControllerDelegate: AnyObject {
 
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
+
+    /// Callback when the preview screen has become visible.
+    func previewDidAppear()
+
+    /// Callback when the preview screen is not longer visible.
+    func previewWillDisappear()
 }
 
 /// A view controller to preview the segments sequentially
@@ -100,6 +106,16 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         super.viewWillAppear(animated)
 
         restartPlayback()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        delegate?.previewDidAppear()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.previewWillDisappear()
     }
 
     override public func viewDidLoad() {

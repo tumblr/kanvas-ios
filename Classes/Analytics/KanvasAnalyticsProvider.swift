@@ -371,4 +371,12 @@ public protocol KanvasAnalyticsProvider {
     /// Logs when the "next" button that opens APO is pressed in the Editor
     /// - Parameter page: page presenting the post options
     func logAdvancedOptionsOpen(page: String)
+
+    /// Logs when the given screen has become visible.
+    /// - Parameter screen: The screen that became visible.
+    func logScreenView(_ screen: KanvasScreen)
+
+    /// Logs when the given screen is not longer visible.
+    /// - Parameter screen: The screen not longer visible.
+    func logScreenLeave(_ screen: KanvasScreen)
 }

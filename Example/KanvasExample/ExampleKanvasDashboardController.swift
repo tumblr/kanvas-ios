@@ -115,6 +115,15 @@ public class KanvasDashboardController: UIViewController {
 }
 
 extension KanvasDashboardController: CameraControllerDelegate {
+
+    public func screenDidAppear(_ screen: KanvasScreen) {
+        print("🔵 Dashboard screen did appear: \(screen)")
+    }
+
+    public func screenWillDisappear(_ screen: KanvasScreen) {
+        print("🔵 Dashboard screen will disappear: \(screen)")
+    }
+
     public func editorDismissed() {
 
     }

@@ -55,10 +55,17 @@ public protocol EditorControllerDelegate: AnyObject {
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
+
     /// Called when the Post Button is pressed to indicate whether export should occur
     /// The return value indicates whether the export should be run
     /// This is partly temporary, I think the export functionality should be passed into this controller to decouple things
     func shouldExport() -> Bool
+
+    /// Called when the editor screen has become visible.
+    func editorDidAppear()
+
+    /// Called when the editor screen is not longer visible.
+    func editorWillDisappear()
 }
 
 extension EditorControllerDelegate {
@@ -416,8 +423,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
 
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        delegate?.editorWillDisappear()
         player.pause()
+    }
+
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        delegate?.editorDidAppear()
     }
     
     override public func viewDidLoad() {

@@ -140,7 +140,6 @@ class MultiEditorControllerTests: FBSnapshotTestCase {
 }
 
 final class MultiEditorControllerDelegateStub: MultiEditorComposerDelegate {
-
     let settings: CameraSettings
     let assetsHandler: AssetsHandlerType
     let exporterClass: MediaExporting.Type
@@ -226,6 +225,11 @@ final class MultiEditorControllerDelegateStub: MultiEditorComposerDelegate {
         return UIView()
     }
 
+    func editorDidAppear() {
 
-    
+    }
+
+    func editorWillDisappear() {
+
+    }
 }

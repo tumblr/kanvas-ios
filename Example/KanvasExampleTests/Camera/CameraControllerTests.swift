@@ -309,6 +309,14 @@ final class CameraControllerTests: FBSnapshotTestCase {
 }
 
 final class CameraControllerDelegateStub: CameraControllerDelegate {
+    func screenDidAppear(_ screen: Kanvas.KanvasScreen) {
+        
+    }
+
+    func screenWillDisappear(_ screen: Kanvas.KanvasScreen) {
+
+    }
+
 
     func openAppSettings(completion: ((Bool) -> ())?) {
 

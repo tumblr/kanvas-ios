@@ -311,6 +311,13 @@ extension MultiEditorViewController: MediaClipsEditorDelegate {
 }
 
 extension MultiEditorViewController: EditorControllerDelegate {
+    func editorDidAppear() {
+        delegate?.editorDidAppear()
+    }
+
+    func editorWillDisappear() {
+        delegate?.editorWillDisappear()
+    }
 
     func getBlogSwitcher() -> UIView {
         return UIView()
