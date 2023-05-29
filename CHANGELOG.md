@@ -30,6 +30,10 @@ _None._
 
 -->
 
+## Unreleased
+
+- Added new delegate methods to track appearing and disappearing of camera, preview, and editor screens. [#156]
+
 ## 1.4.7
 
 - The crop box starts to swap its dimensions depending on portrait or landscape sized images. [#152]
