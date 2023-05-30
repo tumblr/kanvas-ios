@@ -294,8 +294,7 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
             case .video(let videoURL, _):
                 // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
                 // then single photos from that mode should still export as video.
-                if settings.features.gifs,
-                   let group = cameraMode?.group, group == .gif {
+                if let group = cameraMode?.group, group == .gif {
                     gifEncoder.encode(video: videoURL,
                                       loopCount: 0,
                                       framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond) { gifURL in
