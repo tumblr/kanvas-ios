@@ -32,13 +32,11 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         return []
     }
 
-    func getVideoSegments() -> [CameraSegment] {
+    func getVideoSegments(count: Int = 2) -> [CameraSegment] {
+        
         if let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
-            return [
-                CameraSegment.video(videoURL, mediaInfo),
-                CameraSegment.video(videoURL, mediaInfo)
-            ]
+            return Array(repeating: CameraSegment.video(videoURL, mediaInfo), count: count)
         }
         return []
     }
@@ -66,9 +64,20 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         return []
     }
 
-    func newViewController(settings: CameraSettings = CameraSettings(), segments: [CameraSegment], delegate: CameraPreviewControllerDelegate? = nil, assetsHandler: AssetsHandlerType? = nil, cameraMode: CameraMode? = nil) -> CameraPreviewViewController {
+    func newViewController(settings: CameraSettings = CameraSettings(),
+                           segments: [CameraSegment],
+                           delegate: CameraPreviewControllerDelegate? = nil,
+                           assetsHandler: AssetsHandlerType? = nil,
+                           cameraMode: CameraMode? = nil,
+                           gifEncoder: GIFEncoder = GIFEncoderImageIO()) -> CameraPreviewViewController {
+        
         let handler = assetsHandler ?? AssetsHandlerStub()
-        let viewController = CameraPreviewViewController(settings: settings, segments: segments, assetsHandler: handler, cameraMode: cameraMode)
+        let viewController = CameraPreviewViewController(settings: settings,
+                                                         segments: segments,
+                                                         assetsHandler:
+                                                            handler,
+                                                         cameraMode: cameraMode,
+                                                         gifEncoder: gifEncoder)
         viewController.delegate = delegate ?? newDelegateStub()
         viewController.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
         return viewController
@@ -195,6 +204,21 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         UIView.setAnimationsEnabled(true)
         FBSnapshotArchFriendlyVerifyView(viewController.view)
         XCTAssert(delegate.closeCalled, "Delegate close function not called")
+    }
+    
+    func testConfirmButtonEncodesGIFWhenCameraModeWasGIF() {
+        let segments = getVideoSegments(count: 1)
+        let delegate = newDelegateStub()
+        let gifEncoderStub = GIFEncoderStub()
+        let viewController = newViewController(segments: segments,
+                                               delegate: delegate,
+                                               cameraMode: .gif,
+                                               gifEncoder: gifEncoderStub)
+        
+        UIView.setAnimationsEnabled(false)
+        viewController.confirmButtonPressed()
+        
+        XCTAssert(gifEncoderStub.encodeGIFCalled)
     }
 
 }
