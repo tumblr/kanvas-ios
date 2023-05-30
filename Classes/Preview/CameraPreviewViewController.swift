@@ -46,6 +46,7 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let cameraMode: CameraMode?
+    private let gifEncoder: GIFEncoder
 
     private var currentSegmentIndex: Int = 0
     private var timer: Timer = Timer()
@@ -73,12 +74,19 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, cameraMode: CameraMode?) {
+    ///   - gifEncoder: The encoder used to convert videos in to gifs
+    init(settings: CameraSettings,
+         segments: [CameraSegment],
+         assetsHandler: AssetsHandlerType,
+         cameraMode: CameraMode?,
+         gifEncoder: GIFEncoder = GIFEncoderImageIO()) {
+        
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.currentPlayer = firstPlayer
+        self.gifEncoder = gifEncoder
 
         super.init(nibName: .none, bundle: .none)
         setupNotifications()
@@ -283,23 +291,25 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                             self.hideLoading()
                         }
                     }
-                case .video(let videoURL, _):
-                    // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
-                    // then single photos from that mode should still export as video.
-                    if settings.features.gifs,
-                       let group = cameraMode?.group, group == .gif {
-                        GIFEncoderImageIO().encode(video: videoURL, loopCount: 0, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond) { gifURL in
-                            performUIUpdate {
-                                self.delegate?.didFinishExportingFrames(url: gifURL)
-                                self.hideLoading()
-                            }
-                        }
-                    } else {
+            case .video(let videoURL, _):
+                // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
+                // then single photos from that mode should still export as video.
+                if settings.features.gifs,
+                   let group = cameraMode?.group, group == .gif {
+                    gifEncoder.encode(video: videoURL,
+                                      loopCount: 0,
+                                      framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond) { gifURL in
                         performUIUpdate {
-                            self.delegate?.didFinishExportingVideo(url: videoURL)
+                            self.delegate?.didFinishExportingFrames(url: gifURL)
                             self.hideLoading()
                         }
                     }
+                } else {
+                    performUIUpdate {
+                        self.delegate?.didFinishExportingVideo(url: videoURL)
+                        self.hideLoading()
+                    }
+                }
             }
         }
         else {
