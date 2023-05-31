@@ -73,7 +73,7 @@ Documentation is lacking at the moment, but contributions are welcome!
 
 ### Version naming rules
 
-(I suggest applying `Semantic Versioning` [technique](https://www.kodeco.com/7076593-cocoapods-tutorial-for-swift-getting-started#toc-anchor-008) from [Kodeco](https://www.kodeco.com/).)
+(I suggest applying `Semantic Versioning` [technique](https://www.kodeco.com/7076593-cocoapods-tutorial-for-swift-getting-started#toc-anchor-008) from [Kodeco](https://www.kodeco.com/). Beside, [semver](https://semver.org/) should be worthing checking out.)
 
 Many times, you’ll see a version written like this: 1.0.0. Those three numbers are major, minor and patch version numbers.
 
