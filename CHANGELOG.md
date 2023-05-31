@@ -36,7 +36,7 @@ _None._
 
 ## 1.4.8
 
-- Replace `DispatchQueue.global` by Swift concurrency to reduce Thread Explosion [#153]
+- Replace `DispatchQueue.global` with Swift concurrency to reduce Thread Explosion [#153]
 - Fix streched image after taking a shot in GIF mode issue [#155]
 
 ## 1.4.7
