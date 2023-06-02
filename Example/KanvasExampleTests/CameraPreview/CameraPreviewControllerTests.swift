@@ -74,8 +74,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
         let handler = assetsHandler ?? AssetsHandlerStub()
         let viewController = CameraPreviewViewController(settings: settings,
                                                          segments: segments,
-                                                         assetsHandler:
-                                                            handler,
+                                                         assetsHandler: handler,
                                                          cameraMode: cameraMode,
                                                          gifEncoder: gifEncoder)
         viewController.delegate = delegate ?? newDelegateStub()
