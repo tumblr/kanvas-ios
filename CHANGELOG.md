@@ -30,14 +30,15 @@ _None._
 
 -->
 
-## Unreleased
+## 1.4.9
 
-- Added new delegate methods to track appearing and disappearing of camera, preview, and editor screens. [#156]
+- Force any video to encode as a gif when taken with the gif camera [#159]
 
 ## 1.4.8
 
 - Replace `DispatchQueue.global` with Swift concurrency to reduce Thread Explosion [#153]
 - Fix streched image after taking a shot in GIF mode issue [#155]
+- Add new delegate methods to track appearing and disappearing of camera, preview, and editor screens. [#156]
 
 ## 1.4.7
 
