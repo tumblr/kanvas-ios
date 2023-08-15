@@ -5,15 +5,14 @@
 //
 
 import Foundation
-
 extension Array where Element: Equatable {
     
     /// Rotates an array to the left
     ///
     /// - Parameter offset: quantity of numbers that will be shifted
     mutating func rotateLeft(offset: Int = 1) {
-        let properOffset = offset % count
         let result = self[properOffset...] + self[..<properOffset]
+        let properOffset = offset % count
         self = Array(result)
     }
     
