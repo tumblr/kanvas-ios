@@ -1,8 +1,8 @@
 common_params:
   - &common_plugins
-    - automattic/bash-cache#2.2.0
+    - automattic/bash-cache#2.16.0
   - &common_env
-    IMAGE_ID: xcode-13.4.1
+    IMAGE_ID: xcode-14.3
 
 steps:
   #################
