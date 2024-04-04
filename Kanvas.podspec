@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'Kanvas'
-  spec.version      = '1.4.9'
+  spec.version      = '1.5.0'
   spec.summary      = 'A custom camera built for iOS.'
   spec.homepage     = 'https://github.com/tumblr/kanvas-ios'
   spec.license      = 'MPLv2'
