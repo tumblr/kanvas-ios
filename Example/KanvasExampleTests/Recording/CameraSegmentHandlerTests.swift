@@ -58,7 +58,7 @@ final class CameraSegmentHandlerTests: XCTestCase {
     
     func testAddVideo() {
         let cameraSegmentHandler = CameraSegmentHandler()
-        if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+        if let url = ResourcePaths.sampleVideoURL {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             cameraSegmentHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
             XCTAssert(cameraSegmentHandler.segments.count == 1, "CameraSegmentHandler failed to add video segment")
@@ -127,6 +127,6 @@ final class CameraSegmentHandlerTests: XCTestCase {
     }
     
     func createVideo() -> URL? {
-        return Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4")
+        return ResourcePaths.sampleVideoURL
     }
 }

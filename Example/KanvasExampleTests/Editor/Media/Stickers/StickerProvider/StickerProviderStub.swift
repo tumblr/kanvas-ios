@@ -6,9 +6,12 @@
 
 import Kanvas
 import Foundation
+import UIKit
 
+#if !SWIFT_PACKAGE
 extension URLSessionTask: KanvasCancelable {
 }
+#endif
 
 class ImageLoader: KanvasStickerLoader {
     func loadSticker(at imageURL: URL, imageView: UIImageView?, completion: @escaping (UIImage?, Error?) -> Void) -> KanvasCancelable {

@@ -5,7 +5,12 @@
 //
 
 @testable import Kanvas
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+import KanvasExample
+#else
 import FBSnapshotTestCase
+#endif
 import Foundation
 import UIKit
 import XCTest
@@ -20,11 +25,11 @@ final class CameraControllerTests: FBSnapshotTestCase {
     }
 
     func newVideo() -> URL? {
-        return Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4")
+        return ResourcePaths.sampleVideoURL
     }
 
     func newImage() -> UIImage? {
-        return Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap { UIImage(contentsOfFile: $0) }
+        return ResourcePaths.sampleImagePath.flatMap { UIImage(contentsOfFile: $0) }
     }
 
     func newDelegateStub() -> CameraControllerDelegateStub {

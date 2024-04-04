@@ -9,9 +9,8 @@ import Foundation
 import XCTest
 
 final class CameraSegmentTests: XCTestCase {
-
     func testImageSegment() {
-        if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
+        if let path = ResourcePaths.sampleImagePath, let image = UIImage(contentsOfFile: path) {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             let segment = CameraSegment.image(image, nil, nil, mediaInfo)
             XCTAssert(segment.image != nil, "CameraSegment was not initialized properly")
@@ -22,7 +21,7 @@ final class CameraSegmentTests: XCTestCase {
     }
 
     func testVideoSegment() {
-        if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+        if let url = ResourcePaths.sampleVideoURL {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             let segment = CameraSegment.video(url, mediaInfo)
             XCTAssert(segment.videoURL != nil, "CameraSegment was not initialized properly")

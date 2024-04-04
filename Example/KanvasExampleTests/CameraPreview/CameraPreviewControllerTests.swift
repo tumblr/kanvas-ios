@@ -5,7 +5,11 @@
 //
 
 @testable import Kanvas
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+#else
 import FBSnapshotTestCase
+#endif
 import Foundation
 import UIKit
 import XCTest
@@ -19,8 +23,8 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
     }
 
     func getAllSegments() -> [CameraSegment] {
-        if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
-           let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+        if let image = ResourcePaths.sampleImagePath.flatMap({ UIImage(contentsOfFile: $0) }),
+           let videoURL = ResourcePaths.sampleVideoURL {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             return [
                 CameraSegment.image(image, videoURL, nil, mediaInfo),
@@ -34,7 +38,7 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
 
     func getVideoSegments(count: Int = 2) -> [CameraSegment] {
         
-        if let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+        if let videoURL = ResourcePaths.sampleVideoURL {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             return Array(repeating: CameraSegment.video(videoURL, mediaInfo), count: count)
         }
@@ -42,8 +46,8 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
     }
 
     func getPhotoSegment() -> [CameraSegment] {
-        if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
-            let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+        if let image = ResourcePaths.sampleImagePath.flatMap({ UIImage(contentsOfFile: $0) }),
+            let videoURL = ResourcePaths.sampleVideoURL {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             return [
                 CameraSegment.image(image, videoURL, nil, mediaInfo)
@@ -53,8 +57,8 @@ final class CameraPreviewControllerTests: FBSnapshotTestCase {
     }
 
     func getPhotoSegments() -> [CameraSegment] {
-        if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }),
-            let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+        if let image = ResourcePaths.sampleImagePath.flatMap({ UIImage(contentsOfFile: $0) }),
+            let videoURL = ResourcePaths.sampleVideoURL {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             return [
                 CameraSegment.image(image, videoURL, nil, mediaInfo),

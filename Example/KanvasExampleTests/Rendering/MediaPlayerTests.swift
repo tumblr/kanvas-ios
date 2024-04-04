@@ -76,7 +76,7 @@ class MediaPlayerTests: XCTestCase {
     }
     
     func testPlayVideo() {
-        guard let videoURL = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") else {
+        guard let videoURL = ResourcePaths.sampleVideoURL else {
             XCTFail("Could not load sample.mp4")
             return
         }

@@ -5,7 +5,11 @@
 //
 
 @testable import Kanvas
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+#else
 import FBSnapshotTestCase
+#endif
 import AVFoundation
 
 class FilteredInputViewControllerDelegateStub: FilteredInputViewControllerDelegate {

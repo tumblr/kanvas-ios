@@ -45,11 +45,11 @@ final class CameraRecorderStub: CameraRecordingProtocol {
         recording = true
         startTime = Date()
     }
-
+    
     func stopRecordingVideo(completion: @escaping (URL?) -> Void) {
         if isRecording() {
             recording = false
-            if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+            if let url = ResourcePaths.sampleVideoURL {
                 let mediaInfo = MediaInfo(source: .kanvas_camera)
                 cameraSegmentHandler.addNewVideoSegment(url: url, mediaInfo: mediaInfo)
                 completion(url)
@@ -74,7 +74,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
             completion(nil)
             return
         }
-        if let path = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png"), let image = UIImage(contentsOfFile: path) {
+        if let path = ResourcePaths.sampleImagePath, let image = UIImage(contentsOfFile: path) {
             let mediaInfo = MediaInfo(source: .kanvas_camera)
             cameraSegmentHandler.addNewImageSegment(image: image, size: image.size, mediaInfo: mediaInfo, completion: { (success, segment) in
                 completion(image)
@@ -116,7 +116,7 @@ final class CameraRecorderStub: CameraRecordingProtocol {
             return
         }
         recording = true
-        if let url = Bundle(for: type(of: self)).url(forResource: "sample", withExtension: "mp4") {
+        if let url = ResourcePaths.sampleVideoURL {
             completion(url)
         }
         else {

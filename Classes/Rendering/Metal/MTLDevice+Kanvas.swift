@@ -11,6 +11,9 @@ import MetalKit
 // 2. Concatinate all source files as a string then compile it at runtime by using MTLDevice::makeLibrary(source:options:)
 extension MTLDevice {
     func makeKanvasDefaultLibrary() -> MTLLibrary? {
+        #if SWIFT_PACKAGE
+            return try? makeDefaultLibrary(bundle: Bundle.module)
+        #else
         guard
             let bundlePath = KanvasStrings.bundlePath(for: CameraSettings.self)
         else {
@@ -41,5 +44,6 @@ extension MTLDevice {
             print("\(error)")
             return nil
         }
+        #endif
     }
 }

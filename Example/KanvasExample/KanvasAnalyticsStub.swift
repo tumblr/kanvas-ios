@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import UIKit
 import Kanvas
 
 final public class KanvasAnalyticsStub: NSObject, KanvasAnalyticsProvider {

@@ -7,6 +7,7 @@
 import Foundation
 import Kanvas
 import Photos
+import UIKit
 
 @objc protocol DashboardPagingController: AnyObject {
     func setPageSlideEnabled(_ pageSlideEnabled: Bool)

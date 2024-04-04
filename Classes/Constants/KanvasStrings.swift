@@ -40,7 +40,11 @@ public struct KanvasStrings {
     }
 
     static func bundlePath(for aClass: AnyClass) -> String? {
+        #if SWIFT_PACKAGE
+        return Bundle.module.path(forResource: "alpha_blend", ofType: "glsl")
+        #else
         return Bundle(for: aClass).path(forResource: "Kanvas", ofType: "bundle")
+        #endif
     }
 
     public var cameraPermissionsTitleLabel: String

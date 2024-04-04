@@ -5,16 +5,19 @@ import PackageDescription
 
 let package = Package(
     name: "Kanvas",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v15)
     ],
     products: [
         .library(
             name: "Kanvas",
-            targets: ["Kanvas"]),
+            targets: ["Kanvas", "KanvasTests"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/TimOliver/TOCropViewController.git", branch: "main"),
+        .package(url: "https://github.com/uber/ios-snapshot-test-case.git", from: "8.0.0"),
     ],
     targets: [
         .target(
@@ -22,6 +25,26 @@ let package = Package(
             dependencies: [.product(name: "CropViewController", package: "TOCropViewController")],
             path: "Classes",
             resources: [.process("Resources")]
+        ),
+        .target(
+            name: "KanvasExample",
+            dependencies: ["Kanvas"],
+            path: "Example/KanvasExample",
+            exclude: ["Info.plist"]
+        ),
+        .testTarget(
+            name: "KanvasTests",
+            dependencies: [
+                "Kanvas",
+                "KanvasExample",
+                .product(name: "iOSSnapshotTestCase", package: "ios-snapshot-test-case")
+            ],
+            path: "Example/KanvasExampleTests",
+            exclude: ["ReferenceImages_32", "ReferenceImages_64"],
+            resources: [
+                .process("Resources"),
+                .process("Resources/MetalShaders/shaders.metal")
+            ]
         ),
     ]
 )

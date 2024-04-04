@@ -6,14 +6,17 @@
 
 import Foundation
 import XCTest
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+#else
 import FBSnapshotTestCase
+#endif
 @testable import Kanvas
 
 final class MediaPickerButtonViewTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-
         self.recordMode = false
     }
 
@@ -22,7 +25,7 @@ final class MediaPickerButtonViewTests: FBSnapshotTestCase {
         settings.features.mediaPicking = true
         let view = MediaPickerButtonView(settings: settings)
         view.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
+        if let image = ResourcePaths.sampleImagePath.flatMap({ UIImage(contentsOfFile: $0) }) {
             view.setThumbnail(image)
         }
         FBSnapshotArchFriendlyVerifyView(view)
@@ -33,7 +36,7 @@ final class MediaPickerButtonViewTests: FBSnapshotTestCase {
         settings.features.mediaPicking = false
         let view = MediaPickerButtonView(settings: settings)
         view.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        if let image = Bundle(for: type(of: self)).path(forResource: "sample", ofType: "png").flatMap({ UIImage(contentsOfFile: $0) }) {
+        if let image = ResourcePaths.sampleImagePath.flatMap({ UIImage(contentsOfFile: $0) }) {
             view.setThumbnail(image)
         }
         FBSnapshotArchFriendlyVerifyView(view)

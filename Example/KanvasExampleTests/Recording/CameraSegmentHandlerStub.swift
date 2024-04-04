@@ -13,21 +13,18 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
 
     var segments: [CameraSegment] = []
 
-    let videoURL = Bundle(for: CameraSegmentHandlerStub.self).url(forResource: "sample", withExtension: "mp4")
-    let imageURL = Bundle(for: CameraSegmentHandlerStub.self).path(forResource: "sample", ofType: "png")
-
     func addSegment(_ segment: CameraSegment) {
         segments.append(segment)
     }
 
     func addNewVideoSegment(url: URL, mediaInfo: MediaInfo) {
-        guard let videoURL = videoURL else { return }
+        guard let videoURL = ResourcePaths.sampleVideoURL else { return }
         let segment = CameraSegment.video(videoURL, mediaInfo)
         segments.append(segment)
     }
 
     func addNewImageSegment(image: UIImage, size: CGSize, mediaInfo: MediaInfo, completion: @escaping (Bool, CameraSegment?) -> Void) {
-        guard let url = videoURL else { return }
+        guard let url = ResourcePaths.sampleVideoURL else { return }
         let segment = CameraSegment.image(image, url, nil, mediaInfo)
         segments.append(segment)
         completion(true, segment)
@@ -56,7 +53,7 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
     }
 
     func exportVideo(completion: @escaping (URL?, MediaInfo?) -> Void) {
-        completion(videoURL, MediaInfo(source: .kanvas_camera))
+        completion(ResourcePaths.sampleVideoURL, MediaInfo(source: .kanvas_camera))
     }
 
     func reset(removeFromDisk: Bool) {
@@ -64,7 +61,7 @@ final class CameraSegmentHandlerStub: SegmentsHandlerType {
     }
 
     func mergeAssets(segments: [CameraSegment], withAudio: Bool, completion: @escaping (URL?, MediaInfo?) -> Void) {
-        completion(videoURL, MediaInfo(source: .kanvas_camera))
+        completion(ResourcePaths.sampleVideoURL, MediaInfo(source: .kanvas_camera))
     }
 
     func videoOutputSettingsForSize(size: CGSize) -> [String: Any] {

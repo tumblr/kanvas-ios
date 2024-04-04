@@ -6,7 +6,11 @@
 
 @testable import Kanvas
 import AVFoundation
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+#else
 import FBSnapshotTestCase
+#endif
 import UIKit
 import XCTest
 
