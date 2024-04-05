@@ -30,6 +30,10 @@ _None._
 
 -->
 
+## 1.5.0
+
+- Adds support for Swift Package Manager [#166]
+
 ## 1.4.9
 
 - Force any video to encode as a gif when taken with the gif camera [#159]

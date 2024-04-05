@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'Kanvas'
-  spec.version      = '1.4.9'
+  spec.version      = '1.5.0'
   spec.summary      = 'A custom camera built for iOS.'
   spec.homepage     = 'https://github.com/tumblr/kanvas-ios'
   spec.license      = 'MPLv2'
@@ -15,7 +15,9 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
   spec.frameworks = 'Foundation', 'GLKit', 'OpenGLES', 'UIKit'
   spec.source_files = 'Classes/**/*.{h,m,swift,vsh,glsl}'
-  spec.resource_bundles = { 'Kanvas' => 'Resources/*' }
+  spec.resource_bundles = {
+    'Kanvas' => ['Classes/Resources/*']
+  }
   spec.dependency 'CropViewController'
   spec.user_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GLES_SILENCE_DEPRECATION=1' }
   spec.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GLES_SILENCE_DEPRECATION=1' }
