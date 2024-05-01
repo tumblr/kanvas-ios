@@ -12,8 +12,8 @@ platform :ios do
     run_tests(
       workspace: File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExample.xcworkspace'),
       scheme: 'KanvasExample',
-      devices: ['iPhone 8'],
-      deployment_target_version: '14.0'
+      devices: ['iPhone SE (3rd generation)'],
+      deployment_target_version: '15.0'
     )
   end
 end
