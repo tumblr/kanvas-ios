@@ -5,6 +5,9 @@
 //
 
 @testable import Kanvas
+#if SWIFT_PACKAGE
+import KanvasExample
+#endif
 import Foundation
 import XCTest
 

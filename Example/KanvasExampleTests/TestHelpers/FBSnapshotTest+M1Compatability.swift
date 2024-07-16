@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+#else
 import FBSnapshotTestCase
+#endif
 import UIKit
 
 /// Set between 0 and 1

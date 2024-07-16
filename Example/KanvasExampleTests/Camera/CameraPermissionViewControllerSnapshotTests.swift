@@ -8,7 +8,11 @@
 
 @testable import Kanvas
 import XCTest
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+#else
 import FBSnapshotTestCase
+#endif
 
 final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
     private var mockDelegate: MockCameraPermissionsViewControllerDelegate { MockCameraPermissionsViewControllerDelegate() }

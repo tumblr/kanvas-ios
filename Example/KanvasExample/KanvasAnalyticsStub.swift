@@ -7,6 +7,7 @@
 import AVFoundation
 import Foundation
 import Kanvas
+import UIKit
 
 final public class KanvasAnalyticsStub: NSObject, KanvasAnalyticsProvider {
     public func logScreenView(_ screen: Kanvas.KanvasScreen) {

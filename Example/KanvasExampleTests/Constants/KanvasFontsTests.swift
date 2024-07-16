@@ -5,7 +5,11 @@
 //
 
 import XCTest
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+#else
 import FBSnapshotTestCase
+#endif
 @testable import Kanvas
 
 class KanvasFontsTests: FBSnapshotTestCase {

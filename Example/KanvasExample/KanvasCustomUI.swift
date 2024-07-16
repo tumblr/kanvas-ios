@@ -6,6 +6,7 @@
 
 import Foundation
 import Kanvas
+import UIKit
 
 /// Contains custom colors and fonts for the Kanvas framework
 public class KanvasCustomUI {
@@ -61,7 +62,7 @@ public class KanvasCustomUI {
     private let selectedColor = brightBlue // ColorPickerController:29
     private let black25 = UIColor.tumblrBlack25
     
-    func cameraColors() -> KanvasColors {
+    public func cameraColors() -> KanvasColors {
         return KanvasColors(
             drawingDefaultColor: Self.brightBlue,
             colorPickerColors: pickerColors,
@@ -94,7 +95,7 @@ public class KanvasCustomUI {
     private static let drawer = KanvasFonts.Drawer(textSelectedFont: UIFont.favoritTumblrMedium(fontSize: 14), textUnselectedFont: UIFont.favoritTumblr85(fontSize: 14))
 
     
-    func cameraFonts() -> KanvasFonts {
+    public func cameraFonts() -> KanvasFonts {
         let paddingAdjustment: (UIFont) -> KanvasFonts.Padding? = { font in
             if font == UIFont.favoritTumblr85(fontSize: font.pointSize) {
                 return KanvasFonts.Padding(topMargin: 8.0,
@@ -125,7 +126,7 @@ public class KanvasCustomUI {
     }
 }
 
-extension UIFont {
+public extension UIFont {
     static func fairwater(fontSize: CGFloat) -> UIFont {
         let font = UIFont(name: "Bradley Hand", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize, weight: .medium)
         if UIFont.isDynamicTypeEnabled {

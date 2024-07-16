@@ -5,7 +5,12 @@
 //
 
 @testable import Kanvas
+#if SWIFT_PACKAGE
+import iOSSnapshotTestCase
+import KanvasExample
+#else
 import FBSnapshotTestCase
+#endif
 import Foundation
 import UIKit
 import XCTest
