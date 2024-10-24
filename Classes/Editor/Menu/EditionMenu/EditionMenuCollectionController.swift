@@ -112,7 +112,7 @@ final class EditionMenuCollectionController: UIViewController, KanvasEditorMenuC
             return nil
         }
         let indexPath = IndexPath(item: index, section: Constants.section)
-        return self.collectionView(collectionView, cellForItemAt: indexPath) as? EditionMenuCollectionCell
+        return collectionView.cellForItem(at: indexPath) as? EditionMenuCollectionCell
     }
     
     // MARK: - UICollectionViewDataSource

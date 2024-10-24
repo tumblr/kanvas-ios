@@ -508,14 +508,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - GIF Maker Helpers
 
     private func openGIFMaker(animated: Bool) {
-        guard let cell = collectionController.getCell(for: .gif) else {
-            assertionFailure("Failed to open GIF Maker")
-            return
-        }
-        openGIFMaker(cell: cell, animated: animated, permanent: true)
+        openGIFMaker(cell: collectionController.getCell(for: .gif), animated: animated, permanent: true)
     }
 
-    private func openGIFMaker(cell: KanvasEditorMenuCollectionCell, animated: Bool, permanent: Bool) {
+    private func openGIFMaker(cell: KanvasEditorMenuCollectionCell?, animated: Bool, permanent: Bool) {
         let editionOption = EditionOption.gif
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         showMainUI(false)
