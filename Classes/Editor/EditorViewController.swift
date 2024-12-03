@@ -950,9 +950,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func handleExportError() {
         delegate?.didFailExporting()
         let alertController = UIAlertController(title: nil,
-                                                message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"),
+                                                message: NSLocalizedString("SomethingGoofedTitle", value: "Something goofed.", comment: "Alert controller message"),
                                                 preferredStyle: .alert)
-        let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { _ in
+        let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", value: "Try again", comment: "Try again"), style: .default) { _ in
             alertController.dismiss(animated: true, completion: .none)
         }
         alertController.addAction(tryAgainButton)

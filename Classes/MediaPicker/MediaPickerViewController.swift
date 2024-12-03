@@ -150,7 +150,7 @@ private extension KanvasMediaPickerViewController {
         }
         else if let image = image {
             guard canPick(image: image) else {
-                let message = NSLocalizedString("That's too big, bud.", comment: "That's too big, bud.")
+                let message = NSLocalizedString("That's too big, bud.", value: "That's too big, bud.", comment: "That's too big, bud.")
                 cannotPick(reason: message)
                 return
             }
