@@ -18,17 +18,17 @@ enum EditionOption: Int {
     var text: String {
         switch self {
         case .gif:
-            return NSLocalizedString("EditorGIF", comment: "Label for the GIF option in the editor tools")
+            return NSLocalizedString("EditorGIF", value: "Create GIF", comment: "Label for the GIF option in the editor tools")
         case .filter:
-            return NSLocalizedString("EditorFilters", comment: "Label for the filters option in the editor tools")
+            return NSLocalizedString("EditorFilters", value: "Filters", comment: "Label for the filters option in the editor tools")
         case .text:
-            return NSLocalizedString("EditorText", comment: "Label for the text option in the editor tools")
+            return NSLocalizedString("EditorText", value: "Text", comment: "Label for the text option in the editor tools")
         case .media:
-            return NSLocalizedString("EditorMedia", comment: "Label for the media option in the editor tools")
+            return NSLocalizedString("EditorMedia", value: "Media", comment: "Label for the media option in the editor tools")
         case .drawing:
-            return NSLocalizedString("EditorDrawing", comment: "Label for the drawing option in the editor tools")
+            return NSLocalizedString("EditorDrawing", value: "Drawing", comment: "Label for the drawing option in the editor tools")
         case .cropRotate:
-            return NSLocalizedString("EditorCropRotate", comment: "Label for the crop rotate option in the editor tools")
+            return NSLocalizedString("EditorCropRotate", value: "Crop/Rotate", comment: "Label for the crop rotate option in the editor tools")
         }
     }
 }

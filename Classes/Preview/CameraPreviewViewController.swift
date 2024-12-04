@@ -325,13 +325,13 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                 }
                 else {
                     self.hideLoading()
-                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"), preferredStyle: .alert)
+                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", value: "Something goofed.", comment: "Alert controller message"), preferredStyle: .alert)
                     
-                    let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel) { [weak self] _ in
+                    let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", value: "Cancel", comment: "Title for cancel button."), style: .cancel) { [weak self] _ in
                         self?.delegate?.didFinishExportingVideo(url: url)
                     }
                     
-                    let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { [weak self] _ in
+                    let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", value: "Try again", comment: "Try again"), style: .default) { [weak self] _ in
                         self?.showLoading()
                         self?.createFinalContent()
                     }

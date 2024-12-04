@@ -201,7 +201,7 @@ final class ColorSelectorView: UIView {
         preferences.positioning.textVInset = Constants.tooltipVerticalTextInset
         preferences.positioning.textHInset = Constants.tooltipHorizontalTextInset
         
-        let text = NSLocalizedString("Drag to select color", comment: "Color selector tooltip for the Camera")
+        let text = NSLocalizedString("Drag to select color", value: "Drag to select color", comment: "Color selector tooltip for the Camera")
         tooltip = EasyTipView(text: text, preferences: preferences)
     }
     

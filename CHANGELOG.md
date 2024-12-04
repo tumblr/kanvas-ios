@@ -30,6 +30,14 @@ _None._
 
 -->
 
+## 1.5.2
+
+- Updates localized strings to be compatible with genstrings tool. [#168]
+
+## 1.5.1
+
+- Fixes a crash on iOS 18. [#167]
+
 ## 1.5.0
 
 - Adds support for Swift Package Manager [#166]

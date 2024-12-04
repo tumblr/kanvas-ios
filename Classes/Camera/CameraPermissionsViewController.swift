@@ -84,8 +84,8 @@ class CameraPermissionsView: UIView {
     }()
 
     lazy var settingsButton: UIButton = {
-        let title = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
-        let titleDisabled = NSLocalizedString("PhotoAccessNoAccessAction", comment: "PhotoAccessNoAccessAction")
+        let title = NSLocalizedString("PhotoAccessNoAccessAction", value: "Take me to Settings", comment: "Action button text for scenerio when access to Photos has been disallowed")
+        let titleDisabled = NSLocalizedString("PhotoAccessNoAccessAction", value: "Take me to Settings", comment: "Action button text for scenerio when access to Photos has been disallowed")
         let button = CameraPermissionsView.makeButton(title: title, titleDisabled: titleDisabled)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(openAppSettings), for: .touchUpInside)

@@ -699,7 +699,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
             postButton.bottomAnchor.constraint(equalTo: safeLayoutGuide.bottomAnchor, constant: -EditorViewConstants.postButtonVerticalMargin)
         ])
         
-        postLabel.text = NSLocalizedString("Post", comment: "Message for the post button in the editor screen")
+        postLabel.text = NSLocalizedString("Post", value: "Post", comment: "Message for the post button in the editor screen")
         postLabel.textColor = .white
         postLabel.font = KanvasFonts.shared.postLabelFont
         postLabel.clipsToBounds = false

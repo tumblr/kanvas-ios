@@ -17,11 +17,11 @@ enum PlaybackOption: String, OptionSelectorItem {
     var description: String {
         switch self {
         case .loop:
-            return NSLocalizedString("GIFLoop", comment: "Loop playback mode")
+            return NSLocalizedString("GIFLoop", value: "Loop", comment: "Loop playback mode")
         case .rebound:
-            return NSLocalizedString("GIFRebound", comment: "Rebound playback mode")
+            return NSLocalizedString("GIFRebound", value: "Rebound", comment: "Rebound playback mode")
         case .reverse:
-            return NSLocalizedString("GIFReverseLoop", comment: "Reverse playback mode")
+            return NSLocalizedString("GIFReverseLoop", value: "Reverse", comment: "Reverse playback mode")
         }
     }
     

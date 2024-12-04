@@ -335,7 +335,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
         }
         
         let completion: (Bool) -> Void = { [weak self] _ in
-            self?.expandCell.changeLabel(to: NSLocalizedString("EditorMore", comment: "Label for the 'More' option in the editor tools"))
+            self?.expandCell.changeLabel(to: NSLocalizedString("EditorMore", value: "More", comment: "Label for the 'More' option in the editor tools"))
         }
         
         if animated {
@@ -353,7 +353,7 @@ final class StyleMenuView: IgnoreTouchesView, StyleMenuCellDelegate, StyleMenuEx
     /// - Parameter animated: whether to animate the transition or not.
     func expandCollection(animated: Bool = false) {
         state = .expanded
-        expandCell.changeLabel(to: NSLocalizedString("EditorClose", comment: "Label for the 'Close' option in the editor tools"))
+        expandCell.changeLabel(to: NSLocalizedString("EditorClose", value: "Close", comment: "Label for the 'Close' option in the editor tools"))
         stopTimer()
         
         let action: () -> Void = { [weak self] in

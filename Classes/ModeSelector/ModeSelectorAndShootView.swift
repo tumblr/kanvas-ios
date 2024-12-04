@@ -241,7 +241,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
         preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
-        let text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
+        let text = NSLocalizedString("Tap to switch modes", value: "Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
         
         return EasyTipView(text: text, preferences: preferences, delegate: self)
     }
@@ -258,7 +258,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         preferences.positioning.textHInset = 18
         preferences.positioning.textVInset = 14
         preferences.positioning.margin = 4
-        let text = NSLocalizedString("Tap and hold to record", comment: "Indicates to the user that they can tap and hold to record")
+        let text = NSLocalizedString("Tap and hold to record", value: "Tap and hold to record", comment: "Indicates to the user that they can tap and hold to record")
         
         return EasyTipView(text: text, preferences: preferences, delegate: self)
     }
