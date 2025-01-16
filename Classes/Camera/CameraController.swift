@@ -480,9 +480,9 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     }
     
     private func showDismissTooltip() {
-        let alertController = UIAlertController(title: nil, message: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"), preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel)
-        let discardAction = UIAlertAction(title: NSLocalizedString("I'm sure", comment: "Confirmation to discard all the clips"), style: .destructive) { [weak self] (UIAlertAction) in
+        let alertController = UIAlertController(title: nil, message: NSLocalizedString("Are you sure? If you close this, you'll lose everything you just created.", value: "Are you sure? If you close this, you'll lose everything you just created.", comment: "Popup message when user discards all their clips"), preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", value: "Cancel", comment: "Cancel alert controller"), style: .cancel)
+        let discardAction = UIAlertAction(title: NSLocalizedString("I'm sure", value: "I'm sure", comment: "Confirmation to discard all the clips"), style: .destructive) { [weak self] (UIAlertAction) in
             self?.handleCloseButtonPressed()
         }
         alertController.addAction(cancelAction)
@@ -1275,7 +1275,7 @@ open class CameraController: UIViewController, MediaClipsEditorDelegate, CameraP
     }
 
     public func pickingMediaNotAllowed(reason: String) {
-        let buttonMessage = NSLocalizedString("Got it", comment: "Got it")
+        let buttonMessage = NSLocalizedString("Got it", value: "Got it", comment: "Got it")
         showAlert(message: reason, buttonMessage: buttonMessage)
     }
 

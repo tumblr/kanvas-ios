@@ -508,14 +508,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - GIF Maker Helpers
 
     private func openGIFMaker(animated: Bool) {
-        guard let cell = collectionController.getCell(for: .gif) else {
-            assertionFailure("Failed to open GIF Maker")
-            return
-        }
-        openGIFMaker(cell: cell, animated: animated, permanent: true)
+        openGIFMaker(cell: collectionController.getCell(for: .gif), animated: animated, permanent: true)
     }
 
-    private func openGIFMaker(cell: KanvasEditorMenuCollectionCell, animated: Bool, permanent: Bool) {
+    private func openGIFMaker(cell: KanvasEditorMenuCollectionCell?, animated: Bool, permanent: Bool) {
         let editionOption = EditionOption.gif
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         showMainUI(false)
@@ -954,9 +950,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func handleExportError() {
         delegate?.didFailExporting()
         let alertController = UIAlertController(title: nil,
-                                                message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"),
+                                                message: NSLocalizedString("SomethingGoofedTitle", value: "Something goofed.", comment: "Alert controller message"),
                                                 preferredStyle: .alert)
-        let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { _ in
+        let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", value: "Try again", comment: "Try again"), style: .default) { _ in
             alertController.dismiss(animated: true, completion: .none)
         }
         alertController.addAction(tryAgainButton)
