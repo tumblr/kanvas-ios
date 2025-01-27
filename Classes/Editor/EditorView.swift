@@ -347,7 +347,7 @@ final class EditorView: UIView, MovableViewCanvasDelegate, MediaPlayerViewDelega
 
             let bottomConstraint: NSLayoutConstraint
             let topConstraint: NSLayoutConstraint
-            if Device.belongsToIPhoneXGroup {
+            if Device.belongsToIPhoneXGroup || Device.isIPad {
                 bottomConstraint = playerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
                 topConstraint = playerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
             } else {

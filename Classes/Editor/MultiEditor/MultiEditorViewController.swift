@@ -17,7 +17,9 @@ protocol MultiEditorComposerDelegate: EditorControllerDelegate {
 
 class MultiEditorViewController: UIViewController {
     private lazy var clipsController: MediaClipsEditorViewController = {
-        let clipsEditor = MediaClipsEditorViewController(showsAddButton: true)
+        let collectionViewSettings = MediaClipsCollectionView.Settings(showsFadeOutGradient: false)
+        let collectionSettings = MediaClipsCollectionController.Settings(clipsCollectionViewSettings: collectionViewSettings)
+        let clipsEditor = MediaClipsEditorViewController(showsAddButton: true, collectionSettings: collectionSettings)
         clipsEditor.delegate = self
         clipsEditor.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         return clipsEditor
