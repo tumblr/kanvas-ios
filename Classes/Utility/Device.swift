@@ -29,8 +29,14 @@ public struct KanvasDevice {
     // Device type
     static let isIPad: Bool = UIDevice.current.userInterfaceIdiom == .pad
     static let isIPhone: Bool = UIDevice.current.userInterfaceIdiom == .phone
-    public static let isRunningInSimulator: Bool = TARGET_OS_SIMULATOR != 0
-    
+    public static var isRunningInSimulator: Bool {
+#if SIMULATOR
+        true
+#else
+        false
+#endif
+    }
+
     // Width and height of current device
     static let screenWidth: Int = Int(UIScreen.main.bounds.size.width)
     static let screenHeight: Int = Int(UIScreen.main.bounds.size.height)
