@@ -6,7 +6,7 @@ env:
 
 common_params:
   - &common_plugins
-    - automattic/bash-cache#2.2.0
+    - automattic/bash-cache#5.3.1
 
 steps:
   #################
