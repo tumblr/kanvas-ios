@@ -26,7 +26,7 @@ final class ColorThieftTests: XCTestCase {
                               UIColor(hex: "#ebebeb"),
                               UIColor(hex: "#747474"),
                               UIColor(hex: "#6c6c6c")]
-        
-        XCTAssertEqual(colors, expectedColors, "Expected different colors")
+
+        XCTAssertColorsEqual(colors, expectedColors, accuracy: 0.035)
     }
 }

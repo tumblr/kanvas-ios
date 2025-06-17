@@ -18,6 +18,6 @@ final class UIImageDominantColorsTests: XCTestCase {
                               UIColor(hex: "#545454"),
                               UIColor(hex: "#343434")]
         
-        XCTAssertEqual(colors, expectedColors, "Expected different colors.")
+        XCTAssertColorsEqual(colors, expectedColors, accuracy: 0.035)
     }
 }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,6 +29,7 @@
 		1404E2AE28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */; };
 		1431FA3B2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */; };
 		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
+		3F23ACA62E011682006B0209 /* XCTAssertColorsEqual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F23ACA52E011682006B0209 /* XCTAssertColorsEqual.swift */; };
 		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
@@ -255,6 +256,7 @@
 		147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		2E2C11793C82F53D672DCC9A /* Pods-KanvasExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.release.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.release.xcconfig"; sourceTree = "<group>"; };
 		2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F23ACA52E011682006B0209 /* XCTAssertColorsEqual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTAssertColorsEqual.swift; sourceTree = "<group>"; };
 		528EA69F8E77F28A567AEDBC /* Pods-KanvasExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.debug.xcconfig"; sourceTree = "<group>"; };
 		650648002478291B0052C175 /* SpeedControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControllerTests.swift; sourceTree = "<group>"; };
 		65064802247829270052C175 /* SpeedViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedViewTests.swift; sourceTree = "<group>"; };
@@ -512,6 +514,7 @@
 			isa = PBXGroup;
 			children = (
 				1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */,
+				3F23ACA52E011682006B0209 /* XCTAssertColorsEqual.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -1263,9 +1266,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KanvasExample/Pods-KanvasExample-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KanvasExample/Pods-KanvasExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1324,9 +1331,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1543,6 +1554,7 @@
 				65E46BAA22BD22DE004FD226 /* EditionOptionTests.swift in Sources */,
 				B342F42A24B3C45300E9C461 /* MetalPixelBufferViewTests.swift in Sources */,
 				0E29275F21879C18009E1FCF /* CameraZoomHandlerTests.swift in Sources */,
+				3F23ACA62E011682006B0209 /* XCTAssertColorsEqual.swift in Sources */,
 				AB7263E9212CC83B0044ED96 /* KanvasStringsTests.swift in Sources */,
 				65507DB4239F381700087014 /* MainTextViewTests.swift in Sources */,
 				0E5CFADE219F283B00D8F6F5 /* DeviceTests.swift in Sources */,
