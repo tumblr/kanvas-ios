@@ -9,7 +9,7 @@ env:
 
 common_params:
   - &common_plugins
-    - automattic/bash-cache#5.3.1
+    - automattic/a8c-ci-toolkit#5.3.1
 
 steps:
   #################
@@ -29,12 +29,7 @@ steps:
   - label: "Validate Podspec"
     key: validate
     command: |
-      # validate_podspec
-      echo '+++ ⚠️ validate_podspec was bypassed ⚠️'
-      # post a message in the logs
-      cat .buildkite/validate_podspec_annotation.md
-      # and also as an annotation
-      cat .buildkite/validate_podspec_annotation.md | buildkite-agent annotate --style 'warning'
+      validate_podspec --patch-cocoapods
     plugins: *common_plugins
     agents:
       queue: upload
