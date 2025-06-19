@@ -31,8 +31,6 @@ steps:
     command: |
       validate_podspec --patch-cocoapods
     plugins: *common_plugins
-    agents:
-      queue: upload
 
   #################
   # Lint
