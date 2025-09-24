@@ -1,11 +1,11 @@
 PODS:
-  - CropViewController (2.6.1)
+  - CropViewController (2.8.0)
   - iOSSnapshotTestCase (8.0.0):
     - iOSSnapshotTestCase/SwiftSupport (= 8.0.0)
   - iOSSnapshotTestCase/Core (8.0.0)
   - iOSSnapshotTestCase/SwiftSupport (8.0.0):
     - iOSSnapshotTestCase/Core
-  - Kanvas (1.5.2):
+  - Kanvas (1.5.3):
     - CropViewController
 
 DEPENDENCIES:
@@ -23,9 +23,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CropViewController: 58fb440f30dac788b129d2a1f24cffdcb102669c
+  CropViewController: 29befa222e239d392d7f0ed00f324102c8bef5c9
   iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
-  Kanvas: 5203490649cb4c2ea6a796cf89b73e87c57ddda1
+  Kanvas: 0cae3ea32d1e509b079cbbc79f864c93ded385be
 
 PODFILE CHECKSUM: 7f87a0c75f7e07c253792681a758e25d03b1f121
 
