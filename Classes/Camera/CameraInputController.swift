@@ -183,6 +183,8 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         setupFlash(defaultOption: settings.preferredFlashOption)
 
         setupPreviewBlur()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationChanged), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -197,7 +199,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             return
         }
 
-        setupCaptureSession()
+        setupCaptureSession(frameSize: view.frame.size)
 
         setupNotifications()
     }
@@ -214,8 +216,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         teardownNotifications()
     }
 
-    func setupCaptureSession() {
-        let frameSize = view.frame.size
+    func setupCaptureSession(frameSize: CGSize) {
         previewBlurView.effect = CameraInputController.blurEffect()
         let hasFullAccess = delegate?.cameraInputControllerHasFullAccess() ?? true
         guard hasFullAccess else {
@@ -283,10 +284,46 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
             try configureAudioDataOutput()
             try configureCurrentOutput()
             captureSession?.commitConfiguration()
+            refreshOrientation()
         } catch {
             // this can happen if not all permissions were accepted, should not throw an exception
             captureSession?.commitConfiguration()
             return
+        }
+    }
+
+    @objc func orientationChanged() {
+        refreshOrientation()
+    }
+
+    private func refreshOrientation() {
+        captureSession?.connections.forEach({ connection in
+            connection.videoOrientation = orientation()
+        })
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        refreshOrientation()
+
+        stopCaptureSession()
+        setupCaptureSession(frameSize: CGSize(width: size.width, height: size.height))
+    }
+
+
+    private func orientation() -> AVCaptureVideoOrientation {
+        switch UIDevice.current.orientation {
+        case .portrait:
+            return .portrait
+        case .portraitUpsideDown:
+            return .portraitUpsideDown
+        case .landscapeLeft:
+            return .landscapeRight
+        case .landscapeRight:
+            return .landscapeLeft
+        default:
+            return .portrait
         }
     }
 

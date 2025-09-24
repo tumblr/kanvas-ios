@@ -188,4 +188,43 @@ public struct KanvasEditorDesign {
             }
         )
     }()
+
+    public static var storiesDesign: KanvasEditorDesign = {
+        return KanvasEditorDesign(
+            isVerticalMenu: false,
+            checkmarkImage: KanvasImages.shared.editorConfirmImage,
+            buttonBackgroundColor: .clear,
+            buttonInvertedBackgroundColor: .clear,
+            optionBackgroundColor: .clear,
+            topButtonSize: 49,
+            topSecondaryButtonSize: 36,
+            topButtonInterspace: 30,
+            fakeOptionCellCheckmarkImage: UIImage.imageFromCameraBundle(named: "confirm"),
+            closeGradientImage: UIImage.imageFromCameraBundle(named: "closeGradient"),
+            editorViewCloseImage: UIImage.imageFromCameraBundle(named: "whiteCloseIcon"),
+            editorViewBackImage: UIImage.imageFromCameraBundle(named: "back"),
+            editorViewButtonTopMargin: 24,
+            editorViewButtonBottomMargin: Device.belongsToIPhoneXGroup ? 14 : 19.5,
+            editorViewFakeOptionCellMinSize: 36,
+            editorViewFakeOptionCellMaxSize: 45,
+            editorViewCloseButtonSize: 26.5,
+            editorViewCloseButtonHorizontalMargin: 24,
+            drawingViewUndoImage: UIImage.imageFromCameraBundle(named: "undo"),
+            drawingViewEraserSelectedImage: UIImage.imageFromCameraBundle(named: "eraserSelected"),
+            drawingViewEraserUnselectedImage: UIImage.imageFromCameraBundle(named: "eraserUnselected"),
+            drawingViewMarkerImage: UIImage.imageFromCameraBundle(named: "marker"),
+            drawingViewSharpieImage: UIImage.imageFromCameraBundle(named: "sharpie"),
+            drawingViewPencilImage: UIImage.imageFromCameraBundle(named: "pencil"),
+            drawingViewEyeDropperImage: UIImage.imageFromCameraBundle(named: "eyeDropper"),
+            editorTextViewFontImage: UIImage.imageFromCameraBundle(named: "font"),
+            editorTextViewAlignmentImage: [
+                .left: UIImage.imageFromCameraBundle(named: "leftAlignment"),
+                .center: UIImage.imageFromCameraBundle(named: "centerAlignment"),
+                .right: UIImage.imageFromCameraBundle(named: "rightAlignment"),
+            ],
+            editorTextViewHighlightImage: { selected in
+                return selected ? UIImage.imageFromCameraBundle(named: "highlightSelected") : UIImage.imageFromCameraBundle(named: "highlightUnselected")
+            }
+        )
+    }()
 }
