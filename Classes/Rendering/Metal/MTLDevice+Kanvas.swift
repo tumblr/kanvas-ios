@@ -12,25 +12,11 @@ import MetalKit
 extension MTLDevice {
     func makeKanvasDefaultLibrary() -> MTLLibrary? {
         guard
-            let bundlePath = KanvasStrings.bundlePath(for: CameraSettings.self)
+            let bundle = KanvasStrings.bundle(for: CameraSettings.self),
+            let shaderPath = bundle.resourcePath?.appending("/MetalShaders").appending("/shaders.metal"),
+            let source = try? String(contentsOfFile: shaderPath, encoding: .utf8)
         else {
             return nil
-        }
-
-        let shaderDirectoryPath = "\(bundlePath)/MetalShaders"
-        
-        let enumerator = FileManager.default.enumerator(atPath: shaderDirectoryPath)
-        var source = ""
-        while let filename = enumerator?.nextObject() as? String {
-            if filename.hasSuffix("metal") {
-                let fileURL = "\(shaderDirectoryPath)/\(filename)"
-                do {
-                    source += try String(contentsOfFile: fileURL, encoding: .utf8)
-                }
-                catch {
-                    print("failed to read \(filename)")
-                }
-            }
         }
         
         do {

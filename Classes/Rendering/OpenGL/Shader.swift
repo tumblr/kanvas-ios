@@ -57,8 +57,7 @@ class Shader {
     /// - Returns: The shader source code as a String
     class func getSourceCode(_ name: String, type: ShaderExtension) -> String? {
         let extString: String = type.rawValue
-        guard let bundlePath = KanvasStrings.bundlePath(for: Shader.self),
-        let bundle = Bundle(path: bundlePath),
+        guard let bundle = KanvasStrings.bundle(for: Shader.self),
         let path = bundle.path(forResource: String("\(ShaderConstants.shaderDirectory)/\(name)"), ofType: extString) else {
                 return nil
         }

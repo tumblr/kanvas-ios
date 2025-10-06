@@ -199,8 +199,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
 
 private struct CameraSegmentHandlerConstants {
     static let silentURL: URL? = {
-        guard let bundlePath = KanvasStrings.bundlePath(for: CameraSegmentHandler.self),
-            let bundle = Bundle(path: bundlePath) else {
+        guard let bundle = KanvasStrings.bundle(for: CameraSegmentHandler.self) else {
                 return nil
         }
         return bundle.url(forResource: "silence", withExtension: "aac")
