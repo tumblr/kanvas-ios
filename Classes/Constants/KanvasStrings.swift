@@ -41,7 +41,7 @@ public struct KanvasStrings {
 
     static func bundlePath(for aClass: AnyClass) -> String? {
         #if SWIFT_PACKAGE
-            return Bundle.module.path(forResource: "Kanvas", ofType: "bundle")
+            return Bundle.module.bundlePath
         #else
             return Bundle(for: aClass).path(forResource: "Kanvas", ofType: "bundle")
         #endif
