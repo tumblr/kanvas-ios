@@ -11,13 +11,25 @@ import MetalKit
 // 2. Concatinate all source files as a string then compile it at runtime by using MTLDevice::makeLibrary(source:options:)
 extension MTLDevice {
     func makeKanvasDefaultLibrary() -> MTLLibrary? {
-        guard
-            let bundle = KanvasStrings.bundle(for: CameraSettings.self),
-            let shaderPath = bundle.resourcePath?.appending("/MetalShaders").appending("/shaders.metal"),
-            let source = try? String(contentsOfFile: shaderPath, encoding: .utf8)
-        else {
-            return nil
-        }
+        #if SWIFT_PACKAGE
+            guard
+                let bundle = KanvasStrings.bundle(for: CameraSettings.self),
+                let shadersURL = bundle.url(forResource: "shaders", withExtension: "metal"),
+                let source = try? String(contentsOf: shadersURL, encoding: .utf8)
+            else {
+                return nil
+            }
+        
+        #else
+            guard
+                let bundle = KanvasStrings.bundle(for: CameraSettings.self),
+                let shaderPath = bundle.resourcePath?.appending("/MetalShaders").appending("/shaders.metal"),
+                let source = try? String(contentsOfFile: shaderPath, encoding: .utf8)
+            else {
+                return nil
+            }
+        #endif
+
         
         do {
             let library = try makeLibrary(source: source, options: nil)
