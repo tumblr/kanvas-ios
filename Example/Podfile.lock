@@ -9,7 +9,7 @@ PODS:
     - CropViewController
 
 DEPENDENCIES:
-  - CropViewController
+  - CropViewController (~> 2.8)
   - iOSSnapshotTestCase (= 8.0.0)
   - Kanvas (from `../`)
 
@@ -27,6 +27,6 @@ SPEC CHECKSUMS:
   iOSSnapshotTestCase: a670511f9ee3829c2b9c23e6e68f315fd7b6790f
   Kanvas: 0cae3ea32d1e509b079cbbc79f864c93ded385be
 
-PODFILE CHECKSUM: 7f87a0c75f7e07c253792681a758e25d03b1f121
+PODFILE CHECKSUM: d8ece942701133aca052e9f2c34500d3894e8fee
 
 COCOAPODS: 1.11.3

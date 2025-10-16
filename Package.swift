@@ -22,8 +22,7 @@ let package = Package(
             dependencies: [.product(name: "CropViewController", package: "TOCropViewController")],
             path: "Classes",
             resources: [
-                .process("Resources"),
-                .process("Resources/MetalShaders/shaders.metal")
+                .process("Resources")           
             ]
         ),
     ]
