@@ -5,7 +5,7 @@
 //
 
 @testable import Kanvas
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
 final class KanvasColorsTests: FBSnapshotTestCase {
     override func setUp() {

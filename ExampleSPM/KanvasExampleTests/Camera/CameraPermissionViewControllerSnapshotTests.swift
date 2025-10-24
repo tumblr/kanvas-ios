@@ -8,7 +8,7 @@
 
 @testable import Kanvas
 import XCTest
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 
 final class CameraPermissionsViewControllerSnapshotTests: FBSnapshotTestCase {
     private var mockDelegate: MockCameraPermissionsViewControllerDelegate { MockCameraPermissionsViewControllerDelegate() }

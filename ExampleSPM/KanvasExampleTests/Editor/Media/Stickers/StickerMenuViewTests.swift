@@ -6,7 +6,7 @@
 
 @testable import Kanvas
 import AVFoundation
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import Foundation
 import UIKit
 import XCTest

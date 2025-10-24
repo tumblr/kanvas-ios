@@ -30,7 +30,7 @@
 		1404E2AE28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */; };
 		1431FA3B2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */; };
 		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
-		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
+		28C9EE95F54694F9A6343B30 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F9C1DE6E2416B336667DAE /* Pods_KanvasExampleTests.framework */; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
 		650A833F24646A350071BF9D /* GifMakerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A833E24646A350071BF9D /* GifMakerControllerTests.swift */; };
@@ -231,7 +231,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0A2D7799F1E8CBD7CAD7F236 /* Pods-KanvasExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		0E29275E21879C18009E1FCF /* CameraZoomHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraZoomHandlerTests.swift; sourceTree = "<group>"; };
 		0E5CFADD219F283B00D8F6F5 /* DeviceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTests.swift; sourceTree = "<group>"; };
 		0E6450B821B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoreTouchesCollectionViewTests.swift; sourceTree = "<group>"; };
@@ -253,8 +252,8 @@
 		1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraPermissionsViewControllerDelegate.swift; sourceTree = "<group>"; };
 		1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FBSnapshotTest+M1Compatability.swift"; sourceTree = "<group>"; };
 		147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
-		2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A0347845EE544E67738E8D0 /* Pods-KanvasExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExampleTests.release.xcconfig"; path = "Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		1745DA64C970017F75F19C32 /* Pods-KanvasExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExampleTests.release.xcconfig"; path = "Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		41F9C1DE6E2416B336667DAE /* Pods_KanvasExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		650648002478291B0052C175 /* SpeedControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControllerTests.swift; sourceTree = "<group>"; };
 		65064802247829270052C175 /* SpeedViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedViewTests.swift; sourceTree = "<group>"; };
 		650A833E24646A350071BF9D /* GifMakerControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerControllerTests.swift; sourceTree = "<group>"; };
@@ -420,6 +419,7 @@
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
+		AD70F4CC567B5A26E5F34558 /* Pods-KanvasExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B342F42924B3C45300E9C461 /* MetalPixelBufferViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPixelBufferViewTests.swift; sourceTree = "<group>"; };
 		BF01710D2498592F00639E49 /* URL+MediaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+MediaTests.swift"; sourceTree = "<group>"; };
 		BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerHandlerTests.swift; sourceTree = "<group>"; };
@@ -457,7 +457,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */,
+				28C9EE95F54694F9A6343B30 /* Pods_KanvasExampleTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,7 +520,7 @@
 			isa = PBXGroup;
 			children = (
 				973CC439A84BFDE7FC10BAC1 /* libPods-KanvasExample.a */,
-				2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */,
+				41F9C1DE6E2416B336667DAE /* Pods_KanvasExampleTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1100,8 +1100,8 @@
 			children = (
 				851711E19722E89C27E6645A /* Pods-KanvasExample.debug.xcconfig */,
 				C06275D257AC3AB0A32223E5 /* Pods-KanvasExample.release.xcconfig */,
-				0A2D7799F1E8CBD7CAD7F236 /* Pods-KanvasExampleTests.debug.xcconfig */,
-				3A0347845EE544E67738E8D0 /* Pods-KanvasExampleTests.release.xcconfig */,
+				AD70F4CC567B5A26E5F34558 /* Pods-KanvasExampleTests.debug.xcconfig */,
+				1745DA64C970017F75F19C32 /* Pods-KanvasExampleTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1171,11 +1171,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AB7F29652121F0ED00B8D599 /* Build configuration list for PBXNativeTarget "KanvasExampleTests" */;
 			buildPhases = (
-				4936E99FC30DAA57C7B38EF8 /* [CP] Check Pods Manifest.lock */,
+				7DD53178206B0487E6C8EED2 /* [CP] Check Pods Manifest.lock */,
 				AB7F29582121F0ED00B8D599 /* Sources */,
 				AB7F29592121F0ED00B8D599 /* Frameworks */,
 				AB7F295A2121F0ED00B8D599 /* Resources */,
-				76DC70CC2A71E73CE9C540AF /* [CP] Embed Pods Frameworks */,
+				D8E4D6375E5FE47AFC10EDE6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1294,7 +1294,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4936E99FC30DAA57C7B38EF8 /* [CP] Check Pods Manifest.lock */ = {
+		7DD53178206B0487E6C8EED2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1316,7 +1316,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		76DC70CC2A71E73CE9C540AF /* [CP] Embed Pods Frameworks */ = {
+		D8E4D6375E5FE47AFC10EDE6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1734,7 +1734,7 @@
 		};
 		AB7F29632121F0ED00B8D599 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0A2D7799F1E8CBD7CAD7F236 /* Pods-KanvasExampleTests.debug.xcconfig */;
+			baseConfigurationReference = AD70F4CC567B5A26E5F34558 /* Pods-KanvasExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1759,7 +1759,7 @@
 		};
 		AB7F29642121F0ED00B8D599 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3A0347845EE544E67738E8D0 /* Pods-KanvasExampleTests.release.xcconfig */;
+			baseConfigurationReference = 1745DA64C970017F75F19C32 /* Pods-KanvasExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

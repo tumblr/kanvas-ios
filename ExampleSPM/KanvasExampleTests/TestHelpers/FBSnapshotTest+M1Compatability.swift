@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import UIKit
 
 /// Set between 0 and 1

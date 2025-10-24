@@ -5,7 +5,7 @@
 //
 
 @testable import Kanvas
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 import AVFoundation
 
 class FilteredInputViewControllerDelegateStub: FilteredInputViewControllerDelegate {

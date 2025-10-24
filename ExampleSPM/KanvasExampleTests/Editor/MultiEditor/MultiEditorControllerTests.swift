@@ -5,7 +5,7 @@
 //
 
 import XCTest
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 @testable import Kanvas
 
 class MultiEditorControllerTests: FBSnapshotTestCase {

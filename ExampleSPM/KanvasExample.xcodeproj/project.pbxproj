@@ -30,8 +30,8 @@
 		1431FA3B2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */; };
 		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
 		513B2FAF2EA19278000B61F9 /* Kanvas in Frameworks */ = {isa = PBXBuildFile; productRef = 513B2FAE2EA19278000B61F9 /* Kanvas */; };
-		513B2FB22EA192C2000B61F9 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 513B2FB12EA192C2000B61F9 /* iOSSnapshotTestCase */; };
-		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
+		51F6FC3E2EAC188E00AE2660 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 51F6FC3D2EAC188E00AE2660 /* iOSSnapshotTestCase */; };
+		51F6FC402EAC188E00AE2660 /* iOSSnapshotTestCase in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 51F6FC3D2EAC188E00AE2660 /* iOSSnapshotTestCase */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
 		650A833F24646A350071BF9D /* GifMakerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A833E24646A350071BF9D /* GifMakerControllerTests.swift */; };
@@ -230,6 +230,20 @@
 			remoteInfo = KanvasExample;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		51F6FC3F2EAC188E00AE2660 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				51F6FC402EAC188E00AE2660 /* iOSSnapshotTestCase in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0E29275E21879C18009E1FCF /* CameraZoomHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraZoomHandlerTests.swift; sourceTree = "<group>"; };
@@ -454,8 +468,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				513B2FB22EA192C2000B61F9 /* iOSSnapshotTestCase in Frameworks */,
-				5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */,
+				51F6FC3E2EAC188E00AE2660 /* iOSSnapshotTestCase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1158,6 +1171,7 @@
 				AB7F29582121F0ED00B8D599 /* Sources */,
 				AB7F29592121F0ED00B8D599 /* Frameworks */,
 				AB7F295A2121F0ED00B8D599 /* Resources */,
+				51F6FC3F2EAC188E00AE2660 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1201,7 +1215,7 @@
 			mainGroup = AB7F293A2121F02A00B8D599;
 			packageReferences = (
 				513B2FAD2EA19278000B61F9 /* XCLocalSwiftPackageReference "../../kanvas-ios" */,
-				513B2FB02EA192C2000B61F9 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				51F6FC3A2EAC187700AE2660 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
 			);
 			productRefGroup = AB7F29442121F02A00B8D599 /* Products */;
 			projectDirPath = "";
@@ -1646,6 +1660,7 @@
 					"COCOAPODS=1",
 				);
 				INFOPLIST_FILE = KanvasExampleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1670,6 +1685,7 @@
 					"COCOAPODS=1",
 				);
 				INFOPLIST_FILE = KanvasExampleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1723,7 +1739,7 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		513B2FB02EA192C2000B61F9 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
+		51F6FC3A2EAC187700AE2660 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uber/ios-snapshot-test-case.git";
 			requirement = {
@@ -1738,9 +1754,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Kanvas;
 		};
-		513B2FB12EA192C2000B61F9 /* iOSSnapshotTestCase */ = {
+		51F6FC3D2EAC188E00AE2660 /* iOSSnapshotTestCase */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 513B2FB02EA192C2000B61F9 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */;
+			package = 51F6FC3A2EAC187700AE2660 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */;
 			productName = iOSSnapshotTestCase;
 		};
 /* End XCSwiftPackageProductDependency section */

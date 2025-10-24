@@ -6,6 +6,7 @@
 
 import Kanvas
 import Foundation
+import UIKit
 
 extension URLSessionTask: KanvasCancelable {
 }

@@ -6,7 +6,7 @@
 
 import Foundation
 import XCTest
-import FBSnapshotTestCase
+import iOSSnapshotTestCase
 @testable import Kanvas
 
 final class MediaPickerButtonViewTests: FBSnapshotTestCase {
