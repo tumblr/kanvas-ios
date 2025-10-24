@@ -30,7 +30,6 @@
 		1404E2AE28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */; };
 		1431FA3B2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */; };
 		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
-		513B2FB22EA192C2000B61F9 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 513B2FB12EA192C2000B61F9 /* iOSSnapshotTestCase */; };
 		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
@@ -458,7 +457,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				513B2FB22EA192C2000B61F9 /* iOSSnapshotTestCase in Frameworks */,
 				5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1815,25 +1813,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		513B2FB02EA192C2000B61F9 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case.git" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/uber/ios-snapshot-test-case.git";
-			requirement = {
-				kind = exactVersion;
-				version = 8.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		513B2FB12EA192C2000B61F9 /* iOSSnapshotTestCase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 513B2FB02EA192C2000B61F9 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case.git" */;
-			productName = iOSSnapshotTestCase;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AB7F293B2121F02A00B8D599 /* Project object */;
 }
