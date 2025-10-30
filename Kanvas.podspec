@@ -10,8 +10,8 @@ Pod::Spec.new do |spec|
                         tag: spec.version.to_s }
   spec.authors      = { 'Jimmy Schementi' => 'jimmys@tumblr.com',
                         'Tony Cheng' => 'tony@getkanvas.com' }
-  spec.platform     = :ios, '13.0'
-  spec.swift_version = '4.2'
+  spec.platform     = :ios, '15.0'
+  spec.swift_version = '5.9'
   spec.requires_arc = true
   spec.frameworks = 'Foundation', 'GLKit', 'OpenGLES', 'UIKit'
   spec.source_files = 'Classes/**/*.{h,m,swift,vsh,glsl}'
