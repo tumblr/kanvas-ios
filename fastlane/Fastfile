@@ -8,11 +8,6 @@ ARTIFACTS_PATH = File.join(PROJECT_ROOT, 'artifacts')
 
 platform :ios do
   desc 'Build and Test the Pod'
-
-  before_all do
-    xcode_select(version: '16.4')
-  end
-
   lane :test do
     run_tests(
       workspace: File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExample.xcworkspace'),
