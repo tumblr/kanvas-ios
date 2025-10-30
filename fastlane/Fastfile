@@ -13,7 +13,7 @@ platform :ios do
       workspace: File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExample.xcworkspace'),
       scheme: 'KanvasExample',
       devices: ['iPhone SE (3rd generation)'],
-      deployment_target_version: '15.0'
+      deployment_target_version: '18.5'
     )
   end
 end
