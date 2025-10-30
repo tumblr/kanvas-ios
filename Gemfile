@@ -2,6 +2,6 @@
 
 source 'https://rubygems.org'
 
-gem 'cocoapods', '1.11.3'
-gem 'fastlane', '~> 2.206'
-gem 'rubocop', '~> 1.31'
+gem 'cocoapods', '1.16'
+gem 'fastlane', '~> 2.216'
+gem 'rubocop', '~> 1.6'
