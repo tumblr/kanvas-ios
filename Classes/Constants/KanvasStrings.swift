@@ -39,8 +39,15 @@ public struct KanvasStrings {
         }
     }
 
-    static func bundlePath(for aClass: AnyClass) -> String? {
-        return Bundle(for: aClass).path(forResource: "Kanvas", ofType: "bundle")
+    static func bundle(for aClass: AnyClass) -> Bundle? {
+        #if SWIFT_PACKAGE
+            return Bundle.module
+        #else
+            guard let bundlePath = Bundle(for: aClass).path(forResource: "Kanvas", ofType: "bundle") else {
+                return nil
+            }
+            return Bundle(path: bundlePath)
+        #endif
     }
 
     public var cameraPermissionsTitleLabel: String

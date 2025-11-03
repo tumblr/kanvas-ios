@@ -14,14 +14,16 @@ let package = Package(
             targets: ["Kanvas"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/TimOliver/TOCropViewController.git", branch: "main"),
+        .package(url: "https://github.com/TimOliver/TOCropViewController.git", exact: "2.8.0"),
     ],
     targets: [
         .target(
             name: "Kanvas",
             dependencies: [.product(name: "CropViewController", package: "TOCropViewController")],
             path: "Classes",
-            resources: [.process("Resources")]
+            resources: [
+                .process("Resources")           
+            ]
         ),
     ]
 )

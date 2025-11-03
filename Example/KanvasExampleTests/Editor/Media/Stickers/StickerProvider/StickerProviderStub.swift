@@ -7,7 +7,7 @@
 import Kanvas
 import Foundation
 
-extension URLSessionTask: KanvasCancelable {
+extension URLSessionTask: @retroactive KanvasCancelable {
 }
 
 class ImageLoader: KanvasStickerLoader {

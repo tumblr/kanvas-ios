@@ -8,7 +8,6 @@ import Foundation
 import UIKit
 import Photos
 import Kanvas
-import Photos
 
 private enum PhotoLibraryAccessError: Error {
     case notDetermined, restricted, denied, add(Error)

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -25,11 +25,12 @@
 		0EBE144E2123727800E9D0C8 /* CameraSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE144D2123727800E9D0C8 /* CameraSettingsTests.swift */; };
 		0EDE7A3B216425BD009DB00F /* ExtendedStackViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3A216425BD009DB00F /* ExtendedStackViewTests.swift */; };
 		0EDE7A3D216425C5009DB00F /* ExtendedButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE7A3C216425C5009DB00F /* ExtendedButtonTests.swift */; };
+		0FB42C14EA613430F8C0380C /* libPods-KanvasExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 973CC439A84BFDE7FC10BAC1 /* libPods-KanvasExample.a */; };
 		1404E2AC28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AB28113EBD00161EB6 /* MockCaptureDeviceAuthorizer.swift */; };
 		1404E2AE28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */; };
 		1431FA3B2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */; };
 		147C0F2827FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */; };
-		5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */; };
+		28C9EE95F54694F9A6343B30 /* Pods_KanvasExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F9C1DE6E2416B336667DAE /* Pods_KanvasExampleTests.framework */; };
 		650648012478291B0052C175 /* SpeedControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650648002478291B0052C175 /* SpeedControllerTests.swift */; };
 		65064803247829270052C175 /* SpeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65064802247829270052C175 /* SpeedViewTests.swift */; };
 		650A833F24646A350071BF9D /* GifMakerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650A833E24646A350071BF9D /* GifMakerControllerTests.swift */; };
@@ -159,7 +160,6 @@
 		76ED1DD622C15A9B00E6AF79 /* MediaPickerButtonViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76ED1DD522C15A9B00E6AF79 /* MediaPickerButtonViewTests.swift */; };
 		76FFF24022D4EF53000A0D04 /* KanvasUIImagePickerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FFF23F22D4EF53000A0D04 /* KanvasUIImagePickerViewControllerTests.swift */; };
 		76FFF24822DCD991000A0D04 /* FeatureTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FFF24722DCD991000A0D04 /* FeatureTableView.swift */; };
-		A1EC85EB2BBE0C5734B8D861 /* libPods-KanvasExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 973CC439A84BFDE7FC10BAC1 /* libPods-KanvasExample.a */; };
 		AB7263E9212CC83B0044ED96 /* KanvasStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E5212CC83B0044ED96 /* KanvasStringsTests.swift */; };
 		AB7263EA212CC83B0044ED96 /* KanvasImagesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E6212CC83B0044ED96 /* KanvasImagesTests.swift */; };
 		AB7263EB212CC83B0044ED96 /* KanvasColorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7263E7212CC83B0044ED96 /* KanvasColorsTests.swift */; };
@@ -231,7 +231,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		01FC2BB00871F4C91AA029E9 /* Pods-KanvasExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		0E29275E21879C18009E1FCF /* CameraZoomHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraZoomHandlerTests.swift; sourceTree = "<group>"; };
 		0E5CFADD219F283B00D8F6F5 /* DeviceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTests.swift; sourceTree = "<group>"; };
 		0E6450B821B5B72B00CB7672 /* IgnoreTouchesCollectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoreTouchesCollectionViewTests.swift; sourceTree = "<group>"; };
@@ -253,9 +252,8 @@
 		1404E2AD28113FC400161EB6 /* MockCameraPermissionsViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraPermissionsViewControllerDelegate.swift; sourceTree = "<group>"; };
 		1431FA3A2812DD52007BA9B6 /* FBSnapshotTest+M1Compatability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FBSnapshotTest+M1Compatability.swift"; sourceTree = "<group>"; };
 		147C0F2727FEE0A200F48182 /* CameraPermissionViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
-		2E2C11793C82F53D672DCC9A /* Pods-KanvasExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.release.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.release.xcconfig"; sourceTree = "<group>"; };
-		2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		528EA69F8E77F28A567AEDBC /* Pods-KanvasExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.debug.xcconfig"; sourceTree = "<group>"; };
+		1745DA64C970017F75F19C32 /* Pods-KanvasExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExampleTests.release.xcconfig"; path = "Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		41F9C1DE6E2416B336667DAE /* Pods_KanvasExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KanvasExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		650648002478291B0052C175 /* SpeedControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControllerTests.swift; sourceTree = "<group>"; };
 		65064802247829270052C175 /* SpeedViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedViewTests.swift; sourceTree = "<group>"; };
 		650A833E24646A350071BF9D /* GifMakerControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerControllerTests.swift; sourceTree = "<group>"; };
@@ -385,8 +383,8 @@
 		76ED1DD522C15A9B00E6AF79 /* MediaPickerButtonViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerButtonViewTests.swift; sourceTree = "<group>"; };
 		76FFF23F22D4EF53000A0D04 /* KanvasUIImagePickerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasUIImagePickerViewControllerTests.swift; sourceTree = "<group>"; };
 		76FFF24722DCD991000A0D04 /* FeatureTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureTableView.swift; sourceTree = "<group>"; };
+		851711E19722E89C27E6645A /* Pods-KanvasExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.debug.xcconfig"; sourceTree = "<group>"; };
 		973CC439A84BFDE7FC10BAC1 /* libPods-KanvasExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KanvasExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AAE187352F3D3B5A4AE406ED /* Pods-KanvasExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExampleTests.release.xcconfig"; path = "Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		AB7263E5212CC83B0044ED96 /* KanvasStringsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KanvasStringsTests.swift; sourceTree = "<group>"; };
 		AB7263E6212CC83B0044ED96 /* KanvasImagesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KanvasImagesTests.swift; sourceTree = "<group>"; };
 		AB7263E7212CC83B0044ED96 /* KanvasColorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KanvasColorsTests.swift; sourceTree = "<group>"; };
@@ -421,6 +419,7 @@
 		ABFBDE25212CCDE400E1044C /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = SOURCE_ROOT; };
 		ABFBDE26212CCDE500E1044C /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = SOURCE_ROOT; };
 		ABFBDE29212CCF0700E1044C /* CameraSegmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSegmentTests.swift; sourceTree = "<group>"; };
+		AD70F4CC567B5A26E5F34558 /* Pods-KanvasExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-KanvasExampleTests/Pods-KanvasExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B342F42924B3C45300E9C461 /* MetalPixelBufferViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPixelBufferViewTests.swift; sourceTree = "<group>"; };
 		BF01710D2498592F00639E49 /* URL+MediaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+MediaTests.swift"; sourceTree = "<group>"; };
 		BF017113249B2C3700639E49 /* GifMakerHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifMakerHandlerTests.swift; sourceTree = "<group>"; };
@@ -433,6 +432,7 @@
 		BFA7DAA724E3BA8000F357B6 /* LivePhotoLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePhotoLoaderTests.swift; sourceTree = "<group>"; };
 		BFA7DAA924E3BACE00F357B6 /* MediaPickerThumbnailFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerThumbnailFetcherTests.swift; sourceTree = "<group>"; };
 		BFA7DAAB24E42A9000F357B6 /* KanvasMediaPickerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanvasMediaPickerViewControllerTests.swift; sourceTree = "<group>"; };
+		C06275D257AC3AB0A32223E5 /* Pods-KanvasExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KanvasExample.release.xcconfig"; path = "Target Support Files/Pods-KanvasExample/Pods-KanvasExample.release.xcconfig"; sourceTree = "<group>"; };
 		F551187F25DDC96700DEBF7E /* MultiEditorControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiEditorControllerTests.swift; sourceTree = "<group>"; };
 		F58D37B925117A88007CDF82 /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = en.lproj; sourceTree = "<group>"; };
 		F597B4E024B3E57300843540 /* UIColor+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Colors.swift"; sourceTree = "<group>"; };
@@ -449,7 +449,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1EC85EB2BBE0C5734B8D861 /* libPods-KanvasExample.a in Frameworks */,
+				0FB42C14EA613430F8C0380C /* libPods-KanvasExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,7 +457,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E1399DE40FDDBD3F12B4468 /* Pods_KanvasExampleTests.framework in Frameworks */,
+				28C9EE95F54694F9A6343B30 /* Pods_KanvasExampleTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,7 +520,7 @@
 			isa = PBXGroup;
 			children = (
 				973CC439A84BFDE7FC10BAC1 /* libPods-KanvasExample.a */,
-				2FBD328E5F4D4ECEBA5561F5 /* Pods_KanvasExampleTests.framework */,
+				41F9C1DE6E2416B336667DAE /* Pods_KanvasExampleTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -963,8 +963,8 @@
 				AB7F29452121F02A00B8D599 /* KanvasExample */,
 				AB7F295D2121F0ED00B8D599 /* KanvasExampleTests */,
 				AB7F29442121F02A00B8D599 /* Products */,
-				F8A70A8209D208023D56CAC9 /* Pods */,
 				207DC35FB9695882309558B9 /* Frameworks */,
+				BEB3A2A1204FD5234E40296F /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1095,6 +1095,17 @@
 			path = Metal;
 			sourceTree = "<group>";
 		};
+		BEB3A2A1204FD5234E40296F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				851711E19722E89C27E6645A /* Pods-KanvasExample.debug.xcconfig */,
+				C06275D257AC3AB0A32223E5 /* Pods-KanvasExample.release.xcconfig */,
+				AD70F4CC567B5A26E5F34558 /* Pods-KanvasExampleTests.debug.xcconfig */,
+				1745DA64C970017F75F19C32 /* Pods-KanvasExampleTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		BF4BEEA1237B4FDD00E5D96C /* OpenGL */ = {
 			isa = PBXGroup;
 			children = (
@@ -1134,17 +1145,6 @@
 			path = MultiEditor;
 			sourceTree = "<group>";
 		};
-		F8A70A8209D208023D56CAC9 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				528EA69F8E77F28A567AEDBC /* Pods-KanvasExample.debug.xcconfig */,
-				2E2C11793C82F53D672DCC9A /* Pods-KanvasExample.release.xcconfig */,
-				01FC2BB00871F4C91AA029E9 /* Pods-KanvasExampleTests.debug.xcconfig */,
-				AAE187352F3D3B5A4AE406ED /* Pods-KanvasExampleTests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1152,11 +1152,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AB7F29552121F02C00B8D599 /* Build configuration list for PBXNativeTarget "KanvasExample" */;
 			buildPhases = (
-				9B7E058ED27AFD44362E087E /* [CP] Check Pods Manifest.lock */,
+				3DAFD590F1719A5F6ABBA3D4 /* [CP] Check Pods Manifest.lock */,
 				AB7F293F2121F02A00B8D599 /* Sources */,
 				AB7F29402121F02A00B8D599 /* Frameworks */,
 				AB7F29412121F02A00B8D599 /* Resources */,
-				0CABC96F72E29D6E7401C19E /* [CP] Copy Pods Resources */,
+				0B915AFF1BD62125DB3DDF1D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1171,11 +1171,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AB7F29652121F0ED00B8D599 /* Build configuration list for PBXNativeTarget "KanvasExampleTests" */;
 			buildPhases = (
-				738F75634A37BF5EA6832A11 /* [CP] Check Pods Manifest.lock */,
+				7DD53178206B0487E6C8EED2 /* [CP] Check Pods Manifest.lock */,
 				AB7F29582121F0ED00B8D599 /* Sources */,
 				AB7F29592121F0ED00B8D599 /* Frameworks */,
 				AB7F295A2121F0ED00B8D599 /* Resources */,
-				DE95F59B62017B241AAF5CD5 /* [CP] Embed Pods Frameworks */,
+				D8E4D6375E5FE47AFC10EDE6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1255,7 +1255,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0CABC96F72E29D6E7401C19E /* [CP] Copy Pods Resources */ = {
+		0B915AFF1BD62125DB3DDF1D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1272,29 +1272,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KanvasExample/Pods-KanvasExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		738F75634A37BF5EA6832A11 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-KanvasExampleTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9B7E058ED27AFD44362E087E /* [CP] Check Pods Manifest.lock */ = {
+		3DAFD590F1719A5F6ABBA3D4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1316,7 +1294,29 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DE95F59B62017B241AAF5CD5 /* [CP] Embed Pods Frameworks */ = {
+		7DD53178206B0487E6C8EED2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KanvasExampleTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D8E4D6375E5FE47AFC10EDE6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1694,13 +1694,13 @@
 		};
 		AB7F29562121F02C00B8D599 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 528EA69F8E77F28A567AEDBC /* Pods-KanvasExample.debug.xcconfig */;
+			baseConfigurationReference = 851711E19722E89C27E6645A /* Pods-KanvasExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 84Q69XA6W4;
+				DEVELOPMENT_TEAM = 645UY6D9AD;
 				INFOPLIST_FILE = KanvasExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1714,13 +1714,13 @@
 		};
 		AB7F29572121F02C00B8D599 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E2C11793C82F53D672DCC9A /* Pods-KanvasExample.release.xcconfig */;
+			baseConfigurationReference = C06275D257AC3AB0A32223E5 /* Pods-KanvasExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 84Q69XA6W4;
+				DEVELOPMENT_TEAM = 645UY6D9AD;
 				INFOPLIST_FILE = KanvasExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1734,7 +1734,7 @@
 		};
 		AB7F29632121F0ED00B8D599 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 01FC2BB00871F4C91AA029E9 /* Pods-KanvasExampleTests.debug.xcconfig */;
+			baseConfigurationReference = AD70F4CC567B5A26E5F34558 /* Pods-KanvasExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1759,7 +1759,7 @@
 		};
 		AB7F29642121F0ED00B8D599 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AAE187352F3D3B5A4AE406ED /* Pods-KanvasExampleTests.release.xcconfig */;
+			baseConfigurationReference = 1745DA64C970017F75F19C32 /* Pods-KanvasExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

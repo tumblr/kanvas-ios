@@ -4,6 +4,7 @@ default_platform(:ios)
 
 PROJECT_ROOT = File.dirname(__dir__)
 EXAMPLE_PROJECT_ROOT = File.join(PROJECT_ROOT, 'Example')
+EXAMPLE_SPM_PROJECT_ROOT = File.join(PROJECT_ROOT, 'ExampleSPM')
 ARTIFACTS_PATH = File.join(PROJECT_ROOT, 'artifacts')
 
 platform :ios do
@@ -12,8 +13,12 @@ platform :ios do
     run_tests(
       workspace: File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExample.xcworkspace'),
       scheme: 'KanvasExample',
-      devices: ['iPhone SE (3rd generation)'],
-      deployment_target_version: '15.0'
+      devices: ['iPhone 16e (18.5)']
+    )
+    run_tests(
+      project: File.join(EXAMPLE_SPM_PROJECT_ROOT, 'KanvasExample.xcodeproj'),
+      scheme: 'KanvasExample',
+      devices: ['iPhone 16e (18.5)']
     )
   end
 end
