@@ -18,13 +18,13 @@ enum VideoCompositorError: Error {
 /// and providing a new CVPixelBuffer to use as the frame in the output video.
 final class VideoCompositor: NSObject, AVVideoCompositing {
 
-    var sourcePixelBufferAttributes: [String: Any]? {
+    var sourcePixelBufferAttributes: [String: any Sendable]? {
         return [
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ]
     }
 
-    var requiredPixelBufferAttributesForRenderContext: [String: Any] {
+    var requiredPixelBufferAttributesForRenderContext: [String: any Sendable] {
         return [
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ]

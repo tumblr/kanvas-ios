@@ -16,7 +16,7 @@ private struct Constants {
     static let imageExtension: String = "png"
 }
 
-extension URLSessionTask: KanvasCancelable {
+extension URLSessionTask: @retroactive KanvasCancelable {
 
 }
 
