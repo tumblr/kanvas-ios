@@ -13,12 +13,12 @@ platform :ios do
     run_tests(
       workspace: File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExample.xcworkspace'),
       scheme: 'KanvasExample',
-      devices: ['iPhone 16e (18.5)']
+      devices: ['iPhone 16e (26.1)']
     )
     run_tests(
       project: File.join(EXAMPLE_SPM_PROJECT_ROOT, 'KanvasExample.xcodeproj'),
       scheme: 'KanvasExample',
-      devices: ['iPhone 16e (18.5)']
+      devices: ['iPhone 16e (26.1)']
     )
   end
 end
