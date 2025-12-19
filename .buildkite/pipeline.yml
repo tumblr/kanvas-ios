@@ -18,6 +18,7 @@ steps:
   - label: "Build and Test"
     key: test
     command: |
+      xcodebuild -downloadComponent MetalToolchain || true
       build_and_test_pod
     plugins: *common_plugins
     artifact_paths:
