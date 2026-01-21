@@ -52,6 +52,8 @@ final class Marker: Texture {
         let endPointBottom = CGPoint(x: endPoint.x - angleXOffset + distanceXOffset, y: endPoint.y + angleYOffset - distanceYOffset)
         let endPointTop = CGPoint(x: endPoint.x + angleXOffset + distanceXOffset, y: endPoint.y - angleYOffset - distanceYOffset)
         let controlPointTop = CGPoint(x: secondPoint.x + angleXOffset + distanceXOffset, y: secondPoint.y - angleYOffset - distanceYOffset)
+        
+        if endPoint.isNan || endPointBottom.isNan || endPointTop.isNan { return }
 
         context.setAlpha(Marker.alpha)
         context.move(to: startPointTop)
@@ -68,5 +70,9 @@ final class Marker: Texture {
 fileprivate extension CGPoint {
     func midPoint(to point: CGPoint) -> CGPoint {
         return CGPoint(x: (self.x + point.x) * 0.5, y: (self.y + point.y) * 0.5)
+    }
+    
+    var isNan: Bool {
+        return self.x.isNaN && self.y.isNaN
     }
 }
