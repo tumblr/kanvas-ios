@@ -58,6 +58,9 @@
 /* Title of camera permissions screen */
 "Post to Tumblr" = "Post to Tumblr";
 
+/* Button to revert GIF changes */
+"Revert" = "Revert";
+
 /* Alert controller message */
 "SomethingGoofedTitle" = "SomethingGoofedTitle";
 
