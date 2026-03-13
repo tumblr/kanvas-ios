@@ -11,15 +11,20 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.5
     static let buttonHorizontalMargin: CGFloat = 16
     static let buttonRadius: CGFloat = 25
+    static let addButtonWidth: CGFloat = 40
+    static let addButtonHeight: CGFloat = 60
     static let nextButtonSize: CGFloat = 49
-    static let nextButtonCenterYOffset: CGFloat = 3
-    static let topPadding: CGFloat = 6
-    static let bottomPadding: CGFloat = 6 + (Device.belongsToIPhoneXGroup ? 28 : 0)
+    static let buttonLeadingMargin: CGFloat = KanvasDesign.shared.mediaClipsEditorViewButtonLeadingMargin
+    static let buttonTrailingMargin: CGFloat = KanvasDesign.shared.mediaClipsEditorViewButtonTrailingMargin
+    static let topPadding: CGFloat = KanvasDesign.shared.mediaClipsEditorViewTopPadding
+    static let bottomPadding: CGFloat = KanvasDesign.shared.mediaClipsEditorViewBottomPadding
+    static let nextButtonCenterYOffset: CGFloat = KanvasDesign.shared.mediaClipsEditorViewNextButtonCenterYOffset
 }
 
-protocol MediaClipsEditorViewDelegate: class {
+protocol MediaClipsEditorViewDelegate: AnyObject {
     /// Callback for when next button is selected
     func nextButtonWasPressed()
+    func addButtonWasPressed()
 }
 
 /// View for media clips editor
@@ -28,27 +33,36 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     static let height = MediaClipsCollectionView.height +
                         Constants.topPadding +
                         Constants.bottomPadding
-
+    
     weak var delegate: MediaClipsEditorViewDelegate?
     
     private let mainContainer: IgnoreTouchesView
     private let nextButton: UIButton
+    private let addButton: UIButton // For adding a new clip
     let collectionContainer: IgnoreTouchesView
 
     // MARK: - Initializers
     
-    init() {
+    init(showsAddButton: Bool = false) {
         mainContainer = IgnoreTouchesView()
-        mainContainer.backgroundColor = KanvasCameraColors.shared.translucentBlack
+        mainContainer.backgroundColor = KanvasDesign.shared.mediaClipsEditorViewBackgroundColor
         
         collectionContainer = IgnoreTouchesView()
 
         nextButton = UIButton()
+        addButton = UIButton()
         super.init(frame: .zero)
         
         clipsToBounds = false
         
         setUpViews()
+        
+        if showsAddButton {
+            setUpAddButton()
+        }
+        else {
+            setUpNextButton()
+        }
     }
 
     @available(*, unavailable, message: "use init() instead")
@@ -66,7 +80,6 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     private func setUpViews() {
         setUpMainContainer()
         setUpCollection()
-        setUpNextButton()
     }
     
     private func setUpMainContainer() {
@@ -88,7 +101,14 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         collectionContainer.clipsToBounds = false
         collectionContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        let trailingMargin = Constants.nextButtonSize + Constants.buttonHorizontalMargin * 1.5
+        let trailingMargin: CGFloat
+        if KanvasDesign.shared.isBottomPicker {
+            trailingMargin = Constants.nextButtonSize + Constants.buttonLeadingMargin + Constants.buttonTrailingMargin
+        }
+        else {
+            trailingMargin = Constants.nextButtonSize + Constants.buttonTrailingMargin * 1.5
+        }
+        
         NSLayoutConstraint.activate([
             collectionContainer.leadingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.leadingAnchor),
             collectionContainer.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -trailingMargin),
@@ -101,15 +121,38 @@ final class MediaClipsEditorView: IgnoreTouchesView {
         mainContainer.addSubview(nextButton)
         nextButton.accessibilityIdentifier = "Media Clips Next Button"
         nextButton.accessibilityLabel = "Next Button"
-        nextButton.setImage(KanvasCameraImages.nextImage, for: .normal)
         nextButton.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         
+        if KanvasDesign.shared.isBottomPicker {
+            let circle = UIImage.circle(diameter: Constants.nextButtonSize, color: KanvasColors.shared.primaryButtonBackgroundColor)
+            nextButton.setBackgroundImage(circle, for: .normal)
+        }
+        
+        nextButton.setImage(KanvasDesign.shared.mediaClipsEditorViewNextImage, for: .normal)
+        
         NSLayoutConstraint.activate([
-            nextButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonHorizontalMargin),
+            nextButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonTrailingMargin),
             nextButton.heightAnchor.constraint(equalToConstant: Constants.nextButtonSize),
             nextButton.widthAnchor.constraint(equalToConstant: Constants.nextButtonSize),
             nextButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor, constant: -Constants.nextButtonCenterYOffset)
+        ])
+    }
+    
+    private func setUpAddButton() {
+        mainContainer.addSubview(addButton)
+        addButton.accessibilityIdentifier = "Media Clips Next Button"
+        addButton.accessibilityLabel = "Next Button"
+        addButton.tintColor = .white
+        addButton.setImage(UIImage.imageFromCameraBundle(named: "new"), for: .normal)
+        addButton.addTarget(self, action: #selector(addPressed), for: .touchUpInside)
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            addButton.trailingAnchor.constraint(equalTo: mainContainer.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.buttonHorizontalMargin),
+            addButton.centerYAnchor.constraint(equalTo: collectionContainer.centerYAnchor),
+            addButton.heightAnchor.constraint(equalToConstant: Constants.addButtonHeight),
+            addButton.widthAnchor.constraint(equalToConstant: Constants.addButtonWidth)
         ])
     }
     
@@ -117,6 +160,10 @@ final class MediaClipsEditorView: IgnoreTouchesView {
     
     @objc private func nextPressed() {
         delegate?.nextButtonWasPressed()
+    }
+    
+    @objc private func addPressed() {
+        delegate?.addButtonWasPressed()
     }
     
     // MARK: - Public interface

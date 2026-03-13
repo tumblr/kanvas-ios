@@ -4,11 +4,13 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
 
+import UIKit
 import AVFoundation
 import Foundation
+import CoreServices
 
 /// A container for segments
-enum CameraSegment {
+public enum CameraSegment {
     // The image can be converted to a video when used in a sequence for stop motion, and thus the url.
     case image(UIImage, URL?, TimeInterval?, MediaInfo)
     case video(URL, MediaInfo?)
@@ -17,6 +19,15 @@ enum CameraSegment {
         switch self {
         case .image(let image, _, _, _): return image
         case .video: return nil
+        }
+    }
+
+    var isVideo: Bool {
+        switch self {
+        case .video:
+            return true
+        case .image:
+            return false
         }
     }
 
@@ -45,20 +56,36 @@ enum CameraSegment {
     static func defaultTimeInterval(segments: [CameraSegment]) -> TimeInterval {
         for media in segments {
             switch media {
-            case .image(_, _, _, _):
+            case .image:
                 break
-            case .video(_, _):
-                return KanvasCameraTimes.stopMotionFrameTimeInterval
+            case .video:
+                return KanvasTimes.stopMotionFrameTimeInterval
             }
         }
-        return KanvasCameraTimes.onlyImagesFrameTimeInterval
+        return KanvasTimes.onlyImagesFrameTimeInterval
+    }
+
+    var lastFrame: UIImage {
+        switch self {
+        case .image(let image, _, _, _): return image
+        case .video(let url, _):
+            let asset = AVAsset(url: url)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            do {
+                let image = try imageGenerator.copyCGImage(at: CMTime(seconds: .zero, preferredTimescale: 1), actualTime: nil)
+                return UIImage(cgImage: image)
+            } catch let error {
+                assertionFailure("Failed to generate CameraSegment thumbnail \(url): \(error)")
+                return UIImage()
+            }
+        }
     }
 
     func mediaFrame(defaultTimeInterval: TimeInterval) -> MediaFrame? {
-        if let image = self.image {
-            return (image: image, interval: self.timeInterval ?? defaultTimeInterval)
-        }
-        else {
+        switch self {
+        case .image(let image, _, let timeInterval, _):
+            return (image: image, interval: timeInterval ?? defaultTimeInterval)
+        case .video:
             return nil
         }
     }
@@ -79,8 +106,9 @@ protocol AssetsHandlerType {
     ///
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
+    ///   - withAudio: whether to include audio tracks
     ///   - completion: returns a local video URL if merged successfully
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void)
+    func mergeAssets(segments: [CameraSegment], withAudio: Bool, completion: @escaping (URL?, MediaInfo?) -> Void)
 
     func ensureAllImagesHaveVideo(segments: [CameraSegment], completion: @escaping ([CameraSegment]) -> ())
 }
@@ -92,12 +120,13 @@ extension AssetsHandlerType {
     ///   - segments: the CameraSegments
     /// - Returns: true if all images, false otherwise
     func containsOnlyImages(segments: [CameraSegment]) -> Bool {
-        for segment in segments {
-            if segment.image == nil {
+        return segments.contains(where: { segment in
+            if case .video = segment {
+                return true
+            } else {
                 return false
             }
-        }
-        return true
+        }) == false
     }
 }
 
@@ -170,8 +199,7 @@ protocol SegmentsHandlerType: AssetsHandlerType {
 
 private struct CameraSegmentHandlerConstants {
     static let silentURL: URL? = {
-        guard let bundlePath = KanvasCameraStrings.bundlePath(for: CameraSegmentHandler.self),
-            let bundle = Bundle(path: bundlePath) else {
+        guard let bundle = KanvasStrings.bundle(for: CameraSegmentHandler.self) else {
                 return nil
         }
         return bundle.url(forResource: "silence", withExtension: "aac")
@@ -296,20 +324,20 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         var totalDuration: CMTime = CMTime.zero
         let allImages = containsOnlyImages(segments: segments)
         for segment in segments {
-            if let segmentURL = segment.videoURL {
-                let asset = AVURLAsset(url: segmentURL)
+            switch segment {
+            case .video(let url, _):
+                let asset = AVURLAsset(url: url)
                 totalDuration = CMTimeAdd(totalDuration, asset.duration)
-            }
-            else if segment.image != nil {
+            case .image(_, _, let timeInterval, _):
                 let duration: CMTime = {
-                    if let timeInterval = segment.timeInterval {
-                        return CMTime(seconds: timeInterval, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                    if let timeInterval = timeInterval {
+                        return CMTime(seconds: timeInterval, preferredTimescale: KanvasTimes.stopMotionFrameTimescale)
                     }
                     else if allImages {
-                        return KanvasCameraTimes.onlyImagesFrameTime
+                        return KanvasTimes.onlyImagesFrameTime
                     }
                     else {
-                        return KanvasCameraTimes.stopMotionFrameTime
+                        return KanvasTimes.stopMotionFrameTime
                     }
                 }()
                 totalDuration = CMTimeAdd(totalDuration, duration)
@@ -322,7 +350,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     ///
     /// - Parameter completion: returns a local video URL if merged successfully
     func exportVideo(completion: @escaping (URL?, MediaInfo?) -> Void) {
-        mergeAssets(segments: segments, completion: completion)
+        mergeAssets(segments: segments, withAudio: true, completion: completion)
     }
 
     /// This removes all segments from disk and memory
@@ -346,7 +374,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
     /// - Parameters:
     ///   - segments: the CameraSegments to be merged
     ///   - completion: returns a local video URL if merged successfully
-    func mergeAssets(segments: [CameraSegment], completion: @escaping (URL?, MediaInfo?) -> Void) {
+    func mergeAssets(segments: [CameraSegment], withAudio: Bool, completion: @escaping (URL?, MediaInfo?) -> Void) {
         let preciseOptions = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
         let mixComposition = AVMutableComposition(urlAssetInitializationOptions: preciseOptions)
         // the video and audio composition tracks should only be created if there are any video or audio tracks in the segments, otherwise there would be an export issue with an empty composition
@@ -363,11 +391,11 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 videoCompTrack = videoCompTrack ?? mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
                 videoDuration = {
                     if let segmentDuration = segmentDuration {
-                        return CMTime(seconds: segmentDuration, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                        return CMTime(seconds: segmentDuration, preferredTimescale: KanvasTimes.stopMotionFrameTimescale)
                     }
                     /// If all of the segments are photos, then the individual frame times are shorter
                     else if allImages {
-                        let endTime = CMTime(value: KanvasCameraTimes.onlyImagesFrameDuration, timescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                        let endTime = CMTime(value: KanvasTimes.onlyImagesFrameDuration, timescale: KanvasTimes.stopMotionFrameTimescale)
                         return CMTimeCompare(videoTrack.timeRange.duration, endTime) == 1 ? endTime : videoTrack.timeRange.duration
                     }
                     else {
@@ -378,7 +406,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 self.addTrack(assetTrack: videoTrack, compositionTrack: videoCompTrack, time: insertTime, timeRange: timeRange)
                 videoCompTrack?.preferredTransform = videoTrack.preferredTransform
             }
-            if let audioTrack = urlAsset.tracks(withMediaType: .audio).first {
+            if let audioTrack = urlAsset.tracks(withMediaType: .audio).first, withAudio {
                 audioCompTrack = audioCompTrack ?? mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
                 var audioTimeRange = audioTrack.timeRange
                 if CMTimeCompare(audioTrack.timeRange.duration, videoDuration) == 1 {
@@ -415,23 +443,24 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         for segment in segments {
             if segment.videoURL != nil {
                 newSegments.append(segment)
-                continue
             }
-            guard let segmentImage = segment.image else {
-                assertionFailure("No video and no image?")
-                continue
-            }
-            dispatchGroup.enter()
 
-            self.videoQueue.async {
-                self.createVideoFromImage(image: segmentImage, duration: segment.timeInterval) { url in
-                    guard let url = url else {
-                        dispatchGroup.leave()
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        newSegments.append(.image(segmentImage, url, segment.timeInterval, segment.mediaInfo))
-                        dispatchGroup.leave()
+            switch segment {
+            case .video:
+                assertionFailure("Video without a video URL")
+            case .image(let imageURL, _, _, _):
+                dispatchGroup.enter()
+
+                self.videoQueue.async {
+                    self.createVideoFromImage(image: imageURL, duration: segment.timeInterval) { url in
+                        guard let url = url else {
+                            dispatchGroup.leave()
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            newSegments.append(.image(imageURL, url, segment.timeInterval, segment.mediaInfo))
+                            dispatchGroup.leave()
+                        }
                     }
                 }
             }
@@ -443,7 +472,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
 
     private func allImagesHaveVideo(segments: [CameraSegment]) -> Bool {
         for segment in segments {
-            if segment.image != nil && segment.videoURL == nil {
+            if case .image = segment, segment.videoURL == nil {
                 return false
             }
         }
@@ -524,7 +553,9 @@ final class CameraSegmentHandler: SegmentsHandlerType {
         assetExport.shouldOptimizeForNetworkUse = true
 
         assetExport.exportAsynchronously() {
-            completion(assetExport.status == .completed ? finalURL : nil, mediaInfo)
+            DispatchQueue.main.async {
+                completion(assetExport.status == .completed ? finalURL : nil, mediaInfo)
+            }
         }
     }
 
@@ -580,7 +611,7 @@ final class CameraSegmentHandler: SegmentsHandlerType {
                 firstBufferAppended = true
             }
             else {
-                let endTime = CMTime(seconds: duration ?? KanvasCameraTimes.stopMotionFrameTimeInterval, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale)
+                let endTime = CMTime(seconds: duration ?? KanvasTimes.stopMotionFrameTimeInterval, preferredTimescale: KanvasTimes.stopMotionFrameTimescale)
                 adaptor.append(buffer, withPresentationTime: endTime)
                 assetWriter.endSession(atSourceTime: endTime)
                 adaptor.assetWriterInput.markAsFinished()

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Protocol for closing the filters
-protocol EditorFilterViewDelegate: class {
+protocol EditorFilterViewDelegate: AnyObject {
     
     /// Called when the user taps the background to confirm
     func didTapBackground()

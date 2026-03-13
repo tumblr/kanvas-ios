@@ -13,7 +13,7 @@ private struct Constants {
 }
 
 /// Protocol for the text view inside text tools
-protocol MainTextViewDelegate: class {
+protocol MainTextViewDelegate: AnyObject {
     
     /// Called when the background was touched
     func didTapBackground()
@@ -35,6 +35,8 @@ final class MainTextView: StylableTextView {
         resizeFont()
         centerContentVertically()
     }
+
+    var resizesFont: Bool = true
     
     override init() {
         super.init()
@@ -43,9 +45,9 @@ final class MainTextView: StylableTextView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("init(from:) has not been implemented")
     }
-    
+
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return false
     }
@@ -88,7 +90,7 @@ final class MainTextView: StylableTextView {
     }
     
     func resizeFont() {
-        guard !bounds.size.equalTo(.zero), let currentFont = font else { return }
+        guard resizesFont && !bounds.size.equalTo(.zero), let currentFont = font else { return }
         var bestFont = currentFont.withSize(Constants.fontSizes[0])
         
         for fontSize in Constants.fontSizes {

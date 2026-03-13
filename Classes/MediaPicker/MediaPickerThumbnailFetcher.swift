@@ -5,10 +5,10 @@
 //
 
 import Foundation
-
+import UIKit
 import Photos
 
-protocol MediaPickerThumbnailFetcherDelegate: class {
+protocol MediaPickerThumbnailFetcherDelegate: AnyObject {
     func didUpdateThumbnail(image: UIImage)
 }
 

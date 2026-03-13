@@ -7,7 +7,7 @@
 import UIKit
 
 //GLboolean, Boolean
-extension UInt8: ExpressibleByBooleanLiteral {
+extension UInt8: @retroactive ExpressibleByBooleanLiteral {
     public var boolValue: Bool {
         return self != 0
     }
@@ -16,7 +16,7 @@ extension UInt8: ExpressibleByBooleanLiteral {
     }
 }
 //GLint
-extension Int32: ExpressibleByBooleanLiteral {
+extension Int32: @retroactive ExpressibleByBooleanLiteral {
     public init(booleanLiteral value: BooleanLiteralType) {
         self = value ? Int32(1) : Int32(0)
     }

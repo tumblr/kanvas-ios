@@ -10,7 +10,7 @@ import UIKit
 
 /// protocol for closing the preview or confirming
 
-protocol CameraPreviewViewDelegate: class {
+protocol CameraPreviewViewDelegate: AnyObject {
     /// A function that is called when the confirm button is pressed
     func confirmButtonPressed()
     /// A function that is called when the close button is pressed
@@ -79,7 +79,7 @@ final class CameraPreviewView: UIView {
     private func setUpCloseButton() {
         closeButton.accessibilityLabel = "Close Button"
         closeButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
-        closeButton.setImage(KanvasCameraImages.backImage, for: .normal)
+        closeButton.setImage(KanvasImages.backImage, for: .normal)
         closeButton.imageView?.contentMode = .scaleAspectFit
         
         addSubview(closeButton)
@@ -97,7 +97,10 @@ final class CameraPreviewView: UIView {
         confirmButton.accessibilityLabel = "Confirm Button"
         confirmButton.layer.applyShadows(offset: CGSize(width: 0.0, height: 2.0), radius: 0.0)
         addSubview(confirmButton)
-        confirmButton.setImage(KanvasCameraImages.confirmImage, for: .normal)
+
+        confirmButton.setBackgroundImage(KanvasImages.circleImage?.withRenderingMode(.alwaysTemplate), for: .normal)
+        confirmButton.setImage(KanvasImages.shared.confirmImage, for: .normal)
+        confirmButton.tintColor = KanvasColors.shared.cameraConfirmationColor
         confirmButton.addTarget(self, action: #selector(confirmButtonPressed), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 

@@ -7,18 +7,22 @@
 import AVFoundation
 import Foundation
 import UIKit
+import CropViewController
 
 /// Protocol for camera editor controller methods
 
-public protocol EditorControllerDelegate: class {
+public protocol EditorControllerDelegate: AnyObject {
     /// callback when finished exporting video clips.
-    func didFinishExportingVideo(url: URL?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingVideo(url: URL?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting image
-    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingImage(image: UIImage?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
 
     /// callback when finished exporting frames
-    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, action: KanvasExportAction, mediaChanged: Bool)
+    func didFinishExportingFrames(url: URL?, size: CGSize?, info: MediaInfo?, archive: Data?, action: KanvasExportAction, mediaChanged: Bool)
+
+    /// callback when exporting fails
+    func didFailExporting()
     
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
@@ -44,14 +48,30 @@ public protocol EditorControllerDelegate: class {
     
     /// Obtains the quick post button.
     ///
-    /// - Parameter enableLongPress: whether to enable the long press action for the button.
     /// - Returns: the quick post button.
-    func getQuickPostButton(enableLongPress: Bool) -> UIView
+    func getQuickPostButton() -> UIView
     
     /// Obtains the blog switcher.
     ///
     /// - Returns: the blog switcher.
     func getBlogSwitcher() -> UIView
+
+    /// Called when the Post Button is pressed to indicate whether export should occur
+    /// The return value indicates whether the export should be run
+    /// This is partly temporary, I think the export functionality should be passed into this controller to decouple things
+    func shouldExport() -> Bool
+
+    /// Called when the editor screen has become visible.
+    func editorDidAppear()
+
+    /// Called when the editor screen is not longer visible.
+    func editorWillDisappear()
+}
+
+extension EditorControllerDelegate {
+    public func shouldExport() -> Bool {
+        return true
+    }
 }
 
 private struct Constants {
@@ -59,34 +79,60 @@ private struct Constants {
 }
 
 /// A view controller to edit the segments
-public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, EditionMenuCollectionControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate {
+public final class EditorViewController: UIViewController, MediaPlayerController, EditorViewDelegate, KanvasEditorMenuControllerDelegate, EditorFilterControllerDelegate, DrawingControllerDelegate, EditorTextControllerDelegate, MediaDrawerControllerDelegate, GifMakerHandlerDelegate, MediaPlayerDelegate, CropViewControllerDelegate {
 
-    private lazy var editorView: EditorView = {
-        var mainActionMode: EditorView.MainActionMode = .confirm
-        if settings.features.editorPostOptions {
-            mainActionMode = .postOptions
-        }
-        else if settings.features.editorPosting {
-            mainActionMode = .post
+    enum Media {
+        case image(UIImage)
+        case video(URL)
+    }
+
+    public struct ExportResult {
+        let original: Media?
+        let result: Media
+        let info: MediaInfo
+        let archive: Data
+    }
+
+    @objc(KanvasEditorEdit) public class Edit: NSObject, NSSecureCoding {
+        public static var supportsSecureCoding = true
+
+        public func encode(with coder: NSCoder) {
+            coder.encode(canvas, forKey: "canvas")
+            coder.encode(isMuted, forKey: "isMuted")
         }
 
-        let editorView = EditorView(delegate: self,
-                                    mainActionMode: mainActionMode,
-                                    showSaveButton: settings.features.editorSaving,
-                                    showCrossIcon: settings.crossIconInEditor,
-                                    showTagButton: settings.showTagButtonInEditor,
-                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
-                                    enableQuickPostLongPress: settings.enableQuickPostLongPress,
-                                    showBlogSwitcher: settings.showBlogSwitcherInEditor,
-                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinater,
-                                    metalContext: settings.features.metalPreview ? metalContext : nil)
-        player.playerView = editorView.playerView
-        return editorView
-    }()
+        public required init?(coder: NSCoder) {
+            canvas = coder.decodeObject(of: MovableViewCanvas.self, forKey: "canvas")
+            isMuted = coder.decodeBool(forKey: "isMuted")
+        }
+
+        let canvas: MovableViewCanvas?
+        let isMuted: Bool
+
+        init(canvas: MovableViewCanvas, isMuted: Bool) {
+            self.canvas = canvas
+            self.isMuted = isMuted
+        }
+    }
+
+    // Set immediately after the initializer super call to ensure it is never `nil`.
+    var editorView: EditorView!
+
+    var isMuted: Bool {
+        return player.isMuted
+    }
     
-    private lazy var collectionController: EditionMenuCollectionController = {
-        let controller = EditionMenuCollectionController(settings: self.settings,
-                                                         shouldExportMediaAsGIF: shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil)
+    private lazy var collectionController: KanvasEditorMenuController = {
+        let exportAsGif = shouldEnableGIFButton() ? shouldExportAsGIFByDefault() : nil
+        let controller: KanvasEditorMenuController
+        
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            controller = StyleMenuController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+        }
+        else {
+            controller = EditionMenuCollectionController(settings: self.settings, shouldExportMediaAsGIF: exportAsGif)
+        }
+        
         controller.delegate = self
         return controller
     }()
@@ -98,7 +144,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }()
     
     private lazy var textController: EditorTextController = {
-        let controller = EditorTextController()
+        let textViewSettings = EditorTextView.Settings(fontSelectorUsesFont: settings.fontSelectorUsesFont, resizesFonts: settings.features.resizesFonts)
+        let settings = EditorTextController.Settings(textViewSettings: textViewSettings)
+        let controller = EditorTextController(settings: settings)
         controller.delegate = self
         return controller
     }()
@@ -130,7 +178,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private lazy var loadingView: LoadingIndicatorView = LoadingIndicatorView()
 
     private let quickBlogSelectorCoordinater: KanvasQuickBlogSelectorCoordinating?
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    private let tagCollection: UIView?
+    private let analyticsProvider: KanvasAnalyticsProvider?
     private let settings: CameraSettings
     private var originalSegments: [CameraSegment]
     private var segments: [CameraSegment] {
@@ -142,7 +191,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private let stickerProvider: StickerProvider?
     private let cameraMode: CameraMode?
     private var openedMenu: EditionOption?
-    private var selectedCell: EditionMenuCollectionCell?
+    private var selectedCell: KanvasEditorMenuCollectionCell?
+
     private let metalContext = MetalContext.createContext()
 
     private var shouldExportMediaAsGIF: Bool {
@@ -154,28 +204,67 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    private lazy var player: MediaPlayer = {
-        return MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
-    }()
-    
+    private let player: MediaPlayer
     private var filterType: FilterType? {
         didSet {
             player.filterType = filterType
         }
     }
     
+    private var cropRotateApplied: Bool = false
+    
     private var mediaChanged: Bool {
         let hasStickerOrText = !editorView.movableViewCanvas.isEmpty
         let filterApplied = filterType?.filterApplied ?? false
         let hasDrawings = !drawingController.isEmpty
         let gifMakerOpened = shouldExportMediaAsGIF
-        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened
+        return hasStickerOrText || filterApplied || hasDrawings || gifMakerOpened || cropRotateApplied
     }
 
     private var editingNewText: Bool = true
 
     public weak var delegate: EditorControllerDelegate?
-    
+
+    private var exportCompletion: ((Result<ExportResult, Error>) -> Void)?
+
+    private static func editor(delegate: EditorViewDelegate?,
+                               settings: CameraSettings,
+                               showsMuteButton: Bool,
+                               edit: Edit?,
+                               quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+                               tagCollection: UIView?,
+                               metalContext: MetalContext?) -> EditorView {
+        var mainActionMode: EditorView.MainActionMode = .confirm
+        if settings.features.editorPostOptions {
+            mainActionMode = .postOptions
+        }
+        else if settings.features.editorPosting {
+            mainActionMode = .post
+        }
+
+        let canvas = edit?.canvas ?? MovableViewCanvas()
+
+        let editorView: EditorView = EditorView(delegate: delegate,
+                                    mainActionMode: mainActionMode,
+                                    showSaveButton: settings.features.editorSaving,
+                                    showMuteButton: showsMuteButton,
+                                    showCrossIcon: settings.crossIconInEditor,
+                                    showCogIcon: settings.showCogIconInEditor,
+                                    showTagButton: settings.showTagButtonInEditor,
+                                    showTagCollection: settings.showTagCollectionInEditor,
+                                    showQuickPostButton: settings.showQuickPostButtonInEditor,
+                                    showBlogSwitcher: settings.showBlogSwitcherInEditor,
+                                    confirmAtTop: settings.features.editorConfirmAtTop,
+                                    aspectRatio: settings.aspectRatio,
+                                    quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                    tagCollection: tagCollection,
+                                    metalContext: metalContext,
+                                    mediaContentMode: settings.features.scaleMediaToFill ? .scaleAspectFill : .scaleAspectFit,
+                                    movableViewCanvas: canvas)
+        canvas.delegate = editorView
+        return editorView
+    }
+
     @available(*, unavailable, message: "use init(settings:, segments:) instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -189,8 +278,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     public static func createEditor(for image: UIImage,
                                     settings: CameraSettings,
                                     stickerProvider: StickerProvider,
-                                    analyticsProvider: KanvasCameraAnalyticsProvider) -> EditorViewController {
-        EditorViewController(settings: settings,
+                                    analyticsProvider: KanvasAnalyticsProvider,
+                                    delegate: EditorControllerDelegate) -> EditorViewController {
+        EditorViewController(delegate: delegate,
+                             settings: settings,
                              segments: [.image(image, nil, nil, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
@@ -198,11 +289,16 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: analyticsProvider,
-                             quickBlogSelectorCoordinator: nil)
+                             quickBlogSelectorCoordinator: nil,
+                             tagCollection: nil)
     }
     
-    public static func createEditor(for videoURL: URL, settings: CameraSettings, stickerProvider: StickerProvider) -> EditorViewController {
-        EditorViewController(settings: settings,
+    public static func createEditor(for videoURL: URL,
+                                    settings: CameraSettings,
+                                    stickerProvider: StickerProvider,
+                                    delegate: EditorControllerDelegate) -> EditorViewController {
+        EditorViewController(delegate: delegate,
+                             settings: settings,
                              segments: [.video(videoURL, MediaInfo(source: .media_library))],
                              assetsHandler: CameraSegmentHandler(),
                              exporterClass: MediaExporter.self,
@@ -210,18 +306,21 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                              cameraMode: nil,
                              stickerProvider: stickerProvider,
                              analyticsProvider: nil,
-                             quickBlogSelectorCoordinator: nil)
+                             quickBlogSelectorCoordinator: nil,
+                             tagCollection: nil)
     }
 
     public static func createEditor(forGIF url: URL,
                               info: MediaInfo,
                               settings: CameraSettings,
                               stickerProvider: StickerProvider,
-                              analyticsProvider: KanvasCameraAnalyticsProvider,
+                              analyticsProvider: KanvasAnalyticsProvider,
+                              delegate: EditorControllerDelegate,
                               completion: @escaping (EditorViewController) -> Void) {
         GIFDecoderFactory.main().decode(image: url) { frames in
             let segments = CameraSegment.from(frames: frames, info: info)
-            let editor = EditorViewController(settings: settings,
+            let editor = EditorViewController(delegate: delegate,
+                                              settings: settings,
                                               segments: segments,
                                               stickerProvider: stickerProvider,
                                               analyticsProvider: analyticsProvider)
@@ -229,11 +328,13 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
     }
 
-    convenience init(settings: CameraSettings,
+    convenience init(delegate: EditorControllerDelegate,
+                     settings: CameraSettings,
                      segments: [CameraSegment],
                      stickerProvider: StickerProvider,
-                     analyticsProvider: KanvasCameraAnalyticsProvider) {
-        self.init(settings: settings,
+                     analyticsProvider: KanvasAnalyticsProvider) {
+        self.init(delegate: delegate,
+                  settings: settings,
                   segments: segments,
                   assetsHandler: CameraSegmentHandler(),
                   exporterClass: MediaExporter.self,
@@ -241,7 +342,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
                   cameraMode: nil,
                   stickerProvider: stickerProvider,
                   analyticsProvider: analyticsProvider,
-                  quickBlogSelectorCoordinator: nil)
+                  quickBlogSelectorCoordinator: nil,
+                  tagCollection: nil)
     }
     
     /// The designated initializer for the editor controller
@@ -252,16 +354,20 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
     ///   - stickerProvider: Class that will provide the stickers in the editor.
-    ///   - analyticsProvider: A class conforming to KanvasCameraAnalyticsProvider
-    init(settings: CameraSettings,
+    ///   - analyticsProvider: A class conforming to KanvasAnalyticsProvider
+    init(delegate: EditorControllerDelegate,
+         settings: CameraSettings,
          segments: [CameraSegment],
          assetsHandler: AssetsHandlerType,
          exporterClass: MediaExporting.Type,
          gifEncoderClass: GIFEncoder.Type,
          cameraMode: CameraMode?,
          stickerProvider: StickerProvider?,
-         analyticsProvider: KanvasCameraAnalyticsProvider?,
-         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?) {
+         analyticsProvider: KanvasAnalyticsProvider?,
+         quickBlogSelectorCoordinator: KanvasQuickBlogSelectorCoordinating?,
+         edit: Edit? = nil,
+         tagCollection: UIView?) {
+        self.delegate = delegate
         self.settings = settings
         self.originalSegments = segments
         self.assetsHandler = assetsHandler
@@ -271,8 +377,25 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         self.gifEncoderClass = gifEncoderClass
         self.stickerProvider = stickerProvider
         self.quickBlogSelectorCoordinater = quickBlogSelectorCoordinator
+        self.tagCollection = tagCollection
+
+        let metalContext: MetalContext? = settings.features.metalPreview ? MetalContext.createContext() : nil
+        self.player = MediaPlayer(renderer: Renderer(settings: settings, metalContext: metalContext))
+        self.player.isMuted = edit?.isMuted == true
+        let muteButtonShown = settings.features.muteButton && segments.first?.isVideo == true
 
         super.init(nibName: .none, bundle: .none)
+
+        self.editorView = EditorViewController.editor(delegate: self,
+                                                      settings: settings,
+                                                      showsMuteButton: muteButtonShown,
+                                                      edit: edit,
+                                                      quickBlogSelectorCoordinator: quickBlogSelectorCoordinator,
+                                                      tagCollection: tagCollection,
+                                                      metalContext: metalContext)
+        self.editorView.muteButtonSelected = player.isMuted
+
+        player.playerView = editorView.playerView
         
         self.player.delegate = self
 
@@ -296,6 +419,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         super.viewWillAppear(animated)
 
         startPlayerFromSegments()
+    }
+
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.editorWillDisappear()
+        player.pause()
+    }
+
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        delegate?.editorDidAppear()
     }
     
     override public func viewDidLoad() {
@@ -333,7 +467,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     private func addCarouselDefaultColors(_ image: UIImage) {
         let dominantColors = image.getDominantColors(count: 3)
         drawingController.addColorsForCarousel(colors: dominantColors)
-        
+
         if let mostDominantColor = dominantColors.first {
             textController.addColorsForCarousel(colors: [mostDominantColor, .white, .black])
         }
@@ -374,14 +508,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     // MARK: - GIF Maker Helpers
 
     private func openGIFMaker(animated: Bool) {
-        guard let cell = collectionController.getCell(for: .gif) else {
-            assertionFailure("Failed to open GIF Maker")
-            return
-        }
-        openGIFMaker(cell: cell, animated: animated, permanent: true)
+        openGIFMaker(cell: collectionController.getCell(for: .gif), animated: animated, permanent: true)
     }
 
-    private func openGIFMaker(cell: EditionMenuCollectionCell, animated: Bool, permanent: Bool) {
+    private func openGIFMaker(cell: KanvasEditorMenuCollectionCell?, animated: Bool, permanent: Bool) {
         let editionOption = EditionOption.gif
         onBeforeShowingEditionMenu(editionOption, cell: cell)
         showMainUI(false)
@@ -393,13 +523,16 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         }
         else {
+            editorView.showQuickPostButton(false)
             gifMakerController.showConfirmButton(true)
         }
         analyticsProvider?.logEditorGIFOpen()
     }
 
     private func revertGIF() {
-        editorView.animateReturnOfEditionOption(cell: selectedCell)
+        if settings.animateEditorControls {
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
+        }
         gifMakerController.showView(false)
         gifMakerController.showConfirmButton(false)
         gifMakerHandler.revert { reverted in
@@ -442,14 +575,14 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         }
 
         // More than one segment, or one video-only segment, enable it.
-        if segments.count > 1 || segments.first?.image == nil {
+        if segments.count > 1 || segments.first?.isVideo == true {
             return true
         }
 
         // A single segment that has both an image and a video (live photo), enabled it.
         if segments.count == 1,
             let firstSegment = segments.first,
-            firstSegment.image != nil,
+            firstSegment.isVideo == false,
             firstSegment.videoURL != nil {
             return true
         }
@@ -530,13 +663,21 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         analyticsProvider?.logSaveFromDashboard()
     }
 
+    func didTapMuteButton(enabled: Bool) {
+        player.isMuted = enabled
+    }
+
     func didTapPostButton() {
-        startExporting(action: .post)
+        if delegate?.shouldExport() ?? true {
+            startExporting(action: .post)
+        }
         analyticsProvider?.logPostFromDashboard()
     }
 
     func didTapConfirmButton() {
-        startExporting(action: .confirm)
+        if delegate?.shouldExport() ?? true {
+            startExporting(action: .confirm)
+        }
         analyticsProvider?.logOpenComposeFromDashboard()
     }
 
@@ -546,13 +687,17 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didTapText(options: TextOptions, transformations: ViewTransformations) {
-        let cell = collectionController.textCell
+        let cell = collectionController.getCell(for: .text)
         onBeforeShowingEditionMenu(.text, cell: cell)
         showMainUI(false)
         textController.showView(true, options: options, transformations: transformations)
-        editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+        if settings.animateEditorControls {
+            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+                self.textController.showConfirmButton(true)
+            })
+        } else {
             self.textController.showConfirmButton(true)
-        })
+        }
         analyticsProvider?.logEditorTextEdit()
         editingNewText = false
     }
@@ -579,11 +724,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
     
     func didBeginTouchesOnText() {
-        showNavigationContainer(false)
+        editorView.showNavigationItems(false)
     }
     
     func didEndTouchesOnText() {
-        showNavigationContainer(true)
+        editorView.showNavigationItems(true)
     }
 
     func didRenderRectChange(rect: CGRect) {
@@ -594,162 +739,203 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         player.stop()
         delegate?.dismissButtonPressed()
     }
-    
-    func getQuickPostButton(enableLongPress: Bool) -> UIView {
-        guard let delegate = delegate else { return UIView() }
-        return delegate.getQuickPostButton(enableLongPress: enableLongPress)
-    }
-    
+
     func getBlogSwitcher() -> UIView {
         guard let delegate = delegate else { return UIView() }
         return delegate.getBlogSwitcher()
     }
+    
+    func getQuickPostButton() -> UIView {
+        guard let delegate = delegate else { return UIView() }
+        return delegate.getQuickPostButton()
+    }
 
+    func restartPlayback() {
+        player.stop()
+        startPlayerFromSegments()
+    }
+    
+    func stopPlayback() {
+        player.stop()
+    }
+
+    deinit {
+        player.stop()
+    }
+    
     // MARK: - Media Exporting
 
     private func startExporting(action: KanvasExportAction) {
         player.stop()
         showLoading()
-        if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
-            // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
+        let archive: Data
+        do {
+            archive = try NSKeyedArchiver.archivedData(withRootObject: edit, requiringSecureCoding: true)
+        } catch {
+            handleExportError()
+            return
+        }
+        if segments.count == 1, let firstSegment = segments.first, case CameraSegment.image(let image, _, _, _) = firstSegment {
+            // If the camera mode is .stopMotion, or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
             // then single photos from that mode should still export as video.
-            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo {
+            if let cameraMode = cameraMode, cameraMode.group == .video && cameraMode != .normal && settings.exportStopMotionPhotoAsVideo {
                 assetsHandler.ensureAllImagesHaveVideo(segments: segments) { segments in
                     guard let videoURL = segments.first?.videoURL else { return }
-                    self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                    DispatchQueue.main.async {
+                        self.createFinalVideo(videoURL: videoURL, mediaInfo: firstSegment.mediaInfo, archive: archive, exportAction: action)
+                    }
                 }
             }
             else {
-                createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, exportAction: action)
+                createFinalImage(image: image, mediaInfo: firstSegment.mediaInfo, archive: archive, exportAction: action)
             }
         }
         else if shouldExportMediaAsGIF {
             if segments.count == 1, let segment = segments.first, let url = segment.videoURL {
-                self.createFinalGIF(videoURL: url, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, exportAction: action)
+                self.createFinalGIF(videoURL: url, framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond, mediaInfo: segment.mediaInfo, archive: archive, exportAction: action)
             }
             else if assetsHandler.containsOnlyImages(segments: segments) {
-                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), exportAction: action)
+                self.createFinalGIF(segments: segments, mediaInfo: segments.first?.mediaInfo ?? MediaInfo(source: .kanvas_camera), archive: archive, exportAction: action)
             }
             else {
                 // Segments are not all frames, so we need to generate a full video first, and then convert that to a GIF.
                 // It might be nice in the future to create a GIF directly from segments.
-                assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+                assetsHandler.mergeAssets(segments: segments, withAudio: true) { [weak self] url, mediaInfo in
                     guard let self = self else {
                         return
                     }
                     guard let url = url, let mediaInfo = mediaInfo else {
-                        self.hideLoading()
                         self.handleExportError()
                         return
                     }
-                    let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasCameraTimes.stopMotionFrameTimescale).seconds / KanvasCameraTimes.onlyImagesFrameTime.seconds)
-                    self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, exportAction: action)
+                    let fps = Int(CMTime(seconds: 1.0, preferredTimescale: KanvasTimes.stopMotionFrameTimescale).seconds / KanvasTimes.onlyImagesFrameTime.seconds)
+                    DispatchQueue.main.async {
+                        self.createFinalGIF(videoURL: url, framesPerSecond: fps, mediaInfo: mediaInfo, archive: archive, exportAction: action)
+                    }
                 }
             }
         }
         else {
-            assetsHandler.mergeAssets(segments: segments) { [weak self] url, mediaInfo in
+            assetsHandler.mergeAssets(segments: segments, withAudio: isMuted == false) { [weak self] url, mediaInfo in
                 guard let url = url else {
-                    self?.hideLoading()
                     self?.handleExportError()
                     return
                 }
-                self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), exportAction: action)
+                DispatchQueue.main.async {
+                    self?.createFinalVideo(videoURL: url, mediaInfo: mediaInfo ?? MediaInfo(source: .media_library), archive: archive, exportAction: action)
+                }
             }
         }
     }
 
-    private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
+    public func export(_ completion: @escaping (Result<ExportResult, Error>) -> Void) {
+        exportCompletion = completion
+        startExporting(action: .post)
+    }
+
+    var edit: Edit {
+        return Edit(canvas: editorView.movableViewCanvas, isMuted: isMuted)
+    }
+
+    private var exportSize: CGSize? {
+        let exportSize = editorView.exportSize
+        return settings.features.scaleMediaToFill ? exportSize : nil
+    }
+
+    private func createFinalGIF(segments: [CameraSegment], mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
         let segments = gifMakerHandler.trimmedSegments(segments)
         let frames = segments.compactMap { $0.mediaFrame(defaultTimeInterval: getDefaultTimeIntervalForImageSegments()) }
-        exporter.export(frames: frames) { orderedFrames in
+        exporter.export(frames: frames, toSize: exportSize) { orderedFrames in
             let playbackFrames = self.gifMakerHandler.framesForPlayback(orderedFrames)
             self.gifEncoderClass.init().encode(frames: playbackFrames, loopCount: 0) { gifURL in
-                var size: CGSize? = nil
-                if let gifURL = gifURL {
-                    size = GIFDecoderFactory.main().size(of: gifURL)
-                }
-                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
-                performUIUpdate {
-                    self.hideLoading()
-                }
-            }
-        }
-    }
-
-    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
-        let exporter = exporterClass.init(settings: settings)
-        exporter.filterType = filterType ?? .passthrough
-        exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
-            guard let exportedVideoURL = exportedVideoURL else {
-                performUIUpdate {
-                    self.hideLoading()
-                    self.handleExportError()
-                }
-                return
-            }
-            self.gifEncoderClass.init().encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { [weak self] gifURL in
-                guard let self = self else { return }
                 guard let gifURL = gifURL else {
                     performUIUpdate {
-                        self.hideLoading()
                         self.handleExportError()
                     }
                     return
                 }
                 let size = GIFDecoderFactory.main().size(of: gifURL)
-                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
-                performUIUpdate {
-                    self.hideLoading()
-                }
+                let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo, archive: archive)
+                self.exportCompletion?(.success(result))
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
             }
         }
     }
 
-    private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalGIF(videoURL: URL, framesPerSecond: Int, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(video: videoURL, mediaInfo: mediaInfo) { (exportedVideoURL, _) in
+        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, _) in
+            guard let exportedVideoURL = exportedVideoURL else {
+                performUIUpdate {
+                    self.handleExportError()
+                }
+                return
+            }
+            self.gifEncoderClass.init().encode(video: exportedVideoURL, loopCount: 0, framesPerSecond: framesPerSecond) { gifURL in
+                guard let gifURL = gifURL else {
+                    performUIUpdate {
+                        self.handleExportError()
+                    }
+                    return
+                }
+                let size = GIFDecoderFactory.main().size(of: gifURL)
+                let result = ExportResult(original: nil, result: .video(gifURL), info: mediaInfo, archive: archive)
+                self.exportCompletion?(.success(result))
+                self.delegate?.didFinishExportingFrames(url: gifURL, size: size, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
+            }
+        }
+    }
+
+    private func createFinalVideo(videoURL: URL, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
+        let exporter = exporterClass.init(settings: settings)
+        exporter.filterType = filterType ?? .passthrough
+        exporter.imageOverlays = imageOverlays()
+        exporter.export(video: videoURL, mediaInfo: mediaInfo, toSize: exportSize) { (exportedVideoURL, error) in
             performUIUpdate {
                 guard let url = exportedVideoURL else {
-                    self.hideLoading()
-                    self.handleExportError()
+                    if let error = error, let exportCompletion = self.exportCompletion {
+                        exportCompletion(.failure(error))
+                    } else {
+                        self.handleExportError()
+                    }
                     return
                 }
-                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
-                self.hideLoading()
+                let result = ExportResult(original: .video(videoURL), result: .video(url), info: mediaInfo, archive: archive)
+                self.exportCompletion?(.success(result))
+                self.delegate?.didFinishExportingVideo(url: url, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
             }
         }
     }
 
-    private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, exportAction: KanvasExportAction) {
+    private func createFinalImage(image: UIImage, mediaInfo: MediaInfo, archive: Data, exportAction: KanvasExportAction) {
         let exporter = exporterClass.init(settings: settings)
         exporter.filterType = filterType ?? .passthrough
         exporter.imageOverlays = imageOverlays()
-        exporter.export(image: image, time: player.lastStillFilterTime) { (exportedImage, _) in
+        exporter.export(image: image, time: player.lastStillFilterTime, toSize: exportSize) { (exportedImage, error) in
+            let originalImage = image
             performUIUpdate {
-                guard Device.isRunningInSimulator == false else {
-                    self.delegate?.didFinishExportingImage(image: UIImage(), info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
-                    self.hideLoading()
-                    return
-                }
                 guard let unwrappedImage = exportedImage else {
-                    self.hideLoading()
-                    self.handleExportError()
+                    if let error = error, let exportCompletion = self.exportCompletion {
+                        exportCompletion(.failure(error))
+                    } else {
+                        self.handleExportError()
+                    }
                     return
                 }
-                self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, action: exportAction, mediaChanged: self.mediaChanged)
-                self.hideLoading()
+                let result = ExportResult(original: .image(originalImage), result: .image(unwrappedImage), info: mediaInfo, archive: archive)
+                self.exportCompletion?(.success(result))
+                self.delegate?.didFinishExportingImage(image: unwrappedImage, info: mediaInfo, archive: archive, action: exportAction, mediaChanged: self.mediaChanged)
             }
         }
     }
 
     private func imageOverlays() -> [CGImage] {
+        editorView.layoutIfNeeded()
         var imageOverlays: [CGImage] = []
         if let drawingLayer = drawingController.drawingLayer, let drawingOverlayImage = drawingLayer.cgImage() {
             imageOverlays.append(drawingOverlayImage)
@@ -762,10 +948,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     private func handleExportError() {
+        delegate?.didFailExporting()
         let alertController = UIAlertController(title: nil,
-                                                message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"),
+                                                message: NSLocalizedString("SomethingGoofedTitle", value: "Something goofed.", comment: "Alert controller message"),
                                                 preferredStyle: .alert)
-        let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { _ in
+        let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", value: "Try again", comment: "Try again"), style: .default) { _ in
             alertController.dismiss(animated: true, completion: .none)
         }
         alertController.addAction(tryAgainButton)
@@ -779,7 +966,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         case .gif:
             if settings.features.editorGIFMaker {
                 shouldExportMediaAsGIF = gifMakerHandler.shouldExport
-                editorView.animateReturnOfEditionOption(cell: selectedCell)
+                if settings.animateEditorControls {
+                editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: gifMakerController.confirmButtonLocation)
+                } else {
+                    selectedCell?.alpha = 1
+                }
                 gifMakerController.showView(false)
                 gifMakerController.showConfirmButton(false)
                 showMainUI(true)
@@ -791,19 +982,30 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         case .filter:
             filterController.showView(false)
+            editorView.showQuickPostButton(true)
             showMainUI(true)
         case .text:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            if settings.animateEditorControls {
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: textController.confirmButtonLocation)
+            } else {
+                selectedCell?.alpha = 1
+            }
             textController.showView(false)
             textController.showConfirmButton(false)
             showMainUI(true)
         case .drawing:
-            editorView.animateReturnOfEditionOption(cell: selectedCell)
+            if settings.animateEditorControls {
+            editorView.animateReturnOfEditionOption(cell: selectedCell, initialLocation: drawingController.confirmButtonLocation)
+            } else {
+                selectedCell?.alpha = 1
+            }
             drawingController.showView(false)
             drawingController.showConfirmButton(false)
             showMainUI(true)
         case .media:
             analyticsProvider?.logEditorMediaDrawerClosed()
+        case .cropRotate:
+            break
         }
         
         onAfterConfirmingEditionMenu()
@@ -815,9 +1017,9 @@ public final class EditorViewController: UIViewController, MediaPlayerController
         selectedCell = nil
     }
     
-    // MARK: - EditionMenuCollectionControllerDelegate
+    // MARK: - KanvasEditionMenuControllerDelegate
 
-    func didSelectEditionOption(_ editionOption: EditionOption, cell: EditionMenuCollectionCell) {
+    func didSelectEditionOption(_ editionOption: EditionOption, cell: KanvasEditorMenuCollectionCell) {
         switch editionOption {
         case .gif:
             if settings.features.editorGIFMaker {
@@ -831,6 +1033,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             }
         case .filter:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
+            editorView.showQuickPostButton(false)
             showMainUI(false)
             analyticsProvider?.logEditorFiltersOpen()
             filterController.showView(true)
@@ -840,22 +1043,58 @@ public final class EditorViewController: UIViewController, MediaPlayerController
             analyticsProvider?.logEditorTextAdd()
             editingNewText = true
             textController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+            if settings.animateEditorControls {
+                editorView.animateEditionOption(cell: cell, finalLocation: textController.confirmButtonLocation, completion: { _ in
+                    self.textController.showConfirmButton(true)
+                })
+            } else {
                 self.textController.showConfirmButton(true)
-            })
+            }
         case .drawing:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             showMainUI(false)
             analyticsProvider?.logEditorDrawingOpen()
             drawingController.showView(true)
-            editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
+            if settings.animateEditorControls {
+                editorView.animateEditionOption(cell: cell, finalLocation: drawingController.confirmButtonLocation, completion: { _ in
+                    self.drawingController.showConfirmButton(true)
+                })
+            } else {
                 self.drawingController.showConfirmButton(true)
-            })
+            }
         case .media:
             onBeforeShowingEditionMenu(editionOption, cell: cell)
             analyticsProvider?.logEditorMediaDrawerOpen()
             openMediaDrawer()
+        case .cropRotate:
+            onBeforeShowingEditionMenu(editionOption, cell: cell)
+            analyticsProvider?.logEditorCropRotateOpen()
+            showCropRotateController()
+            break
         }
+    }
+    
+    private func showCropRotateController() {
+        guard let image: UIImage = segments.first?.image else {
+            return
+        }
+        let cropViewController = CropViewController(image: image)
+        cropViewController.aspectRatioLockDimensionSwapEnabled = true
+        cropViewController.delegate = self
+        cropRotateApplied = false
+        present(cropViewController, animated: true, completion: nil)
+    }
+    
+    // MARK: CropViewControllerDelegate
+    
+    public func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        originalSegments = [CameraSegment.image(image, nil, nil, MediaInfo(source: .media_library))]
+        player.playerView?.reset()
+        player.renderer.refreshFilter()
+        restartPlayback()
+        cropRotateApplied = true
+        dismiss(animated: true)
+        onAfterConfirmingEditionMenu()
     }
     
     /// Prepares the editor state to show an edition menu
@@ -863,7 +1102,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameters
     ///  - editionOption: the selected edition option
     ///  - cell: the cell of the selected edition option
-    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: EditionMenuCollectionCell? = nil) {
+    private func onBeforeShowingEditionMenu(_ editionOption: EditionOption, cell: KanvasEditorMenuCollectionCell? = nil) {
         selectedCell = cell
         openedMenu = editionOption
     }
@@ -873,7 +1112,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func getDefaultTimeIntervalForImageSegments() -> TimeInterval {
         return CameraSegment.defaultTimeInterval(segments: segments)
     }
-    
+
     // MARK: - GifMakerHandlerDelegate
     
     func didConfirmGif() {
@@ -902,7 +1141,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func unsetMediaPlayerFrame() {
         player.cancelPlayingSingleFrame()
     }
-    
+
     // MARK: - EditorFilterControllerDelegate
     
     func didConfirmFilters() {
@@ -934,8 +1173,8 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func didConfirmText(textView: StylableTextView, transformations: ViewTransformations, location: CGPoint, size: CGSize) {
         if !textView.text.isEmpty {
-            editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size)
-            if let font = KanvasTextFont.from(font: textView.options.font), let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
+            editorView.movableViewCanvas.addView(view: textView, transformations: transformations, location: location, size: size, animated: true)
+            if let font = textView.options.font, let alignment = KanvasTextAlignment.from(alignment: textView.options.alignment) {
                 analyticsProvider?.logEditorTextConfirm(isNew: editingNewText, font: font, alignment: alignment, highlighted: textView.options.highlightColor != nil)
             }
             else {
@@ -950,9 +1189,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     }
 
     func didChange(font: UIFont) {
-        if let font = KanvasTextFont.from(font: font) {
-            analyticsProvider?.logEditorTextChange(font: font)
-        }
+        analyticsProvider?.logEditorTextChange(font: font)
     }
 
     func didChange(highlight: Bool) {
@@ -1012,7 +1249,7 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     func didSelectSticker(imageView: StylableImageView, size: CGSize) {
         analyticsProvider?.logEditorStickerAdd(stickerId: imageView.id)
         editorView.movableViewCanvas.addView(view: imageView, transformations: ViewTransformations(),
-                                             location: editorView.movableViewCanvas.bounds.center, size: size)
+                                             location: editorView.movableViewCanvas.bounds.center, size: size, animated: true)
     }
     
     func didSelectStickerType(_ stickerType: StickerType) {
@@ -1037,10 +1274,11 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     
     func onPostingOptionsDismissed() {
         startPlayerFromSegments()
+        hideLoading()
     }
     
     func onQuickPostButtonSubmitted() {
-        startExporting(action: .post)
+        startExporting(action: .confirmPostOptions)
     }
     
     public func onQuickPostOptionsShown(visible: Bool, hintText: String?, view: UIView) {
@@ -1070,38 +1308,10 @@ public final class EditorViewController: UIViewController, MediaPlayerController
     /// - Parameter show: true to show, false to hide
     private func showMainUI(_ show: Bool) {
         collectionController.showView(show)
-        showConfirmButton(show)
-        showCloseButton(show)
-        showTagButton(show)
-    }
-    
-    // MARK: - Public interface
-    
-    /// shows or hides the confirm button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showConfirmButton(_ show: Bool) {
         editorView.showConfirmButton(show)
-    }
-    
-    /// shows or hides the close button (back caret)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showCloseButton(_ show: Bool) {
         editorView.showCloseButton(show)
-    }
-
-    /// shows or hides the tag button (#)
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showTagButton(_ show: Bool) {
         editorView.showTagButton(show)
-    }
-    
-    /// shows or hides the editor menu and the back button
-    ///
-    /// - Parameter show: true to show, false to hide
-    func showNavigationContainer(_ show: Bool) {
-        editorView.showNavigationContainer(show)
+        editorView.showTagCollection(show)
+        editorView.showBlogSwitcher(show)
     }
 }

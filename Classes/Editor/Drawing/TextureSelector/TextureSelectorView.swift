@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol TextureSelectorViewDelegate: class {
+protocol TextureSelectorViewDelegate: AnyObject {
     /// Called when the main button is selected
     func didTapTextureButton()
     
@@ -84,7 +84,7 @@ final class TextureSelectorView: IgnoreTouchesView {
     /// Sets up the button that opens the selector
     private func setUpMainButton() {
         mainButton.contentMode = .center
-        mainButton.image = KanvasCameraImages.pencilImage
+        mainButton.image = KanvasImages.pencilImage
         mainButton.accessibilityIdentifier = "Texture Main Button"
         mainButton.backgroundColor = .white
         addSubview(mainButton)
@@ -126,9 +126,9 @@ final class TextureSelectorView: IgnoreTouchesView {
     
     /// Adds the options to the stack view
     private func setUpOptions() {
-        sharpieButton.setBackgroundImage(KanvasCameraImages.sharpieImage, for: .normal)
-        pencilButton.setBackgroundImage(KanvasCameraImages.pencilImage, for: .normal)
-        markerButton.setBackgroundImage(KanvasCameraImages.markerImage, for: .normal)
+        sharpieButton.setBackgroundImage(KanvasEditorDesign.shared.drawingViewSharpieImage, for: .normal)
+        pencilButton.setBackgroundImage(KanvasEditorDesign.shared.drawingViewPencilImage, for: .normal)
+        markerButton.setBackgroundImage(KanvasEditorDesign.shared.drawingViewMarkerImage, for: .normal)
         
         let sharpieButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(sharpieButtonTapped(recognizer:)))
         let pencilButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(pencilButtonTapped(recognizer:)))

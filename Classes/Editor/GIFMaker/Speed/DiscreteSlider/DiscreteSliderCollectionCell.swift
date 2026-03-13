@@ -16,7 +16,7 @@ private struct Constants {
     static let lineHeight: CGFloat = 4
     static let lineCornerRadius: CGFloat = 2
     static let inactiveColor: UIColor = .white
-    static let activeColor: UIColor = KanvasCameraColors.shared.sliderActiveColor
+    static let activeColor: UIColor = KanvasColors.shared.sliderActiveColor
 }
 
 /// The cell inside the discrete slider.
@@ -87,7 +87,7 @@ final class DiscreteSliderCollectionCell: UICollectionViewCell {
     private func setupCircle() {
         circle.accessibilityIdentifier = "Discrete Slider Collection Cell Circle"
         circle.translatesAutoresizingMaskIntoConstraints = false
-        circle.image = KanvasCameraImages.circleImage?.withRenderingMode(.alwaysTemplate)
+        circle.image = KanvasImages.circleImage?.withRenderingMode(.alwaysTemplate)
         circle.tintColor = Constants.activeColor
         addSubview(circle)
         

@@ -8,9 +8,10 @@ import UIKit
 import CoreVideo
 import OpenGLES
 import GLKit
+import os
 
 /// Protocol for GLPixelBufferView
-protocol GLPixelBufferViewDelegate: class {
+protocol GLPixelBufferViewDelegate: AnyObject {
 
     /// Called when the rendering rectangle changes
     func didRenderRectChange(rect: CGRect)
@@ -18,6 +19,8 @@ protocol GLPixelBufferViewDelegate: class {
 
 /// OpenGL view for rendering a buffer of pixels.
 final class GLPixelBufferView: UIView, PixelBufferView {
+
+    private let log = OSLog(subsystem: "com.tumblr.kanvas", category: "GLPixelBufferView")
 
     private weak var delegate: GLPixelBufferViewDelegate?
 
@@ -43,7 +46,7 @@ final class GLPixelBufferView: UIView, PixelBufferView {
         }
     }
 
-    private var mediaContentMode: UIView.ContentMode = .scaleAspectFill {
+    private(set) var mediaContentMode: UIView.ContentMode = .scaleAspectFill {
         didSet {
             guard mediaContentMode == .scaleAspectFill || mediaContentMode == .scaleAspectFit else {
                 assertionFailure("GLPixelBufferView.mediaContentMode only supports scaleAspectFill and scaleAspectFit")
@@ -104,7 +107,7 @@ final class GLPixelBufferView: UIView, PixelBufferView {
         bail: repeat {
             glFramebufferRenderbuffer(GL_FRAMEBUFFER.ui, GL_COLOR_ATTACHMENT0.ui, GL_RENDERBUFFER.ui, colorBufferHandle)
             if glCheckFramebufferStatus(GL_FRAMEBUFFER.ui) != GL_FRAMEBUFFER_COMPLETE.ui {
-                assertionFailure("Failure with framebuffer generation")
+                os_log("Failure with framebuffer generation", log: log, type: .error)
                 success = false
                 break bail
             }
@@ -168,7 +171,7 @@ final class GLPixelBufferView: UIView, PixelBufferView {
         if frameBufferHandle == 0 {
             let success = self.initializeBuffers()
             if !success {
-                assertionFailure("Problem initializing OpenGL buffers.")
+                os_log("Problem initializing OpenGL buffers.", log: log, type: .error)
                 return
             }
         }

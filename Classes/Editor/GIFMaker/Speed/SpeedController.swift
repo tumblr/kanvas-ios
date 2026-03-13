@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for the speed controller
-protocol SpeedControllerDelegate: class {
+protocol SpeedControllerDelegate: AnyObject {
     
     /// Called when a new speed is selected.
     ///

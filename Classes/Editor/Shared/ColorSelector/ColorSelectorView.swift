@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for the color selector view
-protocol ColorSelectorViewDelegate: class {
+protocol ColorSelectorViewDelegate: AnyObject {
     
     /// Called when the selection circle is panned
     ///
@@ -33,12 +33,12 @@ private struct Constants {
     
     // Tooltip
     static let tooltipForegroundColor: UIColor = .white
-    static let tooltipBackgroundColor: UIColor = KanvasCameraColors.shared.tooltipBackgroundColor
+    static let tooltipBackgroundColor: UIColor = KanvasColors.shared.tooltipBackgroundColor
     static let tooltipArrowPosition: EasyTipView.ArrowPosition = .bottom
     static let tooltipCornerRadius: CGFloat = 6
     static let tooltipArrowWidth: CGFloat = 11
     static let tooltipMargin: CGFloat = 12
-    static let tooltipFont: UIFont = KanvasCameraFonts.shared.colorSelectorTooltipFont
+    static let tooltipFont: UIFont = KanvasFonts.shared.colorSelectorTooltipFont
     static let tooltipVerticalTextInset: CGFloat = 13
     static let tooltipHorizontalTextInset: CGFloat = 16
 }
@@ -201,7 +201,7 @@ final class ColorSelectorView: UIView {
         preferences.positioning.textVInset = Constants.tooltipVerticalTextInset
         preferences.positioning.textHInset = Constants.tooltipHorizontalTextInset
         
-        let text = NSLocalizedString("Drag to select color", comment: "Color selector tooltip for the Camera")
+        let text = NSLocalizedString("Drag to select color", value: "Drag to select color", comment: "Color selector tooltip for the Camera")
         tooltip = EasyTipView(text: text, preferences: preferences)
     }
     

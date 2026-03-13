@@ -10,7 +10,7 @@ import UIKit
 
 /// Protocol for camera preview controller methods
 
-protocol CameraPreviewControllerDelegate: class {
+protocol CameraPreviewControllerDelegate: AnyObject {
     /// callback when finished exporting video clips.
     func didFinishExportingVideo(url: URL?)
 
@@ -22,6 +22,12 @@ protocol CameraPreviewControllerDelegate: class {
 
     /// callback when dismissing controller without exporting
     func dismissButtonPressed()
+
+    /// Callback when the preview screen has become visible.
+    func previewDidAppear()
+
+    /// Callback when the preview screen is not longer visible.
+    func previewWillDisappear()
 }
 
 /// A view controller to preview the segments sequentially
@@ -40,6 +46,7 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
     private let segments: [CameraSegment]
     private let assetsHandler: AssetsHandlerType
     private let cameraMode: CameraMode?
+    private let gifEncoder: GIFEncoder
 
     private var currentSegmentIndex: Int = 0
     private var timer: Timer = Timer()
@@ -67,12 +74,19 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
     ///   - segments: The segments to playback
     ///   - assetsHandler: The assets handler type, for testing.
     ///   - cameraMode: The camera mode that the preview was coming from, if any
-    init(settings: CameraSettings, segments: [CameraSegment], assetsHandler: AssetsHandlerType, cameraMode: CameraMode?) {
+    ///   - gifEncoder: The encoder used to convert videos in to gifs
+    init(settings: CameraSettings,
+         segments: [CameraSegment],
+         assetsHandler: AssetsHandlerType,
+         cameraMode: CameraMode?,
+         gifEncoder: GIFEncoder = GIFEncoderImageIO()) {
+        
         self.settings = settings
         self.segments = segments
         self.assetsHandler = assetsHandler
         self.cameraMode = cameraMode
         self.currentPlayer = firstPlayer
+        self.gifEncoder = gifEncoder
 
         super.init(nibName: .none, bundle: .none)
         setupNotifications()
@@ -100,6 +114,16 @@ final class CameraPreviewViewController: UIViewController, MediaPlayerController
         super.viewWillAppear(animated)
 
         restartPlayback()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        delegate?.previewDidAppear()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.previewWillDisappear()
     }
 
     override public func viewDidLoad() {
@@ -251,29 +275,39 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
     func confirmButtonPressed() {
         stopPlayback()
         showLoading()
-        if segments.count == 1, let firstSegment = segments.first, let image = firstSegment.image {
-            // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
-            // then single photos from that mode should still export as video.
-            if let cameraMode = cameraMode, cameraMode.group == .video && settings.exportStopMotionPhotoAsVideo, let videoURL = firstSegment.videoURL {
-                performUIUpdate {
-                    self.delegate?.didFinishExportingVideo(url: videoURL)
-                    self.hideLoading()
-                }
-            }
-            else {
-                performUIUpdate {
-                    self.delegate?.didFinishExportingImage(image: image)
-                    self.hideLoading()
-                }
-            }
-        }
-        else if settings.features.gifs,
-            let group = cameraMode?.group, group == .gif, segments.count == 1, let segment = segments.first, let url = segment.videoURL {
-            // If one GIF/Loop video was captured, export it as a GIF
-            GIFEncoderImageIO().encode(video: url, loopCount: 0, framesPerSecond: KanvasCameraTimes.gifPreferredFramesPerSecond) { gifURL in
-                performUIUpdate {
-                    self.delegate?.didFinishExportingFrames(url: gifURL)
-                    self.hideLoading()
+        if segments.count == 1, let firstSegment = segments.first {
+            switch firstSegment {
+                case .image(let image, let videoURL, _, _):
+                    // If the camera mode is .stopMotion, or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
+                    // then single photos from that mode should still export as video.
+                    if let cameraMode = cameraMode, cameraMode.group == .video && cameraMode != .normal && settings.exportStopMotionPhotoAsVideo {
+                        performUIUpdate {
+                            self.delegate?.didFinishExportingVideo(url: videoURL)
+                            self.hideLoading()
+                        }
+                    } else {
+                        performUIUpdate {
+                            self.delegate?.didFinishExportingImage(image: image)
+                            self.hideLoading()
+                        }
+                    }
+            case .video(let videoURL, _):
+                // If the camera mode is .stopMotion, .normal or .stitch (.video) and the `exportStopMotionPhotoAsVideo` is true,
+                // then single photos from that mode should still export as video.
+                if cameraMode?.group == .gif {
+                    gifEncoder.encode(video: videoURL,
+                                      loopCount: 0,
+                                      framesPerSecond: KanvasTimes.gifPreferredFramesPerSecond) { gifURL in
+                        performUIUpdate {
+                            self.delegate?.didFinishExportingFrames(url: gifURL)
+                            self.hideLoading()
+                        }
+                    }
+                } else {
+                    performUIUpdate {
+                        self.delegate?.didFinishExportingVideo(url: videoURL)
+                        self.hideLoading()
+                    }
                 }
             }
         }
@@ -283,7 +317,7 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
     }
 
     private func createFinalContent() {
-        assetsHandler.mergeAssets(segments: segments, completion: { url, _  in
+        assetsHandler.mergeAssets(segments: segments, withAudio: true, completion: { url, _  in
             performUIUpdate {
                 if let url = url {
                     self.delegate?.didFinishExportingVideo(url: url)
@@ -291,13 +325,13 @@ extension CameraPreviewViewController: CameraPreviewViewDelegate {
                 }
                 else {
                     self.hideLoading()
-                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", comment: "Alert controller message"), preferredStyle: .alert)
+                    let alertController = UIAlertController(title: nil, message: NSLocalizedString("SomethingGoofedTitle", value: "Something goofed.", comment: "Alert controller message"), preferredStyle: .alert)
                     
-                    let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel alert controller"), style: .cancel) { [weak self] _ in
+                    let cancelButton = UIAlertAction(title: NSLocalizedString("Cancel", value: "Cancel", comment: "Title for cancel button."), style: .cancel) { [weak self] _ in
                         self?.delegate?.didFinishExportingVideo(url: url)
                     }
                     
-                    let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try creating final content again"), style: .default) { [weak self] _ in
+                    let tryAgainButton = UIAlertAction(title: NSLocalizedString("Try again", value: "Try again", comment: "Try again"), style: .default) { [weak self] _ in
                         self?.showLoading()
                         self?.createFinalContent()
                     }

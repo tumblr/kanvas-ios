@@ -10,7 +10,7 @@ import UIKit
 
 /// Protocol for confirming and selecting filters
 
-protocol EditorFilterControllerDelegate: class {
+protocol EditorFilterControllerDelegate: AnyObject {
     /// Callback for when the user taps the background to confirm
     func didConfirmFilters()
     

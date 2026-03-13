@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 typealias MediaFrame = (image: UIImage, interval: TimeInterval)
 
@@ -47,7 +48,7 @@ func MediaFrameGetEndTimestamp(_ frames: [MediaFrame], at index: Int) -> TimeInt
     }
 }
 
-protocol GifMakerHandlerDelegate: class {
+protocol GifMakerHandlerDelegate: AnyObject {
     func didConfirmGif()
 
     func didRevertGif()
@@ -192,9 +193,9 @@ class GifMakerHandler {
 
     private var thumbnails: [TimeInterval: UIImage] = [:]
 
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    private let analyticsProvider: KanvasAnalyticsProvider?
 
-    init(analyticsProvider: KanvasCameraAnalyticsProvider?) {
+    init(analyticsProvider: KanvasAnalyticsProvider?) {
         self.analyticsProvider = analyticsProvider
     }
 

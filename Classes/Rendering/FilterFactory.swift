@@ -5,6 +5,8 @@
 //
 
 import Foundation
+import CoreGraphics
+import CoreVideo
 
 enum FilterPlatform {
     case openGL

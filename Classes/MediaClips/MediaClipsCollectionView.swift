@@ -18,7 +18,7 @@ final class MediaClipsCollectionView: UIView {
     static let height = MediaClipsCollectionViewConstants.height
     let collectionView: UICollectionView
     let fadeOutGradient = CAGradientLayer()
-
+        
     init() {
         collectionView = createCollectionView()
 
@@ -60,7 +60,8 @@ extension MediaClipsCollectionView {
                                   UIColor.clear.cgColor]
         fadeOutGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
         fadeOutGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        fadeOutGradient.locations = [0, 0.05, 0.9, 1.0]
+        fadeOutGradient.locations = KanvasDesign.shared.mediaClipsCollectionViewFadeOutGradientLocations
+        
         layer.mask = fadeOutGradient
     }
     
@@ -71,7 +72,7 @@ private func createCollectionView() -> UICollectionView {
     let layout = UICollectionViewFlowLayout()
     configureCollectionLayout(layout: layout)
 
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    let collectionView = InteractiveMovementsCrashFixCollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.accessibilityIdentifier = "Media Clips Collection"
     collectionView.backgroundColor = .clear
     configureCollection(collectionView: collectionView)
@@ -97,4 +98,13 @@ private func configureCollection(collectionView: UICollectionView) {
     collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
     collectionView.dragInteractionEnabled = true
     collectionView.reorderingCadence = .immediate
+}
+
+// Fixes a crash in `_UIDragFeedbackGenerator`: https://github.com/tumblr/kanvas-ios/issues/98
+private class InteractiveMovementsCrashFixCollectionView: UICollectionView {
+    // See https://stackoverflow.com/questions/51553223/handling-multiple-uicollectionview-interactivemovements-crash-uidragsnapping for more details
+    override func cancelInteractiveMovement() {
+        super.cancelInteractiveMovement()
+        super.endInteractiveMovement() // animation will be ended early here
+    }
 }

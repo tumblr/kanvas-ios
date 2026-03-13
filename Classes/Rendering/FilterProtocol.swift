@@ -9,7 +9,7 @@ import Foundation
 import GLKit
 
 /// Protocol for filters
-protocol FilterProtocol: class {
+protocol FilterProtocol: AnyObject {
 
     /// Uses the sampleBuffer's dimensions to initialize framebuffers and pixel buffers.
     func setupFormatDescription(from sampleBuffer: CMSampleBuffer, transform: GLKMatrix4?, outputDimensions: CGSize)

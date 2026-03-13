@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol FilterCollectionInnerCellDelegate: class {
+protocol FilterCollectionInnerCellDelegate: AnyObject {
     /// Callback method when tapping a cell
     ///
     /// - Parameters:
@@ -77,8 +77,8 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
     ///
     /// - Parameter item: The FilterItem to display
     func bindTo(_ item: FilterItem) {
-        iconView.image = KanvasCameraImages.filterTypes[item.type] ?? nil
-        iconView.backgroundColor = KanvasCameraColors.shared.filterColors[item.type]
+        iconView.image = KanvasImages.filterTypes[item.type] ?? nil
+        iconView.backgroundColor = KanvasColors.shared.filterColors[item.type]
     }
     
     /// shows or hides the cell
@@ -148,7 +148,7 @@ final class FilterCollectionInnerCell: UICollectionViewCell {
         circleView.clipsToBounds = true
         circleView.layer.masksToBounds = true
         circleView.layer.cornerRadius = dimensions.circleDiameter / 2
-        circleView.layer.borderWidth = 3 * (dimensions.circleDiameter/dimensions.circleMaxDiameter)
+        circleView.layer.borderWidth = KanvasDesign.shared.filterCollectionInnerCellBorderWidth * (dimensions.circleDiameter/dimensions.circleMaxDiameter)
         circleView.layer.borderColor = UIColor.white.cgColor
     }
     

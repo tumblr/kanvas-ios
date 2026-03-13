@@ -56,11 +56,22 @@ class Shader {
     ///   - type: fragment or vertex
     /// - Returns: The shader source code as a String
     class func getSourceCode(_ name: String, type: ShaderExtension) -> String? {
+#if SWIFT_PACKAGE
+        guard let url = Bundle.module.url(forResource: name,
+                                    withExtension: type.rawValue) else {
+            return nil
+        }
+        
+        do {
+            return try String(contentsOf: url)
+        } catch {
+            return nil
+        }
+#else
         let extString: String = type.rawValue
-        guard let bundlePath = KanvasCameraStrings.bundlePath(for: Shader.self),
-        let bundle = Bundle(path: bundlePath),
-        let path = bundle.path(forResource: String("\(ShaderConstants.shaderDirectory)/\(name)"), ofType: extString) else {
-                return nil
+        guard let bundle = KanvasStrings.bundle(for: Shader.self),
+              let path = bundle.path(forResource: String("\(ShaderConstants.shaderDirectory)/\(name)"), ofType: extString) else {
+            return nil
         }
         
         do {
@@ -70,6 +81,7 @@ class Shader {
         catch {
             return nil
         }
+#endif
     }
     
     /// Creates a program given the vertex and fragment shaders

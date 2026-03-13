@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Protocol for the text tools editor
-protocol EditorTextViewDelegate: class {
+protocol EditorTextViewDelegate: AnyObject {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()
@@ -50,7 +50,7 @@ private struct Constants {
     static let circularIconCornerRadius: CGFloat = circularIconSize / 2
 
     // Confirm button
-    static let confirmButtonSize: CGFloat = 36
+    static let confirmButtonSize: CGFloat = KanvasEditorDesign.shared.topButtonSize
     static let confirmButtonInset: CGFloat = -10
 }
 
@@ -116,6 +116,10 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         set {
             mainTextView.font = newValue
             mainTextView.resizeFont()
+
+            if settings.fontSelectorUsesFont {
+                refreshFontSelector()
+            }
         }
     }
     
@@ -127,7 +131,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     var highlightColor: UIColor? {
         get { return mainTextView.highlightColor }
         set {
-            guard let newColor = newValue, let image = KanvasCameraImages.highlightImage(for: newColor.isVisible()) else { return }
+            guard let newColor = newValue, let image = KanvasEditorDesign.shared.editorTextViewHighlightImage(newColor.isVisible()) else { return }
             highlightSelector.setImage(image, for: .normal)
             mainTextView.highlightColor = newColor
         }
@@ -145,7 +149,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     var alignment: NSTextAlignment {
         get { return mainTextView.textAlignment }
         set {
-            guard let image = KanvasCameraImages.aligmentImages[newValue] else { return }
+            guard let image = KanvasEditorDesign.shared.editorTextViewAlignmentImage[newValue] else { return }
             alignmentSelector.setImage(image, for: .normal)
             mainTextView.textAlignment = newValue
         }
@@ -188,13 +192,22 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         croppedView.sizeToFit()
         return croppedView.contentSize
     }
+
+    struct Settings {
+        /// The Font Selector button uses the current selected font (`font`) for its label
+        let fontSelectorUsesFont: Bool
+        /// Enables/disables progressive font resizing
+        let resizesFonts: Bool
+    }
+
+    private let settings: Settings
     
     @available(*, unavailable, message: "use init() instead")
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    init() {
+
+    init(settings inSettings: Settings) {
         confirmButton = ExtendedButton(inset: Constants.confirmButtonInset)
         mainTextView = MainTextView()
         toolsContainer = UIView()
@@ -210,6 +223,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         eyeDropper = UIButton()
         colorGradient = UIView()
         colorSelector = IgnoreTouchesView()
+        settings = inSettings
         super.init(frame: .zero)
         mainTextView.textViewDelegate = self
         setupViews()
@@ -239,6 +253,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     private func setUpMainTextView() {
         mainTextView.accessibilityIdentifier = "Editor Text Main View"
         mainTextView.translatesAutoresizingMaskIntoConstraints = false
+        mainTextView.resizesFont = settings.resizesFonts
         addSubview(mainTextView)
         
         let topMargin = Constants.topMargin + Constants.confirmButtonSize
@@ -270,9 +285,18 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
         confirmButton.accessibilityIdentifier = "Editor Text Confirm Button"
-        confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
+        
+        let checkmark = KanvasEditorDesign.shared.checkmarkImage
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            let backgroundImage = UIImage.circle(diameter: Constants.confirmButtonSize, color: KanvasColors.shared.primaryButtonBackgroundColor)
+            confirmButton.setBackgroundImage(backgroundImage, for: .normal)
+            confirmButton.setImage(checkmark, for: .normal)
+        }
+        else {
+            confirmButton.setBackgroundImage(checkmark, for: .normal)
+        }
         
         NSLayoutConstraint.activate([
             confirmButton.centerXAnchor.constraint(equalTo: topButtonsContainer.centerXAnchor),
@@ -285,6 +309,12 @@ final class EditorTextView: UIView, MainTextViewDelegate {
         confirmButton.addGestureRecognizer(tapRecognizer)
         
         confirmButton.alpha = 0
+    }
+
+    private func refreshFontSelector() {
+        if let attributedFont = font?.withSize(20) {
+            fontSelector.setAttributedTitle(NSAttributedString(string: "Aa", attributes: [.font: attributedFont, .foregroundColor: UIColor.white]), for: .normal)
+        }
     }
     
     /// Sets up the container that holds the main menu and the color picker menu
@@ -319,7 +349,13 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the font selector button
     private func setUpFontSelector() {
         fontSelector.accessibilityIdentifier = "Editor Text Font Selector"
-        fontSelector.setImage(KanvasCameraImages.fontImage, for: .normal)
+        if settings.fontSelectorUsesFont {
+            refreshFontSelector()
+        } else {
+            fontSelector.setImage(KanvasImages.fontImage, for: .normal)
+        }
+        fontSelector.layer.cornerRadius = Constants.customIconSize / 2
+        fontSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         fontSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(fontSelector)
         
@@ -337,6 +373,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the alignment selector button
     private func setUpAlignmentSelector() {
         alignmentSelector.accessibilityIdentifier = "Editor Text Alignment Selector"
+        alignmentSelector.layer.cornerRadius = Constants.customIconSize / 2
+        alignmentSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         alignmentSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(alignmentSelector)
         
@@ -354,6 +392,8 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the highlight selector button
     private func setUpHighlightSelector() {
         highlightSelector.accessibilityIdentifier = "Editor Text Font Selector"
+        highlightSelector.layer.cornerRadius = Constants.customIconSize / 2
+        highlightSelector.backgroundColor = KanvasEditorDesign.shared.buttonBackgroundColor
         highlightSelector.translatesAutoresizingMaskIntoConstraints = false
         mainMenuContainer.addSubview(highlightSelector)
         
@@ -371,7 +411,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the gradient button that opens the color picker menu
     private func setUpOpenColorPicker() {
         openColorPicker.accessibilityIdentifier = "Editor Text Open Color Picker"
-        openColorPicker.setImage(KanvasCameraImages.gradientImage, for: .normal)
+        openColorPicker.setImage(KanvasImages.gradientImage, for: .normal)
         openColorPicker.layer.borderColor = Constants.circularIconBorderColor.cgColor
         openColorPicker.layer.borderWidth = Constants.circularIconBorderWidth
         openColorPicker.layer.cornerRadius = Constants.circularIconCornerRadius
@@ -408,7 +448,10 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the cross button to close the color picker menu
     private func setUpCloseColorPicker() {
         closeColorPicker.accessibilityIdentifier = "Editor Text Close Color Picker"
-        closeColorPicker.setImage(KanvasCameraImages.closeGradientImage, for: .normal)
+        closeColorPicker.setImage(KanvasEditorDesign.shared.closeGradientImage, for: .normal)
+        closeColorPicker.contentMode = .center
+        closeColorPicker.backgroundColor = KanvasEditorDesign.shared.buttonInvertedBackgroundColor
+        closeColorPicker.layer.cornerRadius = Constants.circularIconSize / 2
         closeColorPicker.translatesAutoresizingMaskIntoConstraints = false
         colorPickerContainer.addSubview(closeColorPicker)
         
@@ -426,7 +469,7 @@ final class EditorTextView: UIView, MainTextViewDelegate {
     /// Sets up the eye dropper button in the color picker menu
     private func setUpEyeDropper() {
         eyeDropper.accessibilityIdentifier = "Editor Text Eye Dropper"
-        let image = KanvasCameraImages.eyeDropperImage?.withRenderingMode(.alwaysTemplate)
+        let image = KanvasEditorDesign.shared.drawingViewEyeDropperImage?.withRenderingMode(.alwaysTemplate)
         eyeDropper.setImage(image, for: .normal)
         eyeDropper.layer.borderColor = Constants.circularIconBorderColor.cgColor
         eyeDropper.layer.borderWidth = Constants.circularIconBorderWidth

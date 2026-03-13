@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol MediaClipsCollectionControllerDelegate: class {
+protocol MediaClipsCollectionControllerDelegate: AnyObject {
     
     /// Callback for when a clip is moved inside the collection
     func mediaClipWasMoved(from originIndex: Int, to destinationIndex: Int)
@@ -17,15 +17,19 @@ protocol MediaClipsCollectionControllerDelegate: class {
     
     /// Callback for when a clip finishes moving / draggin
     func mediaClipFinishedMoving()
+    
+    func mediaClipWasSelected(at: Int)
 }
 
 /// Constants for Collection Controller
 private struct MediaClipsCollectionControllerConstants {
     /// Animation duration in seconds
     static let animationDuration: TimeInterval = 0.15
-        
+            
     /// Padding at each side of the clip collection
-    static let horizontalInset: CGFloat = 11
+    static let leftInset: CGFloat = KanvasDesign.shared.mediaClipsCollectionControllerLeftInset
+    static let rightInset: CGFloat = KanvasDesign.shared.mediaClipsCollectionControllerRightInset
+
 }
 
 /// Controller for handling the media clips collection.
@@ -64,11 +68,33 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
         }
     }
 
+    func select(index: Int) {
+        let selectedIndexPath = IndexPath(item: index, section: 0)
+        guard mediaClipsCollectionView.collectionView.indexPathsForSelectedItems?.contains(selectedIndexPath) == false else {
+            return
+        }
+        mediaClipsCollectionView.collectionView.indexPathsForSelectedItems?.forEach({ indexPath in
+            mediaClipsCollectionView.collectionView.deselectItem(at: indexPath, animated: false)
+        })
+        let scrollPosition: UICollectionView.ScrollPosition
+        if mediaClipsCollectionView.collectionView.indexPathsForVisibleItems.contains(selectedIndexPath) {
+            scrollPosition = []
+        } else {
+            scrollPosition = .left
+        }
+        mediaClipsCollectionView.collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: scrollPosition)
+    }
+
     func removeAllClips() {
         while clips.count > 0 {
             clips.remove(at: 0)
             mediaClipsCollectionView.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
         }
+        mediaClipsCollectionView.collectionView.reloadData()
+    }
+    
+    func replace(clips: [MediaClip]) {
+        self.clips = clips.map({ $0 })
         mediaClipsCollectionView.collectionView.reloadData()
     }
     
@@ -106,6 +132,7 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         mediaClipsCollectionView.collectionView.register(cell: MediaClipsCollectionCell.self)
         mediaClipsCollectionView.collectionView.delegate = self
         mediaClipsCollectionView.collectionView.dataSource = self
@@ -143,12 +170,14 @@ final class MediaClipsCollectionController: UIViewController, UICollectionViewDe
     // MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard clips.count > 0, collectionView.bounds != .zero else { return .zero }
-        return UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.horizontalInset,
-                            bottom: 0, right: MediaClipsCollectionControllerConstants.horizontalInset)
+        let insets = UIEdgeInsets(top: 0, left: MediaClipsCollectionControllerConstants.leftInset,
+                                  bottom: 0, right: MediaClipsCollectionControllerConstants.rightInset)
+        return insets
     }
 
     private func cellBorderWhenCentered(firstCell: Bool, leftBorder: Bool, collectionView: UICollectionView) -> CGFloat {
         let cellMock = MediaClipsCollectionCell(frame: .zero)
+        
         if firstCell, let firstClip = clips.first {
             cellMock.bindTo(firstClip)
         }
@@ -214,6 +243,10 @@ extension MediaClipsCollectionController: UICollectionViewDragDelegate {
         draggingCell?.show(true)
         draggingCell = .none
         draggingClipIndex = .none
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.mediaClipWasSelected(at: indexPath.row)
     }
 }
 

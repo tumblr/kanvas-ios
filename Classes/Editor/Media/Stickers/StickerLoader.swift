@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol KanvasCancelable {
     /// Cancels the running operation.

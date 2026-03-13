@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol DrawingCanvasDelegate: class {
+protocol DrawingCanvasDelegate: AnyObject {
     func didBeginTouches()
     func didEndTouches()
 }

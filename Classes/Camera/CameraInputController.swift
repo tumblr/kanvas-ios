@@ -550,8 +550,10 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         if let formatDescription = currentDevice?.activeFormat.formatDescription {
             let videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription)
             var dimensions = CGSize(width: CGFloat(videoDimensions.height), height: CGFloat(videoDimensions.width))
-            // Make recording resolution have the same aspect ratio as the screen
-            dimensions.width = dimensions.height * (frameSize.width / frameSize.height)
+            if settings.features.scaleMediaToFill {
+                // Make recording resolution have the same aspect ratio as the screen
+                dimensions.width = dimensions.height * (frameSize.width / frameSize.height)
+            }
             return dimensions
         }
         return .zero
@@ -595,8 +597,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
                 camera.unlockForConfiguration()
             }
         }
-        currentCameraPosition = rearCamera != nil ? .back : .front
-
+        
         let microphoneSession =  AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone], mediaType: AVMediaType.audio, position: .unspecified)
         microphone = microphoneSession.devices.first
     }
@@ -783,7 +784,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
         }
         else if output == videoDataOutput {
             filteredInputViewControllerInstance?.filterSampleBuffer(sampleBuffer)
-            if !settings.features.openGLCapture {
+            if !(settings.features.openGLCapture || settings.features.metalFilters) {
                 recorder?.processVideoSampleBuffer(sampleBuffer)
             }
         }
@@ -846,7 +847,7 @@ final class CameraInputController: UIViewController, CameraRecordingDelegate, AV
 
     // MARK: - FilteredInputViewControllerDelegate
     func filteredPixelBufferReady(pixelBuffer: CVPixelBuffer, presentationTime: CMTime) {
-        if settings.features.openGLCapture {
+        if settings.features.openGLCapture || settings.features.metalFilters {
             recorder?.processVideoPixelBuffer(pixelBuffer, presentationTime: presentationTime)
         }
     }

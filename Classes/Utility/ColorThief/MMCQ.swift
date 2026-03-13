@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// MMCQ (modified median cut quantization) algorithm from
 /// the Leptonica library (http://www.leptonica.com/).

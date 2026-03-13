@@ -12,7 +12,7 @@ private struct Constants {
     static let animationDuration: TimeInterval = 0.25
     static let cornerRadius: CGFloat = 18
     static let backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.4)
-    static let font: UIFont = KanvasCameraFonts.shared.timeIndicatorFont
+    static let font: UIFont = KanvasFonts.shared.timeIndicatorFont
     static let fontColor: UIColor = .white
     static let width: CGFloat = 68
     static let height: CGFloat = 36

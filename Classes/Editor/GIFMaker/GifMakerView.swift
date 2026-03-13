@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for closing the GIF maker
-protocol GifMakerViewDelegate: class {
+protocol GifMakerViewDelegate: AnyObject {
     
     /// Called when the confirm button is selected
     func didTapConfirmButton()
@@ -36,12 +36,12 @@ private struct Constants {
     static let speedMenuMargin: CGFloat = 34
     
     // Top options
-    static let topButtonSize: CGFloat = 36
+    static let topButtonSize: CGFloat = KanvasEditorDesign.shared.topButtonSize
     static let topButtonInset: CGFloat = -10
-    static let topButtonsInterspace: CGFloat = 30
+    static let topButtonsInterspace: CGFloat = KanvasEditorDesign.shared.topButtonInterspace
     static let topButtonsCount: CGFloat = 3
 
-    static let font = KanvasCameraFonts.shared.gifMakerRevertButtonFont
+    static let font = KanvasFonts.shared.gifMakerRevertButtonFont
     static let revertFontColor = UIColor(red: 1, green: 0.286, blue: 0.188, alpha: 1)
     static let revertBackgroundColor = UIColor.white
 }
@@ -121,9 +121,19 @@ final class GifMakerView: UIView {
     /// Sets up the confirmation button with a check mark
     private func setUpConfirmButton() {
         confirmButton.accessibilityIdentifier = "GIF Maker Confirm Button"
-        confirmButton.setBackgroundImage(KanvasCameraImages.editorConfirmImage, for: .normal)
+        
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(confirmButton)
+        
+        let checkmark = KanvasEditorDesign.shared.checkmarkImage
+        if KanvasEditorDesign.shared.isVerticalMenu {
+            let backgroundImage = UIImage.circle(diameter: Constants.topButtonSize, color: KanvasColors.shared.primaryButtonBackgroundColor)
+            confirmButton.setBackgroundImage(backgroundImage, for: .normal)
+            confirmButton.setImage(checkmark, for: .normal)
+        }
+        else {
+            confirmButton.setBackgroundImage(checkmark, for: .normal)
+        }
         
         let index: CGFloat = 0
         let topOffset = (Constants.topButtonSize + Constants.topButtonsInterspace) * index
@@ -142,7 +152,7 @@ final class GifMakerView: UIView {
     /// Sets up the trim button in the top options
     private func setUpTrimButton() {
         trimButton.accessibilityIdentifier = "GIF Maker Trim Button"
-        trimButton.setBackgroundImage(KanvasCameraImages.trimOff, for: .normal)
+        trimButton.setBackgroundImage(KanvasImages.trimOff, for: .normal)
         trimButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(trimButton)
         
@@ -161,7 +171,7 @@ final class GifMakerView: UIView {
     /// Sets up the speed tools button in the top options
     private func setUpSpeedButton() {
         speedButton.accessibilityIdentifier = "GIF Maker Speed Button"
-        speedButton.setBackgroundImage(KanvasCameraImages.speedOff, for: .normal)
+        speedButton.setBackgroundImage(KanvasImages.speedOff, for: .normal)
         speedButton.translatesAutoresizingMaskIntoConstraints = false
         topButtonsContainer.addSubview(speedButton)
         
@@ -219,7 +229,7 @@ final class GifMakerView: UIView {
         trimMenuContainer.clipsToBounds = false
         addSubview(trimMenuContainer)
         
-        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.trimMenuMargin
+        let bottomMargin = Constants.bottomMargin + OptionSelectorView.height + Constants.trimMenuMargin
         NSLayoutConstraint.activate([
             trimMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             trimMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
@@ -236,7 +246,7 @@ final class GifMakerView: UIView {
         speedMenuContainer.clipsToBounds = false
         addSubview(speedMenuContainer)
         
-        let bottomMargin = Constants.bottomMargin + PlaybackView.height + Constants.speedMenuMargin
+        let bottomMargin = Constants.bottomMargin + OptionSelectorView.height + Constants.speedMenuMargin
         NSLayoutConstraint.activate([
             speedMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             speedMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
@@ -257,7 +267,7 @@ final class GifMakerView: UIView {
             playbackMenuContainer.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Constants.leftMargin),
             playbackMenuContainer.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Constants.rightMargin),
             playbackMenuContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Constants.bottomMargin),
-            playbackMenuContainer.heightAnchor.constraint(equalToConstant: PlaybackView.height),
+            playbackMenuContainer.heightAnchor.constraint(equalToConstant: OptionSelectorView.height),
         ])
     }
     
@@ -306,7 +316,7 @@ final class GifMakerView: UIView {
     /// - Parameter image: the new image for the button
     func changeTrimButton(_ enabled: Bool) {
         let animation: (() -> Void) = { [weak self] in
-            let image = enabled ? KanvasCameraImages.trimOn : KanvasCameraImages.trimOff
+            let image = enabled ? KanvasImages.trimOn : KanvasImages.trimOff
             self?.trimButton.setBackgroundImage(image, for: .normal)
         }
         
@@ -322,7 +332,7 @@ final class GifMakerView: UIView {
     /// - Parameter image: the new image for the button
     func changeSpeedButton(_ enabled: Bool) {
         let animation: (() -> Void) = { [weak self] in
-            let image = enabled ? KanvasCameraImages.speedOn : KanvasCameraImages.speedOff
+            let image = enabled ? KanvasImages.speedOn : KanvasImages.speedOff
             self?.speedButton.setBackgroundImage(image, for: .normal)
         }
         

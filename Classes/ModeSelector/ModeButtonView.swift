@@ -5,9 +5,10 @@
 //
 
 import Foundation
+import UIKit
 
 /// Protocol to handle mode button user actions
-protocol ModeButtonViewDelegate: class {
+protocol ModeButtonViewDelegate: AnyObject {
 
     /// Function called when mode button was tapped
     func modeButtonViewDidTap()
@@ -18,7 +19,7 @@ private struct ModeButtonViewConstants {
     static let contentVerticalInset: CGFloat = 6
     static let contentHorizontalInset: CGFloat = 20
     static let borderWidth: CGFloat = 2
-    static let buttonFont: UIFont = KanvasCameraFonts.shared.modeButtonFont
+    static let buttonFont: UIFont = KanvasFonts.shared.modeButtonFont
 }
 
 /// The capsule mode button view

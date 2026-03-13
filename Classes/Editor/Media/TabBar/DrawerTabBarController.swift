@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Constants for selecting a tab
-protocol DrawerTabBarControllerDelegate: class {
+protocol DrawerTabBarControllerDelegate: AnyObject {
     func didSelectOption(_ option: DrawerTabBarOption)
 }
 

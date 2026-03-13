@@ -6,6 +6,7 @@
 
 import MetalKit
 import GLKit
+import MetalPerformanceShaders
 
 struct ShaderContext {
     var time: Float = 0.0
@@ -21,11 +22,12 @@ final class MetalPixelBufferView: MTKView {
     
     var mediaTransform: GLKMatrix4?
     var isPortrait: Bool = true
+    private(set) var mediaContentMode: UIView.ContentMode
     
-    init(context: MetalContext) {
+    init(context: MetalContext, mediaContentMode: UIView.ContentMode) {
         self.context = context
+        self.mediaContentMode = mediaContentMode
         super.init(frame: .zero, device: context.device)
-        self.contentMode = .scaleAspectFit
         print(renderEncoder.device)
     }
     
@@ -67,9 +69,21 @@ final class MetalPixelBufferView: MTKView {
         if isPortrait && width > height {
             (width, height) = (height, width)
         }
+
+        let targetSize = CGSize(width: frame.width * contentScaleFactor, height: frame.height * contentScaleFactor)
+
+        let descriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: metalTexture.pixelFormat, width: Int(targetSize.width), height: Int(targetSize.height), mipmapped: false)
+        descriptor.usage = [.shaderWrite, .shaderRead, .renderTarget]
+
+        guard let destinationTexture = device?.makeTexture(descriptor: descriptor) else {
+            print("Resize destination texture's makeTexture failed")
+            return
+        }
+
+        resize(targetSize: targetSize, commandBuffer: commandBuffer, sourceTexture: metalTexture, destinationTexture: destinationTexture)
         
         renderEncoder.encode(commandBuffer: commandBuffer,
-                             inputTexture: metalTexture,
+                             inputTexture: destinationTexture,
                              currentRenderPassDescriptor: currentRenderPassDescriptor,
                              shaderContext: shaderContext,
                              aspectRatio: CGFloat(height) / CGFloat(width),
@@ -78,6 +92,72 @@ final class MetalPixelBufferView: MTKView {
         commandBuffer.commit()
         commandBuffer.waitUntilScheduled()
         self.pixelBufferToDraw = nil
+    }
+}
+
+extension MetalPixelBufferView {
+    /// Resize a metal texture to a target size
+    /// - Parameters:
+    ///   - pixelBuffer: The pixel buffer containing the
+    ///   - targetSize: Target size to scale and resize the `sourceTexture` to.
+    ///   - commandBuffer: The command buffer to encode the scale transform to.
+    ///   - sourceTexture: The metal texture to resize/scale.
+    ///   - destinationTexture: The metal texture to encode the resulting scaled/resized image to.
+    func resize(targetSize: CGSize, commandBuffer: MTLCommandBuffer, sourceTexture: MTLTexture, destinationTexture: MTLTexture) {
+        let sourceWidth = sourceTexture.width
+        let sourceHeight = sourceTexture.height
+        let widthRatio = Double(targetSize.width) / Double(sourceWidth)
+        let heightRatio = Double(targetSize.height) / Double(sourceHeight)
+        let scaleX, scaleY, translateX, translateY: Double
+
+        switch mediaContentMode {
+        case .scaleToFill:
+            scaleX = widthRatio
+            scaleY = heightRatio
+            translateX = 0
+            translateY = 0
+        case .scaleAspectFill:
+            if heightRatio > widthRatio {
+                scaleY = heightRatio
+                scaleX = scaleY
+                let currentWidth = Double(sourceWidth) * scaleX
+                translateX = (Double(targetSize.width) - currentWidth) * 0.5
+                translateY = 0
+            } else {
+                scaleX = widthRatio
+                scaleY = scaleX
+                let currentHeight = Double(sourceHeight) * scaleY
+                translateY = (Double(targetSize.height) - currentHeight) * 0.5
+                translateX = 0
+            }
+        case .scaleAspectFit:
+            if heightRatio > widthRatio {
+                scaleX = widthRatio
+                scaleY = scaleX
+                let currentHeight = Double(sourceHeight) * scaleY
+                translateY = (Double(targetSize.height) - currentHeight) * 0.5
+                translateX = 0
+            } else {
+                scaleY = heightRatio
+                scaleX = scaleY
+                let currentWidth = Double(sourceWidth) * scaleX
+                translateX = (Double(targetSize.width) - currentWidth) * 0.5
+                translateY = 0
+            }
+        default:
+            scaleX = 0
+            scaleY = 0
+            translateX = 0
+            translateY = 0
+            // Only supports the scaling content modes.
+        }
+
+        var transform = MPSScaleTransform(scaleX: scaleX, scaleY: scaleY, translateX: translateX, translateY: translateY)
+        let scale = MPSImageBilinearScale.init(device: device!)
+        withUnsafePointer(to: &transform) { (transformPtr: UnsafePointer<MPSScaleTransform>) -> () in
+            scale.scaleTransform = transformPtr
+            scale.encode(commandBuffer: commandBuffer, sourceTexture: sourceTexture, destinationTexture: destinationTexture)
+        }
     }
 }
 

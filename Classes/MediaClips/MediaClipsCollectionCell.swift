@@ -11,15 +11,16 @@ import UIKit
 private struct MediaClipsCollectionCellConstants {
     static let animationDuration: TimeInterval = 0.1
     static let cellPadding: CGFloat = 2.9
-    static let clipHeight: CGFloat = 60
-    static let clipWidth: CGFloat = 40
-    static let borderWidth: CGFloat = 1.1
-    static let cornerRadius: CGFloat = 8
-    static let font: UIFont = KanvasCameraFonts.shared.mediaClipsFont
-    static let labelHorizontalPadding: CGFloat = 5.5
-    static let labelVerticalPadding: CGFloat = 3.5
+    static let clipHeight: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellClipHeight
+    static let clipWidth: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellClipWidth
+    static let borderWidth: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellBorderWidth
+    static let selectedBorderWidth: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellSelectedBorderWidth
+    static let cornerRadius: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellCornerRadius
+    static let font: UIFont = KanvasDesign.shared.mediaClipsCollectionCellFont
+    static let labelHorizontalPadding: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellLabelHorizontalPadding
+    static let labelVerticalPadding: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellLabelVerticalPadding
     static let labelHeight: CGFloat = 14
-    static let clipAlpha: CGFloat = 0.5
+    static let clipAlpha: CGFloat = KanvasDesign.shared.mediaClipsCollectionCellClipAlpha
 
     static var minimumHeight: CGFloat {
         return clipHeight
@@ -40,7 +41,7 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
         let view = UIView()
         view.clipsToBounds = true
         view.layer.cornerRadius = MediaClipsCollectionCellConstants.cornerRadius
-        view.layer.borderColor = KanvasCameraColors.shared.mediaBorderColor.cgColor
+        view.layer.borderColor = KanvasColors.shared.mediaBorderColor.cgColor
         view.layer.borderWidth = MediaClipsCollectionCellConstants.borderWidth
         return view
     }()
@@ -72,18 +73,26 @@ final class MediaClipsCollectionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         clipImage.image = .none
+        clipView.layer.borderWidth = MediaClipsCollectionCellConstants.borderWidth
+    }
+
+    override var isSelected: Bool {
+        didSet {
+            clipView.layer.borderWidth = isSelected ? MediaClipsCollectionCellConstants.selectedBorderWidth  : MediaClipsCollectionCellConstants.borderWidth
+        }
     }
 
     /// updates the cell to the MediaClip properties
     ///
     /// - Parameter item: The MediaClip to display
     func bindTo(_ item: MediaClip) {
-        clipImage.image = item.representativeFrame
+        let image = item.representativeFrame
+        clipImage.image = image
         clipLabel.text = item.overlayText
     }
-    
+
     // MARK: - Public interface
-    
+
     /// shows or hides the cell
     ///
     /// - Parameter show: true to show, false to hide

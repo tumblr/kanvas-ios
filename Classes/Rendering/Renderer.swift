@@ -11,7 +11,7 @@ import OpenGLES
 import GLKit
 
 /// Callbacks for rendering
-protocol RendererDelegate: class {
+protocol RendererDelegate: AnyObject {
     /// Called when renderer has a processed pixel buffer ready for display. This may skip frames, so it's only
     /// intended to be used for display purposes.
     ///
@@ -31,7 +31,7 @@ protocol RendererDelegate: class {
     func rendererRanOutOfBuffers()
 }
 
-/// Renders pixel buffers with open gl
+/// Renders pixel buffers with open gl or metal
 final class Renderer: Rendering {
 
     /// Optional delegate
@@ -64,9 +64,17 @@ final class Renderer: Rendering {
     private let settings: CameraSettings?
     private let callbackQueue: DispatchQueue = DispatchQueue.main
     private var filter: FilterProtocol
-    private let filterFactory: FilterFactory
+    private var filterFactory: FilterFactory
     private var processingImage = false
     private var filteredPixelBuffer: CVPixelBuffer?
+
+    var filterPlatform: FilterPlatform {
+        didSet {
+            filterFactory = FilterFactory(glContext: glContext,
+                                              metalContext: metalContext,
+                                              filterPlatform: filterPlatform)
+        }
+    }
 
     /// Designated initializer
     ///
@@ -74,10 +82,11 @@ final class Renderer: Rendering {
     init(settings: CameraSettings?=nil, metalContext: MetalContext?=nil) {
         glContext = EAGLContext(api: .openGLES3)
         self.settings = settings
-        self.metalContext = metalContext
+        self.metalContext = metalContext ?? MetalContext.createContext()
+        self.filterPlatform = settings?.features.metalFilters == true ? .metal : .openGL
         let filterFactory = FilterFactory(glContext: glContext,
                                           metalContext: metalContext,
-                                          filterPlatform: settings?.features.metalFilters == true ? .metal : .openGL)
+                                          filterPlatform: filterPlatform)
         filter = filterFactory.createFilter(type: self.filterType)
         self.filterFactory = filterFactory
         switchInputDimensions = false
@@ -122,7 +131,7 @@ final class Renderer: Rendering {
         let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         let filterAlreadyInitialized: Bool = synchronized(self) {
             if filter.outputFormatDescription == nil {
-                let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: scaleToFillSize)
+                let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: settings?.features.scaleMediaToFill == true ? scaleToFillSize : nil)
                 filter.setupFormatDescription(from: sampleBuffer, transform: finalMediaTransform, outputDimensions: outputDimensions ?? .zero)
                 return false
             }
@@ -154,6 +163,8 @@ final class Renderer: Rendering {
     /// For this to work, all access to filteredPixelBuffer should be locked, so this method should be called in
     /// a synchronized(self) block.
     private func output(filteredPixelBuffer: CVPixelBuffer) {
+        guard let delegate = self.delegate else { return }
+
         self.filteredPixelBuffer = filteredPixelBuffer
         callbackQueue.async {
             let pixelBuffer: CVPixelBuffer? = synchronized(self) {
@@ -164,7 +175,7 @@ final class Renderer: Rendering {
                 return pixelBuffer
             }
             if let filteredPixelBuffer = pixelBuffer {
-                self.delegate?.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer)
+                delegate.rendererReadyForDisplay(pixelBuffer: filteredPixelBuffer)
             }
         }
     }
@@ -195,7 +206,7 @@ final class Renderer: Rendering {
         }
         
         if imageFilter.outputFormatDescription == nil {
-            let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: scaleToFillSize)
+            let (finalMediaTransform, outputDimensions) = configureScaleToFill(sampleBuffer: sampleBuffer, size: settings?.features.scaleMediaToFill == true ? scaleToFillSize : nil)
             imageFilter.setupFormatDescription(from: sampleBuffer, transform: finalMediaTransform, outputDimensions: outputDimensions ?? .zero)
         }
         let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)

@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Foundation
+import UIKit
 
 /// Default values for the input camera
 private struct CameraZoomConstants {
@@ -14,7 +15,7 @@ private struct CameraZoomConstants {
 }
 
 /// protocol for handling the current zoom on a device
-protocol CameraZoomHandlerDelegate: class {
+protocol CameraZoomHandlerDelegate: AnyObject {
     /// Gets the current device for zooming
     var currentDeviceForZooming: AVCaptureDevice? { get }
 }
@@ -31,12 +32,12 @@ final class CameraZoomHandler {
     private var currentDevice: AVCaptureDevice? {
         return delegate?.currentDeviceForZooming
     }
-    private let analyticsProvider: KanvasCameraAnalyticsProvider?
+    private let analyticsProvider: KanvasAnalyticsProvider?
     
     /// The designated initializer
     ///
     /// - Parameter analyticsProvider: Optionally provide an analytics class
-    init(analyticsProvider: KanvasCameraAnalyticsProvider? = nil) {
+    init(analyticsProvider: KanvasAnalyticsProvider? = nil) {
         self.analyticsProvider = analyticsProvider
     }
     

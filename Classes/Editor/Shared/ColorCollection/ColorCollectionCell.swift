@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Delegate for touch events on this cell
-protocol ColorCollectionCellDelegate: class {
+protocol ColorCollectionCellDelegate: AnyObject {
     /// Callback method when selecting a cell
     ///
     /// - Parameters:

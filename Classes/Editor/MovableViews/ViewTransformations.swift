@@ -7,7 +7,9 @@
 import Foundation
 import UIKit
 
-final class ViewTransformations {
+final class ViewTransformations: NSObject, NSSecureCoding {
+
+    static var supportsSecureCoding = true
     
     static let defaultPosition: CGPoint = .zero
     static let defaultScale: CGFloat = 1.0
@@ -24,5 +26,23 @@ final class ViewTransformations {
         self.position = position
         self.scale = scale
         self.rotation = rotation
+    }
+
+    private enum CodingKeys: String {
+        case position
+        case scale
+        case rotation
+    }
+
+    init?(coder: NSCoder) {
+        position = coder.decodeCGPoint(forKey: CodingKeys.position.rawValue)
+        scale = CGFloat(coder.decodeFloat(forKey: CodingKeys.scale.rawValue))
+        rotation = CGFloat(coder.decodeFloat(forKey: CodingKeys.rotation.rawValue))
+    }
+
+    func encode(with coder: NSCoder) {
+        coder.encode(position, forKey: CodingKeys.position.rawValue)
+        coder.encode(Float(scale), forKey: CodingKeys.scale.rawValue)
+        coder.encode(Float(rotation), forKey: CodingKeys.rotation.rawValue)
     }
 }

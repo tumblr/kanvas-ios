@@ -55,12 +55,12 @@ final class ColorDrop: UIImageView {
     // MARK: - Layout
     
     private func setUpView() {
-        image = KanvasCameraImages.dropImage?.withRenderingMode(.alwaysTemplate)
+        image = KanvasImages.dropImage?.withRenderingMode(.alwaysTemplate)
         tintColor = .white
         translatesAutoresizingMaskIntoConstraints = false
         clipsToBounds = true
         
-        innerDrop.image = KanvasCameraImages.dropImage?.withRenderingMode(.alwaysTemplate)
+        innerDrop.image = KanvasImages.dropImage?.withRenderingMode(.alwaysTemplate)
         innerDrop.translatesAutoresizingMaskIntoConstraints = false
         innerDrop.clipsToBounds = true
         addSubview(innerDrop)

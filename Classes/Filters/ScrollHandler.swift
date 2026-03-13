@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol ScrollHandlerDelegate: class {
+protocol ScrollHandlerDelegate: AnyObject {
     func indexPathAtSelectionCircle() -> IndexPath?
     func calculateDistanceFromSelectionCircle(cell: FilterCollectionCell) -> CGFloat
     func selectFilter(index: Int, animated: Bool)

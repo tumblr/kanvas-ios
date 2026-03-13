@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for confirming a sticker
-protocol StickerMenuControllerDelegate: class {
+protocol StickerMenuControllerDelegate: AnyObject {
     /// Callback for when a sticker is selected
     ///
     /// - Parameters

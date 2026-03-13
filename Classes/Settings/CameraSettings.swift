@@ -16,7 +16,7 @@ import Foundation
 /// - stitch: Capturing stop motions, a sequence of images and/or videos
 /// - gif: Capturing gifs, a sequence of photos
 
-@objc public enum CameraMode: Int {
+@objc public enum CameraMode: Int, OptionSelectorItem {
     case stopMotion = 0
     case photo
     case loop
@@ -66,6 +66,10 @@ import Foundation
     
     private var order: Int {
         return self.rawValue
+    }
+    
+    var description: String {
+        return KanvasStrings.name(for: self)
     }
 }
 
@@ -121,6 +125,10 @@ public struct CameraFeatures {
     /// This enables the UI to draw in the editor.
     public var editorDrawing: Bool = false
     
+    /// The Editor Crop Rotate feature
+    /// This enables the UI to crop & rotate your image in the editor.
+    public var editorCropRotate: Bool = false
+
     /// The Media Picker feature
     /// This enables the UI to pick media instead of using the camera.
     public var mediaPicking: Bool = false
@@ -130,6 +138,10 @@ public struct CameraFeatures {
     public var editorPosting: Bool = false
 
     public var editorPostOptions: Bool = false
+
+    /// Editor Confirm Button
+    /// Moves the editor confirm button to the top right
+    public var editorConfirmAtTop: Bool = false
 
     /// The Editor Saving feature
     /// This enables the UI to save media from the editor.
@@ -142,6 +154,32 @@ public struct CameraFeatures {
     /// GIF support
     /// This enables GIFs to be picked from the media picker, and exported from the Editor.
     public var gifs = false
+    
+    /// Mode selector tooltip
+    /// This enables a tooltip to appear below the mode selector when the camera launches for the first time.
+    public var modeSelectorTooltip: Bool = false
+    
+    /// Shutter button tooltip
+    /// This enables a tooltip to appear above the shutter button when the camera launches for the first time.
+    public var shutterButtonTooltip: Bool = false
+
+    /// Button to Mute Sound
+    /// This adds an option to mute sounds from videos during editing and in export.
+    public var muteButton = false
+
+
+    /// Multi-Export support
+    /// This enables multiple images/videos to be taken, edited, and then exported
+    public var multipleExports = false
+
+    /// Scale media to fill
+    /// This scales the imported media to fill the screen by setting the `mediaContentMode` to `scaleAspectFill` on the pixel buffer views.
+    /// The buffer views will resize their contents during drawing to fill the screen.
+    public var scaleMediaToFill: Bool = false
+
+    /// Resizes Text View Fonts
+    /// Whether or not to resize the text view fonts progressively to fit withinthe editing area.
+    public var resizesFonts: Bool = true
 }
 
 // A class that defines the settings for the Kanvas Camera
@@ -235,17 +273,21 @@ public struct CameraFeatures {
     /// This changes back carat in the editor to a cross icon
     public var crossIconInEditor = DefaultCameraSettings.crossIconInEditor
 
+    /// Cog icon in Editor
+    /// This sets a cog icon for the posting options button in the editor
+    public var showCogIconInEditor = DefaultCameraSettings.showCogIconInEditor
+    
     /// Tag button in Editor
     /// This shows a # button in the editor to enable adding tags
     public var showTagButtonInEditor = DefaultCameraSettings.showTagButtonInEditor
     
+    /// Tag collection in Editor
+    /// This shows a collection of tags in the editor
+    public var showTagCollectionInEditor = DefaultCameraSettings.showTagCollectionInEditor
+    
     /// Quick post button in Editor
     /// This shows a post button that makes quick options appear when long pressed
     public var showQuickPostButtonInEditor = DefaultCameraSettings.showQuickPostButtonInEditor
-    
-    /// Long press for post button in Editor
-    /// This enables the long press for the quick post button.
-    public var enableQuickPostLongPress = DefaultCameraSettings.enableQuickPostLongPress
     
     /// Blog Switcher in Editor
     /// This shows a blog switcher that makes quick options appear when long pressed
@@ -267,6 +309,15 @@ public struct CameraFeatures {
 
     /// Auto-open GIF Maker after GIF Camera
     public var gifCameraShouldStartGIFMaker: Bool = DefaultCameraSettings.editorShouldStartGIFMaker
+
+    /// Animate the movement of control in the editor
+    public var animateEditorControls: Bool = DefaultCameraSettings.animateEditorControls
+
+    /// The Font Selector button uses the currently selected font for its label
+    public var fontSelectorUsesFont: Bool = DefaultCameraSettings.fontFamilyUsesFont
+
+    /// The aspect ratio to pin the Editor View to
+    public var aspectRatio: CGFloat? = nil
 
     override public init() { }
 
@@ -321,11 +372,13 @@ private struct DefaultCameraSettings {
     static let features = CameraFeatures()
     static let topButtonsSwapped: Bool = false
     static let crossIconInEditor: Bool = false
+    static let showCogIconInEditor: Bool = false
     static let showTagButtonInEditor: Bool = false
+    static let showTagCollectionInEditor: Bool = false
     static let showQuickPostButtonInEditor: Bool = false
-    static let enableQuickPostLongPress: Bool = false
     static let showBlogSwitcherInEditor: Bool = false
     static let editorShouldStartGIFMaker: Bool = false
     static let gifCameraShouldStartGIFMaker: Bool = false
-
+    static let fontFamilyUsesFont: Bool = false
+    static let animateEditorControls: Bool = true
 }

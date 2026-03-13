@@ -1,0 +1,72 @@
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+//
+
+import Foundation
+
+// the values for common string throughout the module
+public struct KanvasStrings {
+    // MARK: - Camera Modes
+
+    // photoModeName: used in the camera mode button
+    static let photoModeName: String = NSLocalizedString("Photo", value: "Photo", comment: "Photo camera mode")
+
+    // loopModeName: used in the camera mode button
+    static let loopModeName: String = NSLocalizedString("Loop", value: "Loop", comment: "Gif camera mode")
+
+    // stopMotionModeName: used in the camera mode button
+    static let stopMotionModeName: String = NSLocalizedString("Capture", value: "Capture", comment: "Stop motion camera mode")
+    
+    // normalModeName: used in the camera mode button
+    static let normalModeName: String = NSLocalizedString("Normal", value: "Normal", comment: "Normal camera mode")
+    
+    // stitchModeName: used in the camera mode button
+    static let stitchModeName: String = NSLocalizedString("Stitch", value: "Stitch", comment: "Stitch camera mode")
+    
+    // gifModeName: used in the camera mode button
+    static let gifModeName: String = NSLocalizedString("GIF", value: "GIF", comment: "GIF camera mode")
+    
+    static func name(for mode: CameraMode) -> String {
+        switch mode {
+        case .photo: return photoModeName
+        case .loop: return loopModeName
+        case .stopMotion: return stopMotionModeName
+        case .normal: return normalModeName
+        case .stitch: return stitchModeName
+        case .gif: return gifModeName
+        }
+    }
+
+    static func bundle(for aClass: AnyClass) -> Bundle? {
+        #if SWIFT_PACKAGE
+            return Bundle.module
+        #else
+            guard let bundlePath = Bundle(for: aClass).path(forResource: "Kanvas", ofType: "bundle") else {
+                return nil
+            }
+            return Bundle(path: bundlePath)
+        #endif
+    }
+
+    public var cameraPermissionsTitleLabel: String
+    public var cameraPermissionsDescriptionLabel: String
+
+    public static var shared = KanvasStrings(cameraPermissionsTitleLabel: cameraPermissionTitleString,
+                                             cameraPermissionsDescriptionLabel: cameraPermissionDescriptionString)
+    
+    private static let cameraPermissionTitleString = {
+        NSLocalizedString("CameraAccessNoAccessTitle", value: "Please allow access to your camera and microphone", comment: "Title text for scenerio when access to Camera and microphone is required or has been disallowed")
+    }()
+    
+    private static let cameraPermissionDescriptionString = {
+        NSLocalizedString("CameraAccessNoAccessDesc", value: "This functionality is required to post videos and photos", comment: "Description text for scenerio when access to Camera and microphone is required or has been disallowed")
+    }()
+
+    public init(cameraPermissionsTitleLabel: String,
+                cameraPermissionsDescriptionLabel: String) {
+        self.cameraPermissionsTitleLabel = cameraPermissionsTitleLabel
+        self.cameraPermissionsDescriptionLabel = cameraPermissionsDescriptionLabel
+    }
+}

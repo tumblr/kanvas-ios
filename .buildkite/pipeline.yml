@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+agents:
+  queue: mac
+
+env:
+  IMAGE_ID: xcode-26.1.1
+
+common_params:
+  - &common_plugins
+    - automattic/a8c-ci-toolkit#5.3.1
+
+steps:
+  #################
+  # Build and Test
+  #################
+  - label: "Build and Test"
+    key: test
+    command: |
+      xcodebuild -downloadComponent MetalToolchain || true
+      build_and_test_pod
+    plugins: *common_plugins
+    artifact_paths:
+      - "artifacts/**/*"
+
+  #################
+  # Validate Podspecs
+  #################
+  - label: "Validate Podspec"
+    key: validate
+    command: |
+      validate_podspec --patch-cocoapods --allow-warnings
+    plugins: *common_plugins
+
+  #################
+  # Lint
+  #################
+  - label: "Lint"
+    key: lint
+    command: |
+      lint_pod
+    plugins: *common_plugins
+
+  #################
+  # Publish the Podspec (if we're building a tag)
+  #################
+  - label: "⬆️ Publish Pod"
+    command: .buildkite/commands/publish-pod.sh
+    plugins: *common_plugins
+    depends_on:
+      - "test"
+      - "validate"
+      - "lint"
+    if: build.tag != null

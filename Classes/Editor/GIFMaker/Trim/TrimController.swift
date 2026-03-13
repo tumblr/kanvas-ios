@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for the trim controller
-protocol TrimControllerDelegate: class {
+protocol TrimControllerDelegate: AnyObject {
     /// Called after a trimming movement starts
     func didStartTrimming()
 

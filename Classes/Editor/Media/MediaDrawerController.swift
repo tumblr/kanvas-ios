@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for selecting a sticker and dimissing the media drawer
-protocol MediaDrawerControllerDelegate: class {
+protocol MediaDrawerControllerDelegate: AnyObject {
     /// Callback for when a sticker is selected
     ///
     /// - Parameters

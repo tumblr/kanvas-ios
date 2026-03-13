@@ -8,8 +8,9 @@ import Foundation
 import CoreMedia
 import GLKit
 
-protocol Rendering: class {
+protocol Rendering: AnyObject {
     var delegate: RendererDelegate? { get set }
+    var filterPlatform: FilterPlatform { get set }
     var filterType: FilterType { get set }
     var imageOverlays: [CGImage] { get set }
     var mediaTransform: GLKMatrix4? { get set }

@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension UIColor {
     func isVisible() -> Bool {

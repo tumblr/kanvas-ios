@@ -5,9 +5,10 @@
 //
 
 import Foundation
+import UIKit
 
 /// Delegate for handling camera input actions
-protocol CameraInputControllerDelegate: class {
+protocol CameraInputControllerDelegate: AnyObject {
     /// Delegate to reset the current device zoom
     func cameraInputControllerShouldResetZoom()
     

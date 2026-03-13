@@ -12,7 +12,7 @@ import OpenGLES
 import GLKit
 
 /// Delegate for MediaPlayer
-protocol MediaPlayerDelegate: class {
+protocol MediaPlayerDelegate: AnyObject {
     /// Called then the first pixel buffer is shown
     /// - Parameter image: the first frame shown
     func didDisplayFirstFrame(_ image: UIImage)
@@ -21,7 +21,7 @@ protocol MediaPlayerDelegate: class {
 }
 
 /// Delegate for MediaPlayerView
-protocol MediaPlayerViewDelegate: class {
+protocol MediaPlayerViewDelegate: AnyObject {
     /// Called when the rendering rectangle changes
     /// - Parameter rect: new rendering rectangle
     func didRenderRectChange(rect: CGRect)
@@ -51,33 +51,39 @@ enum MediaPlayerPlaybackMode {
 /// View for rendering the player.
 final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
 
-    weak var pixelBufferView: PixelBufferView?
-    
-    var mediaTransform: GLKMatrix4? {
-        didSet {
-            pixelBufferView?.mediaTransform = mediaTransform
-        }
-    }
-    
-    var isPortrait: Bool = true {
-        didSet {
-            pixelBufferView?.isPortrait = isPortrait
-        }
-    }
-
+    weak var pixelBufferView: (PixelBufferView & UIView)?
+    private var metalContext: MetalContext?
+    private var mediaContentMode: UIView.ContentMode
     weak var delegate: MediaPlayerViewDelegate?
 
-    init(metalContext: MetalContext?) {
-        super.init(frame: .zero)
+    var mediaTransform: GLKMatrix4? {
+         didSet {
+            pixelBufferView?.mediaTransform = mediaTransform
+         }
+     }
 
+      var isPortrait: Bool = true {
+         didSet {
+            pixelBufferView?.isPortrait = isPortrait
+         }
+     }
+
+    init(metalContext: MetalContext?, mediaContentMode: UIView.ContentMode) {
+        self.metalContext = metalContext
+        self.mediaContentMode = mediaContentMode
+        super.init(frame: .zero)
+        createPixelBufferView()
+    }
+
+    private func createPixelBufferView() {
         let pixelBufferView: PixelBufferView & UIView
+
         if let metalContext = metalContext {
-            pixelBufferView = MetalPixelBufferView(context: metalContext)
+            pixelBufferView = MetalPixelBufferView(context: metalContext, mediaContentMode: mediaContentMode)
         }
         else {
-            pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: .scaleAspectFit)
+            pixelBufferView = GLPixelBufferView(delegate: self, mediaContentMode: mediaContentMode)
         }
-
         pixelBufferView.add(into: self)
         self.pixelBufferView = pixelBufferView
     }
@@ -86,6 +92,11 @@ final class MediaPlayerView: UIView, GLPixelBufferViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func reset() {
+        pixelBufferView?.removeFromSuperview()
+        createPixelBufferView()
+    }
+    
     // MARK: - GLPixelBufferViewDelegate
 
     func didRenderRectChange(rect: CGRect) {
@@ -199,23 +210,17 @@ final class MediaPlayer {
         }
     }
 
-    func getFrame(at index: Int) -> UIImage? {
-        guard index >= 0 && index < playableMedia.count else {
-            return nil
-        }
-        switch playableMedia[index] {
-        case .image(let image, _, _):
-            return image
-        case .video(_, _, _):
-            return nil
-        }
-    }
 
     /// Default initializer
     /// - Parameter renderer: Rendering instance for this player to use.
     init(renderer: Rendering?) {
         self.renderer = renderer ?? Renderer()
         self.renderer.delegate = self
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+        } catch let error {
+            print("Failed to set audio session category: \(error)")
+        }
     }
 
     deinit {
@@ -266,6 +271,15 @@ final class MediaPlayer {
         nextImageTimer = nil
         avPlayer.pause()
         renderer.reset()
+    }
+
+    var isMuted: Bool {
+        set {
+            avPlayer.isMuted = newValue
+        }
+        get {
+            return avPlayer.isMuted
+        }
     }
 
     /// Resumes the playback of media.
@@ -519,7 +533,14 @@ final class MediaPlayer {
             return
         }
         if let sampleBuffer = output?.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: nil)?.sampleBuffer() {
-            renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime)
+            let size: CGSize?
+            
+            if let playerView = playerView, playerView.pixelBufferView?.mediaContentMode == .scaleAspectFill {
+                size = CGSize(width: playerView.frame.width * playerView.contentScaleFactor, height: playerView.frame.height * playerView.contentScaleFactor)
+            } else {
+                size = nil
+            }
+            renderer.processSampleBuffer(sampleBuffer, time: Date.timeIntervalSinceReferenceDate - startTime, scaleToFillSize: size)
         }
     }
 

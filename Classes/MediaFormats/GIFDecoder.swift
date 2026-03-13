@@ -5,6 +5,8 @@
 //
 
 import Foundation
+import CoreGraphics
+import ImageIO
 
 typealias GIFDecodeFrame = (image: CGImage, interval: TimeInterval)
 

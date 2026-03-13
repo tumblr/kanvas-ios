@@ -9,11 +9,15 @@ import UIKit
 import MobileCoreServices
 import Photos
 
-protocol KanvasMediaPickerViewControllerDelegate: class {
-    func didPick(image: UIImage, url: URL?)
-    func didPick(video: URL)
-    func didPick(gif: URL)
-    func didPick(livePhotoStill: UIImage, pairedVideo: URL)
+public enum PickedMedia {
+    case image(UIImage, URL?)
+    case video(URL)
+    case gif(URL)
+    case livePhoto(UIImage, URL)
+}
+
+public protocol KanvasMediaPickerViewControllerDelegate: AnyObject {
+    func didPick(media: [PickedMedia])
     func didCancel()
     func pickingMediaNotAllowed(reason: String)
 }
@@ -28,7 +32,7 @@ final class KanvasUIImagePickerController: UIImagePickerController {
     }
 }
 
-final class KanvasMediaPickerViewController: UIViewController {
+final class KanvasMediaPickerViewController: UIViewController, MediaPicker {
 
     let settings: CameraSettings
 
@@ -56,6 +60,12 @@ final class KanvasMediaPickerViewController: UIViewController {
         super.viewDidLoad()
         addChild(imagePickerController)
         view.addSubview(imagePickerController.view)
+    }
+
+    static func present(on: UIViewController, with settings: CameraSettings, delegate: KanvasMediaPickerViewControllerDelegate, completion: @escaping () -> Void) {
+        let picker = KanvasMediaPickerViewController(settings: settings)
+        picker.delegate = delegate
+        on.present(picker, animated: true, completion: completion)
     }
 }
 
@@ -94,7 +104,7 @@ private extension KanvasMediaPickerViewController {
         options.version = .original
         options.deliveryMode = .highQualityFormat
         options.isNetworkAccessAllowed = true
-        PHImageManager.default().requestImageData(for: phAsset, options: options) { (data, str, orientation, opts) in
+        PHImageManager.default().requestImageDataAndOrientation(for: phAsset, options: options) { (data, str, orientation, opts) in
             completion(data)
         }
     }
@@ -140,11 +150,11 @@ private extension KanvasMediaPickerViewController {
         }
         else if let image = image {
             guard canPick(image: image) else {
-                let message = NSLocalizedString("That's too big, bud.", comment: "That's too big, bud.")
+                let message = NSLocalizedString("That's too big, bud.", value: "That's too big, bud.", comment: "That's too big, bud.")
                 cannotPick(reason: message)
                 return
             }
-            pick(image: image, url: mediaURL)
+            pick(image: image, url: imageURL)
         }
         else if let mediaURL = mediaURL {
             pick(video: mediaURL)
@@ -155,19 +165,23 @@ private extension KanvasMediaPickerViewController {
     }
 
     private func pick(frames imageURL: URL) {
-        delegate?.didPick(gif: imageURL)
+        let media = PickedMedia.gif(imageURL)
+        delegate?.didPick(media: [media])
     }
 
     private func pick(image: UIImage, url: URL?) {
-        delegate?.didPick(image: image, url: url)
+        let media = PickedMedia.image(image, url)
+        delegate?.didPick(media: [media])
     }
 
     private func pick(video url: URL) {
-        delegate?.didPick(video: url)
+        let media = PickedMedia.video(url)
+        delegate?.didPick(media: [media])
     }
 
     private func pick(livePhotoStill: UIImage, pairedVideo: URL) {
-        delegate?.didPick(livePhotoStill: livePhotoStill, pairedVideo: pairedVideo)
+        let media = PickedMedia.livePhoto(livePhotoStill, pairedVideo)
+        delegate?.didPick(media: [media])
     }
 
     private func canPick(image: UIImage) -> Bool {

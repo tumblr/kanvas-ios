@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for confirming the text tools
-protocol EditorTextControllerDelegate: class {
+protocol EditorTextControllerDelegate: AnyObject {
     
     /// Called after the confirm button is tapped
     ///
@@ -61,7 +61,7 @@ protocol EditorTextControllerDelegate: class {
 /// Constants for EditorTextController
 private struct Constants {
     static let animationDuration: TimeInterval = 0.25
-    static let fonts: [UIFont?] = KanvasCameraFonts.shared.editorFonts
+    static let fonts: [UIFont?] = KanvasFonts.shared.editorFonts
     static let alignments: [NSTextAlignment] = [.left, .center, .right]
 }
 
@@ -77,7 +77,7 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     private var highlight: Bool?
         
     private lazy var textView: EditorTextView = {
-        let textView = EditorTextView()
+        let textView = EditorTextView(settings: settings.textViewSettings)
         textView.delegate = self
         return textView
     }()
@@ -104,13 +104,20 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     var confirmButtonLocation: CGPoint {
         return textView.confirmButtonLocation
     }
+
+    struct Settings {
+        let textViewSettings: EditorTextView.Settings
+    }
+
+    private let settings: Settings
     
     // MARK: - Initializers
     
-    init() {
+    init(settings inSettings: Settings) {
         textTransformations = ViewTransformations()
         fonts = Constants.fonts
         alignments = Constants.alignments
+        settings = inSettings
         super.init(nibName: .none, bundle: .none)
     }
     
@@ -262,7 +269,12 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
-            textView.moveToolsUp(distance: keyboardRectangle.height)
+
+            let bottom = CGPoint(x: view.frame.minX, y: view.frame.maxY)
+            let difference = keyboardRectangle.maxY - view.convert(bottom, to: nil).y
+
+            let heightDiff = keyboardRectangle.height - difference
+            textView.moveToolsUp(distance: heightDiff)
         }
     }
     

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Media Picker Button Delegate
-protocol MediaPickerButtonViewDelegate: class {
+protocol MediaPickerButtonViewDelegate: AnyObject {
 
     /// Called when the media picker button is pressed
     func mediaPickerButtonDidPress()
@@ -64,7 +64,7 @@ final class MediaPickerButtonView: IgnoreTouchesView {
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchCancel)
             buttonView.addTarget(self, action: #selector(stopGlow), for: .touchDragExit)
             
-            if let defaultImage = KanvasCameraImages.imageThumbnail {
+            if let defaultImage = KanvasImages.imageThumbnail {
                 setBackgroundImage(defaultImage)
             }
         }

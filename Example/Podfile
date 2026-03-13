@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+source 'https://cdn.cocoapods.org/'
+
+use_modular_headers!
+platform :ios, '15.0'
+
+project 'KanvasExample.xcodeproj'
+
+target 'KanvasExample' do
+  pod 'Kanvas', path: '../'
+  pod 'CropViewController', '~> 2.8'
+
+  target 'KanvasExampleTests' do
+    inherit! :search_paths
+    use_frameworks!
+    pod 'iOSSnapshotTestCase', '8.0.0'
+  end
+end

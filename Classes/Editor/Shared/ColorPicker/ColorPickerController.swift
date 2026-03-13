@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-protocol ColorPickerControllerDelegate: class {
+protocol ColorPickerControllerDelegate: AnyObject {
     /// Called when a color is selected
     ///
     /// - Parameter color: the color just selected
@@ -25,7 +25,7 @@ final class ColorPickerController: UIViewController, ColorPickerViewDelegate {
     
     weak var delegate: ColorPickerControllerDelegate?
     
-    private var selectedColor: UIColor = KanvasCameraColors.shared.selectedPickerColor
+    private var selectedColor: UIColor = KanvasColors.shared.selectedPickerColor
     
     private lazy var colorPickerView: ColorPickerView = {
         let view = ColorPickerView()

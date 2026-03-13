@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// Protocol for changes in the trimming range
-protocol TrimAreaDelegate: class {
+protocol TrimAreaDelegate: AnyObject {
     func didMoveLeftSide(recognizer: UIGestureRecognizer)
     func didMoveRightSide(recognizer: UIGestureRecognizer)
 }
@@ -19,7 +19,7 @@ private struct Constants {
     static let height: CGFloat = 71
     static let selectorInset: CGFloat = -20
     static let cornerRadius: CGFloat = 8
-    static let backgroundColor: UIColor = KanvasCameraColors.shared.trimBackgroundColor
+    static let backgroundColor: UIColor = KanvasColors.shared.trimBackgroundColor
     
     // Top and bottom borders
     static let selectorBorderHeight: CGFloat = 5

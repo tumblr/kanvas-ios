@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 private struct ModeSelectorAndShootViewConstants {
     static let tooltipTopMargin: CGFloat = 13.5
@@ -13,7 +14,7 @@ private struct ModeSelectorAndShootViewConstants {
     static let tooltipBubbleWidth: CGFloat = 18
     static let tooltipBubbleHeight: CGFloat = 12
     static let tooltipCornerRadius: CGFloat = 6
-    static let tooltipTextFont: UIFont = KanvasCameraFonts.shared.modeSelectorTooltipFont
+    static let tooltipTextFont: UIFont = KanvasFonts.shared.modeSelectorTooltipFont
     static let selectorYCenterMargin: CGFloat = CameraConstants.optionButtonSize / 2
     static let shootButtonSize: CGFloat = ShootButtonView.buttonMaximumWidth
     static let shootButtonBottomMargin: CGFloat = 14
@@ -21,6 +22,12 @@ private struct ModeSelectorAndShootViewConstants {
         return ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.shootButtonSize
     }
     static let mediaPickerButtonSize: CGFloat = 35
+    
+    static let modeSelectorTopMargin: CGFloat = 8
+    static let modeSelectorHorizontalMargin: CGFloat = 100
+    static var modeSelectorHeight: CGFloat {
+        return OptionSelectorCell.height
+    }
 }
 
 /// Protocol to handle mode selector container and capture button user actions
@@ -37,6 +44,8 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     static let shootButtonSize = ModeSelectorAndShootViewConstants.shootButtonSize
     static let shootButtonBottomMargin = ModeSelectorAndShootViewConstants.shootButtonBottomMargin
     static let shootButtonTopMargin = ModeSelectorAndShootViewConstants.shootButtonTopMargin
+    static let modeSelectorHeight = ModeSelectorAndShootViewConstants.modeSelectorHeight
+    static let modeSelectorTopMargin = ModeSelectorAndShootViewConstants.modeSelectorTopMargin
 
     weak var delegate: ModeSelectorAndShootViewDelegate? {
         didSet {
@@ -47,23 +56,28 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
 
     private let settings: CameraSettings
-    private let shootButton: ShootButtonView
     private let modeSelectorButton: ModeButtonView
     private let mediaPickerButton: MediaPickerButtonView
-    private var tooltip: EasyTipView?
-
+    private var modeSelectorTooltip: EasyTipView?
+    private var shutterButtonTooltip: EasyTipView?
+    let shootButton: ShootButtonView
+    let modeSelectorView: UIView
+    
+    
     /// Initializer for the mode selector view
     ///
     /// - Parameter settings: CameraSettings to determine the default and available modes
     init(settings: CameraSettings) {
         modeSelectorButton = ModeButtonView()
-        shootButton = ShootButtonView(baseColor: KanvasCameraColors.shared.shootButtonBaseColor)
+        shootButton = ShootButtonView(baseColor: KanvasColors.shared.shootButtonBaseColor)
         mediaPickerButton = MediaPickerButtonView(settings: settings)
+        modeSelectorView = UIView()
         self.settings = settings
 
         super.init(frame: .zero)
         backgroundColor = .clear
-        tooltip = createTooltip()
+        modeSelectorTooltip = createModeSelectorTooltip()
+        shutterButtonTooltip = createShutterButtonTooltip()
         
         setUpButtons()
     }
@@ -98,22 +112,23 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     ///
     /// - Parameter selectedMode: the mode to switch the UI to
     func setUpMode(_ selectedMode: CameraMode) {
-        modeSelectorButton.setTitle(KanvasCameraStrings.name(for: selectedMode))
+        modeSelectorButton.setTitle(KanvasStrings.name(for: selectedMode))
         shootButton.configureFor(trigger: triggerFor(selectedMode),
-                                 image: KanvasCameraImages.image(for: selectedMode),
-                                 timeLimit: KanvasCameraTimes.recordingTime(for: selectedMode, hold: false),
-                                 holdTimeLimit: KanvasCameraTimes.recordingTime(for: selectedMode, hold: true))
+                                 image: KanvasImages.image(for: selectedMode),
+                                 timeLimit: KanvasTimes.recordingTime(for: selectedMode, hold: false),
+                                 holdTimeLimit: KanvasTimes.recordingTime(for: selectedMode, hold: true))
     }
 
     /// show or hide the mode button with an animation
     ///
     /// - Parameter show: true to show, false to hide
     func showModeButton(_ show: Bool) {
+        let modeSelector = KanvasDesign.shared.isBottomPicker ? modeSelectorView : modeSelectorButton
         if show {
-            showViews(shownViews: [modeSelectorButton], hiddenViews: [], animated: true)
+            showViews(shownViews: [modeSelector], hiddenViews: [], animated: true)
         }
         else {
-            showViews(shownViews: [], hiddenViews: [modeSelectorButton], animated: true)
+            showViews(shownViews: [], hiddenViews: [modeSelector], animated: true)
         }
     }
     
@@ -131,16 +146,31 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         shootButton.enableGestureRecognizers(enabled)
     }
 
-    /// shows the tooltip below the mode selector
-    func showTooltip() {
-        if let tooltip = tooltip, !tooltip.isVisible() {
-            tooltip.show(animated: true, forView: modeSelectorButton, withinSuperview: self)
+    /// shows a tooltip below the mode selector
+    func showModeSelectorTooltip() {
+        let targetView = KanvasDesign.shared.isBottomPicker ? modeSelectorView : modeSelectorButton
+        if let tooltip = modeSelectorTooltip, !tooltip.isVisible() {
+            tooltip.show(animated: true, forView: targetView, withinSuperview: self)
+        }
+    }
+    
+    /// shows a tooltip above the shutter button
+    func showShutterButtonTooltip() {
+        if let tooltip = shutterButtonTooltip, !tooltip.isVisible() {
+            tooltip.show(animated: true, forView: shootButton, withinSuperview: self)
         }
     }
     
     /// dismisses the tooltip below the mode selector
-    func dismissTooltip() {
-        if let tooltip = tooltip, tooltip.isVisible() {
+    func dismissModeSelectorTooltip() {
+        if let tooltip = modeSelectorTooltip, tooltip.isVisible() {
+            tooltip.dismiss()
+        }
+    }
+    
+    /// dismisses the tooltip above the shutter button
+    func dismissShutterButtonTooltip() {
+        if let tooltip = shutterButtonTooltip, tooltip.isVisible() {
             tooltip.dismiss()
         }
     }
@@ -198,11 +228,11 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
 
     // MARK: - UI Layout
-
-    private func createTooltip() -> EasyTipView {
+    
+    private func createModeSelectorTooltip() -> EasyTipView {
         var preferences = EasyTipView.Preferences()
         preferences.drawing.foregroundColor = .white
-        preferences.drawing.backgroundColorCollection = KanvasCameraColors.shared.backgroundColors
+        preferences.drawing.backgroundColorCollection = KanvasColors.shared.backgroundColors
         preferences.drawing.arrowPosition = .top
         preferences.drawing.arrowWidth = ModeSelectorAndShootViewConstants.tooltipArrowWidth
         preferences.drawing.arrowHeight = ModeSelectorAndShootViewConstants.tooltipArrowHeight
@@ -211,21 +241,42 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
         preferences.positioning.textHInset = ModeSelectorAndShootViewConstants.tooltipBubbleWidth
         preferences.positioning.textVInset = ModeSelectorAndShootViewConstants.tooltipBubbleHeight
         preferences.positioning.margin = ModeSelectorAndShootViewConstants.tooltipTopMargin
-        let text = NSLocalizedString("Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
+        let text = NSLocalizedString("Tap to switch modes", value: "Tap to switch modes", comment: "Indicates to the user that they can tap a button to switch camera modes")
+        
+        return EasyTipView(text: text, preferences: preferences, delegate: self)
+    }
+    
+    private func createShutterButtonTooltip() -> EasyTipView {
+        var preferences = EasyTipView.Preferences()
+        preferences.drawing.foregroundColor = .black
+        preferences.drawing.backgroundColorCollection = KanvasColors.shared.backgroundColors
+        preferences.drawing.arrowPosition = .bottom
+        preferences.drawing.arrowWidth = 8.5
+        preferences.drawing.arrowHeight = 6
+        preferences.drawing.cornerRadius = 23
+        preferences.drawing.font = UIFont.boldSystemFont(ofSize: 16)
+        preferences.positioning.textHInset = 18
+        preferences.positioning.textVInset = 14
+        preferences.positioning.margin = 4
+        let text = NSLocalizedString("Tap and hold to record", value: "Tap and hold to record", comment: "Indicates to the user that they can tap and hold to record")
+        
         return EasyTipView(text: text, preferences: preferences, delegate: self)
     }
     
     private func setUpButtons() {
-        addSubview(modeSelectorButton)
-        addSubview(mediaPickerButton)
-        addSubview(shootButton)
-
-        setUpModeSelector()
         setUpShootButton()
         setUpMediaPickerButton()
+        
+        if KanvasDesign.shared.isBottomPicker {
+            setUpModeSelectorView()
+        }
+        else {
+            setUpModeSelector()
+        }
     }
 
     private func setUpModeSelector() {
+        addSubview(modeSelectorButton)
         modeSelectorButton.accessibilityIdentifier = "Mode Options Selector Button"
 
         modeSelectorButton.translatesAutoresizingMaskIntoConstraints = false
@@ -235,13 +286,28 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
             modeSelectorButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
         ])
     }
+    
+    private func setUpModeSelectorView() {
+        addSubview(modeSelectorView)
+        modeSelectorView.accessibilityIdentifier = "Mode Options Selector View"
+        
+        modeSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            modeSelectorView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            modeSelectorView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            modeSelectorView.heightAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.modeSelectorHeight),
+            modeSelectorView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, constant: -ModeSelectorAndShootViewConstants.modeSelectorHorizontalMargin),
+        ])
+    }
 
     private func setUpShootButton() {
+        addSubview(shootButton)
         shootButton.accessibilityIdentifier = "Shoot Button"
 
         shootButton.translatesAutoresizingMaskIntoConstraints = false
+        let bottomMargin = KanvasDesign.shared.isBottomPicker ? ModeSelectorAndShootViewConstants.shootButtonBottomMargin + ModeSelectorAndShootViewConstants.modeSelectorTopMargin + ModeSelectorAndShootViewConstants.modeSelectorHeight : ModeSelectorAndShootViewConstants.shootButtonBottomMargin
         NSLayoutConstraint.activate([
-            shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -ModeSelectorAndShootViewConstants.shootButtonBottomMargin),
+            shootButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -bottomMargin),
             shootButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             shootButton.heightAnchor.constraint(equalTo: shootButton.widthAnchor),
             shootButton.widthAnchor.constraint(equalToConstant: ModeSelectorAndShootViewConstants.shootButtonSize)
@@ -249,6 +315,7 @@ final class ModeSelectorAndShootView: IgnoreTouchesView, EasyTipViewDelegate {
     }
 
     private func setUpMediaPickerButton() {
+        addSubview(mediaPickerButton)
         mediaPickerButton.translatesAutoresizingMaskIntoConstraints = false
         let guide = UILayoutGuide()
         addLayoutGuide(guide)
