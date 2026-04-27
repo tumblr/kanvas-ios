@@ -3,18 +3,12 @@
 default_platform(:ios)
 
 PROJECT_ROOT = File.dirname(__dir__)
-EXAMPLE_PROJECT_ROOT = File.join(PROJECT_ROOT, 'Example')
 EXAMPLE_SPM_PROJECT_ROOT = File.join(PROJECT_ROOT, 'ExampleSPM')
 ARTIFACTS_PATH = File.join(PROJECT_ROOT, 'artifacts')
 
 platform :ios do
-  desc 'Build and Test the Pod'
+  desc 'Build and Test'
   lane :test do
-    run_tests(
-      workspace: File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExample.xcworkspace'),
-      scheme: 'KanvasExample',
-      devices: ['iPhone 16e (26.1)']
-    )
     run_tests(
       project: File.join(EXAMPLE_SPM_PROJECT_ROOT, 'KanvasExample.xcodeproj'),
       scheme: 'KanvasExample',
@@ -27,7 +21,7 @@ error do |_lane, _exception|
   # Create the artifacts path if needed
   FileUtils.mkdir_p(ARTIFACTS_PATH)
 
-  diffs_path = File.join(EXAMPLE_PROJECT_ROOT, 'KanvasExampleTests', 'FailureDiffs')
+  diffs_path = File.join(EXAMPLE_SPM_PROJECT_ROOT, 'KanvasExampleTests', 'FailureDiffs')
 
   return unless File.directory? diffs_path
 
