@@ -5,25 +5,19 @@
 
 [![Build status](https://badge.buildkite.com/7c8558667703d6147550801644af0f394019d6e7b2daed739f.svg?branch=main)](https://buildkite.com/automattic/kanvas-ios)
 
-[![Cocoapods](https://img.shields.io/cocoapods/v/Kanvas)](https://cocoapods.org/pods/Kanvas)
-
 Kanvas is an [open-source](https://github.com/tumblr/kanvas-ios/blob/main/LICENSE) iOS library for adding effects, drawings, text, stickers, and making GIFs from existing media or the camera.
 
-It is used in the [Tumblr iOS app](https://apps.apple.com/us/app/tumblr/id305343404) as a camera, media editor, GIF maker, and media posting tool. 
+It is used in the [Tumblr iOS app](https://apps.apple.com/us/app/tumblr/id305343404) as a camera, media editor, GIF maker, and media posting tool.
 
 ## Setup
 
-Add this to your `Podfile`:
+Add Kanvas to your project via Swift Package Manager:
 
-```ruby
-pod 'Kanvas', :git => 'https://github.com/tumblr/kanvas-ios.git'
+```swift
+.package(url: "https://github.com/tumblr/kanvas-ios.git", from: "1.5.2")
 ```
 
-And run:
-
-```bash
-pod install
-```
+Then add `Kanvas` as a dependency of the targets that need it.
 
 ## Usage
 
@@ -52,8 +46,7 @@ Documentation is lacking at the moment, but contributions are welcome!
 
 ## Example App
 
-[`Example`](https://github.com/tumblr/kanvas-ios/tree/main/Example) is an example app showing how to use Kanvas. Try it out!
+[`ExampleSPM`](https://github.com/tumblr/kanvas-ios/tree/main/ExampleSPM) is an example app showing how to use Kanvas. Try it out!
 
-1. Run `cd Example; bundle exec pod install`
-2. Open `Example/KanvasExample.xcworkspace` in Xcode
-3. Run the app on a device.
+1. Open `ExampleSPM/KanvasExample.xcodeproj` in Xcode.
+2. Run the app on a device or simulator.

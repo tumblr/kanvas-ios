@@ -19,37 +19,7 @@ steps:
     key: test
     command: |
       xcodebuild -downloadComponent MetalToolchain || true
-      build_and_test_pod
+      validate_swift_package
     plugins: *common_plugins
     artifact_paths:
       - "artifacts/**/*"
-
-  #################
-  # Validate Podspecs
-  #################
-  - label: "Validate Podspec"
-    key: validate
-    command: |
-      validate_podspec --patch-cocoapods --allow-warnings
-    plugins: *common_plugins
-
-  #################
-  # Lint
-  #################
-  - label: "Lint"
-    key: lint
-    command: |
-      lint_pod
-    plugins: *common_plugins
-
-  #################
-  # Publish the Podspec (if we're building a tag)
-  #################
-  - label: "⬆️ Publish Pod"
-    command: .buildkite/commands/publish-pod.sh
-    plugins: *common_plugins
-    depends_on:
-      - "test"
-      - "validate"
-      - "lint"
-    if: build.tag != null

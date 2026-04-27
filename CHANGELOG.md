@@ -65,7 +65,7 @@ _None._
 
 ### Breaking Changes
 
-_None._
+- Drop CocoaPods support. The package is now SwiftPM-only. Existing CocoaPods consumers can stay pinned to `1.5.2` — the last Pod-published tag — but no new podspecs will be released.
 
 ### New Features
 
