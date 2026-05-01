@@ -36,8 +36,5 @@ fastlane/README.md
 fastlane/test_output
 fastlane/report.xml
 
-# CocoaPods
-Example/Pods
-
 # Bundler
 /vendor/bundle

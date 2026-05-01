@@ -30,6 +30,24 @@ _None._
 
 -->
 
+## Unreleased
+
+### Breaking Changes
+
+- Drop CocoaPods distribution; the package is now SwiftPM-only. Existing consumers can stay on `1.6.2` (the last Pod-published tag).
+
+### New Features
+
+_None._
+
+### Bug Fixes
+
+_None._
+
+### Internal Changes
+
+_None._
+
 ## 1.5.2
 
 - Updates localized strings to be compatible with genstrings tool. [#168]
