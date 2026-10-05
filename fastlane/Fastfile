@@ -12,7 +12,7 @@ platform :ios do
     run_tests(
       project: File.join(EXAMPLE_SPM_PROJECT_ROOT, 'KanvasExample.xcodeproj'),
       scheme: 'KanvasExample',
-      devices: ['iPhone 16e (26.1)']
+      devices: ['iPhone 17e (26.5)']
     )
   end
 end
