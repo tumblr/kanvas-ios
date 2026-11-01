@@ -18,9 +18,16 @@ final class MediaClipsCollectionView: UIView {
     static let height = MediaClipsCollectionViewConstants.height
     let collectionView: UICollectionView
     let fadeOutGradient = CAGradientLayer()
+
+    struct Settings {
+        let showsFadeOutGradient: Bool
+    }
+
+    private let settings: Settings
         
-    init() {
+    init(settings: Settings) {
         collectionView = createCollectionView()
+        self.settings = settings
 
         super.init(frame: .zero)
 
@@ -49,7 +56,9 @@ extension MediaClipsCollectionView {
     private func setUpViews() {
         collectionView.add(into: self)
         collectionView.clipsToBounds = false
-        setFadeOutGradient()
+        if settings.showsFadeOutGradient {
+            setFadeOutGradient()
+        }
     }
     
     private func setFadeOutGradient() {

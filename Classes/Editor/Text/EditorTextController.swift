@@ -285,6 +285,9 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
     // This method is called inside the keyboard animation,
     // so any UI change made here will be animated.
     @objc func keyboardWillHide(notification: NSNotification) {
+        if isHiding == false && textView.alpha != 0 {
+            didConfirmText()
+        }
         textView.moveToolsDown()
     }
     
@@ -336,13 +339,17 @@ final class EditorTextController: UIViewController, EditorTextViewDelegate, Colo
             self.textView.startWriting()
         })
     }
-    
+
+    /// A flag to indicate whether we're in the process of hiding. This is used in `keyboardWillHide` to determine whether to confirm the text.
+    private var isHiding = false
     
     /// Makes the view disappear
     private func hide() {
         textView.endWriting()
+        isHiding = true
         UIView.animate(withDuration: Constants.animationDuration) {
             self.textView.alpha = 0
+            self.isHiding = false
         }
     }
     
