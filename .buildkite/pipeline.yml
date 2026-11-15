@@ -9,7 +9,7 @@ env:
 
 common_params:
   - &common_plugins
-    - automattic/a8c-ci-toolkit#5.3.1
+    - automattic/a8c-ci-toolkit#7.1.1
 
 steps:
   #################
@@ -20,7 +20,9 @@ steps:
     command: |
       xcodebuild -downloadComponent MetalToolchain || true
       install_gems
+      restore_swiftpm_cache --package-resolved ExampleSPM/KanvasExample.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
       bundle exec fastlane test
+      save_swiftpm_cache --package-resolved ExampleSPM/KanvasExample.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
     plugins: *common_plugins
     artifact_paths:
       - "artifacts/**/*"
