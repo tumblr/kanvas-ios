@@ -313,6 +313,9 @@ public struct CameraFeatures {
     /// Animate the movement of control in the editor
     public var animateEditorControls: Bool = DefaultCameraSettings.animateEditorControls
 
+    /// Whether to show a shadow to the sides of the media clips
+    public var showShadowOverMediaClips: Bool = DefaultCameraSettings.showShadowOverMediaClips
+
     /// The Font Selector button uses the currently selected font for its label
     public var fontSelectorUsesFont: Bool = DefaultCameraSettings.fontFamilyUsesFont
 
@@ -381,4 +384,5 @@ private struct DefaultCameraSettings {
     static let gifCameraShouldStartGIFMaker: Bool = false
     static let fontFamilyUsesFont: Bool = false
     static let animateEditorControls: Bool = true
+    static let showShadowOverMediaClips: Bool = true
 }

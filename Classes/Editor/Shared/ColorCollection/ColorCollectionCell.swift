@@ -73,8 +73,8 @@ final class ColorCollectionCell: UICollectionViewCell {
         circleView.accessibilityIdentifier = "Color Cell View"
         
         NSLayoutConstraint.activate([
-            circleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-            circleView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor),
+            circleView.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor),
+            circleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             circleView.heightAnchor.constraint(equalToConstant: ColorCollectionCellConstants.circleDiameter),
             circleView.widthAnchor.constraint(equalToConstant: ColorCollectionCellConstants.circleDiameter)
         ])
