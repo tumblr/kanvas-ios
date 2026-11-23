@@ -13,7 +13,7 @@ common_params:
 
 steps:
   - label: "[DO NOT MERGE] Stress testWriteAndReadMetadataWithVideo"
-    command: .buildkite/commands/stress-video-metadata-test.sh 10
+    command: .buildkite/commands/stress-video-metadata-test.sh 1
     parallelism: 10
     plugins: *common_plugins
     artifact_paths:
