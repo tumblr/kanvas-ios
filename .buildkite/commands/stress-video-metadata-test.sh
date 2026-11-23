@@ -21,7 +21,6 @@ if [ -z "$log" ]; then
     -destination 'platform=iOS Simulator,name=iPhone 17e,OS=26.5' \
     -only-testing:"$test_id" \
     -test-iterations "$iterations" \
-    -retry-tests-on-failure NO \
     > "$log" 2>&1 || true
 fi
 
