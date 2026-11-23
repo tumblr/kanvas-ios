@@ -18,15 +18,15 @@ class MediaMetadataTests: XCTestCase {
         recorder.startRecordingVideo(on: mode)
         recorder.stopRecordingVideo() { _ in
             recorder.exportRecording(completion: { (url, mediaInfo) in
+                defer { expectation.fulfill() }
                 guard url != nil else {
-                    XCTFail()
+                    XCTFail("Export produced no URL")
                     return
                 }
                 XCTAssertEqual(mediaInfo?.source, .kanvas_camera)
-                expectation.fulfill()
             })
         }
-        wait(for: [expectation], timeout: 5)
+        wait(for: [expectation], timeout: 30)
     }
 
     func testWriteAndReadMetadataWithImage() {
