@@ -50,9 +50,9 @@ final class MediaClipsEditorViewController: UIViewController, MediaClipsCollecti
     /// This needs to be dynamic because it will be observed
     @objc private(set) dynamic var hasClips: Bool = false
 
-    init(showsAddButton: Bool = false) {
+    init(showsAddButton: Bool = false, collectionSettings: MediaClipsCollectionController.Settings) {
         editorView = MediaClipsEditorView(showsAddButton: showsAddButton)
-        collectionController = MediaClipsCollectionController()
+        collectionController = MediaClipsCollectionController(settings: collectionSettings)
         super.init(nibName: .none, bundle: .none)
         collectionController.delegate = self
         editorView.delegate = self
